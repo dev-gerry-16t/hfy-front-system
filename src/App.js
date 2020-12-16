@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
 import "./App.css";
-import LoginDemo from "./view/Login/login";
+import LoginDemo from "./containers/Login/login";
 
 function App() {
   return (
