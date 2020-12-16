@@ -26,7 +26,7 @@ const LoginDemo = () => {
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
-
+  console.log(GLOBAL_CONSTANTS);
   return (
     <div
       style={{ display: "flex", justifyContent: "center", margin: "20px 0px" }}
@@ -75,8 +75,8 @@ const LoginDemo = () => {
             Submit
           </Button>
         </Form.Item>
-        {GLOBAL_CONSTANTS.VERSION}
       </Form>
+        {GLOBAL_CONSTANTS.VERSION}
     </div>
   );
 };
