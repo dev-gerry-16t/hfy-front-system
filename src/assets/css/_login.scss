@@ -1,0 +1,195 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins&display=swap");
+
+.login_head_logo {
+  display: flex;
+  justify-content: center;
+  padding: 20px 0px;
+}
+
+.login_logo {
+  width: 15vh;
+}
+
+.login_card_form {
+  width: 360px;
+  height: fit-content;
+  margin-top: 15px;
+  padding: 20px 0px;
+  background: #ffff;
+  border-radius: 48px;
+  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+
+  .login_top_form {
+    padding: 5px 25px;
+    h1 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 40px;
+      text-align: center;
+      letter-spacing: 1px;
+      color: #ff0282;
+    }
+    .login-recover-pass {
+      display: flex;
+      justify-content: center;
+      align-content: center;
+      margin: 15px;
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 10px;
+      line-height: 28px;
+      letter-spacing: 0.75px;
+      color: #ff0282;
+      p {
+        margin-top: 0;
+        margin-bottom: 0em;
+      }
+    }
+    .login_inputs_form {
+      margin-top: 40px;
+      .login-ant-input {
+        margin-top: 20px;
+        position: relative;
+        .login-label-placeholder {
+          position: absolute;
+          bottom: 27px;
+          z-index: 2;
+          background: #fff;
+          left: 12px;
+          padding: 0px 5px;
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: normal;
+          font-size: 10px;
+          line-height: 28px;
+          letter-spacing: 0.75px;
+          color: #d6d8e7;
+        }
+        .ant-input-affix-wrapper {
+          position: relative;
+          display: inline-block;
+          width: 100%;
+          min-width: 0;
+          padding: 4px 11px;
+          color: rgba(0, 0, 0, 0.85);
+          font-size: 14px;
+          line-height: 1.5715;
+          background-color: #fff;
+          background-image: none;
+          -webkit-transition: all 0.3s;
+          transition: all 0.3s;
+          display: -ms-inline-flexbox;
+          display: inline-flex;
+          border: 1px solid #d6d8e7;
+          box-sizing: border-box;
+          border-radius: 8px;
+          .ant-input {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: bold;
+            font-size: 12px;
+            line-height: 30px;
+            letter-spacing: 0.75px;
+          }
+        }
+      }
+    }
+    .button_init_primary {
+      display: flex;
+      justify-content: center;
+      button {
+        background: #ff0282;
+        border-radius: 16px;
+        border: none;
+        width: 70%;
+        padding: 5px 0px;
+        span {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 34px;
+          letter-spacing: 0.75px;
+          color: #ffffff;
+        }
+      }
+    }
+  }
+
+  .login_divider {
+    display: flex;
+    margin: 20px 0px;
+    hr {
+      width: 100%;
+      flex: 1 1;
+      background: #a0a3bd;
+    }
+    span {
+      text-align: center;
+      flex: 1 2 auto;
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 10px;
+      line-height: 15px;
+      color: #a0a3bd;
+      letter-spacing: 0.75px;
+    }
+  }
+
+  .login_bottom_form {
+    padding: 5px 25px;
+    .button_init_secondary {
+      display: flex;
+      justify-content: center;
+      button {
+        border: 1px solid #FF0282;
+        background: #fff;
+        border-radius: 16px;
+        width: 70%;
+        padding: 5px 0px;
+        span {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 34px;
+          letter-spacing: 0.75px;
+          color: #FF0282;
+        }
+      }
+    }
+  }
+}
+
+.login_main {
+  display: flex;
+  justify-content: center;
+  background: url("../img/cityscape.png");
+  height: 88vh;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.login_footer_version {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  h3 {
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 10px;
+    line-height: 40px;
+    text-align: center;
+    letter-spacing: 1px;
+    color: gray;
+  }
+}
+
+.site-form-item-icon {
+  color: #230b34;
+}
