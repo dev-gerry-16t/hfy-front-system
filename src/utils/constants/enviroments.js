@@ -24,6 +24,7 @@ let ENVIROMENT = "";
 
 const getEnviroment = () => {
   let location = null;
+  console.log("window.location.hostname", window.location.hostname);
   if (window.location.hostname === DOMAIN_WEB) {
     location = `${INSTANCE_PRODUCTION.API_PROTOCOL}${INSTANCE_PRODUCTION.DNS_API}`;
   } else if (window.location.hostname === DOMAIN_WEB_TEST) {
