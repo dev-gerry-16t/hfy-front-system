@@ -9,14 +9,14 @@ const INSTANCE_LOCAL = {
 };
 
 const INSTANCE_TEST = {
-  DNS_API: "hfybacksystem-env.eba-m97qsknm.us-east-2.elasticbeanstalk.com",
-  API_PROTOCOL: "http://",
+  DNS_API: "hfy-back-system.herokuapp.com",
+  API_PROTOCOL: "https://",
   PORT: "",
 };
 
 const INSTANCE_PRODUCTION = {
-  DNS_API: "hfybacksystem-env.eba-m97qsknm.us-east-2.elasticbeanstalk.com",
-  API_PROTOCOL: "http://",
+  DNS_API: "hfy-back-system.herokuapp.com",
+  API_PROTOCOL: "https://",
   PORT: "",
 };
 
