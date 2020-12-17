@@ -1,5 +1,5 @@
-const DOMAIN_WEB = "homify.biz";
-const DOMAIN_WEB_TEST = "homify.biz";
+const DOMAIN_WEB = "hfybacksystem-env.eba-m97qsknm.us-east-2.elasticbeanstalk.com";
+const DOMAIN_WEB_TEST = "hfybacksystem-env.eba-m97qsknm.us-east-2.elasticbeanstalk.com";
 const DOMAIN_WEB_LOCAL = "localhost";
 
 const INSTANCE_LOCAL = {
