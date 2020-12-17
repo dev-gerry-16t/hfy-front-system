@@ -1,6 +1,7 @@
 import React from "react";
 import "antd/dist/antd.css";
 import { Form, Input, Button, Checkbox } from "antd";
+import { callApiLogin } from "../../utils/actions/actions";
 
 const layout = {
   labelCol: {
@@ -18,13 +19,19 @@ const tailLayout = {
 };
 
 const LoginDemo = () => {
-  const onFinish = (values) => {
-    console.log("Success:", values);
+  const onFinish = async (values) => {
+    try {
+      const response = await callApiLogin({
+        email: values.username,
+        password: values.password,
+      });
+      console.log("hola", response);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
-  const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
-  };
+  const onFinishFailed = (errorInfo) => {};
 
   return (
     <div

@@ -1,6 +1,4 @@
-import ENVIROMENT from '../constants/enviroments';
-
-const PORTS = {};
+const HEADER = { "Content-Type": "application/json" };
 
 const API = {
   API: "/api",
@@ -8,7 +6,9 @@ const API = {
   REGISTER: "/registerUser",
 };
 
-const API_CONSTANTS={
-    LOGIN:`${ENVIROMENT}${API.API}${API.LOGIN}`,
-    REGISTER:`${ENVIROMENT}${API.API}${API.REGISTER}`,
-}
+const API_CONSTANTS = {
+  LOGIN: `${API.LOGIN}`,
+  REGISTER: `${API.REGISTER}`,
+};
+
+export { API_CONSTANTS, HEADER };
