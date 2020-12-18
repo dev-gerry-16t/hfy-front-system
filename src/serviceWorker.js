@@ -29,17 +29,6 @@ export function register(config) {
       return;
     }
 
-    self.addEventListener('fetch', (event) => {
-      event.respondWith(
-        caches.match(event.request).then((response) => {
-          if (response) {
-            return response;
-          }
-          return fetch(event.request);
-        }),
-      );
-    });
-
     window.addEventListener("load", () => {
       const swUrl = `${process.env.PUBLIC_URL}/sw.js`;
 
