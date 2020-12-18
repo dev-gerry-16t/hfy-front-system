@@ -55,7 +55,7 @@ const Login = () => {
               <p>Olvidé mi contraseña</p>
             </div>
             <div className="button_init_primary">
-              <button>
+              <button type="button" onClick={() => {}}>
                 <span>Iniciar sesión</span>
               </button>
             </div>
@@ -67,7 +67,7 @@ const Login = () => {
           </div>
           <div className="login_bottom_form">
             <div className="button_init_secondary">
-              <button>
+              <button type="button">
                 <span>Crear cuenta</span>
               </button>
             </div>

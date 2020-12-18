@@ -1,14 +1,40 @@
+import React from "react";
+import { connect } from "react-redux";
+import { Router } from "react-router";
+import Loadable from "react-loadable";
+import { ConfigProvider } from "antd";
+import { Route, Switch } from "react-router-dom";
+import es_ES from "antd/lib/locale-provider/es_ES";
 import "./App.css";
-import Login from "./containers/Login/login";
-import RecoveryPassEnter from "./containers/Recovery/RecoveryPassEnter";
-import RecoveryPassSentCode from "./containers/Recovery/RecoveryPassSentCode";
-import RecoveryPassCode from "./containers/Recovery/RecoveryPassCode";
-import RecoveryNewPass from "./containers/Recovery/RecoveryNewPass";
-import Register from "./containers/Register/Register";
-import RegisterForm from "./containers/Register/RegisterForm";
 
-const App = () => {
-  return <Login />;
+const loading = () => (
+  <div className="animated fadeIn pt-3 text-center">
+    <div className="sk-spinner sk-spinner-pulse" />
+  </div>
+);
+
+const Login = Loadable({
+  loader: () => import("./containers/Login/login"),
+  loading,
+});
+
+const App = (props) => {
+  const { history, token } = props;
+
+  return (
+    <Router history={history}>
+      <ConfigProvider locale={es_ES}>
+        <Switch>
+          <Route exact path="/" name="Login Page" component={Login} />
+          <Route path="/login" name="Login Page" component={Login} />
+        </Switch>
+      </ConfigProvider>
+    </Router>
+  );
 };
 
-export default App;
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = null;
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
