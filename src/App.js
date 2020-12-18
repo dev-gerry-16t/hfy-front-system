@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
 import { Router } from "react-router";
 import Loadable from "react-loadable";
 import { ConfigProvider } from "antd";
@@ -26,6 +26,7 @@ const App = (props) => {
       <ConfigProvider locale={es_ES}>
         <Switch>
           <Route exact path="/" name="Login Page" component={Login} />
+          <Route path="/login" name="Login Page" component={Login} />
         </Switch>
       </ConfigProvider>
     </Router>
