@@ -6,23 +6,9 @@ import RecoveryPassCode from "./containers/Recovery/RecoveryPassCode";
 import RecoveryNewPass from "./containers/Recovery/RecoveryNewPass";
 import Register from "./containers/Register/Register";
 import RegisterForm from "./containers/Register/RegisterForm";
-import logo from './assets/img/logo.png';
 
 const App = () => {
-  return (
-    <div className="App">
-      <div className="login_head_logo">
-      <img src={logo} alt="Girl in a jacket" className="login_logo"/>
-      </div>
-      <Login />
-      <RecoveryPassEnter />
-      <RecoveryPassSentCode />
-      <RecoveryPassCode />
-      <RecoveryNewPass />
-      <Register />
-      <RegisterForm />
-    </div>
-  );
+  return <Login />;
 };
 
 export default App;
