@@ -47,6 +47,11 @@
 
     const wb = new Workbox("/sw.js");
 
+    /* function showUpdateBar() {
+      let snackbar = document.getElementById('snackbar');
+      snackbar.className = 'show';
+    } */
+
     document.getElementById("reload").addEventListener("click", function () {
       wb.messageSW({ type: "SKIP_WAITING" });
     });
@@ -55,9 +60,11 @@
       wb.register()
         .then((reg) => {
           reg.addEventListener("updatefound", () => {
+            // A wild service worker has appeared in reg.installing!
+            window.postMessage("UPDATING");
             newWorker = reg.installing;
-
             newWorker.addEventListener("statechange", () => {
+              // Has network.state changed?
               if (
                 navigator.serviceWorker.controller &&
                 newWorker.state == "installed"
@@ -73,6 +80,7 @@
       navigator.serviceWorker.addEventListener("controllerchange", function () {
         if (refreshing === false) {
           setTimeout(() => window.location.reload(), 5000);
+          //window.location.reload();
           refreshing = true;
         }
       });
