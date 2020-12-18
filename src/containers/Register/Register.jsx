@@ -24,7 +24,6 @@ const Register = (props) => {
       <div className="login_card_form">
         <div className="login_top_form">
           <h1> ¿Qué te trae por aquí? </h1>
-
           <div className="login_inputs_form">
             <Radio.Group name="radiogroup" defaultValue={1}>
               <p style={{ marginBottom: "32px" }}>
@@ -108,12 +107,135 @@ const Register = (props) => {
               <button
                 type="button"
                 onClick={() => {
-                  history.push("/login");
+                  setUserType(3);
                 }}
               >
                 <span> Finalizar registro </span>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const insterCodeCompoent = (
+    <div className="login_main">
+      <div className="login_card_form">
+        <div className="login_top_form">
+          <h1> Ingresa tu código </h1>
+          <p className="recoverInstructions">
+            Enviamos un código de confirmacion al correo correo@corroe.com
+          </p>
+          <div className="codeForm">
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-0"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                  } else {
+                    document.getElementById("input-code-validate-1").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-1"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-0").focus();
+                  } else {
+                    document.getElementById("input-code-validate-2").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-2"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-1").focus();
+                  } else {
+                    document.getElementById("input-code-validate-3").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-3"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-2").focus();
+                  } else {
+                    document.getElementById("input-code-validate-4").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-4"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-3").focus();
+                  } else {
+                    document.getElementById("input-code-validate-5").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-5"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-4").focus();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
+            <button
+              type="button"
+              onClick={() => {
+                setUserType(4);
+              }}
+            >
+              <span> Validar </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const successRegister = (
+    <div className="login_main">
+      <div className="login_card_form">
+        <div className="login_top_form">
+          <h1> Registro completo </h1>
+          <p className="recoverInstructions">
+            Felicidades tu registro se realizó con éxito!
+          </p>
+          <div className="button_init_primary">
+            <button
+              type="button"
+              onClick={() => {
+                history.push("/login");
+              }}
+            >
+              <span>Ir al Login</span>
+            </button>
           </div>
         </div>
       </div>
@@ -128,6 +250,12 @@ const Register = (props) => {
         break;
       case 2:
         component = selectForm;
+        break;
+      case 3:
+        component = insterCodeCompoent;
+        break;
+      case 4:
+        component = successRegister;
         break;
       default:
         component = <div />;
