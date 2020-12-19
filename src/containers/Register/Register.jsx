@@ -131,6 +131,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-0"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
@@ -143,6 +144,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-1"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
@@ -156,6 +158,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-2"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
@@ -169,6 +172,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-3"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
@@ -182,6 +186,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-4"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
@@ -195,6 +200,7 @@ const Register = (props) => {
             <div className="codeFormItem">
               <Input
                 id="input-code-validate-5"
+                type='number'
                 maxLength={1}
                 onChange={(event) => {
                   if (event.target.value === "") {
