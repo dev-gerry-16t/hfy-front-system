@@ -66,7 +66,7 @@ const RegisterForm = () => {
 
             <label className="fieldset_title"> Información de contacto </label>
 
-            <div className="register_row half" style={{marginBottom:'40px'}}>
+            <div className="register_row half">
               <Input
                 suffix={<PhoneOutlined />}
                 placeholder="Teléfono celular"
@@ -80,7 +80,7 @@ const RegisterForm = () => {
 
             <label className="fieldset_title"> Contraseña </label>
 
-            <div className="register_row half" style={{marginBottom:'40px'}}>
+            <div className="register_row half">
               <Input
                 suffix={<KeyOutlined />}
                 placeholder="Contraseña"
@@ -92,7 +92,7 @@ const RegisterForm = () => {
               />    
             </div> 
             
-            <div className="button_init_primary" style={{margin:'56px 0 0'}}>
+            <div className="button_init_primary" style={{margin:'16px 0 0'}}>
               <button>
                 <span> Finalizar registro </span>
               </button>
