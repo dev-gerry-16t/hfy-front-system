@@ -1,5 +1,6 @@
 import React from "react";
 import "antd/dist/antd.css";
+import { connect } from "react-redux";
 import { Form, Input, Button, Checkbox } from "antd";
 import {
   EyeInvisibleOutlined,
@@ -25,7 +26,8 @@ const tailLayout = {
   },
 };
 
-const Login = () => {
+const Login = (props) => {
+  const { history } = props;
   return (
     <div className="App">
       <div className="login_head_logo">
@@ -67,7 +69,12 @@ const Login = () => {
           </div>
           <div className="login_bottom_form">
             <div className="button_init_secondary">
-              <button type="button">
+              <button
+                type="button"
+                onClick={() => {
+                  history.push("/registro");
+                }}
+              >
                 <span>Crear cuenta</span>
               </button>
             </div>
@@ -81,4 +88,8 @@ const Login = () => {
   );
 };
 
-export default Login;
+const mapStateToProps = (state) => ({});
+
+const mapDispatchToProps = () => {};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

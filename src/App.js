@@ -18,6 +18,11 @@ const Login = Loadable({
   loading,
 });
 
+const Registro = Loadable({
+  loader: () => import("./containers/Register/Register"),
+  loading,
+});
+
 const App = (props) => {
   const { history, token } = props;
 
@@ -27,6 +32,7 @@ const App = (props) => {
         <Switch>
           <Route exact path="/" name="Login Page" component={Login} />
           <Route path="/login" name="Login Page" component={Login} />
+          <Route path="/registro" name="Registro" component={Registro} />
         </Switch>
       </ConfigProvider>
     </Router>
