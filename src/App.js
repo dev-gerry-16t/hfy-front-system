@@ -32,6 +32,7 @@ const App = (props) => {
         <Switch>
           <Route exact path="/" name="Login Page" component={Login} />
           <Route path="/login" name="Login Page" component={Login} />
+          <Route path="/index" name="Login Page" component={Login} />
           <Route path="/registro" name="Registro" component={Registro} />
         </Switch>
       </ConfigProvider>
