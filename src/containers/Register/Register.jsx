@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import "antd/dist/antd.css";
 import { Radio, Select, Input } from "antd";
-import { LockOutlined } from "@ant-design/icons";
 import { callApiLogin } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
@@ -10,7 +9,7 @@ import {
   UserOutlined,
   PhoneOutlined,
   MailOutlined,
-  KeyOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -97,10 +96,15 @@ const Register = (props) => {
             </div>
             <label className="fieldset_title"> Contraseña </label>
             <div className="register_row half">
-              <Input suffix={<KeyOutlined />} placeholder="Contraseña" />
               <Input
-                suffix={<KeyOutlined />}
+                suffix={<LockOutlined />}
+                placeholder="Contraseña"
+                type="password"
+              />
+              <Input
+                suffix={<LockOutlined />}
                 placeholder="Confirmar Contraseña"
+                type="password"
               />
             </div>
             <div className="button_init_primary" style={{ margin: "16px 0 0" }}>
