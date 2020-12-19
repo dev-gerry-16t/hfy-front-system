@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import "antd/dist/antd.css";
 import { Radio, Select, Input } from "antd";
-import { LockOutlined } from "@ant-design/icons";
 import { callApiLogin } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
@@ -10,7 +9,7 @@ import {
   UserOutlined,
   PhoneOutlined,
   MailOutlined,
-  KeyOutlined,
+  LockOutlined,
 } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -24,7 +23,6 @@ const Register = (props) => {
       <div className="login_card_form">
         <div className="login_top_form">
           <h1> ¿Qué te trae por aquí? </h1>
-
           <div className="login_inputs_form">
             <Radio.Group name="radiogroup" defaultValue={1}>
               <p style={{ marginBottom: "32px" }}>
@@ -86,7 +84,7 @@ const Register = (props) => {
               <Input suffix={<UserOutlined />} placeholder="Segundo Apellido" />
             </div>
             <label className="fieldset_title"> Información de contacto </label>
-            <div className="register_row half" style={{ marginBottom: "40px" }}>
+            <div className="register_row half">
               <Input
                 suffix={<PhoneOutlined />}
                 placeholder="Teléfono celular"
@@ -97,23 +95,157 @@ const Register = (props) => {
               />
             </div>
             <label className="fieldset_title"> Contraseña </label>
-            <div className="register_row half" style={{ marginBottom: "40px" }}>
-              <Input suffix={<KeyOutlined />} placeholder="Contraseña" />
+            <div className="register_row half">
               <Input
-                suffix={<KeyOutlined />}
+                suffix={<LockOutlined />}
+                placeholder="Contraseña"
+                type="password"
+              />
+              <Input
+                suffix={<LockOutlined />}
                 placeholder="Confirmar Contraseña"
+                type="password"
               />
             </div>
-            <div className="button_init_primary" style={{ margin: "56px 0 0" }}>
+            <div className="button_init_primary" style={{ margin: "16px 0 0" }}>
               <button
                 type="button"
                 onClick={() => {
-                  history.push("/login");
+                  setUserType(3);
                 }}
               >
                 <span> Finalizar registro </span>
               </button>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const insterCodeCompoent = (
+    <div className="login_main">
+      <div className="login_card_form">
+        <div className="login_top_form">
+          <h1> Ingresa tu código </h1>
+          <p className="recoverInstructions">
+            Enviamos un código de confirmacion al correo correo@corroe.com
+          </p>
+          <div className="codeForm">
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-0"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                  } else {
+                    document.getElementById("input-code-validate-1").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-1"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-0").focus();
+                  } else {
+                    document.getElementById("input-code-validate-2").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-2"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-1").focus();
+                  } else {
+                    document.getElementById("input-code-validate-3").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-3"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-2").focus();
+                  } else {
+                    document.getElementById("input-code-validate-4").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-4"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-3").focus();
+                  } else {
+                    document.getElementById("input-code-validate-5").focus();
+                  }
+                }}
+              />
+            </div>
+            <div className="codeFormItem">
+              <Input
+                id="input-code-validate-5"
+                type="number"
+                maxLength={1}
+                onChange={(event) => {
+                  if (event.target.value === "") {
+                    document.getElementById("input-code-validate-4").focus();
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
+            <button
+              type="button"
+              onClick={() => {
+                setUserType(4);
+              }}
+            >
+              <span> Validar </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const successRegister = (
+    <div className="login_main">
+      <div className="login_card_form">
+        <div className="login_top_form">
+          <h1> Registro completo </h1>
+          <p className="recoverInstructions">
+            Felicidades tu registro se realizó con éxito!
+          </p>
+          <div className="button_init_primary">
+            <button
+              type="button"
+              onClick={() => {
+                history.push("/login");
+              }}
+            >
+              <span>Ir al Login</span>
+            </button>
           </div>
         </div>
       </div>
@@ -128,6 +260,12 @@ const Register = (props) => {
         break;
       case 2:
         component = selectForm;
+        break;
+      case 3:
+        component = insterCodeCompoent;
+        break;
+      case 4:
+        component = successRegister;
         break;
       default:
         component = <div />;
