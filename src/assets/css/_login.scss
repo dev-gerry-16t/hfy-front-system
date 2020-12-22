@@ -37,7 +37,7 @@ html {
   width: 90%;
   max-width: 420px;
   height: fit-content;
-  margin-top: 5vh;
+  margin-top: 3vh;
   padding: 20px 0px;
   background: #ffff;
   border-radius: 48px;
@@ -73,7 +73,7 @@ html {
       display: flex;
       justify-content: center;
       align-content: center;
-      margin: 15px;
+      margin: 0px 0px 15px 0px;
       font-family: Poppins;
       font-style: normal;
       font-weight: bold;
@@ -87,12 +87,12 @@ html {
       }
     }
     .login_inputs_form {
-      margin-top: 40px;
+      margin-top: 15px;
       .ant-radio-wrapper {
         white-space: normal;
       }
       .login-ant-input {
-        margin-top: 20px;
+        margin-top: 15px;
         position: relative;
         .login-label-placeholder {
           position: absolute;
@@ -336,4 +336,43 @@ html {
   font-weight: 700;
   margin-bottom: 1em;
   display: block;
+}
+
+.error_login_incorrect_data {
+  display: flex;
+  justify-content: center;
+  div {
+    background: #fff4ec;
+    color: #cf6e23;
+    padding: 0px 15px;
+    border-radius: 5px;
+    img {
+      margin-right: 5px;
+      margin-bottom: 5px;
+    }
+  }
+}
+
+.error_login_incorrect_data_field {
+  background: #feefef;
+  color: #da1414;
+  padding: 0px 15px;
+  border-radius: 5px;
+  font-size: 10px;
+  img {
+    margin-right: 5px;
+    margin-bottom: 5px;
+  }
+}
+
+.hide {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.2s linear;
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s, opacity 0.1s linear;
 }
