@@ -55,6 +55,7 @@
       wb.register()
         .then((reg) => {
           reg.addEventListener("updatefound", () => {
+            window.postMessage('UPDATING');
             newWorker = reg.installing;
 
             newWorker.addEventListener("statechange", () => {

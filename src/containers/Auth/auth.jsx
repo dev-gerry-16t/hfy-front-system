@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { connect } from "react-redux";
 
-const Auth = () => {
+const Auth = (props) => {
+  const { history } = props;
+
+  useEffect(() => {
+    setTimeout(() => {
+      history.push("/dashboard");
+    }, 3000);
+  }, []);
+
   return (
     <div className="loader-auth-spiner">
       <div />

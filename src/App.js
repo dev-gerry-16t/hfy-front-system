@@ -28,6 +28,11 @@ const Auth = Loadable({
   loading,
 });
 
+const DefaultLayout = Loadable({
+  loader: () => import("./containers/Layout/layout"),
+  loading,
+});
+
 const App = (props) => {
   const { history, token } = props;
 
@@ -40,6 +45,12 @@ const App = (props) => {
           <Route path="/index" name="Login Page" component={Login} />
           <Route path="/registro" name="Registro" component={Registro} />
           <Route path="/auth" name="Autorizacion" component={Auth} />
+          <Route
+            history={history}
+            path="/app/"
+            name="Home"
+            render={(props) => <DefaultLayout {...props} authenticated />}
+          />
         </Switch>
       </ConfigProvider>
     </Router>
