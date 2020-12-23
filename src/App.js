@@ -23,6 +23,11 @@ const Registro = Loadable({
   loading,
 });
 
+const Auth = Loadable({
+  loader: () => import("./containers/Auth/auth"),
+  loading,
+});
+
 const App = (props) => {
   const { history, token } = props;
 
@@ -34,6 +39,7 @@ const App = (props) => {
           <Route path="/login" name="Login Page" component={Login} />
           <Route path="/index" name="Login Page" component={Login} />
           <Route path="/registro" name="Registro" component={Registro} />
+          <Route path="/auth" name="Autorizacion" component={Auth} />
         </Switch>
       </ConfigProvider>
     </Router>

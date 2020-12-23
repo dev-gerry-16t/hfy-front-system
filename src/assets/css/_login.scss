@@ -292,10 +292,6 @@ html {
     -webkit-appearance: none;
     margin: 0;
   }
-
-  input[type="number"] {
-    -moz-appearance: textfield;
-  }
 }
 
 .confirmPasswordHolder {
@@ -375,4 +371,66 @@ html {
   visibility: visible;
   opacity: 1;
   transition: visibility 0s, opacity 0.1s linear;
+}
+
+.loader-auth-spiner {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  background: #fff;
+  div {
+    width: 89px;
+    height: 89px;
+    position: relative;
+    background: #ff0282;
+    animation-duration: 2.5s;
+    animation-name: animSpin;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+  }
+
+  @keyframes animSpin {
+    50% {
+      transform: rotateZ(180deg) scale(0.94);
+    }
+    100% {
+      transform: rotateZ(360deg) scale(1);
+    }
+  }
+
+  div,
+  div:before,
+  div:after {
+    border-radius: 50%;
+  }
+
+  div:before,
+  div:after {
+    content: "";
+    position: absolute;
+    border: 8px solid transparent;
+  }
+
+  div:before {
+    width: 75%;
+    height: 75%;
+    background: rgba(255, 255, 255, 0.13);
+    left: 12.5%;
+    top: 12.5%;
+    border-left: 8px solid rgba(255, 255, 255, 0.34);
+    border-bottom: 8px solid rgba(255, 255, 255, 0.34);
+  }
+
+  div:after {
+    width: 40%;
+    height: 40%;
+    left: 30%;
+    top: 30%;
+    border-right: 8px solid rgba(255, 255, 255, 1);
+    border-left: 8px solid rgba(255, 255, 255, 1);
+    border-bottom: 8px solid rgba(255, 255, 255, 1);
+  }
 }

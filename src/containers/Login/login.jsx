@@ -13,6 +13,7 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import saqareX from "../../assets/icons/saqareX.svg";
+import { isNil } from "lodash";
 
 const layout = {
   labelCol: {
@@ -43,10 +44,16 @@ const Login = (props) => {
     try {
       if (isEmpty(data.password) === false && isEmpty(data.email) === false) {
         const response = await callApiLogin(data);
-        console.log("response login function", response);
+        const idSystemUser =
+          isNil(response) === false &&
+          isNil(response.response) === false &&
+          isNil(response.response.isSystemUser) === false
+            ? response.response.isSystemUser
+            : null;
+        console.log("idSystemUser", idSystemUser);
+        history.push("/auth");
       } else {
         if (isEmpty(data.password) || isEmpty(data.email)) {
-          console.log("isEmpty(data.password) ", isEmpty(data.password));
           setErrorsLogin({
             ...errorsLogin,
             errorPass: isEmpty(data.password),
@@ -55,7 +62,6 @@ const Login = (props) => {
         }
       }
     } catch (error) {
-      console.log("error Login", error);
       setErrorsLogin({ ...errorsLogin, error: true, message: error });
     }
   };
@@ -121,13 +127,13 @@ const Login = (props) => {
                 />
               </div>
               <div
-                  className={`error_login_incorrect_data_field ${
-                    errorsLogin.errorPass === false ? "hide" : "visible"
-                  }`}
-                >
-                  <img src={saqareX} alt="exclaim" />
-                  <span>Este campo es requerido</span>
-                </div>
+                className={`error_login_incorrect_data_field ${
+                  errorsLogin.errorPass === false ? "hide" : "visible"
+                }`}
+              >
+                <img src={saqareX} alt="exclaim" />
+                <span>Este campo es requerido</span>
+              </div>
             </div>
             <div className="login-recover-pass">
               <p>Olvidé mi contraseña</p>
