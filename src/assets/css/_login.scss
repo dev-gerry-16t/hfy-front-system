@@ -374,63 +374,50 @@ html {
 }
 
 .loader-auth-spiner {
-  display: flex;
-  width: 100vw;
-  height: 100vh;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-  background: #fff;
-  div {
-    width: 89px;
-    height: 89px;
-    position: relative;
-    background: #ff0282;
-    animation-duration: 2.5s;
-    animation-name: animSpin;
-    animation-timing-function: linear;
-    animation-iteration-count: infinite;
-  }
-
-  @keyframes animSpin {
-    50% {
-      transform: rotateZ(180deg) scale(0.94);
-    }
-    100% {
-      transform: rotateZ(360deg) scale(1);
-    }
-  }
-
-  div,
-  div:before,
-  div:after {
+  animation: spin 1s infinite linear;
+  border: solid 2vmin transparent;
+  border-radius: 50%;
+  border-right-color: #da1414;
+  border-top-color: #da1414;
+  box-sizing: border-box;
+  height: 20vmin;
+  left: calc(50% - 10vmin);
+  position: fixed;
+  top: calc(50% - 10vmin);
+  width: 20vmin;
+  z-index: 1;
+  &:before {
+    animation: spin 2s infinite linear;
+    border: solid 2vmin transparent;
     border-radius: 50%;
-  }
-
-  div:before,
-  div:after {
+    border-right-color: #dd6969;
+    border-top-color: #dd6969;
+    box-sizing: border-box;
     content: "";
+    height: 16vmin;
+    left: 0;
     position: absolute;
-    border: 8px solid transparent;
+    top: 0;
+    width: 16vmin;
   }
-
-  div:before {
-    width: 75%;
-    height: 75%;
-    background: rgba(255, 255, 255, 0.13);
-    left: 12.5%;
-    top: 12.5%;
-    border-left: 8px solid rgba(255, 255, 255, 0.34);
-    border-bottom: 8px solid rgba(255, 255, 255, 0.34);
+  &:after {
+    animation: spin 3s infinite linear;
+    border: solid 2vmin transparent;
+    border-radius: 50%;
+    border-right-color:  #dfb7b7;
+    border-top-color: #dfb7b7;
+    box-sizing: border-box;
+    content: "";
+    height: 12vmin;
+    left: 2vmin;
+    position: absolute;
+    top: 2vmin;
+    width: 12vmin;
   }
+}
 
-  div:after {
-    width: 40%;
-    height: 40%;
-    left: 30%;
-    top: 30%;
-    border-right: 8px solid rgba(255, 255, 255, 1);
-    border-left: 8px solid rgba(255, 255, 255, 1);
-    border-bottom: 8px solid rgba(255, 255, 255, 1);
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
   }
 }

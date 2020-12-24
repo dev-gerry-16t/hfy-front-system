@@ -17,10 +17,8 @@ import {
   callGetAllRegisterUser,
   callGetAllVerifyCode,
 } from "../../utils/actions/actions";
-import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
-import saqareX from "../../assets/icons/saqareX.svg";
 
 const { Option } = Select;
 
@@ -518,7 +516,6 @@ const Register = (props) => {
                 maxLength={1}
                 minLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                   } else {
                     document.getElementById("input-code-validate-1").focus();
@@ -539,7 +536,6 @@ const Register = (props) => {
                 value={codeVerify.value2}
                 maxLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                     document.getElementById("input-code-validate-0").focus();
                   } else {
@@ -561,7 +557,6 @@ const Register = (props) => {
                 value={codeVerify.value3}
                 maxLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                     document.getElementById("input-code-validate-1").focus();
                   } else {
@@ -583,7 +578,6 @@ const Register = (props) => {
                 value={codeVerify.value4}
                 maxLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                     document.getElementById("input-code-validate-2").focus();
                   } else {
@@ -605,7 +599,6 @@ const Register = (props) => {
                 value={codeVerify.value5}
                 maxLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                     document.getElementById("input-code-validate-3").focus();
                   } else {
@@ -627,7 +620,6 @@ const Register = (props) => {
                 value={codeVerify.value6}
                 maxLength={1}
                 onChange={(event) => {
-                  const arrayCode = codeVerify;
                   if (event.target.value === "") {
                     document.getElementById("input-code-validate-4").focus();
                   } else {
@@ -722,6 +714,7 @@ const Register = (props) => {
   useEffect(() => {
     handlerAsyncCallAppis();
   }, []);
+  
   return (
     <div className="App">
       <div className="login_head_logo">

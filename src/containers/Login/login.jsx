@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
+import { isNil } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import { connect } from "react-redux";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Input } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
@@ -13,22 +14,6 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import saqareX from "../../assets/icons/saqareX.svg";
-import { isNil } from "lodash";
-
-const layout = {
-  labelCol: {
-    span: 8,
-  },
-  wrapperCol: {
-    span: 16,
-  },
-};
-const tailLayout = {
-  wrapperCol: {
-    offset: 8,
-    span: 16,
-  },
-};
 
 const Login = (props) => {
   const { history, callApiLogin } = props;

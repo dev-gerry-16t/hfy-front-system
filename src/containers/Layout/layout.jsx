@@ -1,16 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import { Layout, Menu } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
-import Icon from "@ant-design/icons";
-import {
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-} from "@ant-design/icons";
+import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
 import IconDashboard from "../../assets/icons/iconDashboard.svg";
 import IconOwner from "../../assets/icons/iconHome.svg";
 import IconRenter from "../../assets/icons/renter.svg";
@@ -19,9 +12,17 @@ import IconChat from "../../assets/icons/chat.svg";
 import IconEdit from "../../assets/icons/edit.svg";
 import IconShortLogo from "../../assets/icons/logoShortWhite.svg";
 import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
+import IconNotification from "../../assets/icons/Notification.svg";
+import IconProfile from "../../assets/icons/Profile.svg";
 import routes from "../../routes";
 
-const { Header, Sider, Content } = Layout;
+const { Header, Sider } = Layout;
+
+const Loading = () => (
+  <div className="loader-auth-spiner">
+    <div />
+  </div>
+);
 
 const DefaultLayout = (props) => {
   const { history, authenticated } = props;
@@ -38,9 +39,7 @@ const DefaultLayout = (props) => {
           trigger={null}
           collapsible
           collapsed={collapsed}
-          onClick={(e) => {
-            console.log("e", e);
-          }}
+          onClick={(e) => {}}
         >
           <div className="logo">
             <img
@@ -55,12 +54,7 @@ const DefaultLayout = (props) => {
             />
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item
-              key="1"
-              onClick={(event) => {
-                console.log("event", event);
-              }}
-            >
+            <Menu.Item key="1" onClick={(event) => {}}>
               <img
                 className="ant-menu-item-icon"
                 width="15"
@@ -96,46 +90,56 @@ const DefaultLayout = (props) => {
         </Sider>
         <Layout className="site-layout">
           <Header className="site-layout-background" style={{ padding: 0 }}>
-            {React.createElement(
-              collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-              {
-                className: "trigger",
-                onClick: toggle,
-              }
-            )}
+            <div className="header-title-button">
+              {React.createElement(
+                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
+                {
+                  onClick: toggle,
+                }
+              )}
+              <h2>Dashboard</h2>
+            </div>
+            <div className="header-info-user">
+              <h2>
+                Hola, <strong>Usuario</strong>
+              </h2>
+              <button className="button-header">
+                <img src={IconNotification} />
+              </button>
+              <button className="button-header">
+                <img src={IconProfile} />
+              </button>
+            </div>
           </Header>
-          <Switch>
-            {routes.map((route) => {
-              console.log("route", route);
-              return (
-                <Route
-                  history={history}
-                  key={route.id}
-                  path={route.path}
-                  exact={route.exact}
-                  name={route.name}
-                  render={(prop) => {
-                    console.log("authenticated", authenticated);
-                    if (authenticated === true) {
-                      //onChange();
-                      console.log("route", route);
-
-                      return <route.component {...prop} history={history} />;
-                    } else {
-                      return (
-                        <Redirect
-                          to={{
-                            pathname: "/logout",
-                            state: { from: props.location },
-                          }}
-                        />
-                      );
-                    }
-                  }}
-                />
-              );
-            })}
-          </Switch>
+          <Suspense fallback={<Loading />}>
+            <Switch>
+              {routes.map((route) => {
+                return (
+                  <Route
+                    history={history}
+                    key={route.id}
+                    path={route.path}
+                    exact={route.exact}
+                    name={route.name}
+                    render={(prop) => {
+                      if (authenticated === true) {
+                        return <route.component {...prop} history={history} />;
+                      } else {
+                        return (
+                          <Redirect
+                            to={{
+                              pathname: "/logout",
+                              state: { from: props.location },
+                            }}
+                          />
+                        );
+                      }
+                    }}
+                  />
+                );
+              })}
+            </Switch>
+          </Suspense>
         </Layout>
       </Layout>
     </div>

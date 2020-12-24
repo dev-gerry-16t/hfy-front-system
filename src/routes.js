@@ -4,8 +4,9 @@ const ViewContent = React.lazy(() => import("./views/Content/content"));
 
 const routes = [
   {
+    key: "1",
     id: "ViewContent",
-    path: "/",
+    path: "/app/viewContent",
     name: "View Content",
     component: ViewContent,
     exact: true,

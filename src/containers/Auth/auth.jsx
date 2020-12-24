@@ -6,15 +6,11 @@ const Auth = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      history.push("/dashboard");
+      history.push("/app/viewContent");
     }, 3000);
   }, []);
 
-  return (
-    <div className="loader-auth-spiner">
-      <div />
-    </div>
-  );
+  return <div className="loader-auth-spiner" />;
 };
 
 const mapStateToProps = (state) => ({});

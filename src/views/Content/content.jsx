@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { connect } from "react-redux";
-import { Layout, Menu } from "antd";
+import { Layout } from "antd";
 
-const { Header, Sider, Content } = Layout;
+const { Content } = Layout;
 
 const ViewContent = () => {
-  console.log('hola');
   return (
     <Content
       className="site-layout-background"
@@ -15,7 +14,7 @@ const ViewContent = () => {
         minHeight: 280,
       }}
     >
-      Content
+      Content1
     </Content>
   );
 };
