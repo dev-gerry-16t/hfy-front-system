@@ -3,11 +3,12 @@ import "antd/dist/antd.css";
 import { isNil } from "lodash";
 import isEmpty from "lodash/isEmpty";
 import { connect } from "react-redux";
-import { Input } from "antd";
+import { Input, Spin } from "antd";
 import {
   EyeInvisibleOutlined,
   EyeTwoTone,
   UserOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import { callApiLogin } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -18,12 +19,15 @@ import saqareX from "../../assets/icons/saqareX.svg";
 const Login = (props) => {
   const { history, callApiLogin } = props;
   const [dataLogin, setDataLogin] = useState({ email: "", password: "" });
+  const [spinVisible, setSpinVisible] = useState(false);
   const [errorsLogin, setErrorsLogin] = useState({
     error: false,
     message: "",
     errorEmail: false,
     errorPass: false,
   });
+
+  const LoadingSpin = <SyncOutlined spin />;
 
   const handlerCallApiLogin = async (data) => {
     try {
@@ -43,8 +47,10 @@ const Login = (props) => {
             : null;
         await localStorage.setItem("idSystemUser", idSystemUser);
         await localStorage.setItem("token", token);
+        setSpinVisible(false);
         history.push("/auth");
       } else {
+        setSpinVisible(false);
         if (isEmpty(data.password) || isEmpty(data.email)) {
           setErrorsLogin({
             ...errorsLogin,
@@ -54,6 +60,7 @@ const Login = (props) => {
         }
       }
     } catch (error) {
+      setSpinVisible(false);
       setErrorsLogin({ ...errorsLogin, error: true, message: error });
     }
   };
@@ -65,82 +72,85 @@ const Login = (props) => {
       </div>
       <div className="login_main">
         <div className="login_card_form">
-          <div className="login_top_form">
-            <h1>Inicia sesión</h1>
-            <div
-              className={`error_login_incorrect_data ${
-                errorsLogin.error === false ? "hide" : "visible"
-              }`}
-            >
-              <div>
-                <img src={admiration} alt="exclaim" />
-                <span>{errorsLogin.message}</span>
-              </div>
-            </div>
-            <div className="login_inputs_form">
-              <div className="login-ant-input">
-                <label className="login-label-placeholder">Usuario</label>
-                <Input
-                  value={dataLogin.email}
-                  onChange={(e) => {
-                    setDataLogin({ ...dataLogin, email: e.target.value });
-                    setErrorsLogin({
-                      ...errorsLogin,
-                      error: false,
-                      errorEmail: false,
-                    });
-                  }}
-                  suffix={<UserOutlined className="site-form-item-icon" />}
-                />
-              </div>
+          <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+            <div className="login_top_form">
+              <h1>Inicia sesión</h1>
               <div
-                className={`error_login_incorrect_data_field ${
-                  errorsLogin.errorEmail === false ? "hide" : "visible"
+                className={`error_login_incorrect_data ${
+                  errorsLogin.error === false ? "hide" : "visible"
                 }`}
               >
-                <img src={saqareX} alt="exclaim" />
-                <span>Este campo es requerido</span>
+                <div>
+                  <img src={admiration} alt="exclaim" />
+                  <span>{errorsLogin.message}</span>
+                </div>
               </div>
-              <div className="login-ant-input">
-                <label className="login-label-placeholder">Contraseña</label>
-                <Input.Password
-                  value={dataLogin.password}
-                  onChange={(e) => {
-                    setDataLogin({ ...dataLogin, password: e.target.value });
-                    setErrorsLogin({
-                      ...errorsLogin,
-                      error: false,
-                      errorPass: false,
-                    });
+              <div className="login_inputs_form">
+                <div className="login-ant-input">
+                  <label className="login-label-placeholder">Usuario</label>
+                  <Input
+                    value={dataLogin.email}
+                    onChange={(e) => {
+                      setDataLogin({ ...dataLogin, email: e.target.value });
+                      setErrorsLogin({
+                        ...errorsLogin,
+                        error: false,
+                        errorEmail: false,
+                      });
+                    }}
+                    suffix={<UserOutlined className="site-form-item-icon" />}
+                  />
+                </div>
+                <div
+                  className={`error_login_incorrect_data_field ${
+                    errorsLogin.errorEmail === false ? "hide" : "visible"
+                  }`}
+                >
+                  <img src={saqareX} alt="exclaim" />
+                  <span>Este campo es requerido</span>
+                </div>
+                <div className="login-ant-input">
+                  <label className="login-label-placeholder">Contraseña</label>
+                  <Input.Password
+                    value={dataLogin.password}
+                    onChange={(e) => {
+                      setDataLogin({ ...dataLogin, password: e.target.value });
+                      setErrorsLogin({
+                        ...errorsLogin,
+                        error: false,
+                        errorPass: false,
+                      });
+                    }}
+                    iconRender={(visible) =>
+                      visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                    }
+                  />
+                </div>
+                <div
+                  className={`error_login_incorrect_data_field ${
+                    errorsLogin.errorPass === false ? "hide" : "visible"
+                  }`}
+                >
+                  <img src={saqareX} alt="exclaim" />
+                  <span>Este campo es requerido</span>
+                </div>
+              </div>
+              <div className="login-recover-pass">
+                <p>Olvidé mi contraseña</p>
+              </div>
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSpinVisible(true);
+                    handlerCallApiLogin(dataLogin);
                   }}
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
-                />
-              </div>
-              <div
-                className={`error_login_incorrect_data_field ${
-                  errorsLogin.errorPass === false ? "hide" : "visible"
-                }`}
-              >
-                <img src={saqareX} alt="exclaim" />
-                <span>Este campo es requerido</span>
+                >
+                  <span>Iniciar sesión</span>
+                </button>
               </div>
             </div>
-            <div className="login-recover-pass">
-              <p>Olvidé mi contraseña</p>
-            </div>
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={() => {
-                  handlerCallApiLogin(dataLogin);
-                }}
-              >
-                <span>Iniciar sesión</span>
-              </button>
-            </div>
-          </div>
+          </Spin>
           <div className="login_divider">
             <hr />
             <span>No tengo cuenta</span>

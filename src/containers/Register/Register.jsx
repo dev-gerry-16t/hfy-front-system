@@ -3,12 +3,13 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Radio, Select, Input } from "antd";
+import { Radio, Select, Input, Spin, Skeleton } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
   MailOutlined,
   LockOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import {
   callGetAllCustomers,
@@ -19,6 +20,7 @@ import {
 } from "../../utils/actions/actions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
+import Arrow from "../../assets/icons/Arrow.svg";
 
 const { Option } = Select;
 
@@ -38,6 +40,7 @@ const Register = (props) => {
   const [userEndorsement, setUserEndorsement] = useState([]);
   const [configComponents, setConfigComponents] = useState({});
   const [verifyPassword, setVerifyPassword] = useState(null);
+  const [spinVisible, setSpinVisible] = useState(false);
   const [dataForm, setDataForm] = useState({
     idPersonType: null,
     idEndorsement: null,
@@ -48,6 +51,9 @@ const Register = (props) => {
     username: null,
     password: null,
   });
+
+  const LoadingSpin = <SyncOutlined spin />;
+
   const copyErrors = {
     errorPass: {
       error: false,
@@ -138,6 +144,7 @@ const Register = (props) => {
   const handlerCallVerifyCode = async (data) => {
     try {
       await callGetAllVerifyCode(data);
+      setSpinVisible(false);
     } catch (error) {
       throw error;
     }
@@ -225,25 +232,37 @@ const Register = (props) => {
     <div className="login_main">
       <div className="login_card_form">
         <div className="login_top_form">
+          <button
+            className="arrow-back-to"
+            type="button"
+            onClick={() => {
+              history.push("/login");
+            }}
+          >
+            <img src={Arrow} alt="backTo" width="30" />
+          </button>
           <h1> ¿Qué te trae por aquí? </h1>
           <div className="login_inputs_form">
-            <Radio.Group
-              name="radiogroup"
-              value={selectuserCustomer}
-              defaultValue={1}
-              onChange={(e) => {
-                setSelectUserCustomer(e.target.value);
-              }}
-            >
-              {isEmpty(userCustomer) === false &&
-                userCustomer.map((row) => {
+            <Skeleton loading={isEmpty(userCustomer) === true} active />
+            {isEmpty(userCustomer) === false && (
+              <Radio.Group
+                name="radiogroup"
+                value={selectuserCustomer}
+                defaultValue={1}
+                onChange={(e) => {
+                  setSelectUserCustomer(e.target.value);
+                }}
+              >
+                {userCustomer.map((row) => {
                   return (
                     <p className="visible" style={{ marginBottom: "32px" }}>
                       <Radio value={row.id}> {row.text} </Radio>
                     </p>
                   );
                 })}
-            </Radio.Group>
+              </Radio.Group>
+            )}
+
             <div className="button_init_primary">
               <button
                 type="button"
@@ -270,200 +289,437 @@ const Register = (props) => {
   const selectForm = (
     <div className="login_main" style={{ height: "100%" }}>
       <div className="login_card_form large">
-        <div className="register_holder">
-          <div className="login_top_form">
-            <h1> Completa tu perfil </h1>
-            <div
-              className={`error_login_incorrect_data ${
-                errorFormulary === false ? "hide" : "visible"
-              }`}
-              style={{ display: "flex", flexDirection: "column" }}
-            >
-              {errorBase.error && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorBase.message}</span>
-                </div>
-              )}
-              {errorsRegister.errorGivenName.error && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorGivenName.message}</span>
-                </div>
-              )}
-              {errorsRegister.errorPass.error && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorPass.message}</span>
-                </div>
-              )}
-              {errorsRegister.errorPass.errorEmpty && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorPass.messageEmpty}</span>
-                </div>
-              )}
-              {errorsRegister.errorPersonType.error && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorPersonType.message}</span>
-                </div>
-              )}
-              {errorsRegister.errorUserName.error && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorUserName.message}</span>
-                </div>
-              )}
-              {errorsRegister.errorUserName.errorFormat && (
-                <div>
-                  <img src={admiration} alt="exclaim" />
-                  <span>{errorsRegister.errorUserName.messageFormatError}</span>
-                </div>
-              )}
-            </div>
-            <label className="fieldset_title">Información personal</label>
-            <div className="register_row half">
-              <Select
-                placeholder="Tipo de Persona"
-                onChange={(value, option) => {
-                  const configureOption = option.onClick();
-                  setConfigComponents(configureOption);
-                  setErrorsRegister(copyErrors);
-                  setErrorFormulary(false);
-                  setDataForm({ ...dataForm, idPersonType: value });
+        <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+          <div className="register_holder">
+            <div className="login_top_form">
+              <button
+                className="arrow-back-to"
+                type="button"
+                onClick={() => {
+                  setUserType(1);
                 }}
               >
-                {isEmpty(userPerson) === false &&
-                  userPerson.map((row) => {
-                    return (
-                      <Option
-                        value={row.id}
-                        onClick={() => {
-                          return isNil(row) === false &&
-                            isNil(row.jsonProperties) === false
-                            ? JSON.parse(row.jsonProperties)
-                            : {};
-                        }}
-                      >
-                        {row.text}
-                      </Option>
-                    );
-                  })}
-              </Select>
-              {isEmpty(configComponents) === false &&
-                configComponents.idEndorsement && (
-                  <Select
-                    placeholder="Aval"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, idEndorsement: value });
-                    }}
-                  >
-                    {isEmpty(userEndorsement) === false &&
-                      userEndorsement.map((row) => {
-                        return <Option value={row.id}>{row.text}</Option>;
-                      })}
-                  </Select>
+                <img src={Arrow} alt="backTo" width="30" />
+              </button>
+              <h1> Completa tu perfil </h1>
+              <div
+                className={`error_login_incorrect_data ${
+                  errorFormulary === false ? "hide" : "visible"
+                }`}
+                style={{ display: "flex", flexDirection: "column" }}
+              >
+                {errorBase.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorBase.message}</span>
+                  </div>
                 )}
-            </div>
-            <div className="register_row">
-              <Input
-                value={dataForm.givenName}
-                suffix={<UserOutlined />}
-                placeholder={
-                  configComponents.lastName ? "Nombre(s):" : "Razón Social"
-                }
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, givenName: e.target.value });
-                  setErrorsRegister(copyErrors);
-                  setErrorFormulary(false);
-                }}
-              />
-            </div>
-            <div className="register_row half">
-              {isEmpty(configComponents) === false &&
-                configComponents.lastName && (
-                  <Input
-                    value={dataForm.lastName}
-                    suffix={<UserOutlined />}
-                    placeholder="Primer Apellido"
-                    onChange={(e) => {
-                      setDataForm({ ...dataForm, lastName: e.target.value });
-                    }}
-                  />
+                {errorsRegister.errorGivenName.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorGivenName.message}</span>
+                  </div>
                 )}
-              {isEmpty(configComponents) === false &&
-                configComponents.mothersMaidenName && (
-                  <Input
-                    value={dataForm.mothersMaidenName}
-                    suffix={<UserOutlined />}
-                    placeholder="Segundo Apellido"
-                    onChange={(e) => {
-                      setDataForm({
+                {errorsRegister.errorPass.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorPass.message}</span>
+                  </div>
+                )}
+                {errorsRegister.errorPass.errorEmpty && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorPass.messageEmpty}</span>
+                  </div>
+                )}
+                {errorsRegister.errorPersonType.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorPersonType.message}</span>
+                  </div>
+                )}
+                {errorsRegister.errorUserName.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorUserName.message}</span>
+                  </div>
+                )}
+                {errorsRegister.errorUserName.errorFormat && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>
+                      {errorsRegister.errorUserName.messageFormatError}
+                    </span>
+                  </div>
+                )}
+              </div>
+              <label className="fieldset_title">Información personal</label>
+              <div className="register_row half">
+                <Select
+                  placeholder="Tipo de Persona"
+                  onChange={(value, option) => {
+                    const configureOption = option.onClick();
+                    setConfigComponents(configureOption);
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                    setDataForm({ ...dataForm, idPersonType: value });
+                  }}
+                >
+                  {isEmpty(userPerson) === false &&
+                    userPerson.map((row) => {
+                      return (
+                        <Option
+                          value={row.id}
+                          onClick={() => {
+                            return isNil(row) === false &&
+                              isNil(row.jsonProperties) === false
+                              ? JSON.parse(row.jsonProperties)
+                              : {};
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+                {isEmpty(configComponents) === false &&
+                  configComponents.idEndorsement && (
+                    <Select
+                      placeholder="Aval"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, idEndorsement: value });
+                      }}
+                    >
+                      {isEmpty(userEndorsement) === false &&
+                        userEndorsement.map((row) => {
+                          return <Option value={row.id}>{row.text}</Option>;
+                        })}
+                    </Select>
+                  )}
+              </div>
+              <div className="register_row">
+                <Input
+                  value={dataForm.givenName}
+                  suffix={<UserOutlined />}
+                  placeholder={
+                    configComponents.lastName ? "Nombre(s):" : "Razón Social"
+                  }
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, givenName: e.target.value });
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                  }}
+                />
+              </div>
+              <div className="register_row half">
+                {isEmpty(configComponents) === false &&
+                  configComponents.lastName && (
+                    <Input
+                      value={dataForm.lastName}
+                      suffix={<UserOutlined />}
+                      placeholder="Primer Apellido"
+                      onChange={(e) => {
+                        setDataForm({ ...dataForm, lastName: e.target.value });
+                      }}
+                    />
+                  )}
+                {isEmpty(configComponents) === false &&
+                  configComponents.mothersMaidenName && (
+                    <Input
+                      value={dataForm.mothersMaidenName}
+                      suffix={<UserOutlined />}
+                      placeholder="Segundo Apellido"
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          mothersMaidenName: e.target.value,
+                        });
+                      }}
+                    />
+                  )}
+              </div>
+              <label className="fieldset_title">
+                {" "}
+                Información de contacto{" "}
+              </label>
+              <div className="register_row half">
+                <Input
+                  value={dataForm.phoneNumber}
+                  suffix={<PhoneOutlined />}
+                  placeholder="Teléfono celular"
+                  onChange={(e) => {
+                    const regexp = /^([0-9])*$/;
+                    if (regexp.test(e.target.value) === true) {
+                      setDataForm({ ...dataForm, phoneNumber: e.target.value });
+                    }
+                  }}
+                />
+                <Input
+                  value={dataForm.username}
+                  suffix={<MailOutlined />}
+                  placeholder="Correo electrónico"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      username: e.target.value,
+                    });
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                  }}
+                />
+              </div>
+              <label className="fieldset_title"> Contraseña </label>
+              <div className="register_row half">
+                <Input
+                  value={dataForm.password}
+                  suffix={<LockOutlined />}
+                  placeholder="Contraseña"
+                  type="password"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      password: e.target.value,
+                    });
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                  }}
+                />
+                <Input
+                  value={verifyPassword}
+                  suffix={<LockOutlined />}
+                  placeholder="Confirmar Contraseña"
+                  type="password"
+                  onChange={(e) => {
+                    setVerifyPassword(e.target.value);
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                  }}
+                />
+              </div>
+              <div
+                className="button_init_primary"
+                style={{ margin: "16px 0 0" }}
+              >
+                <button
+                  type="button"
+                  onClick={async () => {
+                    try {
+                      const verifyData = await handlerVerifyInformation({
                         ...dataForm,
-                        mothersMaidenName: e.target.value,
+                        verifyPassword,
                       });
-                    }}
-                  />
-                )}
+                      setErrorFormulary(!verifyData);
+                      if (verifyData === true) {
+                        setSpinVisible(true);
+                        await handlerCallApiRegister({
+                          ...dataForm,
+                          idCustomerType: selectuserCustomer,
+                          offset: "-06:00",
+                        });
+                        setUserType(3);
+                        setSpinVisible(false);
+                      }
+                    } catch (error) {
+                      setSpinVisible(false);
+                      setErrorFormulary(true);
+                      setErrorBase({
+                        ...errorBase,
+                        error: true,
+                        message: error,
+                      });
+                      setTimeout(() => {
+                        setErrorFormulary(false);
+                        setErrorBase(errorCatchBase);
+                      }, 3000);
+                    }
+                  }}
+                >
+                  <span> Registrarme </span>
+                </button>
+              </div>
             </div>
-            <label className="fieldset_title"> Información de contacto </label>
-            <div className="register_row half">
-              <Input
-                value={dataForm.phoneNumber}
-                suffix={<PhoneOutlined />}
-                placeholder="Teléfono celular"
-                onChange={(e) => {
-                  const regexp = /^([0-9])*$/;
-                  if (regexp.test(e.target.value) === true) {
-                    setDataForm({ ...dataForm, phoneNumber: e.target.value });
+          </div>
+        </Spin>
+      </div>
+    </div>
+  );
+
+  const insterCodeCompoent = (
+    <div className="login_main">
+      <div className="login_card_form">
+        <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+          <div className="login_top_form">
+            <button
+              className="arrow-back-to"
+              type="button"
+              onClick={() => {
+                setUserType(2);
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <h1> Ingresa tu código </h1>
+            <p className="recoverInstructions">
+              Enviamos un código de confirmación al correo {dataForm.username}
+            </p>
+            <div className="codeForm">
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-0"
+                  type="number"
+                  value={codeVerify.value1}
+                  maxLength={1}
+                  minLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                    } else {
+                      document.getElementById("input-code-validate-1").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value1: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-1"
+                  type="number"
+                  value={codeVerify.value2}
+                  maxLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      document.getElementById("input-code-validate-0").focus();
+                    } else {
+                      document.getElementById("input-code-validate-2").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value2: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-2"
+                  type="number"
+                  value={codeVerify.value3}
+                  maxLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      document.getElementById("input-code-validate-1").focus();
+                    } else {
+                      document.getElementById("input-code-validate-3").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value3: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-3"
+                  type="number"
+                  value={codeVerify.value4}
+                  maxLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      document.getElementById("input-code-validate-2").focus();
+                    } else {
+                      document.getElementById("input-code-validate-4").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value4: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-4"
+                  type="number"
+                  value={codeVerify.value5}
+                  maxLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      document.getElementById("input-code-validate-3").focus();
+                    } else {
+                      document.getElementById("input-code-validate-5").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value5: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+              <div className="codeFormItem">
+                <Input
+                  id="input-code-validate-5"
+                  type="number"
+                  value={codeVerify.value6}
+                  maxLength={1}
+                  onChange={(event) => {
+                    if (event.target.value === "") {
+                      document.getElementById("input-code-validate-4").focus();
+                    } else {
+                      document.getElementById("button-send-code").focus();
+                    }
+                    if (event.target.value.length <= 1) {
+                      setCodeVerify({
+                        ...codeVerify,
+                        value6: event.target.value,
+                      });
+                    }
+                  }}
+                />
+              </div>
+            </div>
+            <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
+              <button
+                type="button"
+                id="button-send-code"
+                onClick={async () => {
+                  setSpinVisible(true);
+                  try {
+                    let numberResult = "";
+                    for (const property in codeVerify) {
+                      numberResult += codeVerify[property];
+                    }
+                    await handlerCallVerifyCode({
+                      code: numberResult,
+                      idRequestSignUp,
+                      offset: "-06:00",
+                    });
+                    setUserType(4);
+                  } catch (error) {
+                    setSpinVisible(false);
                   }
                 }}
-              />
-              <Input
-                value={dataForm.username}
-                suffix={<MailOutlined />}
-                placeholder="Correo electrónico"
-                onChange={(e) => {
-                  setDataForm({
-                    ...dataForm,
-                    username: e.target.value,
-                  });
-                  setErrorsRegister(copyErrors);
-                  setErrorFormulary(false);
-                }}
-              />
+              >
+                <span> Validar </span>
+              </button>
             </div>
-            <label className="fieldset_title"> Contraseña </label>
-            <div className="register_row half">
-              <Input
-                value={dataForm.password}
-                suffix={<LockOutlined />}
-                placeholder="Contraseña"
-                type="password"
-                onChange={(e) => {
-                  setDataForm({
-                    ...dataForm,
-                    password: e.target.value,
-                  });
-                  setErrorsRegister(copyErrors);
-                  setErrorFormulary(false);
-                }}
-              />
-              <Input
-                value={verifyPassword}
-                suffix={<LockOutlined />}
-                placeholder="Confirmar Contraseña"
-                type="password"
-                onChange={(e) => {
-                  setVerifyPassword(e.target.value);
-                  setErrorsRegister(copyErrors);
-                  setErrorFormulary(false);
-                }}
-              />
-            </div>
-            <div className="button_init_primary" style={{ margin: "16px 0 0" }}>
-              <button
+            <div
+              className="login-recover-pass"
+              style={{ marginTop: "15px", cursor: "pointer" }}
+            >
+              <p
                 type="button"
                 onClick={async () => {
                   try {
@@ -478,7 +734,6 @@ const Register = (props) => {
                         idCustomerType: selectuserCustomer,
                         offset: "-06:00",
                       });
-                      setUserType(3);
                     }
                   } catch (error) {
                     setErrorFormulary(true);
@@ -490,174 +745,11 @@ const Register = (props) => {
                   }
                 }}
               >
-                <span> Registrarme </span>
-              </button>
+                Reenviar código
+              </p>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const insterCodeCompoent = (
-    <div className="login_main">
-      <div className="login_card_form">
-        <div className="login_top_form">
-          <h1> Ingresa tu código </h1>
-          <p className="recoverInstructions">
-            Enviamos un código de confirmación al correo {dataForm.username}
-          </p>
-          <div className="codeForm">
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-0"
-                type="number"
-                value={codeVerify.value1}
-                maxLength={1}
-                minLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                  } else {
-                    document.getElementById("input-code-validate-1").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value1: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-1"
-                type="number"
-                value={codeVerify.value2}
-                maxLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    document.getElementById("input-code-validate-0").focus();
-                  } else {
-                    document.getElementById("input-code-validate-2").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value2: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-2"
-                type="number"
-                value={codeVerify.value3}
-                maxLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    document.getElementById("input-code-validate-1").focus();
-                  } else {
-                    document.getElementById("input-code-validate-3").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value3: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-3"
-                type="number"
-                value={codeVerify.value4}
-                maxLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    document.getElementById("input-code-validate-2").focus();
-                  } else {
-                    document.getElementById("input-code-validate-4").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value4: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-4"
-                type="number"
-                value={codeVerify.value5}
-                maxLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    document.getElementById("input-code-validate-3").focus();
-                  } else {
-                    document.getElementById("input-code-validate-5").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value5: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-            <div className="codeFormItem">
-              <Input
-                id="input-code-validate-5"
-                type="number"
-                value={codeVerify.value6}
-                maxLength={1}
-                onChange={(event) => {
-                  if (event.target.value === "") {
-                    document.getElementById("input-code-validate-4").focus();
-                  } else {
-                    document.getElementById("button-send-code").focus();
-                  }
-                  if (event.target.value.length <= 1) {
-                    setCodeVerify({
-                      ...codeVerify,
-                      value6: event.target.value,
-                    });
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
-            <button
-              type="button"
-              id="button-send-code"
-              onClick={async () => {
-                try {
-                  let numberResult = "";
-                  for (const property in codeVerify) {
-                    numberResult += codeVerify[property];
-                  }
-                  await handlerCallVerifyCode({
-                    code: numberResult,
-                    idRequestSignUp,
-                    offset: "-06:00",
-                  });
-                  setUserType(4);
-                } catch (error) {}
-              }}
-            >
-              <span> Validar </span>
-            </button>
-          </div>
-        </div>
+        </Spin>
       </div>
     </div>
   );
@@ -668,7 +760,9 @@ const Register = (props) => {
         <div className="login_top_form">
           <h1> Registro completo </h1>
           <p className="recoverInstructions">
-            Felicidades tu registro se realizó con éxito!
+            Bienvenido(a) <strong>{dataForm.givenName}</strong>. Estamos muy
+            emocionados de tenerte a bordo. Ingresa a tu cuenta y que comience
+            la aventura.
           </p>
           <div className="button_init_primary">
             <button
@@ -714,7 +808,7 @@ const Register = (props) => {
   useEffect(() => {
     handlerAsyncCallAppis();
   }, []);
-  
+
   return (
     <div className="App">
       <div className="login_head_logo">
