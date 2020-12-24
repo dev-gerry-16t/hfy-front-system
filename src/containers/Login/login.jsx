@@ -32,10 +32,17 @@ const Login = (props) => {
         const idSystemUser =
           isNil(response) === false &&
           isNil(response.response) === false &&
-          isNil(response.response.isSystemUser) === false
-            ? response.response.isSystemUser
+          isNil(response.response.idSystemUser) === false
+            ? response.response.idSystemUser
             : null;
-        console.log("idSystemUser", idSystemUser);
+        const token =
+          isNil(response) === false &&
+          isNil(response.response) === false &&
+          isNil(response.response.token) === false
+            ? response.response.token
+            : null;
+        await localStorage.setItem("idSystemUser", idSystemUser);
+        await localStorage.setItem("token", token);
         history.push("/auth");
       } else {
         if (isEmpty(data.password) || isEmpty(data.email)) {

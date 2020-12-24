@@ -1,4 +1,6 @@
 import React from "react";
+import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import { connect } from "react-redux";
 import { Router } from "react-router";
 import Loadable from "react-loadable";
@@ -35,7 +37,8 @@ const DefaultLayout = Loadable({
 
 const App = (props) => {
   const { history, token } = props;
-
+  const authenticate = localStorage.getItem("idSystemUser");
+  console.log("APP STORAGE", authenticate);
   return (
     <Router history={history}>
       <ConfigProvider locale={es_ES}>
@@ -49,7 +52,16 @@ const App = (props) => {
             history={history}
             path="/app/"
             name="Home"
-            render={(props) => <DefaultLayout {...props} authenticated />}
+            render={(props) => (
+              <DefaultLayout
+                {...props}
+                authenticate={
+                  isNil(authenticate) === false &&
+                  isEmpty(authenticate) === false
+                }
+                authenticated
+              />
+            )}
           />
         </Switch>
       </ConfigProvider>

@@ -6,6 +6,7 @@ const Auth = (props) => {
 
   useEffect(() => {
     setTimeout(() => {
+      console.log('STORAGE',localStorage.getItem('idSystemUser'));
       history.push("/app/viewContent");
     }, 3000);
   }, []);

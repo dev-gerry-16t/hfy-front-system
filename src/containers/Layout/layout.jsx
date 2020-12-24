@@ -128,7 +128,7 @@ const DefaultLayout = (props) => {
                         return (
                           <Redirect
                             to={{
-                              pathname: "/logout",
+                              pathname: "/",
                               state: { from: props.location },
                             }}
                           />
