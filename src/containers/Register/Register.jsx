@@ -75,6 +75,10 @@ const Register = (props) => {
       error: false,
       message: "El tipo de persona es requerido",
     },
+    errorCodeVerify: {
+      error: false,
+      message: "El código de verificación ingresado es invalido",
+    },
   };
   const [errorsRegister, setErrorsRegister] = useState(copyErrors);
   const [errorFormulary, setErrorFormulary] = useState(false);
@@ -559,6 +563,21 @@ const Register = (props) => {
               <img src={Arrow} alt="backTo" width="30" />
             </button>
             <h1> Ingresa tu código </h1>
+            <div
+              className={`error_login_incorrect_data ${
+                errorsRegister.errorCodeVerify.error === false
+                  ? "hide"
+                  : "visible"
+              }`}
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              {errorsRegister.errorCodeVerify.error && (
+                <div>
+                  <img src={admiration} alt="exclaim" />
+                  <span>{errorsRegister.errorCodeVerify.message}</span>
+                </div>
+              )}
+            </div>
             <p className="recoverInstructions">
               Enviamos un código de confirmación al correo {dataForm.username}
             </p>
@@ -571,6 +590,7 @@ const Register = (props) => {
                   maxLength={1}
                   minLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                     } else {
                       document.getElementById("input-code-validate-1").focus();
@@ -591,6 +611,7 @@ const Register = (props) => {
                   value={codeVerify.value2}
                   maxLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                       document.getElementById("input-code-validate-0").focus();
                     } else {
@@ -612,6 +633,7 @@ const Register = (props) => {
                   value={codeVerify.value3}
                   maxLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                       document.getElementById("input-code-validate-1").focus();
                     } else {
@@ -633,6 +655,7 @@ const Register = (props) => {
                   value={codeVerify.value4}
                   maxLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                       document.getElementById("input-code-validate-2").focus();
                     } else {
@@ -654,6 +677,7 @@ const Register = (props) => {
                   value={codeVerify.value5}
                   maxLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                       document.getElementById("input-code-validate-3").focus();
                     } else {
@@ -675,6 +699,7 @@ const Register = (props) => {
                   value={codeVerify.value6}
                   maxLength={1}
                   onChange={(event) => {
+                    setErrorsRegister(copyErrors);
                     if (event.target.value === "") {
                       document.getElementById("input-code-validate-4").focus();
                     } else {
@@ -708,6 +733,15 @@ const Register = (props) => {
                     });
                     setUserType(4);
                   } catch (error) {
+                    const objectErrors = {
+                      ...errorsRegister,
+                      errorCodeVerify: {
+                        ...errorsRegister.errorCodeVerify,
+                        error: true,
+                        message: error,
+                      },
+                    };
+                    setErrorsRegister(objectErrors);
                     setSpinVisible(false);
                   }
                 }}
