@@ -6,7 +6,7 @@ const routes = [
   {
     key: "1",
     id: "ViewContent",
-    path: "/app/viewContent",
+    path: "/websystem/viewContent",
     name: "View Content",
     component: ViewContent,
     exact: true,

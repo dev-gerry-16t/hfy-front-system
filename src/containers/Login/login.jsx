@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
-import { isNil } from "lodash";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import { connect } from "react-redux";
 import { Input, Spin } from "antd";
 import {
@@ -15,9 +15,10 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import saqareX from "../../assets/icons/saqareX.svg";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 
 const Login = (props) => {
-  const { history, callApiLogin } = props;
+  const { history, callApiLogin, setDataUserProfile } = props;
   const [dataLogin, setDataLogin] = useState({ email: "", password: "" });
   const [spinVisible, setSpinVisible] = useState(false);
   const [errorsLogin, setErrorsLogin] = useState({
@@ -45,8 +46,7 @@ const Login = (props) => {
           isNil(response.response.token) === false
             ? response.response.token
             : null;
-        await localStorage.setItem("idSystemUser", idSystemUser);
-        await localStorage.setItem("token", token);
+        await setDataUserProfile({ idSystemUser, token });
         setSpinVisible(false);
         history.push("/auth");
       } else {
@@ -177,10 +177,13 @@ const Login = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => {
+  return {};
+};
 
 const mapDispatchToProps = (dispatch) => ({
   callApiLogin: (data) => dispatch(callApiLogin(data)),
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

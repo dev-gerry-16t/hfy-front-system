@@ -181,14 +181,84 @@ const callGetAllRegisterUser = (data) => async (dispatch, getState) => {
 const callGetAllVerifyCode = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
-    // data = {
-    //   ...data,
-    //   idRequestSignUp: "8A7198C9-AE07-4ADD-AF34-60E84758296D",
-    //   code: "123435",
-    //   offset: "-06:00",
-    // };
     const response = await RequesterAxios.post(
       API_CONSTANTS.VERIFY_CODE_REGISTER,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllUserProfile = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_USER_PROFILE,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllMenuProfile = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_MENU_PROFILE,
       data,
       config
     );
@@ -226,4 +296,6 @@ export {
   callGetAllEndorsement,
   callGetAllRegisterUser,
   callGetAllVerifyCode,
+  callGetAllUserProfile,
+  callGetAllMenuProfile,
 };

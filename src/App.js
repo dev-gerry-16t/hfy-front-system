@@ -36,9 +36,7 @@ const DefaultLayout = Loadable({
 });
 
 const App = (props) => {
-  const { history, token } = props;
-  const authenticate = localStorage.getItem("idSystemUser");
-  console.log("APP STORAGE", authenticate);
+  const { history, token, dataProfile } = props;
   return (
     <Router history={history}>
       <ConfigProvider locale={es_ES}>
@@ -50,16 +48,19 @@ const App = (props) => {
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route
             history={history}
-            path="/app/"
+            path="/websystem/"
             name="Home"
             render={(props) => (
               <DefaultLayout
                 {...props}
                 authenticate={
-                  isNil(authenticate) === false &&
-                  isEmpty(authenticate) === false
+                  isNil(dataProfile.idSystemUser) === false &&
+                  isEmpty(dataProfile.idSystemUser) === false
                 }
-                authenticated
+                authenticated={
+                  isNil(dataProfile.dataProfile.idSystemUser) === false &&
+                  isEmpty(dataProfile.dataProfile.idSystemUser) === false
+                }
               />
             )}
           />
@@ -69,7 +70,10 @@ const App = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => {
+  const { dataProfile } = state;
+  return { dataProfile };
+};
 
 const mapDispatchToProps = null;
 

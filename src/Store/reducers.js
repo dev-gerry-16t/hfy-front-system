@@ -1,7 +1,10 @@
 import { combineReducers } from "redux";
 import { purgeStoredState } from "redux-persist";
+import { dataProfile } from "../utils/reducers/dataProfileReducer";
 
-const appReducers = combineReducers({});
+const appReducers = combineReducers({
+  dataProfile,
+});
 
 export default (state, action, persistConfig) => {
   // Reset to initialState

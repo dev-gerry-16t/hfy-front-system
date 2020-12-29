@@ -36,10 +36,9 @@ const DefaultLayout = (props) => {
     <div className="App">
       <Layout>
         <Sider
-          trigger={null}
           collapsible
           collapsed={collapsed}
-          onClick={(e) => {}}
+          onCollapse={toggle}
         >
           <div className="logo">
             <img
@@ -91,12 +90,6 @@ const DefaultLayout = (props) => {
         <Layout className="site-layout">
           <Header className="site-layout-background" style={{ padding: 0 }}>
             <div className="header-title-button">
-              {React.createElement(
-                collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
-                {
-                  onClick: toggle,
-                }
-              )}
               <h2>Dashboard</h2>
             </div>
             <div className="header-info-user">
