@@ -35,11 +35,7 @@ const DefaultLayout = (props) => {
   return (
     <div className="App">
       <Layout>
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={toggle}
-        >
+        <Sider collapsible collapsed={collapsed} onCollapse={toggle}>
           <div className="logo">
             <img
               src={IconLongtLogo}
@@ -93,9 +89,10 @@ const DefaultLayout = (props) => {
               <h2>Dashboard</h2>
             </div>
             <div className="header-info-user">
-              <h2>
-                Hola, <strong>Usuario</strong>
-              </h2>
+              <div className="hi-user-name-type">
+                <strong>Gerardo Gonzalez</strong>
+                <span>Propietario</span>
+              </div>
               <button className="button-header">
                 <img src={IconNotification} />
               </button>
