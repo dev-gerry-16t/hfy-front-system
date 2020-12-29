@@ -26,7 +26,7 @@ const Loading = () => (
 );
 
 const DefaultLayout = (props) => {
-  const { history, authenticated, dataProfileMenu } = props;
+  const { history, authenticated, dataProfileMenu, dataProfile } = props;
   const [collapsed, setCollapsed] = useState(false);
   const arrayIconst = {
     IconDashboard,
@@ -39,6 +39,7 @@ const DefaultLayout = (props) => {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+
   return (
     <div className="App">
       <Layout>
@@ -83,7 +84,7 @@ const DefaultLayout = (props) => {
             </div>
             <div className="header-info-user">
               <div className="hi-user-name-type">
-                <strong>Gerardo Gonzalez</strong>
+                <strong>{dataProfile.showName}</strong>
                 <span>Propietario</span>
               </div>
               <button className="button-header">
@@ -131,7 +132,10 @@ const DefaultLayout = (props) => {
 
 const mapStateToProps = (state) => {
   const { dataProfile, dataProfileMenu } = state;
-  return { dataProfile, dataProfileMenu: dataProfileMenu.dataProfileMenu };
+  return {
+    dataProfile: dataProfile.dataProfile,
+    dataProfileMenu: dataProfileMenu.dataProfileMenu,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => ({});

@@ -236,16 +236,18 @@ const Register = (props) => {
     <div className="login_main">
       <div className="login_card_form">
         <div className="login_top_form">
-          <button
-            className="arrow-back-to"
-            type="button"
-            onClick={() => {
-              history.push("/login");
-            }}
-          >
-            <img src={Arrow} alt="backTo" width="30" />
-          </button>
-          <h1> ¿Qué te trae por aquí? </h1>
+          <h1>
+            <button
+              className="arrow-back-to"
+              type="button"
+              onClick={() => {
+                history.push("/login");
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            ¿Qué te trae por aquí?{" "}
+          </h1>
           <div className="login_inputs_form">
             <Skeleton loading={isEmpty(userCustomer) === true} active />
             {isEmpty(userCustomer) === false && (
@@ -296,16 +298,18 @@ const Register = (props) => {
         <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
           <div className="register_holder">
             <div className="login_top_form">
-              <button
-                className="arrow-back-to"
-                type="button"
-                onClick={() => {
-                  setUserType(1);
-                }}
-              >
-                <img src={Arrow} alt="backTo" width="30" />
-              </button>
-              <h1> Completa tu perfil </h1>
+              <h1>
+                <button
+                  className="arrow-back-to"
+                  type="button"
+                  onClick={() => {
+                    setUserType(1);
+                  }}
+                >
+                  <img src={Arrow} alt="backTo" width="30" />
+                </button>
+                Completa tu perfil{" "}
+              </h1>
               <div
                 className={`error_login_incorrect_data ${
                   errorFormulary === false ? "hide" : "visible"
@@ -553,16 +557,18 @@ const Register = (props) => {
       <div className="login_card_form">
         <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
           <div className="login_top_form">
-            <button
-              className="arrow-back-to"
-              type="button"
-              onClick={() => {
-                setUserType(2);
-              }}
-            >
-              <img src={Arrow} alt="backTo" width="30" />
-            </button>
-            <h1> Ingresa tu código </h1>
+            <h1>
+              <button
+                className="arrow-back-to"
+                type="button"
+                onClick={() => {
+                  setUserType(2);
+                }}
+              >
+                <img src={Arrow} alt="backTo" width="30" />
+              </button>
+              Ingresa tu código{" "}
+            </h1>
             <div
               className={`error_login_incorrect_data ${
                 errorsRegister.errorCodeVerify.error === false
