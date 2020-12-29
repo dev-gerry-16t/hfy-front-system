@@ -15,6 +15,7 @@ import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
 import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import routes from "../../routes";
+import isEmpty from "lodash/isEmpty";
 
 const { Header, Sider } = Layout;
 
@@ -25,13 +26,19 @@ const Loading = () => (
 );
 
 const DefaultLayout = (props) => {
-  const { history, authenticated } = props;
+  const { history, authenticated, dataProfileMenu } = props;
   const [collapsed, setCollapsed] = useState(false);
-
+  const arrayIconst = {
+    IconDashboard,
+    IconOwner,
+    IconRenter,
+    IconDocument,
+    IconChat,
+    IconEdit,
+  };
   const toggle = () => {
     setCollapsed(!collapsed);
   };
-
   return (
     <div className="App">
       <Layout>
@@ -49,38 +56,24 @@ const DefaultLayout = (props) => {
             />
           </div>
           <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" onClick={(event) => {}}>
-              <img
-                className="ant-menu-item-icon"
-                width="15"
-                src={IconDashboard}
-              />
-              <span className="tex-menu-icon-ant">Dashboard</span>
-            </Menu.Item>
-            <Menu.Item key="2">
-              <img className="ant-menu-item-icon" width="15" src={IconOwner} />
-              <span className="tex-menu-icon-ant">Propiedades</span>
-            </Menu.Item>
-            <Menu.Item key="3">
-              <img className="ant-menu-item-icon" width="15" src={IconRenter} />
-              <span className="tex-menu-icon-ant">Inquilinos</span>
-            </Menu.Item>
-            <Menu.Item key="4">
-              <img
-                className="ant-menu-item-icon"
-                width="15"
-                src={IconDocument}
-              />
-              <span className="tex-menu-icon-ant">Documentos</span>
-            </Menu.Item>
-            <Menu.Item key="5">
-              <img className="ant-menu-item-icon" width="15" src={IconChat} />
-              <span className="tex-menu-icon-ant">Mensajes</span>
-            </Menu.Item>
-            <Menu.Item key="6">
-              <img className="ant-menu-item-icon" width="15" src={IconEdit} />
-              <span>Incidencias</span>
-            </Menu.Item>
+            {isEmpty(dataProfileMenu) === false &&
+              dataProfileMenu.map((row) => {
+                return (
+                  <Menu.Item
+                    key={`${row.idMenu}`}
+                    onClick={(event) => {
+                      history.push(row.path);
+                    }}
+                  >
+                    <img
+                      className="ant-menu-item-icon"
+                      width="15"
+                      src={arrayIconst[row.icon]}
+                    />
+                    <span className="tex-menu-icon-ant">{row.menuName}</span>
+                  </Menu.Item>
+                );
+              })}
           </Menu>
         </Sider>
         <Layout className="site-layout">
@@ -136,7 +129,10 @@ const DefaultLayout = (props) => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return { dataProfile, dataProfileMenu: dataProfileMenu.dataProfileMenu };
+};
 
 const mapDispatchToProps = (dispatch) => ({});
 

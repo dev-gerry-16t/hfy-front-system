@@ -25,7 +25,6 @@ const RequesterAxios = {
       const response = await axiosInstance.post(endPoint, body, config);
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },

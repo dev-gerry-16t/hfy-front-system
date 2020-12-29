@@ -1,9 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar } from "antd";
+import { Layout, Avatar, Rate } from "antd";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
+import IconArroRight from "../../assets/icons/arrowRight.svg";
 
 const { Content } = Layout;
 
@@ -59,29 +60,80 @@ const ViewContent = () => {
                 <div className="box-info-user">
                   <div className="avatar-user">
                     <Avatar
-                      size={60}
+                      size={50}
                       src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
                     />
                   </div>
                   <div className="info-user">
-                    <div>Nombre</div>
-                    <div>Rating</div>
-                    <div>Status</div>
+                    <strong>Pedro Ramirez</strong>
+                    <Rate
+                      style={{
+                        fontSize: "15px",
+                        position: "relative",
+                        bottom: "5px",
+                      }}
+                      tooltips={[]}
+                      onChange={() => {}}
+                      value={5}
+                    />
+                    <div className="status-payment">
+                      <span>PAGO PENDIENTE</span>
+                    </div>
                   </div>
                   <div className="info-user-payment">
                     <div>
-                      Proximo Pago: <strong>03 Feb 21</strong>
+                      Próximo Pago: <strong>03 Feb 21</strong>
                     </div>
                     <div>
-                      Monto de Rebta: <strong>$18,000.00</strong>
+                      Monto de Renta: <strong>$18,000.00</strong>
                     </div>
                   </div>
                 </div>
                 <div className="button-collapse">
-                  <button>></button>
+                  <button>
+                    <img src={IconArroRight} alt="arrow-right" width="15" />
+                  </button>
                 </div>
               </div>
-              <div className="data-renter-info">Inquilino 2</div>
+              <div className="data-renter-info">
+                <div className="box-info-user">
+                  <div className="avatar-user">
+                    <Avatar
+                      size={50}
+                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                    />
+                  </div>
+                  <div className="info-user">
+                    <strong>Pedro Ramirez</strong>
+                    <Rate
+                      style={{
+                        fontSize: "15px",
+                        position: "relative",
+                        bottom: "5px",
+                      }}
+                      tooltips={[]}
+                      onChange={() => {}}
+                      value={5}
+                    />
+                    <div className="status-payment">
+                      <span>PAGO PENDIENTE</span>
+                    </div>
+                  </div>
+                  <div className="info-user-payment">
+                    <div>
+                      Próximo Pago: <strong>03 Feb 21</strong>
+                    </div>
+                    <div>
+                      Monto de Renta: <strong>$18,000.00</strong>
+                    </div>
+                  </div>
+                </div>
+                <div className="button-collapse">
+                  <button>
+                    <img src={IconArroRight} alt="arrow-right" width="15" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>

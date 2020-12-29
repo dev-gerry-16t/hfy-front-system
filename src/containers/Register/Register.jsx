@@ -579,7 +579,8 @@ const Register = (props) => {
               )}
             </div>
             <p className="recoverInstructions">
-              Enviamos un código de confirmación al correo {dataForm.username}
+              Enviamos un código de confirmación al correo{" "}
+              <strong>{dataForm.username}</strong>
             </p>
             <div className="codeForm">
               <div className="codeFormItem">
@@ -756,6 +757,7 @@ const Register = (props) => {
               <p
                 type="button"
                 onClick={async () => {
+                  setErrorsRegister(copyErrors);
                   try {
                     const verifyData = await handlerVerifyInformation({
                       ...dataForm,

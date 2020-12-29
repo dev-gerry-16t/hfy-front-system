@@ -37,6 +37,7 @@ const DefaultLayout = Loadable({
 
 const App = (props) => {
   const { history, token, dataProfile } = props;
+  const accessDev = window.location.hostname === "localhost";
   return (
     <Router history={history}>
       <ConfigProvider locale={es_ES}>
@@ -46,6 +47,7 @@ const App = (props) => {
           <Route path="/index" name="Login Page" component={Login} />
           <Route path="/registro" name="Registro" component={Registro} />
           <Route path="/auth" name="Autorizacion" component={Auth} />
+          <Route path="/logout" name="Clean App and Close" component={Auth} />
           <Route
             history={history}
             path="/websystem/"
@@ -58,8 +60,10 @@ const App = (props) => {
                   isEmpty(dataProfile.idSystemUser) === false
                 }
                 authenticated={
-                  isNil(dataProfile.dataProfile.idSystemUser) === false &&
-                  isEmpty(dataProfile.dataProfile.idSystemUser) === false
+                  (isNil(dataProfile.dataProfile) === false &&
+                    isNil(dataProfile.dataProfile.idSystemUser) === false &&
+                    isEmpty(dataProfile.dataProfile.idSystemUser) === false) ||
+                  accessDev
                 }
               />
             )}

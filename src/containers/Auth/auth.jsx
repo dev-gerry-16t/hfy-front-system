@@ -6,7 +6,10 @@ import {
   callGetAllUserProfile,
   callGetAllMenuProfile,
 } from "../../utils/actions/actions";
-import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import {
+  setDataUserProfile,
+  setDataUserMenu,
+} from "../../utils/dispatchs/userProfileDispatch";
 
 const Auth = (props) => {
   const {
@@ -14,7 +17,9 @@ const Auth = (props) => {
     callGetAllUserProfile,
     dataProfile,
     setDataUserProfile,
+    setDataUserMenu,
     callGetAllMenuProfile,
+    purgeStore,
   } = props;
 
   const handlerCallGetAllUserProfile = async () => {
@@ -40,11 +45,23 @@ const Auth = (props) => {
         idSystemUser,
         idLoginHistory,
       });
-      console.log('responseMenu',responseMenu);
+      const responseResultMenu =
+        isNil(responseMenu) === false &&
+        isNil(responseMenu.response) === false &&
+        isEmpty(responseMenu.response) === false
+          ? responseMenu.response
+          : [];
+      await setDataUserMenu(responseResultMenu);
       await setDataUserProfile({
         ...dataProfile.dataProfile,
         ...responseResult,
       });
+      history.push(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.path) === false
+          ? responseResult.path
+          : "/websystem"
+      );
     } catch (error) {}
   };
 
@@ -52,8 +69,19 @@ const Auth = (props) => {
     await handlerCallGetAllUserProfile();
   };
 
+  const handlerFinishSession = async () => {
+    await purgeStore();
+    await sessionStorage.clear();
+    await localStorage.clear();
+    history.push("/login");
+  };
+
   useEffect(() => {
-    handlerAsyncCallApiis();
+    if (window.location.pathname === "/auth") {
+      handlerAsyncCallApiis();
+    } else if (window.location.pathname === "/logout") {
+      handlerFinishSession();
+    }
   }, []);
 
   return <div className="loader-auth-spiner" />;
@@ -66,8 +94,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
+  setDataUserMenu: (data) => dispatch(setDataUserMenu(data)),
   callGetAllUserProfile: (data) => dispatch(callGetAllUserProfile(data)),
   callGetAllMenuProfile: (data) => dispatch(callGetAllMenuProfile(data)),
+  purgeStore: () => dispatch({ type: "PURGE" }),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Auth);

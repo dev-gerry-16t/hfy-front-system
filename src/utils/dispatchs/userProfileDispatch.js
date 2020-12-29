@@ -3,4 +3,9 @@ const setDataUserProfile = (dataProfile) => ({
   dataProfile,
 });
 
-export { setDataUserProfile };
+const setDataUserMenu = (dataProfileMenu) => ({
+  type: "SET_DATA_USER_MENU",
+  dataProfileMenu,
+});
+
+export { setDataUserProfile, setDataUserMenu };
