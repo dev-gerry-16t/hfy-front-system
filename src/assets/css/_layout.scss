@@ -92,3 +92,8 @@
   font-family: Poppins;
   font-weight: 400;
 }
+
+.ant-layout-content {
+  overflow: scroll;
+  overflow-x: hidden;
+}

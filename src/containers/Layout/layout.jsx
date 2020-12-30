@@ -1,5 +1,6 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
 import { Layout, Menu } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
@@ -15,7 +16,6 @@ import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
 import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import routes from "../../routes";
-import isEmpty from "lodash/isEmpty";
 
 const { Header, Sider } = Layout;
 

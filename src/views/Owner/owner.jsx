@@ -1,22 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Layout, Avatar, Rate } from "antd";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import IconArroRight from "../../assets/icons/arrowRight.svg";
+import { callGetAllCustomerById } from "../../utils/actions/actions";
 
 const { Content } = Layout;
 
-const ViewContent = () => {
+const Owner = (props) => {
+  const { dataProfile, callGetAllCustomerById } = props;
+  const [dataCustomer, setDataCustomer] = useState({});
+  const dataOptions = {
+    chart: {
+      type: "column",
+    },
+    title: {
+      text: "Estadistica Mensual",
+    },
+    yAxis: {
+      title: {
+        text: "Monto",
+      },
+    },
+    xAxis: {
+      categories: ["Diciembre"],
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: "Ganancias",
+        data: [18000],
+        color: "#4E51D8",
+      },
+      {
+        name: "Gastos",
+        data: [6000],
+        color: "#EF280F",
+      },
+      {
+        name: "Balance",
+        data: [12000],
+        color: "",
+      },
+    ],
+  };
+  const handlerCallGetAllCustomerById = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllCustomerById({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      console.log("responseResult", responseResult);
+      setDataCustomer(responseResult);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    handlerCallGetAllCustomerById();
+  }, []);
+
   return (
     <Content>
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Buenos días, Patricia</h2>
+            <h2>Buenos días, {dataCustomer.shortName}</h2>
             <span>
-              Último inicio de sesión: <strong>03 Dic 20 10:48 am</strong>
+              Último inicio de sesión:{" "}
+              <strong>{dataCustomer.lastSessionStarted}</strong>
             </span>
           </div>
           <div className="button_init_primary">
@@ -30,28 +97,32 @@ const ViewContent = () => {
             <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
               <img src={IconOwner} alt="icon" width="20px"></img>
             </div>
-            <h2>$38,000.00</h2>
-            <span>Total Rentas Acumuladas (3)</span>
+            <h2>{dataCustomer.totalCumulativeRentAmount}</h2>
+            <span>
+              Total Rentas Acumuladas ({dataCustomer.totalCumulativeRents})
+            </span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
               <img src={IconWallet} alt="icon" width="20px"></img>
             </div>
-            <h2>$8,500.00</h2>
-            <span>Total Rentas Acumuladas (3)</span>
+            <h2>{dataCustomer.totalExpensiveAmount}</h2>
+            <span>Total Gastos Acumulados</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={IconActivity} alt="icon" width="20px"></img>
             </div>
-            <h2>$29,500.00</h2>
-            <span>Total Rentas Acumuladas (3)</span>
+            <h2>{dataCustomer.totalCumulativeBalance}</h2>
+            <span>Balance Acumulado</span>
           </div>
         </div>
         <div className="main-information-user">
           <div className="card-chart-information">
             <div className="title-cards">Ganancias</div>
-            <div>Grafica</div>
+            <div>
+              <HighchartsReact highcharts={Highcharts} options={dataOptions} />
+            </div>
           </div>
           <div className="renter-card-information">
             <div className="title-cards">Inquilinos</div>
@@ -142,8 +213,15 @@ const ViewContent = () => {
   );
 };
 
-const mapStateToProps = (state) => ({});
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callGetAllCustomerById: (data) => dispatch(callGetAllCustomerById(data)),
+});
 
-export default connect(mapStateToProps, mapDispatchToProps)(ViewContent);
+export default connect(mapStateToProps, mapDispatchToProps)(Owner);

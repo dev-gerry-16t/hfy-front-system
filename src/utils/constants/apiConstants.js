@@ -13,6 +13,7 @@ const API = {
 };
 
 const API_CONSTANTS = {
+  GET_ALL_CUSTOMER_BY_ID: `${API.API_SECURE}/customer/getCustomerById`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
   LOGIN: `${API.API}${API.SYSTEM_USER}/validateLogin`,
