@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate } from "antd";
+import { Layout, Avatar, Rate, Modal } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import Highcharts from "highcharts";
@@ -16,6 +16,8 @@ const { Content } = Layout;
 const Owner = (props) => {
   const { dataProfile, callGetAllCustomerById } = props;
   const [dataCustomer, setDataCustomer] = useState({});
+  const [isModalVisible, setIsModalVisible] = useState(false);
+
   const dataOptions = {
     chart: {
       type: "column",
@@ -77,6 +79,20 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <Modal
+        title="Agregar Propiedad"
+        visible={isModalVisible}
+        onOk={() => {
+          setIsModalVisible(!isModalVisible);
+        }}
+        onCancel={() => {
+          setIsModalVisible(!isModalVisible);
+        }}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
@@ -85,6 +101,16 @@ const Owner = (props) => {
               Último inicio de sesión:{" "}
               <strong>{dataCustomer.lastSessionStarted}</strong>
             </span>
+          </div>
+          <div className="button_init_primary">
+            <button
+              type="button"
+              onClick={() => {
+                setIsModalVisible(!isModalVisible);
+              }}
+            >
+              <span>Registrar Propiedad</span>
+            </button>
           </div>
           <div className="button_init_primary">
             <button type="button" onClick={() => {}}>

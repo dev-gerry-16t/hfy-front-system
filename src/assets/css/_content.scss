@@ -143,6 +143,17 @@
   }
 }
 
+// antd
 .ant-rate-star:not(:last-child) {
   margin-right: 4px !important;
 }
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+.ant-modal-content {
+  border-radius: 15px !important;
+}
+.ant-modal-header {
+  border-radius: 15px 15px 0 0 !important;
+}
+//antd
