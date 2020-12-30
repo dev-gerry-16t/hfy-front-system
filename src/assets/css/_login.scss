@@ -168,6 +168,12 @@ html {
             font-size: 12px;
             line-height: 30px;
             letter-spacing: 0.75px;
+            z-index: 3;
+          }
+        }
+        .ant-input-affix-wrapper:hover {
+          .ant-input {
+            z-index: 5;
           }
         }
       }

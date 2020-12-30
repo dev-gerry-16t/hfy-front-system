@@ -41,6 +41,32 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script>
+    function initFreshChat() {
+      window.fcWidget.init({
+        token: "0f733738-b44b-4f92-84e7-8c7d1b2cec36",
+        open: false,
+        host: "https://wchat.freshchat.com",
+        locale: "es",
+      });
+    }
+    function initialize(i, t) {
+      var e;
+      i.getElementById(t)
+        ? initFreshChat()
+        : (((e = i.createElement("script")).id = t),
+          (e.async = !0),
+          (e.src = "https://wchat.freshchat.com/js/widget.js"),
+          (e.onload = initFreshChat),
+          i.head.appendChild(e));
+    }
+    function initiateCall() {
+      initialize(document, "freshchat-js-sdk");
+    }
+    window.addEventListener
+      ? window.addEventListener("load", initiateCall, !1)
+      : window.attachEvent("load", initiateCall, !1);
+  </script>
   <script type="module">
     import { Workbox } from "https://storage.googleapis.com/workbox-cdn/releases/4.1.0/workbox-window.prod.mjs";
     let newWorker;
@@ -55,7 +81,7 @@
       wb.register()
         .then((reg) => {
           reg.addEventListener("updatefound", () => {
-            window.postMessage('UPDATING');
+            window.postMessage("UPDATING");
             newWorker = reg.installing;
 
             newWorker.addEventListener("statechange", () => {

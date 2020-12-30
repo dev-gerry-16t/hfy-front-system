@@ -51,6 +51,7 @@ const Auth = (props) => {
         isEmpty(responseMenu.response) === false
           ? responseMenu.response
           : [];
+      window.fcWidget.user.setFirstName(responseResult.showName);
       await setDataUserMenu(responseResultMenu);
       await setDataUserProfile({
         ...dataProfile.dataProfile,
