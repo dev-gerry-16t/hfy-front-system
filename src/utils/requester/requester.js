@@ -12,8 +12,6 @@ const RequesterAxios = {
   get: async (path, config) => {
     try {
       const endPoint = `${ENVIROMENT}${path}`;
-      console.log("ENVIROMENT", ENVIROMENT);
-      console.log("endPoint", endPoint);
       const response = await axiosInstance.get(endPoint, config);
       return response;
     } catch (error) {
@@ -27,7 +25,6 @@ const RequesterAxios = {
       const response = await axiosInstance.post(endPoint, body, config);
       return response;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   },

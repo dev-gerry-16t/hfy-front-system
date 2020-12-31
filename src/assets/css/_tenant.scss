@@ -1,0 +1,177 @@
+.top-info-tenant {
+  display: flex;
+  justify-content: space-between;
+  .card-info-tenant {
+    width: 49%;
+    display: flex;
+    background: #ffffff;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    padding: 10px 40px 10px 10px;
+    .avatar-user {
+      margin: 0px 25px 0px 15px;
+      align-self: center;
+    }
+    .info-tenant {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      .info-user {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        margin-right: 20px;
+        strong {
+          font-size: 18px;
+          font-family: Poppins;
+          font-weight: bold;
+          letter-spacing: 1px;
+          font-style: normal;
+        }
+      }
+      .data-contact {
+        font-family: Poppins;
+        font-size: 12px;
+        color: #4e4b66;
+      }
+    }
+  }
+  .card-data-tenant {
+    font-family: Poppins;
+    width: 49%;
+    display: flex;
+    background: #ffffff;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    padding: 15px 10px 10px 25px;
+    .info-property-tenant {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+      flex: 1 1 auto;
+      margin-bottom: 30px;
+      div {
+        flex: 1 1 auto;
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .status-tenant {
+      display: flex;
+      align-items: flex-end;
+      .status-payment {
+        background: rgba(218, 20, 20, 0.3);
+        padding: 4px 10px;
+        border-radius: 15px;
+        span {
+          color: #da1414;
+        }
+      }
+    }
+  }
+}
+
+.actions-information-tenant {
+  margin-top: 20px;
+  .tabs-tenant-information {
+    .ant-tabs-nav-list {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+    }
+    .ant-tabs-nav {
+      margin: 0px !important;
+    }
+    .ant-tabs-ink-bar {
+      background: #ff0282;
+      height: 5px !important;
+    }
+    .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
+      color: #ff0282;
+      font-family: Poppins;
+      font-weight: 600;
+    }
+    .ant-tabs-tab:hover {
+      color: #ff0282;
+    }
+    .ant-tabs-tab {
+      font-family: Poppins;
+      font-weight: 600;
+    }
+  }
+  .main-content-tabs {
+    background: #ffffff;
+    padding: 20px;
+  }
+  .content-documents {
+    display: flex;
+    justify-content: space-between;
+    .content-history {
+      width: 60%;
+      box-shadow: 0px 1px 8px 6px #ebebf1;
+      border-radius: 0px 0px 16px 16px;
+    }
+    .content-upload {
+      width: 38%;
+      display: flex;
+      flex-direction: column;
+      .button_init_primary {
+        display: flex;
+        justify-content: center;
+        width: 30%;
+        min-width: 340px;
+        max-width: 145px;
+        align-self: center;
+        margin-bottom: 15px;
+        label {
+          background: #ff0282;
+          border-radius: 16px;
+          border: none;
+          width: 100%;
+          cursor: pointer;
+          text-align: center;
+          span {
+            font-family: Poppins;
+            font-style: normal;
+            font-weight: 600;
+            font-size: 12px;
+            line-height: 34px;
+            letter-spacing: 0.75px;
+            color: #ffffff;
+          }
+        }
+      }
+      .section-container-action-up {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        box-shadow: 0px 1px 8px 6px #ebebf1;
+        padding: 15px 0px;
+        border-radius: 16px;
+        .container-carousel {
+          width: 208px;
+          height: 202px;
+          border-radius: 16px;
+          margin-bottom: 15px;
+          background: #c4c4c4;
+          .main-carousel {
+            width: 100%;
+            height: 100%;
+            img {
+              border-radius: 16px;
+              filter: opacity(0.5);
+              transition: all 0.5s ease-in-out;
+            }
+            img:hover {
+              filter: opacity(0.2);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#file-input {
+  display: none;
+}

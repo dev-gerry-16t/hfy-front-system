@@ -1,0 +1,159 @@
+.margin-app-main {
+  margin: 2vh 4vh;
+}
+.top-main-user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  .welcome-user-main {
+    display: flex;
+    flex-direction: column;
+    h2 {
+      margin-bottom: 0px;
+    }
+    span {
+      font-size: 10px;
+    }
+  }
+  .button_init_primary {
+    display: flex;
+    justify-content: center;
+    width: 30%;
+    min-width: 340px;
+    max-width: 145px;
+    button {
+      background: #ff0282;
+      border-radius: 16px;
+      border: none;
+      width: 100%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: #ffffff;
+      }
+    }
+  }
+}
+.indicators-amount-renter {
+  display: flex;
+  justify-content: space-between;
+  margin: 40px 0px;
+  .cards-amount-renter {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+    align-items: center;
+    background: #ffffff;
+    width: 30%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    opacity: 0.8;
+    h2 {
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    span {
+      font-size: 10px;
+      margin-bottom: 5px;
+    }
+    .elipse-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 20px;
+      position: absolute;
+      left: 15px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+}
+
+.main-information-user {
+  display: flex;
+  justify-content: space-between;
+  .title-cards {
+    padding: 10px 0px 5px 20px;
+    border-bottom: 1px solid #d6d8e7;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    letter-spacing: 0.75px;
+  }
+  .card-chart-information {
+    background: #ffffff;
+    width: 35%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+  }
+  .renter-card-information {
+    background: #ffffff;
+    width: 62%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    .section-information-renters {
+      padding: 10px 20px;
+      .data-renter-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #d6d8e7;
+        padding-bottom: 10px;
+        .box-info-user {
+          display: flex;
+          flex: 1 1 auto;
+          .avatar-user {
+            margin-right: 20px;
+            align-self: center;
+          }
+          .info-user {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            .status-payment {
+              background: rgba(218, 20, 20, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              span {
+                color: #da1414;
+              }
+            }
+          }
+          .info-user-payment {
+            align-self: center;
+          }
+        }
+        .button-collapse {
+          button {
+            background: transparent;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+// antd
+.ant-rate-star:not(:last-child) {
+  margin-right: 4px !important;
+}
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.3) !important;
+}
+.ant-modal-content {
+  border-radius: 15px !important;
+}
+.ant-modal-header {
+  border-radius: 15px 15px 0 0 !important;
+}
+//antd
