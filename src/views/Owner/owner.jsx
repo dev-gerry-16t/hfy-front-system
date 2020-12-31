@@ -14,7 +14,7 @@ import { callGetAllCustomerById } from "../../utils/actions/actions";
 const { Content } = Layout;
 
 const Owner = (props) => {
-  const { dataProfile, callGetAllCustomerById } = props;
+  const { dataProfile, callGetAllCustomerById, history } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -187,7 +187,12 @@ const Owner = (props) => {
                   </div>
                 </div>
                 <div className="button-collapse">
-                  <button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      history.push("/websystem/dashboard-owner/tenant");
+                    }}
+                  >
                     <img src={IconArroRight} alt="arrow-right" width="15" />
                   </button>
                 </div>
