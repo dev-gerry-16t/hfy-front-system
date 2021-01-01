@@ -23,6 +23,9 @@ const RequesterAxios = {
     try {
       const endPoint = `${ENVIROMENT}${path}`;
       const response = await axiosInstance.post(endPoint, body, config);
+      if (response.status === 401) {
+        window.location.href = "/logout";
+      }
       return response;
     } catch (error) {
       throw error;
