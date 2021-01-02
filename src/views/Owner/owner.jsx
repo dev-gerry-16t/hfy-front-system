@@ -44,7 +44,7 @@ const Owner = (props) => {
       },
       {
         name: "Gastos",
-        data: [6000],
+        data: [-6000],
         color: "#EF280F",
       },
       {
@@ -68,7 +68,6 @@ const Owner = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      console.log("responseResult", responseResult);
       setDataCustomer(responseResult);
     } catch (error) {}
   };

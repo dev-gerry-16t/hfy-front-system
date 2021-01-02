@@ -219,18 +219,60 @@
 .content-messages-sections {
   display: flex;
   justify-content: space-between;
-  .item-messages {
+  font-family: Poppins;
+  margin-top: 15px;
+  .ant-timeline-item-tail {
+    margin-top: 60px;
+    background: #ff0282;
+  }
+  .ant-timeline-item-head {
+    margin-top: 60px;
+    background: #ff0282;
+    border: 1px solid #ff0282;
+  }
+  .section-history-messages {
+    width: 45%;
+    max-height: 500px;
+    overflow-y: scroll;
+    .item-messages {
+      box-shadow: 0px 1px 8px 6px #ebebf1;
+      border-radius: 16px;
+      padding: 15px;
+      min-width: 280px;
+      .item-message-1 {
+        display: flex;
+        .elipse-icon {
+          display: flex;
+          justify-content: center;
+          border-radius: 20px;
+          width: 30px;
+          height: 30px;
+          position: relative;
+          bottom: 5px;
+        }
+        .message-name-send {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          bottom: 10px;
+          margin-left: 15px;
+          span {
+            position: relative;
+            bottom: 5px;
+          }
+        }
+      }
+      .item-message-2 {
+      }
+    }
+  }
+  .section-type-messages {
+    width: 45%;
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 16px;
-    .elipse-icon {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-radius: 20px;
-      position: absolute;
-      left: 15px;
-      width: 30px;
-      height: 30px;
+    textarea {
+      height: 80% !important;
+      border: none;
     }
   }
 }
