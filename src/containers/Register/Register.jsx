@@ -17,6 +17,7 @@ import {
   callGetAllEndorsement,
   callGetAllRegisterUser,
   callGetAllVerifyCode,
+  callGetInvitationUser,
 } from "../../utils/actions/actions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
@@ -32,8 +33,10 @@ const Register = (props) => {
     callGetAllEndorsement,
     callGetAllRegisterUser,
     callGetAllVerifyCode,
+    callGetInvitationUser,
   } = props;
-  const [userType, setUserType] = useState(1);
+  const [userType, setUserType] = useState(null);
+  const [idInvitation, setIdInvitation] = useState(null);
   const [userCustomer, setUserCustomer] = useState([]);
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
   const [userPerson, setUserPerson] = useState([]);
@@ -109,12 +112,21 @@ const Register = (props) => {
   };
 
   const handlerCallApiPersonTypes = async (data) => {
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
     try {
       const response = await callGetAllPersons(data);
       const responseResult =
         isNil(response) === false && isNil(response.result) === false
           ? response.result
           : [];
+      if (isEmpty(params) === false && isEmpty(responseResult) === false) {
+        const filterCondition = responseResult.find((row) => {
+          return row.idPersonType == params.idCustomerType;
+        });
+        const parseResult = JSON.parse(filterCondition.jsonProperties);
+        setConfigComponents(parseResult);
+      }
       setUserPerson(responseResult);
     } catch (error) {}
   };
@@ -127,6 +139,31 @@ const Register = (props) => {
           ? response.result
           : [];
       setUserEndorsement(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetInvitationUser = async (id) => {
+    try {
+      const response = await callGetInvitationUser(id);
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      await handlerCallApiPersonTypes({
+        idType: 1,
+        idCustomerType: responseResult.idCustomerType,
+      });
+      await handlerCallApiEndorsement({
+        idType: 1,
+      });
+      setSelectUserCustomer(responseResult.idCustomerType);
+      setIdInvitation(responseResult.idInvitation);
+      setDataForm({
+        ...dataForm,
+        idPersonType: responseResult.idPersonType,
+        givenName: responseResult.givenName,
+        username: responseResult.usernameRequested,
+      });
     } catch (error) {}
   };
 
@@ -303,7 +340,14 @@ const Register = (props) => {
                   className="arrow-back-to"
                   type="button"
                   onClick={() => {
-                    setUserType(1);
+                    const { match } = props;
+                    const params =
+                      isEmpty(match.params) === false ? match.params : {};
+                    if (isEmpty(params) === false) {
+                      history.push("/login");
+                    } else {
+                      setUserType(1);
+                    }
                   }}
                 >
                   <img src={Arrow} alt="backTo" width="30" />
@@ -365,6 +409,7 @@ const Register = (props) => {
               <div className="register_row half">
                 <Select
                   placeholder="Tipo de Persona"
+                  value={dataForm.idPersonType}
                   onChange={(value, option) => {
                     const configureOption = option.onClick();
                     setConfigComponents(configureOption);
@@ -848,7 +893,15 @@ const Register = (props) => {
   };
 
   useEffect(() => {
-    handlerAsyncCallAppis();
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
+    if (isEmpty(params) === false) {
+      setUserType(2);
+      handlerCallGetInvitationUser(params.idInvitation, params);
+    } else {
+      setUserType(1);
+      handlerAsyncCallAppis();
+    }
   }, []);
 
   return (
@@ -869,6 +922,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllEndorsement: (data) => dispatch(callGetAllEndorsement(data)),
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
+  callGetInvitationUser: (paramId) => dispatch(callGetInvitationUser(paramId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

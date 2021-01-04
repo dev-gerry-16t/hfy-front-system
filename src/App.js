@@ -45,7 +45,13 @@ const App = (props) => {
           <Route exact path="/" name="Login Page" component={Login} />
           <Route path="/login" name="Login Page" component={Login} />
           <Route path="/index" name="Login Page" component={Login} />
-          <Route path="/registro" name="Registro" component={Registro} />
+          <Route exact path="/registro" name="Registro" component={Registro} />
+          <Route
+            exact
+            path="/registro/:idInvitation/:idCustomerType"
+            name="Registro"
+            component={Registro}
+          />
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route path="/logout" name="Clean App and Close" component={Auth} />
           <Route

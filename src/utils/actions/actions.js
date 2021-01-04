@@ -143,6 +143,38 @@ const callGetAllEndorsement = (data) => async (dispatch, getState) => {
   }
 };
 
+const callGetInvitationUser = (paramId) => async (dispatch, getState) => {
+  try {
+    const config = { headers: { ...HEADER } };
+    const endPoint = `${API_CONSTANTS.GET_ALL_CUSTOMER_INVITATION}${paramId}`;
+    const response = await RequesterAxios.get(endPoint, config);
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetAllRegisterUser = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
@@ -332,6 +364,7 @@ export {
   callGetAllCustomers,
   callGetAllPersons,
   callGetAllEndorsement,
+  callGetInvitationUser,
   callGetAllRegisterUser,
   callGetAllVerifyCode,
   callGetAllUserProfile,
