@@ -36,7 +36,6 @@ const Register = (props) => {
     callGetInvitationUser,
   } = props;
   const [userType, setUserType] = useState(null);
-  const [idInvitation, setIdInvitation] = useState(null);
   const [userCustomer, setUserCustomer] = useState([]);
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
   const [userPerson, setUserPerson] = useState([]);
@@ -53,6 +52,7 @@ const Register = (props) => {
     phoneNumber: null,
     username: null,
     password: null,
+    idInvitation: null,
   });
 
   const LoadingSpin = <SyncOutlined spin />;
@@ -157,12 +157,12 @@ const Register = (props) => {
         idType: 1,
       });
       setSelectUserCustomer(responseResult.idCustomerType);
-      setIdInvitation(responseResult.idInvitation);
       setDataForm({
         ...dataForm,
         idPersonType: responseResult.idPersonType,
         givenName: responseResult.givenName,
         username: responseResult.usernameRequested,
+        idInvitation: responseResult.idInvitation,
       });
     } catch (error) {}
   };
