@@ -50,7 +50,7 @@ const Owner = (props) => {
       {
         name: "Balance",
         data: [12000],
-        color: "",
+        color: "#32cd32",
       },
     ],
   };

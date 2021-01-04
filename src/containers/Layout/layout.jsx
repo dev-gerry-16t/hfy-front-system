@@ -15,6 +15,7 @@ import IconShortLogo from "../../assets/icons/logoShortWhite.svg";
 import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
 import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
+import IconClose from "../../assets/icons/close.svg";
 import routes from "../../routes";
 
 const { Header, Sider } = Layout;
@@ -35,6 +36,7 @@ const DefaultLayout = (props) => {
     IconDocument,
     IconChat,
     IconEdit,
+    IconClose,
   };
   const toggle = () => {
     setCollapsed(!collapsed);

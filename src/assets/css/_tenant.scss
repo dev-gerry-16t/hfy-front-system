@@ -239,6 +239,7 @@
       border-radius: 16px;
       padding: 15px;
       min-width: 280px;
+      width: 95%;
       .item-message-1 {
         display: flex;
         .elipse-icon {
@@ -270,9 +271,46 @@
     width: 45%;
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 16px;
+    height: 320px;
+    .text-header {
+      background: #ff0282;
+      text-align: center;
+      border-radius: 15px 15px 0px 0px;
+      font-weight: normal;
+      color: #ffffff;
+      font-size: 16px;
+      padding: 5px 0px;
+
+    }
     textarea {
-      height: 80% !important;
-      border: none;
+      height: 290px !important;
+      width: 100%;
+      outline: none;
+      border: 1px solid #d6d8e7;
+      padding: 10px;
+      border-radius: 0px 0px 15px 15px;
+    }
+    .button_init_primary {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      min-width: 240px;
+      button {
+        background: #ff0282;
+        border-radius: 16px;
+        border: none;
+        width: 100%;
+        span {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 34px;
+          letter-spacing: 0.75px;
+          color: #ffffff;
+        }
+      }
     }
   }
 }

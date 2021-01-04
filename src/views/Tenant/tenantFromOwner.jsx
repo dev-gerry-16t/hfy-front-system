@@ -44,7 +44,7 @@ const TenantFromOwner = (props) => {
         <div className="actions-information-tenant">
           <div className="tabs-tenant-information">
             <Tabs
-              defaultActiveKey="3"
+              defaultActiveKey="1"
               onChange={() => {}}
               tabBarStyle={{ color: "#A0A3BD" }}
             >
