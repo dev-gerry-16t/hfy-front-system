@@ -10,6 +10,7 @@ import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../../assets/icons/wallet.svg";
 import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
+import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 
 const SectionCardTenant = (props) => {
   const { history, tenantCoincidences, finishCallApis } = props;
@@ -72,12 +73,14 @@ const SectionCardTenant = (props) => {
               </div>
             );
           })}
-
-        {isEmpty(tenantCoincidences) === true && finishCallApis === true && (
-          <div>Sin Inquilinos</div>
-        )}
         {finishCallApis === false && <Skeleton loading active />}
       </div>
+      {isEmpty(tenantCoincidences) === true && finishCallApis === true && (
+        <div className="empty-tenants">
+          <img src={EmptyTenant} alt="" />
+          <span>Aun no tienes inquilinos registrados</span>
+        </div>
+      )}
     </div>
   );
 };

@@ -145,12 +145,101 @@
   }
 }
 
+.form-modal {
+  .title-head-modal {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    .arrow-back-to {
+      border: none;
+      background: transparent;
+      position: absolute;
+      top: 3px;
+      left: 0px;
+    }
+    h1 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 40px;
+      text-align: center;
+      letter-spacing: 1px;
+      color: #ff0282;
+    }
+  }
+  .main-form-information {
+    padding: 0px 25px;
+    p {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 28px;
+      letter-spacing: 0.75px;
+      color: #da006e;
+    }
+    .add-more-suite {
+      background: #ff0282;
+      border-radius: 8px;
+      border: none;
+      color: #fff;
+      span {
+        position: relative;
+        bottom: 1px;
+      }
+    }
+    .ant-row {
+      margin-bottom: 20px;
+    }
+    .ant-select {
+      width: 100%;
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    .ant-input {
+      border-radius: 8px;
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    .value-info-select {
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  .button_init_primary {
+    display: flex;
+    justify-content: center;
+    button {
+      background: #ff0282;
+      border-radius: 16px;
+      border: none;
+      width: 45%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: #ffffff;
+      }
+    }
+  }
+}
+
 // antd
 .ant-rate-star:not(:last-child) {
   margin-right: 4px !important;
 }
 .ant-modal-mask {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background: rgba(78, 75, 102, 0.3) !important;
+  backdrop-filter: blur(10px);
 }
 .ant-modal-content {
   border-radius: 15px !important;

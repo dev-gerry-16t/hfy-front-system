@@ -14,6 +14,7 @@ import {
 } from "../../utils/actions/actions";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
+import SectionAddProperty from "./sections/sectionAddProperty";
 
 const { Content } = Layout;
 
@@ -110,20 +111,13 @@ const Owner = (props) => {
 
   return (
     <Content>
-      <Modal
-        title="Agregar Propiedad"
-        visible={isModalVisible}
-        onOk={() => {
+      <SectionAddProperty
+        isModalVisible={isModalVisible}
+        onClose={() => {
           setIsModalVisible(!isModalVisible);
         }}
-        onCancel={() => {
-          setIsModalVisible(!isModalVisible);
-        }}
-      >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Modal>
+        onClickAddProperty={(data) => {}}
+      />
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
