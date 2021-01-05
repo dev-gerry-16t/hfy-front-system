@@ -3,57 +3,34 @@ import { connect } from "react-redux";
 import { Layout, Avatar, Rate, Modal } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import IconArroRight from "../../assets/icons/arrowRight.svg";
-import { callGetAllCustomerById } from "../../utils/actions/actions";
+import {
+  callGetAllCustomerById,
+  callGetAllCustomerCoincidences,
+  callGetStatsChart,
+} from "../../utils/actions/actions";
+import SectionCardTenant from "./sections/sectionCardTenants";
+import SectionStatsChart from "./sections/sectionStatsChart";
 
 const { Content } = Layout;
 
 const Owner = (props) => {
-  const { dataProfile, callGetAllCustomerById, history } = props;
+  const {
+    dataProfile,
+    callGetAllCustomerById,
+    history,
+    callGetTenantCoincidences,
+    callGetStatsChart,
+  } = props;
   const [dataCustomer, setDataCustomer] = useState({});
+  const [dataStatsChart, setDataStatsChart] = useState([]);
+  const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [finishCallApis, setFinishCallApis] = useState(false);
 
-  const dataOptions = {
-    chart: {
-      type: "column",
-    },
-    title: {
-      text: "Estadistica Mensual",
-    },
-    yAxis: {
-      title: {
-        text: "Monto",
-      },
-    },
-    xAxis: {
-      categories: ["Diciembre"],
-    },
-    credits: {
-      enabled: false,
-    },
-    series: [
-      {
-        name: "Ganancias",
-        data: [18000],
-        color: "#4E51D8",
-      },
-      {
-        name: "Gastos",
-        data: [-6000],
-        color: "#EF280F",
-      },
-      {
-        name: "Balance",
-        data: [12000],
-        color: "#32cd32",
-      },
-    ],
-  };
   const handlerCallGetAllCustomerById = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -72,8 +49,63 @@ const Owner = (props) => {
     } catch (error) {}
   };
 
+  const handlerCallGetTenantCoincidences = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+
+    // const idCustomer = "EF214D81-D538-444E-BBFE-6276C7B13650";
+    // const idSystemUser = "4E8173B3-CA66-44CA-B4FF-4958306B3C7C";
+    // const idLoginHistory = "8A13D7FB-52BA-47EF-92B7-65EE629DCBE0";
+
+    try {
+      const response = await callGetTenantCoincidences({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setTenantCoincidences(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetCallGetStatsChart = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+
+    // const idCustomer = "EF214D81-D538-444E-BBFE-6276C7B13650";
+    // const idSystemUser = "4E8173B3-CA66-44CA-B4FF-4958306B3C7C";
+    // const idLoginHistory = "8A13D7FB-52BA-47EF-92B7-65EE629DCBE0";
+
+    try {
+      const response = await callGetStatsChart({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        jsonConditions: [],
+      });
+
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataStatsChart(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCalllSyncApis = async () => {
+    await handlerCallGetAllCustomerById();
+    await handlerCallGetTenantCoincidences();
+    await handlerCallGetCallGetStatsChart();
+    setFinishCallApis(true);
+  };
+
   useEffect(() => {
-    handlerCallGetAllCustomerById();
+    handlerCalllSyncApis();
   }, []);
 
   return (
@@ -143,100 +175,15 @@ const Owner = (props) => {
           </div>
         </div>
         <div className="main-information-user">
-          <div className="card-chart-information">
-            <div className="title-cards">Ganancias</div>
-            <div>
-              <HighchartsReact highcharts={Highcharts} options={dataOptions} />
-            </div>
-          </div>
-          <div className="renter-card-information">
-            <div className="title-cards">Inquilinos</div>
-            <div className="section-information-renters">
-              <div className="data-renter-info">
-                <div className="box-info-user">
-                  <div className="avatar-user">
-                    <Avatar
-                      size={50}
-                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
-                  </div>
-                  <div className="info-user">
-                    <strong>Pedro Ramirez</strong>
-                    <Rate
-                      style={{
-                        fontSize: "15px",
-                        position: "relative",
-                        bottom: "5px",
-                      }}
-                      tooltips={[]}
-                      onChange={() => {}}
-                      value={5}
-                    />
-                    <div className="status-payment">
-                      <span>PAGO PENDIENTE</span>
-                    </div>
-                  </div>
-                  <div className="info-user-payment">
-                    <div>
-                      Próximo Pago: <strong>03 Feb 21</strong>
-                    </div>
-                    <div>
-                      Monto de Renta: <strong>$18,000.00</strong>
-                    </div>
-                  </div>
-                </div>
-                <div className="button-collapse">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      history.push("/websystem/dashboard-owner/tenant");
-                    }}
-                  >
-                    <img src={IconArroRight} alt="arrow-right" width="15" />
-                  </button>
-                </div>
-              </div>
-              <div className="data-renter-info">
-                <div className="box-info-user">
-                  <div className="avatar-user">
-                    <Avatar
-                      size={50}
-                      src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-                    />
-                  </div>
-                  <div className="info-user">
-                    <strong>Pedro Ramirez</strong>
-                    <Rate
-                      style={{
-                        fontSize: "15px",
-                        position: "relative",
-                        bottom: "5px",
-                      }}
-                      tooltips={[]}
-                      onChange={() => {}}
-                      value={5}
-                    />
-                    <div className="status-payment">
-                      <span>PAGO PENDIENTE</span>
-                    </div>
-                  </div>
-                  <div className="info-user-payment">
-                    <div>
-                      Próximo Pago: <strong>03 Feb 21</strong>
-                    </div>
-                    <div>
-                      Monto de Renta: <strong>$18,000.00</strong>
-                    </div>
-                  </div>
-                </div>
-                <div className="button-collapse">
-                  <button>
-                    <img src={IconArroRight} alt="arrow-right" width="15" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
+          <SectionStatsChart
+            dataStatsChart={dataStatsChart}
+            finishCallApis={finishCallApis}
+          />
+          <SectionCardTenant
+            history={history}
+            tenantCoincidences={tenantCoincidences}
+            finishCallApis={finishCallApis}
+          />
         </div>
       </div>
     </Content>
@@ -252,6 +199,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callGetAllCustomerById: (data) => dispatch(callGetAllCustomerById(data)),
+  callGetStatsChart: (data) => dispatch(callGetStatsChart(data)),
+  callGetTenantCoincidences: (data) =>
+    dispatch(callGetAllCustomerCoincidences(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

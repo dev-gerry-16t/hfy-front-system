@@ -782,6 +782,7 @@ const Register = (props) => {
                       code: numberResult,
                       idRequestSignUp,
                       offset: "-06:00",
+                      idInvitation: dataForm.idInvitation,
                     });
                     setUserType(4);
                   } catch (error) {

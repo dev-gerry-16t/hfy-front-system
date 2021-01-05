@@ -17,7 +17,7 @@ const routes = [
   {
     key: "2",
     id: "TenantFromOwner",
-    path: "/websystem/dashboard-owner/tenant",
+    path: "/websystem/dashboard-owner/tenant/:idCustomer",
     name: "Inquilino",
     component: TenantFromOwner,
     exact: true,
