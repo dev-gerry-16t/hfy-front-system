@@ -97,3 +97,12 @@
   overflow: scroll;
   overflow-x: hidden;
 }
+
+#nprogress .spinner-icon {
+  border-top-color: #ff0282 !important;
+  border-left-color: #ff0282 !important;
+}
+
+#nprogress .bar {
+  background: #ff0282;
+}

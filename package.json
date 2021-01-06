@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^12.5.0",
     "antd": "^4.9.2",
     "axios": "^0.21.0",
+    "axios-progress-bar": "^1.2.0",
     "highcharts": "^8.2.2",
     "highcharts-react-official": "^3.0.0",
     "history": "^4.7.2",
