@@ -11,10 +11,16 @@ import {
   callGetAllCustomerById,
   callGetAllCustomerCoincidences,
   callGetStatsChart,
+  callAddProperty,
+  callGetAllPersons,
+  callGetProperties,
+  callGetDepartments,
+  callAddTenant,
 } from "../../utils/actions/actions";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionAddProperty from "./sections/sectionAddProperty";
+import SectionAddTenant from "./sections/sectionAddTenant";
 
 const { Content } = Layout;
 
@@ -25,12 +31,33 @@ const Owner = (props) => {
     history,
     callGetTenantCoincidences,
     callGetStatsChart,
+    callAddProperty,
+    callGetAllPersons,
+    callGetProperties,
+    callGetDepartments,
+    callAddTenant,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
+  const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
+  const [dataPersonType, setDataPersonType] = useState([]);
+  const [dataDepartment, setDataDepartment] = useState([]);
   const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
   const [finishCallApis, setFinishCallApis] = useState(false);
+  const [spinVisible, setSpinVisible] = useState(false);
+
+  const handlerCallApiPersonTypes = async (data) => {
+    try {
+      const response = await callGetAllPersons(data);
+      const responseResult =
+        isNil(response) === false && isNil(response.result) === false
+          ? response.result
+          : [];
+      setDataPersonType(responseResult);
+    } catch (error) {}
+  };
 
   const handlerCallGetAllCustomerById = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
@@ -52,11 +79,6 @@ const Owner = (props) => {
 
   const handlerCallGetTenantCoincidences = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-
-    // const idCustomer = "EF214D81-D538-444E-BBFE-6276C7B13650";
-    // const idSystemUser = "4E8173B3-CA66-44CA-B4FF-4958306B3C7C";
-    // const idLoginHistory = "8A13D7FB-52BA-47EF-92B7-65EE629DCBE0";
-
     try {
       const response = await callGetTenantCoincidences({
         idCustomer,
@@ -75,11 +97,6 @@ const Owner = (props) => {
 
   const handlerCallGetCallGetStatsChart = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-
-    // const idCustomer = "EF214D81-D538-444E-BBFE-6276C7B13650";
-    // const idSystemUser = "4E8173B3-CA66-44CA-B4FF-4958306B3C7C";
-    // const idLoginHistory = "8A13D7FB-52BA-47EF-92B7-65EE629DCBE0";
-
     try {
       const response = await callGetStatsChart({
         idCustomer,
@@ -98,6 +115,90 @@ const Owner = (props) => {
     } catch (error) {}
   };
 
+  const handlerCallAddProperty = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callAddProperty({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setSpinVisible(false);
+      setIsModalVisible(!isModalVisible);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
+  const handlerCallGetProperties = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetProperties({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataCatalogProperty(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetDepartments = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetDepartments({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataDepartment(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallAddTenant = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callAddTenant({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      console.log("response", response);
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setSpinVisible(false);
+      setIsModalVisibleTenant(!isModalVisibleTenant);
+      handlerCallGetTenantCoincidences();
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -112,11 +213,35 @@ const Owner = (props) => {
   return (
     <Content>
       <SectionAddProperty
+        spinVisible={spinVisible}
         isModalVisible={isModalVisible}
         onClose={() => {
           setIsModalVisible(!isModalVisible);
         }}
-        onClickAddProperty={(data) => {}}
+        onClickAddProperty={(data) => {
+          setSpinVisible(true);
+          handlerCallAddProperty(data);
+        }}
+      />
+      <SectionAddTenant
+        dataPersonType={dataPersonType}
+        dataCatalogProperty={dataCatalogProperty}
+        dataDepartment={dataDepartment}
+        spinVisible={spinVisible}
+        isModalVisible={isModalVisibleTenant}
+        onClose={() => {
+          setIsModalVisibleTenant(!isModalVisibleTenant);
+        }}
+        onClickAddProperty={(data) => {
+          setSpinVisible(true);
+          handlerCallAddTenant(data);
+        }}
+        onChangeSelectProperty={(value) => {
+          handlerCallGetDepartments({
+            idProperty: value,
+            type: 1,
+          });
+        }}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -127,20 +252,38 @@ const Owner = (props) => {
               <strong>{dataCustomer.lastSessionStarted}</strong>
             </span>
           </div>
-          <div className="button_init_primary">
-            <button
-              type="button"
-              onClick={() => {
-                setIsModalVisible(!isModalVisible);
-              }}
-            >
-              <span>Registrar Propiedad</span>
-            </button>
-          </div>
-          <div className="button_init_primary">
-            <button type="button" onClick={() => {}}>
-              <span>Registrar Inquilino</span>
-            </button>
+          <div
+            style={{
+              display: "flex",
+              width: "50%",
+              justifyContent: "space-between",
+            }}
+          >
+            <div className="button_init_primary">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsModalVisible(!isModalVisible);
+                }}
+              >
+                <span>Registrar Propiedad</span>
+              </button>
+            </div>
+            <div className="button_init_primary">
+              <button
+                type="button"
+                onClick={async () => {
+                  setIsModalVisibleTenant(!isModalVisibleTenant);
+                  await handlerCallApiPersonTypes({
+                    idType: 2,
+                    idCustomerType: null,
+                  });
+                  await handlerCallGetProperties();
+                }}
+              >
+                <span>Invitar Inquilino</span>
+              </button>
+            </div>
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -196,6 +339,11 @@ const mapDispatchToProps = (dispatch) => ({
   callGetStatsChart: (data) => dispatch(callGetStatsChart(data)),
   callGetTenantCoincidences: (data) =>
     dispatch(callGetAllCustomerCoincidences(data)),
+  callAddProperty: (data) => dispatch(callAddProperty(data)),
+  callGetAllPersons: (data) => dispatch(callGetAllPersons(data)),
+  callGetProperties: (data) => dispatch(callGetProperties(data)),
+  callGetDepartments: (data) => dispatch(callGetDepartments(data)),
+  callAddTenant: (data) => dispatch(callAddTenant(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

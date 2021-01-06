@@ -15,6 +15,10 @@ const API = {
 const API_CONSTANTS = {
   GET_ALL_CUSTOMER_BY_ID: `${API.API_SECURE}/customer/getCustomerById`,
   GET_ALL_CUSTOMER_TENANT_COINCIDENCES: `${API.API_SECURE}/customer/getTenantCoincidences`,
+  CUSTOMER_ADD_PROPERTY: `${API.API_SECURE}/customer/addProperty`,
+  GET_ALL_PROPERTIES: `${API.API_SECURE}/customer/getAllProperties`,
+  GET_ALL_DEPARTMENTS: `${API.API_SECURE}/customer/getApartments`,
+  SEND_TENANT_INVITATION: `${API.API_SECURE}/customer/tenantInvitation`,
   GET_ALL_STATS_CHART: `${API.API_SECURE}/customer/statsCharts`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
