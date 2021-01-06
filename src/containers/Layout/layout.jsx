@@ -87,7 +87,7 @@ const DefaultLayout = (props) => {
             <div className="header-info-user">
               <div className="hi-user-name-type">
                 <strong>{dataProfile.showName}</strong>
-                <span>Propietario</span>
+                <span>{dataProfile.userType}</span>
               </div>
               <button className="button-header">
                 <img src={IconNotification} />
