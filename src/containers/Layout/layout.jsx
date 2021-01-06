@@ -39,7 +39,7 @@ const DefaultLayout = (props) => {
     IconEdit,
     IconClose,
   };
-  console.log("dataProfile", dataProfile);
+  
   const toggle = () => {
     setCollapsed(!collapsed);
   };
