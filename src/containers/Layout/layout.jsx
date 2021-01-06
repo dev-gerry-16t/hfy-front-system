@@ -1,6 +1,7 @@
 import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import { Layout, Menu } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
@@ -38,96 +39,107 @@ const DefaultLayout = (props) => {
     IconEdit,
     IconClose,
   };
+  console.log("dataProfile", dataProfile);
   const toggle = () => {
     setCollapsed(!collapsed);
   };
 
+  useEffect(() => {
+    if (isNil(dataProfile) === true) {
+      history.push("/");
+    }
+  }, []);
+
   return (
     <div className="App">
-      <Layout>
-        <Sider collapsible collapsed={collapsed} onCollapse={toggle}>
-          <div className="logo">
-            <img
-              src={IconLongtLogo}
-              alt="Logo short"
-              style={{ display: collapsed === true ? "none" : "block" }}
-            />
-            <img
-              src={IconShortLogo}
-              alt="Logo short"
-              style={{ display: collapsed === true ? "block" : "none" }}
-            />
-          </div>
-          <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
-            {isEmpty(dataProfileMenu) === false &&
-              dataProfileMenu.map((row) => {
-                return (
-                  <Menu.Item
-                    key={`${row.idMenu}`}
-                    onClick={(event) => {
-                      history.push(row.path);
-                    }}
-                  >
-                    <img
-                      className="ant-menu-item-icon"
-                      width="15"
-                      src={arrayIconst[row.icon]}
-                    />
-                    <span className="tex-menu-icon-ant">{row.menuName}</span>
-                  </Menu.Item>
-                );
-              })}
-          </Menu>
-        </Sider>
-        <Layout className="site-layout">
-          <Header className="site-layout-background" style={{ padding: 0 }}>
-            <div className="header-title-button">
-              <h2>Dashboard</h2>
+      {isNil(dataProfile) === false && (
+        <Layout>
+          <Sider collapsible collapsed={collapsed} onCollapse={toggle}>
+            <div className="logo">
+              <img
+                src={IconLongtLogo}
+                alt="Logo short"
+                style={{ display: collapsed === true ? "none" : "block" }}
+              />
+              <img
+                src={IconShortLogo}
+                alt="Logo short"
+                style={{ display: collapsed === true ? "block" : "none" }}
+              />
             </div>
-            <div className="header-info-user">
-              <div className="hi-user-name-type">
-                <strong>{dataProfile.showName}</strong>
-                <span>{dataProfile.userType}</span>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+              {isEmpty(dataProfileMenu) === false &&
+                dataProfileMenu.map((row) => {
+                  return (
+                    <Menu.Item
+                      key={`${row.idMenu}`}
+                      onClick={(event) => {
+                        history.push(row.path);
+                      }}
+                    >
+                      <img
+                        className="ant-menu-item-icon"
+                        width="15"
+                        src={arrayIconst[row.icon]}
+                      />
+                      <span className="tex-menu-icon-ant">{row.menuName}</span>
+                    </Menu.Item>
+                  );
+                })}
+            </Menu>
+          </Sider>
+          <Layout className="site-layout">
+            <Header className="site-layout-background" style={{ padding: 0 }}>
+              <div className="header-title-button">
+                <h2>Dashboard</h2>
               </div>
-              <button className="button-header">
-                <img src={IconNotification} />
-              </button>
-              <button className="button-header">
-                <img src={IconProfile} />
-              </button>
-            </div>
-          </Header>
-          <Suspense fallback={<Loading />}>
-            <Switch>
-              {routes.map((route) => {
-                return (
-                  <Route
-                    history={history}
-                    key={route.id}
-                    path={route.path}
-                    exact={route.exact}
-                    name={route.name}
-                    render={(prop) => {
-                      if (authenticated === true) {
-                        return <route.component {...prop} history={history} />;
-                      } else {
-                        return (
-                          <Redirect
-                            to={{
-                              pathname: "/",
-                              state: { from: props.location },
-                            }}
-                          />
-                        );
-                      }
-                    }}
-                  />
-                );
-              })}
-            </Switch>
-          </Suspense>
+              <div className="header-info-user">
+                <div className="hi-user-name-type">
+                  <strong>{dataProfile.showName}</strong>
+                  <span>{dataProfile.userType}</span>
+                </div>
+                <button className="button-header">
+                  <img src={IconNotification} />
+                </button>
+                <button className="button-header">
+                  <img src={IconProfile} />
+                </button>
+              </div>
+            </Header>
+            <Suspense fallback={<Loading />}>
+              <Switch>
+                {routes.map((route) => {
+                  return (
+                    <Route
+                      history={history}
+                      key={route.id}
+                      path={route.path}
+                      exact={route.exact}
+                      name={route.name}
+                      render={(prop) => {
+                        if (authenticated === true) {
+                          return (
+                            <route.component {...prop} history={history} />
+                          );
+                        } else {
+                          return (
+                            <Redirect
+                              to={{
+                                pathname: "/",
+                                state: { from: props.location },
+                              }}
+                            />
+                          );
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </Switch>
+            </Suspense>
+          </Layout>
         </Layout>
-      </Layout>
+      )}
     </div>
   );
 };

@@ -37,7 +37,7 @@ const DefaultLayout = Loadable({
 
 const App = (props) => {
   const { history, token, dataProfile } = props;
-  const accessDev = window.location.hostname === "localhost";
+  const accessDev = false//window.location.hostname === "localhost";
   return (
     <Router history={history}>
       <ConfigProvider locale={es_ES}>
