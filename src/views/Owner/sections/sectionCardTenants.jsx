@@ -13,10 +13,27 @@ import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 
 const SectionCardTenant = (props) => {
-  const { history, tenantCoincidences, finishCallApis } = props;
+  const {
+    history,
+    tenantCoincidences,
+    finishCallApis,
+    onClickSendInvitation,
+  } = props;
   return (
     <div className="renter-card-information">
-      <div className="title-cards">Inquilinos</div>
+      <div className="title-cards flex-title-card">
+        <span>Inquilinos</span>
+        <div className="button_init_primary">
+          <button
+            type="button"
+            onClick={() => {
+              onClickSendInvitation();
+            }}
+          >
+            <span>Invitar Inquilino</span>
+          </button>
+        </div>
+      </div>
       <div className="section-information-renters">
         {isEmpty(tenantCoincidences) === false &&
           finishCallApis === true &&

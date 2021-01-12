@@ -21,6 +21,7 @@ import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionAddProperty from "./sections/sectionAddProperty";
 import SectionAddTenant from "./sections/sectionAddTenant";
+import SectionAdvancement from "./sections/sectionAdvancement";
 
 const { Content } = Layout;
 
@@ -45,6 +46,9 @@ const Owner = (props) => {
   const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
+  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] = useState(
+    false
+  );
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
 
@@ -243,6 +247,18 @@ const Owner = (props) => {
           });
         }}
       />
+      <SectionAdvancement
+        isModalVisible={isModalVisibleAdvancement}
+        onClose={() => {
+          setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
+        }}
+        onClickAdvancement={(data) => {
+          setSpinVisible(true);
+        }}
+        spinVisible={spinVisible}
+        dataTenant={[]}
+        dataBank={[]}
+      />
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
@@ -272,16 +288,11 @@ const Owner = (props) => {
             <div className="button_init_primary">
               <button
                 type="button"
-                onClick={async () => {
-                  setIsModalVisibleTenant(!isModalVisibleTenant);
-                  await handlerCallApiPersonTypes({
-                    idType: 2,
-                    idCustomerType: null,
-                  });
-                  await handlerCallGetProperties();
+                onClick={() => {
+                  setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
                 }}
               >
-                <span>Invitar Inquilino</span>
+                <span>Adelanto de renta</span>
               </button>
             </div>
           </div>
@@ -320,6 +331,14 @@ const Owner = (props) => {
             history={history}
             tenantCoincidences={tenantCoincidences}
             finishCallApis={finishCallApis}
+            onClickSendInvitation={async () => {
+              setIsModalVisibleTenant(!isModalVisibleTenant);
+              await handlerCallApiPersonTypes({
+                idType: 2,
+                idCustomerType: null,
+              });
+              await handlerCallGetProperties();
+            }}
           />
         </div>
       </div>

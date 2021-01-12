@@ -4,6 +4,9 @@ const ViewContent = React.lazy(() => import("./views/Owner/owner"));
 const TenantFromOwner = React.lazy(() =>
   import("./views/Tenant/tenantFromOwner")
 );
+const SignatureTest = React.lazy(() =>
+  import("./views/Signature/signatureIndex")
+);
 
 const routes = [
   {
@@ -20,6 +23,15 @@ const routes = [
     path: "/websystem/dashboard-owner/tenant/:idCustomer",
     name: "Inquilino",
     component: TenantFromOwner,
+    exact: true,
+  },
+  ,
+  {
+    key: "3",
+    id: "SignatureTest",
+    path: "/websystem/testSignature",
+    name: "signature",
+    component: SignatureTest,
     exact: true,
   },
 ];
