@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import NumberFormat from "react-number-format";
@@ -12,14 +12,28 @@ import {
   Col,
   Select,
   Spin,
+  Tooltip,
 } from "antd";
-import { SyncOutlined } from "@ant-design/icons";
+import {
+  InfoCircleOutlined,
+  UserOutlined,
+  SyncOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const { Option } = Select;
 
 const SectionAddProperty = (props) => {
-  const { isModalVisible, onClose, onClickAddProperty, spinVisible } = props;
+  const {
+    isModalVisible,
+    onClose,
+    onClickAddProperty,
+    spinVisible,
+    onChangeZipCode,
+    dataZipCodeAdress,
+    dataZipCatalog,
+  } = props;
   const initialDataForm = {
     street: null,
     suite: null,
@@ -28,6 +42,7 @@ const SectionAddProperty = (props) => {
     city: null,
     state: null,
     zipCode: null,
+    idZipCode: null,
     firstStreetReference: null,
     secondStreetReference: null,
     totalSuites: [],
@@ -36,8 +51,19 @@ const SectionAddProperty = (props) => {
   const [dataForm, setDataForm] = useState(initialDataForm);
   const [statesDynamic, setStateDynamic] = useState({});
   const [totalDepartment, setTotalDepartment] = useState([]);
+  const [isOpenInput, setIsOpenInput] = useState(false);
 
   const LoadingSpin = <SyncOutlined spin />;
+
+  useEffect(() => {
+    if (isEmpty(dataZipCodeAdress) === false) {
+      setDataForm({
+        ...dataForm,
+        state: dataZipCodeAdress.state,
+        city: dataZipCodeAdress.municipality,
+      });
+    }
+  }, [dataZipCodeAdress]);
 
   return (
     <Modal
@@ -86,20 +112,32 @@ const SectionAddProperty = (props) => {
             <Row>
               <Col span={11}>
                 <Input
-                  value={dataForm.neighborhood}
-                  placeholder={"Colonia"}
+                  value={dataForm.zipCode}
+                  placeholder={"Código postal"}
                   onChange={(e) => {
-                    setDataForm({ ...dataForm, neighborhood: e.target.value });
+                    const value = e.target.value;
+                    if (value.length >= 5) {
+                      setDataForm({ ...dataForm, zipCode: value });
+                      onChangeZipCode(e.target.value);
+                    } else {
+                      setDataForm({
+                        ...dataForm,
+                        neighborhood: null,
+                        idZipCode: null,
+                        zipCode: value,
+                      });
+                    }
                   }}
                 />
               </Col>
               <Col span={2} />
               <Col span={11}>
                 <Input
-                  value={dataForm.city}
-                  placeholder={"Municipio/Delegacion"}
+                  value={dataForm.state}
+                  placeholder={"Estado"}
+                  disabled
                   onChange={(e) => {
-                    setDataForm({ ...dataForm, city: e.target.value });
+                    setDataForm({ ...dataForm, state: e.target.value });
                   }}
                 />
               </Col>
@@ -107,22 +145,81 @@ const SectionAddProperty = (props) => {
             <Row>
               <Col span={11}>
                 <Input
-                  value={dataForm.state}
-                  placeholder={"Estado"}
+                  value={dataForm.city}
+                  disabled
+                  placeholder={"Municipio/Delegacion"}
                   onChange={(e) => {
-                    setDataForm({ ...dataForm, state: e.target.value });
+                    setDataForm({ ...dataForm, city: e.target.value });
                   }}
                 />
               </Col>
               <Col span={2} />
               <Col span={11}>
-                <Input
-                  value={dataForm.zipCode}
-                  placeholder={"Código postal"}
-                  onChange={(e) => {
-                    setDataForm({ ...dataForm, zipCode: e.target.value });
-                  }}
-                />
+                {isOpenInput === false ? (
+                  <Select
+                    placeholder="Colonia"
+                    value={dataForm.idZipCode}
+                    onChange={(value, option) => {
+                      console.log("value, option", value, option.onClick());
+                      const dataSelect = option.onClick();
+                      setIsOpenInput(dataSelect.isOpen);
+                      if (dataSelect.isOpen === true) {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhood: null,
+                          idZipCode: value,
+                        });
+                      } else {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhood: option.children,
+                          idZipCode: value,
+                        });
+                      }
+                    }}
+                  >
+                    {isEmpty(dataZipCatalog) === false &&
+                      dataZipCatalog.map((row) => {
+                        return (
+                          <Option
+                            value={row.idZipCode}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.neighborhood}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                ) : (
+                  <Input
+                    value={dataForm.neighborhood}
+                    placeholder={"Indicar Colonia"}
+                    suffix={
+                      <Tooltip title="Cerrar">
+                        <CloseOutlined
+                          style={{ color: "rgba(0,0,0,.45)" }}
+                          onClick={() => {
+                            console.log("click");
+                            setIsOpenInput(false);
+                            setDataForm({
+                              ...dataForm,
+                              idZipCode: null,
+                              neighborhood: null,
+                            });
+                          }}
+                        />
+                      </Tooltip>
+                    }
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        neighborhood: e.target.value,
+                      });
+                    }}
+                  />
+                )}
               </Col>
             </Row>
             <p>Entre Calles</p>

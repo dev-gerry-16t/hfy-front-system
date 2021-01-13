@@ -40,7 +40,7 @@ const SubSectionSummary = (props) => {
             <tr>
               <td>Monto de renta</td>
               <td>
-                {isNil(dataForm.maximunAdvanceRents) === false &&
+                {isNil(dataForm.advanceRents) === false &&
                 isNil(dataForm.currentRentFormat) === false
                   ? frontFunctions.parseFormatCurrency(
                       dataForm.currentRentFormat
@@ -50,15 +50,15 @@ const SubSectionSummary = (props) => {
             </tr>
             <tr>
               <td>Adelantos</td>
-              <td>{dataForm.maximunAdvanceRents}</td>
+              <td>{dataForm.advanceRents}</td>
             </tr>
             <tr>
               <td>Monto total adelanto</td>
               <td>
-                {isNil(dataForm.maximunAdvanceRents) === false &&
+                {isNil(dataForm.advanceRents) === false &&
                 isNil(dataForm.currentRentFormat) === false
                   ? frontFunctions.parseFormatCurrency(
-                      dataForm.currentRentFormat * dataForm.maximunAdvanceRents,
+                      dataForm.currentRentFormat * dataForm.advanceRents,
                       2
                     )
                   : "$0.00"}
@@ -67,11 +67,11 @@ const SubSectionSummary = (props) => {
             <tr>
               <td>Servicio Homify 3%</td>
               <td>
-                {isNil(dataForm.maximunAdvanceRents) === false &&
+                {isNil(dataForm.advanceRents) === false &&
                 isNil(dataForm.currentRentFormat) === false
                   ? frontFunctions.parseFormatCurrency(
                       dataForm.currentRentFormat *
-                        (dataForm.maximunAdvanceRents * 0.03),
+                        (dataForm.advanceRents * 0.03),
                       2
                     )
                   : "$0.00"}
@@ -85,11 +85,11 @@ const SubSectionSummary = (props) => {
             >
               <td>Monto neto adelanto</td>
               <td>
-                {isNil(dataForm.maximunAdvanceRents) === false &&
+                {isNil(dataForm.advanceRents) === false &&
                 isNil(dataForm.currentRentFormat) === false
                   ? frontFunctions.parseFormatCurrency(
                       dataForm.currentRentFormat *
-                        (dataForm.maximunAdvanceRents * 0.97),
+                        (dataForm.advanceRents * 0.97),
                       2
                     )
                   : "$0.00"}
@@ -103,10 +103,10 @@ const SubSectionSummary = (props) => {
           <p>Monto total de adelanto</p>
           <div>
             <h2>
-              {isNil(dataForm.maximunAdvanceRents) === false &&
+              {isNil(dataForm.advanceRents) === false &&
               isNil(dataForm.currentRentFormat) === false
                 ? frontFunctions.parseFormatCurrency(
-                    dataForm.currentRentFormat * dataForm.maximunAdvanceRents,
+                    dataForm.currentRentFormat * dataForm.advanceRents,
                     2
                   )
                 : "$0.00"}
@@ -116,11 +116,11 @@ const SubSectionSummary = (props) => {
           <p>Monto neto de adelanto</p>
           <div>
             <h2>
-              {isNil(dataForm.maximunAdvanceRents) === false &&
+              {isNil(dataForm.advanceRents) === false &&
               isNil(dataForm.currentRentFormat) === false
                 ? frontFunctions.parseFormatCurrency(
                     dataForm.currentRentFormat *
-                      (dataForm.maximunAdvanceRents * 0.97),
+                      (dataForm.advanceRents * 0.97),
                     2
                   )
                 : "$0.00"}

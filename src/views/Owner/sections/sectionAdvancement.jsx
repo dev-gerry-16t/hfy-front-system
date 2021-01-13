@@ -32,12 +32,13 @@ const SectionAdvancement = (props) => {
   const frontFunctions = new FrontFunctions();
   const initialDataForm = {
     text: null,
-    currentRentFormat: null,
-    maximunAdvanceRents: null,
+    currentRentFormat: "",
+    advanceRents: null,
     accountHolder: null,
     accountNumber: null,
     clabeNumber: null,
-    bank: null,
+    idContract: null,
+    idBank: null,
   };
   const [dataForm, setDataForm] = useState(initialDataForm);
   const [property, setProperty] = useState(null);
@@ -78,12 +79,28 @@ const SectionAdvancement = (props) => {
                     placeholder="Inquilino"
                     value={dataForm.text}
                     onChange={(value, option) => {
-                      setDataForm({ ...dataForm, text: value });
+                      const dataSelect = option.onClick();
+                      setDataForm({
+                        ...dataForm,
+                        text: value,
+                        currentRentFormat: dataSelect.currentRentAmount,
+                        idContract: dataSelect.idContract,
+                      });
                     }}
                   >
-                    <Option value={1}>Inquilino 1</Option>
-                    <Option value={2}>Inquilino 2</Option>
-                    <Option value={3}>Inquilino 3</Option>
+                    {isEmpty(dataTenant) === false &&
+                      dataTenant.map((row) => {
+                        return (
+                          <Option
+                            value={row.id}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.fullName}
+                          </Option>
+                        );
+                      })}
                   </Select>
                 </Row>
                 <Row>
@@ -96,6 +113,7 @@ const SectionAdvancement = (props) => {
                     allowNegative={false}
                     prefix="$"
                     suffix=""
+                    disabled
                     value={dataForm.currentRentFormat}
                     className="inputLogin"
                     floatingLabelText=""
@@ -118,9 +136,9 @@ const SectionAdvancement = (props) => {
                 <Row>
                   <Select
                     placeholder="Rentas adelantadas"
-                    value={dataForm.maximunAdvanceRents}
+                    value={dataForm.advanceRents}
                     onChange={(value, option) => {
-                      setDataForm({ ...dataForm, maximunAdvanceRents: value });
+                      setDataForm({ ...dataForm, advanceRents: value });
                     }}
                   >
                     <Option value={1}>1</Option>
@@ -202,14 +220,21 @@ const SectionAdvancement = (props) => {
               <Col span={11}>
                 <Select
                   placeholder="Banco"
-                  value={dataForm.bank}
+                  showSearch
+                  value={dataForm.idBank}
                   onChange={(value, option) => {
-                    setDataForm({ ...dataForm, bank: value });
+                    setDataForm({ ...dataForm, idBank: value });
                   }}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
                 >
-                  <Option value={1}>Banco 1</Option>
-                  <Option value={2}>Banco 2</Option>
-                  <Option value={3}>Banco 3</Option>
+                  {isEmpty(dataBank) === false &&
+                    dataBank.map((row) => {
+                      return <Option value={row.id}>{row.text}</Option>;
+                    })}
                 </Select>
               </Col>
             </Row>

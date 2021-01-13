@@ -16,6 +16,10 @@ import {
   callGetProperties,
   callGetDepartments,
   callAddTenant,
+  callGetZipCodeAdress,
+  callGetAllTenantsCatalog,
+  callGetAllBankCatalog,
+  callRequestAdvancement,
 } from "../../utils/actions/actions";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
@@ -37,12 +41,20 @@ const Owner = (props) => {
     callGetProperties,
     callGetDepartments,
     callAddTenant,
+    callGetZipCodeAdress,
+    callGetAllTenantsCatalog,
+    callGetAllBankCatalog,
+    callRequestAdvancement,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
   const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
   const [dataPersonType, setDataPersonType] = useState([]);
   const [dataDepartment, setDataDepartment] = useState([]);
+  const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
+  const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataTenant, setDataTenant] = useState([]);
+  const [dataBank, setDataBank] = useState([]);
   const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
@@ -119,6 +131,31 @@ const Owner = (props) => {
     } catch (error) {}
   };
 
+  const hanlderCallGetZipCodeAdress = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetZipCodeAdress({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      setDataZipCodeAdress(responseResult1);
+      setDataZipCatalog(responseResult2);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
   const handlerCallAddProperty = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -136,6 +173,28 @@ const Owner = (props) => {
           : {};
       setSpinVisible(false);
       setIsModalVisible(!isModalVisible);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
+  const handlerCallRequestAdvancement = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callRequestAdvancement({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response) === false
+          ? response.response
+          : {};
+      setSpinVisible(false);
+      setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
     } catch (error) {
       setSpinVisible(false);
     }
@@ -188,7 +247,6 @@ const Owner = (props) => {
         idLoginHistory,
         ...data,
       });
-      console.log("response", response);
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&
@@ -198,6 +256,44 @@ const Owner = (props) => {
       setSpinVisible(false);
       setIsModalVisibleTenant(!isModalVisibleTenant);
       handlerCallGetTenantCoincidences();
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
+  const handlerCallTenantCatalog = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllTenantsCatalog({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataTenant(responseResult);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
+  const handlerCallBankCatalog = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllBankCatalog({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataBank(responseResult);
     } catch (error) {
       setSpinVisible(false);
     }
@@ -225,6 +321,11 @@ const Owner = (props) => {
         onClickAddProperty={(data) => {
           setSpinVisible(true);
           handlerCallAddProperty(data);
+        }}
+        dataZipCodeAdress={dataZipCodeAdress}
+        dataZipCatalog={dataZipCatalog}
+        onChangeZipCode={(zipCode) => {
+          hanlderCallGetZipCodeAdress({ type: 1, zipCode });
         }}
       />
       <SectionAddTenant
@@ -254,10 +355,11 @@ const Owner = (props) => {
         }}
         onClickAdvancement={(data) => {
           setSpinVisible(true);
+          handlerCallRequestAdvancement(data);
         }}
         spinVisible={spinVisible}
-        dataTenant={[]}
-        dataBank={[]}
+        dataTenant={dataTenant}
+        dataBank={dataBank}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -288,8 +390,10 @@ const Owner = (props) => {
             <div className="button_init_primary">
               <button
                 type="button"
-                onClick={() => {
+                onClick={async () => {
                   setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
+                  await handlerCallTenantCatalog();
+                  await handlerCallBankCatalog();
                 }}
               >
                 <span>Adelanto de renta</span>
@@ -363,6 +467,10 @@ const mapDispatchToProps = (dispatch) => ({
   callGetProperties: (data) => dispatch(callGetProperties(data)),
   callGetDepartments: (data) => dispatch(callGetDepartments(data)),
   callAddTenant: (data) => dispatch(callAddTenant(data)),
+  callGetZipCodeAdress: (data) => dispatch(callGetZipCodeAdress(data)),
+  callGetAllTenantsCatalog: (data) => dispatch(callGetAllTenantsCatalog(data)),
+  callGetAllBankCatalog: (data) => dispatch(callGetAllBankCatalog(data)),
+  callRequestAdvancement: (data) => dispatch(callRequestAdvancement(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

@@ -74,18 +74,19 @@ const SectionCardTenant = (props) => {
                   </div>
                 </div>
                 <div className="button-collapse">
-                  {isNil(row.idCustomer) === false && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        history.push(
-                          `/websystem/dashboard-owner/tenant/${row.idCustomer}`
-                        );
-                      }}
-                    >
-                      <img src={IconArroRight} alt="arrow-right" width="15" />
-                    </button>
-                  )}
+                  {isNil(row.canSeeTenantDetail) === false &&
+                    row.canSeeTenantDetail === true && (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          history.push(
+                            `/websystem/dashboard-owner/tenant/${row.idCustomer}`
+                          );
+                        }}
+                      >
+                        <img src={IconArroRight} alt="arrow-right" width="15" />
+                      </button>
+                    )}
                 </div>
               </div>
             );
