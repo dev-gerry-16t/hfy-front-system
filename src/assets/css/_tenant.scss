@@ -22,7 +22,7 @@
         flex-direction: column;
         margin-right: 20px;
         strong {
-          font-size: 18px;
+          font-size: 15px;
           font-family: Poppins;
           font-weight: bold;
           letter-spacing: 1px;
@@ -33,6 +33,21 @@
         font-family: Poppins;
         font-size: 12px;
         color: #4e4b66;
+      }
+      .status-tenant {
+        display: flex;
+        align-items: flex-end;
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        .status-payment {
+          background: rgba(218, 20, 20, 0.3);
+          padding: 4px 10px;
+          border-radius: 15px;
+          span {
+            color: #da1414;
+          }
+        }
       }
     }
   }
@@ -49,7 +64,6 @@
       flex-direction: row;
       flex-wrap: nowrap;
       flex: 1 1 auto;
-      margin-bottom: 30px;
       div {
         flex: 1 1 auto;
         display: flex;
@@ -90,6 +104,7 @@
       color: #ff0282;
       font-family: Poppins;
       font-weight: 600;
+      //letter-spacing: 1px;
     }
     .ant-tabs-tab:hover {
       color: #ff0282;
@@ -212,8 +227,20 @@
   }
 }
 
-#file-input {
+#file-input,
+#file-input-2 {
   display: none;
+}
+
+.section-upload-files {
+  display: flex;
+  justify-content: space-between;
+  padding: 2% 10%;
+  .section-upload-file {
+    width: 180px;
+    height: 200px;
+    background: #c4c4c4;
+  }
 }
 
 .content-messages-sections {
@@ -310,6 +337,29 @@
           color: #ffffff;
         }
       }
+    }
+  }
+}
+
+.button-action-payment {
+  display: flex;
+  justify-content: center;
+  margin-top: 25px;
+  button {
+    background: #ff0282;
+    border-radius: 16px;
+    border: none;
+    width: 30%;
+    cursor: pointer;
+    text-align: center;
+    span {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 12px;
+      line-height: 34px;
+      letter-spacing: 0.75px;
+      color: #ffffff;
     }
   }
 }

@@ -21,13 +21,16 @@ import IconArroRight from "../../assets/icons/arrowRight.svg";
 import SectionDocuments from "./sectionDocuments/sectionDocuments";
 import SectionInfoTenant from "./sectionDocuments/sectionCardInformation";
 import SectionMessages from "./sectionDocuments/sectionMessages";
+import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
+import { callGetAllCustomerTenantById } from "../../utils/actions/actions";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 const { Option } = Select;
 
 const TenantFromOwner = (props) => {
-  const { dataProfile } = props;
+  const { dataProfile, match, callGetAllCustomerTenantById } = props;
+  const [dataTenant, setDataTenant] = useState([]);
   const dotChange = useRef(null);
   const contentStyle = {
     height: "160px",
@@ -37,10 +40,35 @@ const TenantFromOwner = (props) => {
     background: "#364d79",
   };
 
+  const handlerCallGetAllCustomerTenantById = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllCustomerTenantById({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataTenant(responseResult);
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    const { params } = match;
+    handlerCallGetAllCustomerTenantById({
+      idCustomerTenant: params.idCustomerTenant,
+    });
+  }, []);
   return (
     <Content>
       <div className="margin-app-main">
-        <SectionInfoTenant />
+        <SectionInfoTenant dataTenant={dataTenant} />
         <div className="actions-information-tenant">
           <div className="tabs-tenant-information">
             <Tabs
@@ -49,7 +77,7 @@ const TenantFromOwner = (props) => {
               tabBarStyle={{ color: "#A0A3BD" }}
             >
               <TabPane tab="Registrar pago" key="1">
-                <div className="main-content-tabs">Hola</div>
+                <SectionRegisterPayment />
               </TabPane>
               <TabPane tab="Documentos" key="2">
                 <SectionDocuments />
@@ -57,8 +85,7 @@ const TenantFromOwner = (props) => {
               <TabPane tab="Mensajes" key="3">
                 <SectionMessages />
               </TabPane>
-              <TabPane tab="Historial de pagos" key="4" />
-              <TabPane tab="Cotizar incidencia" key="5" />
+              <TabPane tab="Cotizar incidencia" key="4" />
             </Tabs>
           </div>
         </div>
@@ -74,6 +101,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callGetAllCustomerTenantById: (data) =>
+    dispatch(callGetAllCustomerTenantById(data)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);

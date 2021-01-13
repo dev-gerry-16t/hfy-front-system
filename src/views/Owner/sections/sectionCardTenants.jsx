@@ -3,6 +3,8 @@ import { connect } from "react-redux";
 import { Layout, Avatar, Rate, Modal, Skeleton } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import moment from "moment";
+import "moment/locale/es";
 import { UserOutlined } from "@ant-design/icons";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -12,6 +14,8 @@ import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 
+moment.locale("es");
+
 const SectionCardTenant = (props) => {
   const {
     history,
@@ -19,6 +23,17 @@ const SectionCardTenant = (props) => {
     finishCallApis,
     onClickSendInvitation,
   } = props;
+
+  const formatDate = (date) => {
+    let dateFormat = "";
+    if (date !== "NA") {
+      dateFormat = moment(date, "DD/MM/YYYY").format("DD MMMM YYYY");
+    } else {
+      dateFormat = date;
+    }
+    return dateFormat;
+  };
+
   return (
     <div className="renter-card-information">
       <div className="title-cards flex-title-card">
@@ -66,7 +81,8 @@ const SectionCardTenant = (props) => {
                   </div>
                   <div className="info-user-payment">
                     <div>
-                      Próximo Pago: <strong>{row.nextPayment}</strong>
+                      Próximo Pago:{" "}
+                      <strong>{formatDate(row.nextPayment)}</strong>
                     </div>
                     <div>
                       Monto de Renta: <strong>{row.rentAmount}</strong>
@@ -80,7 +96,7 @@ const SectionCardTenant = (props) => {
                         type="button"
                         onClick={() => {
                           history.push(
-                            `/websystem/dashboard-owner/tenant/${row.idCustomer}`
+                            `/websystem/dashboard-owner/tenant/${row.idCustomerTenant}`
                           );
                         }}
                       >
