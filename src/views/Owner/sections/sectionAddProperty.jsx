@@ -160,7 +160,6 @@ const SectionAddProperty = (props) => {
                     placeholder="Colonia"
                     value={dataForm.idZipCode}
                     onChange={(value, option) => {
-                      console.log("value, option", value, option.onClick());
                       const dataSelect = option.onClick();
                       setIsOpenInput(dataSelect.isOpen);
                       if (dataSelect.isOpen === true) {
@@ -201,7 +200,6 @@ const SectionAddProperty = (props) => {
                         <CloseOutlined
                           style={{ color: "rgba(0,0,0,.45)" }}
                           onClick={() => {
-                            console.log("click");
                             setIsOpenInput(false);
                             setDataForm({
                               ...dataForm,

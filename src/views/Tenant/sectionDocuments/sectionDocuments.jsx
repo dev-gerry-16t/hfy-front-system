@@ -88,9 +88,7 @@ const SectionDocuments = () => {
               id="file-input"
               type="file"
               accept="image/png, image/jpeg, image/jpg , image/gif"
-              onChange={(e) => {
-                console.log("e.target.files", e.target.files[0]);
-              }}
+              onChange={(e) => {}}
             />
           </div>
           <div className="section-container-action-up">

@@ -1,7 +1,7 @@
 const DOMAIN_WEB = "homify.biz";
 const DOMAIN_WEB_TEST = "homify.biz";
 const DOMAIN_WEB_LOCAL = "localhost";
-console.log('window.location.hostname',window.location.hostname);
+
 const INSTANCE_LOCAL = {
   DNS_API: "localhost",
   API_PROTOCOL: "http://",
