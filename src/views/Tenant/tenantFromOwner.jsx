@@ -22,15 +22,31 @@ import SectionDocuments from "./sectionDocuments/sectionDocuments";
 import SectionInfoTenant from "./sectionDocuments/sectionCardInformation";
 import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
-import { callGetAllCustomerTenantById } from "../../utils/actions/actions";
+import {
+  callGetAllCustomerTenantById,
+  callGetPaymentTypes,
+  callGetPaymentContract,
+  callAddDocument,
+} from "../../utils/actions/actions";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
 const { Option } = Select;
 
 const TenantFromOwner = (props) => {
-  const { dataProfile, match, callGetAllCustomerTenantById } = props;
+  const {
+    dataProfile,
+    match,
+    callGetAllCustomerTenantById,
+    callGetPaymentTypes,
+    callGetPaymentContract,
+    callAddDocument,
+  } = props;
   const [dataTenant, setDataTenant] = useState([]);
+  const [dataPayments, setDataPayments] = useState([]);
+  const [idContractData, setIdContractData] = useState(null);
+  const [spinVisible, setSpinVisible] = useState(false);
+
   const dotChange = useRef(null);
   const contentStyle = {
     height: "160px",
@@ -40,14 +56,33 @@ const TenantFromOwner = (props) => {
     background: "#364d79",
   };
 
-  const handlerCallGetAllCustomerTenantById = async (data) => {
+  const handlerCallGetAllPaymentTypes = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetPaymentTypes({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataPayments(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetAllCustomerTenantById = async () => {
+    const { params } = match;
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const idCustomerTenant = params.idCustomerTenant;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
         idSystemUser,
         idLoginHistory,
-        ...data,
+        idCustomerTenant,
       });
       const responseResult =
         isNil(response) === false &&
@@ -56,14 +91,61 @@ const TenantFromOwner = (props) => {
           ? response.response[0]
           : {};
       setDataTenant(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdContractData(responseResult.idContract);
+        handlerCallGetAllPaymentTypes({
+          type: 1,
+          idContract: responseResult.idContract,
+          idCustomerTenant,
+        });
+      }
     } catch (error) {}
   };
 
+  const handlerCallGetAllPaymentContract = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGetPaymentContract({
+        ...data,
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      handlerCallGetAllCustomerTenantById();
+      setSpinVisible(false);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
+  const handlerAddDocument = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const dataDocument = {
+      documentName: data.name,
+      extension: data.type,
+      preview: null,
+      thumbnail: null,
+      idDocumentType: 1,
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+    };
+    try {
+      const response = await callAddDocument(data.originFileObj, dataDocument);
+      const documentId =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.idDocument) === false
+          ? response.response.idDocument
+          : null;
+      return Promise.resolve(documentId);
+    } catch (error) {
+      setSpinVisible(false);
+    }
+  };
+
   useEffect(() => {
-    const { params } = match;
-    handlerCallGetAllCustomerTenantById({
-      idCustomerTenant: params.idCustomerTenant,
-    });
+    handlerCallGetAllCustomerTenantById();
   }, []);
   return (
     <Content>
@@ -77,7 +159,30 @@ const TenantFromOwner = (props) => {
               tabBarStyle={{ color: "#A0A3BD" }}
             >
               <TabPane tab="Registrar pago" key="1">
-                <SectionRegisterPayment />
+                <SectionRegisterPayment
+                  dataPayments={dataPayments}
+                  spinVisible={spinVisible}
+                  onGetDocuments={async (arrayDocument, data) => {
+                    setSpinVisible(true);
+                    const { params } = match;
+                    const idCustomerTenant = params.idCustomerTenant;
+                    const dataDocuments = await Promise.all(
+                      arrayDocument.map((row) => {
+                        const item = handlerAddDocument(row);
+                        return item;
+                      })
+                    );
+                    const parseDocument = dataDocuments.join();
+                    const dataSend = {
+                      ...data,
+                      idCustomerTenant,
+                      idContract: idContractData,
+                      documents: parseDocument,
+                    };
+                    handlerCallGetAllPaymentContract(dataSend);
+                  }}
+                  onRegisterPayment={(data) => {}}
+                />
               </TabPane>
               <TabPane tab="Documentos" key="2">
                 <SectionDocuments />
@@ -104,6 +209,9 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGetAllCustomerTenantById: (data) =>
     dispatch(callGetAllCustomerTenantById(data)),
+  callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),
+  callGetPaymentContract: (data) => dispatch(callGetPaymentContract(data)),
+  callAddDocument: (file, data) => dispatch(callAddDocument(file, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);

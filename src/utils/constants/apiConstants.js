@@ -14,6 +14,8 @@ const API = {
 
 const API_CONSTANTS = {
   GET_ALL_CUSTOMER_BY_ID: `${API.API_SECURE}/customer/getCustomerById`,
+  GET_ALL_PYMENT_TYPES: `${API.API_SECURE}/customer/getAllPayments`,
+  GET_ALL_PYMENT_CONTRACT: `${API.API_SECURE}/customer/getAllPaymentInContract`,
   GET_ALL_CUSTOMER_TENANT_BY_ID: `${API.API_SECURE}/customer/getCustomerTenantsById`,
   GET_ALL_CUSTOMER_TENANT_COINCIDENCES: `${API.API_SECURE}/customer/getTenantCoincidences`,
   CUSTOMER_ADD_PROPERTY: `${API.API_SECURE}/customer/addProperty`,
@@ -34,6 +36,7 @@ const API_CONSTANTS = {
   GET_ALL_ENDORSEMENT: `${API.API}${API.ENDORSEMENT}/getAllEndorsement`,
   REGISTER: `${API.API}${API.REGISTER}`,
   VERIFY_CODE_REGISTER: `${API.API}${API.REGISTER}/verifyCode`,
+  ADD_DOCUMENT: `${API.API_SECURE}/addDocument`,
 };
 
 export { API_CONSTANTS, HEADER };

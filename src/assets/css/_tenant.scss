@@ -240,6 +240,7 @@
     width: 180px;
     height: 200px;
     background: #c4c4c4;
+    position: relative;
   }
 }
 
@@ -404,4 +405,27 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #c70164;
+}
+
+.ant-upload-list-picture-card-container {
+  display: inline-block;
+  width: 100% !important;
+  height: 200px !important;
+  margin: 0 8px 8px 0;
+  vertical-align: top;
+}
+
+.ant-upload.ant-upload-select-picture-card {
+  width: 100% !important;
+  height: 200px !important;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  text-align: center;
+  vertical-align: top;
+  background-color: #fafafa;
+  border: 1px dashed #d9d9d9;
+  border-radius: 2px;
+  cursor: pointer;
+  -webkit-transition: border-color 0.3s;
+  transition: border-color 0.3s;
 }
