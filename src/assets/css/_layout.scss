@@ -21,7 +21,6 @@
   background: #fff;
   display: flex;
   justify-content: space-between;
-  padding: 0px 25px !important;
   font-family: Poppins;
   font-weight: 400;
   color: #4e4b66;
@@ -105,4 +104,11 @@
 
 #nprogress .bar {
   background: #ff0282;
+}
+
+.drawer-menu_header {
+  .ant-drawer-body {
+    padding: 0px !important;
+    background: #ff0282;
+  }
 }

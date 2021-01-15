@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu } from "antd";
+import { Layout, Menu, Drawer } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -30,6 +30,7 @@ const Loading = () => (
 const DefaultLayout = (props) => {
   const { history, authenticated, dataProfileMenu, dataProfile } = props;
   const [collapsed, setCollapsed] = useState(false);
+  const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
     IconOwner,
@@ -39,7 +40,7 @@ const DefaultLayout = (props) => {
     IconEdit,
     IconClose,
   };
-  
+
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -54,6 +55,47 @@ const DefaultLayout = (props) => {
     <div className="App">
       {isNil(dataProfile) === false && (
         <Layout>
+          <Drawer
+            placement="left"
+            className="drawer-menu_header"
+            closable={false}
+            onClose={() => {
+              setCollapsedButton(!collapsedButton);
+            }}
+            visible={collapsedButton}
+            key="left"
+          >
+            {" "}
+            <div className="logo">
+              <img src={IconLongtLogo} alt="Logo short" />
+              <img
+                src={IconShortLogo}
+                alt="Logo short"
+                style={{ display: collapsed === true ? "block" : "none" }}
+              />
+            </div>
+            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+              {isEmpty(dataProfileMenu) === false &&
+                dataProfileMenu.map((row) => {
+                  return (
+                    <Menu.Item
+                      key={`${row.idMenu}`}
+                      onClick={(event) => {
+                        history.push(row.path);
+                        setCollapsedButton(!collapsedButton);
+                      }}
+                    >
+                      <img
+                        className="ant-menu-item-icon"
+                        width="15"
+                        src={arrayIconst[row.icon]}
+                      />
+                      <span className="tex-menu-icon-ant">{row.menuName}</span>
+                    </Menu.Item>
+                  );
+                })}
+            </Menu>
+          </Drawer>
           <Sider collapsible collapsed={collapsed} onCollapse={toggle}>
             <div className="logo">
               <img
@@ -91,6 +133,16 @@ const DefaultLayout = (props) => {
           <Layout className="site-layout">
             <Header className="site-layout-background" style={{ padding: 0 }}>
               <div className="header-title-button">
+                <button
+                  className="button-drawer-header"
+                  onClick={() => {
+                    setCollapsedButton(!collapsedButton);
+                  }}
+                >
+                  {React.createElement(
+                    collapsedButton ? MenuUnfoldOutlined : MenuFoldOutlined
+                  )}
+                </button>
                 <h2>Dashboard</h2>
               </div>
               <div className="header-info-user">

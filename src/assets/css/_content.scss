@@ -1,6 +1,9 @@
 .margin-app-main {
   margin: 2vh 4vh;
 }
+.button-drawer-header {
+  display: none;
+}
 .top-main-user {
   display: flex;
   justify-content: space-between;
@@ -14,6 +17,11 @@
     span {
       font-size: 10px;
     }
+  }
+  .action-buttons-top {
+    display: flex;
+    width: 50%;
+    justify-content: space-between;
   }
   .button_init_primary {
     display: flex;
@@ -76,6 +84,7 @@
 .main-information-user {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
   .title-cards {
     padding: 10px 0px 5px 20px;
     border-bottom: 1px solid #d6d8e7;
@@ -290,3 +299,134 @@
   border-radius: 15px 15px 0 0 !important;
 }
 //antd
+@media screen and (max-width: 970px) {
+  .main-information-user {
+    flex-direction: column;
+    .card-chart-information {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+    .renter-card-information {
+      width: 100% !important;
+    }
+  }
+
+  .indicators-amount-renter {
+    flex-direction: column;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    .cards-amount-renter {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+  }
+  .top-main-user {
+    flex-direction: column;
+    .welcome-user-main {
+      width: 100%;
+    }
+    .action-buttons-top {
+      width: 100%;
+    }
+  }
+}
+
+@media screen and (max-width: 715px) {
+  aside {
+    display: none;
+  }
+  .button-drawer-header {
+    display: block;
+    background: transparent;
+    border: none;
+    margin-left: 10px;
+  }
+  // .top-main-user {
+  //   flex-direction: column;
+  //   .welcome-user-main {
+  //     width: 100%;
+  //   }
+  //   .action-buttons-top {
+  //     width: 100%;
+  //   }
+  // }
+}
+
+@media screen and (max-width: 520px) {
+  .margin-app-main {
+    margin: 2vh 5px;
+  }
+  .welcome-user-main {
+    margin-bottom: 10px;
+  }
+  .action-buttons-top {
+    flex-direction: column;
+    .button_init_primary {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  .data-renter-info {
+    .box-info-user {
+      flex-direction: column;
+      .avatar-user {
+        margin-right: 0px !important;
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+      .info-user {
+        .status-payment {
+          margin: 5px 0px;
+        }
+      }
+    }
+  }
+  .renter-card-information {
+    .title-cards {
+      .button_init_primary {
+        button {
+          min-width: 140px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .header-title-button {
+    h2 {
+      font-size: 15px;
+    }
+  }
+  .header-info-user {
+    .hi-user-name-type {
+      strong {
+        font-size: 12px !important;
+      }
+      span {
+        font-size: 12px !important;
+      }
+    }
+    .button-header {
+      margin: 0px 5px !important;
+      img {
+        width: 20px;
+      }
+    }
+  }
+  .renter-card-information {
+    .title-cards {
+      flex-direction: column;
+      span {
+        margin-bottom: 5px;
+      }
+      .button_init_primary {
+        justify-content: center;
+        button {
+          width: 100% !important;
+          min-width: 140px;
+        }
+      }
+    }
+  }
+}

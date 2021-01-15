@@ -370,13 +370,7 @@ const Owner = (props) => {
               <strong>{dataCustomer.lastSessionStarted}</strong>
             </span>
           </div>
-          <div
-            style={{
-              display: "flex",
-              width: "50%",
-              justifyContent: "space-between",
-            }}
-          >
+          <div className="action-buttons-top">
             <div className="button_init_primary">
               <button
                 type="button"
