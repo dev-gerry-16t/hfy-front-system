@@ -89,7 +89,7 @@ const SectionAddProperty = (props) => {
           <div className="main-form-information">
             <p>Datos de localización</p>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.street}
                   placeholder={"Calle"}
@@ -98,8 +98,13 @@ const SectionAddProperty = (props) => {
                   }}
                 />
               </Col>
-              <Col span={2} />
-              <Col span={11}>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.streetNumber}
                   placeholder={"Numero"}
@@ -110,7 +115,7 @@ const SectionAddProperty = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.zipCode}
                   placeholder={"Código postal"}
@@ -130,8 +135,13 @@ const SectionAddProperty = (props) => {
                   }}
                 />
               </Col>
-              <Col span={2} />
-              <Col span={11}>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.state}
                   placeholder={"Estado"}
@@ -143,7 +153,7 @@ const SectionAddProperty = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.city}
                   disabled
@@ -153,8 +163,13 @@ const SectionAddProperty = (props) => {
                   }}
                 />
               </Col>
-              <Col span={2} />
-              <Col span={11}>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 {isOpenInput === false ? (
                   <Select
                     placeholder="Colonia"
@@ -222,7 +237,7 @@ const SectionAddProperty = (props) => {
             </Row>
             <p>Entre Calles</p>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.firstStreetReference}
                   placeholder={"Calle"}
@@ -234,8 +249,13 @@ const SectionAddProperty = (props) => {
                   }}
                 />
               </Col>
-              <Col span={2} />
-              <Col span={11}>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.secondStreetReference}
                   placeholder={"Calle"}

@@ -76,7 +76,7 @@ const SectionAddTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Select
                   placeholder="Tipo de persona"
                   value={dataForm.idPersonType}
@@ -90,8 +90,13 @@ const SectionAddTenant = (props) => {
                     })}
                 </Select>
               </Col>
-              <Col span={2} />
-              <Col span={11}>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Select
                   placeholder="Departamento"
                   value={dataForm.idApartment}

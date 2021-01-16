@@ -73,7 +73,7 @@ const SectionAdvancement = (props) => {
               Llena la siguiente información para solicitar un adelanto de renta
             </p>
             <Row>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Row>
                   <Select
                     placeholder="Inquilino"
@@ -147,7 +147,12 @@ const SectionAdvancement = (props) => {
                   </Select>
                 </Row>
               </Col>
-              <Col span={13} className="total-advancement-amount">
+              <Col
+                span={13}
+                xs={{ span: 24 }}
+                md={{ span: 13 }}
+                className="total-advancement-amount"
+              >
                 <SubSectionSummary
                   viewSummary={viewSummary}
                   onClickViewSummary={() => {
