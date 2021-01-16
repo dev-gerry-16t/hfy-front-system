@@ -144,10 +144,7 @@ const SectionRegisterPayment = (props) => {
               </Col>
             </Row>
           </div>
-          <div
-            className="section-type-messages"
-            style={{ width: "50%", height: "280px" }}
-          >
+          <div className="section-type-messages" style={{ width: "50%" }}>
             <div className="text-header">Evidencia</div>
             <div className="section-upload-files">
               <div className="section-upload-file">

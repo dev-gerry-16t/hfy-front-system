@@ -79,7 +79,7 @@ const SectionDocuments = () => {
             </div>
           </div>
         </div>
-        <div className="content-upload">
+        {/* <div className="content-upload">
           <div className="button_init_primary">
             <label type="button" for="file-input" onClick={() => {}}>
               <span>Subir documentos</span>
@@ -130,6 +130,7 @@ const SectionDocuments = () => {
             />
           </div>
         </div>
+       */}
       </div>
     </div>
   );

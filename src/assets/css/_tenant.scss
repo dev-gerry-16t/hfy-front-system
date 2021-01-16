@@ -122,7 +122,7 @@
     display: flex;
     justify-content: space-between;
     .content-history {
-      width: 60%;
+      width: 100%;
       .select-file {
         display: flex;
         margin-bottom: 20px;
@@ -295,27 +295,28 @@
       }
     }
   }
-  .section-type-messages {
+  .section-type-messages-fixed {
     width: 45%;
-    box-shadow: 0px 1px 8px 6px #ebebf1;
-    border-radius: 16px;
-    height: 320px;
-    .text-header {
-      background: #ff0282;
-      text-align: center;
-      border-radius: 15px 15px 0px 0px;
-      font-weight: normal;
-      color: #ffffff;
-      font-size: 16px;
-      padding: 5px 0px;
-    }
-    textarea {
-      height: 290px !important;
-      width: 100%;
-      outline: none;
-      border: 1px solid #d6d8e7;
-      padding: 10px;
-      border-radius: 0px 0px 15px 15px;
+    .section-type-messages {
+      box-shadow: 0px 1px 8px 6px #ebebf1;
+      border-radius: 16px;
+      .text-header {
+        background: #ff0282;
+        text-align: center;
+        border-radius: 15px 15px 0px 0px;
+        font-weight: normal;
+        color: #ffffff;
+        font-size: 16px;
+        padding: 5px 0px;
+      }
+      textarea {
+        height: 290px !important;
+        width: 100%;
+        outline: none;
+        border: 1px solid #d6d8e7;
+        padding: 10px;
+        border-radius: 0px 0px 15px 15px;
+      }
     }
     .button_init_primary {
       margin-top: 20px;
@@ -428,4 +429,81 @@
   cursor: pointer;
   -webkit-transition: border-color 0.3s;
   transition: border-color 0.3s;
+}
+
+@media screen and (max-width: 1080px) {
+  .top-info-tenant {
+    flex-direction: column;
+    .card-info-tenant {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .card-data-tenant {
+      width: 100%;
+    }
+  }
+}
+@media screen and (max-width: 970px) {
+  .content-messages-sections {
+    flex-direction: column;
+    .section-history-messages {
+      width: 100%;
+    }
+    .section-type-messages {
+      width: 100% !important;
+    }
+    .section-type-messages-fixed {
+      width: 100%;
+      margin-top: 15px;
+    }
+  }
+}
+@media screen and (max-width: 715px) {
+}
+@media screen and (max-width: 520px) {
+  .top-info-tenant {
+    .card-info-tenant {
+      padding: 10px 5px 10px 5px;
+      .info-tenant {
+        .status-tenant {
+          position: relative;
+          top: 0px;
+          right: 0px;
+        }
+      }
+    }
+    .card-data-tenant {
+      flex-direction: column;
+      padding: 10px 5px 10px 5px;
+      .info-property-tenant {
+        div {
+          flex: 1 1 0px;
+        }
+      }
+    }
+  }
+  .section-upload-files {
+    flex-direction: column;
+    .section-upload-file {
+      width: 100%;
+    }
+  }
+  .button-action-payment {
+    button {
+      width: 100%;
+    }
+  }
+  .ant-timeline-item {
+    .ant-timeline-item-tail {
+      display: none;
+    }
+    .ant-timeline-item-head {
+      display: none;
+    }
+    .ant-timeline-item-content {
+      margin: 0 0 0 0px !important;
+    }
+  }
+}
+@media screen and (max-width: 390px) {
 }

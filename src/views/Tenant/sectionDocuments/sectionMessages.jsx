@@ -14,9 +14,11 @@ const SectionMessages = () => {
             <SectionCardItemMessage />
           </Timeline>
         </div>
-        <div className="section-type-messages">
-          <div className="text-header">Redactar mensaje</div>
-          <textarea maxlength="200" />
+        <div className="section-type-messages-fixed">
+          <div className="section-type-messages">
+            <div className="text-header">Redactar mensaje</div>
+            <textarea maxlength="200" />
+          </div>
           <div className="button_init_primary">
             <button type="button" onClick={() => {}}>
               <span>Enviar mensaje</span>
