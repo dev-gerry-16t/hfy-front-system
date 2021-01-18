@@ -60,7 +60,7 @@ const SectionInfoTenant = (props) => {
             <Tooltip title={dataTenant.tooltipAddress}>
               <strong>{dataTenant.propertyAddress}</strong>
             </Tooltip>
-            <strong>A210</strong>
+            <strong>-</strong>
             <strong>{formatDate(dataTenant.nextPaymentAt)}</strong>
             <strong>{dataTenant.currentRent}</strong>
           </div>

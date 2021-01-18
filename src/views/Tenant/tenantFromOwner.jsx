@@ -27,6 +27,8 @@ import {
   callGetPaymentTypes,
   callGetPaymentContract,
   callAddDocument,
+  callGetAllDocumentTypes,
+  callGetPaymentContractDocument,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -41,9 +43,15 @@ const TenantFromOwner = (props) => {
     callGetPaymentTypes,
     callGetPaymentContract,
     callAddDocument,
+    callGetAllDocumentTypes,
+    callGetPaymentContractDocument,
   } = props;
+  const { params } = match;
+  const idCustomerTenant = params.idCustomerTenant;
   const [dataTenant, setDataTenant] = useState([]);
   const [dataPayments, setDataPayments] = useState([]);
+  const [dataDocumentTypes, setDataDocumentTypes] = useState([]);
+  const [dataDocumentsRepository, setDataDocumentsRepository] = useState([]);
   const [idContractData, setIdContractData] = useState(null);
   const [spinVisible, setSpinVisible] = useState(false);
 
@@ -73,10 +81,45 @@ const TenantFromOwner = (props) => {
     } catch (error) {}
   };
 
-  const handlerCallGetAllCustomerTenantById = async () => {
-    const { params } = match;
+  const handlerCallGetAllDocumentTypes = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-    const idCustomerTenant = params.idCustomerTenant;
+    try {
+      const response = await callGetAllDocumentTypes({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        idCustomerTenant,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDocumentTypes(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetPaymentContractDocument = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetPaymentContractDocument({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        idCustomerTenant,
+        idContract: idContractData,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDocumentsRepository(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetAllCustomerTenantById = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -118,14 +161,14 @@ const TenantFromOwner = (props) => {
     }
   };
 
-  const handlerAddDocument = async (data) => {
+  const handlerAddDocument = async (data, type) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     const dataDocument = {
       documentName: data.name,
       extension: data.type,
       preview: null,
       thumbnail: null,
-      idDocumentType: 1,
+      idDocumentType: type.idPaymentType,
       idCustomer,
       idSystemUser,
       idLoginHistory,
@@ -146,7 +189,9 @@ const TenantFromOwner = (props) => {
 
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
+    handlerCallGetAllDocumentTypes();
   }, []);
+
   return (
     <Content>
       <div className="margin-app-main">
@@ -157,6 +202,7 @@ const TenantFromOwner = (props) => {
               defaultActiveKey="1"
               onChange={() => {}}
               tabBarStyle={{ color: "#A0A3BD" }}
+              tabPosition="top"
             >
               <TabPane tab="Registrar pago" key="1">
                 <SectionRegisterPayment
@@ -164,11 +210,9 @@ const TenantFromOwner = (props) => {
                   spinVisible={spinVisible}
                   onGetDocuments={async (arrayDocument, data) => {
                     setSpinVisible(true);
-                    const { params } = match;
-                    const idCustomerTenant = params.idCustomerTenant;
                     const dataDocuments = await Promise.all(
                       arrayDocument.map((row) => {
-                        const item = handlerAddDocument(row);
+                        const item = handlerAddDocument(row, data);
                         return item;
                       })
                     );
@@ -185,7 +229,13 @@ const TenantFromOwner = (props) => {
                 />
               </TabPane>
               <TabPane tab="Documentos" key="2">
-                <SectionDocuments />
+                <SectionDocuments
+                  dataDocumentTypes={dataDocumentTypes}
+                  dataDocumentsRepository={dataDocumentsRepository}
+                  onSearchDocument={(data) => {
+                    handlerCallGetPaymentContractDocument(data);
+                  }}
+                />
               </TabPane>
               <TabPane tab="Mensajes" key="3">
                 <SectionMessages />
@@ -212,6 +262,9 @@ const mapDispatchToProps = (dispatch) => ({
   callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),
   callGetPaymentContract: (data) => dispatch(callGetPaymentContract(data)),
   callAddDocument: (file, data) => dispatch(callAddDocument(file, data)),
+  callGetAllDocumentTypes: (data) => dispatch(callGetAllDocumentTypes(data)),
+  callGetPaymentContractDocument: (data) =>
+    dispatch(callGetPaymentContractDocument(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);

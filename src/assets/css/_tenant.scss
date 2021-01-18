@@ -124,10 +124,11 @@
     .content-history {
       width: 100%;
       .select-file {
-        display: flex;
-        margin-bottom: 20px;
+        .ant-picker {
+          width: 100%;
+        }
         .ant-select {
-          width: 50%;
+          width: 100%;
         }
       }
       .content-files {
@@ -141,11 +142,6 @@
           border-bottom: 1px solid #d6d8e7;
           .box-preview {
             padding: 15px;
-            div {
-              background: #c4c4c4;
-              width: 162px;
-              height: 102px;
-            }
           }
           .box-information {
             flex: 1 1 auto;
@@ -244,6 +240,20 @@
   }
 }
 
+.section-type-messages {
+  box-shadow: 0px 1px 8px 6px #ebebf1;
+  border-radius: 16px;
+  .text-header {
+    background: #ff0282;
+    text-align: center;
+    border-radius: 15px 15px 0px 0px;
+    font-weight: normal;
+    color: #ffffff;
+    font-size: 16px;
+    padding: 5px 0px;
+  }
+}
+
 .content-messages-sections {
   display: flex;
   justify-content: space-between;
@@ -307,17 +317,6 @@
   .section-type-messages-fixed {
     width: 45%;
     .section-type-messages {
-      box-shadow: 0px 1px 8px 6px #ebebf1;
-      border-radius: 16px;
-      .text-header {
-        background: #ff0282;
-        text-align: center;
-        border-radius: 15px 15px 0px 0px;
-        font-weight: normal;
-        color: #ffffff;
-        font-size: 16px;
-        padding: 5px 0px;
-      }
       textarea {
         height: 290px !important;
         width: 100%;
@@ -470,6 +469,13 @@
 @media screen and (max-width: 715px) {
 }
 @media screen and (max-width: 520px) {
+  .actions-information-tenant {
+    .tabs-tenant-information {
+      .ant-tabs-nav-list {
+        width: auto;
+      }
+    }
+  }
   .top-info-tenant {
     .card-info-tenant {
       padding: 10px 5px 10px 5px;
@@ -515,4 +521,14 @@
   }
 }
 @media screen and (max-width: 390px) {
+}
+.ant-picker {
+  border-radius: 8px !important;
+  .ant-picker-input {
+    input {
+      border-radius: 8px;
+      font-family: Poppins;
+      font-weight: bold;
+    }
+  }
 }

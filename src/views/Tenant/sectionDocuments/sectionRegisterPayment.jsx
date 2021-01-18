@@ -166,6 +166,8 @@ const SectionRegisterPayment = (props) => {
               const documents = [...fileList, ...fileList1];
               onGetDocuments(documents, dataForm);
               setDataForm(initialDataForm);
+              setFileList([]);
+              setFileList1([]);
               // onRegisterPayment(dataForm);
             }}
           >

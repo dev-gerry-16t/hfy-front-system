@@ -19,6 +19,8 @@ const API_CONSTANTS = {
   GET_ALL_CUSTOMER_TENANT_BY_ID: `${API.API_SECURE}/customer/getCustomerTenantsById`,
   GET_ALL_CUSTOMER_TENANT_COINCIDENCES: `${API.API_SECURE}/customer/getTenantCoincidences`,
   CUSTOMER_ADD_PROPERTY: `${API.API_SECURE}/customer/addProperty`,
+  GET_ALL_DOCUMENT_TYPES: `${API.API_SECURE}/customer/getAllDocumentTypes`,
+  GET_PAYMENT_IN_CONTRACT_DOCUMENT: `${API.API_SECURE}/customer/getPaymentInContractDocument`,
   GET_ALL_PROPERTIES: `${API.API_SECURE}/customer/getAllProperties`,
   GET_ALL_DEPARTMENTS: `${API.API_SECURE}/customer/getApartments`,
   REQUEST_ADVANCEMENT_RENTS: `${API.API_SECURE}/customer/requestAdvancement`,
