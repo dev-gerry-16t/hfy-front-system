@@ -18,6 +18,8 @@ const API_CONSTANTS = {
   GET_ALL_PYMENT_CONTRACT: `${API.API_SECURE}/customer/getAllPaymentInContract`,
   GET_ALL_CUSTOMER_TENANT_BY_ID: `${API.API_SECURE}/customer/getCustomerTenantsById`,
   GET_ALL_CUSTOMER_TENANT_COINCIDENCES: `${API.API_SECURE}/customer/getTenantCoincidences`,
+  ADD_CUSTOMER_MESSAGE: `${API.API_SECURE}/customer/addCustomerMessage`,
+  GET_CUSTOMER_MESSAGE: `${API.API_SECURE}/customer/getCustomerMessage`,
   CUSTOMER_ADD_PROPERTY: `${API.API_SECURE}/customer/addProperty`,
   GET_ALL_DOCUMENT_TYPES: `${API.API_SECURE}/customer/getAllDocumentTypes`,
   GET_PAYMENT_IN_CONTRACT_DOCUMENT: `${API.API_SECURE}/customer/getPaymentInContractDocument`,

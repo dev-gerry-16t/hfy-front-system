@@ -304,6 +304,7 @@
       .item-message-2 {
       }
       .response-message-item {
+        display: flex;
         border-top: 1px solid #d6d8e7;
         margin-top: 10px;
         textarea {
@@ -469,6 +470,9 @@
 @media screen and (max-width: 715px) {
 }
 @media screen and (max-width: 520px) {
+  .main-content-tabs {
+    padding: 10px 5px !important;
+  }
   .actions-information-tenant {
     .tabs-tenant-information {
       .ant-tabs-nav-list {

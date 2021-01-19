@@ -29,6 +29,8 @@ import {
   callAddDocument,
   callGetAllDocumentTypes,
   callGetPaymentContractDocument,
+  callAddCustomerMessage,
+  callGetCustomerMessage,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -45,14 +47,19 @@ const TenantFromOwner = (props) => {
     callAddDocument,
     callGetAllDocumentTypes,
     callGetPaymentContractDocument,
+    callAddCustomerMessage,
+    callGetCustomerMessage,
   } = props;
   const { params } = match;
   const idCustomerTenant = params.idCustomerTenant;
   const [dataTenant, setDataTenant] = useState([]);
   const [dataPayments, setDataPayments] = useState([]);
   const [dataDocumentTypes, setDataDocumentTypes] = useState([]);
+  const [dataMessages, setDataMessages] = useState([]);
   const [dataDocumentsRepository, setDataDocumentsRepository] = useState([]);
   const [idContractData, setIdContractData] = useState(null);
+  const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
+  const [idTopIndexDocuments, setIdTopIndexDocuments] = useState(-1);
   const [spinVisible, setSpinVisible] = useState(false);
 
   const dotChange = useRef(null);
@@ -107,6 +114,7 @@ const TenantFromOwner = (props) => {
         idSystemUser,
         idLoginHistory,
         idCustomerTenant,
+        topIndex: idTopIndexDocuments,
         idContract: idContractData,
         ...data,
       });
@@ -115,6 +123,9 @@ const TenantFromOwner = (props) => {
           ? response.response
           : [];
       setDataDocumentsRepository(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdTopIndexDocuments(responseResult[0].topIndex);
+      }
     } catch (error) {}
   };
 
@@ -138,6 +149,10 @@ const TenantFromOwner = (props) => {
         setIdContractData(responseResult.idContract);
         handlerCallGetAllPaymentTypes({
           type: 1,
+          idContract: responseResult.idContract,
+          idCustomerTenant,
+        });
+        handlerCallGetCustomerMessage({
           idContract: responseResult.idContract,
           idCustomerTenant,
         });
@@ -185,6 +200,49 @@ const TenantFromOwner = (props) => {
     } catch (error) {
       setSpinVisible(false);
     }
+  };
+
+  const handlerCallGetCustomerMessage = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerMessage({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: idTopIndexMessage,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataMessages(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdTopIndexMessage(responseResult[0].topIndex);
+      }
+    } catch (error) {}
+  };
+
+  const handlerCallAddCustomerMessage = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callAddCustomerMessage({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        idCustomerTenant,
+        idContract: idContractData,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      handlerCallGetCustomerMessage({
+        idContract: idContractData,
+        idCustomerTenant,
+      });
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -238,7 +296,18 @@ const TenantFromOwner = (props) => {
                 />
               </TabPane>
               <TabPane tab="Mensajes" key="3">
-                <SectionMessages />
+                <SectionMessages
+                  dataMessages={dataMessages}
+                  getMoreCoincidences={() => {
+                    handlerCallGetCustomerMessage({
+                      idContract: idContractData,
+                      idCustomerTenant,
+                    });
+                  }}
+                  onSendMessages={(data) => {
+                    handlerCallAddCustomerMessage(data);
+                  }}
+                />
               </TabPane>
               <TabPane tab="Cotizar incidencia" key="4" />
             </Tabs>
@@ -265,6 +334,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllDocumentTypes: (data) => dispatch(callGetAllDocumentTypes(data)),
   callGetPaymentContractDocument: (data) =>
     dispatch(callGetPaymentContractDocument(data)),
+  callAddCustomerMessage: (data) => dispatch(callAddCustomerMessage(data)),
+  callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);

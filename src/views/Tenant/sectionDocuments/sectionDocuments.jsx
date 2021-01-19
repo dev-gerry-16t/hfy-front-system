@@ -10,6 +10,7 @@ import {
   Col,
   DatePicker,
   Image,
+  Button,
 } from "antd";
 import Search from "../../../assets/icons/Search.svg";
 import ENVIROMENT from "../../../utils/constants/enviroments";
@@ -202,7 +203,6 @@ const SectionDocuments = (props) => {
                       )},${moment().format("YYYY-MM-DD")}`;
                     }
                     onSearchDocument({
-                      topIndex: -1,
                       filterDate: sendDateFormat,
                       idDocumentType: selectDocumentType,
                     });
@@ -295,6 +295,31 @@ const SectionDocuments = (props) => {
           </div>
         </div>
        */}
+      </div>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <Button
+          type="link"
+          onClick={() => {
+            let sendDateFormat = "";
+            if (selectDateFilter === "1") {
+              sendDateFormat = statesDates.now;
+            } else if (selectDateFilter === "2") {
+              sendDateFormat = statesDates.month;
+            } else if (selectDateFilter === "3") {
+              sendDateFormat = `${statesDates.startDate},${statesDates.endDate}`;
+            } else {
+              sendDateFormat = `${moment().format(
+                "YYYY-MM-DD"
+              )},${moment().format("YYYY-MM-DD")}`;
+            }
+            onSearchDocument({
+              filterDate: sendDateFormat,
+              idDocumentType: selectDocumentType,
+            });
+          }}
+        >
+          Mostrar mas
+        </Button>
       </div>
     </div>
   );
