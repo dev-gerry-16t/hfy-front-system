@@ -44,6 +44,24 @@
     }
   }
 }
+.button-action-primary {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: #ff0282;
+  border-radius: 16px;
+  border: none;
+  span {
+    font-family: Poppins;
+    padding: 0px 10px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 34px;
+    letter-spacing: 0.75px;
+    color: #ffffff;
+  }
+}
 .indicators-amount-renter {
   display: flex;
   justify-content: space-between;
@@ -147,6 +165,60 @@
             border: none;
           }
         }
+      }
+    }
+  }
+}
+
+.main-information-owner {
+  background: #ffffff;
+  box-shadow: 0px 1px 8px 6px #ebebf1;
+  border-radius: 16px;
+  margin-top: 20px;
+  .title-cards {
+    padding: 10px 0px 5px 20px;
+    border-bottom: 1px solid #d6d8e7;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    letter-spacing: 0.75px;
+  }
+  .section-information-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+    .section-information-info {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: space-around;
+      .section-information-data {
+        display: flex;
+        align-self: center;
+        .info-user {
+          display: flex;
+          flex-direction: column;
+          margin-left: 15px;
+        }
+      }
+      .section-information-button-1 {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .section-information-buttons {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: space-around;
+      .section-information-button-2 {
+        display: flex;
+        flex-direction: column;
+      }
+      .section-information-button-3 {
+        display: flex;
+        flex-direction: column;
       }
     }
   }
@@ -264,6 +336,27 @@
       }
     }
   }
+  .button_init_secondary {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    button {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid #ff0282;
+      width: 40%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: #ff0282;
+      }
+    }
+  }
 }
 
 .total-advancement-amount {
@@ -335,6 +428,33 @@
   aside {
     display: none;
   }
+  .main-information-owner {
+    .title-cards {
+    }
+    .section-information-actions {
+      display: flex;
+      flex-direction: column;
+      .section-information-info {
+        .section-information-data {
+          margin-top: 15px;
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+          margin-top: 15px;
+        }
+      }
+      .section-information-buttons {
+        margin-top: 20px;
+        .section-information-button-2 {
+          margin-top: 15px;
+        }
+        .section-information-button-3 {
+          margin-top: 15px;
+        }
+      }
+    }
+  }
   .button-drawer-header {
     display: block;
     background: transparent;
@@ -353,6 +473,37 @@
 }
 
 @media screen and (max-width: 520px) {
+  .main-information-owner {
+    .title-cards {
+      flex-direction: column;
+      .button_init_secondary{
+        display: block;
+        button{
+          width: 100%;
+        }
+      }
+    }
+    .section-information-actions {
+      display: flex;
+      flex-direction: column;
+      .section-information-info {
+        flex-direction: column;
+        .section-information-data {
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+        }
+      }
+      .section-information-buttons {
+        flex-direction: column;
+        .section-information-button-2 {
+        }
+        .section-information-button-3 {
+        }
+      }
+    }
+  }
   .margin-app-main {
     margin: 2vh 5px;
   }
@@ -393,6 +544,33 @@
 }
 
 @media screen and (max-width: 390px) {
+  .main-information-owner {
+    .title-cards {
+      flex-direction: column;
+      .button_init_secondary{
+        display: block;
+        button{
+          width: 100%;
+        }
+      }
+    }
+    .section-information-actions {
+      .section-information-info {
+        .section-information-data {
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+        }
+      }
+      .section-information-buttons {
+        .section-information-button-2 {
+        }
+        .section-information-button-3 {
+        }
+      }
+    }
+  }
   .header-title-button {
     h2 {
       font-size: 15px;
@@ -432,7 +610,7 @@
   .ant-modal-body {
     padding: 24px 5px !important;
   }
-  .main-form-information{
+  .main-form-information {
     padding: 0px 5px !important;
   }
 }

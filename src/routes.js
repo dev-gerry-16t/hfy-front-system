@@ -7,6 +7,7 @@ const TenantFromOwner = React.lazy(() =>
 const SignatureTest = React.lazy(() =>
   import("./views/Signature/signatureIndex")
 );
+const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
 
 const routes = [
   {
@@ -25,13 +26,20 @@ const routes = [
     component: TenantFromOwner,
     exact: true,
   },
-  ,
   {
     key: "3",
     id: "SignatureTest",
     path: "/websystem/testSignature",
     name: "signature",
     component: SignatureTest,
+    exact: true,
+  },
+  {
+    key: "4",
+    id: "Tenant",
+    path: "/websystem/dashboard-tenant",
+    name: "Tenant",
+    component: Tenant,
     exact: true,
   },
 ];
