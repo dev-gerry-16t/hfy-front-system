@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu, Drawer } from "antd";
+import { Layout, Menu, Drawer, notification } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -49,6 +49,28 @@ const DefaultLayout = (props) => {
     if (isNil(dataProfile) === true) {
       history.push("/");
     }
+    const args = {
+      description: (
+        <div style={{ fontFamily: "Poppins" }}>
+          Es necesatio responder el formulario para poder continuar con tu
+          proceso
+          <button
+            type="button"
+            onClick={() => {
+              notification.destroy();
+              history.push("/websystem/typeform-user");
+            }}
+            className="button-action-primary"
+            style={{ marginTop: "25px" }}
+          >
+            <span>Ir al formulario</span>
+          </button>
+        </div>
+      ),
+      duration: 0,
+      style: { marginTop: "4vw" },
+    };
+    notification.open(args);
   }, []);
 
   return (

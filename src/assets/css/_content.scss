@@ -476,9 +476,9 @@
   .main-information-owner {
     .title-cards {
       flex-direction: column;
-      .button_init_secondary{
+      .button_init_secondary {
         display: block;
-        button{
+        button {
           width: 100%;
         }
       }
@@ -547,9 +547,9 @@
   .main-information-owner {
     .title-cards {
       flex-direction: column;
-      .button_init_secondary{
+      .button_init_secondary {
         display: block;
-        button{
+        button {
           width: 100%;
         }
       }
@@ -613,4 +613,8 @@
   .main-form-information {
     padding: 0px 5px !important;
   }
+}
+
+.ant-notification-notice-close {
+  display: none;
 }
