@@ -52,8 +52,13 @@ const DefaultLayout = (props) => {
     const args = {
       description: (
         <div style={{ fontFamily: "Poppins" }}>
-          Es necesatio responder el formulario para poder continuar con tu
-          proceso
+          <span style={{ fontSize: "12px" }}>
+            Antes de iniciar el formulario debes tener lista una identificación
+            oficial, tus últimos 3 comprobantes de ingresos y una carta de la
+            empresa donde trabajas que acredite desde cuando estas laborando en
+            la empresa. Adicional, necesitaras la escritura del inmueble que
+            quedara como garantía y los datos e identificación del Aval.
+          </span>
           <button
             type="button"
             onClick={() => {
@@ -65,6 +70,13 @@ const DefaultLayout = (props) => {
           >
             <span>Ir al formulario</span>
           </button>
+        </div>
+      ),
+      message: (
+        <div
+          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+        >
+          Solicitud de Investigación Persona Física con Aval
         </div>
       ),
       duration: 0,

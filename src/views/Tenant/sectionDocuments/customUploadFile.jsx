@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Upload, Modal } from "antd";
 import Magnifier from "react-magnifier";
-import { PlusOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import UploadFile from "../../../assets/icons/Upload.svg";
 

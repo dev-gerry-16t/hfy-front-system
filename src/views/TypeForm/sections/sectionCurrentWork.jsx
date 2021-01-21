@@ -1,4 +1,5 @@
 import React from "react";
+import NumberFormat from "react-number-format";
 import {
   Layout,
   Avatar,
@@ -16,7 +17,8 @@ import IconProfile from "../../../assets/icons/Profile.svg";
 
 const { Option } = Select;
 
-const SectionCurrentWork = () => {
+const SectionCurrentWork = (props) => {
+  const { onClickBack, onClickNext } = props;
   return (
     <div className="content-typeform-formulary">
       <h3>Información laboral</h3>
@@ -29,9 +31,28 @@ const SectionCurrentWork = () => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
-                placeholder={"Numero de dependientes economicos"}
-                onChange={(e) => {}}
+              <NumberFormat
+                id={null}
+                customInput={Input}
+                thousandSeparator=","
+                decimalSeparator="."
+                decimalPrecision={2}
+                allowNegative={false}
+                prefix=""
+                suffix=""
+                value={""}
+                className="inputLogin"
+                floatingLabelText=""
+                isVisible
+                toBlock={false}
+                disable={false}
+                placeholder="Numero de dependientes economicos"
+                onValueChange={(values) => {
+                  const { formattedValue, value, floatValue } = values;
+                }}
+                onClick={(event) => {}}
+                onFocus={(event) => {}}
+                onBlur={(event) => {}}
               />
             </Col>
           </Row>
@@ -45,7 +66,29 @@ const SectionCurrentWork = () => {
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Sueldo mensual"} onChange={(e) => {}} />
+              <NumberFormat
+                id={null}
+                customInput={Input}
+                thousandSeparator=","
+                decimalSeparator="."
+                decimalPrecision={2}
+                allowNegative={false}
+                prefix="$"
+                suffix=""
+                value={""}
+                className="inputLogin"
+                floatingLabelText=""
+                isVisible
+                toBlock={false}
+                disable={false}
+                placeholder="Sueldo mensual"
+                onValueChange={(values) => {
+                  const { formattedValue, value, floatValue } = values;
+                }}
+                onClick={(event) => {}}
+                onFocus={(event) => {}}
+                onBlur={(event) => {}}
+              />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -61,6 +104,22 @@ const SectionCurrentWork = () => {
               <Input placeholder={"Correo de tu jefe"} onChange={(e) => {}} />
             </Col>
           </Row>
+          <div className="button_actions">
+            <button
+              type="button"
+              onClick={onClickBack}
+              className="button_secondary"
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClickNext}
+              className="button_primary"
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
       </Row>

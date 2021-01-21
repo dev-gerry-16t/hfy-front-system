@@ -16,7 +16,8 @@ import IconProfile from "../../../assets/icons/Profile.svg";
 
 const { Option } = Select;
 
-const SectionInfoReferences = () => {
+const SectionInfoReferences = (props) => {
+  const { onClickBack, onClickNext } = props;
   return (
     <div className="content-typeform-formulary">
       <h3>Referencias</h3>
@@ -128,6 +129,22 @@ const SectionInfoReferences = () => {
               <Input placeholder={"Correo"} onChange={(e) => {}} />
             </Col>
           </Row>
+          <div className="button_actions">
+            <button
+              type="button"
+              onClick={onClickBack}
+              className="button_secondary"
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              onClick={onClickNext}
+              className="button_primary"
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
       </Row>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Layout,
   Avatar,
@@ -14,7 +14,10 @@ import {
 } from "antd";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
-const SectionInfoUser = () => {
+const SectionInfoUser = (props) => {
+  const { onClickNext } = props;
+  const [haveCar, setHaveCar] = useState(true);
+  
   return (
     <div className="content-typeform-formulary">
       <h3>Información personal</h3>
@@ -67,18 +70,39 @@ const SectionInfoUser = () => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <div className="option-select-radio">
-                <span>Tienes Auto</span>
-                <Radio.Group onChange={() => {}} value={1}>
-                  <Radio value={1}>Si</Radio>
-                  <Radio value={2}>No</Radio>
+                <span style={{ color: "#ff0282", fontWeight: "bold" }}>
+                  Tienes Auto
+                </span>
+                <Radio.Group
+                  onChange={(e) => {
+                    setHaveCar(e.target.value);
+                  }}
+                  value={haveCar}
+                >
+                  <Radio value={true}>Si</Radio>
+                  <Radio value={false}>No</Radio>
                 </Radio.Group>
               </div>
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Ingresa las placas"} onChange={(e) => {}} />
-            </Col>
+            {haveCar === true && (
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  placeholder={"Ingresa las placas"}
+                  onChange={(e) => {}}
+                />
+              </Col>
+            )}
           </Row>
+          <div className="button_actions">
+            <button
+              type="button"
+              onClick={onClickNext}
+              className="button_primary"
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
       </Row>

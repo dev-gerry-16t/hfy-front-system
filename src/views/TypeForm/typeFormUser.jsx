@@ -7,6 +7,8 @@ import HomeActive from "../../assets/iconSteps/iconHome.svg";
 import HomeInactive from "../../assets/iconSteps/iconHomeInactive.svg";
 import IconProfile from "../../assets/iconSteps/Profile.svg";
 import IconProfileInactive from "../../assets/iconSteps/ProfileInactive.svg";
+import Wallet from "../../assets/iconSteps/wallet.svg";
+import WalletInactive from "../../assets/iconSteps/walletInactive.svg";
 import Work from "../../assets/iconSteps/Work.svg";
 import WorkInactive from "../../assets/iconSteps/WorkInactive.svg";
 import DocumentIcon from "../../assets/iconSteps/document.svg";
@@ -19,6 +21,12 @@ import SectionInfoUser from "./sections/sectionInfoUser";
 import SectionCurrentAddress from "./sections/currentAddress";
 import SectionCurrentWork from "./sections/sectionCurrentWork";
 import SectionInfoReferences from "./sections/sectionInfoReferences";
+import SectionDocumentation from "./sections/sectionDocumentation";
+import SectionInfoAval from "./sections/sectionInfoAval";
+import SectionInfoOwner from "./sections/sectionInfoOwner";
+import CurrentAddressRenter from "./sections/currentAddresRenter";
+import TypePolicy from "./sections/TypePolicy";
+import SectionBankInfo from "./sections/sectionBankInfo";
 
 const { Step } = Steps;
 const { Content } = Layout;
@@ -37,47 +45,106 @@ const TypeFormUser = () => {
   const steps = [
     {
       title: "Información personal",
-      content: <SectionInfoUser />,
+      content: <SectionInfoUser onClickNext={() => next()} />,
       iconActive: IconProfile,
       iconInactive: IconProfileInactive,
     },
     {
       title: "Dirección actual",
-      content: <SectionCurrentAddress />,
+      content: (
+        <SectionCurrentAddress
+          onClickNext={() => next()}
+          onClickBack={() => prev()}
+        />
+      ),
       iconActive: HomeActive,
       iconInactive: HomeInactive,
     },
     {
       title: "Información laboral",
-      content: <SectionCurrentWork />,
+      content: (
+        <SectionCurrentWork
+          onClickNext={() => next()}
+          onClickBack={() => prev()}
+        />
+      ),
       iconActive: Work,
       iconInactive: WorkInactive,
     },
     {
       title: "Referencias",
-      content: <SectionInfoReferences />,
+      content: (
+        <SectionInfoReferences
+          onClickNext={() => next()}
+          onClickBack={() => prev()}
+        />
+      ),
       iconActive: Renter,
       iconInactive: RenterInactive,
     },
     {
       title: "Documentación",
-      content: "Second-content",
+      content: (
+        <SectionDocumentation
+          onClickNext={() => next()}
+          onClickBack={() => prev()}
+        />
+      ),
       iconActive: DocumentIcon,
       iconInactive: DocumentIconInactive,
     },
     {
       title: "Información aval",
-      content: "Last-content",
+      content: (
+        <SectionInfoAval onClickFinish={() => {}} onClickBack={() => prev()} />
+      ),
       iconActive: Shield,
       iconInactive: ShieldInactive,
     },
   ];
+
+  const stepsOwner = [
+    {
+      title: "Información personal",
+      content: <SectionInfoOwner onClickNext={() => next()} />,
+      iconActive: IconProfile,
+      iconInactive: IconProfileInactive,
+    },
+    {
+      title: "Inmueble a rentar",
+      content: (
+        <CurrentAddressRenter
+          onClickNext={() => next()}
+          onClickBack={() => prev()}
+        />
+      ),
+      iconActive: HomeActive,
+      iconInactive: HomeInactive,
+    },
+    {
+      title: "Poliza",
+      content: (
+        <TypePolicy onClickNext={() => next()} onClickBack={() => prev()} />
+      ),
+      iconActive: DocumentIcon,
+      iconInactive: DocumentIconInactive,
+    },
+    {
+      title: "Datos bancarios",
+      content: (
+        <SectionBankInfo onClickFinish={() => {}} onClickBack={() => prev()} />
+      ),
+      iconActive: Wallet,
+      iconInactive: WalletInactive,
+    },
+  ];
+
   return (
     <Content>
       <div className="margin-app-main">
         <div className="steps-style-header">
           <hr />
-          {steps.map((row, index) => {
+          {stepsOwner.map((row, index) => {
             return (
               <div className="step-icon">
                 <div
@@ -104,27 +171,7 @@ const TypeFormUser = () => {
             );
           })}
         </div>
-        <div className="steps-content">{steps[current].content}</div>
-        <div className="steps-action">
-          {current < steps.length - 1 && (
-            <Button type="primary" onClick={() => next()}>
-              Next
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button
-              type="primary"
-              onClick={() => message.success("Processing complete!")}
-            >
-              Done
-            </Button>
-          )}
-          {current > 0 && (
-            <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
-              Previous
-            </Button>
-          )}
-        </div>
+        <div className="steps-content">{stepsOwner[current].content}</div>
       </div>
     </Content>
   );
