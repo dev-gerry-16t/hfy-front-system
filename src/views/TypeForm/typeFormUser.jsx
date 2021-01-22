@@ -33,6 +33,7 @@ const { Content } = Layout;
 
 const TypeFormUser = () => {
   const [current, setCurrent] = React.useState(0);
+  const [dataForm, setDataForm] = useState({});
 
   const next = () => {
     setCurrent(current + 1);
@@ -45,7 +46,15 @@ const TypeFormUser = () => {
   const steps = [
     {
       title: "Información personal",
-      content: <SectionInfoUser onClickNext={() => next()} />,
+      content: (
+        <SectionInfoUser
+          dataFormSave={dataForm}
+          onClickNext={(data) => {
+            setDataForm({ ...dataForm, ...data });
+            next();
+          }}
+        />
+      ),
       iconActive: IconProfile,
       iconInactive: IconProfileInactive,
     },
@@ -53,7 +62,11 @@ const TypeFormUser = () => {
       title: "Dirección actual",
       content: (
         <SectionCurrentAddress
-          onClickNext={() => next()}
+          dataFormSave={dataForm}
+          onClickNext={(data) => {
+            setDataForm({ ...dataForm, ...data });
+            next();
+          }}
           onClickBack={() => prev()}
         />
       ),
@@ -64,7 +77,11 @@ const TypeFormUser = () => {
       title: "Información laboral",
       content: (
         <SectionCurrentWork
-          onClickNext={() => next()}
+          dataFormSave={dataForm}
+          onClickNext={(data) => {
+            setDataForm({ ...dataForm, ...data });
+            next();
+          }}
           onClickBack={() => prev()}
         />
       ),
@@ -75,7 +92,11 @@ const TypeFormUser = () => {
       title: "Referencias",
       content: (
         <SectionInfoReferences
-          onClickNext={() => next()}
+          dataFormSave={dataForm}
+          onClickNext={(data) => {
+            setDataForm({ ...dataForm, ...data });
+            next();
+          }}
           onClickBack={() => prev()}
         />
       ),
@@ -139,12 +160,14 @@ const TypeFormUser = () => {
     },
   ];
 
+  console.log("dataForm", dataForm);
+
   return (
     <Content>
       <div className="margin-app-main">
         <div className="steps-style-header">
           <hr />
-          {stepsOwner.map((row, index) => {
+          {steps.map((row, index) => {
             return (
               <div className="step-icon">
                 <div
@@ -164,6 +187,7 @@ const TypeFormUser = () => {
                     visibility: current !== index ? "visible" : "hidden",
                     color: "#d6d8e7",
                   }}
+                  className="title-steps-typeform"
                 >
                   {row.title}
                 </span>
@@ -171,7 +195,7 @@ const TypeFormUser = () => {
             );
           })}
         </div>
-        <div className="steps-content">{stepsOwner[current].content}</div>
+        <div className="steps-content">{steps[current].content}</div>
       </div>
     </Content>
   );

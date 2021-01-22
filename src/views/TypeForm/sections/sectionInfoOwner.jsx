@@ -114,40 +114,25 @@ const SectionInfoOwner = (props) => {
           <p>Domicilio Actual</p>
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <Input
-                placeholder={"Calle"}
-                onChange={(e) => {}}
-              />
+              <Input placeholder={"Calle"} onChange={(e) => {}} />
             </Col>
           </Row>
           <Row>
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Numero interior"}
-                onChange={(e) => {}}
-              />
+              <Input placeholder={"Numero interior"} onChange={(e) => {}} />
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Numero exterior"}
-                onChange={(e) => {}}
-              />
+              <Input placeholder={"Numero exterior"} onChange={(e) => {}} />
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <Input
-                placeholder={"Código postal"}
-                onChange={(e) => {}}
-              />
+              <Input placeholder={"Código postal"} onChange={(e) => {}} />
             </Col>
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
-                placeholder={"Estado"}
-                onChange={(e) => {}}
-              />
+              <Input placeholder={"Estado"} onChange={(e) => {}} />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>

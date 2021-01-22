@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import {
   Layout,
   Avatar,
@@ -17,7 +19,25 @@ import IconProfile from "../../../assets/icons/Profile.svg";
 const { Option } = Select;
 
 const SectionInfoReferences = (props) => {
-  const { onClickBack, onClickNext } = props;
+  const { onClickBack, onClickNext, dataFormSave } = props;
+  const initialForm = {
+    jobPosition: null,
+    economicDependents: null,
+    companyName: null,
+    currentSalary: null,
+    antiquityTimeRange: null,
+    antiquity: null,
+    bossName: null,
+    bossEmailAddress: null,
+  };
+  const [dataForm, setDataForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      setDataForm(dataFormSave);
+    }
+  }, [dataFormSave]);
+  
   return (
     <div className="content-typeform-formulary">
       <h3>Referencias</h3>
