@@ -82,7 +82,7 @@ const DefaultLayout = (props) => {
       duration: 0,
       style: { marginTop: "4vw" },
     };
-    notification.open(args);
+    //notification.open(args);
   }, []);
 
   return (

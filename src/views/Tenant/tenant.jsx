@@ -10,12 +10,20 @@ import MessagesIcon from "../../assets/icons/MessagesIcon.svg";
 import DocumentsIcon from "../../assets/icons/DocumentsIcon.svg";
 import Tools from "../../assets/icons/Tools.svg";
 import Transport from "../../assets/icons/Transport.svg";
+import SectionContractAvailable from "./sections/sectionContractAvailable";
 
 const { Content } = Layout;
 
 const Tenant = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
   return (
     <Content>
+      <SectionContractAvailable
+        isModalVisible={isModalVisible}
+        onClose={() => {
+          setIsModalVisible(!isModalVisible);
+        }}
+      />
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
@@ -27,7 +35,12 @@ const Tenant = () => {
           <div className="action-buttons-top">
             <div className="button_init_primary"></div>
             <div className="button_init_primary">
-              <button type="button" onClick={() => {}}>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsModalVisible(!isModalVisible);
+                }}
+              >
                 <span>¡Contrato Disponible!</span>
               </button>
             </div>
@@ -73,11 +86,7 @@ const Tenant = () => {
                 </button>
               </div>
               <div className="section-information-button-3">
-                <img
-                  src={Transport}
-                  alt="Reportar incidencia"
-                  height={62}
-                />
+                <img src={Transport} alt="Reportar incidencia" height={62} />
                 <button
                   type="button"
                   onClick={() => {}}
