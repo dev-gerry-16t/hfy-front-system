@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal } from "antd";
+import { Layout, Avatar, Rate, Modal, notification } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import IconCalendar from "../../assets/icons/Calendar.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
@@ -11,11 +11,87 @@ import DocumentsIcon from "../../assets/icons/DocumentsIcon.svg";
 import Tools from "../../assets/icons/Tools.svg";
 import Transport from "../../assets/icons/Transport.svg";
 import SectionContractAvailable from "./sections/sectionContractAvailable";
+import SectionDepositGuarantee from "./sections/sectionDepositGuarantee";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 
 const { Content } = Layout;
 
-const Tenant = () => {
+const Tenant = (props) => {
+  const { history } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
+  const frontFunctions = new FrontFunctions();
+
+  useEffect(() => {
+    const args = {
+      description: (
+        <div style={{ fontFamily: "Poppins" }}>
+          <span style={{ fontSize: "12px" }}>
+            Antes de iniciar el formulario debes tener lista una identificación
+            oficial, tus últimos 3 comprobantes de ingresos y una carta de la
+            empresa donde trabajas que acredite desde cuando estas laborando en
+            la empresa. Adicional, necesitaras la escritura del inmueble que
+            quedara como garantía y los datos e identificación del Aval.
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              notification.destroy();
+              history.push("/websystem/typeform-user");
+            }}
+            className="button-action-primary"
+            style={{ marginTop: "25px" }}
+          >
+            <span>Ir al formulario</span>
+          </button>
+        </div>
+      ),
+      message: (
+        <div
+          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+        >
+          Solicitud de Investigación Persona Física con Aval
+        </div>
+      ),
+      duration: 0,
+      style: { marginTop: "4vw" },
+    };
+
+    const argsv2 = {
+      description: (
+        <div style={{ fontFamily: "Poppins" }}>
+          <span style={{ fontSize: "12px" }}>
+            Buen dia <strong>Sebastian</strong>, estamos en espera del pago de
+            tu <strong>depósito en ganarantía</strong>.<br /> <br />
+            Si no puedes pagar el
+            <strong> depósito en ganarantía</strong> tenemos estas opciones para
+            ti
+          </span>
+          <button
+            type="button"
+            onClick={() => {
+              setIsModalVisiblePolicy(!isModalVisiblePolicy);
+              notification.destroy();
+            }}
+            className="button-action-primary"
+            style={{ marginTop: "25px" }}
+          >
+            <span>Revisar opciones</span>
+          </button>
+        </div>
+      ),
+      message: (
+        <div
+          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+        >
+          Depósito en Garantia
+        </div>
+      ),
+      duration: 0,
+      style: { marginTop: "4vw" },
+    };
+    notification.open(argsv2);
+  }, []);
   return (
     <Content>
       <SectionContractAvailable
@@ -23,6 +99,13 @@ const Tenant = () => {
         onClose={() => {
           setIsModalVisible(!isModalVisible);
         }}
+      />
+      <SectionDepositGuarantee
+        isModalVisible={isModalVisiblePolicy}
+        onClose={() => {
+          setIsModalVisiblePolicy(!isModalVisiblePolicy);
+        }}
+        frontFunctions={frontFunctions}
       />
       <div className="margin-app-main">
         <div className="top-main-user">

@@ -224,6 +224,44 @@
   }
 }
 
+.main-form-information-guarantee {
+  padding: 5px;
+  font-family: Poppins;
+  .policy-information-modal {
+    .percentage-description {
+      display: flex;
+      margin: 10px 0px;
+      .radio-percentage {
+      }
+      .description {
+      }
+    }
+  }
+
+  .value-calculator-policy {
+    display: flex;
+    flex-direction: column;
+    .amount-rent-result {
+      align-self: center;
+    }
+    .slider-percentage {
+    }
+    .calculate-percentage {
+      margin: 15px 0px;
+      .percentage-description {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .video-how-functionaly {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+}
+
 .form-modal {
   .title-head-modal {
     position: relative;
@@ -682,6 +720,6 @@
   }
 }
 
-.ant-notification-notice-close {
-  display: none;
-}
+// .ant-notification-notice-close {
+//   display: none;
+// }

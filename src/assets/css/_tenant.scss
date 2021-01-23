@@ -440,6 +440,19 @@
   transition: border-color 0.3s;
 }
 
+.disabled-button {
+  background: #df90b8 !important;
+  cursor: none;
+}
+
+.text-area-contract {
+  width: 100%;
+  height: 160px;
+  border: none;
+  outline: none;
+  padding: 5px;
+}
+
 @media screen and (max-width: 1080px) {
   .top-info-tenant {
     flex-direction: column;

@@ -200,14 +200,14 @@ class FrontFunctions {
       );
   }
 
-  parseFormatCurrency = (money, fraction) => {
+  parseFormatCurrency = (money, fraction, maxFraction) => {
     let resultNumber = "";
     if (isNil(money) === false) {
       const formatMoneyJson = {
         style: "currency",
         currency: "USD",
         minimumFractionDigits: fraction,
-        maximumFractionDigits: 20,
+        maximumFractionDigits: maxFraction || 20,
       };
       const locale = "en-US";
       const moneyFormat = new Intl.NumberFormat(locale, formatMoneyJson);

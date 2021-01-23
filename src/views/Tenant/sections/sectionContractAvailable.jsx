@@ -30,7 +30,9 @@ const { Option } = Select;
 const SectionContractAvailable = (props) => {
   const { isModalVisible, onClose } = props;
   const [signature, setSignature] = useState("");
+  const [valueText, setValueText] = useState(null);
   const [openSection, setOpenSection] = useState(1);
+  const [aceptTerms, setAceptTerms] = useState(false);
   const signatureRef = useRef(null);
 
   const LoadingSpin = <SyncOutlined spin />;
@@ -53,8 +55,8 @@ const SectionContractAvailable = (props) => {
                 onClose();
               } else {
                 setOpenSection(1);
-                signatureRef.current.clear();
               }
+              setAceptTerms(false);
             }}
           >
             <img src={Arrow} alt="backTo" width="30" />
@@ -69,6 +71,7 @@ const SectionContractAvailable = (props) => {
             type="button"
             onClick={() => {
               setOpenSection(3);
+              setAceptTerms(false);
             }}
           >
             <img src={ChatContract} alt="backTo" width="30" />
@@ -126,7 +129,7 @@ const SectionContractAvailable = (props) => {
                 </p>
                 <div className="signature">
                   <SignatureCanvas
-                    penColor="green"
+                    penColor="black"
                     canvasProps={{
                       width: 320,
                       height: 150,
@@ -138,7 +141,17 @@ const SectionContractAvailable = (props) => {
                 <div className="conditions-name">
                   <strong>GERARDO ALDAIR GONZALEZ JIMENEZ</strong>
                 </div>
-                <Checkbox onChange={() => {}}></Checkbox>
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    const signatureCurrent = signatureRef.current;
+                    if (signatureCurrent.isEmpty() === false) {
+                      setAceptTerms(e.target.checked);
+                      const signatureBase64 = signatureCurrent.toDataURL();
+                      setSignature(signatureBase64);
+                    }
+                  }}
+                ></Checkbox>
                 <span
                   style={{
                     marginLeft: 5,
@@ -151,6 +164,27 @@ const SectionContractAvailable = (props) => {
                   terminos y condiciones publicados en la pagina
                   https//homify.ai/terminos-y-condiciones amparados bajo la ley
                 </span>
+              </div>
+            )}
+            {openSection === 3 && (
+              <div className="contract-section-signature">
+                <p style={{ fontSize: "12px" }}>
+                  No estas de acuerdo con tu contrato, puedes mandarnos tus
+                  observaciones
+                </p>
+                <div className="section-type-messages-fixed">
+                  <div className="section-type-messages">
+                    <div className="text-header">Redactar mensaje</div>
+                    <textarea
+                      value={valueText}
+                      maxlength="200"
+                      onChange={(e) => {
+                        setValueText(e.target.value);
+                      }}
+                      className="text-area-contract"
+                    />
+                  </div>
+                </div>
               </div>
             )}
           </div>
@@ -176,16 +210,15 @@ const SectionContractAvailable = (props) => {
               type="button"
               onClick={() => {
                 signatureRef.current.clear();
+                setAceptTerms(false);
               }}
             >
               <span>Limpiar firma</span>
             </button>
             <button
               type="button"
-              onClick={() => {
-                const signatureBase64 = signatureRef.current.toDataURL();
-                setSignature(signatureBase64);
-              }}
+              onClick={() => {}}
+              className={aceptTerms === true ? "" : "disabled-button"}
             >
               <span>Aceptar</span>
             </button>

@@ -49,40 +49,6 @@ const DefaultLayout = (props) => {
     if (isNil(dataProfile) === true) {
       history.push("/");
     }
-    const args = {
-      description: (
-        <div style={{ fontFamily: "Poppins" }}>
-          <span style={{ fontSize: "12px" }}>
-            Antes de iniciar el formulario debes tener lista una identificación
-            oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-            empresa donde trabajas que acredite desde cuando estas laborando en
-            la empresa. Adicional, necesitaras la escritura del inmueble que
-            quedara como garantía y los datos e identificación del Aval.
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              notification.destroy();
-              history.push("/websystem/typeform-user");
-            }}
-            className="button-action-primary"
-            style={{ marginTop: "25px" }}
-          >
-            <span>Ir al formulario</span>
-          </button>
-        </div>
-      ),
-      message: (
-        <div
-          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
-        >
-          Solicitud de Investigación Persona Física con Aval
-        </div>
-      ),
-      duration: 0,
-      style: { marginTop: "4vw" },
-    };
-    //notification.open(args);
   }, []);
 
   return (
