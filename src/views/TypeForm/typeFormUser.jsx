@@ -27,6 +27,7 @@ import SectionInfoOwner from "./sections/sectionInfoOwner";
 import CurrentAddressRenter from "./sections/currentAddresRenter";
 import TypePolicy from "./sections/TypePolicy";
 import SectionBankInfo from "./sections/sectionBankInfo";
+import "moment/locale/es";
 
 const { Step } = Steps;
 const { Content } = Layout;

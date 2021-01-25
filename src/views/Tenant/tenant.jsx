@@ -91,6 +91,7 @@ const Tenant = (props) => {
       style: { marginTop: "4vw" },
     };
     notification.open(argsv2);
+    notification.open(args);
   }, []);
   return (
     <Content>
