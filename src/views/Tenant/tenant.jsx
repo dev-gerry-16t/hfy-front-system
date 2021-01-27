@@ -111,7 +111,7 @@ const Tenant = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Buenos días, Sebastian</h2>
+            <h2>Hola, Sebastian</h2>
             <span>
               Último inicio de sesión: <strong>03 Dic 20 10:45 am</strong>
             </span>

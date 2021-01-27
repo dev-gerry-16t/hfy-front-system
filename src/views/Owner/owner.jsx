@@ -364,7 +364,7 @@ const Owner = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Buenos días, {dataCustomer.shortName}</h2>
+            <h2>Hola, {dataCustomer.shortName}</h2>
             <span>
               Último inicio de sesión:{" "}
               <strong>{dataCustomer.lastSessionStarted}</strong>

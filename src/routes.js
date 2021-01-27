@@ -8,6 +8,8 @@ const SignatureTest = React.lazy(() =>
   import("./views/Signature/signatureIndex")
 );
 const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
+const Adviser = React.lazy(() => import("./views/Adviser/adviser"));
+const Administrator = React.lazy(() => import("./views/Admin/administrator"));
 const TypeFormUser = React.lazy(() => import("./views/TypeForm/typeFormUser"));
 
 const routes = [
@@ -49,6 +51,22 @@ const routes = [
     path: "/websystem/typeform-user",
     name: "TypeForm",
     component: TypeFormUser,
+    exact: true,
+  },
+  {
+    key: "6",
+    id: "Adviser",
+    path: "/websystem/dashboard-adviser",
+    name: "Adviser",
+    component: Adviser,
+    exact: true,
+  },
+  {
+    key: "7",
+    id: "Administrator",
+    path: "/websystem/dashboard-admin",
+    name: "Administrator",
+    component: Administrator,
     exact: true,
   },
 ];
