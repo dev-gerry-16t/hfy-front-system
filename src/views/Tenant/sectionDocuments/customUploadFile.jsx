@@ -46,6 +46,7 @@ const PicturesWall = (props) => {
         onPreview={handlePreview}
         onChange={handleChange}
         method="get"
+        accept="image/png, image/jpeg, image/jpg"
       >
         {fileList.length >= 1 ? null : uploadButton}
       </Upload>

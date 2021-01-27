@@ -29,7 +29,7 @@ const SectionDocumentation = (props) => {
             <span style={{ visibility: "hidden" }}>N/A</span>
           </div>
           <div className="section-content-card-doc">
-            <CustomFileUpload />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
           </div>
         </div>
         <div className="section-card-documentation">
@@ -38,8 +38,8 @@ const SectionDocumentation = (props) => {
             <span>Frente y vuelta</span>
           </div>
           <div className="section-content-card-doc">
-            <CustomFileUpload />
-            <CustomFileUpload />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
           </div>
         </div>
         <div className="section-card-documentation">
@@ -48,7 +48,7 @@ const SectionDocumentation = (props) => {
             <span>Membretada y firmada</span>
           </div>
           <div className="section-content-card-doc">
-            <CustomFileUpload />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
           </div>
         </div>
       </div>
@@ -59,9 +59,9 @@ const SectionDocumentation = (props) => {
             <span style={{ visibility: "hidden" }}>N/A</span>
           </div>
           <div className="section-content-card-doc">
-            <CustomFileUpload />
-            <CustomFileUpload />
-            <CustomFileUpload />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
+            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
           </div>
         </div>
       </div>

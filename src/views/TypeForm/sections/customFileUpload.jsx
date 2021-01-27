@@ -15,6 +15,7 @@ import {
   Tooltip,
   Upload,
   Radio,
+  message,
 } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import Show from "../../../assets/icons/Show.svg";
@@ -22,11 +23,21 @@ import Delete from "../../../assets/icons/Delete.svg";
 
 const { Dragger } = Upload;
 
-const CustomFileUpload = () => {
+const CustomFileUpload = (props) => {
+  const { acceptFile } = props;
   const [fileList, setFileList] = useState([]);
   const [preview, setPreview] = useState(null);
   const [fileName, setFileName] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false);
+
+  const beforeUpload = (file) => {
+    const isLt2M = file.size / 1024 / 1024 < 5;
+    if (!isLt2M) {
+      message.error("¡El archivo que intentas subir debe ser menor que 5MB!");
+    }
+    return isLt2M;
+  };
+
   return (
     <div
       className={`section-drop-document ${
@@ -37,15 +48,25 @@ const CustomFileUpload = () => {
         <Dragger
           action="/"
           onChange={({ file }) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file.originFileObj);
-            reader.onload = (event) => {
-              setPreview(event.target.result);
-            };
-            setFileList(fileList);
-            setFileName(file.name);
+            console.log("file", file);
+            if (isNil(file.originFileObj) === false) {
+              const reader = new FileReader();
+              reader.readAsDataURL(file.originFileObj);
+              reader.onload = (event) => {
+                if (file.type !== "application/pdf") {
+                  setPreview(event.target.result);
+                }else{
+                  setPreview("");
+                }
+              };
+              setFileList(fileList);
+              setFileName(file.name);
+            }
           }}
           method="get"
+          showUploadList={false}
+          accept={acceptFile}
+          beforeUpload={beforeUpload}
         >
           <span>
             Arrastra tu documento
@@ -71,10 +92,10 @@ const CustomFileUpload = () => {
                 setFileName(null);
               }}
             >
-              <img src={Delete} alt="eliminar"/>
+              <img src={Delete} alt="eliminar" />
             </button>
           </div>
-          <img src={preview} alt="Preview"/>
+          <img src={preview} alt="Preview" />
         </div>
       )}
       <Modal
