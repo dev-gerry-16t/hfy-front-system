@@ -26,7 +26,7 @@ const SectionStatsChart = (props) => {
         type: "area",
       },
       title: {
-        text: "Comisiones",
+        text: "Cierres",
       },
       tooltip: {
         pointFormat:

@@ -14,12 +14,15 @@ import {} from "../../utils/actions/actions";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionCardOwner from "./sections/sectionCardOwner";
 import SectionAddUsers from "./sections/sectionAddUsers";
+import SectionDetailUser from "./sections/sectionDetailUser";
 
 const { Content } = Layout;
 
 const Administrator = (props) => {
   const { dataProfile, history } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
+  const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
+
   return (
     <Content>
       <SectionAddUsers
@@ -28,6 +31,12 @@ const Administrator = (props) => {
           setIsVisibleAddUser(!isVisibleAddUser);
         }}
         spinVisible={false}
+      />
+      <SectionDetailUser
+        isDrawerVisible={isVisibleDetailUser}
+        onClose={() => {
+          setIsVisibleDetailUser(!isVisibleDetailUser);
+        }}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -107,6 +116,9 @@ const Administrator = (props) => {
             history={history}
             onAddUser={() => {
               setIsVisibleAddUser(!isVisibleAddUser);
+            }}
+            onOpenDetail={(type) => {
+              setIsVisibleDetailUser(!isVisibleDetailUser);
             }}
             tenantCoincidences={[{}]}
             finishCallApis

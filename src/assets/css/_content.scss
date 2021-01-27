@@ -648,6 +648,17 @@
   }
 }
 
+.content-infomation-drawer {
+  font-family: Poppins;
+  h3 {
+    margin-bottom: 15px;
+    color: #ff0282;
+  }
+  .ant-row{
+    margin-bottom: 10px;
+  }
+}
+
 @media screen and (max-width: 390px) {
   .main-information-owner {
     .title-cards {

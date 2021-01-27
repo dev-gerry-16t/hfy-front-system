@@ -183,7 +183,7 @@ const SectionAddUsers = (props) => {
               <Col span={11}>
                 <Input
                   value={dataForm.emailAdviser}
-                  placeholder={"Correo"}
+                  placeholder={"Correo/No Asesor"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,

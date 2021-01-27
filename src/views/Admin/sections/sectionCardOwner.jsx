@@ -23,6 +23,7 @@ const SectionCardOwner = (props) => {
     finishCallApis,
     onClickSendInvitation,
     onAddUser,
+    onOpenDetail,
   } = props;
 
   const columns = [
@@ -33,7 +34,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            console.log("Propietario");
+            onOpenDetail("Propietario");
           }}
         >
           {text}
@@ -47,7 +48,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            console.log("Inquilino");
+            onOpenDetail("Inquilino");
           }}
           style={{ color: "gray" }}
         >
@@ -62,7 +63,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            console.log("Asesor");
+            onOpenDetail("Asesor");
           }}
           style={{ color: "brown" }}
         >
