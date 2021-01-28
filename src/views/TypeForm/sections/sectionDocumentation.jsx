@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -41,11 +41,18 @@ const CustomSubSectionCardDocument = (props) => {
 const SectionDocumentation = (props) => {
   const { onClickBack, onClickNext, dataDocuments } = props;
   const [isUploadDocument, setIsUploadDocument] = useState(false);
-  
+  const [cardsUpload, setCardsUpload] = useState([]);
+
   const handlerOnConfirmDocuments = () => {
-    setIsUploadDocument(true);
-    //onClickNext();
+    //setIsUploadDocument(true);
+  onClickNext();
   };
+
+  useEffect(() => {
+    if (cardsUpload.length === 7) {
+      onClickNext();
+    }
+  }, [cardsUpload]);
 
   return (
     <div className="content-typeform-formulary">
@@ -65,6 +72,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
         </CustomSubSectionCardDocument>
         <CustomSubSectionCardDocument
@@ -81,6 +91,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
           <CustomFileUpload
             acceptFile="image/png, image/jpeg, image/jpg"
@@ -91,6 +104,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
         </CustomSubSectionCardDocument>
         <CustomSubSectionCardDocument
@@ -107,6 +123,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
         </CustomSubSectionCardDocument>
       </div>
@@ -125,6 +144,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
           <CustomFileUpload
             acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
@@ -135,6 +157,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
           <CustomFileUpload
             acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
@@ -145,6 +170,9 @@ const SectionDocumentation = (props) => {
                 : {}
             }
             isUploadDocument={isUploadDocument}
+            onSuccesUpload={(succes) => {
+              setCardsUpload([...cardsUpload, succes]);
+            }}
           />
         </CustomSubSectionCardDocument>
       </div>

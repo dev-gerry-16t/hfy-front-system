@@ -32,6 +32,7 @@ import TypePolicy from "./sections/TypePolicy";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import {
   callGetTypeFormTenant,
+  callSetTypeFormTenant,
   callGetTypeFormDocumentTenant,
 } from "../../utils/actions/actions";
 
@@ -42,6 +43,7 @@ const TypeFormUser = (props) => {
   const {
     dataProfile,
     callGetTypeFormTenant,
+    callSetTypeFormTenant,
     callGetTypeFormDocumentTenant,
   } = props;
   const [current, setCurrent] = React.useState(0);
@@ -54,6 +56,24 @@ const TypeFormUser = (props) => {
 
   const prev = () => {
     setCurrent(current - 1);
+  };
+
+  const handlerCallSetTypeFormTenant = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callSetTypeFormTenant({
+        idCustomer,
+        idCustomerTenant: idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      console.log("response", response);
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+    } catch (error) {}
   };
 
   const steps = [
@@ -106,8 +126,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoReferences
           dataFormSave={dataForm}
-          onClickNext={(data) => {
-            setDataForm({ ...dataForm, ...data });
+          onClickNext={() => {
             next();
           }}
           onClickBack={() => prev()}
@@ -120,7 +139,9 @@ const TypeFormUser = (props) => {
       title: "Documentación",
       content: (
         <SectionDocumentation
-          onClickNext={() => next()}
+          onClickNext={() => {
+            next();
+          }}
           onClickBack={() => prev()}
           dataDocuments={dataDocuments}
         />
@@ -131,7 +152,13 @@ const TypeFormUser = (props) => {
     {
       title: "Información aval",
       content: (
-        <SectionInfoAval onClickFinish={() => {}} onClickBack={() => prev()} />
+        <SectionInfoAval
+          onClickFinish={() => {
+            console.log("click", dataForm);
+            handlerCallSetTypeFormTenant(dataForm);
+          }}
+          onClickBack={() => prev()}
+        />
       ),
       iconActive: Shield,
       iconInactive: ShieldInactive,
@@ -193,6 +220,7 @@ const TypeFormUser = (props) => {
   useEffect(() => {
     handlerCallAsyncApis();
   }, []);
+  console.log("click", dataForm);
 
   return (
     <Content>
@@ -247,6 +275,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callGetTypeFormTenant: (data) => dispatch(callGetTypeFormTenant(data)),
+  callSetTypeFormTenant: (data) => dispatch(callSetTypeFormTenant(data)),
   callGetTypeFormDocumentTenant: (data) =>
     dispatch(callGetTypeFormDocumentTenant(data)),
 });

@@ -18,11 +18,16 @@ import {
   Radio,
   message,
   Progress,
+  Image,
 } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import Show from "../../../assets/icons/Show.svg";
 import Delete from "../../../assets/icons/Delete.svg";
-import { callAddDocument } from "../../../utils/actions/actions";
+import {
+  callAddDocument,
+  callAddTypeFormDocument,
+} from "../../../utils/actions/actions";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 
 const { Dragger } = Upload;
 
@@ -32,7 +37,9 @@ const CustomFileUpload = (props) => {
     isUploadDocument,
     dataDocument,
     callAddDocument,
+    callAddTypeFormDocument,
     dataProfile,
+    onSuccesUpload,
   } = props;
   const [fileList, setFileList] = useState({});
   const [preview, setPreview] = useState(null);
@@ -61,14 +68,20 @@ const CustomFileUpload = (props) => {
     return isLt2M;
   };
 
-  const handlerAddDocument = async (data, type) => {
+  const handlerAddTypeFormDocument = async (data, id) => {
+    try {
+      await callAddTypeFormDocument(data, id);
+    } catch (error) {}
+  };
+
+  const handlerAddDocument = async (data, infoDoc) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     const dataDocument = {
       documentName: data.name,
       extension: data.type,
       preview: null,
       thumbnail: null,
-      idDocumentType: type,
+      idDocumentType: infoDoc.idDocumentType,
       idCustomer,
       idSystemUser,
       idLoginHistory,
@@ -87,15 +100,26 @@ const CustomFileUpload = (props) => {
         isNil(response.response.idDocument) === false
           ? response.response.idDocument
           : null;
+      await handlerAddTypeFormDocument(
+        {
+          idCustomer,
+          idTypeForm: infoDoc.idTypeForm,
+          idCustomerTenant: idCustomer,
+          type: 1,
+          idSystemUser,
+          idLoginHistory,
+        },
+        documentId
+      );
       setTimeout(() => {
         setSpinVisible(false);
       }, 3000);
-      console.log('documentId',documentId);
+      onSuccesUpload(infoDoc.idDocumentType);
     } catch (error) {
       setSpinVisible(false);
     }
   };
-  
+
   useEffect(() => {
     if (
       isUploadDocument === true &&
@@ -103,7 +127,7 @@ const CustomFileUpload = (props) => {
       isEmpty(fileList) === false
     ) {
       setSpinVisible(true);
-      handlerAddDocument(fileList, dataDocument.idDocumentType);
+      handlerAddDocument(fileList, dataDocument);
     }
   }, [isUploadDocument]);
 
@@ -111,62 +135,81 @@ const CustomFileUpload = (props) => {
     <Spin indicator={LoadingSpin} spinning={spinVisible}>
       <div
         className={`section-drop-document ${
-          isNil(preview) === false && "border-dashed-none"
+          (isNil(preview) === false ||
+            (isEmpty(dataDocument) === false &&
+              isNil(dataDocument.idDocument) === false)) &&
+          "border-dashed-none"
         }`}
       >
-        {isNil(preview) === true ? (
-          <Dragger
-            action="/"
-            onChange={({ file }) => {
-              if (isNil(file.originFileObj) === false) {
-                const reader = new FileReader();
-                reader.readAsDataURL(file.originFileObj);
-                reader.onload = (event) => {
-                  if (file.type !== "application/pdf") {
-                    setPreview(event.target.result);
-                  } else {
-                    setPreview("");
-                  }
-                };
-                setFileList(file);
-                setFileName(file.name);
-              }
-            }}
-            method="get"
-            showUploadList={false}
-            accept={acceptFile}
-            beforeUpload={beforeUpload}
-          >
-            <span>
-              Arrastra tu documento
-              <br /> aqui o haz Clic
-            </span>
-          </Dragger>
-        ) : (
-          <div className="content-preview-document">
-            <div className="screen-hover-action">
-              <button
-                type="button"
-                onClick={() => {
-                  setPreviewVisible(!previewVisible);
-                }}
-              >
-                <img src={Show} alt="preview" />
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setFileList({});
-                  setPreview(null);
-                  setFileName(null);
-                }}
-              >
-                <img src={Delete} alt="eliminar" />
-              </button>
+        {isNil(preview) === true &&
+          isEmpty(dataDocument) === false &&
+          isNil(dataDocument.idDocument) === true && (
+            <Dragger
+              action="/"
+              onChange={({ file }) => {
+                if (isNil(file.originFileObj) === false) {
+                  const reader = new FileReader();
+                  reader.readAsDataURL(file.originFileObj);
+                  reader.onload = (event) => {
+                    if (file.type !== "application/pdf") {
+                      setPreview(event.target.result);
+                    } else {
+                      setPreview("");
+                    }
+                  };
+                  setFileList(file);
+                  setFileName(file.name);
+                }
+              }}
+              method="get"
+              showUploadList={false}
+              accept={acceptFile}
+              beforeUpload={beforeUpload}
+            >
+              <span>
+                Arrastra tu documento
+                <br /> aqui o haz Clic
+              </span>
+            </Dragger>
+          )}
+        {isNil(preview) === false &&
+          isEmpty(dataDocument) === false &&
+          isNil(dataDocument.idDocument) === true && (
+            <div className="content-preview-document">
+              <div className="screen-hover-action">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreviewVisible(!previewVisible);
+                  }}
+                >
+                  <img src={Show} alt="preview" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFileList({});
+                    setPreview(null);
+                    setFileName(null);
+                  }}
+                >
+                  <img src={Delete} alt="eliminar" />
+                </button>
+              </div>
+              <img src={preview} alt="Preview" />
             </div>
-            <img src={preview} alt="Preview" />
-          </div>
-        )}
+          )}
+        {isEmpty(dataDocument) === false &&
+          isNil(dataDocument.idDocument) === false && (
+            <div className="content-preview-document">
+              <Image
+                width={100}
+                height={110}
+                style={{ textAlign: "center" }}
+                src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
+              />
+            </div>
+          )}
         <Modal
           visible={previewVisible}
           title={
@@ -206,6 +249,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callAddDocument: (file, data, callback) =>
     dispatch(callAddDocument(file, data, callback)),
+  callAddTypeFormDocument: (data, id) =>
+    dispatch(callAddTypeFormDocument(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomFileUpload);
