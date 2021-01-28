@@ -49,8 +49,8 @@ const SectionInfoUser = (props) => {
                 value={dataForm.givenName}
                 placeholder={"Nombres"}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({ ...dataForm, givenName: value });
+                  // const value = e.target.value;
+                  // setDataForm({ ...dataForm, givenName: value });
                 }}
                 suffix={<img src={IconProfile} alt="profile" width="15" />}
               />
@@ -61,8 +61,8 @@ const SectionInfoUser = (props) => {
                 value={dataForm.lastName}
                 placeholder={"Apellido paterno"}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({ ...dataForm, lastName: value });
+                  // const value = e.target.value;
+                  // setDataForm({ ...dataForm, lastName: value });
                 }}
                 suffix={<img src={IconProfile} alt="profile" width="15" />}
               />
@@ -73,8 +73,8 @@ const SectionInfoUser = (props) => {
                 value={dataForm.mothersMaidenName}
                 placeholder={"Apellido materno"}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({ ...dataForm, mothersMaidenName: value });
+                  // const value = e.target.value;
+                  // setDataForm({ ...dataForm, mothersMaidenName: value });
                 }}
                 suffix={<img src={IconProfile} alt="profile" width="15" />}
               />
@@ -86,8 +86,8 @@ const SectionInfoUser = (props) => {
                 value={dataForm.phoneNumber}
                 placeholder={"Telefono"}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({ ...dataForm, phoneNumber: value });
+                  // const value = e.target.value;
+                  // setDataForm({ ...dataForm, phoneNumber: value });
                 }}
               />
             </Col>
@@ -97,8 +97,8 @@ const SectionInfoUser = (props) => {
                 value={dataForm.emailAddress}
                 placeholder={"Correo"}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({ ...dataForm, emailAddress: value });
+                  // const value = e.target.value;
+                  // setDataForm({ ...dataForm, emailAddress: value });
                 }}
               />
             </Col>

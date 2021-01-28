@@ -11,6 +11,7 @@ const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
 const Adviser = React.lazy(() => import("./views/Adviser/adviser"));
 const Administrator = React.lazy(() => import("./views/Admin/administrator"));
 const TypeFormUser = React.lazy(() => import("./views/TypeForm/typeFormUser"));
+const TypeFormUserOwner = React.lazy(() => import("./views/TypeForm/typeFormOwner"));
 
 const routes = [
   {
@@ -55,6 +56,14 @@ const routes = [
   },
   {
     key: "6",
+    id: "TypeFormUserOwner",
+    path: "/websystem/typeform-owner",
+    name: "TypeFormUserOwner",
+    component: TypeFormUserOwner,
+    exact: true,
+  },
+  {
+    key: "7",
     id: "Adviser",
     path: "/websystem/dashboard-adviser",
     name: "Adviser",
@@ -62,7 +71,7 @@ const routes = [
     exact: true,
   },
   {
-    key: "7",
+    key: "8",
     id: "Administrator",
     path: "/websystem/dashboard-admin",
     name: "Administrator",

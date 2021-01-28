@@ -10,6 +10,7 @@ const API = {
   CUSTOMER: "/customerType",
   PERSON: "/personType",
   ENDORSEMENT: "/endorsement",
+  TYPEFORM: "/typeForm",
 };
 
 const API_CONSTANTS = {
@@ -41,6 +42,8 @@ const API_CONSTANTS = {
   REGISTER: `${API.API}${API.REGISTER}`,
   VERIFY_CODE_REGISTER: `${API.API}${API.REGISTER}/verifyCode`,
   ADD_DOCUMENT: `${API.API_SECURE}/addDocument`,
+  GET_TYPEFORM_TENANT: `${API.API_SECURE}${API.TYPEFORM}/getTypeForm`,
+  GET_TYPEFORM_DOCUMENT_TENANT: `${API.API_SECURE}${API.TYPEFORM}/getTypeFormDocument`,
 };
 
 export { API_CONSTANTS, HEADER };

@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import {
   Layout,
   Avatar,
@@ -17,53 +19,134 @@ import CustomFileUpload from "./customFileUpload";
 
 const { Dragger } = Upload;
 
+const CustomSubSectionCardDocument = (props) => {
+  const { children, title, subtitle, visibleSubtitle } = props;
+  return (
+    <div className="section-card-documentation">
+      <div className="section-title-card-doc">
+        <strong>{title}</strong>
+        <span
+          style={{
+            visibility: visibleSubtitle === true ? "visible" : "hidden",
+          }}
+        >
+          {subtitle}
+        </span>
+      </div>
+      <div className="section-content-card-doc">{children}</div>
+    </div>
+  );
+};
+
 const SectionDocumentation = (props) => {
-  const { onClickBack, onClickNext } = props;
+  const { onClickBack, onClickNext, dataDocuments } = props;
+  const [isUploadDocument, setIsUploadDocument] = useState(false);
+  
+  const handlerOnConfirmDocuments = () => {
+    setIsUploadDocument(true);
+    //onClickNext();
+  };
+
   return (
     <div className="content-typeform-formulary">
       <h3>Documentación</h3>
       <div className="section-top-documentation">
-        <div className="section-card-documentation">
-          <div className="section-title-card-doc">
-            <strong>Selfie</strong>
-            <span style={{ visibility: "hidden" }}>N/A</span>
-          </div>
-          <div className="section-content-card-doc">
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
-          </div>
-        </div>
-        <div className="section-card-documentation">
-          <div className="section-title-card-doc">
-            <strong>INE</strong>
-            <span>Frente y vuelta</span>
-          </div>
-          <div className="section-content-card-doc">
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg" />
-          </div>
-        </div>
-        <div className="section-card-documentation">
-          <div className="section-title-card-doc">
-            <strong>Carta laboral</strong>
-            <span>Membretada y firmada</span>
-          </div>
-          <div className="section-content-card-doc">
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
-          </div>
-        </div>
+        <CustomSubSectionCardDocument
+          title="Selfie"
+          subtitle="N/A"
+          visibleSubtitle={false}
+        >
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[6]) === false
+                ? dataDocuments[6]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+        </CustomSubSectionCardDocument>
+        <CustomSubSectionCardDocument
+          title="INE"
+          subtitle="Frente y vuelta"
+          visibleSubtitle
+        >
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[0]) === false
+                ? dataDocuments[0]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[1]) === false
+                ? dataDocuments[1]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+        </CustomSubSectionCardDocument>
+        <CustomSubSectionCardDocument
+          title="Carta laboral"
+          subtitle="Membretada y firmada"
+          visibleSubtitle
+        >
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[5]) === false
+                ? dataDocuments[5]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+        </CustomSubSectionCardDocument>
       </div>
       <div className="section-bottom-documentation">
-        <div className="section-card-documentation">
-          <div className="section-title-card-doc">
-            <strong>últimos 3 comprobantes de ingreso</strong>
-            <span style={{ visibility: "hidden" }}>N/A</span>
-          </div>
-          <div className="section-content-card-doc">
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
-            <CustomFileUpload acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx" />
-          </div>
-        </div>
+        <CustomSubSectionCardDocument
+          title="últimos 3 comprobantes de ingreso"
+          subtitle="N/A"
+          visibleSubtitle={false}
+        >
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[2]) === false
+                ? dataDocuments[2]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[3]) === false
+                ? dataDocuments[3]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+          <CustomFileUpload
+            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+            dataDocument={
+              isEmpty(dataDocuments) === false &&
+              isNil(dataDocuments[4]) === false
+                ? dataDocuments[4]
+                : {}
+            }
+            isUploadDocument={isUploadDocument}
+          />
+        </CustomSubSectionCardDocument>
       </div>
       <div className="button_actions">
         <button
@@ -73,7 +156,11 @@ const SectionDocumentation = (props) => {
         >
           <span>Regresar</span>
         </button>
-        <button type="button" onClick={onClickNext} className="button_primary">
+        <button
+          type="button"
+          onClick={handlerOnConfirmDocuments}
+          className="button_primary"
+        >
           <span>Continuar</span>
         </button>
       </div>

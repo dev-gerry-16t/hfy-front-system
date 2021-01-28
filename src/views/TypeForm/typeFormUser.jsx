@@ -2,6 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Layout, Avatar, Rate, Modal, Steps, Button, message } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import "moment/locale/es";
 import IconCalendar from "../../assets/icons/Calendar.svg";
 import HomeActive from "../../assets/iconSteps/iconHome.svg";
 import HomeInactive from "../../assets/iconSteps/iconHomeInactive.svg";
@@ -27,14 +30,23 @@ import SectionInfoOwner from "./sections/sectionInfoOwner";
 import CurrentAddressRenter from "./sections/currentAddresRenter";
 import TypePolicy from "./sections/TypePolicy";
 import SectionBankInfo from "./sections/sectionBankInfo";
-import "moment/locale/es";
+import {
+  callGetTypeFormTenant,
+  callGetTypeFormDocumentTenant,
+} from "../../utils/actions/actions";
 
 const { Step } = Steps;
 const { Content } = Layout;
 
-const TypeFormUser = () => {
+const TypeFormUser = (props) => {
+  const {
+    dataProfile,
+    callGetTypeFormTenant,
+    callGetTypeFormDocumentTenant,
+  } = props;
   const [current, setCurrent] = React.useState(0);
   const [dataForm, setDataForm] = useState({});
+  const [dataDocuments, setDataDocuments] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -110,6 +122,7 @@ const TypeFormUser = () => {
         <SectionDocumentation
           onClickNext={() => next()}
           onClickBack={() => prev()}
+          dataDocuments={dataDocuments}
         />
       ),
       iconActive: DocumentIcon,
@@ -125,78 +138,101 @@ const TypeFormUser = () => {
     },
   ];
 
-  const stepsOwner = [
-    {
-      title: "Información personal",
-      content: <SectionInfoOwner onClickNext={() => next()} />,
-      iconActive: IconProfile,
-      iconInactive: IconProfileInactive,
-    },
-    {
-      title: "Inmueble a rentar",
-      content: (
-        <CurrentAddressRenter
-          onClickNext={() => next()}
-          onClickBack={() => prev()}
-        />
-      ),
-      iconActive: HomeActive,
-      iconInactive: HomeInactive,
-    },
-    {
-      title: "Poliza",
-      content: (
-        <TypePolicy onClickNext={() => next()} onClickBack={() => prev()} />
-      ),
-      iconActive: DocumentIcon,
-      iconInactive: DocumentIconInactive,
-    },
-    {
-      title: "Datos bancarios",
-      content: (
-        <SectionBankInfo onClickFinish={() => {}} onClickBack={() => prev()} />
-      ),
-      iconActive: Wallet,
-      iconInactive: WalletInactive,
-    },
-  ];
+  const handlerCallGetTypeFormDocumentTenant = async (id) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetTypeFormDocumentTenant({
+        idCustomer,
+        idCustomerTenant: idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        idTypeForm: id,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataDocuments(responseResult);
+    } catch (error) {}
+  };
 
-  console.log("dataForm", dataForm);
+  const handlerCallGetTypeFormTenant = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetTypeFormTenant({
+        idCustomer,
+        idCustomerTenant: idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false &&
+        isEmpty(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false &&
+        isNil(response.response2) === false &&
+        isEmpty(response.response2) === false
+          ? response.response2
+          : [];
+      setDataForm(responseResult1);
+      await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm);
+    } catch (error) {}
+  };
+
+  const handlerCallAsyncApis = async () => {
+    await handlerCallGetTypeFormTenant();
+  };
+
+  useEffect(() => {
+    handlerCallAsyncApis();
+  }, []);
 
   return (
     <Content>
       <div className="margin-app-main">
         <div className="steps-style-header">
           <hr />
-          {steps.map((row, index) => {
-            return (
-              <div className="step-icon">
-                <div
-                  className={
-                    current === index
-                      ? "background-circle-active"
-                      : "background-circle-inactive"
-                  }
-                >
-                  <img
-                    src={current === index ? row.iconActive : row.iconInactive}
-                    alt=""
-                  />
+          {isEmpty(steps) === false &&
+            steps.map((row, index) => {
+              return (
+                <div className="step-icon">
+                  <div
+                    className={
+                      current === index
+                        ? "background-circle-active"
+                        : "background-circle-inactive"
+                    }
+                  >
+                    <img
+                      src={
+                        current === index ? row.iconActive : row.iconInactive
+                      }
+                      alt=""
+                    />
+                  </div>
+                  <span
+                    style={{
+                      visibility: current !== index ? "visible" : "hidden",
+                      color: "#d6d8e7",
+                    }}
+                    className="title-steps-typeform"
+                  >
+                    {row.title}
+                  </span>
                 </div>
-                <span
-                  style={{
-                    visibility: current !== index ? "visible" : "hidden",
-                    color: "#d6d8e7",
-                  }}
-                  className="title-steps-typeform"
-                >
-                  {row.title}
-                </span>
-              </div>
-            );
-          })}
+              );
+            })}
         </div>
-        <div className="steps-content">{steps[current].content}</div>
+        {isEmpty(steps) === false && (
+          <div className="steps-content">{steps[current].content}</div>
+        )}
       </div>
     </Content>
   );
@@ -209,6 +245,10 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callGetTypeFormTenant: (data) => dispatch(callGetTypeFormTenant(data)),
+  callGetTypeFormDocumentTenant: (data) =>
+    dispatch(callGetTypeFormDocumentTenant(data)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);
