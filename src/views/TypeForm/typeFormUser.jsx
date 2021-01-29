@@ -63,16 +63,20 @@ const TypeFormUser = (props) => {
   };
 
   const handlerCallSetTypeFormTenant = async (data) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomerTenantTF,
+      idCustomerTF,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
     try {
       const response = await callSetTypeFormTenant({
-        idCustomer,
-        idCustomerTenant: idCustomer,
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
         idLoginHistory,
         ...data,
       });
-      console.log("response", response);
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response

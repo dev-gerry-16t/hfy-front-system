@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Layout, Avatar, Rate, Modal, notification } from "antd";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import { UserOutlined } from "@ant-design/icons";
 import IconCalendar from "../../assets/icons/Calendar.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
@@ -13,85 +15,126 @@ import Transport from "../../assets/icons/Transport.svg";
 import SectionContractAvailable from "./sections/sectionContractAvailable";
 import SectionDepositGuarantee from "./sections/sectionDepositGuarantee";
 import FrontFunctions from "../../utils/actions/frontFunctions";
+import { callGetAllCustomerTenantDashboardById } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 
 const { Content } = Layout;
 
 const Tenant = (props) => {
-  const { history } = props;
+  const {
+    history,
+    callGetAllCustomerTenantById,
+    dataProfile,
+    setDataUserProfile,
+  } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dataTenant, setDataTenant] = useState([]);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
 
-  useEffect(() => {
-    const args = {
-      description: (
-        <div style={{ fontFamily: "Poppins" }}>
-          <span style={{ fontSize: "12px" }}>
-            Antes de iniciar el formulario debes tener lista una identificación
-            oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-            empresa donde trabajas que acredite desde cuando estas laborando en
-            la empresa. Adicional, necesitaras la escritura del inmueble que
-            quedara como garantía y los datos e identificación del Aval.
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              notification.destroy();
-              history.push("/websystem/typeform-user");
-            }}
-            className="button-action-primary"
-            style={{ marginTop: "25px" }}
-          >
-            <span>Ir al formulario</span>
-          </button>
-        </div>
-      ),
-      message: (
-        <div
-          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+  const args = {
+    description: (
+      <div style={{ fontFamily: "Poppins" }}>
+        <span style={{ fontSize: "12px" }}>
+          Antes de iniciar el formulario debes tener lista una identificación
+          oficial, tus últimos 3 comprobantes de ingresos y una carta de la
+          empresa donde trabajas que acredite desde cuando estas laborando en la
+          empresa. Adicional, necesitaras la escritura del inmueble que quedara
+          como garantía y los datos e identificación del Aval.
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            notification.destroy();
+            history.push("/websystem/typeform-user");
+          }}
+          className="button-action-primary"
+          style={{ marginTop: "25px" }}
         >
-          Solicitud de Investigación Persona Física con Aval
-        </div>
-      ),
-      duration: 0,
-      style: { marginTop: "4vw" },
-    };
+          <span>Ir al formulario</span>
+        </button>
+      </div>
+    ),
+    message: (
+      <div
+        style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+      >
+        Solicitud de Investigación Persona Física con Aval
+      </div>
+    ),
+    duration: 0,
+    style: { marginTop: "4vw" },
+  };
 
-    const argsv2 = {
-      description: (
-        <div style={{ fontFamily: "Poppins" }}>
-          <span style={{ fontSize: "12px" }}>
-            Buen dia <strong>Sebastian</strong>, estamos en espera del pago de
-            tu <strong>depósito en ganarantía</strong>.<br /> <br />
-            Si no puedes pagar el
-            <strong> depósito en ganarantía</strong> tenemos estas opciones para
-            ti
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setIsModalVisiblePolicy(!isModalVisiblePolicy);
-              notification.destroy();
-            }}
-            className="button-action-primary"
-            style={{ marginTop: "25px" }}
-          >
-            <span>Revisar opciones</span>
-          </button>
-        </div>
-      ),
-      message: (
-        <div
-          style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+  const argsv2 = {
+    description: (
+      <div style={{ fontFamily: "Poppins" }}>
+        <span style={{ fontSize: "12px" }}>
+          Buen dia <strong>Sebastian</strong>, estamos en espera del pago de tu{" "}
+          <strong>depósito en ganarantía</strong>.<br /> <br />
+          Si no puedes pagar el
+          <strong> depósito en ganarantía</strong> tenemos estas opciones para
+          ti
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            setIsModalVisiblePolicy(!isModalVisiblePolicy);
+            notification.destroy();
+          }}
+          className="button-action-primary"
+          style={{ marginTop: "25px" }}
         >
-          Depósito en Garantia
-        </div>
-      ),
-      duration: 0,
-      style: { marginTop: "4vw" },
-    };
-    notification.open(argsv2);
-    notification.open(args);
+          <span>Revisar opciones</span>
+        </button>
+      </div>
+    ),
+    message: (
+      <div
+        style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+      >
+        Depósito en Garantia
+      </div>
+    ),
+    duration: 0,
+    style: { marginTop: "4vw" },
+  };
+
+  const handlerCallGetAllCustomerTenantById = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllCustomerTenantById({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      console.log("responseResult", responseResult);
+      setDataTenant(responseResult);
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.isTypeFormCompleted) === false &&
+        responseResult.isTypeFormCompleted === false
+      ) {
+        setDataUserProfile({
+          ...dataProfile,
+          idCustomerTenantTF: responseResult.idCustomerTenant,
+          idCustomerTF: responseResult.idCustomer,
+        });
+        notification.open(args);
+      }
+    } catch (error) {}
+  };
+
+  useEffect(() => {
+    // notification.open(argsv2);
+    // notification.open(args);
+    handlerCallGetAllCustomerTenantById();
   }, []);
   return (
     <Content>
@@ -111,23 +154,26 @@ const Tenant = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, Sebastian</h2>
+            <h2>Hola, {dataTenant.shortNameTenant}</h2>
             <span>
-              Último inicio de sesión: <strong>03 Dic 20 10:45 am</strong>
+              Último inicio de sesión:{" "}
+              <strong>{dataTenant.lastSessionStarted}</strong>
             </span>
           </div>
           <div className="action-buttons-top">
             <div className="button_init_primary"></div>
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalVisible(!isModalVisible);
-                }}
-              >
-                <span>¡Contrato Disponible!</span>
-              </button>
-            </div>
+            {dataTenant.canSignContract === 1 && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalVisible(!isModalVisible);
+                  }}
+                >
+                  <span>¡Contrato Disponible!</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -135,21 +181,21 @@ const Tenant = (props) => {
             <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
               <img src={IconCalendar} alt="icon" width="20px"></img>
             </div>
-            <h2>12 Febrero 2021</h2>
+            <h2>{dataTenant.nextPaymentAt}</h2>
             <span>Fecha de próximo pago</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
               <img src={IconWallet} alt="icon" width="20px"></img>
             </div>
-            <h2>$18,500.00</h2>
+            <h2>{dataTenant.currentRent}</h2>
             <span>Monto de renta</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={IconDanger} alt="icon" width="20px"></img>
             </div>
-            <h2>$9,500.00</h2>
+            <h2>{dataTenant.interestAmount}</h2>
             <span>Moratorios</span>
           </div>
         </div>
@@ -160,7 +206,7 @@ const Tenant = (props) => {
           <div className="section-information-actions">
             <div className="section-information-buttons">
               <div className="section-information-button-2">
-                <img src={Tools} alt="Reportar incidencia" />
+                <img src={Tools} height={62} alt="Reportar incidencia" />
                 <button
                   type="button"
                   onClick={() => {}}
@@ -196,7 +242,7 @@ const Tenant = (props) => {
               <div className="section-information-data">
                 <Avatar size={50} icon={<UserOutlined />} />
                 <div className="info-user">
-                  <strong>Pedro Ramirez</strong>
+                  <strong>{dataTenant.fullName}</strong>
                   <Rate
                     style={{
                       fontSize: "15px",
@@ -205,12 +251,12 @@ const Tenant = (props) => {
                     }}
                     tooltips={[]}
                     onChange={() => {}}
-                    value={5}
+                    value={dataTenant.ratingRate}
                   />
                 </div>
               </div>
               <div className="section-information-button-1">
-                <img src={FileReport} alt="Reportar incidencia" />
+                <img src={FileReport} height={62} alt="Reportar incidencia" />
                 <button
                   type="button"
                   onClick={() => {}}
@@ -222,7 +268,7 @@ const Tenant = (props) => {
             </div>
             <div className="section-information-buttons">
               <div className="section-information-button-2">
-                <img src={MessagesIcon} alt="Reportar incidencia" />
+                <img src={MessagesIcon} height={62} alt="Reportar incidencia" />
                 <button
                   type="button"
                   onClick={() => {}}
@@ -260,6 +306,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
+
+  callGetAllCustomerTenantById: (data) =>
+    dispatch(callGetAllCustomerTenantDashboardById(data)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

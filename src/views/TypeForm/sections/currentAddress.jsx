@@ -47,7 +47,7 @@ const SectionCurrentAddress = (props) => {
     neighborhood: null,
     isOwn: null,
     currentTimeRange: null,
-    currentTimeRangeText:null,
+    currentTimeRangeText: null,
     currentTime: null,
     dateChangeAddress: null,
   };
@@ -282,10 +282,10 @@ const SectionCurrentAddress = (props) => {
                       }}
                       value={dataForm.currentTimeRange}
                     >
-                      <Option value={1} onClick={() => {}}>
+                      <Option value={"1"} onClick={() => {}}>
                         Meses
                       </Option>
-                      <Option value={2} onClick={() => {}}>
+                      <Option value={"2"} onClick={() => {}}>
                         Años
                       </Option>
                     </Select>

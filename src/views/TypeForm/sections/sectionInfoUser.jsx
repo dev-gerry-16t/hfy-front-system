@@ -154,7 +154,9 @@ const SectionInfoUser = (props) => {
                       const value = e.target.value;
                       setDataForm({ ...dataForm, hasCar: value });
                     }}
-                    value={dataForm.hasCar}
+                    value={
+                      dataForm.hasCar === true || dataForm.hasCar === 1 ? 1 : 0
+                    }
                   >
                     <Radio value={1}>Si</Radio>
                     <Radio value={0}>No</Radio>
@@ -162,7 +164,7 @@ const SectionInfoUser = (props) => {
                 </div>
               </Col>
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              {dataForm.hasCar === 1 && (
+              {(dataForm.hasCar === 1 || dataForm.hasCar === true) && (
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <Input
                     value={dataForm.carriagePlate}
