@@ -27,11 +27,24 @@ const SectionCurrentWork = (props) => {
     companyName: null,
     currentSalary: null,
     antiquityTimeRange: null,
+    antiquityTimeRangeText: null,
     antiquity: null,
     bossName: null,
     bossEmailAddress: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+  const [confirmData, setConfirmData] = useState(false);
+
+  const DescriptionItem = ({ title, content }) => (
+    <div
+      className="site-description-item-profile-wrapper"
+      style={{ textAlign: "center" }}
+    >
+      <strong className="site-description-item-profile-p-label">{title}</strong>
+      <br />
+      {content}
+    </div>
+  );
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
@@ -41,176 +54,269 @@ const SectionCurrentWork = (props) => {
 
   return (
     <div className="content-typeform-formulary">
-      <h3>Información laboral</h3>
-      <Row>
-        <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-        <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
-                value={dataForm.jobPosition}
-                placeholder={"Puesto"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, jobPosition: e.target.value });
-                }}
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix=""
-                suffix=""
-                value={dataForm.economicDependents}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Numero de dependientes economicos"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({ ...dataForm, economicDependents: floatValue });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <Input
-                value={dataForm.companyName}
-                placeholder={"Nombre de la empresa"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, companyName: e.target.value });
-                }}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix="$"
-                suffix=""
-                value={dataForm.currentSalary}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Sueldo mensual"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({ ...dataForm, currentSalary: floatValue });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix=""
-                suffix=""
-                value={dataForm.antiquity}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Antiguedad"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({ ...dataForm, antiquity: floatValue });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Select
-                placeholder="Periodo"
-                onChange={(value, option) => {
-                  setDataForm({ ...dataForm, antiquityTimeRange: value });
-                }}
-                value={dataForm.antiquityTimeRange}
+      <h3>
+        {confirmData === false
+          ? "Información laboral"
+          : "Confirmar Información laboral"}
+      </h3>
+      {confirmData === false && (
+        <Row>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.jobPosition}
+                  placeholder={"Puesto"}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, jobPosition: e.target.value });
+                  }}
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.economicDependents}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder="Numero de dependientes economicos"
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      economicDependents: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                <Input
+                  value={dataForm.companyName}
+                  placeholder={"Nombre de la empresa"}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, companyName: e.target.value });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.currentSalary}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder="Sueldo mensual"
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({ ...dataForm, currentSalary: floatValue });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.antiquity}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder="Antiguedad"
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({ ...dataForm, antiquity: floatValue });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <Select
+                  placeholder="Periodo"
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      antiquityTimeRange: value,
+                      antiquityTimeRangeText: option.children,
+                    });
+                  }}
+                  value={dataForm.antiquityTimeRange}
+                >
+                  <Option value={1} onClick={() => {}}>
+                    Meses
+                  </Option>
+                  <Option value={2} onClick={() => {}}>
+                    Años
+                  </Option>
+                </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.bossName}
+                  placeholder={"Nombre de tu jefe"}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, bossName: e.target.value });
+                  }}
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.bossEmailAddress}
+                  placeholder={"Correo de tu jefe"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      bossEmailAddress: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <div className="button_actions">
+              <button
+                type="button"
+                onClick={onClickBack}
+                className="button_secondary"
               >
-                <Option value={1} onClick={() => {}}>
-                  Meses
-                </Option>
-                <Option value={2} onClick={() => {}}>
-                  Años
-                </Option>
-              </Select>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
-                value={dataForm.bossName}
-                placeholder={"Nombre de tu jefe"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, bossName: e.target.value });
+                <span>Regresar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmData(true);
                 }}
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
-                value={dataForm.bossEmailAddress}
-                placeholder={"Correo de tu jefe"}
-                onChange={(e) => {
-                  setDataForm({
-                    ...dataForm,
-                    bossEmailAddress: e.target.value,
-                  });
+                className="button_primary"
+              >
+                <span>Continuar</span>
+              </button>
+            </div>
+          </Col>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+        </Row>
+      )}
+      {confirmData === true && (
+        <Row>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Puesto"
+                  content={dataForm.jobPosition}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Numero de dependientes"
+                  content={dataForm.economicDependents}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Nombre de la empresa"
+                  content={dataForm.companyName}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Sueldo mensual"
+                  content={dataForm.currentSalary}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Antiguedad"
+                  content={`${dataForm.antiquity} ${dataForm.antiquityTimeRangeText}`}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Nombre de tu jefe"
+                  content={dataForm.bossName}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Correo de tu jefe"
+                  content={dataForm.bossEmailAddress}
+                />
+              </Col>
+            </Row>
+            <div className="button_actions">
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmData(false);
                 }}
-              />
-            </Col>
-          </Row>
-          <div className="button_actions">
-            <button
-              type="button"
-              onClick={onClickBack}
-              className="button_secondary"
-            >
-              <span>Regresar</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                onClickNext(dataForm);
-              }}
-              className="button_primary"
-            >
-              <span>Continuar</span>
-            </button>
-          </div>
-        </Col>
-        <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-      </Row>
+                className="button_secondary"
+              >
+                <span>Cancelar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onClickNext(dataForm);
+                }}
+                className="button_primary"
+              >
+                <span>Confirmar</span>
+              </button>
+            </div>
+          </Col>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+        </Row>
+      )}
     </div>
   );
 };

@@ -33,6 +33,7 @@ import SectionBankInfo from "./sections/sectionBankInfo";
 import {
   callGetTypeFormTenant,
   callSetTypeFormTenant,
+  callGetZipCodeAdress,
   callGetTypeFormDocumentTenant,
 } from "../../utils/actions/actions";
 
@@ -45,10 +46,13 @@ const TypeFormUser = (props) => {
     callGetTypeFormTenant,
     callSetTypeFormTenant,
     callGetTypeFormDocumentTenant,
+    callGetZipCodeAdress,
   } = props;
   const [current, setCurrent] = React.useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataDocuments, setDataDocuments] = useState([]);
+  const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
+  const [dataZipCatalog, setDataZipCatalog] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -76,6 +80,30 @@ const TypeFormUser = (props) => {
     } catch (error) {}
   };
 
+  const hanlderCallGetZipCodeAdress = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetZipCodeAdress({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      setDataZipCodeAdress(responseResult1);
+      setDataZipCatalog(responseResult2);
+    } catch (error) {}
+  };
+
   const steps = [
     {
       title: "Información personal",
@@ -83,6 +111,7 @@ const TypeFormUser = (props) => {
         <SectionInfoUser
           dataFormSave={dataForm}
           onClickNext={(data) => {
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -97,9 +126,15 @@ const TypeFormUser = (props) => {
         <SectionCurrentAddress
           dataFormSave={dataForm}
           onClickNext={(data) => {
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
+          dataZipCatalog={dataZipCatalog}
+          onChangeZipCode={(zipCode) => {
+            hanlderCallGetZipCodeAdress({ type: 1, zipCode });
+          }}
+          dataZipCodeAdress={dataZipCodeAdress}
           onClickBack={() => prev()}
         />
       ),
@@ -112,6 +147,7 @@ const TypeFormUser = (props) => {
         <SectionCurrentWork
           dataFormSave={dataForm}
           onClickNext={(data) => {
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -154,7 +190,6 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoAval
           onClickFinish={() => {
-            console.log("click", dataForm);
             handlerCallSetTypeFormTenant(dataForm);
           }}
           onClickBack={() => prev()}
@@ -220,7 +255,6 @@ const TypeFormUser = (props) => {
   useEffect(() => {
     handlerCallAsyncApis();
   }, []);
-  console.log("click", dataForm);
 
   return (
     <Content>
@@ -276,6 +310,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGetTypeFormTenant: (data) => dispatch(callGetTypeFormTenant(data)),
   callSetTypeFormTenant: (data) => dispatch(callSetTypeFormTenant(data)),
+  callGetZipCodeAdress: (data) => dispatch(callGetZipCodeAdress(data)),
   callGetTypeFormDocumentTenant: (data) =>
     dispatch(callGetTypeFormDocumentTenant(data)),
 });
