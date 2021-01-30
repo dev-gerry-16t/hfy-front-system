@@ -13,6 +13,7 @@ import {
   Spin,
   Tooltip,
   Upload,
+  message,
   Radio,
 } from "antd";
 import CustomFileUpload from "./customFileUpload";
@@ -41,18 +42,41 @@ const CustomSubSectionCardDocument = (props) => {
 const SectionDocumentation = (props) => {
   const { onClickBack, onClickNext, dataDocuments } = props;
   const [isUploadDocument, setIsUploadDocument] = useState(false);
-  const [cardsUpload, setCardsUpload] = useState([]);
+  const [cardsUpload, setCardsUpload] = useState(false);
+  const [cardsUpload1, setCardsUpload1] = useState(false);
+  const [cardsUpload2, setCardsUpload2] = useState(false);
+  const [cardsUpload3, setCardsUpload3] = useState(false);
+  const [cardsUpload4, setCardsUpload4] = useState(false);
+  const [cardsUpload5, setCardsUpload5] = useState(false);
+  const [cardsUpload6, setCardsUpload6] = useState(false);
 
   const handlerOnConfirmDocuments = () => {
-    //setIsUploadDocument(true);
-  onClickNext();
+    message.loading("Tus documentos se estan subiendo", 0);
+    setIsUploadDocument(true);
   };
 
   useEffect(() => {
-    if (cardsUpload.length === 7) {
+    if (
+      cardsUpload === true &&
+      cardsUpload1 === true &&
+      cardsUpload2 === true &&
+      cardsUpload3 === true &&
+      cardsUpload4 === true &&
+      cardsUpload5 === true &&
+      cardsUpload6 === true
+    ) {
+      message.destroy();
       onClickNext();
     }
-  }, [cardsUpload]);
+  }, [
+    cardsUpload,
+    cardsUpload1,
+    cardsUpload2,
+    cardsUpload3,
+    cardsUpload4,
+    cardsUpload5,
+    cardsUpload6,
+  ]);
 
   return (
     <div className="content-typeform-formulary">
@@ -73,7 +97,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload(true);
             }}
           />
         </CustomSubSectionCardDocument>
@@ -92,7 +116,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload1(true);
             }}
           />
           <CustomFileUpload
@@ -105,7 +129,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload2(true);
             }}
           />
         </CustomSubSectionCardDocument>
@@ -124,7 +148,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload3(true);
             }}
           />
         </CustomSubSectionCardDocument>
@@ -145,7 +169,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload4(true);
             }}
           />
           <CustomFileUpload
@@ -158,7 +182,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload5(true);
             }}
           />
           <CustomFileUpload
@@ -171,7 +195,7 @@ const SectionDocumentation = (props) => {
             }
             isUploadDocument={isUploadDocument}
             onSuccesUpload={(succes) => {
-              setCardsUpload([...cardsUpload, succes]);
+              setCardsUpload6(true);
             }}
           />
         </CustomSubSectionCardDocument>

@@ -20,12 +20,13 @@ import IconProfile from "../../../assets/icons/Profile.svg";
 const { Option } = Select;
 
 const SectionCurrentWork = (props) => {
-  const { onClickBack, onClickNext, dataFormSave } = props;
+  const { onClickBack, onClickNext, dataFormSave, frontFunctions } = props;
   const initialForm = {
     jobPosition: null,
     economicDependents: null,
     companyName: null,
     currentSalary: null,
+    currentSalaryFormat: null,
     antiquityTimeRange: null,
     antiquityTimeRangeText: null,
     antiquity: null,
@@ -48,7 +49,23 @@ const SectionCurrentWork = (props) => {
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
+      setDataForm({
+        ...dataFormSave,
+        antiquityTimeRangeText:
+          dataFormSave.antiquityTimeRange === "Y"
+            ? "Años"
+            : dataFormSave.antiquityTimeRange === "M"
+            ? "Meses"
+            : null,
+        currentSalaryFormat:
+          isNil(dataFormSave.currentSalary) === false
+            ? frontFunctions.parseFormatCurrency(
+                dataFormSave.currentSalary,
+                2,
+                2
+              )
+            : null,
+      });
     }
   }, [dataFormSave]);
 
@@ -135,7 +152,11 @@ const SectionCurrentWork = (props) => {
                   placeholder="Sueldo mensual"
                   onValueChange={(values) => {
                     const { formattedValue, value, floatValue } = values;
-                    setDataForm({ ...dataForm, currentSalary: floatValue });
+                    setDataForm({
+                      ...dataForm,
+                      currentSalary: floatValue,
+                      currentSalaryFormat: formattedValue,
+                    });
                   }}
                   onClick={(event) => {}}
                   onFocus={(event) => {}}
@@ -182,10 +203,10 @@ const SectionCurrentWork = (props) => {
                   }}
                   value={dataForm.antiquityTimeRange}
                 >
-                  <Option value={1} onClick={() => {}}>
+                  <Option value={"M"} onClick={() => {}}>
                     Meses
                   </Option>
-                  <Option value={2} onClick={() => {}}>
+                  <Option value={"Y"} onClick={() => {}}>
                     Años
                   </Option>
                 </Select>
@@ -267,7 +288,7 @@ const SectionCurrentWork = (props) => {
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
                   title="Sueldo mensual"
-                  content={dataForm.currentSalary}
+                  content={dataForm.currentSalaryFormat}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

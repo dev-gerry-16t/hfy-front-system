@@ -68,16 +68,31 @@ const SectionCurrentAddress = (props) => {
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
+      setDataForm({
+        ...dataFormSave,
+        currentTimeRangeText:
+          dataFormSave.currentTimeRange === "Y"
+            ? "Años"
+            : dataFormSave.currentTimeRange === "M"
+            ? "Meses"
+            : null,
+      });
+      onChangeZipCode(dataFormSave.zipCode);
     }
   }, [dataFormSave]);
 
   useEffect(() => {
     if (isEmpty(dataZipCodeAdress) === false) {
       setDataForm({
-        ...dataForm,
+        ...dataFormSave,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
+        currentTimeRangeText:
+          dataFormSave.currentTimeRange === "Y"
+            ? "Años"
+            : dataFormSave.currentTimeRange === "M"
+            ? "Meses"
+            : null,
       });
     }
   }, [dataZipCodeAdress]);
@@ -282,10 +297,10 @@ const SectionCurrentAddress = (props) => {
                       }}
                       value={dataForm.currentTimeRange}
                     >
-                      <Option value={"1"} onClick={() => {}}>
+                      <Option value={"M"} onClick={() => {}}>
                         Meses
                       </Option>
-                      <Option value={"2"} onClick={() => {}}>
+                      <Option value={"Y"} onClick={() => {}}>
                         Años
                       </Option>
                     </Select>

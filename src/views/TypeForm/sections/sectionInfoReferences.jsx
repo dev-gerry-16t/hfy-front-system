@@ -15,11 +15,18 @@ import {
   Radio,
 } from "antd";
 import IconProfile from "../../../assets/icons/Profile.svg";
+import CustomReferences from "./customReference";
 
 const { Option } = Select;
 
 const SectionInfoReferences = (props) => {
-  const { onClickBack, onClickNext, dataFormSave } = props;
+  const {
+    onClickBack,
+    onClickNext,
+    dataFormSave,
+    onClickSendReferences,
+    dataReferences,
+  } = props;
   const initialForm = {
     jobPosition: null,
     economicDependents: null,
@@ -31,124 +38,66 @@ const SectionInfoReferences = (props) => {
     bossEmailAddress: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+  const [isVisibleButtonContinue, setIsVisibleButtonContinue] = useState(false);
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
       setDataForm(dataFormSave);
     }
   }, [dataFormSave]);
-  
+
   return (
     <div className="content-typeform-formulary">
       <h3>Referencias</h3>
       <Row>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
         <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-          <p>Referencia 1</p>
-          <Row>
-            <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <Input
-                placeholder={"Nombres"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido paterno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido materno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Telefono"} onChange={(e) => {}} />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Correo"} onChange={(e) => {}} />
-            </Col>
-          </Row>{" "}
-          <p>Referencia 2</p>
-          <Row>
-            <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <Input
-                placeholder={"Nombres"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido paterno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido materno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Telefono"} onChange={(e) => {}} />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Correo"} onChange={(e) => {}} />
-            </Col>
-          </Row>{" "}
-          <p>Referencia 3</p>
-          <Row>
-            <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <Input
-                placeholder={"Nombres"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido paterno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
-                placeholder={"Apellido materno"}
-                onChange={(e) => {}}
-                suffix={<img src={IconProfile} alt="profile" width="15" />}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Telefono"} onChange={(e) => {}} />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input placeholder={"Correo"} onChange={(e) => {}} />
-            </Col>
-          </Row>
+          <CustomReferences
+            dataReferences={
+              isEmpty(dataReferences) === false &&
+              isNil(dataReferences[0]) === false
+                ? dataReferences[0]
+                : []
+            }
+            title="Referencia 1"
+            onClickAdd={(data) => {
+              onClickSendReferences({
+                ...data,
+                idTypeForm: dataFormSave.idTypeForm,
+              });
+            }}
+          />
+          <CustomReferences
+            dataReferences={
+              isEmpty(dataReferences) === false &&
+              isNil(dataReferences[1]) === false
+                ? dataReferences[1]
+                : []
+            }
+            title="Referencia 2"
+            onClickAdd={(data) => {
+              onClickSendReferences({
+                ...data,
+                idTypeForm: dataFormSave.idTypeForm,
+              });
+            }}
+          />
+          <CustomReferences
+            dataReferences={
+              isEmpty(dataReferences) === false &&
+              isNil(dataReferences[2]) === false
+                ? dataReferences[2]
+                : []
+            }
+            title="Referencia 3"
+            onClickAdd={(data) => {
+              onClickSendReferences({
+                ...data,
+                idTypeForm: dataFormSave.idTypeForm,
+              });
+              setIsVisibleButtonContinue(true);
+            }}
+          />
           <div className="button_actions">
             <button
               type="button"
@@ -157,13 +106,16 @@ const SectionInfoReferences = (props) => {
             >
               <span>Regresar</span>
             </button>
-            <button
-              type="button"
-              onClick={onClickNext}
-              className="button_primary"
-            >
-              <span>Continuar</span>
-            </button>
+            {(isVisibleButtonContinue === true ||
+              isEmpty(dataReferences) === false) && (
+              <button
+                type="button"
+                onClick={onClickNext}
+                className="button_primary"
+              >
+                <span>Continuar</span>
+              </button>
+            )}
           </div>
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />

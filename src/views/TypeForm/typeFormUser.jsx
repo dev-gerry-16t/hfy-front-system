@@ -30,11 +30,13 @@ import SectionInfoOwner from "./sections/sectionInfoOwner";
 import CurrentAddressRenter from "./sections/currentAddresRenter";
 import TypePolicy from "./sections/TypePolicy";
 import SectionBankInfo from "./sections/sectionBankInfo";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import {
   callGetTypeFormTenant,
   callSetTypeFormTenant,
   callGetZipCodeAdress,
   callGetTypeFormDocumentTenant,
+  callSetTypeFormReferences,
 } from "../../utils/actions/actions";
 
 const { Step } = Steps;
@@ -47,9 +49,12 @@ const TypeFormUser = (props) => {
     callSetTypeFormTenant,
     callGetTypeFormDocumentTenant,
     callGetZipCodeAdress,
+    callSetTypeFormReferences,
   } = props;
+  const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
   const [dataForm, setDataForm] = useState({});
+  const [dataReferences, setDataReferences] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
@@ -84,6 +89,25 @@ const TypeFormUser = (props) => {
     } catch (error) {}
   };
 
+  const handlerCallSetTypeFormReferences = async (data) => {
+    const {
+      idCustomerTenantTF,
+      idCustomerTF,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
+    try {
+      const response = await callSetTypeFormReferences({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      console.log("response", response);
+    } catch (error) {}
+  };
+
   const hanlderCallGetZipCodeAdress = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -108,6 +132,33 @@ const TypeFormUser = (props) => {
     } catch (error) {}
   };
 
+  const handlerCallGetTypeFormDocumentTenant = async (id) => {
+    const {
+      idCustomerTenantTF,
+      idCustomerTF,
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
+    try {
+      const response = await callGetTypeFormDocumentTenant({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        idTypeForm: id,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataDocuments(responseResult);
+    } catch (error) {}
+  };
+
   const steps = [
     {
       title: "Información personal",
@@ -115,7 +166,7 @@ const TypeFormUser = (props) => {
         <SectionInfoUser
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            //handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -130,7 +181,7 @@ const TypeFormUser = (props) => {
         <SectionCurrentAddress
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            //handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -151,10 +202,11 @@ const TypeFormUser = (props) => {
         <SectionCurrentWork
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            //handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
+          frontFunctions={frontFunctions}
           onClickBack={() => prev()}
         />
       ),
@@ -166,6 +218,10 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoReferences
           dataFormSave={dataForm}
+          dataReferences={dataReferences}
+          onClickSendReferences={(data) => {
+            handlerCallSetTypeFormReferences(data);
+          }}
           onClickNext={() => {
             next();
           }}
@@ -180,6 +236,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionDocumentation
           onClickNext={() => {
+            handlerCallGetTypeFormDocumentTenant(dataForm.idTypeForm);
             next();
           }}
           onClickBack={() => prev()}
@@ -204,33 +261,18 @@ const TypeFormUser = (props) => {
     },
   ];
 
-  const handlerCallGetTypeFormDocumentTenant = async (id) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGetTypeFormDocumentTenant({
-        idCustomer,
-        idCustomerTenant: idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        idTypeForm: id,
-        type: 1,
-      });
-      const responseResult =
-        isNil(response) === false &&
-        isNil(response.response) === false &&
-        isEmpty(response.response) === false
-          ? response.response
-          : [];
-      setDataDocuments(responseResult);
-    } catch (error) {}
-  };
-
   const handlerCallGetTypeFormTenant = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomerTenantTF,
+      idCustomerTF,
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
     try {
       const response = await callGetTypeFormTenant({
-        idCustomer,
-        idCustomerTenant: idCustomer,
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
         idLoginHistory,
       });
@@ -248,6 +290,7 @@ const TypeFormUser = (props) => {
           ? response.response2
           : [];
       setDataForm(responseResult1);
+      setDataReferences(responseResult2);
       await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm);
     } catch (error) {}
   };
@@ -314,6 +357,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGetTypeFormTenant: (data) => dispatch(callGetTypeFormTenant(data)),
   callSetTypeFormTenant: (data) => dispatch(callSetTypeFormTenant(data)),
+  callSetTypeFormReferences: (data) =>
+    dispatch(callSetTypeFormReferences(data)),
   callGetZipCodeAdress: (data) => dispatch(callGetZipCodeAdress(data)),
   callGetTypeFormDocumentTenant: (data) =>
     dispatch(callGetTypeFormDocumentTenant(data)),

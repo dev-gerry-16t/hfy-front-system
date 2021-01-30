@@ -114,7 +114,6 @@ const Tenant = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      console.log("responseResult", responseResult);
       setDataTenant(responseResult);
       if (
         isEmpty(responseResult) === false &&

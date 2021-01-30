@@ -128,6 +128,12 @@ const CustomFileUpload = (props) => {
     ) {
       setSpinVisible(true);
       handlerAddDocument(fileList, dataDocument);
+    } else if (
+      isUploadDocument === true &&
+      isEmpty(dataDocument) === false &&
+      isNil(dataDocument.idDocument) === false
+    ) {
+      onSuccesUpload(dataDocument.idDocumentType);
     }
   }, [isUploadDocument]);
 
