@@ -126,6 +126,7 @@ const Tenant = (props) => {
           idCustomerTF: responseResult.idCustomer,
         });
         notification.open(args);
+        notification.open(argsv2);
       }
     } catch (error) {}
   };
@@ -161,18 +162,18 @@ const Tenant = (props) => {
           </div>
           <div className="action-buttons-top">
             <div className="button_init_primary"></div>
-            {dataTenant.canSignContract === 1 && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>¡Contrato Disponible!</span>
-                </button>
-              </div>
-            )}
+            {/* {dataTenant.canSignContract === 1 && ( */}
+            <div className="button_init_primary">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsModalVisible(!isModalVisible);
+                }}
+              >
+                <span>¡Contrato Disponible!</span>
+              </button>
+            </div>
+            {/* )} */}
           </div>
         </div>
         <div className="indicators-amount-renter">

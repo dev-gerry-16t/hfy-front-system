@@ -377,7 +377,7 @@ const SectionCurrentAddress = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
-                  title="Municipip/Delegación"
+                  title="Municipio/Delegación"
                   content={dataForm.city}
                 />
               </Col>
@@ -388,7 +388,7 @@ const SectionCurrentAddress = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Codigo postal"
+                  title="Código postal"
                   content={dataForm.zipCode}
                 />
               </Col>

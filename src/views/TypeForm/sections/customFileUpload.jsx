@@ -34,7 +34,7 @@ const { Dragger } = Upload;
 const CustomFileUpload = (props) => {
   const {
     acceptFile,
-    isUploadDocument,
+    typeDocument,
     dataDocument,
     callAddDocument,
     callAddTypeFormDocument,
@@ -47,6 +47,7 @@ const CustomFileUpload = (props) => {
   const [timeUpload, setTimeUpload] = useState(0);
   const [previewVisible, setPreviewVisible] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [spinVisibleUpload, setSpinVisibleUpload] = useState(true);
 
   const LoadingSpin = (
     <div
@@ -71,6 +72,7 @@ const CustomFileUpload = (props) => {
   const handlerAddTypeFormDocument = async (data, id) => {
     try {
       await callAddTypeFormDocument(data, id);
+      setSpinVisibleUpload(false);
     } catch (error) {}
   };
 
@@ -105,7 +107,7 @@ const CustomFileUpload = (props) => {
           idCustomer,
           idTypeForm: infoDoc.idTypeForm,
           idCustomerTenant: idCustomer,
-          type: 1,
+          type: typeDocument,
           idSystemUser,
           idLoginHistory,
         },
@@ -119,24 +121,7 @@ const CustomFileUpload = (props) => {
       setSpinVisible(false);
     }
   };
-
-  useEffect(() => {
-    if (
-      isUploadDocument === true &&
-      isEmpty(dataDocument) === false &&
-      isEmpty(fileList) === false
-    ) {
-      setSpinVisible(true);
-      handlerAddDocument(fileList, dataDocument);
-    } else if (
-      isUploadDocument === true &&
-      isEmpty(dataDocument) === false &&
-      isNil(dataDocument.idDocument) === false
-    ) {
-      onSuccesUpload(dataDocument.idDocumentType);
-    }
-  }, [isUploadDocument]);
-
+  
   return (
     <Spin indicator={LoadingSpin} spinning={spinVisible}>
       <div
@@ -241,6 +226,30 @@ const CustomFileUpload = (props) => {
           <Magnifier src={preview} />
         </Modal>
       </div>
+      {isNil(preview) === false &&
+        isEmpty(dataDocument) === false &&
+        isNil(dataDocument.idDocument) === true &&
+        spinVisibleUpload === true && (
+          <div className="confirm-upload-document button_actions">
+            <button
+              className="button_primary"
+              type="button"
+              onClick={() => {
+                if (
+                  isEmpty(dataDocument) === false &&
+                  isEmpty(fileList) === false
+                ) {
+                  setSpinVisible(true);
+                  handlerAddDocument(fileList, dataDocument);
+                }
+              }}
+            >
+              <span>
+                <i className="fa fa-upload" /> Subir
+              </span>
+            </button>
+          </div>
+        )}
     </Spin>
   );
 };

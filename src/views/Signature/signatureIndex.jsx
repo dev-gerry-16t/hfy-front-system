@@ -9,34 +9,6 @@ const SgnatureIndex = () => {
   const signatureRef = useRef(null);
 
   let stringSignature = `
-    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML>
-<HEAD>
-	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=utf-8">
-	<TITLE></TITLE>
-	<META NAME="GENERATOR" CONTENT="LibreOffice 4.1.6.2 (Linux)">
-	<META NAME="AUTHOR" CONTENT="Office 365">
-	<META NAME="CREATED" CONTENT="20201217;63500000000000">
-	<META NAME="CHANGEDBY" CONTENT="Cuenta Microsoft">
-	<META NAME="CHANGED" CONTENT="20201223;25000000000000">
-	<META NAME="AppVersion" CONTENT="15.0000">
-	<META NAME="DocSecurity" CONTENT="0">
-	<META NAME="HyperlinksChanged" CONTENT="false">
-	<META NAME="LinksUpToDate" CONTENT="false">
-	<META NAME="ScaleCrop" CONTENT="false">
-	<META NAME="ShareDoc" CONTENT="false">
-	<STYLE TYPE="text/css">
-	<!--
-		@page { size: 8.5in 11in; margin-left: 1.18in; margin-right: 1.18in; margin-top: 0.49in; margin-bottom: 0.49in }
-		P { margin-bottom: 0.08in; direction: ltr; widows: 2; orphans: 2 }
-	-->
-	</STYLE>
-</HEAD>
-<BODY LANG="es-MX" DIR="LTR">
-<DIV TYPE=HEADER>
-	<P STYLE="margin-bottom: 0.45in"><BR>
-	</P>
-</DIV>
 <P ALIGN=RIGHT STYLE="margin-top: 0.19in; margin-bottom: 0.19in"><FONT FACE="Arial, serif">FOLIO:
 </FONT><FONT COLOR="#ff0000"><FONT FACE="Arial, serif">HOM0060</FONT></FONT></P>
 <P ALIGN=JUSTIFY STYLE="margin-top: 0.19in; margin-bottom: 0.19in"><FONT FACE="Arial, serif"><B>CONTRATO
@@ -1074,7 +1046,13 @@ de diciembre de 2020. </B></FONT>
 <P ALIGN=JUSTIFY STYLE="margin-top: 0.19in; margin-bottom: 0.19in"><BR><BR>
 </P>
 <P ALIGN=CENTER STYLE="margin-top: 0.19in; margin-bottom: 0.19in">“<FONT FACE="Arial, serif"><B>EL
-ARRENDADOR”</B></FONT></P>
+ARRENDADOR”</B></FONT></P><P ALIGN=JUSTIFY STYLE="margin-top: 0.19in; margin-bottom: 0.19in"><BR><BR>
+</P>
+<div style="position:relative;text-align:center">${
+    isEmpty(signature)
+      ? ""
+      : `<img src=${signature} alt="Firma" style="position:absolute;top: -75px;right: 175px;"/>`
+  }</div>
 <P ALIGN=CENTER STYLE="margin-top: 0.19in; margin-bottom: 0.19in"><FONT FACE="Arial, serif"><B>_____________________________</B></FONT></P>
 <P ALIGN=CENTER STYLE="margin-top: 0.19in; margin-bottom: 0.19in; border-top: none; border-left: none; border-right: none; padding-top: 0in; padding-bottom: 0.43in; padding-left: 0in; padding-right: 0in">
 <FONT FACE="Arial, serif"><B>ARACELI HURTADO FEREGRINO.</B></FONT></P>
@@ -1120,12 +1098,7 @@ inmediata al arrendatario, para que tome las medidas necesarias para
 la resolución del problema</FONT>.</P>
 <DIV TYPE=FOOTER>
 	<P STYLE="margin-top: 0.45in; margin-bottom: 0in"><BR>
-	</P>
-</DIV>
-</BODY>
-</HTML>`;
-
-  console.log("signature", signatureRef);
+	</P>`;
 
   return (
     <div

@@ -112,7 +112,7 @@ const CustomReferences = (props) => {
                 className="button_primary"
               >
                 <span>
-                  {isEmpty(dataReferences) === false ? "Editar" : "Agregar"}
+                  {isEmpty(dataReferences) === false ? "Guardar" : "Agregar"}
                 </span>
               </button>
             </div>

@@ -50,12 +50,14 @@ const TypeFormUser = (props) => {
     callGetTypeFormDocumentTenant,
     callGetZipCodeAdress,
     callSetTypeFormReferences,
+    history,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataReferences, setDataReferences] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);
+  const [dataDocumentsEndorsement, setDataDocumentsEndorsement] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
 
@@ -104,7 +106,6 @@ const TypeFormUser = (props) => {
         idLoginHistory,
         ...data,
       });
-      console.log("response", response);
     } catch (error) {}
   };
 
@@ -132,7 +133,7 @@ const TypeFormUser = (props) => {
     } catch (error) {}
   };
 
-  const handlerCallGetTypeFormDocumentTenant = async (id) => {
+  const handlerCallGetTypeFormDocumentTenant = async (id, type) => {
     const {
       idCustomerTenantTF,
       idCustomerTF,
@@ -147,7 +148,7 @@ const TypeFormUser = (props) => {
         idSystemUser,
         idLoginHistory,
         idTypeForm: id,
-        type: 1,
+        type,
       });
       const responseResult =
         isNil(response) === false &&
@@ -155,7 +156,11 @@ const TypeFormUser = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : [];
-      setDataDocuments(responseResult);
+      if (type === 1) {
+        setDataDocuments(responseResult);
+      } else if (type === 2) {
+        setDataDocumentsEndorsement(responseResult);
+      }
     } catch (error) {}
   };
 
@@ -166,7 +171,7 @@ const TypeFormUser = (props) => {
         <SectionInfoUser
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            //handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -181,8 +186,10 @@ const TypeFormUser = (props) => {
         <SectionCurrentAddress
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            //handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
+            setDataZipCodeAdress({});
+            setDataZipCatalog([]);
             next();
           }}
           dataZipCatalog={dataZipCatalog}
@@ -202,7 +209,7 @@ const TypeFormUser = (props) => {
         <SectionCurrentWork
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            //handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -236,11 +243,12 @@ const TypeFormUser = (props) => {
       content: (
         <SectionDocumentation
           onClickNext={() => {
-            handlerCallGetTypeFormDocumentTenant(dataForm.idTypeForm);
+            handlerCallGetTypeFormDocumentTenant(dataForm.idTypeForm, 1);
             next();
           }}
           onClickBack={() => prev()}
           dataDocuments={dataDocuments}
+          typeDocument={1}
         />
       ),
       iconActive: DocumentIcon,
@@ -250,10 +258,23 @@ const TypeFormUser = (props) => {
       title: "Información aval",
       content: (
         <SectionInfoAval
-          onClickFinish={() => {
-            handlerCallSetTypeFormTenant(dataForm);
+          dataFormSave={dataForm}
+          dataDocuments={dataDocumentsEndorsement}
+          onClickFinish={(data) => {
+            handlerCallSetTypeFormTenant(data);
+            history.push("/websystem/dashboard-tenant");
           }}
-          onClickBack={() => prev()}
+          dataZipCatalog={dataZipCatalog}
+          onChangeZipCode={(zipCode) => {
+            hanlderCallGetZipCodeAdress({ type: 1, zipCode });
+          }}
+          dataZipCodeAdress={dataZipCodeAdress}
+          onClickBack={() => {
+            prev();
+            setDataZipCodeAdress({});
+            setDataZipCatalog([]);
+          }}
+          typeDocument={2}
         />
       ),
       iconActive: Shield,
@@ -291,7 +312,8 @@ const TypeFormUser = (props) => {
           : [];
       setDataForm(responseResult1);
       setDataReferences(responseResult2);
-      await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm);
+      await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 1);
+      await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 2);
     } catch (error) {}
   };
 

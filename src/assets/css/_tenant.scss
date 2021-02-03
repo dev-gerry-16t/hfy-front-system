@@ -453,6 +453,11 @@
   padding: 5px;
 }
 
+.confirm-upload-document{
+  display: flex;
+  justify-content: center;
+}
+
 @media screen and (max-width: 1080px) {
   .top-info-tenant {
     flex-direction: column;
