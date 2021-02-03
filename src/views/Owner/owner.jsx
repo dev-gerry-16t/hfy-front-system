@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal } from "antd";
+import { Layout, Avatar, Rate, Modal, notification } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
@@ -64,6 +64,37 @@ const Owner = (props) => {
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
 
+  const args = {
+    description: (
+      <div style={{ fontFamily: "Poppins" }}>
+        <span style={{ fontSize: "12px" }}>
+          Necesitamos que nos ayudes a ingresar tu información personal, la cual
+          sera utilizada para la elaboración del contrato y póliza.
+        </span>
+        <button
+          type="button"
+          onClick={() => {
+            notification.destroy();
+            history.push("/websystem/typeform-owner");
+          }}
+          className="button-action-primary"
+          style={{ marginTop: "25px" }}
+        >
+          <span>Ir al formulario</span>
+        </button>
+      </div>
+    ),
+    message: (
+      <div
+        style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+      >
+        Solicitud Póliza Homify Propietario
+      </div>
+    ),
+    duration: 0,
+    style: { marginTop: "4vw" },
+  };
+
   const handlerCallApiPersonTypes = async (data) => {
     try {
       const response = await callGetAllPersons(data);
@@ -90,6 +121,13 @@ const Owner = (props) => {
           ? response.response[0]
           : {};
       setDataCustomer(responseResult);
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.isTypeFormCompleted) === false &&
+        responseResult.isTypeFormCompleted === false
+      ) {
+        notification.open(args);
+      }
     } catch (error) {}
   };
 

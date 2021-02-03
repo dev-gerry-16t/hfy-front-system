@@ -84,7 +84,7 @@ const SectionCurrentAddress = (props) => {
   useEffect(() => {
     if (isEmpty(dataZipCodeAdress) === false) {
       setDataForm({
-        ...dataFormSave,
+        ...dataForm,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
         currentTimeRangeText:
@@ -244,10 +244,12 @@ const SectionCurrentAddress = (props) => {
                     onChange={(e) => {
                       setDataForm({ ...dataForm, isOwn: e.target.value });
                     }}
-                    value={dataForm.isOwn}
+                    value={
+                      dataForm.isOwn === 1 || dataForm.isOwn === true ? 1 : 0
+                    }
                   >
-                    <Radio value={1}>Rentada</Radio>
-                    <Radio value={0}>Propia</Radio>
+                    <Radio value={1}>Propia</Radio>
+                    <Radio value={0}>Rentada</Radio>
                   </Radio.Group>
                 </div>
               </Col>
@@ -397,7 +399,11 @@ const SectionCurrentAddress = (props) => {
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
                   title="La propiedad es"
-                  content={dataForm.isOwn === 1 ? "Rentada" : "Propia"}
+                  content={
+                    dataForm.isOwn === 1 || dataForm.isOwn === true
+                      ? "Propia"
+                      : "Rentada"
+                  }
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

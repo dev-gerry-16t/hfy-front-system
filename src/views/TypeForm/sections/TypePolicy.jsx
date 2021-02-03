@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import {
   Layout,
   Avatar,
@@ -18,7 +20,17 @@ import CustomFileUpload from "./customFileUpload";
 const { Option } = Select;
 
 const TypePolicy = (props) => {
-  const { onClickBack, onClickNext } = props;
+  const {
+    onClickBack,
+    onClickNext,
+    dataPolicies,
+    dataDocuments,
+    typeDocument,
+  } = props;
+  const initialForm = {
+    idPolicy: null,
+  };
+  const [dataForm, setDataForm] = useState(initialForm);
   return (
     <div className="content-typeform-formulary">
       <h3>Poliza y Documentos</h3>
@@ -30,17 +42,23 @@ const TypePolicy = (props) => {
             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
               <Select
                 placeholder="¿Que póliza contratas?"
-                onChange={(value, option) => {}}
+                onChange={(value, option) => {
+                  setDataForm({ ...dataForm, idPolicy: value });
+                }}
               >
-                <Option value={1} onClick={() => {}}>
-                  Homify Básica
-                </Option>
-                <Option value={2} onClick={() => {}}>
-                  Homify Pro
-                </Option>
-                <Option value={3} onClick={() => {}}>
-                  Homify Renta Segura
-                </Option>
+                {isEmpty(dataPolicies) === false &&
+                  dataPolicies.map((row) => {
+                    return (
+                      <Option
+                        value={row.id}
+                        onClick={() => {
+                          return row;
+                        }}
+                      >
+                        {row.text}
+                      </Option>
+                    );
+                  })}
               </Select>
             </Col>
           </Row>
@@ -52,8 +70,26 @@ const TypePolicy = (props) => {
                 <span>Frente y vuelta</span>
               </div>
               <div className="section-content-card-doc">
-                <CustomFileUpload />
-                <CustomFileUpload />
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[0]) === false
+                      ? dataDocuments[0]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[1]) === false
+                      ? dataDocuments[1]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
               </div>
             </div>
           </div>
@@ -67,7 +103,9 @@ const TypePolicy = (props) => {
             </button>
             <button
               type="button"
-              onClick={onClickNext}
+              onClick={() => {
+                onClickNext(dataForm);
+              }}
               className="button_primary"
             >
               <span>Continuar</span>
