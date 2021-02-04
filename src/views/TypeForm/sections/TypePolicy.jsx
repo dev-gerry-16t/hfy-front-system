@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -26,11 +26,19 @@ const TypePolicy = (props) => {
     dataPolicies,
     dataDocuments,
     typeDocument,
+    dataFormSave,
   } = props;
   const initialForm = {
     idPolicy: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      setDataForm(dataFormSave);
+    }
+  }, [dataFormSave]);
+
   return (
     <div className="content-typeform-formulary">
       <h3>Poliza y Documentos</h3>
@@ -41,6 +49,7 @@ const TypePolicy = (props) => {
           <Row>
             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
               <Select
+                value={dataForm.idPolicy}
                 placeholder="¿Que póliza contratas?"
                 onChange={(value, option) => {
                   setDataForm({ ...dataForm, idPolicy: value });

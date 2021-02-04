@@ -30,6 +30,7 @@ const CurrentAddressRenter = (props) => {
     onClickBack,
     onClickNext,
     dataFormSave,
+    frontFunctions,
     dataZipCatalog,
     onChangeZipCode,
     dataZipCodeAdress,
@@ -48,9 +49,7 @@ const CurrentAddressRenter = (props) => {
     idPropertyTypeText: null,
     isFurnished: null,
     currentRent: null,
-    currentRentFormat: null,
     maintenanceAmount: null,
-    maintenanceAmountFormat: null,
     totalParkingSpots: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
@@ -313,7 +312,6 @@ const CurrentAddressRenter = (props) => {
                     setDataForm({
                       ...dataForm,
                       currentRent: floatValue,
-                      currentRentFormat: formattedValue,
                     });
                   }}
                   onClick={(event) => {}}
@@ -344,7 +342,6 @@ const CurrentAddressRenter = (props) => {
                     setDataForm({
                       ...dataForm,
                       maintenanceAmount: floatValue,
-                      maintenanceAmountFormat: formattedValue,
                     });
                   }}
                   onClick={(event) => {}}
@@ -385,6 +382,13 @@ const CurrentAddressRenter = (props) => {
               </Col>
             </Row>
             <div className="button_actions">
+              <button
+                type="button"
+                onClick={onClickBack}
+                className="button_secondary"
+              >
+                <span>Regresar</span>
+              </button>
               <button
                 type="button"
                 onClick={() => {
@@ -473,13 +477,29 @@ const CurrentAddressRenter = (props) => {
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
                   title="Monto de renta"
-                  content={dataForm.currentRentFormat}
+                  content={
+                    isNil(dataFormSave.currentRent) === false
+                      ? frontFunctions.parseFormatCurrency(
+                          dataForm.currentRent,
+                          2,
+                          2
+                        )
+                      : null
+                  }
                 />
               </Col>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
                   title="Monto de mantenimiento"
-                  content={dataForm.maintenanceAmountFormat}
+                  content={
+                    isNil(dataFormSave.maintenanceAmount) === false
+                      ? frontFunctions.parseFormatCurrency(
+                          dataForm.maintenanceAmount,
+                          2,
+                          2
+                        )
+                      : null
+                  }
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

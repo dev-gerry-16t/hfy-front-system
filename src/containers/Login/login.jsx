@@ -46,8 +46,8 @@ const Login = (props) => {
           isNil(response.response.token) === false
             ? response.response.token
             : null;
-        window.fcWidget.user.setEmail(data.email);
-        window.fcWidget.setExternalId(idSystemUser);
+        //window.fcWidget.user.setEmail(data.email);
+        //window.fcWidget.setExternalId(idSystemUser);
         await setDataUserProfile({ idSystemUser, token });
         setSpinVisible(false);
         history.push("/auth");

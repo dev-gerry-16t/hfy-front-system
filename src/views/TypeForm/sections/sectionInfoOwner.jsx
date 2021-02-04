@@ -52,6 +52,8 @@ const SectionInfoOwner = (props) => {
     state: null,
     municipality: null,
     neighborhood: null,
+    electorKey: null,
+    passportId: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -201,6 +203,29 @@ const SectionInfoOwner = (props) => {
                   onChange={(e) => {
                     const value = e.target.value;
                     setDataForm({ ...dataForm, citizenId: value });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.electorKey}
+                  placeholder={"Clave de elector"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, electorKey: value });
+                  }}
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.passportId}
+                  placeholder={"Numero de pasaporte"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, passportId: value });
                   }}
                 />
               </Col>
@@ -437,7 +462,22 @@ const SectionInfoOwner = (props) => {
                 <DescriptionItem title="CURP" content={dataForm.citizenId} />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={3} xs={{ span: 24 }} md={{ span: 3 }}>
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Clave de elector"
+                  content={dataForm.electorKey}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Numero de pasaporte"
+                  content={dataForm.passportId}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
                   title="Estado civil"
                   content={dataForm.idMaritalStatusText}

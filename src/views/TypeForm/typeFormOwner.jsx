@@ -38,6 +38,7 @@ import {
   callGetPropertyTypes,
   callGetPolicies,
 } from "../../utils/actions/actions";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import "moment/locale/es";
 
@@ -48,6 +49,7 @@ const TypeFormOwner = (props) => {
   const {
     callGetTypeFormDocumentTenant,
     dataProfile,
+    history,
     callGetAllBankCatalog,
     callSetTypeFormOwner,
     callGetTypeFormOwner,
@@ -56,6 +58,7 @@ const TypeFormOwner = (props) => {
     callGetPropertyTypes,
     callGetPolicies,
   } = props;
+  const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataBank, setDataBank] = useState([]);
@@ -164,6 +167,7 @@ const TypeFormOwner = (props) => {
       title: "Inmueble a rentar",
       content: (
         <CurrentAddressRenter
+          frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           onClickNext={(data) => {
             handlerCallSetTypeFormTenant(data);
@@ -192,6 +196,7 @@ const TypeFormOwner = (props) => {
       title: "Poliza",
       content: (
         <TypePolicy
+          dataFormSave={dataForm}
           dataPolicies={dataPolicies}
           dataDocuments={dataDocuments}
           typeDocument={3}
@@ -210,9 +215,11 @@ const TypeFormOwner = (props) => {
       title: "Datos bancarios",
       content: (
         <SectionBankInfo
+          dataFormSave={dataForm}
           dataBank={dataBank}
           onClickFinish={(data) => {
             handlerCallSetTypeFormTenant(data);
+            history.push("/websystem/dashboard-owner");
           }}
           onClickBack={() => prev()}
         />
