@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, notification } from "antd";
+import { Layout, Avatar, Rate, Modal, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
@@ -21,6 +21,7 @@ import {
   callGetAllBankCatalog,
   callRequestAdvancement,
 } from "../../utils/actions/actions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionAddProperty from "./sections/sectionAddProperty";
@@ -64,6 +65,22 @@ const Owner = (props) => {
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const args = {
     description: (
       <div style={{ fontFamily: "Poppins" }}>
@@ -103,7 +120,12 @@ const Owner = (props) => {
           ? response.result
           : [];
       setDataPersonType(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAllCustomerById = async () => {
@@ -128,7 +150,12 @@ const Owner = (props) => {
       ) {
         notification.open(args);
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetTenantCoincidences = async () => {
@@ -146,7 +173,12 @@ const Owner = (props) => {
           ? response.response
           : {};
       setTenantCoincidences(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetCallGetStatsChart = async () => {
@@ -166,7 +198,12 @@ const Owner = (props) => {
           ? response.response
           : {};
       setDataStatsChart(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetZipCodeAdress = async (data) => {
@@ -192,6 +229,10 @@ const Owner = (props) => {
       setDataZipCatalog(responseResult2);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
   const handlerCallAddProperty = async (data) => {
@@ -213,6 +254,10 @@ const Owner = (props) => {
       setIsModalVisible(!isModalVisible);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -235,6 +280,10 @@ const Owner = (props) => {
       setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -254,7 +303,12 @@ const Owner = (props) => {
           ? response.response
           : {};
       setDataCatalogProperty(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetDepartments = async (data) => {
@@ -273,7 +327,12 @@ const Owner = (props) => {
           ? response.response
           : {};
       setDataDepartment(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallAddTenant = async (data) => {
@@ -296,6 +355,10 @@ const Owner = (props) => {
       handlerCallGetTenantCoincidences();
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -315,6 +378,10 @@ const Owner = (props) => {
       setDataTenant(responseResult);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -334,6 +401,10 @@ const Owner = (props) => {
       setDataBank(responseResult);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 

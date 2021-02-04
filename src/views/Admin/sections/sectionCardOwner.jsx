@@ -131,7 +131,7 @@ const SectionCardOwner = (props) => {
       colorContract: "blue",
       numberContract: "N/A",
       policyType: "N/A",
-      amountRent: "$28,000.00",
+      amountRent: "N/A",
       dateContractEnd: "N/A",
       adviser: "Angel Cortez Avendaño",
     },

@@ -107,6 +107,14 @@ const SectionDetailUser = (props) => {
             </Row>
             <Row>
               <Col span={12}>
+                <DescriptionItem title="Ocupación" content="Ingeniero" />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem title="Salario mensual" content="$45,000.00" />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
                 <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
               </Col>
               <Col span={12}>
@@ -141,7 +149,13 @@ const SectionDetailUser = (props) => {
               role="separator"
             />
           </Panel>
-          <Panel header={<h3 role="title-section">Contrato</h3>} key="2">
+          <Panel
+            header={<h3 role="title-section">Documentos Legales</h3>}
+            key="2"
+          >
+            <p>
+              <h3>Contrato</h3>
+            </p>
             <Row>
               <Col span={12}>
                 <DescriptionItem title="Estatus" content="Vigente" />
@@ -155,12 +169,18 @@ const SectionDetailUser = (props) => {
                 <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Poliza" content="Homify Basica" />
+                <a>Descargar Contrato</a>
               </Col>
             </Row>
+            <p>
+              <h3>Poliza</h3>
+            </p>
             <Row>
               <Col span={12}>
-                <a>Descargar</a>
+                <DescriptionItem title="Poliza" content="Homify Basica" />
+              </Col>
+              <Col span={12}>
+                <a>Descargar Poliza</a>
               </Col>
             </Row>
             <div

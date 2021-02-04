@@ -3,6 +3,11 @@ const GLOBAL_CONSTANTS = {
   tokenSecretKey: "",
   ROOT_NAME: "system",
   VERSION: "Homify v0.0.21",
+  STATUS_API: {
+    WARNING: "WARNING",
+    SUCCESS: "SUCCESS",
+    ERROR: "ERROR",
+  },
 };
 
 export default GLOBAL_CONSTANTS;
