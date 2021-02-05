@@ -15,6 +15,8 @@ import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionCardOwner from "./sections/sectionCardOwner";
 import SectionAddUsers from "./sections/sectionAddUsers";
 import SectionDetailUser from "./sections/sectionDetailUser";
+import SectionDetailUserTenant from "./sections/sectionDetailUserTenant";
+import SectionDetailUserAdviser from "./sections/sectionUserDetailAdviser";
 
 const { Content } = Layout;
 
@@ -22,6 +24,12 @@ const Administrator = (props) => {
   const { dataProfile, history } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
+  const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
+    false
+  );
+  const [isVisibleDetailUserAdviser, setIsVisibleDetailUserAdviser] = useState(
+    false
+  );
 
   return (
     <Content>
@@ -36,6 +44,18 @@ const Administrator = (props) => {
         isDrawerVisible={isVisibleDetailUser}
         onClose={() => {
           setIsVisibleDetailUser(!isVisibleDetailUser);
+        }}
+      />
+      <SectionDetailUserTenant
+        isDrawerVisible={isVisibleDetailUserTenant}
+        onClose={() => {
+          setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
+        }}
+      />
+      <SectionDetailUserAdviser
+        isDrawerVisible={isVisibleDetailUserAdviser}
+        onClose={() => {
+          setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
         }}
       />
       <div className="margin-app-main">
@@ -117,8 +137,14 @@ const Administrator = (props) => {
             onAddUser={() => {
               setIsVisibleAddUser(!isVisibleAddUser);
             }}
-            onOpenDetail={(type) => {
-              setIsVisibleDetailUser(!isVisibleDetailUser);
+            onOpenDetail={(type, id) => {
+              if (id === 1) {
+                setIsVisibleDetailUser(!isVisibleDetailUser);
+              } else if (id === 2) {
+                setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
+              } else if (id === 3) {
+                setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
+              }
             }}
             tenantCoincidences={[{}]}
             finishCallApis

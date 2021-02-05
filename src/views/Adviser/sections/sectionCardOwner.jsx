@@ -12,6 +12,7 @@ import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../../assets/icons/wallet.svg";
 import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
+import IconMessages from "../../../assets/icons/ChatContract.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 
 moment.locale("es");
@@ -57,8 +58,8 @@ const SectionCardOwner = (props) => {
                 onChange={() => {}}
                 value={5}
               />
-              <div className="status-payment" style={{ cursor: "pointer" }}>
-                <span>Enviar mensaje</span>
+              <div className="status-payment">
+                <span>Cerrado</span>
               </div>
             </div>
             <div className="info-user-payment">
@@ -66,9 +67,17 @@ const SectionCardOwner = (props) => {
                 Vencimiento de contrato: <strong>25 enero 2022</strong>
               </div>
               <div>
-                Monto de Renta: <strong>$25,000.00</strong>
+                Poliza: <strong>Renta Segura</strong>
+              </div>
+              <div>
+                Comisión 35%: <strong>$3,500.00</strong>
               </div>
             </div>
+          </div>
+          <div className="button-collapse">
+            <button type="button" onClick={() => {}}>
+              <img src={IconMessages} alt="arrow-right" width="20" />
+            </button>
           </div>
         </div>
         <div className="data-renter-info">
@@ -88,8 +97,8 @@ const SectionCardOwner = (props) => {
                 onChange={() => {}}
                 value={5}
               />
-              <div className="status-payment" style={{ cursor: "pointer" }}>
-                <span>Enviar mensaje</span>
+              <div className="status-payment">
+                <span>Por cerrar</span>
               </div>
             </div>
             <div className="info-user-payment">
@@ -97,9 +106,17 @@ const SectionCardOwner = (props) => {
                 Vencimiento de contrato: <strong>3 Febrero 2021</strong>
               </div>
               <div>
-                Monto de Renta: <strong>$18,000.00</strong>
+                Poliza: <strong>PRO</strong>
+              </div>
+              <div>
+                Comisión por renovación 10%: <strong>$1,500.00</strong>
               </div>
             </div>
+          </div>
+          <div className="button-collapse">
+            <button type="button" onClick={() => {}}>
+              <img src={IconMessages} alt="arrow-right" width="20" />
+            </button>
           </div>
         </div>
         {finishCallApis === false && <Skeleton loading active />}

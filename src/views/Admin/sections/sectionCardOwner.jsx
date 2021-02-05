@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Skeleton, Table, Tag } from "antd";
+import {
+  Layout,
+  Avatar,
+  Rate,
+  Modal,
+  Skeleton,
+  Table,
+  Tag,
+  Button,
+} from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import "moment/locale/es";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, CheckSquareOutlined } from "@ant-design/icons";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
@@ -34,7 +43,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            onOpenDetail("Propietario");
+            onOpenDetail("Propietario", 1);
           }}
         >
           {text}
@@ -48,7 +57,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            onOpenDetail("Inquilino");
+            onOpenDetail("Inquilino", 2);
           }}
           style={{ color: "gray" }}
         >
@@ -63,7 +72,7 @@ const SectionCardOwner = (props) => {
       render: (text) => (
         <a
           onClick={() => {
-            onOpenDetail("Asesor");
+            onOpenDetail("Asesor", 3);
           }}
           style={{ color: "brown" }}
         >
@@ -97,16 +106,47 @@ const SectionCardOwner = (props) => {
       key: "policyType",
     },
     {
-      title: "Monto de renta",
-      dataIndex: "amountRent",
-      key: "amountRent",
-      align: "right",
-    },
-    {
       title: "Vencimiento de contrato",
       dataIndex: "dateContractEnd",
       key: "dateContractEnd",
       align: "center",
+    },
+    {
+      title: "Estatus de poliza",
+      dataIndex: "statusPolicy",
+      key: "statusPolicy",
+      align: "center",
+      render: (status, record) => {
+        let component = <div />;
+        if (status === true) {
+          component = (
+            <div>
+              <Button
+                type="primary"
+                shape="round"
+                icon={<CheckSquareOutlined />}
+                size="small"
+              >
+                Cerrar
+              </Button>
+            </div>
+          );
+        } else if (status === false) {
+          component = (
+            <Tag
+              icon={
+                <span className="anticon">
+                  <i className="fa fa-handshake-o" aria-hidden="true" />
+                </span>
+              }
+              color="#00bb2d"
+            >
+              Cerrado
+            </Tag>
+          );
+        }
+        return component;
+      },
     },
   ];
 
@@ -119,9 +159,9 @@ const SectionCardOwner = (props) => {
       colorContract: "green",
       numberContract: "59029488",
       policyType: "Homify Basica",
-      amountRent: "$18,000.00",
       dateContractEnd: "25/01/2022",
       adviser: "Angel Cortez Avendaño",
+      statusPolicy: false,
     },
     {
       key: "2",
@@ -131,9 +171,9 @@ const SectionCardOwner = (props) => {
       colorContract: "blue",
       numberContract: "N/A",
       policyType: "N/A",
-      amountRent: "N/A",
       dateContractEnd: "N/A",
       adviser: "Angel Cortez Avendaño",
+      statusPolicy: true,
     },
     {
       key: "3",
@@ -143,9 +183,9 @@ const SectionCardOwner = (props) => {
       colorContract: "red",
       numberContract: "34874792",
       policyType: "Homify Premium",
-      amountRent: "$20,000.00",
       dateContractEnd: "03/02/2021",
       adviser: "Francisco Ortega",
+      statusPolicy: true,
     },
   ];
 

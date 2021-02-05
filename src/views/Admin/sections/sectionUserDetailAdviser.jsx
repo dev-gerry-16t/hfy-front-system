@@ -24,7 +24,7 @@ import FrontFunctions from "../../../utils/actions/frontFunctions";
 const { Option } = Select;
 const { Panel } = Collapse;
 
-const SectionDetailUser = (props) => {
+const SectionDetailUserAdviser = (props) => {
   const { isDrawerVisible, onClose, spinVisible } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
@@ -68,13 +68,27 @@ const SectionDetailUser = (props) => {
       visible={isDrawerVisible}
     >
       <div className="content-infomation-drawer">
-        <h3>Detalle de Propietario</h3>
+        <h3>Detalle de Asesor</h3>
         <div className="ant-divider ant-divider-horizontal" role="separator" />
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel
             header={<h3 role="title-section">Información general</h3>}
             key="1"
           >
+            <Row>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Asignar Aprobación"
+                  content="Sebastian Perez Guitierrez"
+                />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Calificación 1-5"
+                  content="5"
+                />
+              </Col>
+            </Row>
             <Row>
               <Col span={12}>
                 <DescriptionItem
@@ -100,6 +114,14 @@ const SectionDetailUser = (props) => {
                   title="Tipo de cliente"
                   content="Propietario"
                 />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <DescriptionItem title="Ocupación" content="Ingeniero" />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem title="Salario mensual" content="$45,000.00" />
               </Col>
             </Row>
             <Row>
@@ -134,65 +156,13 @@ const SectionDetailUser = (props) => {
               </Col>
             </Row>
           </Panel>
-          <Panel header={<h3 role="title-section">Propiedades</h3>} key="2">
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Subir inventario"
-                  content={<a>seleccionar</a>}
-                />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Subir inventario"
-                  content={<a>seleccionar</a>}
-                />
-              </Col>
-            </Row>
-          </Panel>
           <Panel
             header={<h3 role="title-section">Documentos Legales</h3>}
-            key="3"
+            key="2"
           >
             <p>
               <h3>Contrato</h3>
             </p>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Tipo de persona fiscal"
-                  content="Fisica"
-                />
-              </Col>
-            </Row>
             <Row>
               <Col span={12}>
                 <DescriptionItem title="Estatus" content="Vigente" />
@@ -221,21 +191,71 @@ const SectionDetailUser = (props) => {
                 <DescriptionItem title="Poliza" content="Homify Basica" />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
+                <a>Descargar Poliza</a>
+              </Col>
+            </Row>
+            <div
+              className="ant-divider ant-divider-horizontal"
+              role="separator"
+            />
+            <p>
+              <h3>Pagares</h3>
+            </p>
+            <Row>
+              <Col span={12}>
+                <a>Descargar Pagares</a>
+              </Col>
+            </Row>
+          </Panel>
+          <Panel header={<h3 role="title-section">Propiedades</h3>} key="3">
+            <Row>
+              <Col span={24}>
+                <DescriptionItem
+                  title="Dirección"
+                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
+                />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <a>Descargar Poliza</a>
+                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Subir inventario"
+                  content={<a>seleccionar</a>}
+                />
+              </Col>
+            </Row>
+            <div
+              className="ant-divider ant-divider-horizontal"
+              role="separator"
+            />
+            <Row>
+              <Col span={24}>
+                <DescriptionItem
+                  title="Dirección"
+                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Subir inventario"
+                  content={<a>seleccionar</a>}
+                />
               </Col>
             </Row>
           </Panel>
-
-          <Panel
-            header={<h3 role="title-section">Documentación personal</h3>}
-            key="4"
-          >
+          <Panel header={<h3 role="title-section">Documentos</h3>} key="4">
             <Row>
+              <Col span={8}>
+                <DescriptionItem title="Selfie" content={<a>Descargar</a>} />
+              </Col>
               <Col span={8}>
                 <DescriptionItem
                   title="Ine frontal"
@@ -249,6 +269,34 @@ const SectionDetailUser = (props) => {
                 />
               </Col>
             </Row>
+            <Row>
+              <Col span={8}>
+                <DescriptionItem
+                  title="Carta laboral"
+                  content={<a>Descargar</a>}
+                />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Comprobante de ingreso 1"
+                  content={<a>Descargar</a>}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Comprobante de ingreso 2"
+                  content={<a>Descargar</a>}
+                />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Comprobante de ingreso 3"
+                  content={<a>Descargar</a>}
+                />
+              </Col>
+            </Row>
           </Panel>
         </Collapse>
       </div>
@@ -256,4 +304,4 @@ const SectionDetailUser = (props) => {
   );
 };
 
-export default SectionDetailUser;
+export default SectionDetailUserAdviser;
