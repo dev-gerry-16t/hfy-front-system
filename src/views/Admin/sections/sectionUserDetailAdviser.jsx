@@ -70,235 +70,59 @@ const SectionDetailUserAdviser = (props) => {
       <div className="content-infomation-drawer">
         <h3>Detalle de Asesor</h3>
         <div className="ant-divider ant-divider-horizontal" role="separator" />
-        <Collapse defaultActiveKey={["1"]} ghost>
-          <Panel
-            header={<h3 role="title-section">Información general</h3>}
-            key="1"
-          >
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Asignar Aprobación"
-                  content="Sebastian Perez Guitierrez"
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Calificación 1-5"
-                  content="5"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Nombre completo"
-                  content="Sebastian Perez Guitierrez"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Correo"
-                  content="testUser-homify@example.com"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Telefono" content="55-63-15-98-07" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Tipo de cliente"
-                  content="Propietario"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Ocupación" content="Ingeniero" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem title="Salario mensual" content="$45,000.00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Enviar mensaje"
-                  content={
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                      <a>Enviar</a>
-                    </Dropdown>
-                  }
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
-              </Col>
-            </Row>
-          </Panel>
-          <Panel
-            header={<h3 role="title-section">Documentos Legales</h3>}
-            key="2"
-          >
-            <p>
-              <h3>Contrato</h3>
-            </p>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Estatus" content="Vigente" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem title="Folio" content="212234334" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
-              </Col>
-              <Col span={12}>
-                <a>Descargar Contrato</a>
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
+        <h3>Información general</h3>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem
+              title="Nombre completo"
+              content="Sebastian Perez Guitierrez"
             />
-            <p>
-              <h3>Poliza</h3>
-            </p>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Poliza" content="Homify Basica" />
-              </Col>
-              <Col span={12}>
-                <a>Descargar Poliza</a>
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
+          </Col>
+          <Col span={12}>
+            <DescriptionItem
+              title="Enviar mensaje"
+              content={
+                <Dropdown overlay={menu} trigger={["click"]}>
+                  <a>Enviar</a>
+                </Dropdown>
+              }
             />
-            <p>
-              <h3>Pagares</h3>
-            </p>
-            <Row>
-              <Col span={12}>
-                <a>Descargar Pagares</a>
-              </Col>
-            </Row>
-          </Panel>
-          <Panel header={<h3 role="title-section">Propiedades</h3>} key="3">
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Subir inventario"
-                  content={<a>seleccionar</a>}
-                />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
+          </Col>
+        </Row>
+        <Row>
+          <Col span={24}>
+            <DescriptionItem
+              title="Correo"
+              content="testUser-homify@example.com"
             />
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Subir inventario"
-                  content={<a>seleccionar</a>}
-                />
-              </Col>
-            </Row>
-          </Panel>
-          <Panel header={<h3 role="title-section">Documentos</h3>} key="4">
-            <Row>
-              <Col span={8}>
-                <DescriptionItem title="Selfie" content={<a>Descargar</a>} />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine frontal"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine vuelta"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Carta laboral"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 1"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 2"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 3"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-          </Panel>
-        </Collapse>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Telefono" content="55-63-15-98-07" />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem title="Polizas Totales" content="15" />
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Renovaciones" content="4" />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem title="Comisiones totales" content="$12,700,00" />
+          </Col>
+        </Row>
+        <h3>Información de poliza actual</h3>
+        <Row>
+          <Col span={12}>
+            <DescriptionItem title="Comisión por" content="Renovación 10%" />
+          </Col>
+          <Col span={12}>
+            <DescriptionItem title="Comisión poliza Actual" content="$2,5000" />
+          </Col>
+        </Row>
+        <Row></Row>
       </div>
     </Drawer>
   );

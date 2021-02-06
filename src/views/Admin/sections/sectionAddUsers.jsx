@@ -178,6 +178,79 @@ const SectionAddUsers = (props) => {
                 </Col>
               </Row>
             )}
+            <p>Ingresa la información del segundo inquilino (Opcional)</p>
+            <Row>
+              <Col span={11}>
+                <Input
+                  value={dataForm.emailTenant2}
+                  placeholder={"Correo"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      emailTenant2: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Col span={2} />
+              <Col span={11}>
+                <Select
+                  placeholder="Tipo de persona"
+                  value={dataForm.personType2}
+                  onChange={(value, option) => {
+                    setDataForm({ ...dataForm, personType2: value });
+                  }}
+                >
+                  <Option value={1}>Fisica</Option>
+                  <Option value={2}>Moral</Option>
+                </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <Input
+                  value={dataForm.nameTenant2}
+                  placeholder={
+                    dataForm.personType !== 2 ? "Nombre" : "Razon social"
+                  }
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      nameTenant2: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            {dataForm.personType2 !== 2 && (
+              <Row>
+                <Col span={11}>
+                  <Input
+                    value={dataForm.lastNameTenant2}
+                    placeholder={"Apellido paterno"}
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        lastNameTenant2: e.target.value,
+                      });
+                    }}
+                  />
+                </Col>
+                <Col span={2} />
+                <Col span={11}>
+                  <Input
+                    value={dataForm.mothersLastNameTenant2}
+                    placeholder={"Apellido materno"}
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        mothersLastNameTenant2: e.target.value,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
             <p>Ingresa la información del Asesor</p>
             <Row>
               <Col span={11}>
