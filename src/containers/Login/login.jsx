@@ -138,7 +138,14 @@ const Login = (props) => {
                 </div>
               </div>
               <div className="login-recover-pass">
-                <p>Olvidé mi contraseña</p>
+                <p
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    history.push("/recoveryPass");
+                  }}
+                >
+                  Olvidé mi contraseña
+                </p>
               </div>
               <div className="button_init_primary">
                 <button

@@ -8,6 +8,7 @@ import { ConfigProvider } from "antd";
 import { Route, Switch } from "react-router-dom";
 import es_ES from "antd/lib/locale-provider/es_ES";
 import "./App.css";
+import RecoveryPass from "./containers/Recovery/RecoveryPass";
 
 const loading = () => (
   <div className="animated fadeIn pt-3 text-center">
@@ -25,6 +26,11 @@ const Registro = Loadable({
   loading,
 });
 
+const RecoveryPassword = Loadable({
+  loader: () => import("./containers/Recovery/RecoveryPass"),
+  loading,
+});
+
 const Auth = Loadable({
   loader: () => import("./containers/Auth/auth"),
   loading,
@@ -37,7 +43,7 @@ const DefaultLayout = Loadable({
 
 const App = (props) => {
   const { history, token, dataProfile } = props;
-  const accessDev = false//window.location.hostname === "localhost";
+  const accessDev = false; //window.location.hostname === "localhost";
   return (
     <Router history={history}>
       <ConfigProvider locale={es_ES}>
@@ -46,6 +52,13 @@ const App = (props) => {
           <Route path="/login" name="Login Page" component={Login} />
           <Route path="/index" name="Login Page" component={Login} />
           <Route exact path="/registro" name="Registro" component={Registro} />
+          <Route
+            exact
+            path="/recoveryPass"
+            name="Recuperar contraseña"
+            component={RecoveryPassword}
+          />
+
           <Route
             exact
             path="/registro/:idInvitation/:idCustomerType"
