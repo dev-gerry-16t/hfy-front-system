@@ -12,12 +12,9 @@ import {
   SyncOutlined,
 } from "@ant-design/icons";
 import {
-  callGetAllCustomers,
-  callGetAllPersons,
-  callGetAllEndorsement,
-  callGetAllRegisterUser,
-  callGetAllVerifyCode,
-  callGetInvitationUser,
+  callGetAllRequestRecoveryPass,
+  callGetAllVerifyCodeRecoveryPass,
+  callPutRecoveryPass,
 } from "../../utils/actions/actions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
@@ -28,12 +25,9 @@ const { Option } = Select;
 const RecoveryPassword = (props) => {
   const {
     history,
-    callGetAllCustomers,
-    callGetAllPersons,
-    callGetAllEndorsement,
-    callGetAllRegisterUser,
-    callGetAllVerifyCode,
-    callGetInvitationUser,
+    callGetAllRequestRecoveryPass,
+    callGetAllVerifyCodeRecoveryPass,
+    callPutRecoveryPass,
   } = props;
   const copyErrors = {
     errorCodeVerify: {
@@ -66,6 +60,43 @@ const RecoveryPassword = (props) => {
   });
 
   const LoadingSpin = <SyncOutlined spin />;
+
+  const handlerCallApiRegister = async (data) => {
+    try {
+      const response = await callGetAllRequestRecoveryPass({
+        userName: data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.result) === false
+          ? response.result
+          : "";
+      setDataForm({ ...dataForm, ...responseResult });
+      setSpinVisible(false);
+      setUserType(2);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const handlerCallChangePassword = async (data, id) => {
+    try {
+      await callPutRecoveryPass(data, id);
+      setSpinVisible(false);
+      setUserType(4);
+    } catch (error) {
+      setSpinVisible(false);
+      throw error;
+    }
+  };
+
+  const handlerCallVerifyCode = async (data) => {
+    try {
+      await callGetAllVerifyCodeRecoveryPass(data);
+      setSpinVisible(false);
+    } catch (error) {
+      throw error;
+    }
+  };
 
   const handlerEvalutePassword = (pass) => {
     const size = /^(?=.{8,}).*$/;
@@ -115,36 +146,39 @@ const RecoveryPassword = (props) => {
   const selectEmail = (
     <div className="login_main">
       <div className="login_card_form">
-        <div className="login_top_form">
-          <h1> ¿Tienes problemas para iniciar sesión? </h1>
-          <p className="recoverInstructions">
-            Ingresa el correo con el que te registraste para poder reestablecer
-            tu contraseña.
-          </p>
-          <div className="login_inputs_form">
-            <Input
-              value={dataForm.username}
-              suffix={<MailOutlined className="site-form-item-icon" />}
-              onChange={(e) => {
-                const value = e.target.value;
-                setDataForm({
-                  ...dataForm,
-                  username: value,
-                });
-              }}
-            />
+        <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+          <div className="login_top_form">
+            <h1> ¿Tienes problemas para iniciar sesión? </h1>
+            <p className="recoverInstructions">
+              Ingresa el correo con el que te registraste para poder
+              reestablecer tu contraseña.
+            </p>
+            <div className="login_inputs_form">
+              <Input
+                value={dataForm.username}
+                suffix={<MailOutlined className="site-form-item-icon" />}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  setDataForm({
+                    ...dataForm,
+                    username: value,
+                  });
+                }}
+              />
+            </div>
+            <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
+              <button
+                type="button"
+                onClick={() => {
+                  setSpinVisible(true);
+                  handlerCallApiRegister(dataForm.username);
+                }}
+              >
+                <span> Enviar código </span>
+              </button>
+            </div>
           </div>
-          <div className="button_init_primary" style={{ margin: "60px 0 0" }}>
-            <button
-              type="button"
-              onClick={() => {
-                setUserType(2);
-              }}
-            >
-              <span> Enviar código </span>
-            </button>
-          </div>
-        </div>
+        </Spin>
       </div>
     </div>
   );
@@ -324,33 +358,35 @@ const RecoveryPassword = (props) => {
                 type="button"
                 id="button-send-code"
                 onClick={async () => {
-                  setUserType(3);
-
-                  //   setSpinVisible(true);
-                  //   try {
-                  //     let numberResult = "";
-                  //     for (const property in codeVerify) {
-                  //       numberResult += codeVerify[property];
-                  //     }
-                  //     await handlerCallVerifyCode({
-                  //       code: numberResult,
-                  //       idRequestSignUp,
-                  //       offset: "-06:00",
-                  //       idInvitation: dataForm.idInvitation,
-                  //     });
-                  //     setUserType(4);
-                  //   } catch (error) {
-                  //     const objectErrors = {
-                  //       ...errorsRegister,
-                  //       errorCodeVerify: {
-                  //         ...errorsRegister.errorCodeVerify,
-                  //         error: true,
-                  //         message: error,
-                  //       },
-                  //     };
-                  //     setErrorsRegister(objectErrors);
-                  //     setSpinVisible(false);
-                  //   }
+                  setSpinVisible(true);
+                  try {
+                    let numberResult = "";
+                    for (const property in codeVerify) {
+                      numberResult += codeVerify[property];
+                    }
+                    await handlerCallVerifyCode({
+                      idRequestRecoveryPassword:
+                        dataForm.idRequestPasswordRecovery,
+                      code: numberResult,
+                      offset: "-06:00",
+                    });
+                    setDataForm({
+                      ...dataForm,
+                      code: numberResult,
+                    });
+                    setUserType(3);
+                  } catch (error) {
+                    const objectErrors = {
+                      ...errorsRegister,
+                      errorCodeVerify: {
+                        ...errorsRegister.errorCodeVerify,
+                        error: true,
+                        message: error,
+                      },
+                    };
+                    setErrorsRegister(objectErrors);
+                    setSpinVisible(false);
+                  }
                 }}
               >
                 <span> Validar </span>
@@ -363,28 +399,19 @@ const RecoveryPassword = (props) => {
               <p
                 type="button"
                 onClick={async () => {
-                  //   setErrorsRegister(copyErrors);
-                  //   try {
-                  //     const verifyData = await handlerVerifyInformation({
-                  //       ...dataForm,
-                  //       verifyPassword,
-                  //     });
-                  //     setErrorFormulary(!verifyData);
-                  //     if (verifyData === true) {
-                  //       await handlerCallApiRegister({
-                  //         ...dataForm,
-                  //         idCustomerType: selectuserCustomer,
-                  //         offset: "-06:00",
-                  //       });
-                  //     }
-                  //   } catch (error) {
-                  //     setErrorFormulary(true);
-                  //     setErrorBase({ ...errorBase, error: true, message: error });
-                  //     setTimeout(() => {
-                  //       setErrorFormulary(false);
-                  //       setErrorBase(errorCatchBase);
-                  //     }, 3000);
-                  //   }
+                  document.getElementById("input-code-validate-0").focus();
+                  setCodeVerify({
+                    value1: "",
+                    value2: "",
+                    value3: "",
+                    value4: "",
+                    value5: "",
+                    value6: "",
+                  });
+                  setDataForm({ ...dataForm, code: null });
+                  setErrorsRegister(copyErrors);
+                  setSpinVisible(true);
+                  handlerCallApiRegister(dataForm.username);
                 }}
               >
                 Reenviar código
@@ -399,119 +426,128 @@ const RecoveryPassword = (props) => {
   const insterNewPassword = (
     <div className="login_main" style={{ height: "150%" }}>
       <div className="login_card_form">
-        <div className="login_top_form">
-          <h1> Reestablece tu contraseña </h1>
-          <p className="recoverInstructions">
-            ¡Perfecto! Ingresa tu nueva contraseña
-          </p>
-          <div className="login_inputs_form">
-            <div className="confirmPasswordHolder">
-              <Input
-                value={dataForm.password}
-                suffix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="Contraseña nueva"
-                type="password"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setDataForm({
-                    ...dataForm,
-                    password: value,
-                  });
-                  handlerEvalutePassword(value);
-                }}
-              />
-              <p
-                className="fieldset_title"
-                style={{ margin: "10px 0px 0px 0px" }}
-              >
-                {securePass.percentStatus === 100
-                  ? "Tu contraseña es segura"
-                  : "La contraseña debe contener"}
-              </p>
-              <Progress
-                percent={securePass.percentStatus}
-                status={
-                  securePass.percentStatus === 100 ? "success" : "exception"
-                }
-              />
-              {securePass.lengthCharacter === false && (
-                <Alert
-                  message="Al menos 8 caracteres"
-                  type="warning"
-                  showIcon
+        <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+          <div className="login_top_form">
+            <h1> Reestablece tu contraseña </h1>
+            <p className="recoverInstructions">
+              ¡Perfecto! Ingresa tu nueva contraseña
+            </p>
+            <div className="login_inputs_form">
+              <div className="confirmPasswordHolder">
+                <Input
+                  value={dataForm.password}
+                  suffix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Contraseña nueva"
+                  type="password"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({
+                      ...dataForm,
+                      password: value,
+                    });
+                    handlerEvalutePassword(value);
+                  }}
                 />
-              )}
-              {securePass.upperLowerword === false && (
-                <Alert
-                  message="Letras Mayusculas y minusculas (AaBbCc)"
-                  type="warning"
-                  showIcon
+                <p
+                  className="fieldset_title"
+                  style={{ margin: "10px 0px 0px 0px" }}
+                >
+                  {securePass.percentStatus === 100
+                    ? "Tu contraseña es segura"
+                    : "La contraseña debe contener"}
+                </p>
+                <Progress
+                  percent={securePass.percentStatus}
+                  status={
+                    securePass.percentStatus === 100 ? "success" : "exception"
+                  }
                 />
-              )}
-              {securePass.numbers === false && (
-                <Alert message="Numeros" type="warning" showIcon />
-              )}
-              {securePass.specialCharacters === false && (
-                <Alert
-                  message="Caracteres especiales (@$&!%*?)"
-                  type="warning"
-                  showIcon
-                />
-              )}
-            </div>
-
-            <div
-              className="confirmPasswordHolder"
-              style={{ margin: "48px 0 0" }}
-            >
-              <Input
-                value={verifyPassword}
-                type="password"
-                suffix={<LockOutlined className="site-form-item-icon" />}
-                placeholder="Confirma contraseña"
-                onChange={(e) => {
-                  const value = e.target.value;
-                  setVerifyPassword(value);
-                }}
-              />
-            </div>
-            <div>
-              {isNil(dataForm.password) === false &&
-                isEmpty(dataForm.password) === false &&
-                isNil(verifyPassword) === false &&
-                isEmpty(verifyPassword) === false && (
-                  <p className="fieldset_title">
-                    {dataForm.password === verifyPassword
-                      ? "Las contraseñas coinciden"
-                      : " Las contraseñas no coinciden"}
-                  </p>
+                {securePass.lengthCharacter === false && (
+                  <Alert
+                    message="Al menos 8 caracteres"
+                    type="warning"
+                    showIcon
+                  />
                 )}
+                {securePass.upperLowerword === false && (
+                  <Alert
+                    message="Letras Mayusculas y minusculas (AaBbCc)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+                {securePass.numbers === false && (
+                  <Alert message="Numeros" type="warning" showIcon />
+                )}
+                {securePass.specialCharacters === false && (
+                  <Alert
+                    message="Caracteres especiales (@$&!%*?)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+              </div>
+
+              <div
+                className="confirmPasswordHolder"
+                style={{ margin: "48px 0 0" }}
+              >
+                <Input
+                  value={verifyPassword}
+                  type="password"
+                  suffix={<LockOutlined className="site-form-item-icon" />}
+                  placeholder="Confirma contraseña"
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setVerifyPassword(value);
+                  }}
+                />
+              </div>
+              <div>
+                {isNil(dataForm.password) === false &&
+                  isEmpty(dataForm.password) === false &&
+                  isNil(verifyPassword) === false &&
+                  isEmpty(verifyPassword) === false && (
+                    <p className="fieldset_title">
+                      {dataForm.password === verifyPassword
+                        ? "Las contraseñas coinciden"
+                        : " Las contraseñas no coinciden"}
+                    </p>
+                  )}
+              </div>
+            </div>
+            <div
+              className={
+                securePass.percentStatus === 100 &&
+                dataForm.password === verifyPassword
+                  ? "button_init_primary"
+                  : "button_init_primary_disabled"
+              }
+              style={{ margin: "60px 0 0" }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    securePass.percentStatus === 100 &&
+                    dataForm.password === verifyPassword
+                  ) {
+                    setSpinVisible(true);
+                    handlerCallChangePassword(
+                      {
+                        password: dataForm.password,
+                        code: dataForm.code,
+                      },
+                      dataForm.idRequestPasswordRecovery
+                    );
+                  }
+                }}
+              >
+                <span> Guardar y Continuar </span>
+              </button>
             </div>
           </div>
-          <div
-            className={
-              securePass.percentStatus === 100 &&
-              dataForm.password === verifyPassword
-                ? "button_init_primary"
-                : "button_init_primary_disabled"
-            }
-            style={{ margin: "60px 0 0" }}
-          >
-            <button
-              type="button"
-              onClick={() => {
-                if (
-                  securePass.percentStatus === 100 &&
-                  dataForm.password === verifyPassword
-                ) {
-                  setUserType(4);
-                }
-              }}
-            >
-              <span> Guardar y Continuar </span>
-            </button>
-          </div>
-        </div>
+        </Spin>
       </div>
     </div>
   );
@@ -560,7 +596,7 @@ const RecoveryPassword = (props) => {
     }
     return component;
   };
-  console.log("userType", userType);
+
   return (
     <div className="App">
       <div className="login_head_logo">
@@ -574,12 +610,11 @@ const RecoveryPassword = (props) => {
 const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = (dispatch) => ({
-  callGetAllCustomers: (data) => dispatch(callGetAllCustomers(data)),
-  callGetAllPersons: (data) => dispatch(callGetAllPersons(data)),
-  callGetAllEndorsement: (data) => dispatch(callGetAllEndorsement(data)),
-  callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
-  callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
-  callGetInvitationUser: (paramId) => dispatch(callGetInvitationUser(paramId)),
+  callGetAllRequestRecoveryPass: (data) =>
+    dispatch(callGetAllRequestRecoveryPass(data)),
+  callGetAllVerifyCodeRecoveryPass: (data) =>
+    dispatch(callGetAllVerifyCodeRecoveryPass(data)),
+  callPutRecoveryPass: (data, id) => dispatch(callPutRecoveryPass(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RecoveryPassword);
