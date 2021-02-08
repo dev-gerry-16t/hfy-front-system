@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Radio, Select, Input, Spin, Skeleton } from "antd";
+import { Radio, Select, Input, Spin, Skeleton, Alert, Progress } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -37,6 +37,13 @@ const Register = (props) => {
   } = props;
   const [userType, setUserType] = useState(null);
   const [userCustomer, setUserCustomer] = useState([]);
+  const [securePass, setSecurePass] = useState({
+    lengthCharacter: false,
+    upperLowerword: false,
+    numbers: false,
+    specialCharacters: false,
+    percentStatus: 0,
+  });
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
   const [userPerson, setUserPerson] = useState([]);
   const [userEndorsement, setUserEndorsement] = useState([]);
@@ -63,6 +70,12 @@ const Register = (props) => {
       message: "Las contraseñas no coinciden",
       errorEmpty: false,
       messageEmpty: "La contraseña es requerida",
+    },
+    errorPassSecure: {
+      error: false,
+      message: "Tu contraseña no es segura",
+      errorEmpty: false,
+      messageEmpty: "Tu contraseña no es segura",
     },
     errorGivenName: {
       error: false,
@@ -195,6 +208,7 @@ const Register = (props) => {
     const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
     let objectErrors = errorsRegister;
     let validatePass = true;
+    let validatePassSecure = true;
     let validateIdPerson = true;
     let validateGivenName = true;
     let validateUserName = true;
@@ -219,6 +233,14 @@ const Register = (props) => {
         errorPass: { ...objectErrors.errorPass, error: true },
       };
       validatePass = false;
+    }
+
+    if (securePass.percentStatus < 100) {
+      objectErrors = {
+        ...objectErrors,
+        errorPassSecure: { ...objectErrors.errorPassSecure, error: true },
+      };
+      validatePassSecure = false;
     }
 
     if (isNil(data.idPersonType) === false) {
@@ -265,8 +287,57 @@ const Register = (props) => {
     setErrorsRegister(objectErrors);
 
     return (
-      validatePass && validateIdPerson && validateGivenName && validateUserName
+      validatePass &&
+      validateIdPerson &&
+      validateGivenName &&
+      validateUserName &&
+      validatePassSecure
     );
+  };
+
+  const handlerEvalutePassword = (pass) => {
+    const size = /^(?=.{8,}).*$/;
+    const lowerInPass = /^(?=\w*[a-z])/;
+    const upperInPass = /^(?=\w*[A-Z])/;
+    const numberInPass = /^(?=.*\d)/;
+    const specialCharacter = /^(?=.*[$@$!%*?&])/;
+
+    let lengthCharacter = false;
+    let upperLowerword = false;
+    let numbers = false;
+    let specialCharacters = false;
+    let lengthCharacterPercent = 0;
+    let upperLowerwordPercent = 0;
+    let numbersPercent = 0;
+    let specialCharactersPercent = 0;
+
+    if (size.test(pass) === true) {
+      lengthCharacter = true;
+      lengthCharacterPercent = 25;
+    }
+    if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
+      upperLowerword = true;
+      upperLowerwordPercent = 25;
+    }
+    if (numberInPass.test(pass) === true) {
+      numbers = true;
+      numbersPercent = 25;
+    }
+    if (specialCharacter.test(pass) === true) {
+      specialCharacters = true;
+      specialCharactersPercent = 25;
+    }
+    setSecurePass({
+      lengthCharacter,
+      upperLowerword,
+      numbers,
+      specialCharacters,
+      percentStatus:
+        lengthCharacterPercent +
+        upperLowerwordPercent +
+        numbersPercent +
+        specialCharactersPercent,
+    });
   };
 
   const selectPerson = (
@@ -330,7 +401,7 @@ const Register = (props) => {
   );
 
   const selectForm = (
-    <div className="login_main" style={{ height: "100%" }}>
+    <div className="login_main" style={{ height: "150%" }}>
       <div className="login_card_form large">
         <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
           <div className="register_holder">
@@ -376,6 +447,12 @@ const Register = (props) => {
                   <div>
                     <img src={admiration} alt="exclaim" />
                     <span>{errorsRegister.errorPass.message}</span>
+                  </div>
+                )}
+                {errorsRegister.errorPassSecure.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorPassSecure.message}</span>
                   </div>
                 )}
                 {errorsRegister.errorPass.errorEmpty && (
@@ -529,12 +606,14 @@ const Register = (props) => {
                   placeholder="Contraseña"
                   type="password"
                   onChange={(e) => {
+                    const value = e.target.value;
                     setDataForm({
                       ...dataForm,
-                      password: e.target.value,
+                      password: value,
                     });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
+                    handlerEvalutePassword(value);
                   }}
                 />
                 <Input
@@ -548,6 +627,43 @@ const Register = (props) => {
                     setErrorFormulary(false);
                   }}
                 />
+              </div>
+              <div>
+                <Progress
+                  percent={securePass.percentStatus}
+                  status={
+                    securePass.percentStatus === 100 ? "success" : "exception"
+                  }
+                />
+                <p className="fieldset_title">
+                  {securePass.percentStatus === 100
+                    ? "Tu contraseña es segura"
+                    : "La contraseña debe contener"}
+                </p>
+                {securePass.lengthCharacter === false && (
+                  <Alert
+                    message="Al menos 8 caracteres"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+                {securePass.upperLowerword === false && (
+                  <Alert
+                    message="Letras Mayusculas y minusculas (AaBbCc)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+                {securePass.numbers === false && (
+                  <Alert message="Numeros" type="warning" showIcon />
+                )}
+                {securePass.specialCharacters === false && (
+                  <Alert
+                    message="Caracteres especiales (@$&!%*?)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
               </div>
               <div
                 className="button_init_primary"
