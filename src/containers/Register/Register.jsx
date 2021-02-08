@@ -3,7 +3,16 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Radio, Select, Input, Spin, Skeleton, Alert, Progress } from "antd";
+import {
+  Radio,
+  Select,
+  Input,
+  Spin,
+  Skeleton,
+  Alert,
+  Progress,
+  Checkbox,
+} from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -36,6 +45,7 @@ const Register = (props) => {
     callGetInvitationUser,
   } = props;
   const [userType, setUserType] = useState(null);
+  const [aceptTerms, setAceptTerms] = useState(false);
   const [userCustomer, setUserCustomer] = useState([]);
   const [securePass, setSecurePass] = useState({
     lengthCharacter: false,
@@ -649,7 +659,7 @@ const Register = (props) => {
                 )}
                 {securePass.upperLowerword === false && (
                   <Alert
-                    message="Letras Mayusculas y minusculas (AaBbCc)"
+                    message="Letras mayusculas y minusculas (AaBbCc)"
                     type="warning"
                     showIcon
                   />
@@ -665,8 +675,37 @@ const Register = (props) => {
                   />
                 )}
               </div>
+              <div>
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    setAceptTerms(e.target.checked);
+                  }}
+                ></Checkbox>
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "gray",
+                  }}
+                >
+                  Acepto los{" "}
+                  <a href="https://segurent.mx/aviso-de-privacidad/">
+                    Terminos y Condiciones{" "}
+                  </a>
+                  asi como el{" "}
+                  <a href="https://segurent.mx/aviso-de-privacidad/">
+                    Aviso de privacidad
+                  </a>
+                </span>
+              </div>
               <div
-                className="button_init_primary"
+                className={
+                  aceptTerms === true
+                    ? "button_init_primary"
+                    : "button_init_primary_disabled"
+                }
                 style={{ margin: "16px 0 0" }}
               >
                 <button
