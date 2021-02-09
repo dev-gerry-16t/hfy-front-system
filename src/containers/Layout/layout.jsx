@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu, Drawer, notification } from "antd";
+import { Layout, Menu, Drawer, Dropdown } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -18,6 +18,8 @@ import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
 import routes from "../../routes";
+import SectionChangeImage from "./section/sectionChangeImage";
+import { callSetImageProfile } from "../../utils/actions/actions";
 
 const { Header, Sider } = Layout;
 
@@ -28,8 +30,15 @@ const Loading = () => (
 );
 
 const DefaultLayout = (props) => {
-  const { history, authenticated, dataProfileMenu, dataProfile } = props;
+  const {
+    history,
+    authenticated,
+    dataProfileMenu,
+    dataProfile,
+    callSetImageProfile,
+  } = props;
   const [collapsed, setCollapsed] = useState(false);
+  const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
   const [nameSection, setNameSection] = useState("Dashboard");
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
@@ -45,6 +54,45 @@ const DefaultLayout = (props) => {
   const toggle = () => {
     setCollapsed(!collapsed);
   };
+
+  const handlerCallSetImageProfile = async (data) => {
+    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callSetImageProfile(
+        {
+          idCustomer,
+          idLoginHistory,
+          documentName: "avatar_image",
+          extension: "png/img",
+          preview: null,
+          thumbnail: data,
+        },
+        idSystemUser
+      );
+    } catch (error) {}
+  };
+
+  const menu = (
+    <Menu>
+      <Menu.Item>
+        <a
+          target="_self"
+          rel="noopener noreferrer"
+          onClick={() => {
+            setIsVisibleAvatarSection(!isVisibleAvatarSection);
+          }}
+        >
+          Imagen de perfil
+        </a>
+      </Menu.Item>
+      <Menu.Divider />
+      <Menu.Item>
+        <a target="_self" rel="Cerrrar sesión" href="/logout">
+          Cerrar sesión
+        </a>
+      </Menu.Item>
+    </Menu>
+  );
 
   useEffect(() => {
     if (isNil(dataProfile) === true) {
@@ -135,6 +183,15 @@ const DefaultLayout = (props) => {
           </Sider>
           <Layout className="site-layout">
             <Header className="site-layout-background" style={{ padding: 0 }}>
+              <SectionChangeImage
+                isModalVisible={isVisibleAvatarSection}
+                onClose={() => {
+                  setIsVisibleAvatarSection(!isVisibleAvatarSection);
+                }}
+                onSelectImage={(preview) => {
+                  handlerCallSetImageProfile(preview);
+                }}
+              />
               <div className="header-title-button">
                 <button
                   className="button-drawer-header"
@@ -156,9 +213,11 @@ const DefaultLayout = (props) => {
                 <button className="button-header">
                   <img src={IconNotification} />
                 </button>
-                <button className="button-header">
-                  <img src={IconProfile} />
-                </button>
+                <Dropdown overlay={menu} placement="bottomRight" arrow>
+                  <button className="button-header">
+                    <img src={IconProfile} />
+                  </button>
+                </Dropdown>
               </div>
             </Header>
             <Suspense fallback={<Loading />}>
@@ -207,6 +266,8 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
