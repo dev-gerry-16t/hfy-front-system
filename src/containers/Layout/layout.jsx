@@ -30,6 +30,7 @@ const Loading = () => (
 const DefaultLayout = (props) => {
   const { history, authenticated, dataProfileMenu, dataProfile } = props;
   const [collapsed, setCollapsed] = useState(false);
+  const [nameSection, setNameSection] = useState("Dashboard");
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
@@ -82,6 +83,7 @@ const DefaultLayout = (props) => {
                       key={`${row.idMenu}`}
                       onClick={(event) => {
                         history.push(row.path);
+                        setNameSection(row.menuName);
                         setCollapsedButton(!collapsedButton);
                       }}
                     >
@@ -116,6 +118,7 @@ const DefaultLayout = (props) => {
                     <Menu.Item
                       key={`${row.idMenu}`}
                       onClick={(event) => {
+                        setNameSection(row.menuName);
                         history.push(row.path);
                       }}
                     >
@@ -143,7 +146,7 @@ const DefaultLayout = (props) => {
                     collapsedButton ? MenuUnfoldOutlined : MenuFoldOutlined
                   )}
                 </button>
-                <h2>Dashboard</h2>
+                <h2>{nameSection}</h2>
               </div>
               <div className="header-info-user">
                 <div className="hi-user-name-type">
