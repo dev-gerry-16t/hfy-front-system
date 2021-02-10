@@ -124,6 +124,7 @@ const Tenant = (props) => {
           ...dataProfile,
           idCustomerTenantTF: responseResult.idCustomerTenant,
           idCustomerTF: responseResult.idCustomer,
+          idContract: responseResult.idContract,
         });
         notification.open(args);
         notification.open(argsv2);

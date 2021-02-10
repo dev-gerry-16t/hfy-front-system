@@ -5,7 +5,7 @@ button {
 }
 
 .ant-spin {
-  color: #ff0282 !important;
+  color: var(--color-primary) !important;
 }
 
 body,
@@ -90,18 +90,18 @@ html {
       line-height: 40px;
       text-align: center;
       letter-spacing: 1px;
-      color: #ff0282;
+      color: var(--color-primary);
     }
 
     .ant-radio-inner {
       border-color: #4e4b66;
     }
     .ant-radio-inner::after {
-      background-color: #ff0282;
+      background-color: var(--color-primary);
     }
 
     .ant-radio-checked .ant-radio-inner {
-      border-color: #ff0282;
+      border-color: var(--color-primary);
     }
     .login-recover-pass {
       display: flex;
@@ -114,7 +114,7 @@ html {
       font-size: 10px;
       line-height: 28px;
       letter-spacing: 0.75px;
-      color: #ff0282;
+      color: var(--color-primary);
       p {
         margin-top: 0;
         margin-bottom: 0em;
@@ -182,7 +182,7 @@ html {
       display: flex;
       justify-content: center;
       button {
-        background: #ff0282;
+        background: var(--color-primary);
         border-radius: 16px;
         border: none;
         width: 70%;
@@ -248,7 +248,7 @@ html {
       display: flex;
       justify-content: center;
       button {
-        border: 1px solid #ff0282;
+        border: 1px solid var(--color-primary);
         background: #fff;
         border-radius: 16px;
         width: 70%;
@@ -260,7 +260,7 @@ html {
           font-size: 12px;
           line-height: 34px;
           letter-spacing: 0.75px;
-          color: #ff0282;
+          color: var(--color-primary);
         }
       }
     }

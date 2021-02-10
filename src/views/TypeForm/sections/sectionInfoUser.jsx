@@ -17,7 +17,7 @@ import {
 import IconProfile from "../../../assets/icons/Profile.svg";
 
 const SectionInfoUser = (props) => {
-  const { onClickNext, dataFormSave } = props;
+  const { onClickNext, dataFormSave, dataNationalities, dataIdTypes } = props;
   const initialForm = {
     givenName: null,
     lastName: null,

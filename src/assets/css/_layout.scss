@@ -87,7 +87,7 @@
 }
 
 .ant-layout-sider-children {
-  background: #ff0282;
+  background: var(--color-primary);
 }
 
 .ant-layout-sider-trigger {
@@ -98,7 +98,7 @@
 .ant-menu-dark .ant-menu-sub,
 .ant-menu.ant-menu-dark .ant-menu-sub {
   color: rgba(255, 255, 255, 0.65);
-  background: #ff0282 !important;
+  background: var(--color-primary) !important;
 }
 
 .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
@@ -116,17 +116,17 @@
 }
 
 #nprogress .spinner-icon {
-  border-top-color: #ff0282 !important;
-  border-left-color: #ff0282 !important;
+  border-top-color: var(--color-primary) !important;
+  border-left-color: var(--color-primary) !important;
 }
 
 #nprogress .bar {
-  background: #ff0282;
+  background: var(--color-primary);
 }
 
 .drawer-menu_header {
   .ant-drawer-body {
     padding: 0px !important;
-    background: #ff0282;
+    background: var(--color-primary);
   }
 }

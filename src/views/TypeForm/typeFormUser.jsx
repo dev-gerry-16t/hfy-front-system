@@ -37,6 +37,9 @@ import {
   callGetZipCodeAdress,
   callGetTypeFormDocumentTenant,
   callSetTypeFormReferences,
+  callGetNationalities,
+  callGetIdTypes,
+  callGetOccupations,
 } from "../../utils/actions/actions";
 
 const { Step } = Steps;
@@ -50,6 +53,9 @@ const TypeFormUser = (props) => {
     callGetTypeFormDocumentTenant,
     callGetZipCodeAdress,
     callSetTypeFormReferences,
+    callGetNationalities,
+    callGetIdTypes,
+    callGetOccupations,
     history,
   } = props;
   const frontFunctions = new FrontFunctions();
@@ -60,6 +66,9 @@ const TypeFormUser = (props) => {
   const [dataDocumentsEndorsement, setDataDocumentsEndorsement] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataNationalities, setDataNationalities] = useState([]);
+  const [dataIdTypes, setDataIdTypes] = useState([]);
+  const [dataOccupations, setDataOccupations] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -133,6 +142,78 @@ const TypeFormUser = (props) => {
     } catch (error) {}
   };
 
+  const hanlderCallGetNationalities = async () => {
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+    } = dataProfile;
+    try {
+      const response = await callGetNationalities({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataNationalities(responseResult);
+    } catch (error) {}
+  };
+
+  const hanlderCallGetIdTypes = async () => {
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+    } = dataProfile;
+    try {
+      const response = await callGetIdTypes({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataIdTypes(responseResult);
+    } catch (error) {}
+  };
+
+  const hanlderCallGetOccupations = async () => {
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+    } = dataProfile;
+    try {
+      const response = await callGetOccupations({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataOccupations(responseResult);
+    } catch (error) {}
+  };
+
   const handlerCallGetTypeFormDocumentTenant = async (id, type) => {
     const {
       idCustomerTenantTF,
@@ -170,6 +251,8 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoUser
           dataFormSave={dataForm}
+          dataNationalities={dataNationalities}
+          dataIdTypes={dataIdTypes}
           onClickNext={(data) => {
             handlerCallSetTypeFormTenant(data);
             setDataForm({ ...dataForm, ...data });
@@ -213,6 +296,7 @@ const TypeFormUser = (props) => {
             setDataForm({ ...dataForm, ...data });
             next();
           }}
+          dataOccupations={dataOccupations}
           frontFunctions={frontFunctions}
           onClickBack={() => prev()}
         />
@@ -287,6 +371,7 @@ const TypeFormUser = (props) => {
       idCustomerTenantTF,
       idCustomerTF,
       idCustomer,
+      idContract,
       idSystemUser,
       idLoginHistory,
     } = dataProfile;
@@ -296,6 +381,7 @@ const TypeFormUser = (props) => {
         idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
         idLoginHistory,
+        idContract,
       });
       const responseResult1 =
         isNil(response) === false &&
@@ -319,6 +405,9 @@ const TypeFormUser = (props) => {
 
   const handlerCallAsyncApis = async () => {
     await handlerCallGetTypeFormTenant();
+    await hanlderCallGetNationalities();
+    await hanlderCallGetIdTypes();
+    await hanlderCallGetOccupations();
   };
 
   useEffect(() => {
@@ -384,6 +473,9 @@ const mapDispatchToProps = (dispatch) => ({
   callGetZipCodeAdress: (data) => dispatch(callGetZipCodeAdress(data)),
   callGetTypeFormDocumentTenant: (data) =>
     dispatch(callGetTypeFormDocumentTenant(data)),
+  callGetNationalities: (data) => dispatch(callGetNationalities(data)),
+  callGetIdTypes: (data) => dispatch(callGetIdTypes(data)),
+  callGetOccupations: (data) => dispatch(callGetOccupations(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);

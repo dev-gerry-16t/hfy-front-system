@@ -51,7 +51,7 @@
     justify-content: center;
     width: 45%;
     button {
-      background: #ff0282;
+      background: var(--color-primary);
       border-radius: 16px;
       border: none;
       width: 100%;
@@ -71,7 +71,7 @@
   display: flex;
   justify-content: center;
   width: 100%;
-  background: #ff0282;
+  background: var(--color-primary);
   border-radius: 16px;
   border: none;
   span {
@@ -312,7 +312,7 @@
       line-height: 40px;
       text-align: center;
       letter-spacing: 1px;
-      color: #ff0282;
+      color: var(--color-primary);
     }
   }
   .main-form-information {
@@ -360,7 +360,7 @@
       }
     }
     .add-more-suite {
-      background: #ff0282;
+      background: var(--color-primary);
       border-radius: 8px;
       border: none;
       color: #fff;
@@ -396,7 +396,7 @@
     display: flex;
     justify-content: center;
     button {
-      background: #ff0282;
+      background: var(--color-primary);
       border-radius: 16px;
       border: none;
       width: 45%;
@@ -420,14 +420,14 @@
     font-size: 12px;
     button:first-child {
       background: #fff;
-      color: #ff0282;
+      color: var(--color-primary);
       border-radius: 16px;
-      border: 1px solid #ff0282;
+      border: 1px solid var(--color-primary);
       padding: 3px 10px;
       width: 35%;
     }
     button:last-child {
-      background: #ff0282;
+      background: var(--color-primary);
       color: #ffffff;
       border-radius: 16px;
       border: none;
@@ -446,7 +446,7 @@
     justify-content: flex-end;
     padding-right: 20px;
     button {
-      background: #ff0282;
+      background: var(--color-primary);
       border-radius: 16px;
       border: none;
       width: 40%;
@@ -469,7 +469,7 @@
     button {
       background: #fff;
       border-radius: 16px;
-      border: 1px solid #ff0282;
+      border: 1px solid var(--color-primary);
       width: 40%;
       span {
         font-family: Poppins;
@@ -478,7 +478,7 @@
         font-size: 12px;
         line-height: 34px;
         letter-spacing: 0.75px;
-        color: #ff0282;
+        color: var(--color-primary);
       }
     }
   }
@@ -675,7 +675,7 @@
   font-family: Poppins;
   h3 {
     margin-bottom: 15px;
-    color: #ff0282;
+    color: var(--color-primary);
   }
   .ant-row {
     margin-bottom: 10px;

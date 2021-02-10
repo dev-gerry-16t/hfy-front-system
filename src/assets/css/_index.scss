@@ -1,3 +1,9 @@
+.theme-light {
+  --color-primary: #ff0282;
+}
+.theme-dark {
+  --color-primary: #7c0943;
+}
 @import "~font-awesome/css/font-awesome.min.css";
 @import "./login";
 @import "./layout";

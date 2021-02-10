@@ -197,6 +197,8 @@ const Register = (props) => {
         isNil(response) === false && isNil(response.result) === false
           ? response.result
           : "";
+      console.log("response", response);
+      console.log("responseResult", responseResult);
       setIdRequestSignUp(
         isEmpty(responseResult) === false ? responseResult.idRequestSignUp : ""
       );

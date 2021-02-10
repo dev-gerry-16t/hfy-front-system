@@ -97,17 +97,17 @@
       margin: 0px !important;
     }
     .ant-tabs-ink-bar {
-      background: #ff0282;
+      background: var(--color-primary);
       height: 5px !important;
     }
     .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-      color: #ff0282;
+      color: var(--color-primary);
       font-family: Poppins;
       font-weight: 600;
       //letter-spacing: 1px;
     }
     .ant-tabs-tab:hover {
-      color: #ff0282;
+      color: var(--color-primary);
     }
     .ant-tabs-tab {
       font-family: Poppins;
@@ -175,7 +175,7 @@
         align-self: center;
         margin-bottom: 15px;
         label {
-          background: #ff0282;
+          background: var(--color-primary);
           border-radius: 16px;
           border: none;
           width: 100%;
@@ -244,7 +244,7 @@
   box-shadow: 0px 1px 8px 6px #ebebf1;
   border-radius: 16px;
   .text-header {
-    background: #ff0282;
+    background: var(--color-primary);
     text-align: center;
     border-radius: 15px 15px 0px 0px;
     font-weight: normal;
@@ -261,12 +261,12 @@
   margin-top: 15px;
   .ant-timeline-item-tail {
     margin-top: 60px;
-    background: #ff0282;
+    background: var(--color-primary);
   }
   .ant-timeline-item-head {
     margin-top: 60px;
-    background: #ff0282;
-    border: 1px solid #ff0282;
+    background: var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
   .section-history-messages {
     width: 45%;
@@ -334,7 +334,7 @@
       width: 100%;
       min-width: 240px;
       button {
-        background: #ff0282;
+        background: var(--color-primary);
         border-radius: 16px;
         border: none;
         width: 100%;
@@ -357,7 +357,7 @@
   justify-content: center;
   margin-top: 25px;
   button {
-    background: #ff0282;
+    background: var(--color-primary);
     border-radius: 16px;
     border: none;
     width: 30%;
@@ -408,7 +408,7 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #ff0282;
+  background: var(--color-primary);
   border-radius: 10px;
 }
 

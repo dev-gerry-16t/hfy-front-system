@@ -20,7 +20,13 @@ import IconProfile from "../../../assets/icons/Profile.svg";
 const { Option } = Select;
 
 const SectionCurrentWork = (props) => {
-  const { onClickBack, onClickNext, dataFormSave, frontFunctions } = props;
+  const {
+    onClickBack,
+    onClickNext,
+    dataFormSave,
+    frontFunctions,
+    dataOccupations,
+  } = props;
   const initialForm = {
     jobPosition: null,
     economicDependents: null,
