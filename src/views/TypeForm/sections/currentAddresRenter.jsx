@@ -270,7 +270,7 @@ const CurrentAddressRenter = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "#ff0282", fontWeight: "bold" }}>
+                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
                     ¿El inmueble está amueblado?
                   </span>
                   <Radio.Group

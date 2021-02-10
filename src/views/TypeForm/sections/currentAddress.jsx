@@ -237,7 +237,7 @@ const SectionCurrentAddress = (props) => {
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "#ff0282", fontWeight: "bold" }}>
+                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
                     La propiedad actual es
                   </span>
                   <Radio.Group

@@ -13,7 +13,7 @@ const SectionCardItemMessage = (props) => {
     <Item>
       <div className="item-messages">
         <div className="item-message-1">
-          <div className="elipse-icon" style={{ backgroundColor: "#FF0282" }}>
+          <div className="elipse-icon" style={{ backgroundColor: "var(--color-primary)" }}>
             <img src={IconMessages} alt="icon" width="20px"></img>
           </div>
           <div className="message-name-send">

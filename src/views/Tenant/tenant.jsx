@@ -57,7 +57,7 @@ const Tenant = (props) => {
     ),
     message: (
       <div
-        style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+        style={{ fontFamily: "Poppins", fontSize: "12px", color: "var(--color-primary)" }}
       >
         Solicitud de Investigación Persona Física con Aval
       </div>
@@ -91,7 +91,7 @@ const Tenant = (props) => {
     ),
     message: (
       <div
-        style={{ fontFamily: "Poppins", fontSize: "12px", color: "#ff0282" }}
+        style={{ fontFamily: "Poppins", fontSize: "12px", color: "var(--color-primary)" }}
       >
         Depósito en Garantia
       </div>

@@ -77,7 +77,7 @@ const SectionDepositGuarantee = (props) => {
               onClick={() => {
                 setOpenSection(3);
               }}
-              style={{ border: "1px solid #FF0282", borderRadius: "5px" }}
+              style={{ border: "1px solid var(--color-primary)", borderRadius: "5px" }}
             >
               <span style={{ fontSize: 15 }}>?</span>
             </button>

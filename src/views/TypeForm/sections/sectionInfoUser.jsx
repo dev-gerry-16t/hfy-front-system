@@ -146,7 +146,7 @@ const SectionInfoUser = (props) => {
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "#ff0282", fontWeight: "bold" }}>
+                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
                     Tienes Auto
                   </span>
                   <Radio.Group
