@@ -21,6 +21,24 @@
   }
 }
 
+.empty-data-document {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 5px;
+  label {
+    margin: 10px 0px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 34px;
+    letter-spacing: 0.75px;
+    color: #4e4b66;
+  }
+}
+
 .margin-app-main {
   margin: 2vh 4vh;
 }

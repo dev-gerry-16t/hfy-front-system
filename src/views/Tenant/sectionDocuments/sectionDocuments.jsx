@@ -13,6 +13,7 @@ import {
   Button,
 } from "antd";
 import Search from "../../../assets/icons/Search.svg";
+import EmptyDocument from "../../../assets/icons/EmptyDocument.svg";
 import ENVIROMENT from "../../../utils/constants/enviroments";
 
 const { Option } = Select;
@@ -241,6 +242,17 @@ const SectionDocuments = (props) => {
                   </div>
                 );
               })}{" "}
+            {isEmpty(dataDocumentsRepository) === true && (
+              <div className="empty-data-document">
+                <img
+                  src={EmptyDocument}
+                  alt="make-page"
+                  width={50}
+                  height={40}
+                />
+                <label>No hay documentos en este periodo de tiempo, prueba buscando en otro periodo o tipo de documento</label>
+              </div>
+            )}
           </div>
         </div>
         {/* <div className="content-upload">
@@ -296,31 +308,33 @@ const SectionDocuments = (props) => {
         </div>
        */}
       </div>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <Button
-          type="link"
-          onClick={() => {
-            let sendDateFormat = "";
-            if (selectDateFilter === "1") {
-              sendDateFormat = statesDates.now;
-            } else if (selectDateFilter === "2") {
-              sendDateFormat = statesDates.month;
-            } else if (selectDateFilter === "3") {
-              sendDateFormat = `${statesDates.startDate},${statesDates.endDate}`;
-            } else {
-              sendDateFormat = `${moment().format(
-                "YYYY-MM-DD"
-              )},${moment().format("YYYY-MM-DD")}`;
-            }
-            onSearchDocument({
-              filterDate: sendDateFormat,
-              idDocumentType: selectDocumentType,
-            });
-          }}
-        >
-          Mostrar mas
-        </Button>
-      </div>
+      {isEmpty(dataDocumentsRepository) === false && (
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            type="link"
+            onClick={() => {
+              let sendDateFormat = "";
+              if (selectDateFilter === "1") {
+                sendDateFormat = statesDates.now;
+              } else if (selectDateFilter === "2") {
+                sendDateFormat = statesDates.month;
+              } else if (selectDateFilter === "3") {
+                sendDateFormat = `${statesDates.startDate},${statesDates.endDate}`;
+              } else {
+                sendDateFormat = `${moment().format(
+                  "YYYY-MM-DD"
+                )},${moment().format("YYYY-MM-DD")}`;
+              }
+              onSearchDocument({
+                filterDate: sendDateFormat,
+                idDocumentType: selectDocumentType,
+              });
+            }}
+          >
+            Mostrar mas
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

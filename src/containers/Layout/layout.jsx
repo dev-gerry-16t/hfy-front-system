@@ -86,6 +86,43 @@ const DefaultLayout = (props) => {
         </a>
       </Menu.Item>
       <Menu.Divider />
+      <Menu.ItemGroup title="Cambiar tema">
+        <Menu.Item
+          style={{ display: "flex" }}
+          onClick={() => {
+            const theme = document.getElementsByTagName("body")[0];
+            theme.className = "theme-light";
+          }}
+        >
+          <div
+            style={{
+              background: "#ff0282",
+              padding: "0px 10px",
+              color: "#fff",
+            }}
+          >
+            Light
+          </div>
+        </Menu.Item>
+        <Menu.Item
+          style={{ display: "flex" }}
+          onClick={() => {
+            const theme = document.getElementsByTagName("body")[0];
+            theme.className = "theme-dark";
+          }}
+        >
+          <div
+            style={{
+              background: "#0c101d",
+              padding: "0px 10px",
+              color: "#fff",
+            }}
+          >
+            Dark
+          </div>
+        </Menu.Item>
+      </Menu.ItemGroup>
+      <Menu.Divider />
       <Menu.Item>
         <a target="_self" rel="Cerrrar sesión" href="/logout">
           Cerrar sesión
