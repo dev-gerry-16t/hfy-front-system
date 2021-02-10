@@ -17,6 +17,7 @@ import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
 import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
+import IconCloseLogout from "../../assets/icons/Logout.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import { callSetImageProfile } from "../../utils/actions/actions";
@@ -39,7 +40,6 @@ const DefaultLayout = (props) => {
   } = props;
   const [collapsed, setCollapsed] = useState(false);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
-  const [nameSection, setNameSection] = useState("Dashboard");
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
@@ -51,6 +51,14 @@ const DefaultLayout = (props) => {
     IconClose,
   };
 
+  const nameLocation = () => {
+    const name = routes.find((row) => {
+      return row.path === props.location.pathname;
+    });
+    return name.name;
+  };
+
+  const [nameSection, setNameSection] = useState(nameLocation());
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -121,9 +129,32 @@ const DefaultLayout = (props) => {
             Dark
           </div>
         </Menu.Item>
+        <Menu.Item
+          style={{ display: "flex" }}
+          onClick={() => {
+            const theme = document.getElementsByTagName("body")[0];
+            theme.className = "theme-dark-blue";
+          }}
+        >
+          <div
+            style={{
+              background: "#072146",
+              padding: "0px 10px",
+              color: "#fff",
+            }}
+          >
+            Dark Blue
+          </div>
+        </Menu.Item>
       </Menu.ItemGroup>
       <Menu.Divider />
-      <Menu.Item>
+      <Menu.Item style={{ display: "flex" }}>
+        <img
+          className="ant-menu-item-icon"
+          width="15"
+          src={IconCloseLogout}
+          style={{ marginRight: "5px" }}
+        />
         <a target="_self" rel="Cerrrar sesión" href="/logout">
           Cerrar sesión
         </a>
@@ -136,6 +167,13 @@ const DefaultLayout = (props) => {
       history.push("/");
     }
   }, []);
+
+  useEffect(() => {
+    const name = routes.find((row) => {
+      return row.path === props.location.pathname;
+    });
+    setNameSection(name.name);
+  }, [props.location.pathname]);
 
   return (
     <div className="App">

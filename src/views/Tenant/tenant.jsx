@@ -57,7 +57,11 @@ const Tenant = (props) => {
     ),
     message: (
       <div
-        style={{ fontFamily: "Poppins", fontSize: "12px", color: "var(--color-primary)" }}
+        style={{
+          fontFamily: "Poppins",
+          fontSize: "12px",
+          color: "var(--color-primary)",
+        }}
       >
         Solicitud de Investigación Persona Física con Aval
       </div>
@@ -91,7 +95,11 @@ const Tenant = (props) => {
     ),
     message: (
       <div
-        style={{ fontFamily: "Poppins", fontSize: "12px", color: "var(--color-primary)" }}
+        style={{
+          fontFamily: "Poppins",
+          fontSize: "12px",
+          color: "var(--color-primary)",
+        }}
       >
         Depósito en Garantia
       </div>
@@ -131,7 +139,7 @@ const Tenant = (props) => {
       }
     } catch (error) {}
   };
-
+  
   useEffect(() => {
     // notification.open(argsv2);
     // notification.open(args);
@@ -163,18 +171,18 @@ const Tenant = (props) => {
           </div>
           <div className="action-buttons-top">
             <div className="button_init_primary"></div>
-            {/* {dataTenant.canSignContract === 1 && ( */}
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalVisible(!isModalVisible);
-                }}
-              >
-                <span>¡Contrato Disponible!</span>
-              </button>
-            </div>
-            {/* )} */}
+            {dataTenant.canSignContract === true && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalVisible(!isModalVisible);
+                  }}
+                >
+                  <span>¡Contrato Disponible!</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -200,35 +208,37 @@ const Tenant = (props) => {
             <span>Moratorios</span>
           </div>
         </div>
-        <div className="main-information-owner">
-          <div className="title-cards">
-            <span>Acciones</span>
-          </div>
-          <div className="section-information-actions">
-            <div className="section-information-buttons">
-              <div className="section-information-button-2">
-                <img src={Tools} height={62} alt="Reportar incidencia" />
-                <button
-                  type="button"
-                  onClick={() => {}}
-                  className="button-action-primary"
-                >
-                  <span>Cotizar incidencia</span>
-                </button>
-              </div>
-              <div className="section-information-button-3">
-                <img src={Transport} alt="Reportar incidencia" height={62} />
-                <button
-                  type="button"
-                  onClick={() => {}}
-                  className="button-action-primary"
-                >
-                  <span>Solicitar mudanza</span>
-                </button>
+        {dataTenant.canRequestMove !== 0 && (
+          <div className="main-information-owner">
+            <div className="title-cards">
+              <span>Acciones</span>
+            </div>
+            <div className="section-information-actions">
+              <div className="section-information-buttons">
+                <div className="section-information-button-2">
+                  <img src={Tools} height={62} alt="Reportar incidencia" />
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="button-action-primary"
+                  >
+                    <span>Cotizar incidencia</span>
+                  </button>
+                </div>
+                <div className="section-information-button-3">
+                  <img src={Transport} alt="Reportar incidencia" height={62} />
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="button-action-primary"
+                  >
+                    <span>Solicitar mudanza</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="main-information-owner">
           <div className="title-cards flex-title-card">
             <span>Propietario</span>

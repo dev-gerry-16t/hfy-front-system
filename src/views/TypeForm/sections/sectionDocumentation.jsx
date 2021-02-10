@@ -40,7 +40,33 @@ const CustomSubSectionCardDocument = (props) => {
 };
 
 const SectionDocumentation = (props) => {
-  const { onClickBack, onClickNext, dataDocuments, typeDocument } = props;
+  const {
+    onClickBack,
+    onClickNext,
+    dataDocuments,
+    typeDocument,
+    dataForm,
+  } = props;
+
+  const getTypeIdDocument = (type) => {
+    let word = "";
+
+    switch (type) {
+      case 1:
+        word = "IFE/INE Frontal y Vuelta";
+        break;
+      case 2:
+        word = "Pasaporte";
+        break;
+      case 3:
+        word = "FM3";
+        break;
+      default:
+        word = "IFE/INE Frontal y Vuelta";
+        break;
+    }
+    return word;
+  };
 
   return (
     <div className="content-typeform-formulary">
@@ -63,8 +89,8 @@ const SectionDocumentation = (props) => {
           />
         </CustomSubSectionCardDocument>
         <CustomSubSectionCardDocument
-          title="INE"
-          subtitle="Frente y vuelta"
+          title="Identificación oficial"
+          subtitle={getTypeIdDocument(dataForm.idType)}
           visibleSubtitle
         >
           <CustomFileUpload
@@ -77,16 +103,19 @@ const SectionDocumentation = (props) => {
             }
             typeDocument={typeDocument}
           />
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[1]) === false
-                ? dataDocuments[1]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
+          {dataForm.idType === 1 ||
+            (isNil(dataForm.idType) === true && (
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[1]) === false
+                    ? dataDocuments[1]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            ))}
         </CustomSubSectionCardDocument>
         <CustomSubSectionCardDocument
           title="Carta laboral"

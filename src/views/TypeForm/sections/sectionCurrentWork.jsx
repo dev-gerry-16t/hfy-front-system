@@ -28,7 +28,8 @@ const SectionCurrentWork = (props) => {
     dataOccupations,
   } = props;
   const initialForm = {
-    jobPosition: null,
+    idOccupationActivity: null,
+    idOccupationActivityText: null,
     economicDependents: null,
     companyName: null,
     currentSalary: null,
@@ -54,7 +55,11 @@ const SectionCurrentWork = (props) => {
   );
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
+    if (isEmpty(dataFormSave) === false && isEmpty(dataOccupations) === false) {
+      const selectDefaultOccupation = dataOccupations.find((row) => {
+        return dataForm.idOccupationActivity === row.idOccupationActivity;
+      });
+      
       setDataForm({
         ...dataFormSave,
         antiquityTimeRangeText:
@@ -71,9 +76,13 @@ const SectionCurrentWork = (props) => {
                 2
               )
             : null,
+        idOccupationActivityText:
+          isNil(selectDefaultOccupation) === false
+            ? selectDefaultOccupation.text
+            : "",
       });
     }
-  }, [dataFormSave]);
+  }, [dataFormSave, dataOccupations]);
 
   return (
     <div className="content-typeform-formulary">
@@ -88,13 +97,32 @@ const SectionCurrentWork = (props) => {
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
-                  value={dataForm.jobPosition}
-                  placeholder={"Puesto"}
-                  onChange={(e) => {
-                    setDataForm({ ...dataForm, jobPosition: e.target.value });
+                <Select
+                  placeholder="Puesto/Ocupación"
+                  showSearch
+                  value={dataForm.idOccupationActivity}
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      idOccupationActivity: value,
+                      idOccupationActivityText: option.children,
+                    });
                   }}
-                />
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataOccupations) === false &&
+                    dataOccupations.map((row) => {
+                      return (
+                        <Option value={row.idOccupationActivity}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </Col>
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -271,8 +299,8 @@ const SectionCurrentWork = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
-                  title="Puesto"
-                  content={dataForm.jobPosition}
+                  title="Puesto/Ocupación"
+                  content={dataForm.idOccupationActivityText}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

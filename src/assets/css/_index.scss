@@ -4,6 +4,9 @@
 .theme-dark {
   --color-primary: #0c101d;
 }
+.theme-dark-blue {
+  --color-primary: #072146;
+}
 @import "~font-awesome/css/font-awesome.min.css";
 @import "./login";
 @import "./layout";

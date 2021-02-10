@@ -16,6 +16,8 @@ import {
 } from "antd";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
+const { Option } = Select;
+
 const SectionInfoUser = (props) => {
   const { onClickNext, dataFormSave, dataNationalities, dataIdTypes } = props;
   const initialForm = {
@@ -28,6 +30,11 @@ const SectionInfoUser = (props) => {
     citizenId: null,
     hasCar: null,
     carriagePlate: null,
+    idCountryNationality: null,
+    idCountryNationalityText: null,
+    idType: null,
+    idTypeText: null,
+    idTypeNumber: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -37,6 +44,29 @@ const SectionInfoUser = (props) => {
       setDataForm(dataFormSave);
     }
   }, [dataFormSave]);
+
+  useEffect(() => {
+    if (
+      isEmpty(dataNationalities) === false &&
+      isEmpty(dataIdTypes) === false
+    ) {
+      const selectDefaultNationality = dataNationalities.find((row) => {
+        return dataForm.idCountryNationality === row.idCountryNationality;
+      });
+      const selectDefaultIdType = dataIdTypes.find((row) => {
+        return dataForm.idType === row.idType;
+      });
+      setDataForm({
+        ...dataForm,
+        idCountryNationalityText:
+          isNil(selectDefaultNationality) === false
+            ? selectDefaultNationality.text
+            : "",
+        idTypeText:
+          isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+      });
+    }
+  }, [dataNationalities, dataIdTypes]);
 
   const DescriptionItem = ({ title, content }) => (
     <div
@@ -121,6 +151,80 @@ const SectionInfoUser = (props) => {
               </Col>
             </Row>
             <Row>
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                <Select
+                  placeholder="Nacionalidad"
+                  showSearch
+                  value={dataForm.idCountryNationality}
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      idCountryNationality: value,
+                      idCountryNationalityText: option.children,
+                    });
+                  }}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataNationalities) === false &&
+                    dataNationalities.map((row) => {
+                      return (
+                        <Option value={row.idCountryNationality}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                <Select
+                  placeholder="Identificación oficial"
+                  showSearch
+                  value={dataForm.idType}
+                  onChange={(value, option) => {
+                    const valueLabelIdentity = option.onClick()
+                      .fieldDescription;
+                    setDataForm({
+                      ...dataForm,
+                      idType: value,
+                      idTypeText: option.children,
+                    });
+                  }}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataIdTypes) === false &&
+                    dataIdTypes.map((row) => {
+                      return (
+                        <Option value={row.idType} onClick={() => row}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              {isNil(dataForm.idType) === false && (
+                <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                  <Input
+                    value={dataForm.idTypeNumber}
+                    placeholder={`Numero de ${dataForm.idTypeText}`}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, idTypeNumber: value });
+                    }}
+                  />
+                </Col>
+              )}
+            </Row>
+            <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.taxId}
@@ -146,7 +250,12 @@ const SectionInfoUser = (props) => {
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     Tienes Auto
                   </span>
                   <Radio.Group
@@ -221,6 +330,28 @@ const SectionInfoUser = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
+                  title="Nacionalidad"
+                  content={dataForm.idCountryNationalityText}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Identificacion oficial"
+                  content={dataForm.idTypeText}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title={`Numero de ${dataForm.idTypeText}`}
+                  content={dataForm.idTypeNumber}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
                   title="RFC con Homoclave"
                   content={dataForm.taxId}
                 />
@@ -233,11 +364,15 @@ const SectionInfoUser = (props) => {
               <Col span={3} xs={{ span: 24 }} md={{ span: 3 }}>
                 <DescriptionItem
                   title="Tienes Auto"
-                  content={dataForm.hasCar === 1 ? "Si" : "No"}
+                  content={
+                    dataForm.hasCar === true || dataForm.hasCar === 1
+                      ? "Si"
+                      : "No"
+                  }
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              {dataForm.hasCar === 1 && (
+              {(dataForm.hasCar === true || dataForm.hasCar === 1) && (
                 <Col span={3} xs={{ span: 24 }} md={{ span: 3 }}>
                   <DescriptionItem
                     title="Placas"

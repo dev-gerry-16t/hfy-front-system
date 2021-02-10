@@ -310,7 +310,7 @@ const SectionCurrentAddress = (props) => {
                 </Row>
               </Col>
             </Row>
-            <Row>
+            {/* <Row>
               <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
                 <DatePicker
                   value={
@@ -330,7 +330,7 @@ const SectionCurrentAddress = (props) => {
                   format="DD MMMM YYYY"
                 />
               </Col>
-            </Row>
+            </Row> */}
             <div className="button_actions">
               <button
                 type="button"
@@ -414,7 +414,7 @@ const SectionCurrentAddress = (props) => {
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
+              {/* <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
                 <DescriptionItem
                   title="Fecha de cambio proximo domicilio"
                   content={moment(
@@ -422,7 +422,7 @@ const SectionCurrentAddress = (props) => {
                     "YYYY-MM-DD"
                   ).format("DD MMMM YYYY")}
                 />
-              </Col>
+              </Col> */}
             </Row>
             <div className="button_actions">
               <button

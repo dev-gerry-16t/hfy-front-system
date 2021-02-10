@@ -106,16 +106,14 @@ const SectionInfoReferences = (props) => {
             >
               <span>Regresar</span>
             </button>
-            {(isVisibleButtonContinue === true ||
-              isEmpty(dataReferences) === false) && (
-              <button
-                type="button"
-                onClick={onClickNext}
-                className="button_primary"
-              >
-                <span>Continuar</span>
-              </button>
-            )}
+
+            <button
+              type="button"
+              onClick={onClickNext}
+              className="button_primary"
+            >
+              <span>Continuar</span>
+            </button>
           </div>
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />

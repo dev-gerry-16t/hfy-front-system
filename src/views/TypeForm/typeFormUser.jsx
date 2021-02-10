@@ -326,6 +326,7 @@ const TypeFormUser = (props) => {
       title: "Documentación",
       content: (
         <SectionDocumentation
+          dataForm={dataForm}
           onClickNext={() => {
             handlerCallGetTypeFormDocumentTenant(dataForm.idTypeForm, 1);
             next();
