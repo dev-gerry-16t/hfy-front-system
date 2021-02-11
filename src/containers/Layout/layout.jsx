@@ -100,6 +100,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-light";
+            localStorage.setItem("theme-app", "theme-light");
           }}
         >
           <div
@@ -117,6 +118,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-dark";
+            localStorage.setItem("theme-app", "theme-dark");
           }}
         >
           <div
@@ -133,7 +135,26 @@ const DefaultLayout = (props) => {
           style={{ display: "flex" }}
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
+            theme.className = "theme-purple";
+            localStorage.setItem("theme-app", "theme-purple");
+          }}
+        >
+          <div
+            style={{
+              background: "#9a78b0",
+              padding: "0px 10px",
+              color: "#fff",
+            }}
+          >
+            Purple
+          </div>
+        </Menu.Item>
+        <Menu.Item
+          style={{ display: "flex" }}
+          onClick={() => {
+            const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-dark-blue";
+            localStorage.setItem("theme-app", "theme-dark-blue");
           }}
         >
           <div
@@ -165,6 +186,17 @@ const DefaultLayout = (props) => {
   useEffect(() => {
     if (isNil(dataProfile) === true) {
       history.push("/");
+    }
+    const getThemeApplication = localStorage.getItem("theme-app");
+
+    if (isNil(getThemeApplication) === false) {
+      const theme = document.getElementsByTagName("body")[0];
+      theme.className = getThemeApplication;
+      localStorage.setItem("theme-app", getThemeApplication);
+    } else {
+      const theme = document.getElementsByTagName("body")[0];
+      theme.className = "theme-light";
+      localStorage.setItem("theme-app", "theme-light");
     }
   }, []);
 

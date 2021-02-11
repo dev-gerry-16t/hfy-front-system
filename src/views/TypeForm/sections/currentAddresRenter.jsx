@@ -76,14 +76,24 @@ const CurrentAddressRenter = (props) => {
   }, [dataFormSave]);
 
   useEffect(() => {
-    if (isEmpty(dataZipCodeAdress) === false) {
+    if (
+      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataPropertyTypes) === false
+    ) {
+      const selectDefaulPropertyType = dataPropertyTypes.find((row) => {
+        return dataForm.idPropertyType === row.idPropertyType;
+      });
       setDataForm({
         ...dataForm,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
+        idPropertyTypeText:
+          isNil(selectDefaulPropertyType) === false
+            ? selectDefaulPropertyType.text
+            : "",
       });
     }
-  }, [dataZipCodeAdress]);
+  }, [dataZipCodeAdress, dataPropertyTypes]);
 
   return (
     <div className="content-typeform-formulary">
@@ -255,7 +265,7 @@ const CurrentAddressRenter = (props) => {
                     dataPropertyTypes.map((row) => {
                       return (
                         <Option
-                          value={row.id}
+                          value={row.idPropertyType}
                           onClick={() => {
                             return row;
                           }}
@@ -270,7 +280,12 @@ const CurrentAddressRenter = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     ¿El inmueble está amueblado?
                   </span>
                   <Radio.Group

@@ -32,6 +32,8 @@ const SectionInfoOwner = (props) => {
     onChangeZipCode,
     dataZipCodeAdress,
     dataZipCatalog,
+    dataNationalities,
+    dataIdTypes,
   } = props;
   const initialForm = {
     isOwner: null,
@@ -52,8 +54,11 @@ const SectionInfoOwner = (props) => {
     state: null,
     municipality: null,
     neighborhood: null,
-    electorKey: null,
-    passportId: null,
+    idCountryNationality: null,
+    idCountryNationalityText: null,
+    idType: null,
+    idTypeText: null,
+    idTypeNumber: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -78,14 +83,38 @@ const SectionInfoOwner = (props) => {
   }, [dataFormSave]);
 
   useEffect(() => {
-    if (isEmpty(dataZipCodeAdress) === false) {
+    if (
+      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataNationalities) === false &&
+      isEmpty(dataIdTypes) === false &&
+      isEmpty(dataMaritalStatus) === false
+    ) {
+      const selectDefaultNationality = dataNationalities.find((row) => {
+        return dataForm.idCountryNationality === row.idCountryNationality;
+      });
+      const selectDefaultIdType = dataIdTypes.find((row) => {
+        return dataForm.idType === row.idType;
+      });
+      const selectDefaultMaritalStatus = dataMaritalStatus.find((row) => {
+        return dataForm.idMaritalStatus === row.idMaritalStatus;
+      });
       setDataForm({
         ...dataForm,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
+        idCountryNationalityText:
+          isNil(selectDefaultNationality) === false
+            ? selectDefaultNationality.text
+            : "",
+        idTypeText:
+          isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+        idMaritalStatusText:
+          isNil(selectDefaultMaritalStatus) === false
+            ? selectDefaultMaritalStatus.text
+            : "",
       });
     }
-  }, [dataZipCodeAdress]);
+  }, [dataZipCodeAdress, dataNationalities, dataIdTypes, dataMaritalStatus]);
 
   return (
     <div className="content-typeform-formulary">
@@ -101,7 +130,12 @@ const SectionInfoOwner = (props) => {
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     ¿Eres el propietario?
                   </span>
                   <Radio.Group
@@ -208,27 +242,78 @@ const SectionInfoOwner = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
-                  value={dataForm.electorKey}
-                  placeholder={"Clave de elector"}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setDataForm({ ...dataForm, electorKey: value });
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                <Select
+                  placeholder="Nacionalidad"
+                  showSearch
+                  value={dataForm.idCountryNationality}
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      idCountryNationality: value,
+                      idCountryNationalityText: option.children,
+                    });
                   }}
-                />
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataNationalities) === false &&
+                    dataNationalities.map((row) => {
+                      return (
+                        <Option value={row.idCountryNationality}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
-                  value={dataForm.passportId}
-                  placeholder={"Numero de pasaporte"}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setDataForm({ ...dataForm, passportId: value });
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                <Select
+                  placeholder="Identificación oficial"
+                  showSearch
+                  value={dataForm.idType}
+                  onChange={(value, option) => {
+                    const valueLabelIdentity = option.onClick()
+                      .fieldDescription;
+                    setDataForm({
+                      ...dataForm,
+                      idType: value,
+                      idTypeText: option.children,
+                    });
                   }}
-                />
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataIdTypes) === false &&
+                    dataIdTypes.map((row) => {
+                      return (
+                        <Option value={row.idType} onClick={() => row}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              {isNil(dataForm.idType) === false && (
+                <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                  <Input
+                    value={dataForm.idTypeNumber}
+                    placeholder={`Numero de ${dataForm.idTypeText}`}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, idTypeNumber: value });
+                    }}
+                  />
+                </Col>
+              )}
             </Row>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -247,7 +332,7 @@ const SectionInfoOwner = (props) => {
                     dataMaritalStatus.map((row) => {
                       return (
                         <Option
-                          value={row.id}
+                          value={row.idMaritalStatus}
                           onClick={() => {
                             return row;
                           }}
@@ -464,16 +549,23 @@ const SectionInfoOwner = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Clave de elector"
-                  content={dataForm.electorKey}
+                  title="Nacionalidad"
+                  content={dataForm.idCountryNationalityText}
                 />
               </Col>
             </Row>
             <Row>
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero de pasaporte"
-                  content={dataForm.passportId}
+                  title="Identificación oficial"
+                  content={dataForm.idTypeText}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title={`Numero de ${dataForm.idTypeText}`}
+                  content={dataForm.idTypeNumber}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

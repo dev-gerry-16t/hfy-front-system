@@ -7,6 +7,10 @@
 .theme-dark-blue {
   --color-primary: #072146;
 }
+.theme-purple{
+  --color-primary: #9a78b0;
+
+}
 @import "~font-awesome/css/font-awesome.min.css";
 @import "./login";
 @import "./layout";

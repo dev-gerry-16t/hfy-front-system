@@ -103,19 +103,18 @@ const SectionDocumentation = (props) => {
             }
             typeDocument={typeDocument}
           />
-          {dataForm.idType === 1 ||
-            (isNil(dataForm.idType) === true && (
-              <CustomFileUpload
-                acceptFile="image/png, image/jpeg, image/jpg"
-                dataDocument={
-                  isEmpty(dataDocuments) === false &&
-                  isNil(dataDocuments[1]) === false
-                    ? dataDocuments[1]
-                    : {}
-                }
-                typeDocument={typeDocument}
-              />
-            ))}
+          {(dataForm.idType === 1 || isNil(dataForm.idType) === true) && (
+            <CustomFileUpload
+              acceptFile="image/png, image/jpeg, image/jpg"
+              dataDocument={
+                isEmpty(dataDocuments) === false &&
+                isNil(dataDocuments[1]) === false
+                  ? dataDocuments[1]
+                  : {}
+              }
+              typeDocument={typeDocument}
+            />
+          )}
         </CustomSubSectionCardDocument>
         <CustomSubSectionCardDocument
           title="Carta laboral"

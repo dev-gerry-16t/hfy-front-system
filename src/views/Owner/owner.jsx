@@ -21,6 +21,7 @@ import {
   callGetAllBankCatalog,
   callRequestAdvancement,
 } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
@@ -33,6 +34,7 @@ const { Content } = Layout;
 const Owner = (props) => {
   const {
     dataProfile,
+    setDataUserProfile,
     callGetAllCustomerById,
     history,
     callGetTenantCoincidences,
@@ -103,7 +105,11 @@ const Owner = (props) => {
     ),
     message: (
       <div
-        style={{ fontFamily: "Poppins", fontSize: "12px", color: "var(--color-primary)" }}
+        style={{
+          fontFamily: "Poppins",
+          fontSize: "12px",
+          color: "var(--color-primary)",
+        }}
       >
         Solicitud Póliza Homify Propietario
       </div>
@@ -148,6 +154,10 @@ const Owner = (props) => {
         isNil(responseResult.isTypeFormCompleted) === false &&
         responseResult.isTypeFormCompleted === false
       ) {
+        setDataUserProfile({
+          ...dataProfile,
+          idContract: responseResult.idContract,
+        });
         notification.open(args);
       }
     } catch (error) {
@@ -561,6 +571,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetAllCustomerById: (data) => dispatch(callGetAllCustomerById(data)),
   callGetStatsChart: (data) => dispatch(callGetStatsChart(data)),
   callGetTenantCoincidences: (data) =>

@@ -29,7 +29,7 @@ const SectionBankInfo = (props) => {
     accountHolder: null,
     accountNumber: null,
     clabeNumber: null,
-    contractAvailabilityAt: null,
+    signingAvailabilityAt: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -46,10 +46,19 @@ const SectionBankInfo = (props) => {
   );
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
+    if (isEmpty(dataFormSave) === false && isEmpty(dataBank) === false) {
+      const selectDefaultDataBank = dataBank.find((row) => {
+        return dataForm.idBank === row.idBank;
+      });
+      setDataForm({
+        ...dataFormSave,
+        idBankText:
+          isNil(selectDefaultDataBank) === false
+            ? selectDefaultDataBank.text
+            : "",
+      });
     }
-  }, [dataFormSave]);
+  }, [dataFormSave, dataBank]);
 
   return (
     <div className="content-typeform-formulary">
@@ -146,15 +155,15 @@ const SectionBankInfo = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DatePicker
                   value={
-                    isNil(dataForm.contractAvailabilityAt) === false
-                      ? moment(dataForm.contractAvailabilityAt, "YYYY-MM-DD")
+                    isNil(dataForm.signingAvailabilityAt) === false
+                      ? moment(dataForm.signingAvailabilityAt, "YYYY-MM-DD")
                       : null
                   }
                   placeholder="Fecha de firma de contrato"
                   onChange={(momentFormat, date) => {
                     setDataForm({
                       ...dataForm,
-                      contractAvailabilityAt: moment(momentFormat).format(
+                      signingAvailabilityAt: moment(momentFormat).format(
                         "YYYY-MM-DD"
                       ),
                     });
@@ -227,7 +236,7 @@ const SectionBankInfo = (props) => {
                 <DescriptionItem
                   title="Fecha de firma de contrato"
                   content={moment(
-                    dataForm.contractAvailabilityAt,
+                    dataForm.signingAvailabilityAt,
                     "YYYY-MM-DD"
                   ).format("DD MMMM YYYY")}
                 />

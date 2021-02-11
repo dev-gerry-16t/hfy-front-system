@@ -37,6 +37,8 @@ import {
   callGetZipCodeAdress,
   callGetPropertyTypes,
   callGetPolicies,
+  callGetNationalities,
+  callGetIdTypes,
 } from "../../utils/actions/actions";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import SectionBankInfo from "./sections/sectionBankInfo";
@@ -57,6 +59,8 @@ const TypeFormOwner = (props) => {
     callGetZipCodeAdress,
     callGetPropertyTypes,
     callGetPolicies,
+    callGetNationalities,
+    callGetIdTypes,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
@@ -68,6 +72,8 @@ const TypeFormOwner = (props) => {
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);
+  const [dataNationalities, setDataNationalities] = useState([]);
+  const [dataIdTypes, setDataIdTypes] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -139,6 +145,42 @@ const TypeFormOwner = (props) => {
     } catch (error) {}
   };
 
+  const hanlderCallGetNationalities = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetNationalities({
+        idCustomer,
+        idCustomerTenant: null,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataNationalities(responseResult);
+    } catch (error) {}
+  };
+
+  const hanlderCallGetIdTypes = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetIdTypes({
+        idCustomer,
+        idCustomerTenant: null,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataIdTypes(responseResult);
+    } catch (error) {}
+  };
+
   const stepsOwner = [
     {
       title: "Información personal",
@@ -157,6 +199,8 @@ const TypeFormOwner = (props) => {
             hanlderCallGetZipCodeAdress({ type: 1, zipCode });
           }}
           dataZipCodeAdress={dataZipCodeAdress}
+          dataNationalities={dataNationalities}
+          dataIdTypes={dataIdTypes}
           dataZipCatalog={dataZipCatalog}
         />
       ),
@@ -230,12 +274,18 @@ const TypeFormOwner = (props) => {
   ];
 
   const handlerCallGetTypeFormTenant = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idContract,
+    } = dataProfile;
     try {
       const response = await callGetTypeFormOwner({
         idCustomer,
         idSystemUser,
         idLoginHistory,
+        idContract,
       });
       const responseResult =
         isNil(response) === false &&
@@ -329,6 +379,8 @@ const TypeFormOwner = (props) => {
     await handlerCallGetPropertyTypes();
     await handlerCallGetPolicies();
     await handlerCallBankCatalog();
+    await hanlderCallGetNationalities();
+    await hanlderCallGetIdTypes();
   };
 
   useEffect(() => {
@@ -396,6 +448,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetPropertyTypes: (data) => dispatch(callGetPropertyTypes(data)),
   callGetPolicies: (data) => dispatch(callGetPolicies(data)),
   callSetTypeFormOwner: (data) => dispatch(callSetTypeFormOwner(data)),
+  callGetNationalities: (data) => dispatch(callGetNationalities(data)),
+  callGetIdTypes: (data) => dispatch(callGetIdTypes(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);
