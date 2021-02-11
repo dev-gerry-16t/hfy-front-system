@@ -39,25 +39,28 @@ const SectionInfoUser = (props) => {
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
 
-  useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
-    }
-  }, [dataFormSave]);
+  // useEffect(() => {
+  //   if (isEmpty(dataFormSave) === false) {
+  //     console.log("dataFormSave", dataFormSave);
+  //     setDataForm(dataFormSave);
+  //   }
+  // }, [dataFormSave]);
 
   useEffect(() => {
     if (
+      isEmpty(dataFormSave) === false &&
       isEmpty(dataNationalities) === false &&
       isEmpty(dataIdTypes) === false
     ) {
       const selectDefaultNationality = dataNationalities.find((row) => {
-        return dataForm.idCountryNationality === row.idCountryNationality;
+        return dataFormSave.idCountryNationality === row.idCountryNationality;
       });
       const selectDefaultIdType = dataIdTypes.find((row) => {
-        return dataForm.idType === row.idType;
+        return dataFormSave.idType === row.idType;
       });
+
       setDataForm({
-        ...dataForm,
+        ...dataFormSave,
         idCountryNationalityText:
           isNil(selectDefaultNationality) === false
             ? selectDefaultNationality.text
@@ -66,7 +69,7 @@ const SectionInfoUser = (props) => {
           isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
       });
     }
-  }, [dataNationalities, dataIdTypes]);
+  }, [dataNationalities, dataIdTypes, dataFormSave]);
 
   const DescriptionItem = ({ title, content }) => (
     <div

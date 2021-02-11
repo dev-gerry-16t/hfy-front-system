@@ -271,13 +271,13 @@ const SectionCurrentWork = (props) => {
               </Col>
             </Row>
             <div className="button_actions">
-              <button
+              {/* <button
                 type="button"
                 onClick={onClickBack}
                 className="button_secondary"
               >
                 <span>Regresar</span>
-              </button>
+              </button> */}
               <button
                 type="button"
                 onClick={() => {
