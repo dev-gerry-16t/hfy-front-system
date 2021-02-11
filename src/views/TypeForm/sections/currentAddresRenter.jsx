@@ -397,13 +397,13 @@ const CurrentAddressRenter = (props) => {
               </Col>
             </Row>
             <div className="button_actions">
-              <button
+              {/* <button
                 type="button"
                 onClick={onClickBack}
                 className="button_secondary"
               >
                 <span>Regresar</span>
-              </button>
+              </button> */}
               <button
                 type="button"
                 onClick={() => {
@@ -422,6 +422,10 @@ const CurrentAddressRenter = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <p>
+              Verifica que tu información sea correcta, de lo contrario no
+              podras hacer modificaciones.
+            </p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem

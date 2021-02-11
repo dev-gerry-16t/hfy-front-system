@@ -63,6 +63,12 @@ const SectionInfoOwner = (props) => {
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
   const [isOpenInput, setIsOpenInput] = useState(false);
+  const [visibleComponents, setVisibleComponents] = useState({
+    givenName: true,
+    lastName: true,
+    mothersMaidenName: true,
+    idEndorsement: true,
+  });
 
   const DescriptionItem = ({ title, content }) => (
     <div
@@ -89,6 +95,10 @@ const SectionInfoOwner = (props) => {
       isEmpty(dataIdTypes) === false &&
       isEmpty(dataMaritalStatus) === false
     ) {
+      const visibleField =
+        isNil(dataFormSave.jsonProperties) === false
+          ? JSON.parse(dataFormSave.jsonProperties)
+          : {};
       const selectDefaultNationality = dataNationalities.find((row) => {
         return dataForm.idCountryNationality === row.idCountryNationality;
       });
@@ -113,6 +123,7 @@ const SectionInfoOwner = (props) => {
             ? selectDefaultMaritalStatus.text
             : "",
       });
+      setVisibleComponents({ ...visibleComponents, ...visibleField });
     }
   }, [dataZipCodeAdress, dataNationalities, dataIdTypes, dataMaritalStatus]);
 
@@ -162,7 +173,11 @@ const SectionInfoOwner = (props) => {
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Input
                   value={dataForm.givenName}
-                  placeholder={"Nombres"}
+                  placeholder={
+                    visibleComponents.lastName === true
+                      ? "Nombres"
+                      : "Razón social"
+                  }
                   onChange={(e) => {
                     // const value = e.target.value;
                     // setDataForm({ ...dataForm, givenName: value });
@@ -171,29 +186,38 @@ const SectionInfoOwner = (props) => {
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <Input
-                  value={dataForm.lastName}
-                  placeholder={"Apellido paterno"}
-                  onChange={(e) => {
-                    // const value = e.target.value;
-                    // setDataForm({ ...dataForm, lastName: value });
-                  }}
-                  suffix={<img src={IconProfile} alt="profile" width="15" />}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <Input
-                  value={dataForm.mothersMaidenName}
-                  placeholder={"Apellido materno"}
-                  onChange={(e) => {
-                    // const value = e.target.value;
-                    // setDataForm({ ...dataForm, mothersMaidenName: value });
-                  }}
-                  suffix={<img src={IconProfile} alt="profile" width="15" />}
-                />
-              </Col>
+              {visibleComponents.lastName === true && (
+                <>
+                  {" "}
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <Input
+                      value={dataForm.lastName}
+                      placeholder={"Apellido paterno"}
+                      onChange={(e) => {
+                        // const value = e.target.value;
+                        // setDataForm({ ...dataForm, lastName: value });
+                      }}
+                      suffix={
+                        <img src={IconProfile} alt="profile" width="15" />
+                      }
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <Input
+                      value={dataForm.mothersMaidenName}
+                      placeholder={"Apellido materno"}
+                      onChange={(e) => {
+                        // const value = e.target.value;
+                        // setDataForm({ ...dataForm, mothersMaidenName: value });
+                      }}
+                      suffix={
+                        <img src={IconProfile} alt="profile" width="15" />
+                      }
+                    />
+                  </Col>
+                </>
+              )}
             </Row>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -501,6 +525,10 @@ const SectionInfoOwner = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <p>
+              Verifica que tu información sea correcta, de lo contrario no
+              podras hacer modificaciones.
+            </p>
             <Row>
               <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
@@ -516,8 +544,18 @@ const SectionInfoOwner = (props) => {
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
-                  title="Nombre completo"
-                  content={`${dataForm.givenName} ${dataForm.lastName} ${dataForm.mothersMaidenName}`}
+                  title={
+                    visibleComponents.lastName === true
+                      ? "Nombre completo"
+                      : "Razón social"
+                  }
+                  content={`${dataForm.givenName} ${
+                    visibleComponents.lastName === true ? dataForm.lastName : ""
+                  } ${
+                    visibleComponents.lastName === true
+                      ? dataForm.mothersMaidenName
+                      : ""
+                  }`}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />

@@ -237,7 +237,12 @@ const SectionCurrentAddress = (props) => {
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     La propiedad actual es
                   </span>
                   <Radio.Group
@@ -357,6 +362,10 @@ const SectionCurrentAddress = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <p>
+              Verifica que tu información sea correcta, de lo contrario no
+              podras hacer modificaciones.
+            </p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem title="Calle" content={dataForm.street} />

@@ -59,7 +59,7 @@ const SectionCurrentWork = (props) => {
       const selectDefaultOccupation = dataOccupations.find((row) => {
         return dataForm.idOccupationActivity === row.idOccupationActivity;
       });
-      
+
       setDataForm({
         ...dataFormSave,
         antiquityTimeRangeText:
@@ -296,6 +296,10 @@ const SectionCurrentWork = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <p>
+              Verifica que tu información sea correcta, de lo contrario no
+              podras hacer modificaciones.
+            </p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem
