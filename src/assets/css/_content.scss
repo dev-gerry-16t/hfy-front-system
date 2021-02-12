@@ -346,6 +346,10 @@
       letter-spacing: 0.75px;
       color: #da006e;
     }
+    .option-select-radio {
+      display: flex;
+      flex-direction: column;
+    }
     .contract-card-information {
       box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
       border-radius: 16px;

@@ -13,6 +13,7 @@ import {
   Select,
   Spin,
   Tooltip,
+  Radio,
 } from "antd";
 import {
   InfoCircleOutlined,
@@ -303,64 +304,211 @@ const SectionAddProperty = (props) => {
             {isEmpty(totalDepartment) === false &&
               totalDepartment.map((row) => {
                 return (
-                  <Row>
-                    <Col span={11}>
-                      <Input
-                        value={statesDynamic[row.id].suite}
-                        placeholder={"Número interior"}
-                        onChange={(e) => {
-                          setStateDynamic({
-                            ...statesDynamic,
-                            [row.id]: {
-                              ...statesDynamic[row.id],
-                              suite: e.target.value,
-                            },
-                          });
+                  <>
+                    <Row>
+                      <Col span={11}>
+                        <Input
+                          value={statesDynamic[row.id].suite}
+                          placeholder={"Número interior"}
+                          onChange={(e) => {
+                            setStateDynamic({
+                              ...statesDynamic,
+                              [row.id]: {
+                                ...statesDynamic[row.id],
+                                suite: e.target.value,
+                              },
+                            });
+                          }}
+                        />
+                      </Col>
+                      <Col span={2} />
+                      <Col span={11}>
+                        <NumberFormat
+                          id={null}
+                          customInput={Input}
+                          thousandSeparator=","
+                          decimalSeparator="."
+                          decimalPrecision={2}
+                          allowNegative={false}
+                          prefix="$"
+                          suffix=""
+                          value={statesDynamic[row.id].currentRent}
+                          className="inputLogin"
+                          floatingLabelText=""
+                          isVisible
+                          toBlock={false}
+                          disable={false}
+                          placeholder="Monto de renta"
+                          onValueChange={(values) => {
+                            const {
+                              formattedValue,
+                              value,
+                              floatValue,
+                            } = values;
+                            setStateDynamic({
+                              ...statesDynamic,
+                              [row.id]: {
+                                ...statesDynamic[row.id],
+                                currentRent: floatValue,
+                              },
+                            });
+                          }}
+                          onClick={(event) => {}}
+                          onFocus={(event) => {}}
+                          onBlur={(event) => {}}
+                        />
+                      </Col>
+                      <Col span={1} />
+                      <Col
+                        span={2}
+                        style={{
+                          textAlign: "center",
+                          margin: "auto",
                         }}
-                      />
-                    </Col>
-                    <Col span={2} />
-                    <Col span={11}>
-                      <NumberFormat
-                        id={null}
-                        customInput={Input}
-                        thousandSeparator=","
-                        decimalSeparator="."
-                        decimalPrecision={2}
-                        allowNegative={false}
-                        prefix="$"
-                        suffix=""
-                        value={statesDynamic[row.id].currentRent}
-                        className="inputLogin"
-                        floatingLabelText=""
-                        isVisible
-                        toBlock={false}
-                        disable={false}
-                        placeholder="Monto de renta"
-                        onValueChange={(values) => {
-                          const { formattedValue, value, floatValue } = values;
-                          setStateDynamic({
-                            ...statesDynamic,
-                            [row.id]: {
-                              ...statesDynamic[row.id],
-                              currentRent: floatValue,
-                            },
-                          });
+                      ></Col>
+                    </Row>
+                    <Row>
+                      <Col span={11}>
+                        <div className="option-select-radio">
+                          <span
+                            style={{
+                              color: "var(--color-primary)",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ¿Eres el propietario?
+                          </span>
+                          <Radio.Group
+                            onChange={(e) => {
+                              const value = e.target.value;
+                              setStateDynamic({
+                                ...statesDynamic,
+                                [row.id]: {
+                                  ...statesDynamic[row.id],
+                                  isOwner: value,
+                                },
+                              });
+                            }}
+                            value={statesDynamic[row.id].isOwner}
+                          >
+                            <Radio value={1}>Si</Radio>
+                            <Radio value={0}>No, lo represento</Radio>
+                          </Radio.Group>
+                        </div>
+                      </Col>
+                      <Col span={2} />
+                      <Col span={11}>
+                        <div className="option-select-radio">
+                          <span
+                            style={{
+                              color: "var(--color-primary)",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ¿Está amueblado?
+                          </span>
+                          <Radio.Group
+                            onChange={(e) => {
+                              setStateDynamic({
+                                ...statesDynamic,
+                                [row.id]: {
+                                  ...statesDynamic[row.id],
+                                  isFurnished: e.target.value,
+                                },
+                              });
+                            }}
+                            value={statesDynamic[row.id].isFurnished}
+                          >
+                            <Radio value={1}>Si</Radio>
+                            <Radio value={0}>No</Radio>
+                          </Radio.Group>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={11}>
+                        <NumberFormat
+                          id={null}
+                          customInput={Input}
+                          thousandSeparator=","
+                          decimalSeparator="."
+                          decimalPrecision={2}
+                          allowNegative={false}
+                          prefix="$"
+                          suffix=""
+                          value={statesDynamic[row.id].maintenanceAmount}
+                          className="inputLogin"
+                          floatingLabelText=""
+                          isVisible
+                          toBlock={false}
+                          disable={false}
+                          placeholder="Monto de mantenimiento"
+                          onValueChange={(values) => {
+                            const {
+                              formattedValue,
+                              value,
+                              floatValue,
+                            } = values;
+                            setStateDynamic({
+                              ...statesDynamic,
+                              [row.id]: {
+                                ...statesDynamic[row.id],
+                                maintenanceAmount: floatValue,
+                              },
+                            });
+                          }}
+                          onClick={(event) => {}}
+                          onFocus={(event) => {}}
+                          onBlur={(event) => {}}
+                        />
+                      </Col>
+                      <Col span={2} />
+                      <Col span={11}>
+                        <NumberFormat
+                          id={null}
+                          customInput={Input}
+                          thousandSeparator=","
+                          decimalSeparator="."
+                          decimalPrecision={2}
+                          allowNegative={false}
+                          prefix=""
+                          suffix=""
+                          value={statesDynamic[row.id].totalParkingSpots}
+                          className="inputLogin"
+                          floatingLabelText=""
+                          isVisible
+                          toBlock={false}
+                          disable={false}
+                          placeholder="Número de estacionamientos"
+                          onValueChange={(values) => {
+                            const {
+                              formattedValue,
+                              value,
+                              floatValue,
+                            } = values;
+                            setStateDynamic({
+                              ...statesDynamic,
+                              [row.id]: {
+                                ...statesDynamic[row.id],
+                                totalParkingSpots: floatValue,
+                              },
+                            });
+                          }}
+                          onClick={(event) => {}}
+                          onFocus={(event) => {}}
+                          onBlur={(event) => {}}
+                        />
+                      </Col>
+                      <Col span={1} />
+                      <Col
+                        span={2}
+                        style={{
+                          textAlign: "center",
+                          margin: "auto",
                         }}
-                        onClick={(event) => {}}
-                        onFocus={(event) => {}}
-                        onBlur={(event) => {}}
-                      />
-                    </Col>
-                    <Col span={1} />
-                    <Col
-                      span={2}
-                      style={{
-                        textAlign: "center",
-                        margin: "auto",
-                      }}
-                    ></Col>
-                  </Row>
+                      ></Col>
+                    </Row>
+                  </>
                 );
               })}
           </div>
