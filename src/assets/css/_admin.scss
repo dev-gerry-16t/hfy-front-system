@@ -1,3 +1,49 @@
 .color-green {
   background: green !important;
 }
+
+.table-users-hfy {
+  table {
+    font-family: Poppins;
+    font-size: 12px !important;
+  }
+}
+
+.table-card-users-hfy {
+  display: none;
+  .card-users-hfy {
+    border-bottom: 1px solid #d6d8e7;
+    padding: 10px 0px;
+    table {
+      font-family: Poppins;
+      width: 100%;
+      strong {
+        color: #4e4b66;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 715px) {
+  .ant-drawer-content-wrapper {
+    width: 100% !important;
+  }
+  .table-users-hfy {
+    display: none;
+  }
+  .table-card-users-hfy {
+    display: block;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .table-card-users-hfy {
+    .card-users-hfy {
+      table {
+        strong {
+          display: none;
+        }
+      }
+    }
+  }
+}

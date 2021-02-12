@@ -49,6 +49,122 @@ const SectionCardOwner = (props) => {
   const [openPopover, setOpenPopover] = useState({});
   const [selectPolicy, setSelectPolicy] = useState(null);
 
+  const renderCardComponent = (status, record) => {
+    let component = <div />;
+    const contractStatus = record.contractStatus;
+    if (status === true && contractStatus !== "DECLINADO") {
+      component = (
+        <Popover
+          visible={
+            isNil(openPopover[`popover-${record.key}`]) === false
+              ? openPopover[`popover-${record.key}`]
+              : false
+          }
+          content={
+            <>
+              <Row style={{ marginBottom: 10 }}>
+                <Col span={24}>
+                  <Select
+                    placeholder="Poliza por"
+                    onChange={(value, option) => {}}
+                    style={{ width: "100%" }}
+                  >
+                    <Option value={1} onClick={() => {}}>
+                      Primera vez
+                    </Option>
+                    <Option value={2} onClick={() => {}}>
+                      Renovación
+                    </Option>
+                    <Option value={2} onClick={() => {}}>
+                      Cancelaciòn
+                    </Option>
+                  </Select>
+                </Col>
+              </Row>
+              <Row>
+                <Col span={6} />
+                <Col span={12}>
+                  <Button
+                    type="primary"
+                    shape="round"
+                    icon={<CheckOutlined />}
+                    size="small"
+                    className="color-green"
+                  >
+                    Cerrar
+                  </Button>
+                </Col>
+                <Col span={6} />
+              </Row>
+            </>
+          }
+          title={
+            <div>
+              <span>Asignar cierre de Poliza</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpenPopover({
+                    [`popover-${record.key}`]: false,
+                  });
+                }}
+                style={{
+                  marginLeft: 5,
+                  background: "transparent",
+                  border: "none",
+                }}
+              >
+                <i className="fa fa-times" />
+              </button>
+            </div>
+          }
+          trigger="click"
+        >
+          <Button
+            type="primary"
+            shape="round"
+            icon={<CheckSquareOutlined />}
+            size="small"
+            onClick={() => {
+              setOpenPopover({
+                [`popover-${record.key}`]: true,
+              });
+            }}
+          >
+            Asignar
+          </Button>
+        </Popover>
+      );
+    } else if (status === false && contractStatus !== "DECLINADO") {
+      component = (
+        <Tag
+          icon={
+            <span className="anticon">
+              <i className="fa fa-handshake-o" aria-hidden="true" />
+            </span>
+          }
+          color="#00bb2d"
+        >
+          Cerrado
+        </Tag>
+      );
+    } else if (contractStatus === "DECLINADO") {
+      component = (
+        <Tag
+          icon={
+            <span className="anticon">
+              <i className="fa fa-ban" aria-hidden="true" />
+            </span>
+          }
+          color="#ff0000"
+        >
+          Declinada
+        </Tag>
+      );
+    }
+    return component;
+  };
+
   const columns = [
     {
       title: "Propietario",
@@ -258,7 +374,7 @@ const SectionCardOwner = (props) => {
       contractStatus: "VIGENTE",
       colorContract: "green",
       numberContract: "59029488",
-      policyType: "Homify Basica",
+      policyType: "Basica",
       dateContractEnd: "25/01/2022",
       adviser: "Angel Cortez",
       statusPolicy: false,
@@ -282,7 +398,7 @@ const SectionCardOwner = (props) => {
       contractStatus: "POR CONCLUIR",
       colorContract: "orange",
       numberContract: "34874792",
-      policyType: "Homify Premium",
+      policyType: "Premium",
       dateContractEnd: "03/02/2021",
       adviser: "Francisco Ortega",
       statusPolicy: true,
@@ -294,7 +410,7 @@ const SectionCardOwner = (props) => {
       contractStatus: "DECLINADO",
       colorContract: "red",
       numberContract: "34874793",
-      policyType: "Homify Renta Segura",
+      policyType: "Renta Segura",
       dateContractEnd: "06/02/2021",
       adviser: "Francisco Ortega",
       statusPolicy: true,
@@ -327,7 +443,86 @@ const SectionCardOwner = (props) => {
         </div>
       </div>
       <div className="section-information-renters">
-        <Table columns={columns} dataSource={data} />
+        <Table
+          columns={columns}
+          dataSource={data}
+          className="table-users-hfy"
+        />
+        {isEmpty(data) === false && (
+          <div className="table-card-users-hfy">
+            {data.map((row) => {
+              return (
+                <div className="card-users-hfy">
+                  <table>
+                    <tr>
+                      <td>
+                        <strong>Propietario: </strong>
+                        <a
+                          onClick={() => {
+                            onOpenDetail("Propietario", 1);
+                          }}
+                        >
+                          {row.nameOwner}
+                        </a>
+                      </td>
+                      <td>
+                        <strong>Inquilino:</strong>{" "}
+                        <a
+                          onClick={() => {
+                            onOpenDetail("Inquilino", 2);
+                          }}
+                          style={{ color: "gray" }}
+                        >
+                          {row.nameTenant}
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Asesor:</strong>{" "}
+                        <a
+                          onClick={() => {
+                            onOpenDetail("Asesor", 3);
+                          }}
+                          style={{ color: "brown" }}
+                        >
+                          {row.adviser}
+                        </a>
+                      </td>
+                      <td>
+                        <strong>Contrato:</strong>{" "}
+                        <span>
+                          <Tag color="green" key="1">
+                            {row.contractStatus}
+                          </Tag>
+                        </span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Folio:</strong>{" "}
+                        <span> {row.numberContract}</span>
+                      </td>
+                      <td>
+                        <strong>Póliza:</strong> <span> {row.policyType}</span>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Vencimiento:</strong>{" "}
+                        <span> {row.dateContractEnd}</span>
+                      </td>
+                      <td>
+                        <strong>Estatus:</strong>{" "}
+                        {renderCardComponent(row.statusPolicy, row)}
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              );
+            })}
+          </div>
+        )}
         {finishCallApis === false && <Skeleton loading active />}
       </div>
       {isEmpty(tenantCoincidences) === true && finishCallApis === true && (

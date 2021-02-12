@@ -84,7 +84,7 @@ const SectionDetailUserTenant = (props) => {
           >
             <h3>Inquilino</h3>
             <Row>
-              <Col span={13}>
+              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
                 <strong>Resultado de investigación</strong>
                 <Popover
                   content={
@@ -166,12 +166,12 @@ const SectionDetailUserTenant = (props) => {
                   </Button>
                 </Popover>
               </Col>
-              <Col span={11}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem title="Calificación 1-5" content="5" />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Nombre completo"
                   content="Sebastian Perez Guitierrez"
@@ -187,26 +187,26 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-63-15-98-07" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Tipo de cliente" content="Inquilino" />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Ocupación" content="Ingeniero" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Salario mensual" content="$45,000.00" />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
               </Col>
             </Row>
@@ -219,7 +219,7 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Enviar mensaje"
                   content={
@@ -229,7 +229,7 @@ const SectionDetailUserTenant = (props) => {
                   }
                 />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
               </Col>
             </Row>
@@ -239,7 +239,7 @@ const SectionDetailUserTenant = (props) => {
             />
             <h3>Obligado solidario</h3>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Nombre completo"
                   content="Sebastian Perez Guitierrez"
@@ -255,18 +255,18 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-63-15-98-07" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Tipo de cliente" content="Inquilino" />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Ocupación" content="Ingeniero" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Salario mensual" content="$40,000.00" />
               </Col>
             </Row>
@@ -276,7 +276,7 @@ const SectionDetailUserTenant = (props) => {
             />
             <h3>Fiador</h3>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Nombre completo"
                   content="Sebastian Perez Guitierrez"
@@ -284,10 +284,10 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Correo" content="fiador@example.com" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-63-15-98-07" />
               </Col>
             </Row>
@@ -302,13 +302,13 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Correo"
                   content="referencia1@test.com"
                 />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-77-63-52-12" />
               </Col>
             </Row>
@@ -325,13 +325,13 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Correo"
                   content="referencia2@test.com"
                 />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-77-63-52-12" />
               </Col>
             </Row>
@@ -348,13 +348,13 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Correo"
                   content="referencia3@test.com"
                 />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Telefono" content="55-77-63-52-12" />
               </Col>
             </Row>
@@ -367,7 +367,7 @@ const SectionDetailUserTenant = (props) => {
               <h3>Contrato</h3>
             </p>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Tipo de persona fiscal"
                   content="Fisica"
@@ -375,18 +375,18 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Estatus" content="Vigente" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Folio" content="212234334" />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <a>Descargar Contrato</a>
               </Col>
             </Row>
@@ -398,10 +398,10 @@ const SectionDetailUserTenant = (props) => {
               <h3>Poliza</h3>
             </p>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Poliza" content="Homify Basica" />
               </Col>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <a>Descargar Poliza</a>
               </Col>
             </Row>
@@ -413,7 +413,7 @@ const SectionDetailUserTenant = (props) => {
               <h3>Pagares</h3>
             </p>
             <Row>
-              <Col span={12}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <a>Descargar Pagares</a>
               </Col>
             </Row>
