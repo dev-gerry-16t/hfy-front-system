@@ -336,6 +336,20 @@ const SectionInfoAval = (props) => {
                       }}
                     />
                   </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                    <Input
+                      value={dataForm.publicPropertyRegistry}
+                      placeholder="Registro público de la propiedad"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          publicPropertyRegistry: value,
+                        });
+                      }}
+                    />
+                  </Col>
                 </Row>
                 <p>Dirección de la propiedad en garantia</p>
                 <Row>
@@ -696,6 +710,15 @@ const SectionInfoAval = (props) => {
                 />
               </Col>
             </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem
+                  title="CURP"
+                  content={dataForm.endorsementCitizenId}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+            </Row>
             <p>Dirección de la propiedad en garantia</p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
@@ -738,6 +761,14 @@ const SectionInfoAval = (props) => {
                 <DescriptionItem
                   title="Código postal"
                   content={dataForm.collateralPropertyZipCode}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem
+                  title="Registro público de la propiedad"
+                  content={dataForm.publicPropertyRegistry}
                 />
               </Col>
             </Row>
