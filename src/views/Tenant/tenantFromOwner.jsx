@@ -9,6 +9,7 @@ import {
   Pagination,
   Carousel,
   Select,
+  message,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -22,6 +23,7 @@ import SectionDocuments from "./sectionDocuments/sectionDocuments";
 import SectionInfoTenant from "./sectionDocuments/sectionCardInformation";
 import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetAllCustomerTenantById,
   callGetPaymentTypes,
@@ -71,6 +73,22 @@ const TenantFromOwner = (props) => {
     background: "#364d79",
   };
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const handlerCallGetAllPaymentTypes = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -85,7 +103,12 @@ const TenantFromOwner = (props) => {
           ? response.response
           : [];
       setDataPayments(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAllDocumentTypes = async () => {
@@ -103,7 +126,12 @@ const TenantFromOwner = (props) => {
           ? response.response
           : [];
       setDataDocumentTypes(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetPaymentContractDocument = async (data) => {
@@ -126,7 +154,12 @@ const TenantFromOwner = (props) => {
       if (isEmpty(responseResult) === false) {
         setIdTopIndexDocuments(responseResult[0].topIndex);
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAllCustomerTenantById = async () => {
@@ -157,7 +190,12 @@ const TenantFromOwner = (props) => {
           idCustomerTenant,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAllPaymentContract = async (data) => {
@@ -173,6 +211,10 @@ const TenantFromOwner = (props) => {
       setSpinVisible(false);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -199,6 +241,10 @@ const TenantFromOwner = (props) => {
       return Promise.resolve(documentId);
     } catch (error) {
       setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -220,7 +266,12 @@ const TenantFromOwner = (props) => {
       if (isEmpty(responseResult) === false) {
         setIdTopIndexMessage(responseResult[0].topIndex);
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallAddCustomerMessage = async (data) => {
@@ -242,7 +293,12 @@ const TenantFromOwner = (props) => {
         idContract: idContractData,
         idCustomerTenant,
       });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   useEffect(() => {

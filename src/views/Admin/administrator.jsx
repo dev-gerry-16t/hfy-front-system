@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal } from "antd";
+import { Layout, Avatar, Rate, Modal, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -10,6 +10,7 @@ import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import IconArroRight from "../../assets/icons/arrowRight.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetContractStats,
   callGetContractCoincidences,
@@ -82,6 +83,22 @@ const Administrator = (props) => {
     false
   );
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const handlerCallGetContractStats = async () => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -96,7 +113,12 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataStats(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetContractCoincidences = async () => {
@@ -112,7 +134,12 @@ const Administrator = (props) => {
           ? response.response
           : [];
       setDataCoincidences(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetSearchProspect = async (data) => {
@@ -132,7 +159,12 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataOwnerSearch({ ...dataOwnerSearch, ...responseResult });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetSearchProspectTenant = async (data) => {
@@ -152,7 +184,12 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataTenantSearch({ ...dataTenantSearch, ...responseResult });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetSearchSecondTenant = async (data, id) => {
@@ -172,7 +209,12 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataSecondTenant({ ...dataSecondTenant, ...responseResult });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetSearchProspectAdviser = async (data) => {
@@ -192,7 +234,12 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataAdviserSearch({ ...dataAdviserSearch, ...responseResult });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAddProspect = async (data) => {
@@ -203,7 +250,12 @@ const Administrator = (props) => {
         idLoginHistory,
         ...data,
       });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetContractChart = async () => {
@@ -229,7 +281,12 @@ const Administrator = (props) => {
           : [];
       setDataChartBar(responseResultBar);
       setDataChartPie(responseResultPie);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetAllPolicyStatus = async (id) => {
@@ -246,7 +303,12 @@ const Administrator = (props) => {
           ? response.response
           : [];
       setDataAllPolicyStatus(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const callAsynApis = async () => {
@@ -271,7 +333,12 @@ const Administrator = (props) => {
         data.idContract
       );
       callAsynApis();
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   useEffect(() => {

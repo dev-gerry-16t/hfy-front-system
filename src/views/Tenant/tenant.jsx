@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, notification } from "antd";
+import { Layout, Avatar, Rate, Modal, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { UserOutlined } from "@ant-design/icons";
@@ -15,6 +15,7 @@ import Transport from "../../assets/icons/Transport.svg";
 import SectionContractAvailable from "./sections/sectionContractAvailable";
 import SectionDepositGuarantee from "./sections/sectionDepositGuarantee";
 import FrontFunctions from "../../utils/actions/frontFunctions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import { callGetAllCustomerTenantDashboardById } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 
@@ -31,6 +32,22 @@ const Tenant = (props) => {
   const [dataTenant, setDataTenant] = useState([]);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
+
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
 
   const args = {
     description: (
@@ -135,11 +152,16 @@ const Tenant = (props) => {
           idContract: responseResult.idContract,
         });
         notification.open(args);
-        notification.open(argsv2);
+        //notification.open(argsv2);
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
-  
+
   useEffect(() => {
     // notification.open(argsv2);
     // notification.open(args);

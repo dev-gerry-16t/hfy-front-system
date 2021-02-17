@@ -40,6 +40,7 @@ import {
   callGetNationalities,
   callGetIdTypes,
 } from "../../utils/actions/actions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import "moment/locale/es";
@@ -83,6 +84,22 @@ const TypeFormOwner = (props) => {
     setCurrent(current - 1);
   };
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const handlerCallSetTypeFormTenant = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -96,7 +113,12 @@ const TypeFormOwner = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : {};
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetTypeFormDocument = async (id, type) => {
@@ -118,7 +140,12 @@ const TypeFormOwner = (props) => {
           : [];
 
       setDataDocuments(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetZipCodeAdress = async (data) => {
@@ -142,7 +169,12 @@ const TypeFormOwner = (props) => {
           : [];
       setDataZipCodeAdress(responseResult1);
       setDataZipCatalog(responseResult2);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetNationalities = async () => {
@@ -160,7 +192,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : [];
       setDataNationalities(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetIdTypes = async () => {
@@ -178,7 +215,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : [];
       setDataIdTypes(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const stepsOwner = [
@@ -296,7 +338,12 @@ const TypeFormOwner = (props) => {
           : {};
       setDataForm(responseResult);
       handlerCallGetTypeFormDocument(responseResult.idTypeForm, 3);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetMaritalStatus = async () => {
@@ -315,7 +362,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : {};
       setDataMaritalStatus(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetPropertyTypes = async () => {
@@ -334,7 +386,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : {};
       setDataPropertyTypes(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetPolicies = async () => {
@@ -353,7 +410,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : {};
       setDataPolicies(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallBankCatalog = async () => {
@@ -370,7 +432,12 @@ const TypeFormOwner = (props) => {
           ? response.response
           : [];
       setDataBank(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallAsyncApis = async () => {
