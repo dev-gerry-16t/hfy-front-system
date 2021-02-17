@@ -82,6 +82,14 @@ const SectionDetailUserTenant = (props) => {
             header={<h3 role="title-section">Información general</h3>}
             key="1"
           >
+            <Row>
+              <Col span={20} xs={{ span: 24 }} md={{ span: 20 }}>
+                <strong>Cambiar Roles Inquilino-Obligado Solidario</strong>
+              </Col>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }}>
+                <Button type="primary" shape="round" icon={<SyncOutlined />} />
+              </Col>
+            </Row>
             <h3>Inquilino</h3>
             <Row>
               <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
@@ -239,10 +247,97 @@ const SectionDetailUserTenant = (props) => {
             />
             <h3>Obligado solidario</h3>
             <Row>
+              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                <strong>Resultado de investigación</strong>
+                <Popover
+                  content={
+                    <>
+                      <Row>
+                        <Col span={24}>
+                          <NumberFormat
+                            id={null}
+                            customInput={Input}
+                            thousandSeparator=","
+                            decimalSeparator="."
+                            decimalPrecision={2}
+                            allowNegative={false}
+                            prefix=""
+                            suffix=""
+                            value={valueCalification}
+                            className="inputLogin"
+                            floatingLabelText=""
+                            isVisible
+                            toBlock={false}
+                            disable={false}
+                            placeholder="Calificación"
+                            onValueChange={(values) => {
+                              const {
+                                formattedValue,
+                                value,
+                                floatValue,
+                              } = values;
+                              setValueCalification(floatValue);
+                            }}
+                            onClick={(event) => {}}
+                            onFocus={(event) => {}}
+                            onBlur={(event) => {}}
+                          />
+                        </Col>
+                      </Row>
+                      <div
+                        className="ant-divider ant-divider-horizontal"
+                        role="separator"
+                      />
+                      <Row>
+                        <Col span={11}>
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={<CloseOutlined />}
+                            size="small"
+                            danger
+                          >
+                            Rechazada
+                          </Button>
+                        </Col>
+                        <Col span={2} />
+                        <Col span={11}>
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={<CheckOutlined />}
+                            size="small"
+                            className="color-green"
+                          >
+                            Aprobada
+                          </Button>
+                        </Col>
+                      </Row>
+                    </>
+                  }
+                  title="Resultado de investigación 1-5"
+                  trigger="click"
+                >
+                  <Button
+                    type="primary"
+                    shape="round"
+                    icon={<EditOutlined />}
+                    size="small"
+                    onClick={() => {}}
+                  >
+                    Asignar
+                  </Button>
+                </Popover>
+              </Col>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem title="Calificación 1-5" content="5" />
+              </Col>
+            </Row>
+            <Row>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Nombre completo"
-                  content="Sebastian Perez Guitierrez"
+                  content="Pedro Perez Guitierrez"
                 />
               </Col>
             </Row>
@@ -268,6 +363,37 @@ const SectionDetailUserTenant = (props) => {
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem title="Salario mensual" content="$40,000.00" />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
+              </Col>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <DescriptionItem
+                  title="Dirección"
+                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem
+                  title="Enviar mensaje"
+                  content={
+                    <Dropdown overlay={menu} trigger={["click"]}>
+                      <a>Enviar</a>
+                    </Dropdown>
+                  }
+                />
+              </Col>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
               </Col>
             </Row>
             <div

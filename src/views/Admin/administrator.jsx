@@ -10,8 +10,15 @@ import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import IconArroRight from "../../assets/icons/arrowRight.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
-import {} from "../../utils/actions/actions";
+import {
+  callGetContractStats,
+  callGetContractCoincidences,
+  callGetContractChart,
+  callGetSearchProspect,
+  callGetAddProspect,
+} from "../../utils/actions/actions";
 import SectionStatsChart from "./sections/sectionStatsChart";
+import SectionStatsChartPie from "./sections/sectionStatsChartPie";
 import SectionCardOwner from "./sections/sectionCardOwner";
 import SectionAddUsers from "./sections/sectionAddUsers";
 import SectionDetailUser from "./sections/sectionDetailUser";
@@ -21,9 +28,48 @@ import SectionDetailUserAdviser from "./sections/sectionUserDetailAdviser";
 const { Content } = Layout;
 
 const Administrator = (props) => {
-  const { dataProfile, history } = props;
+  const {
+    dataProfile,
+    history,
+    callGetContractStats,
+    callGetContractCoincidences,
+    callGetContractChart,
+    callGetSearchProspect,
+    callGetAddProspect,
+  } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
+  const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataStats, setDataStats] = useState({});
+  const [dataChartBar, setDataChartBar] = useState([]);
+  const [dataChartPie, setDataChartPie] = useState([]);
+  const [dataOwnerSearch, setDataOwnerSearch] = useState({
+    idPersonType: 1,
+    idCustomer: null,
+  });
+  const [dataTenantSearch, setDataTenantSearch] = useState({
+    idCustomerTenant: null,
+    idCustomerType: null,
+    idPersonType: null,
+    givenName: null,
+    lastName: null,
+    mothersMaidenName: null,
+    emailAddress: null,
+    phoneNumber: null,
+  });
+  const [dataSecondTenant, setDataSecondTenant] = useState({
+    idCustomerTenant: null,
+    idCustomerType: null,
+    idPersonType: null,
+    givenName: null,
+    lastName: null,
+    mothersMaidenName: null,
+    emailAddress: null,
+    phoneNumber: null,
+  });
+  const [dataAdviserSearch, setDataAdviserSearch] = useState({
+    idCustomerAgent: null,
+  });
   const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
     false
   );
@@ -31,14 +77,194 @@ const Administrator = (props) => {
     false
   );
 
+  const handlerCallGetContractStats = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractStats({
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataStats(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetContractCoincidences = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractCoincidences({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: 0,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataCoincidences(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetSearchProspect = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetSearchProspect({
+        idSystemUser,
+        idLoginHistory,
+        dataFiltered: data,
+        idCustomer: null,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataOwnerSearch({ ...dataOwnerSearch, ...responseResult });
+    } catch (error) {}
+  };
+
+  const handlerCallGetSearchProspectTenant = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetSearchProspect({
+        idSystemUser,
+        idLoginHistory,
+        dataFiltered: data,
+        idCustomer: null,
+        type: 2,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataTenantSearch({ ...dataTenantSearch, ...responseResult });
+    } catch (error) {}
+  };
+
+  const handlerCallGetSearchSecondTenant = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetSearchProspect({
+        idSystemUser,
+        idLoginHistory,
+        dataFiltered: data,
+        idCustomer: id,
+        type: 2,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataSecondTenant({ ...dataSecondTenant, ...responseResult });
+    } catch (error) {}
+  };
+
+  const handlerCallGetSearchProspectAdviser = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetSearchProspect({
+        idSystemUser,
+        idLoginHistory,
+        dataFiltered: data,
+        idCustomer: null,
+        type: 3,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataAdviserSearch({ ...dataAdviserSearch, ...responseResult });
+    } catch (error) {}
+  };
+
+  const handlerCallGetAddProspect = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAddProspect({
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      console.log("response", response);
+    } catch (error) {}
+  };
+
+  const handlerCallGetContractChart = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractChart({
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResultBar =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].dataBar) === false
+          ? JSON.parse(response.response[0].dataBar)
+          : [];
+      const responseResultPie =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].dataPAI) === false
+          ? JSON.parse(response.response[0].dataPAI)
+          : [];
+      setDataChartBar(responseResultBar);
+      setDataChartPie(responseResultPie);
+    } catch (error) {}
+  };
+
+  const callAsynApis = async () => {
+    await handlerCallGetContractStats();
+    await handlerCallGetContractCoincidences();
+    await handlerCallGetContractChart();
+  };
+
+  useEffect(() => {
+    callAsynApis();
+  }, []);
+
   return (
     <Content>
       <SectionAddUsers
         isModalVisible={isVisibleAddUser}
+        dataOwnerSearch={dataOwnerSearch}
+        dataTenantSearch={dataTenantSearch}
+        dataAdviserSearch={dataAdviserSearch}
+        dataSecondTenant={dataSecondTenant}
         onClose={() => {
           setIsVisibleAddUser(!isVisibleAddUser);
         }}
         spinVisible={false}
+        onSearchOwner={(data) => {
+          handlerCallGetSearchProspect(data);
+        }}
+        onSearchTenant={(data) => {
+          handlerCallGetSearchProspectTenant(data);
+        }}
+        onSearchSecondTenant={(data, id) => {
+          handlerCallGetSearchSecondTenant(data, id);
+        }}
+        onSearchAdviser={(data) => {
+          handlerCallGetSearchProspectAdviser(data);
+        }}
+        onSendInformation={(data) => {
+          handlerCallGetAddProspect(data);
+        }}
       />
       <SectionDetailUser
         isDrawerVisible={isVisibleDetailUser}
@@ -72,66 +298,27 @@ const Administrator = (props) => {
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
               <img src={IconWallet} alt="icon" width="20px"></img>
             </div>
-            <h2>$60,000.00</h2>
+            <h2>{dataStats.grandTotalSale}</h2>
             <span>Ventas</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={IconPolicy} alt="icon" width="20px"></img>
             </div>
-            <h2>115</h2>
+            <h2>{dataStats.totalClosings}</h2>
             <span>Cierres</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
               <img src={IconDanger} alt="icon" width="20px"></img>
             </div>
-            <h2>20</h2>
+            <h2>{dataStats.totalForClosing}</h2>
             <span>Por cerrar</span>
           </div>
         </div>
-        <div className="main-information-user">
-          <SectionStatsChart
-            dataStatsChart={[
-              {
-                mes: "Noviembre, 2021",
-                ganancia: 35307.5,
-                gananciaFormat: "$ 35,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 35,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-              {
-                mes: "Diciembre, 2021",
-                ganancia: 15307.5,
-                gananciaFormat: "$ 15,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 15,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-              {
-                mes: "Enero, 2021",
-                ganancia: 55307.5,
-                gananciaFormat: "$ 55,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 55,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-            ]}
-            finishCallApis
-          />
+        <div className="main-information-user-admin">
+          <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
+          <SectionStatsChartPie dataStatsChart={dataChartPie} finishCallApis />
           <SectionCardOwner
             history={history}
             onAddUser={() => {
@@ -146,7 +333,7 @@ const Administrator = (props) => {
                 setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
               }
             }}
-            tenantCoincidences={[{}]}
+            dataCoincidences={dataCoincidences}
             finishCallApis
             onClickSendInvitation={() => {}}
           />
@@ -163,6 +350,13 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callGetContractStats: (data) => dispatch(callGetContractStats(data)),
+  callGetContractCoincidences: (data) =>
+    dispatch(callGetContractCoincidences(data)),
+  callGetContractChart: (data) => dispatch(callGetContractChart(data)),
+  callGetSearchProspect: (data) => dispatch(callGetSearchProspect(data)),
+  callGetAddProspect: (data) => dispatch(callGetAddProspect(data)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

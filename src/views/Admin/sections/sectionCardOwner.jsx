@@ -23,6 +23,8 @@ import {
   CheckSquareOutlined,
   CloseOutlined,
   CheckOutlined,
+  CheckCircleTwoTone,
+  EditTwoTone,
 } from "@ant-design/icons";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
@@ -39,7 +41,7 @@ const { Option } = Select;
 const SectionCardOwner = (props) => {
   const {
     history,
-    tenantCoincidences,
+    dataCoincidences,
     finishCallApis,
     onClickSendInvitation,
     onAddUser,
@@ -52,12 +54,12 @@ const SectionCardOwner = (props) => {
   const renderCardComponent = (status, record) => {
     let component = <div />;
     const contractStatus = record.contractStatus;
-    if (status === true && contractStatus !== "DECLINADO") {
+    if (status === 1) {
       component = (
         <Popover
           visible={
-            isNil(openPopover[`popover-${record.key}`]) === false
-              ? openPopover[`popover-${record.key}`]
+            isNil(openPopover[`popover1-${record.key}`]) === false
+              ? openPopover[`popover1-${record.key}`]
               : false
           }
           content={
@@ -105,7 +107,7 @@ const SectionCardOwner = (props) => {
                 type="button"
                 onClick={() => {
                   setOpenPopover({
-                    [`popover-${record.key}`]: false,
+                    [`popover1-${record.key}`]: false,
                   });
                 }}
                 style={{
@@ -127,15 +129,15 @@ const SectionCardOwner = (props) => {
             size="small"
             onClick={() => {
               setOpenPopover({
-                [`popover-${record.key}`]: true,
+                [`popover1-${record.key}`]: true,
               });
             }}
           >
-            Asignar
+            {record.policyStatus}
           </Button>
         </Popover>
       );
-    } else if (status === false && contractStatus !== "DECLINADO") {
+    } else if (status === 2) {
       component = (
         <Tag
           icon={
@@ -145,10 +147,10 @@ const SectionCardOwner = (props) => {
           }
           color="#00bb2d"
         >
-          Cerrado
+          {record.policyStatus}
         </Tag>
       );
-    } else if (contractStatus === "DECLINADO") {
+    } else if (contractStatus === 3) {
       component = (
         <Tag
           icon={
@@ -158,7 +160,7 @@ const SectionCardOwner = (props) => {
           }
           color="#ff0000"
         >
-          Declinada
+          {record.policyStatus}
         </Tag>
       );
     }
@@ -168,45 +170,62 @@ const SectionCardOwner = (props) => {
   const columns = [
     {
       title: "Propietario",
-      dataIndex: "nameOwner",
-      key: "nameOwner",
-      render: (text) => (
-        <a
-          onClick={() => {
-            onOpenDetail("Propietario", 1);
-          }}
-        >
-          {text}
-        </a>
+      dataIndex: "customerFullName",
+      key: "customerFullName",
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <a
+            onClick={() => {
+              onOpenDetail("Propietario", 1);
+            }}
+            style={{ marginRight: "5PX" }}
+          >
+            {text}
+          </a>
+          {record.hasCustomerFinishedTF === true ? (
+            <CheckCircleTwoTone twoToneColor="#32cd32" />
+          ) : (
+            <EditTwoTone twoToneColor="#4169e1" />
+          )}
+        </div>
       ),
     },
     {
       title: "Inquilino",
-      dataIndex: "nameTenant",
-      key: "nameTenant",
-      render: (text) => (
-        <a
-          onClick={() => {
-            onOpenDetail("Inquilino", 2);
-          }}
-          style={{ color: "gray" }}
-        >
-          {text}
-        </a>
+      dataIndex: "customerTenantFullName",
+      key: "customerTenantFullName",
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <a
+            onClick={() => {
+              onOpenDetail("Inquilino", 2);
+            }}
+            style={{ color: "gray", marginRight: "5PX" }}
+          >
+            {text}
+          </a>
+          {record.hasCustomerTenantFinishedTF === true ? (
+            <CheckCircleTwoTone twoToneColor="#32cd32" />
+          ) : (
+            <EditTwoTone twoToneColor="#4169e1" />
+          )}
+        </div>
       ),
     },
     {
       title: "Asesor",
-      dataIndex: "adviser",
-      key: "adviser",
+      dataIndex: "customerAgentFullName",
+      key: "customerAgentFullName",
       render: (text) => (
         <a
           onClick={() => {
-            onOpenDetail("Asesor", 3);
+            if (isNil(text) === false) {
+              onOpenDetail("Asesor", 3);
+            }
           }}
           style={{ color: "brown" }}
         >
-          {text}
+          {isNil(text) === false ? text : "N/A"}
         </a>
       ),
     },
@@ -218,7 +237,7 @@ const SectionCardOwner = (props) => {
       render: (status, record) => {
         return (
           <span>
-            <Tag color={record.colorContract} key="1">
+            <Tag color={record.contractStatusStyle} key="1">
               {status}
             </Tag>
           </span>
@@ -227,29 +246,34 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Folio",
-      dataIndex: "numberContract",
-      key: "numberContract",
+      dataIndex: "hfInvoice",
+      key: "hfInvoice",
+    },
+    {
+      title: "Monto Renta",
+      dataIndex: "amountRent",
+      key: "amountRent",
     },
     {
       title: "Poliza",
-      dataIndex: "policyType",
-      key: "policyType",
+      dataIndex: "policy",
+      key: "policy",
     },
     {
       title: "Vencimiento de contrato",
-      dataIndex: "dateContractEnd",
-      key: "dateContractEnd",
+      dataIndex: "expireAt",
+      key: "expireAt",
       align: "center",
     },
     {
       title: "Estatus de poliza",
-      dataIndex: "statusPolicy",
-      key: "statusPolicy",
+      dataIndex: "idPolicyStatus",
+      key: "idPolicyStatus",
       align: "center",
       render: (status, record) => {
         let component = <div />;
         const contractStatus = record.contractStatus;
-        if (status === true && contractStatus !== "DECLINADO") {
+        if (status === 1) {
           component = (
             <div>
               <Popover
@@ -329,12 +353,12 @@ const SectionCardOwner = (props) => {
                     });
                   }}
                 >
-                  Asignar
+                  {record.policyStatus}
                 </Button>
               </Popover>
             </div>
           );
-        } else if (status === false && contractStatus !== "DECLINADO") {
+        } else if (status === 2) {
           component = (
             <Tag
               icon={
@@ -344,10 +368,10 @@ const SectionCardOwner = (props) => {
               }
               color="#00bb2d"
             >
-              Cerrado
+              {record.policyStatus}
             </Tag>
           );
-        } else if (contractStatus === "DECLINADO") {
+        } else if (contractStatus === 3) {
           component = (
             <Tag
               icon={
@@ -357,7 +381,7 @@ const SectionCardOwner = (props) => {
               }
               color="#ff0000"
             >
-              Declinada
+              {record.policyStatus}
             </Tag>
           );
         }
@@ -365,67 +389,6 @@ const SectionCardOwner = (props) => {
       },
     },
   ];
-
-  const data = [
-    {
-      key: "1",
-      nameOwner: "Carlos Gutierrez",
-      nameTenant: "Sebastian Perez",
-      contractStatus: "VIGENTE",
-      colorContract: "green",
-      numberContract: "59029488",
-      policyType: "Basica",
-      dateContractEnd: "25/01/2022",
-      adviser: "Angel Cortez",
-      statusPolicy: false,
-    },
-    {
-      key: "2",
-      nameOwner: "Pedro Saldaña",
-      nameTenant: "Joaquin Mendez",
-      contractStatus: "EN PROCESO",
-      colorContract: "blue",
-      numberContract: "N/A",
-      policyType: "N/A",
-      dateContractEnd: "N/A",
-      adviser: "Angel Avendaño",
-      statusPolicy: true,
-    },
-    {
-      key: "3",
-      nameOwner: "Jose Manriquez",
-      nameTenant: "Alberto Ortiz",
-      contractStatus: "POR CONCLUIR",
-      colorContract: "orange",
-      numberContract: "34874792",
-      policyType: "Premium",
-      dateContractEnd: "03/02/2021",
-      adviser: "Francisco Ortega",
-      statusPolicy: true,
-    },
-    {
-      key: "4",
-      nameOwner: "Julian Vazquez",
-      nameTenant: "Oscar Velazquez",
-      contractStatus: "DECLINADO",
-      colorContract: "red",
-      numberContract: "34874793",
-      policyType: "Renta Segura",
-      dateContractEnd: "06/02/2021",
-      adviser: "Francisco Ortega",
-      statusPolicy: true,
-    },
-  ];
-
-  const formatDate = (date) => {
-    let dateFormat = "";
-    if (date !== "NA") {
-      dateFormat = moment(date, "DD/MM/YYYY").format("DD MMMM YYYY");
-    } else {
-      dateFormat = date;
-    }
-    return dateFormat;
-  };
 
   return (
     <div className="renter-card-information total-width">
@@ -445,12 +408,12 @@ const SectionCardOwner = (props) => {
       <div className="section-information-renters">
         <Table
           columns={columns}
-          dataSource={data}
+          dataSource={dataCoincidences}
           className="table-users-hfy"
         />
-        {isEmpty(data) === false && (
+        {isEmpty(dataCoincidences) === false && (
           <div className="table-card-users-hfy">
-            {data.map((row) => {
+            {dataCoincidences.map((row) => {
               return (
                 <div className="card-users-hfy">
                   <table>
@@ -461,9 +424,15 @@ const SectionCardOwner = (props) => {
                           onClick={() => {
                             onOpenDetail("Propietario", 1);
                           }}
+                          style={{ marginRight: "5px" }}
                         >
-                          {row.nameOwner}
+                          {row.customerFullName}
                         </a>
+                        {row.hasCustomerFinishedTF === true ? (
+                          <CheckCircleTwoTone twoToneColor="#32cd32" />
+                        ) : (
+                          <EditTwoTone twoToneColor="#4169e1" />
+                        )}
                       </td>
                       <td>
                         <strong>Inquilino:</strong>{" "}
@@ -471,10 +440,15 @@ const SectionCardOwner = (props) => {
                           onClick={() => {
                             onOpenDetail("Inquilino", 2);
                           }}
-                          style={{ color: "gray" }}
+                          style={{ color: "gray", marginRight: "5px" }}
                         >
-                          {row.nameTenant}
+                          {row.customerTenantFullName}
                         </a>
+                        {row.hasCustomerTenantFinishedTF === true ? (
+                          <CheckCircleTwoTone twoToneColor="#32cd32" />
+                        ) : (
+                          <EditTwoTone twoToneColor="#4169e1" />
+                        )}
                       </td>
                     </tr>
                     <tr>
@@ -482,17 +456,21 @@ const SectionCardOwner = (props) => {
                         <strong>Asesor:</strong>{" "}
                         <a
                           onClick={() => {
-                            onOpenDetail("Asesor", 3);
+                            if (isNil(row.customerAgentFullName) === false) {
+                              onOpenDetail("Asesor", 3);
+                            }
                           }}
                           style={{ color: "brown" }}
                         >
-                          {row.adviser}
+                          {isNil(row.customerAgentFullName) === false
+                            ? row.customerAgentFullName
+                            : "N/A"}
                         </a>
                       </td>
                       <td>
                         <strong>Contrato:</strong>{" "}
                         <span>
-                          <Tag color="green" key="1">
+                          <Tag color={row.contractStatusStyle} key="1">
                             {row.contractStatus}
                           </Tag>
                         </span>
@@ -500,21 +478,20 @@ const SectionCardOwner = (props) => {
                     </tr>
                     <tr>
                       <td>
-                        <strong>Folio:</strong>{" "}
-                        <span> {row.numberContract}</span>
+                        <strong>Folio:</strong> <span>{row.hfInvoice} </span>
                       </td>
                       <td>
-                        <strong>Póliza:</strong> <span> {row.policyType}</span>
+                        <strong>Póliza:</strong> <span> {row.policy}</span>
                       </td>
                     </tr>
                     <tr>
                       <td>
                         <strong>Vencimiento:</strong>{" "}
-                        <span> {row.dateContractEnd}</span>
+                        <span> {row.expireAt}</span>
                       </td>
                       <td>
                         <strong>Estatus:</strong>{" "}
-                        {renderCardComponent(row.statusPolicy, row)}
+                        {renderCardComponent(row.idPolicyStatus, row)}
                       </td>
                     </tr>
                   </table>
@@ -525,7 +502,7 @@ const SectionCardOwner = (props) => {
         )}
         {finishCallApis === false && <Skeleton loading active />}
       </div>
-      {isEmpty(tenantCoincidences) === true && finishCallApis === true && (
+      {isEmpty(dataCoincidences) === true && finishCallApis === true && (
         <div className="empty-tenants">
           <img src={EmptyTenant} alt="" />
           <span>Aun no tienes propietarios</span>

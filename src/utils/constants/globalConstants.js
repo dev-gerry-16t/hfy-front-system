@@ -2,7 +2,7 @@ const GLOBAL_CONSTANTS = {
   secretKey: "",
   tokenSecretKey: "",
   ROOT_NAME: "system",
-  VERSION: "Homify v0.0.23",
+  VERSION: "Homify v0.0.24",
   STATUS_API: {
     WARNING: "WARNING",
     SUCCESS: "SUCCESS",

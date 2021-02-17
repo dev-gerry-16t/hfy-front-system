@@ -12,6 +12,7 @@ const API = {
   ENDORSEMENT: "/endorsement",
   TYPEFORM: "/typeForm",
   CATALOGS: "/catalogs",
+  ADMIN: "/admin",
 };
 
 const API_CONSTANTS = {
@@ -61,7 +62,11 @@ const API_CONSTANTS = {
   GET_CATALOG_NATIONALITIES: `${API.API_SECURE}${API.CATALOGS}/getAllNationalities`,
   GET_CATALOG_ID_TYPES: `${API.API_SECURE}${API.CATALOGS}/getAllIDTypes`,
   GET_CATALOG_OCCUPATIONS: `${API.API_SECURE}${API.CATALOGS}/getAllOccupations`,
-
+  GET_CONTRACT_STATS: `${API.API_SECURE}${API.ADMIN}/getContractStats`,
+  GET_CONTRACT_COINCIDENCES: `${API.API_SECURE}${API.ADMIN}/getContractCoincidences`,
+  GET_CONTRACT_CHART: `${API.API_SECURE}${API.ADMIN}/getContractIndicatorsChart`,
+  GET_SEARCH_CUSTOMER: `${API.API_SECURE}${API.ADMIN}/searchCustomer`,
+  GET_ADD_PROSPECT: `${API.API_SECURE}${API.ADMIN}/addProspect`,
 };
 
 export { API_CONSTANTS, HEADER };
