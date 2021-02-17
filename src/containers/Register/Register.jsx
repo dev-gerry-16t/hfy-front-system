@@ -184,6 +184,14 @@ const Register = (props) => {
         ...dataForm,
         idPersonType: responseResult.idPersonType,
         givenName: responseResult.givenName,
+        lastName:
+          isNil(responseResult.lastName) === false
+            ? responseResult.lastName
+            : null,
+        mothersMaidenName:
+          isNil(responseResult.mothersMaidenName) === false
+            ? responseResult.mothersMaidenName
+            : null,
         username: responseResult.usernameRequested,
         idInvitation: responseResult.idInvitation,
       });

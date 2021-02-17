@@ -435,11 +435,13 @@ const SectionCardOwner = (props) => {
         </div>
       </div>
       <div className="section-information-renters">
-        <Table
-          columns={columns}
-          dataSource={dataCoincidences}
-          className="table-users-hfy"
-        />
+        {isEmpty(dataCoincidences) === false && finishCallApis === true && (
+          <Table
+            columns={columns}
+            dataSource={dataCoincidences}
+            className="table-users-hfy"
+          />
+        )}
         {isEmpty(dataCoincidences) === false && (
           <div className="table-card-users-hfy">
             {dataCoincidences.map((row) => {
