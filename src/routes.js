@@ -77,7 +77,7 @@ const routes = [
     key: "8",
     id: "Administrator",
     path: "/websystem/dashboard-admin",
-    name: "Administrador",
+    name: "Dashboard",
     component: Administrator,
     exact: true,
   },

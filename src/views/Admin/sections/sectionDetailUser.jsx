@@ -68,7 +68,20 @@ const SectionDetailUser = (props) => {
       visible={isDrawerVisible}
     >
       <div className="content-infomation-drawer">
-        <h3>Detalle de Propietario</h3>
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <button
+              className="arrow-back-to"
+              type="button"
+              onClick={() => {
+                onClose();
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <h1>Detalle de Propietario</h1>
+          </div>
+        </div>
         <div className="ant-divider ant-divider-horizontal" role="separator" />
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel

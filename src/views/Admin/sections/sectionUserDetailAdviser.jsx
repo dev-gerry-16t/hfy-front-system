@@ -68,7 +68,20 @@ const SectionDetailUserAdviser = (props) => {
       visible={isDrawerVisible}
     >
       <div className="content-infomation-drawer">
-        <h3>Detalle de Asesor</h3>
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <button
+              className="arrow-back-to"
+              type="button"
+              onClick={() => {
+                onClose();
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <h1>Detalle de Asesor</h1>
+          </div>
+        </div>
         <div className="ant-divider ant-divider-horizontal" role="separator" />
         <h3>Información general</h3>
         <Row>

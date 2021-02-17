@@ -46,6 +46,9 @@ const SectionCardOwner = (props) => {
     onClickSendInvitation,
     onAddUser,
     onOpenDetail,
+    onGetPolicyStatus,
+    dataAllPolicyStatus,
+    onClosePolicy,
   } = props;
 
   const [openPopover, setOpenPopover] = useState({});
@@ -68,18 +71,24 @@ const SectionCardOwner = (props) => {
                 <Col span={24}>
                   <Select
                     placeholder="Poliza por"
-                    onChange={(value, option) => {}}
+                    onChange={(value, option) => {
+                      setSelectPolicy(value);
+                    }}
                     style={{ width: "100%" }}
                   >
-                    <Option value={1} onClick={() => {}}>
-                      Primera vez
-                    </Option>
-                    <Option value={2} onClick={() => {}}>
-                      Renovación
-                    </Option>
-                    <Option value={2} onClick={() => {}}>
-                      Cancelaciòn
-                    </Option>
+                    {isEmpty(dataAllPolicyStatus) === false &&
+                      dataAllPolicyStatus.map((row) => {
+                        return (
+                          <Option
+                            value={row.idPolicyStatus}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.text}
+                          </Option>
+                        );
+                      })}
                   </Select>
                 </Col>
               </Row>
@@ -92,6 +101,12 @@ const SectionCardOwner = (props) => {
                     icon={<CheckOutlined />}
                     size="small"
                     className="color-green"
+                    onClick={() => {
+                      onClosePolicy({
+                        ...record,
+                        idPolicyStatus: selectPolicy,
+                      });
+                    }}
                   >
                     Cerrar
                   </Button>
@@ -131,6 +146,7 @@ const SectionCardOwner = (props) => {
               setOpenPopover({
                 [`popover1-${record.key}`]: true,
               });
+              onGetPolicyStatus(record.idContract);
             }}
           >
             {record.policyStatus}
@@ -288,18 +304,24 @@ const SectionCardOwner = (props) => {
                       <Col span={24}>
                         <Select
                           placeholder="Poliza por"
-                          onChange={(value, option) => {}}
+                          onChange={(value, option) => {
+                            setSelectPolicy(value);
+                          }}
                           style={{ width: "100%" }}
                         >
-                          <Option value={1} onClick={() => {}}>
-                            Primera vez
-                          </Option>
-                          <Option value={2} onClick={() => {}}>
-                            Renovación
-                          </Option>
-                          <Option value={2} onClick={() => {}}>
-                            Cancelaciòn
-                          </Option>
+                          {isEmpty(dataAllPolicyStatus) === false &&
+                            dataAllPolicyStatus.map((row) => {
+                              return (
+                                <Option
+                                  value={row.idPolicyStatus}
+                                  onClick={() => {
+                                    return row;
+                                  }}
+                                >
+                                  {row.text}
+                                </Option>
+                              );
+                            })}
                         </Select>
                       </Col>
                     </Row>
@@ -312,6 +334,12 @@ const SectionCardOwner = (props) => {
                           icon={<CheckOutlined />}
                           size="small"
                           className="color-green"
+                          onClick={() => {
+                            onClosePolicy({
+                              ...record,
+                              idPolicyStatus: selectPolicy,
+                            });
+                          }}
                         >
                           Cerrar
                         </Button>
@@ -351,6 +379,7 @@ const SectionCardOwner = (props) => {
                     setOpenPopover({
                       [`popover-${record.key}`]: true,
                     });
+                    onGetPolicyStatus(record.idContract);
                   }}
                 >
                   {record.policyStatus}

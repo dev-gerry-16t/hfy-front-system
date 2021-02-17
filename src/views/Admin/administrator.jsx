@@ -16,6 +16,8 @@ import {
   callGetContractChart,
   callGetSearchProspect,
   callGetAddProspect,
+  callUpdateContract,
+  callGetAllPolicyStatus,
 } from "../../utils/actions/actions";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionStatsChartPie from "./sections/sectionStatsChartPie";
@@ -36,6 +38,8 @@ const Administrator = (props) => {
     callGetContractChart,
     callGetSearchProspect,
     callGetAddProspect,
+    callUpdateContract,
+    callGetAllPolicyStatus,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
@@ -43,6 +47,7 @@ const Administrator = (props) => {
   const [dataStats, setDataStats] = useState({});
   const [dataChartBar, setDataChartBar] = useState([]);
   const [dataChartPie, setDataChartPie] = useState([]);
+  const [dataAllPolicyStatus, setDataAllPolicyStatus] = useState([]);
   const [dataOwnerSearch, setDataOwnerSearch] = useState({
     idPersonType: 1,
     idCustomer: null,
@@ -198,7 +203,6 @@ const Administrator = (props) => {
         idLoginHistory,
         ...data,
       });
-      console.log("response", response);
     } catch (error) {}
   };
 
@@ -228,10 +232,46 @@ const Administrator = (props) => {
     } catch (error) {}
   };
 
+  const handlerCallGetAllPolicyStatus = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllPolicyStatus({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAllPolicyStatus(responseResult);
+    } catch (error) {}
+  };
+
   const callAsynApis = async () => {
     await handlerCallGetContractStats();
     await handlerCallGetContractCoincidences();
     await handlerCallGetContractChart();
+  };
+
+  const handlerCallUpdateContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callUpdateContract(
+        {
+          idCustomer: data.idCustomer,
+          idCustomerTenant: data.idCustomerTenant,
+          idPolicyStatus: data.idPolicyStatus,
+          rating: null,
+          isApproved: null,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idContract
+      );
+      callAsynApis();
+    } catch (error) {}
   };
 
   useEffect(() => {
@@ -321,6 +361,7 @@ const Administrator = (props) => {
           <SectionStatsChartPie dataStatsChart={dataChartPie} finishCallApis />
           <SectionCardOwner
             history={history}
+            dataAllPolicyStatus={dataAllPolicyStatus}
             onAddUser={() => {
               setIsVisibleAddUser(!isVisibleAddUser);
             }}
@@ -336,6 +377,12 @@ const Administrator = (props) => {
             dataCoincidences={dataCoincidences}
             finishCallApis
             onClickSendInvitation={() => {}}
+            onGetPolicyStatus={(id) => {
+              handlerCallGetAllPolicyStatus(id);
+            }}
+            onClosePolicy={(data) => {
+              handlerCallUpdateContract(data);
+            }}
           />
         </div>
       </div>
@@ -357,6 +404,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractChart: (data) => dispatch(callGetContractChart(data)),
   callGetSearchProspect: (data) => dispatch(callGetSearchProspect(data)),
   callGetAddProspect: (data) => dispatch(callGetAddProspect(data)),
+  callUpdateContract: (data, id) => dispatch(callUpdateContract(data, id)),
+  callGetAllPolicyStatus: (data) => dispatch(callGetAllPolicyStatus(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);
