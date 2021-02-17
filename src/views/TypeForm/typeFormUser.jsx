@@ -31,6 +31,7 @@ import CurrentAddressRenter from "./sections/currentAddresRenter";
 import TypePolicy from "./sections/TypePolicy";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import FrontFunctions from "../../utils/actions/frontFunctions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetTypeFormTenant,
   callSetTypeFormTenant,
@@ -59,7 +60,7 @@ const TypeFormUser = (props) => {
     history,
   } = props;
   const frontFunctions = new FrontFunctions();
-  const [current, setCurrent] = React.useState(0);
+  const [current, setCurrent] = React.useState(5);
   const [dataForm, setDataForm] = useState({});
   const [dataReferences, setDataReferences] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);
@@ -70,6 +71,22 @@ const TypeFormUser = (props) => {
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [dataOccupations, setDataOccupations] = useState([]);
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const next = () => {
     setCurrent(current + 1);
   };
@@ -78,7 +95,7 @@ const TypeFormUser = (props) => {
     setCurrent(current - 1);
   };
 
-  const handlerCallSetTypeFormTenant = async (data) => {
+  const handlerCallSetTypeFormTenant = async (data, redirect = false) => {
     const {
       idCustomerTenantTF,
       idCustomerTF,
@@ -97,7 +114,15 @@ const TypeFormUser = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : {};
-    } catch (error) {}
+      if (redirect === true) {
+        history.push("/websystem/dashboard-tenant");
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallSetTypeFormReferences = async (data) => {
@@ -115,7 +140,12 @@ const TypeFormUser = (props) => {
         idLoginHistory,
         ...data,
       });
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetZipCodeAdress = async (data) => {
@@ -139,7 +169,12 @@ const TypeFormUser = (props) => {
           : [];
       setDataZipCodeAdress(responseResult1);
       setDataZipCatalog(responseResult2);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetNationalities = async () => {
@@ -163,7 +198,12 @@ const TypeFormUser = (props) => {
           ? response.response
           : [];
       setDataNationalities(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetIdTypes = async () => {
@@ -187,7 +227,12 @@ const TypeFormUser = (props) => {
           ? response.response
           : [];
       setDataIdTypes(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const hanlderCallGetOccupations = async () => {
@@ -211,7 +256,12 @@ const TypeFormUser = (props) => {
           ? response.response
           : [];
       setDataOccupations(responseResult);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetTypeFormDocumentTenant = async (id, type) => {
@@ -242,7 +292,12 @@ const TypeFormUser = (props) => {
       } else if (type === 2) {
         setDataDocumentsEndorsement(responseResult);
       }
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const steps = [
@@ -343,11 +398,12 @@ const TypeFormUser = (props) => {
       title: "Información aval",
       content: (
         <SectionInfoAval
+          dataNationalities={dataNationalities}
+          dataIdTypes={dataIdTypes}
           dataFormSave={dataForm}
           dataDocuments={dataDocumentsEndorsement}
           onClickFinish={(data) => {
-            handlerCallSetTypeFormTenant(data);
-            history.push("/websystem/dashboard-tenant");
+            handlerCallSetTypeFormTenant(data, true);
           }}
           dataZipCatalog={dataZipCatalog}
           onChangeZipCode={(zipCode) => {
@@ -401,7 +457,12 @@ const TypeFormUser = (props) => {
       setDataReferences(responseResult2);
       await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 1);
       await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 2);
-    } catch (error) {}
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallAsyncApis = async () => {

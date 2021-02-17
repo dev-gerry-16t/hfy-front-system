@@ -251,8 +251,8 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Monto Renta",
-      dataIndex: "amountRent",
-      key: "amountRent",
+      dataIndex: "currentRent",
+      key: "currentRent",
     },
     {
       title: "Poliza",
@@ -492,6 +492,12 @@ const SectionCardOwner = (props) => {
                       <td>
                         <strong>Estatus:</strong>{" "}
                         {renderCardComponent(row.idPolicyStatus, row)}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td>
+                        <strong>Monto Renta:</strong>
+                        <span> {row.currentRent}</span>
                       </td>
                     </tr>
                   </table>

@@ -31,6 +31,8 @@ const { Option } = Select;
 const SectionInfoAval = (props) => {
   const {
     onClickBack,
+    dataNationalities,
+    dataIdTypes,
     onClickFinish,
     dataFormSave,
     onChangeZipCode,
@@ -58,6 +60,13 @@ const SectionInfoAval = (props) => {
     notaryOfficeNumber: null,
     notaryName: null,
     signedAtPlace: null,
+    idEndorsementNationality: null,
+    idEndorsementNationalityText: null,
+    idEndorsementType: null,
+    idEndorsementTypeText: null,
+    idEndorsementTypeNumber: null,
+    endorsementCitizenId: null,
+    publicPropertyRegistry: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -75,11 +84,31 @@ const SectionInfoAval = (props) => {
   );
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
+    if (
+      isEmpty(dataFormSave) === false &&
+      isEmpty(dataNationalities) === false &&
+      isEmpty(dataIdTypes) === false
+    ) {
+      const selectDefaultNationality = dataNationalities.find((row) => {
+        return (
+          dataFormSave.idEndorsementNationality === row.idCountryNationality
+        );
+      });
+      const selectDefaultIdType = dataIdTypes.find((row) => {
+        return dataFormSave.idEndorsementType === row.idType;
+      });
+      setDataForm({
+        ...dataFormSave,
+        idEndorsementNationalityText:
+          isNil(selectDefaultNationality) === false
+            ? selectDefaultNationality.text
+            : "",
+        idEndorsementTypeText:
+          isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+      });
       onChangeZipCode(dataFormSave.collateralPropertyZipCode);
     }
-  }, [dataFormSave]);
+  }, [dataNationalities, dataIdTypes, dataFormSave]);
 
   useEffect(() => {
     if (isEmpty(dataZipCodeAdress) === false) {
@@ -105,7 +134,12 @@ const SectionInfoAval = (props) => {
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
-                  <span style={{ color: "var(--color-primary)", fontWeight: "bold" }}>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
                     ¿Cuentas con Aval?
                   </span>
                   <Radio.Group
@@ -206,6 +240,98 @@ const SectionInfoAval = (props) => {
                         setDataForm({
                           ...dataForm,
                           endorsementEmailAddress: value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                    <Select
+                      placeholder="Nacionalidad"
+                      showSearch
+                      value={dataForm.idEndorsementNationality}
+                      onChange={(value, option) => {
+                        setDataForm({
+                          ...dataForm,
+                          idEndorsementNationality: value,
+                          idEndorsementNationalityText: option.children,
+                        });
+                      }}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {isEmpty(dataNationalities) === false &&
+                        dataNationalities.map((row) => {
+                          return (
+                            <Option value={row.idCountryNationality}>
+                              {row.text}
+                            </Option>
+                          );
+                        })}
+                    </Select>
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+                    <Select
+                      placeholder="Identificación oficial"
+                      showSearch
+                      value={dataForm.idEndorsementType}
+                      onChange={(value, option) => {
+                        const valueLabelIdentity = option.onClick()
+                          .fieldDescription;
+                        setDataForm({
+                          ...dataForm,
+                          idEndorsementType: value,
+                          idEndorsementTypeText: option.children,
+                        });
+                      }}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {isEmpty(dataIdTypes) === false &&
+                        dataIdTypes.map((row) => {
+                          return (
+                            <Option value={row.idType} onClick={() => row}>
+                              {row.text}
+                            </Option>
+                          );
+                        })}
+                    </Select>
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  {isNil(dataForm.idEndorsementType) === false && (
+                    <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                      <Input
+                        value={dataForm.idEndorsementTypeNumber}
+                        placeholder={`Numero de ${dataForm.idEndorsementTypeText}`}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setDataForm({
+                            ...dataForm,
+                            idEndorsementTypeNumber: value,
+                          });
+                        }}
+                      />
+                    </Col>
+                  )}
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.endorsementCitizenId}
+                      placeholder={"CURP"}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          endorsementCitizenId: value,
                         });
                       }}
                     />
@@ -514,7 +640,7 @@ const SectionInfoAval = (props) => {
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
             <p>Información personal</p>
             <Row>
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="¿Cuentas con Aval?"
                   content={
@@ -526,7 +652,7 @@ const SectionInfoAval = (props) => {
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Nombre completo"
                   content={`${dataForm.endorsementGivenName} ${dataForm.endorsementLastName} ${dataForm.endorsementMothersMaidenName}`}
@@ -534,17 +660,39 @@ const SectionInfoAval = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="Telefono"
                   content={dataForm.endorsementPhoneNumber}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Correo"
                   content={dataForm.endorsementEmailAddress}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Nacionalidad"
+                  content={dataForm.idEndorsementNationalityText}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Identificacion oficial"
+                  content={dataForm.idEndorsementTypeText}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title={`Numero de ${dataForm.idEndorsementTypeText}`}
+                  content={dataForm.idEndorsementTypeNumber}
                 />
               </Col>
             </Row>
