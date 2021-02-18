@@ -42,6 +42,21 @@ const SectionDetailUser = (props) => {
     </div>
   );
 
+  const replaceUrl = (address) => {
+    let domainPath = "https://www.google.com/maps/search/";
+
+    if (isNil(address) === false) {
+      const replaceString = address.replaceAll(" ", "+");
+      domainPath = domainPath + replaceString;
+      console.log("domainPath", domainPath);
+    }
+    return (
+      <a href={domainPath} target="_blank">
+        {address}
+      </a>
+    );
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="0">
@@ -136,7 +151,7 @@ const SectionDetailUser = (props) => {
               <Col span={24}>
                 <DescriptionItem
                   title="Dirección"
-                  content={dataDetailCustomer.fullAddress}
+                  content={replaceUrl(dataDetailCustomer.fullAddress)}
                 />
               </Col>
             </Row>
@@ -161,7 +176,7 @@ const SectionDetailUser = (props) => {
               <Col span={24}>
                 <DescriptionItem
                   title="Dirección"
-                  content={dataDetailCustomer.fullAddressProperty}
+                  content={replaceUrl(dataDetailCustomer.fullAddressProperty)}
                 />
               </Col>
             </Row>
