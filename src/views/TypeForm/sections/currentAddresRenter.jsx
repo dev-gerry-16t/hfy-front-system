@@ -51,6 +51,7 @@ const CurrentAddressRenter = (props) => {
     currentRent: null,
     maintenanceAmount: null,
     totalParkingSpots: null,
+    hasInsurance: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -278,7 +279,37 @@ const CurrentAddressRenter = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <div className="option-select-radio">
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ¿El inmueble está asegurado?
+                  </span>
+                  <Radio.Group
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        hasInsurance: e.target.value,
+                      });
+                    }}
+                    value={
+                      dataForm.hasInsurance === true ||
+                      dataForm.hasInsurance === 1
+                        ? 1
+                        : 0
+                    }
+                  >
+                    <Radio value={1}>Si</Radio>
+                    <Radio value={0}>No</Radio>
+                  </Radio.Group>
+                </div>
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
                   <span
                     style={{
@@ -304,8 +335,9 @@ const CurrentAddressRenter = (props) => {
                   </Radio.Group>
                 </div>
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <NumberFormat
                   id={null}
                   customInput={Input}
@@ -335,7 +367,7 @@ const CurrentAddressRenter = (props) => {
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <NumberFormat
                   id={null}
                   customInput={Input}
@@ -467,25 +499,38 @@ const CurrentAddressRenter = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="Código postal"
                   content={dataForm.zipCodeProperty}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Tipo de inmueble"
                   content={dataForm.idPropertyTypeText}
                 />
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="¿Está amueblado?"
                   content={
                     dataForm.isFurnished === true || dataForm.isFurnished === 1
+                      ? "Si"
+                      : "No"
+                  }
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem
+                  title="¿Está asegurado?"
+                  content={
+                    dataForm.hasInsurance === true ||
+                    dataForm.hasInsurance === 1
                       ? "Si"
                       : "No"
                   }

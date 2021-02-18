@@ -61,7 +61,7 @@ const TypeFormUser = (props) => {
     match,
   } = props;
   const frontFunctions = new FrontFunctions();
-  const [current, setCurrent] = React.useState(0);
+  const [current, setCurrent] = React.useState(5);
   const [dataForm, setDataForm] = useState({});
   const [dataReferences, setDataReferences] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);

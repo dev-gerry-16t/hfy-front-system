@@ -427,6 +427,35 @@ const SectionAddProperty = (props) => {
                     </Row>
                     <Row>
                       <Col span={11}>
+                        <div className="option-select-radio">
+                          <span
+                            style={{
+                              color: "var(--color-primary)",
+                              fontWeight: "bold",
+                            }}
+                          >
+                            ¿Está Asegurada?
+                          </span>
+                          <Radio.Group
+                            onChange={(e) => {
+                              setStateDynamic({
+                                ...statesDynamic,
+                                [row.id]: {
+                                  ...statesDynamic[row.id],
+                                  hasInsurance: e.target.value,
+                                },
+                              });
+                            }}
+                            value={statesDynamic[row.id].hasInsurance}
+                          >
+                            <Radio value={1}>Si</Radio>
+                            <Radio value={0}>No</Radio>
+                          </Radio.Group>
+                        </div>
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={11}>
                         <NumberFormat
                           id={null}
                           customInput={Input}

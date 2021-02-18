@@ -450,8 +450,6 @@ const SectionAddUsers = (props) => {
                   customerTenant: arrayTenants,
                   idCustomerAgent: dataAdviserSearch.idCustomerAgent,
                 };
-
-                console.log("dataResult", dataResult);
                 onSendInformation(dataResult);
               }}
             >
