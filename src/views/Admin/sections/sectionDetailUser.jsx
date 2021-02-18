@@ -25,7 +25,7 @@ const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUser = (props) => {
-  const { isDrawerVisible, onClose, spinVisible } = props;
+  const { isDrawerVisible, onClose, spinVisible, dataDetailCustomer } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
   const [dataForm, setDataForm] = useState(initialDataForm);
@@ -92,7 +92,7 @@ const SectionDetailUser = (props) => {
               <Col span={12}>
                 <DescriptionItem
                   title="Nombre completo"
-                  content="Sebastian Perez Guitierrez"
+                  content={dataDetailCustomer.fullName}
                 />
               </Col>
             </Row>
@@ -100,34 +100,43 @@ const SectionDetailUser = (props) => {
               <Col span={24}>
                 <DescriptionItem
                   title="Correo"
-                  content="testUser-homify@example.com"
+                  content={dataDetailCustomer.emailAddress}
                 />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="Telefono" content="55-63-15-98-07" />
+                <DescriptionItem
+                  title="Telefono"
+                  content={dataDetailCustomer.phoneNumber}
+                />
               </Col>
               <Col span={12}>
                 <DescriptionItem
                   title="Tipo de cliente"
-                  content="Propietario"
+                  content={dataDetailCustomer.customerType}
                 />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
+                <DescriptionItem
+                  title="RFC"
+                  content={dataDetailCustomer.taxId}
+                />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
+                <DescriptionItem
+                  title="CURP"
+                  content={dataDetailCustomer.citizenId}
+                />
               </Col>
             </Row>
             <Row>
               <Col span={24}>
                 <DescriptionItem
                   title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
+                  content={dataDetailCustomer.fullAddress}
                 />
               </Col>
             </Row>
@@ -147,41 +156,21 @@ const SectionDetailUser = (props) => {
               </Col>
             </Row>
           </Panel>
-          <Panel header={<h3 role="title-section">Propiedades</h3>} key="2">
+          <Panel header={<h3 role="title-section">Propiedad</h3>} key="2">
             <Row>
               <Col span={24}>
                 <DescriptionItem
                   title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
+                  content={dataDetailCustomer.fullAddressProperty}
                 />
               </Col>
             </Row>
             <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
-              </Col>
               <Col span={12}>
                 <DescriptionItem
-                  title="Subir inventario"
-                  content={<a>seleccionar</a>}
+                  title="Monto de renta"
+                  content={dataDetailCustomer.currentRent}
                 />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem title="Monto de renta" content="$ 18,000.00" />
               </Col>
               <Col span={12}>
                 <DescriptionItem
@@ -202,21 +191,30 @@ const SectionDetailUser = (props) => {
               <Col span={12}>
                 <DescriptionItem
                   title="Tipo de persona fiscal"
-                  content="Fisica"
+                  content={dataDetailCustomer.personType}
                 />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="Estatus" content="Vigente" />
+                <DescriptionItem
+                  title="Estatus"
+                  content={dataDetailCustomer.contractStatus}
+                />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Folio" content="212234334" />
+                <DescriptionItem
+                  title="Folio"
+                  content={dataDetailCustomer.hfInvoice}
+                />
               </Col>
             </Row>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
+                <DescriptionItem
+                  title="Vencimiento"
+                  content={dataDetailCustomer.expireAt}
+                />
               </Col>
               <Col span={12}>
                 <a>Descargar Contrato</a>
@@ -231,10 +229,16 @@ const SectionDetailUser = (props) => {
             </p>
             <Row>
               <Col span={12}>
-                <DescriptionItem title="Poliza" content="Homify Basica" />
+                <DescriptionItem
+                  title="Poliza"
+                  content={dataDetailCustomer.policy}
+                />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
+                <DescriptionItem
+                  title="Vencimiento"
+                  content={dataDetailCustomer.expireAtPolicy}
+                />
               </Col>
             </Row>
             <Row>

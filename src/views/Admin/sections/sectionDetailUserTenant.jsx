@@ -32,7 +32,12 @@ const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUserTenant = (props) => {
-  const { isDrawerVisible, onClose, spinVisible } = props;
+  const {
+    isDrawerVisible,
+    onClose,
+    spinVisible,
+    dataDetailCustomerTenant,
+  } = props;
   const frontFunctions = new FrontFunctions();
   const [valueCalification, setValueCalification] = useState(null);
   const [openPopover, setOpenPopover] = useState(false);

@@ -25,7 +25,7 @@ const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUserAdviser = (props) => {
-  const { isDrawerVisible, onClose, spinVisible } = props;
+  const { isDrawerVisible, onClose, spinVisible, dataDetailAgent } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
   const [dataForm, setDataForm] = useState(initialDataForm);

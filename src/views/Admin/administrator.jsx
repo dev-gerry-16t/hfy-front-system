@@ -19,6 +19,9 @@ import {
   callGetAddProspect,
   callUpdateContract,
   callGetAllPolicyStatus,
+  callGetDetailCustomer,
+  callGetDetailCustomerTenant,
+  callGetDetailCustomerAgent,
 } from "../../utils/actions/actions";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionStatsChartPie from "./sections/sectionStatsChartPie";
@@ -41,11 +44,17 @@ const Administrator = (props) => {
     callGetAddProspect,
     callUpdateContract,
     callGetAllPolicyStatus,
+    callGetDetailCustomer,
+    callGetDetailCustomerTenant,
+    callGetDetailCustomerAgent,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataStats, setDataStats] = useState({});
+  const [dataDetailCustomer, setDataDetailCustomer] = useState({});
+  const [dataDetailCustomerTenant, setDataDetailCustomerTenant] = useState([]);
+  const [dataDetailAgent, setDataDetailAgent] = useState({});
   const [dataChartBar, setDataChartBar] = useState([]);
   const [dataChartPie, setDataChartPie] = useState([]);
   const [dataAllPolicyStatus, setDataAllPolicyStatus] = useState([]);
@@ -113,6 +122,88 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataStats(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDetailCustomer = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetDetailCustomer({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataDetailCustomer(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDetailCustomerTenant = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    const arrayResult = [];
+    try {
+      const response = await callGetDetailCustomerTenant({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false &&
+        isNil(response.response2) === false &&
+        isNil(response.response2[1]) === false
+          ? response.response2[1]
+          : {};
+      if (isEmpty(responseResult1) === false) {
+        arrayResult.push(responseResult1);
+      }
+      if (isEmpty(responseResult2) === false) {
+        arrayResult.push(responseResult2);
+      }
+      setDataDetailCustomerTenant(arrayResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDetailCustomerAgent = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetDetailCustomerAgent({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataDetailAgent(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -378,18 +469,21 @@ const Administrator = (props) => {
         onClose={() => {
           setIsVisibleDetailUser(!isVisibleDetailUser);
         }}
+        dataDetailCustomer={dataDetailCustomer}
       />
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
         onClose={() => {
           setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
         }}
+        dataDetailCustomerTenant={dataDetailCustomerTenant}
       />
       <SectionDetailUserAdviser
         isDrawerVisible={isVisibleDetailUserAdviser}
         onClose={() => {
           setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
         }}
+        dataDetailAgent={dataDetailAgent}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -434,10 +528,13 @@ const Administrator = (props) => {
             }}
             onOpenDetail={(type, id) => {
               if (id === 1) {
+                handlerCallGetDetailCustomer(type);
                 setIsVisibleDetailUser(!isVisibleDetailUser);
               } else if (id === 2) {
+                handlerCallGetDetailCustomerTenant(type);
                 setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
               } else if (id === 3) {
+                handlerCallGetDetailCustomerAgent(type);
                 setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
               }
             }}
@@ -473,6 +570,11 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAddProspect: (data) => dispatch(callGetAddProspect(data)),
   callUpdateContract: (data, id) => dispatch(callUpdateContract(data, id)),
   callGetAllPolicyStatus: (data) => dispatch(callGetAllPolicyStatus(data)),
+  callGetDetailCustomer: (data) => dispatch(callGetDetailCustomer(data)),
+  callGetDetailCustomerTenant: (data) =>
+    dispatch(callGetDetailCustomerTenant(data)),
+  callGetDetailCustomerAgent: (data) =>
+    dispatch(callGetDetailCustomerAgent(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);
