@@ -52,7 +52,7 @@ const routes = [
   {
     key: "5",
     id: "TypeForm",
-    path: "/websystem/typeform-user",
+    path: "/websystem/typeform-user/:idSection",
     name: "TypeForm",
     component: TypeFormUser,
     exact: true,
@@ -60,7 +60,7 @@ const routes = [
   {
     key: "6",
     id: "TypeFormUserOwner",
-    path: "/websystem/typeform-owner",
+    path: "/websystem/typeform-owner/:idSection",
     name: "TypeForm",
     component: TypeFormUserOwner,
     exact: true,

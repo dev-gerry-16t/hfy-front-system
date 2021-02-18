@@ -62,6 +62,7 @@ const TypeFormOwner = (props) => {
     callGetPolicies,
     callGetNationalities,
     callGetIdTypes,
+    match,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
@@ -118,6 +119,7 @@ const TypeFormOwner = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -279,7 +281,7 @@ const TypeFormOwner = (props) => {
       iconInactive: HomeInactive,
     },
     {
-      title: "Poliza",
+      title: "Póliza",
       content: (
         <TypePolicy
           dataFormSave={dataForm}
@@ -303,9 +305,17 @@ const TypeFormOwner = (props) => {
         <SectionBankInfo
           dataFormSave={dataForm}
           dataBank={dataBank}
-          onClickFinish={(data) => {
-            handlerCallSetTypeFormTenant(data);
-            history.push("/websystem/dashboard-owner");
+          onClickFinish={async (data) => {
+            const { params } = match;
+            const idSection = params.idSection;
+            try {
+              await handlerCallSetTypeFormTenant(data);
+              if (isNil(idSection) === false) {
+                history.push("/websystem/dashboard-admin");
+              } else {
+                history.push("/websystem/dashboard-owner");
+              }
+            } catch (error) {}
           }}
           onClickBack={() => prev()}
         />
@@ -451,7 +461,12 @@ const TypeFormOwner = (props) => {
   };
 
   useEffect(() => {
+    const { params } = match;
     handlerCallAsyncApis();
+    const idSection = params.idSection;
+    if (isNil(idSection) === false) {
+      setCurrent(Number(idSection));
+    }
   }, []);
 
   return (

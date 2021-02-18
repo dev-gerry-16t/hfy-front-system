@@ -58,6 +58,7 @@ const TypeFormUser = (props) => {
     callGetIdTypes,
     callGetOccupations,
     history,
+    match,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = React.useState(0);
@@ -95,7 +96,7 @@ const TypeFormUser = (props) => {
     setCurrent(current - 1);
   };
 
-  const handlerCallSetTypeFormTenant = async (data, redirect = false) => {
+  const handlerCallSetTypeFormTenant = async (data) => {
     const {
       idCustomerTenantTF,
       idCustomerTF,
@@ -114,14 +115,12 @@ const TypeFormUser = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : {};
-      if (redirect === true) {
-        history.push("/websystem/dashboard-tenant");
-      }
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -402,8 +401,17 @@ const TypeFormUser = (props) => {
           dataIdTypes={dataIdTypes}
           dataFormSave={dataForm}
           dataDocuments={dataDocumentsEndorsement}
-          onClickFinish={(data) => {
-            handlerCallSetTypeFormTenant(data, true);
+          onClickFinish={async (data) => {
+            const { params } = match;
+            const idSection = params.idSection;
+            try {
+              await handlerCallSetTypeFormTenant(data);
+              if (isNil(idSection) === false) {
+                history.push("/websystem/dashboard-admin");
+              } else {
+                history.push("/websystem/dashboard-tenant");
+              }
+            } catch (error) {}
           }}
           dataZipCatalog={dataZipCatalog}
           onChangeZipCode={(zipCode) => {
@@ -473,7 +481,12 @@ const TypeFormUser = (props) => {
   };
 
   useEffect(() => {
+    const { params } = match;
     handlerCallAsyncApis();
+    const idSection = params.idSection;
+    if (isNil(idSection) === false) {
+      setCurrent(Number(idSection));
+    }
   }, []);
 
   return (

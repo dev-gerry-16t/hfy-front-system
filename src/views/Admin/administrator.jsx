@@ -22,7 +22,9 @@ import {
   callGetDetailCustomer,
   callGetDetailCustomerTenant,
   callGetDetailCustomerAgent,
+  callSwitchCustomerContract,
 } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionStatsChartPie from "./sections/sectionStatsChartPie";
 import SectionCardOwner from "./sections/sectionCardOwner";
@@ -47,6 +49,8 @@ const Administrator = (props) => {
     callGetDetailCustomer,
     callGetDetailCustomerTenant,
     callGetDetailCustomerAgent,
+    callSwitchCustomerContract,
+    setDataUserProfile,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
@@ -54,6 +58,7 @@ const Administrator = (props) => {
   const [dataStats, setDataStats] = useState({});
   const [dataDetailCustomer, setDataDetailCustomer] = useState({});
   const [dataDetailCustomerTenant, setDataDetailCustomerTenant] = useState([]);
+  const [dataDetailReferences, setDataDetailReferences] = useState([]);
   const [dataDetailAgent, setDataDetailAgent] = useState({});
   const [dataChartBar, setDataChartBar] = useState([]);
   const [dataChartPie, setDataChartPie] = useState([]);
@@ -163,24 +168,15 @@ const Administrator = (props) => {
         idLoginHistory,
       });
       const responseResult1 =
-        isNil(response) === false &&
-        isNil(response.response1) === false &&
-        isNil(response.response1[0]) === false
-          ? response.response1[0]
-          : {};
+        isNil(response) === false && isNil(response.response1) === false
+          ? response.response1
+          : [];
       const responseResult2 =
-        isNil(response) === false &&
-        isNil(response.response2) === false &&
-        isNil(response.response2[1]) === false
-          ? response.response2[1]
-          : {};
-      if (isEmpty(responseResult1) === false) {
-        arrayResult.push(responseResult1);
-      }
-      if (isEmpty(responseResult2) === false) {
-        arrayResult.push(responseResult2);
-      }
-      setDataDetailCustomerTenant(arrayResult);
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      setDataDetailCustomerTenant(responseResult1);
+      setDataDetailReferences(responseResult2);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -416,17 +412,38 @@ const Administrator = (props) => {
           idCustomer: data.idCustomer,
           idCustomerTenant: data.idCustomerTenant,
           idPolicyStatus: data.idPolicyStatus,
-          rating: null,
-          isApproved: null,
+          rating: isNil(data.rating) === false ? data.rating : null,
+          isApproved: isNil(data.isApproved) === false ? data.isApproved : null,
           idSystemUser,
           idLoginHistory,
         },
         data.idContract
       );
-      callAsynApis();
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallSwitchCustomerContract = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSwitchCustomerContract(
+        {
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      handlerCallGetDetailCustomerTenant(id);
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
@@ -470,6 +487,15 @@ const Administrator = (props) => {
           setIsVisibleDetailUser(!isVisibleDetailUser);
         }}
         dataDetailCustomer={dataDetailCustomer}
+        onRedirectTo={async (key, idCustomer, idContract) => {
+          await setDataUserProfile({
+            ...dataProfile,
+            idCustomerTenant: null,
+            idCustomer: idCustomer,
+            idContract: idContract,
+          });
+          history.push(`/websystem/typeform-owner/${key}`);
+        }}
       />
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
@@ -477,6 +503,25 @@ const Administrator = (props) => {
           setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
         }}
         dataDetailCustomerTenant={dataDetailCustomerTenant}
+        dataDetailReferences={dataDetailReferences}
+        onSendRatingUser={async (data) => {
+          try {
+            await handlerCallUpdateContract(data);
+            await handlerCallGetDetailCustomerTenant(data.idContract);
+          } catch (error) {}
+        }}
+        changeRolesCustomers={(id) => {
+          handlerCallSwitchCustomerContract(id);
+        }}
+        onRedirectTo={async (key, idCustomer, idContract) => {
+          await setDataUserProfile({
+            ...dataProfile,
+            idCustomerTenantTF: idCustomer,
+            idCustomerTF: null,
+            idContract: idContract,
+          });
+          history.push(`/websystem/typeform-user/${key}`);
+        }}
       />
       <SectionDetailUserAdviser
         isDrawerVisible={isVisibleDetailUserAdviser}
@@ -546,6 +591,7 @@ const Administrator = (props) => {
             }}
             onClosePolicy={(data) => {
               handlerCallUpdateContract(data);
+              callAsynApis();
             }}
           />
         </div>
@@ -569,12 +615,15 @@ const mapDispatchToProps = (dispatch) => ({
   callGetSearchProspect: (data) => dispatch(callGetSearchProspect(data)),
   callGetAddProspect: (data) => dispatch(callGetAddProspect(data)),
   callUpdateContract: (data, id) => dispatch(callUpdateContract(data, id)),
+  callSwitchCustomerContract: (data, id) =>
+    dispatch(callSwitchCustomerContract(data, id)),
   callGetAllPolicyStatus: (data) => dispatch(callGetAllPolicyStatus(data)),
   callGetDetailCustomer: (data) => dispatch(callGetDetailCustomer(data)),
   callGetDetailCustomerTenant: (data) =>
     dispatch(callGetDetailCustomerTenant(data)),
   callGetDetailCustomerAgent: (data) =>
     dispatch(callGetDetailCustomerAgent(data)),
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

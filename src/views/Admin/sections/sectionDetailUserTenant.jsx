@@ -37,10 +37,14 @@ const SectionDetailUserTenant = (props) => {
     onClose,
     spinVisible,
     dataDetailCustomerTenant,
+    dataDetailReferences,
+    changeRolesCustomers,
+    onSendRatingUser,
+    onRedirectTo,
   } = props;
   const frontFunctions = new FrontFunctions();
-  const [valueCalification, setValueCalification] = useState(null);
-  const [openPopover, setOpenPopover] = useState(false);
+  const [valueCalification, setValueCalification] = useState({});
+  const [openPopover, setOpenPopover] = useState({});
 
   const LoadingSpin = <SyncOutlined spin />;
 
@@ -54,6 +58,20 @@ const SectionDetailUserTenant = (props) => {
     </div>
   );
 
+  const replaceUrl = (address) => {
+    let domainPath = "https://www.google.com/maps/search/";
+
+    if (isNil(address) === false) {
+      const replaceString = address.replaceAll(" ", "+");
+      domainPath = domainPath + replaceString;
+    }
+    return (
+      <a href={domainPath} target="_blank">
+        {address}
+      </a>
+    );
+  };
+
   const menu = (
     <Menu>
       <Menu.Item key="0">
@@ -62,10 +80,10 @@ const SectionDetailUserTenant = (props) => {
       <Menu.Item key="1">
         <a>Notificación</a>
       </Menu.Item>
-      <Menu.Item key="1">
+      <Menu.Item key="2">
         <a>Mensaje app</a>
       </Menu.Item>
-      <Menu.Item key="1">
+      <Menu.Item key="3">
         <a>Correo</a>
       </Menu.Item>
     </Menu>
@@ -100,408 +118,421 @@ const SectionDetailUserTenant = (props) => {
             header={<h3 role="title-section">Información general</h3>}
             key="1"
           >
-            <Row>
-              <Col span={20} xs={{ span: 24 }} md={{ span: 20 }}>
-                <strong>Cambiar Roles Inquilino-Obligado Solidario</strong>
-              </Col>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }}>
-                <Button type="primary" shape="round" icon={<SyncOutlined />} />
-              </Col>
-            </Row>
-            <h3>Inquilino</h3>
-            <Row>
-              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                <strong>Resultado de investigación</strong>
-                <Popover
-                  content={
-                    <>
-                      <Row>
-                        <Col span={24}>
-                          <NumberFormat
-                            id={null}
-                            customInput={Input}
-                            thousandSeparator=","
-                            decimalSeparator="."
-                            decimalPrecision={2}
-                            allowNegative={false}
-                            prefix=""
-                            suffix=""
-                            value={valueCalification}
-                            className="inputLogin"
-                            floatingLabelText=""
-                            isVisible
-                            toBlock={false}
-                            disable={false}
-                            placeholder="Calificación"
-                            onValueChange={(values) => {
-                              const {
-                                formattedValue,
-                                value,
-                                floatValue,
-                              } = values;
-                              setValueCalification(floatValue);
-                            }}
-                            onClick={(event) => {}}
-                            onFocus={(event) => {}}
-                            onBlur={(event) => {}}
-                          />
-                        </Col>
-                      </Row>
-                      <div
-                        className="ant-divider ant-divider-horizontal"
-                        role="separator"
-                      />
-                      <Row>
-                        <Col span={11}>
-                          <Button
-                            type="primary"
-                            shape="round"
-                            icon={<CloseOutlined />}
-                            size="small"
-                            danger
-                          >
-                            Rechazada
-                          </Button>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                          <Button
-                            type="primary"
-                            shape="round"
-                            icon={<CheckOutlined />}
-                            size="small"
-                            className="color-green"
-                          >
-                            Aprobada
-                          </Button>
-                        </Col>
-                      </Row>
-                    </>
-                  }
-                  title="Resultado de investigación 1-5"
-                  trigger="click"
-                >
+            {dataDetailCustomerTenant.length === 2 && (
+              <Row>
+                <Col span={20} xs={{ span: 24 }} md={{ span: 20 }}>
+                  <strong>Cambiar Roles Inquilino-Obligado Solidario</strong>
+                </Col>
+                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }}>
                   <Button
                     type="primary"
                     shape="round"
-                    icon={<EditOutlined />}
-                    size="small"
-                    onClick={() => {}}
-                  >
-                    Asignar
-                  </Button>
-                </Popover>
-              </Col>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem title="Calificación 1-5" content="5" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Nombre completo"
-                  content="Sebastian Perez Guitierrez"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Correo"
-                  content="testUser-homify@example.com"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-63-15-98-07" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Tipo de cliente" content="Inquilino" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Ocupación" content="Ingeniero" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Salario mensual" content="$45,000.00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Enviar mensaje"
-                  content={
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                      <a>Enviar</a>
-                    </Dropdown>
-                  }
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <h3>Obligado solidario</h3>
-            <Row>
-              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                <strong>Resultado de investigación</strong>
-                <Popover
-                  content={
-                    <>
-                      <Row>
-                        <Col span={24}>
-                          <NumberFormat
-                            id={null}
-                            customInput={Input}
-                            thousandSeparator=","
-                            decimalSeparator="."
-                            decimalPrecision={2}
-                            allowNegative={false}
-                            prefix=""
-                            suffix=""
-                            value={valueCalification}
-                            className="inputLogin"
-                            floatingLabelText=""
-                            isVisible
-                            toBlock={false}
-                            disable={false}
-                            placeholder="Calificación"
-                            onValueChange={(values) => {
-                              const {
-                                formattedValue,
-                                value,
-                                floatValue,
-                              } = values;
-                              setValueCalification(floatValue);
+                    icon={<SyncOutlined />}
+                    onClick={() => {
+                      changeRolesCustomers(
+                        dataDetailCustomerTenant[0].idContract
+                      );
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
+
+            {isEmpty(dataDetailCustomerTenant) === false &&
+              dataDetailCustomerTenant.map((row) => {
+                return (
+                  <>
+                    <h3>
+                      {row.isMain === true ? "Inquilino" : "Obligado Solidario"}
+                    </h3>
+                    <Row>
+                      <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                        <strong>Resultado de investigación</strong>
+                        <Popover
+                          content={
+                            <>
+                              <Row>
+                                <Col span={24}>
+                                  <NumberFormat
+                                    id={null}
+                                    customInput={Input}
+                                    thousandSeparator=","
+                                    decimalSeparator="."
+                                    decimalPrecision={2}
+                                    allowNegative={false}
+                                    prefix=""
+                                    suffix=""
+                                    value={
+                                      isNil(
+                                        valueCalification[row.idCustomerTenant]
+                                      ) === false
+                                        ? valueCalification[
+                                            row.idCustomerTenant
+                                          ]
+                                        : row.rating
+                                    }
+                                    className="inputLogin"
+                                    floatingLabelText=""
+                                    isVisible
+                                    toBlock={false}
+                                    disable={false}
+                                    placeholder="Calificación"
+                                    onValueChange={(values) => {
+                                      const {
+                                        formattedValue,
+                                        value,
+                                        floatValue,
+                                      } = values;
+                                      setValueCalification({
+                                        ...valueCalification,
+                                        [row.idCustomerTenant]: floatValue,
+                                      });
+                                    }}
+                                    onClick={(event) => {}}
+                                    onFocus={(event) => {}}
+                                    onBlur={(event) => {}}
+                                  />
+                                </Col>
+                              </Row>
+                              <div
+                                className="ant-divider ant-divider-horizontal"
+                                role="separator"
+                              />
+                              <Row>
+                                <Col span={11}>
+                                  <Button
+                                    type="primary"
+                                    shape="round"
+                                    icon={<CloseOutlined />}
+                                    size="small"
+                                    danger
+                                    onClick={() => {
+                                      onSendRatingUser({
+                                        idContract: row.idContract,
+                                        idCustomer: null,
+                                        idCustomerTenant: row.idCustomerTenant,
+                                        idPolicyStatus: null,
+                                        rating:
+                                          isNil(
+                                            valueCalification[
+                                              row.idCustomerTenant
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                row.idCustomerTenant
+                                              ]
+                                            : row.rating,
+                                        isApproved: false,
+                                      });
+                                      setOpenPopover({
+                                        [row.idCustomerTenant]:
+                                          isNil(
+                                            openPopover[row.idCustomerTenant]
+                                          ) === false
+                                            ? !openPopover[row.idCustomerTenant]
+                                            : false,
+                                      });
+                                    }}
+                                  >
+                                    Rechazada
+                                  </Button>
+                                </Col>
+                                <Col span={2} />
+                                <Col span={11}>
+                                  <Button
+                                    type="primary"
+                                    shape="round"
+                                    icon={<CheckOutlined />}
+                                    size="small"
+                                    className="color-green"
+                                    onClick={() => {
+                                      onSendRatingUser({
+                                        idContract: row.idContract,
+                                        idCustomer: null,
+                                        idCustomerTenant: row.idCustomerTenant,
+                                        idPolicyStatus: null,
+                                        rating:
+                                          isNil(
+                                            valueCalification[
+                                              row.idCustomerTenant
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                row.idCustomerTenant
+                                              ]
+                                            : row.rating,
+                                        isApproved: true,
+                                      });
+                                      setOpenPopover({
+                                        [row.idCustomerTenant]:
+                                          isNil(
+                                            openPopover[row.idCustomerTenant]
+                                          ) === false
+                                            ? !openPopover[row.idCustomerTenant]
+                                            : false,
+                                      });
+                                    }}
+                                  >
+                                    Aprobada
+                                  </Button>
+                                </Col>
+                              </Row>
+                            </>
+                          }
+                          title="Resultado de investigación 0-5"
+                          trigger="click"
+                          visible={
+                            isNil(openPopover[row.idCustomerTenant]) === false
+                              ? openPopover[row.idCustomerTenant]
+                              : false
+                          }
+                        >
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={<EditOutlined />}
+                            size="small"
+                            onClick={() => {
+                              setOpenPopover({
+                                [row.idCustomerTenant]:
+                                  isNil(openPopover[row.idCustomerTenant]) ===
+                                  false
+                                    ? !openPopover[row.idCustomerTenant]
+                                    : true,
+                              });
                             }}
-                            onClick={(event) => {}}
-                            onFocus={(event) => {}}
-                            onBlur={(event) => {}}
-                          />
-                        </Col>
-                      </Row>
-                      <div
-                        className="ant-divider ant-divider-horizontal"
-                        role="separator"
-                      />
-                      <Row>
-                        <Col span={11}>
-                          <Button
-                            type="primary"
-                            shape="round"
-                            icon={<CloseOutlined />}
-                            size="small"
-                            danger
                           >
-                            Rechazada
+                            Asignar
                           </Button>
-                        </Col>
-                        <Col span={2} />
-                        <Col span={11}>
-                          <Button
-                            type="primary"
-                            shape="round"
-                            icon={<CheckOutlined />}
-                            size="small"
-                            className="color-green"
-                          >
-                            Aprobada
-                          </Button>
-                        </Col>
-                      </Row>
-                    </>
-                  }
-                  title="Resultado de investigación 1-5"
-                  trigger="click"
-                >
-                  <Button
-                    type="primary"
-                    shape="round"
-                    icon={<EditOutlined />}
-                    size="small"
-                    onClick={() => {}}
-                  >
-                    Asignar
-                  </Button>
-                </Popover>
-              </Col>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem title="Calificación 1-5" content="5" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Nombre completo"
-                  content="Pedro Perez Guitierrez"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Correo"
-                  content="testUser-homify@example.com"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-63-15-98-07" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Tipo de cliente" content="Inquilino" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Ocupación" content="Ingeniero" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Salario mensual" content="$40,000.00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="RFC" content="SBLGTE941625ML5" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="CURP" content="SBLGTE941625HMCNMR00" />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Dirección"
-                  content="Rio Serna 36, El sol, Miguel Hidalgo, 57200"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Enviar mensaje"
-                  content={
-                    <Dropdown overlay={menu} trigger={["click"]}>
-                      <a>Enviar</a>
-                    </Dropdown>
-                  }
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <h3>Fiador</h3>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Nombre completo"
-                  content="Sebastian Perez Guitierrez"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Correo" content="fiador@example.com" />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-63-15-98-07" />
-              </Col>
-            </Row>
+                        </Popover>
+                      </Col>
+                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                        <DescriptionItem
+                          title="Calificación 0-5"
+                          content={
+                            isNil(row.rating) === false ? row.rating : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Nombre completo"
+                          content={
+                            isNil(row.fullName) === false ? row.fullName : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <DescriptionItem
+                          title="Correo"
+                          content={
+                            isNil(row.emailAddress) === false
+                              ? row.emailAddress
+                              : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Telefono"
+                          content={
+                            isNil(row.phoneNumber) === false
+                              ? row.phoneNumber
+                              : "-"
+                          }
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Tipo de cliente"
+                          content={
+                            isNil(row.customerType) === false
+                              ? row.customerType
+                              : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Ocupación"
+                          content={
+                            isNil(row.occupationActivity) === false
+                              ? row.occupationActivity
+                              : "-"
+                          }
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Salario mensual"
+                          content={
+                            isNil(row.currentSalary) === false
+                              ? row.currentSalary
+                              : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="RFC"
+                          content={isNil(row.taxId) === false ? row.taxId : "-"}
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="CURP"
+                          content={
+                            isNil(row.citizenId) === false ? row.citizenId : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <DescriptionItem
+                          title="Dirección"
+                          content={
+                            isNil(row.fullAddress) === false
+                              ? replaceUrl(row.fullAddress)
+                              : "-"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Enviar mensaje"
+                          content={
+                            <Dropdown overlay={menu} trigger={["click"]}>
+                              <a>Enviar</a>
+                            </Dropdown>
+                          }
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="TypeForm"
+                          content={
+                            <Dropdown
+                              overlay={
+                                <Menu
+                                  onClick={(value) => {
+                                    onRedirectTo(
+                                      value.key,
+                                      row.idCustomerTenant,
+                                      row.idContract
+                                    );
+                                  }}
+                                >
+                                  <Menu.Item key="0">
+                                    <a>Información personal</a>
+                                  </Menu.Item>
+                                  <Menu.Item key="1">
+                                    <a>Dirección actual</a>
+                                  </Menu.Item>
+                                  <Menu.Item key="2">
+                                    <a>Información laboral</a>
+                                  </Menu.Item>
+                                  <Menu.Item key="3">
+                                    <a>Referencias</a>
+                                  </Menu.Item>
+                                  <Menu.Item key="4">
+                                    <a>Documentación</a>
+                                  </Menu.Item>
+                                  <Menu.Item key="5">
+                                    <a>Información aval</a>
+                                  </Menu.Item>
+                                </Menu>
+                              }
+                              trigger={["click"]}
+                            >
+                              <a>Ver</a>
+                            </Dropdown>
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <div
+                      className="ant-divider ant-divider-horizontal"
+                      role="separator"
+                    />
+                    {isNil(row.endorsementEmailAddress) === false &&
+                      row.isMain === true && (
+                        <>
+                          <h3>Fiador</h3>
+                          <Row>
+                            <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                              <DescriptionItem
+                                title="Nombre completo"
+                                content={row.endorsementFullName}
+                              />
+                            </Col>
+                          </Row>
+                          <Row>
+                            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                              <DescriptionItem
+                                title="Correo"
+                                content={row.endorsementEmailAddress}
+                              />
+                            </Col>
+                            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                              <DescriptionItem
+                                title="Telefono"
+                                content={row.endorsementPhoneNumber}
+                              />
+                            </Col>
+                          </Row>
+                        </>
+                      )}
+                  </>
+                );
+              })}
           </Panel>
           <Panel header={<h3 role="title-section">Referencias</h3>} key="2">
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Nombre"
-                  content="Nombre de la primer referencia"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Correo"
-                  content="referencia1@test.com"
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-77-63-52-12" />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Nombre"
-                  content="Nombre de la segunda referencia"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Correo"
-                  content="referencia2@test.com"
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-77-63-52-12" />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <Row>
-              <Col span={24}>
-                <DescriptionItem
-                  title="Nombre"
-                  content="Nombre de la tercer referencia"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Correo"
-                  content="referencia3@test.com"
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Telefono" content="55-77-63-52-12" />
-              </Col>
-            </Row>
+            {isEmpty(dataDetailReferences) === false &&
+              dataDetailReferences.map((row) => {
+                return (
+                  <>
+                    <Row>
+                      <Col span={24}>
+                        <DescriptionItem
+                          title="Nombre"
+                          content={row.fullName}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Correo"
+                          content={row.emailAddress}
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Telefono"
+                          content={row.phoneNumber}
+                        />
+                      </Col>
+                    </Row>
+                    <div
+                      className="ant-divider ant-divider-horizontal"
+                      role="separator"
+                    />
+                  </>
+                );
+              })}
           </Panel>
           <Panel
             header={<h3 role="title-section">Documentos Legales</h3>}

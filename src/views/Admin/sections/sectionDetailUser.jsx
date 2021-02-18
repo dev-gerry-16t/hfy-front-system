@@ -25,7 +25,13 @@ const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUser = (props) => {
-  const { isDrawerVisible, onClose, spinVisible, dataDetailCustomer } = props;
+  const {
+    isDrawerVisible,
+    onClose,
+    spinVisible,
+    dataDetailCustomer,
+    onRedirectTo,
+  } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
   const [dataForm, setDataForm] = useState(initialDataForm);
@@ -48,7 +54,6 @@ const SectionDetailUser = (props) => {
     if (isNil(address) === false) {
       const replaceString = address.replaceAll(" ", "+");
       domainPath = domainPath + replaceString;
-      console.log("domainPath", domainPath);
     }
     return (
       <a href={domainPath} target="_blank">
@@ -167,7 +172,40 @@ const SectionDetailUser = (props) => {
                 />
               </Col>
               <Col span={12}>
-                <DescriptionItem title="TypeForm" content={<a>Ver</a>} />
+                <DescriptionItem
+                  title="TypeForm"
+                  content={
+                    <Dropdown
+                      overlay={
+                        <Menu
+                          onClick={(value) => {
+                            onRedirectTo(
+                              value.key,
+                              dataDetailCustomer.idCustomer,
+                              dataDetailCustomer.idContract
+                            );
+                          }}
+                        >
+                          <Menu.Item key="0">
+                            <a>Información personal</a>
+                          </Menu.Item>
+                          <Menu.Item key="1">
+                            <a>Inmueble a rentar</a>
+                          </Menu.Item>
+                          <Menu.Item key="2">
+                            <a>Póliza</a>
+                          </Menu.Item>
+                          <Menu.Item key="3">
+                            <a>Datos bancarios</a>
+                          </Menu.Item>
+                        </Menu>
+                      }
+                      trigger={["click"]}
+                    >
+                      <a>Ver</a>
+                    </Dropdown>
+                  }
+                />
               </Col>
             </Row>
           </Panel>
