@@ -41,7 +41,7 @@ const SectionDetailUserAdviser = (props) => {
       {content}
     </div>
   );
-
+  
   const menu = (
     <Menu>
       <Menu.Item key="0">
@@ -88,7 +88,7 @@ const SectionDetailUserAdviser = (props) => {
           <Col span={12}>
             <DescriptionItem
               title="Nombre completo"
-              content="Sebastian Perez Guitierrez"
+              content={dataDetailAgent.fullName}
             />
           </Col>
           <Col span={12}>
@@ -106,33 +106,56 @@ const SectionDetailUserAdviser = (props) => {
           <Col span={24}>
             <DescriptionItem
               title="Correo"
-              content="testUser-homify@example.com"
+              content={dataDetailAgent.emailAddress}
             />
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <DescriptionItem title="Telefono" content="55-63-15-98-07" />
+            <DescriptionItem
+              title="Telefono"
+              content={dataDetailAgent.phoneNumber}
+            />
           </Col>
           <Col span={12}>
-            <DescriptionItem title="Polizas Totales" content="15" />
+            <DescriptionItem
+              title="Polizas Totales"
+              content={dataDetailAgent.totalCommissions}
+            />
           </Col>
         </Row>
         <Row>
           <Col span={12}>
-            <DescriptionItem title="Renovaciones" content="4" />
+            <DescriptionItem
+              title="Renovaciones"
+              content={
+                isNil(dataDetailAgent.totalRenewals) === false &&
+                isNil(dataDetailAgent.totalRenewals[0]) === false
+                  ? dataDetailAgent.totalRenewals[0]
+                  : "-"
+              }
+            />
           </Col>
           <Col span={12}>
-            <DescriptionItem title="Comisiones totales" content="$12,700,00" />
+            <DescriptionItem
+              title="Comisiones totales"
+              content={dataDetailAgent.totalCommissionsAmount}
+            />
           </Col>
         </Row>
         <h3>Información de poliza actual</h3>
         <Row>
           <Col span={12}>
-            <DescriptionItem title="Comisión por" content="Renovación 10%" />
+            <DescriptionItem
+              title="Comisión por"
+              content={dataDetailAgent.commissionType}
+            />
           </Col>
           <Col span={12}>
-            <DescriptionItem title="Comisión poliza Actual" content="$2,5000" />
+            <DescriptionItem
+              title="Comisión poliza Actual"
+              content={dataDetailAgent.totalCommissionAmount}
+            />
           </Col>
         </Row>
         <Row></Row>

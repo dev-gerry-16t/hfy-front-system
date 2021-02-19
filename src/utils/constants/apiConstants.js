@@ -35,6 +35,8 @@ const API_CONSTANTS = {
   GET_ZIP_CODE_ADRESS: `${API.API_SECURE}/customer/getAdressZipCode`,
   GET_ALL_TENANTS_CATALOG: `${API.API_SECURE}/customer/getCustomerTenants`,
   GET_ALL_BANKS_CATALOG: `${API.API_SECURE}/customer/getAllBanks`,
+  GET_AGENT_INDICATORS: `${API.API_SECURE}/customer/getAgentIndicators`,
+  GET_AGENT_CONTRACT_COINCIDENCES: `${API.API_SECURE}/customer/getAgentContractCoincidences`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
   SET_IMAGE_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/setUserProfile/`,

@@ -85,7 +85,7 @@ const routes = [
     key: "7",
     id: "Adviser",
     path: "/websystem/dashboard-adviser",
-    name: "Asesor",
+    name: "Dashboard",
     component: Adviser,
     exact: true,
   },
