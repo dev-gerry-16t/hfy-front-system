@@ -67,6 +67,7 @@ const SectionInfoAval = (props) => {
     idEndorsementTypeNumber: null,
     endorsementCitizenId: null,
     publicPropertyRegistry: null,
+    endorsementPlaceOfIssue: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -79,7 +80,7 @@ const SectionInfoAval = (props) => {
     >
       <strong className="site-description-item-profile-p-label">{title}</strong>
       <br />
-      {content}
+      {isNil(content) === false ? content : "N/A"}
     </div>
   );
 
@@ -321,6 +322,21 @@ const SectionInfoAval = (props) => {
                       />
                     </Col>
                   )}
+                </Row>
+                <Row>
+                  <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                    <Input
+                      value={dataForm.endorsementPlaceOfIssue}
+                      placeholder={"Lugar de expedición de la identificación"}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          endorsementPlaceOfIssue: value,
+                        });
+                      }}
+                    />
+                  </Col>
                 </Row>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -709,6 +725,16 @@ const SectionInfoAval = (props) => {
                   content={dataForm.idEndorsementTypeNumber}
                 />
               </Col>
+            </Row>
+            <Row>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                <DescriptionItem
+                  title={`Lugar de expedición de identificación`}
+                  content={dataForm.endorsementPlaceOfIssue}
+                />
+              </Col>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
             </Row>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>

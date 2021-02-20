@@ -35,6 +35,7 @@ const SectionInfoUser = (props) => {
     idType: null,
     idTypeText: null,
     idTypeNumber: null,
+    placeOfIssue: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -88,7 +89,7 @@ const SectionInfoUser = (props) => {
     >
       <strong className="site-description-item-profile-p-label">{title}</strong>
       <br />
-      {content}
+      {isNil(content) === false ? content : "N/A"}
     </div>
   );
 
@@ -250,6 +251,18 @@ const SectionInfoUser = (props) => {
               )}
             </Row>
             <Row>
+              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                <Input
+                  value={dataForm.placeOfIssue}
+                  placeholder={"Lugar de expedición de la identificación"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, placeOfIssue: value });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.taxId}
@@ -387,6 +400,16 @@ const SectionInfoUser = (props) => {
                   content={dataForm.idTypeNumber}
                 />
               </Col>
+            </Row>
+            <Row>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                <DescriptionItem
+                  title={`Lugar de expedición de identificación`}
+                  content={dataForm.placeOfIssue}
+                />
+              </Col>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
             </Row>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>

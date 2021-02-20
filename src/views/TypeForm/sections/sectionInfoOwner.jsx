@@ -59,6 +59,7 @@ const SectionInfoOwner = (props) => {
     idType: null,
     idTypeText: null,
     idTypeNumber: null,
+    placeOfIssue: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -340,6 +341,18 @@ const SectionInfoOwner = (props) => {
               )}
             </Row>
             <Row>
+              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                <Input
+                  value={dataForm.placeOfIssue}
+                  placeholder={"Lugar de expedición de la identificación"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, placeOfIssue: value });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Select
                   placeholder="Estado Civil"
@@ -613,6 +626,16 @@ const SectionInfoOwner = (props) => {
                   content={dataForm.idMaritalStatusText}
                 />
               </Col>
+            </Row>
+            <Row>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                <DescriptionItem
+                  title={`Lugar de expedición de identificación`}
+                  content={dataForm.placeOfIssue}
+                />
+              </Col>
+              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
             </Row>
             <p>Domicilio Actual</p>
             <Row>
