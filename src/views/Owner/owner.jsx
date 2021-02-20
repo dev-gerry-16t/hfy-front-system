@@ -498,11 +498,39 @@ const Owner = (props) => {
         },
         data.idContract
       );
+      showMessageStatusApi(
+        "Tu comentario se envio correctamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallSetContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSetContract(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idContract
+      );
+      showMessageStatusApi(
+        "Tu solicitud se proceso exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -534,6 +562,11 @@ const Owner = (props) => {
           } catch (error) {
             throw error;
           }
+        }}
+        onAcceptContract={async (data) => {
+          try {
+            await handlerCallSetContract(data);
+          } catch (error) {}
         }}
       />
       <SectionAddProperty

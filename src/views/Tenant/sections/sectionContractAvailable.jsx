@@ -36,6 +36,7 @@ const SectionContractAvailable = (props) => {
     onAddCommentContract,
     dataGetContract,
     onDownloadDocument,
+    onAcceptContract,
   } = props;
   const [signature, setSignature] = useState("");
   const [startedAt, setStartedAt] = useState(null);
@@ -138,7 +139,8 @@ const SectionContractAvailable = (props) => {
                       )}
                     </div>
                     <div className="contract-children-information">
-                      {isNil(dataGetContract.digitalContract) === false &&
+                      {isNil(dataGetContract) === false &&
+                        isNil(dataGetContract.digitalContract) === false &&
                         isDownloadDocument === false && (
                           <div
                             style={{ color: "black !important" }}
@@ -178,9 +180,15 @@ const SectionContractAvailable = (props) => {
                 ) : (
                   <>
                     <div style={{ marginBottom: "15px" }}>
-                      <label style={{ fontSize: "14px", fontWeight: "500" }}>
+                      <label
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          color: "var(--color-primary)",
+                        }}
+                      >
                         Selecciona la fecha en la que quieres firmar tu contrato
-                        precencial y el dia en el que quieras que inicie el
+                        presencial y el dia en el que quieras que inicie el
                         contrato de arrendamiento.
                       </label>
                     </div>
@@ -231,7 +239,18 @@ const SectionContractAvailable = (props) => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => {
+                        onClick={async () => {
+                          await onAcceptContract({
+                            idCustomer: dataGetContract.idCustomer,
+                            idCustomerTenant: dataGetContract.idCustomerTenant,
+                            idPolicy: dataGetContract.idPolicy,
+                            idContract: dataGetContract.idContract,
+                            digitalSignature: signature,
+                            anex2: null,
+                            startedAt: startedAt,
+                            scheduleSignatureDate: scheduleSignatureDate,
+                            collectionDays: null,
+                          });
                           onClose();
                           setSignaturePrecencial(false);
                         }}
@@ -286,7 +305,13 @@ const SectionContractAvailable = (props) => {
                   https//homify.ai/terminos-y-condiciones amparados bajo la ley
                 </span>
                 <div style={{ margin: "15px 0px" }}>
-                  <label style={{ fontSize: "14px", fontWeight: "500" }}>
+                  <label
+                    style={{
+                      fontSize: "14px",
+                      fontWeight: "500",
+                      color: "var(--color-primary)",
+                    }}
+                  >
                     Selecciona el dia en el que quieras que inicie el contrato
                     de arrendamiento.
                   </label>
@@ -366,7 +391,21 @@ const SectionContractAvailable = (props) => {
             </button>
             <button
               type="button"
-              onClick={() => {}}
+              onClick={async () => {
+                await onAcceptContract({
+                  idCustomer: dataGetContract.idCustomer,
+                  idCustomerTenant: dataGetContract.idCustomerTenant,
+                  idPolicy: dataGetContract.idPolicy,
+                  idContract: dataGetContract.idContract,
+                  digitalSignature: signature,
+                  anex2: null,
+                  startedAt: startedAt,
+                  scheduleSignatureDate: moment().format("YYYY-MM-DD"),
+                  collectionDays: null,
+                });
+                onClose();
+                setSignaturePrecencial(false);
+              }}
               className={aceptTerms === true ? "" : "disabled-button"}
             >
               <span>Aceptar</span>
