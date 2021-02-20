@@ -197,6 +197,17 @@
                 color: #da1414;
               }
             }
+            .status-payment-contract {
+              background: rgba(142, 227, 49, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              cursor: pointer;
+              span {
+                color: #818181;
+              }
+            }
           }
           .info-user-payment {
             align-self: center;
@@ -266,6 +277,16 @@
               justify-content: center;
               span {
                 color: #da1414;
+              }
+            }
+            .status-payment-contract {
+              background: rgba(142, 227, 49, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              span {
+                color: #818181;
               }
             }
           }
@@ -426,12 +447,18 @@
       border-radius: 16px;
       padding: 20px;
       margin-bottom: 20px;
+      .ant-picker {
+        width: 100%;
+      }
       p {
         text-align: center;
       }
       .contract-children-information {
         max-height: 300px;
         overflow-y: scroll;
+        p {
+          color: black;
+        }
       }
       .contract-section-signature {
         .signature {
@@ -763,6 +790,9 @@
         .status-payment {
           margin: 5px 0px;
         }
+        .status-payment-contract {
+          margin: 5px 0px;
+        }
       }
     }
   }
@@ -868,3 +898,139 @@
 // .ant-notification-notice-close {
 //   display: none;
 // }
+
+
+// Color variables
+$main : #FFF5A5;
+$secundary : #FFD4DA;
+$terchiary : #99D2E4;
+
+// animation keyframes
+@keyframes mainAnimation {
+	0% {
+		width: 50px;
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+	}
+	20% {
+		width: 50px;
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+	}
+	40% {
+		width: 150px;
+		transform: translateX(-50px) translateY(0px) rotate(0deg);
+	}
+	60% {
+		width: 150px;
+		transform-origin: bottom right;
+		transform: translateX(-150px) translateY(0px) rotate(90deg);
+	}
+	80% {
+		width: 50px;
+		transform: translateX(-25px) translateY(0px) rotate(90deg);
+	}
+	100% {
+		width: 50px;
+		transform: translateX(-50px) translateY(0px) rotate(90deg);
+	}
+}
+@keyframes secundaryAnimation {
+	0% {
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+	}
+	20% {
+		transform: translateX(0px) translateY(0px) rotate(180deg);
+	}
+	40% {
+		transform: translateX(0px) translateY(0px) rotate(180deg);
+	}
+	60% {
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+	}
+	80% {
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+	}
+	100% {
+		transform: translateX(0px) translateY(0px) rotate(180deg);
+	}
+}
+@keyframes shadowAnimation {
+	0% {
+		width: 150px;
+		transform: translateX(-25px) translateY(0px) rotate(0deg);
+	}
+	20% {
+		width: 75px;
+		transform: translateX(37.5px) translateY(0px) rotate(0deg);
+	}
+	40% {
+		width: 200px;
+		transform: translateX(-25px) translateY(0px) rotate(0deg);
+	}
+	60% {
+		width: 75px;
+		transform: translateX(37.5px) translateY(0px) rotate(0deg);
+	}
+	80% {
+		width: 75px;
+		transform: translateX(37.5px) translateY(0px) rotate(0deg);
+	}
+	100% {
+		width: 150px;
+		transform: translateX(-25px) translateY(0px) rotate(0deg);
+	}
+}
+@keyframes float {
+	0% {
+		top: 50%;
+	}
+	50% {
+		top: 51%;
+	}
+	100% {
+		top: 50%;
+	}
+}
+
+.loader {
+	position: absolute;
+	width: 50px;
+	height: 50px;
+	top: 50%;
+	left: 50%;
+	margin-top: -25px;
+	margin-left: -25px;
+	background-color: $main;
+	transform: translateX(0px) translateY(0px) rotate(0deg);
+	animation: mainAnimation 2.6s ease 0s infinite forwards;
+	z-index: 2;
+	&:after {
+		content: '';
+		display: inline-block;
+		position: absolute;
+		width: 50px;
+		height: 50px;
+		top: 0;
+		left: -50px;
+		background-color: $main;
+		transform-origin: top right;
+		transform: translateX(0px) translateY(0px) rotate(0deg);
+		animation: secundaryAnimation 2.6s ease 0s infinite forwards;
+	}
+}
+
+.shadow {
+	position: absolute;
+	width: 100px;
+	height: 10px;
+	top: 50%;
+	left: 50%;
+	margin-top: 50px;
+	margin-left: -75px;
+	border-radius: 50%;
+	background-color: #95a5a6;
+	transform: translateX(0px) translateY(0px) rotate(0deg);
+	animation: shadowAnimation 2.6s ease 0s infinite forwards,
+						 float 5s ease-in-out 0s infinite forwards;
+	filter: blur(5px);
+	z-index: 1;
+}

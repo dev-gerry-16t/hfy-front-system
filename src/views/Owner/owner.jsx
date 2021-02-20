@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import moment from "moment";
 import { Layout, Avatar, Rate, Modal, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -20,14 +21,21 @@ import {
   callGetAllTenantsCatalog,
   callGetAllBankCatalog,
   callRequestAdvancement,
+  callSetContract,
+  callAddCommentContract,
+  callGetContract,
+  callGetContractComment,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import { API_CONSTANTS, HEADER } from "../../utils/constants/apiConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
 import SectionCardTenant from "./sections/sectionCardTenants";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionAddProperty from "./sections/sectionAddProperty";
 import SectionAddTenant from "./sections/sectionAddTenant";
 import SectionAdvancement from "./sections/sectionAdvancement";
+import SectionContractAvailable from "../Tenant/sections/sectionContractAvailable";
 
 const { Content } = Layout;
 
@@ -48,6 +56,10 @@ const Owner = (props) => {
     callGetAllTenantsCatalog,
     callGetAllBankCatalog,
     callRequestAdvancement,
+    callSetContract,
+    callAddCommentContract,
+    callGetContract,
+    callGetContractComment,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
@@ -58,9 +70,11 @@ const Owner = (props) => {
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataTenant, setDataTenant] = useState([]);
   const [dataBank, setDataBank] = useState([]);
+  const [dataGetContract, setDataGetContract] = useState([]);
   const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
+  const [isVisibleContract, setIsVisibleContract] = useState(false);
   const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] = useState(
     false
   );
@@ -418,6 +432,80 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallGetContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      if (data.download === false) {
+        const response = await callGetContract({
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        });
+        const responseResult =
+          isNil(response) === false &&
+          isNil(response.response) === false &&
+          isNil(response.response[0]) === false
+            ? response.response[0]
+            : {};
+        setDataGetContract(responseResult);
+      } else {
+        const { token } = dataProfile;
+        const response = await fetch(
+          `${ENVIROMENT}${API_CONSTANTS.GET_CONTRACT}`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              ...data,
+              idSystemUser,
+              idLoginHistory,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if (isNil(response.status) === false && response.status !== 200) {
+          throw isNil(response.statusText) === false ? response.statusText : "";
+        }
+        const label = `Contrato_${moment().format("YYYYMMDD-HHmm")}`;
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.className = "download";
+        link.download = `${label}.${"pdf"}`;
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        link.parentElement.removeChild(link);
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallAddCommentContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddCommentContract(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idContract
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -431,6 +519,23 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <SectionContractAvailable
+        isModalVisible={isVisibleContract}
+        onClose={() => {
+          setIsVisibleContract(!isVisibleContract);
+        }}
+        dataGetContract={dataGetContract}
+        onAddCommentContract={(data) => {
+          handlerCallAddCommentContract(data);
+        }}
+        onDownloadDocument={async (data) => {
+          try {
+            await handlerCallGetContract(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
+      />
       <SectionAddProperty
         spinVisible={spinVisible}
         isModalVisible={isModalVisible}
@@ -556,6 +661,15 @@ const Owner = (props) => {
               });
               await handlerCallGetProperties();
             }}
+            onOpenContract={(data) => {
+              handlerCallGetContract({
+                download: false,
+                idCustomer: data.idCustomer,
+                idCustomerTenant: data.idCustomerTenant,
+                idContract: data.idContract,
+              });
+              setIsVisibleContract(!isVisibleContract);
+            }}
           />
         </div>
       </div>
@@ -585,6 +699,11 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllTenantsCatalog: (data) => dispatch(callGetAllTenantsCatalog(data)),
   callGetAllBankCatalog: (data) => dispatch(callGetAllBankCatalog(data)),
   callRequestAdvancement: (data) => dispatch(callRequestAdvancement(data)),
+  callSetContract: (data, id) => dispatch(callSetContract(data, id)),
+  callAddCommentContract: (data, id) =>
+    dispatch(callAddCommentContract(data, id)),
+  callGetContract: (data) => dispatch(callGetContract(data)),
+  callGetContractComment: (data) => dispatch(callGetContractComment(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

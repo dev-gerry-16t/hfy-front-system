@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import isNil from "lodash/isNil";
+import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 import NumberFormat from "react-number-format";
 import {
@@ -14,6 +15,7 @@ import {
   Spin,
   Tooltip,
   Checkbox,
+  DatePicker,
 } from "antd";
 import SignatureCanvas from "react-signature-canvas";
 import {
@@ -28,11 +30,21 @@ import ChatContract from "../../../assets/icons/ChatContract.svg";
 const { Option } = Select;
 
 const SectionContractAvailable = (props) => {
-  const { isModalVisible, onClose } = props;
+  const {
+    isModalVisible,
+    onClose,
+    onAddCommentContract,
+    dataGetContract,
+    onDownloadDocument,
+  } = props;
   const [signature, setSignature] = useState("");
+  const [startedAt, setStartedAt] = useState(null);
+  const [scheduleSignatureDate, setScheduleSignatureDate] = useState(null);
   const [valueText, setValueText] = useState(null);
   const [openSection, setOpenSection] = useState(1);
   const [aceptTerms, setAceptTerms] = useState(false);
+  const [isDownloadDocument, setIsDownloadDocument] = useState(false);
+  const [signaturePrecencial, setSignaturePrecencial] = useState(false);
   const signatureRef = useRef(null);
 
   const LoadingSpin = <SyncOutlined spin />;
@@ -53,6 +65,7 @@ const SectionContractAvailable = (props) => {
             onClick={() => {
               if (openSection === 1) {
                 onClose();
+                setSignaturePrecencial(false);
               } else {
                 setOpenSection(1);
               }
@@ -80,47 +93,155 @@ const SectionContractAvailable = (props) => {
         <div className="main-form-information">
           <div className="contract-card-information">
             {openSection === 1 && (
-              <div className="contract-children-information">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Iusto
-                alias distinctio ab debitis magni perferendis sapiente? Facilis
-                eos quos optio, totam deserunt ad reprehenderit minus. Laborum
-                corrupti aperiam quisquam sit. Voluptatum, ducimus sequi
-                blanditiis vel libero facere exercitationem iste et obcaecati
-                asperiores magnam possimus voluptatem quam tempora quisquam sed
-                eveniet quae amet quaerat unde molestias? Qui vitae fugit
-                ratione deserunt! Fugit mollitia, dolorem vitae facere, eos non
-                reprehenderit dicta voluptate quidem voluptatum ipsam quaerat,
-                fugiat error qui voluptatem quis iste ducimus ad exercitationem
-                veritatis possimus soluta quos cumque. Assumenda, esse!
-                Repellendus architecto eveniet doloribus quia molestias, porro
-                beatae quas quibusdam reprehenderit iusto. Facere laboriosam
-                nemo hic est obcaecati tempore! Vero minima nostrum officiis
-                exercitationem nemo animi harum a tempora eum. Sunt nobis
-                voluptate officia architecto autem? Aperiam ipsam ipsum magnam,
-                minus tempora illo nisi animi maxime voluptate, neque sint harum
-                consequuntur, corporis quas! Voluptas alias perferendis
-                temporibus autem, odit velit. Natus tenetur sint voluptatum
-                ullam illum nulla, suscipit eaque corrupti voluptas error quae
-                excepturi, vel alias provident quas beatae voluptate illo iure
-                quos? Et alias eaque placeat molestias impedit fugiat.
-                Exercitationem commodi, corrupti porro asperiores provident, hic
-                mollitia facere debitis autem numquam, reiciendis molestias
-                libero enim iure sint delectus placeat quam amet harum sit
-                distinctio nobis incidunt necessitatibus vero! Quisquam!
-                Provident distinctio asperiores cumque, minus magnam ex impedit
-                omnis, maxime temporibus facere exercitationem voluptatem.
-                Temporibus, autem sed. Repudiandae voluptatum vel deserunt qui
-                officiis quasi tempora expedita, magnam similique molestiae
-                esse! Quibusdam perferendis, in eum velit corrupti dicta
-                similique assumenda autem ipsum nesciunt. Unde quaerat
-                consectetur quos enim, iste ipsa dicta doloribus quasi
-                consequatur architecto, earum dolore soluta fugiat in
-                aspernatur. Ipsum voluptatum quo autem, architecto earum
-                pariatur accusamus ea perspiciatis quas labore debitis quia
-                totam. Temporibus blanditiis similique totam vitae? Velit itaque
-                quas, aliquam perferendis dolorem porro necessitatibus.
-                Consequuntur, ad!
-              </div>
+              <>
+                {signaturePrecencial === false ? (
+                  <>
+                    <div
+                      className="two-action-buttons"
+                      style={{ marginTop: "0px", marginBottom: "10px" }}
+                    >
+                      {isDownloadDocument === false ? (
+                        <button
+                          type="button"
+                          onClick={async () => {
+                            try {
+                              setIsDownloadDocument(true);
+                              await onDownloadDocument({
+                                download: true,
+                                idCustomer: dataGetContract.idCustomer,
+                                idCustomerTenant:
+                                  dataGetContract.idCustomerTenant,
+                                idContract: dataGetContract.idContract,
+                              });
+                              setIsDownloadDocument(false);
+                            } catch (error) {
+                              setIsDownloadDocument(false);
+                            }
+                          }}
+                        >
+                          <span>Descargar</span>
+                        </button>
+                      ) : (
+                        <div
+                          style={{
+                            fontFamily: "Poppins",
+                            fontWeight: "bold",
+                            fontSize: "18px",
+                            color: "var(--color-primary)",
+                            textAlign: "center",
+                            margn: "0px auto",
+                            width: "98%",
+                          }}
+                        >
+                          Descargando
+                        </div>
+                      )}
+                    </div>
+                    <div className="contract-children-information">
+                      {isNil(dataGetContract.digitalContract) === false &&
+                        isDownloadDocument === false && (
+                          <div
+                            style={{ color: "black !important" }}
+                            dangerouslySetInnerHTML={{
+                              __html: dataGetContract.digitalContract,
+                            }}
+                          />
+                        )}
+                      {isDownloadDocument === true && (
+                        <div
+                          style={{
+                            height: "269px",
+                            position: "relative",
+                          }}
+                        >
+                          <div class="loader"></div>
+                          <div class="shadow"></div>
+                          <div
+                            style={{
+                              position: "absolute",
+                              bottom: "15px",
+                              fontFamily: "Poppins",
+                              fontWeight: "bold",
+                              color: "var(--color-primary)",
+                              textAlign: "center",
+                              margn: "0px auto",
+                              width: "98%",
+                            }}
+                          >
+                            Estamos procesando tu documento
+                            <br /> espera por favor
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div style={{ marginBottom: "15px" }}>
+                      <label style={{ fontSize: "14px", fontWeight: "500" }}>
+                        Selecciona la fecha en la que quieres firmar tu contrato
+                        precencial y el dia en el que quieras que inicie el
+                        contrato de arrendamiento.
+                      </label>
+                    </div>
+                    <Row>
+                      <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                        <DatePicker
+                          value={
+                            isNil(scheduleSignatureDate) === false
+                              ? moment(scheduleSignatureDate, "YYYY-MM-DD")
+                              : null
+                          }
+                          placeholder="Fecha de firma precencial"
+                          onChange={(momentFormat, date) => {
+                            setScheduleSignatureDate(
+                              moment(momentFormat).format("YYYY-MM-DD")
+                            );
+                          }}
+                          format="DD MMMM YYYY"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                        <DatePicker
+                          value={
+                            isNil(startedAt) === false
+                              ? moment(startedAt, "YYYY-MM-DD")
+                              : null
+                          }
+                          placeholder="Fecha de inicio del contrato"
+                          onChange={(momentFormat, date) => {
+                            setStartedAt(
+                              moment(momentFormat).format("YYYY-MM-DD")
+                            );
+                          }}
+                          format="DD MMMM YYYY"
+                        />
+                      </Col>
+                    </Row>
+                    <div className="two-action-buttons">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSignaturePrecencial(!signaturePrecencial);
+                        }}
+                      >
+                        <span>Cancelar</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          onClose();
+                          setSignaturePrecencial(false);
+                        }}
+                      >
+                        <span>Aceptar</span>
+                      </button>
+                    </div>
+                  </>
+                )}
+              </>
             )}
             {openSection === 2 && (
               <div className="contract-section-signature">
@@ -164,6 +285,28 @@ const SectionContractAvailable = (props) => {
                   terminos y condiciones publicados en la pagina
                   https//homify.ai/terminos-y-condiciones amparados bajo la ley
                 </span>
+                <div style={{ margin: "15px 0px" }}>
+                  <label style={{ fontSize: "14px", fontWeight: "500" }}>
+                    Selecciona el dia en el que quieras que inicie el contrato
+                    de arrendamiento.
+                  </label>
+                </div>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DatePicker
+                      value={
+                        isNil(startedAt) === false
+                          ? moment(startedAt, "YYYY-MM-DD")
+                          : null
+                      }
+                      placeholder="Fecha de inicio del contrato"
+                      onChange={(momentFormat, date) => {
+                        setStartedAt(moment(momentFormat).format("YYYY-MM-DD"));
+                      }}
+                      format="DD MMMM YYYY"
+                    />
+                  </Col>
+                </Row>
               </div>
             )}
             {openSection === 3 && (
@@ -178,6 +321,7 @@ const SectionContractAvailable = (props) => {
                     <textarea
                       value={valueText}
                       maxlength="200"
+                      style={{ fontFamily: "Poppins" }}
                       onChange={(e) => {
                         setValueText(e.target.value);
                       }}
@@ -189,10 +333,15 @@ const SectionContractAvailable = (props) => {
             )}
           </div>
         </div>
-        {openSection === 1 && (
+        {openSection === 1 && signaturePrecencial === false && (
           <div className="two-action-buttons">
-            <button type="button" onClick={() => {}}>
-              <span>Descargar contrato</span>
+            <button
+              type="button"
+              onClick={() => {
+                setSignaturePrecencial(!signaturePrecencial);
+              }}
+            >
+              <span>Firma precencial</span>
             </button>
             <button
               type="button"
@@ -226,7 +375,18 @@ const SectionContractAvailable = (props) => {
         )}
         {openSection === 3 && (
           <div className="button_init_primary">
-            <button type="button" onClick={() => {}}>
+            <button
+              type="button"
+              onClick={() => {
+                onAddCommentContract({
+                  idCustomer: dataGetContract.idCustomer,
+                  idCustomerTenant: dataGetContract.idCustomerTenant,
+                  idDigitalContract: dataGetContract.idDigitalContract,
+                  idContract: dataGetContract.idContract,
+                  comment: valueText,
+                });
+              }}
+            >
               <span>Enviar</span>
             </button>
           </div>

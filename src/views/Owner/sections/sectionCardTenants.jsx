@@ -22,6 +22,7 @@ const SectionCardTenant = (props) => {
     tenantCoincidences,
     finishCallApis,
     onClickSendInvitation,
+    onOpenContract,
   } = props;
 
   const formatDate = (date) => {
@@ -75,9 +76,20 @@ const SectionCardTenant = (props) => {
                       onChange={() => {}}
                       value={row.ratingRate}
                     />
-                    <div className="status-payment">
-                      <span>{row.customerStatus}</span>
-                    </div>
+                    {row.canSignContract === true ? (
+                      <div
+                        className="status-payment-contract"
+                        onClick={() => {
+                          onOpenContract(row);
+                        }}
+                      >
+                        <span>Contrato disponible</span>
+                      </div>
+                    ) : (
+                      <div className="status-payment">
+                        <span>{row.customerStatus}</span>
+                      </div>
+                    )}
                   </div>
                   <div className="info-user-payment">
                     <div>
