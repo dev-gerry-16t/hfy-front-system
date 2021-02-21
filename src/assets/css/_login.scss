@@ -479,3 +479,21 @@ html {
     transform: rotate(360deg);
   }
 }
+
+@media screen and (max-width: 520px) {
+  .register_row {
+    flex-direction: column;
+    align-items: flex-start;
+    .ant-select {
+      width: 100% !important;
+      margin-bottom: 10px;
+    }
+    .ant-input-affix-wrapper {
+      width: 100% !important;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
+}

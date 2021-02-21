@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, notification, message } from "antd";
+import { Layout, Avatar, Rate, Modal, notification, message, Tabs } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { UserOutlined } from "@ant-design/icons";
@@ -25,10 +25,14 @@ import {
   callAddCommentContract,
   callGetContract,
   callGetContractComment,
+  callGetCustomerMessage,
+  callAddCustomerMessage,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import SectionMessages from "./sectionDocuments/sectionMessages";
 
 const { Content } = Layout;
+const { TabPane } = Tabs;
 
 const Tenant = (props) => {
   const {
@@ -40,9 +44,14 @@ const Tenant = (props) => {
     callAddCommentContract,
     callGetContract,
     callGetContractComment,
+    callGetCustomerMessage,
+    callAddCustomerMessage,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isVisibleMessages, setIsVisibleMessages] = useState(false);
+  const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [dataTenant, setDataTenant] = useState([]);
+  const [dataMessages, setDataMessages] = useState([]);
   const [dataGetContract, setDataGetContract] = useState([]);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
@@ -139,8 +148,72 @@ const Tenant = (props) => {
     style: { marginTop: "4vw" },
   };
 
-  const handlerCallGetAllCustomerTenantById = async () => {
+  const handlerCallGetCustomerMessage = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerMessage({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: idTopIndexMessage,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataMessages(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdTopIndexMessage(responseResult[0].topIndex);
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallAddCustomerMessage = async (data) => {
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idContract,
+      idCustomerTenant,
+    } = dataProfile;
+    try {
+      const response = await callAddCustomerMessage({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        idCustomerTenant,
+        idContract,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      handlerCallGetCustomerMessage({
+        idContract,
+        idCustomerTenant,
+      });
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllCustomerTenantById = async () => {
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenant,
+    } = dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -154,6 +227,10 @@ const Tenant = (props) => {
           ? response.response[0]
           : {};
       setDataTenant(responseResult);
+      handlerCallGetCustomerMessage({
+        idContract: responseResult.idContract,
+        idCustomerTenant: idCustomerTenant,
+      });
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
@@ -398,72 +475,112 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
-        <div className="main-information-owner">
-          <div className="title-cards flex-title-card">
-            <span>Propietario</span>
-            <div className="button_init_secondary">
-              <button type="button" onClick={() => {}}>
-                <span>Reportar Propietario</span>
-              </button>
+        {isVisibleMessages === false && (
+          <div className="main-information-owner">
+            <div className="title-cards flex-title-card">
+              <span>Propietario</span>
+              <div className="button_init_secondary">
+                <button type="button" onClick={() => {}}>
+                  <span>Reportar Propietario</span>
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="section-information-actions">
-            <div className="section-information-info">
-              <div className="section-information-data">
-                <Avatar size={50} icon={<UserOutlined />} />
-                <div className="info-user">
-                  <strong>{dataTenant.fullName}</strong>
-                  <Rate
-                    style={{
-                      fontSize: "15px",
-                      position: "relative",
-                      bottom: "5px",
-                    }}
-                    tooltips={[]}
-                    onChange={() => {}}
-                    value={dataTenant.ratingRate}
-                  />
+            <div className="section-information-actions">
+              <div className="section-information-info">
+                <div className="section-information-data">
+                  <Avatar size={50} icon={<UserOutlined />} />
+                  <div className="info-user">
+                    <strong>{dataTenant.fullName}</strong>
+                    <Rate
+                      style={{
+                        fontSize: "15px",
+                        position: "relative",
+                        bottom: "5px",
+                      }}
+                      tooltips={[]}
+                      onChange={() => {}}
+                      value={dataTenant.ratingRate}
+                    />
+                  </div>
+                </div>
+                <div className="section-information-button-1">
+                  <img src={FileReport} height={62} alt="Reportar incidencia" />
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="button-action-primary"
+                  >
+                    <span>Reportar incidencia</span>
+                  </button>
                 </div>
               </div>
-              <div className="section-information-button-1">
-                <img src={FileReport} height={62} alt="Reportar incidencia" />
-                <button
-                  type="button"
-                  onClick={() => {}}
-                  className="button-action-primary"
-                >
-                  <span>Reportar incidencia</span>
-                </button>
-              </div>
-            </div>
-            <div className="section-information-buttons">
-              <div className="section-information-button-2">
-                <img src={MessagesIcon} height={62} alt="Reportar incidencia" />
-                <button
-                  type="button"
-                  onClick={() => {}}
-                  className="button-action-primary"
-                >
-                  <span>Enviar mensaje</span>
-                </button>
-              </div>
-              <div className="section-information-button-3">
-                <img
-                  src={DocumentsIcon}
-                  alt="Reportar incidencia"
-                  height={62}
-                />
-                <button
-                  type="button"
-                  onClick={() => {}}
-                  className="button-action-primary"
-                >
-                  <span>Subir documento</span>
-                </button>
+              <div className="section-information-buttons">
+                <div className="section-information-button-2">
+                  <img
+                    src={MessagesIcon}
+                    height={62}
+                    alt="Reportar incidencia"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsVisibleMessages(!isVisibleMessages);
+                    }}
+                    className="button-action-primary"
+                  >
+                    <span>Enviar mensaje</span>
+                  </button>
+                </div>
+                <div className="section-information-button-3">
+                  <img
+                    src={DocumentsIcon}
+                    alt="Reportar incidencia"
+                    height={62}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {}}
+                    className="button-action-primary"
+                  >
+                    <span>Subir documento</span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        )}
+        {isVisibleMessages === true && (
+          <div className="actions-information-tenant">
+            <div className="tabs-tenant-information">
+              <Tabs
+                defaultActiveKey="3"
+                onChange={() => {}}
+                tabBarStyle={{ color: "#A0A3BD" }}
+                tabPosition="top"
+              >
+                <TabPane tab="Mensajes" key="3">
+                  <div>
+                    <button type='button' onClick={()=>{
+                      setIsVisibleMessages(false);
+                    }}>x</button>
+                  </div>
+                  <SectionMessages
+                    dataMessages={dataMessages}
+                    getMoreCoincidences={() => {
+                      handlerCallGetCustomerMessage({
+                        idContract: dataTenant.idContract,
+                        idCustomerTenant: dataTenant.idCustomerTenant,
+                      });
+                    }}
+                    onSendMessages={(data) => {
+                      handlerCallAddCustomerMessage(data);
+                    }}
+                  />
+                </TabPane>
+              </Tabs>
+            </div>
+          </div>
+        )}
       </div>
     </Content>
   );
@@ -485,6 +602,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
   callGetAllCustomerTenantById: (data) =>
     dispatch(callGetAllCustomerTenantDashboardById(data)),
+  callAddCustomerMessage: (data) => dispatch(callAddCustomerMessage(data)),
+  callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

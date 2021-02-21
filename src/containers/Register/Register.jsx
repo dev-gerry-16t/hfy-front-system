@@ -31,6 +31,7 @@ import {
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
+import CustomInput from "../../components/CustomInput";
 
 const { Option } = Select;
 
@@ -501,59 +502,63 @@ const Register = (props) => {
                 )}
               </div>
               <label className="fieldset_title">Información personal</label>
-              <div className="register_row half">
-                <Select
-                  placeholder="Tipo de Persona"
-                  value={dataForm.idPersonType}
-                  onChange={(value, option) => {
-                    const configureOption = option.onClick();
-                    setConfigComponents(configureOption);
-                    setErrorsRegister(copyErrors);
-                    setErrorFormulary(false);
-                    setDataForm({ ...dataForm, idPersonType: value });
-                  }}
-                >
-                  {isEmpty(userPerson) === false &&
-                    userPerson.map((row) => {
-                      return (
-                        <Option
-                          value={row.id}
-                          onClick={() => {
-                            return isNil(row) === false &&
-                              isNil(row.jsonProperties) === false
-                              ? JSON.parse(row.jsonProperties)
-                              : {};
-                          }}
-                        >
-                          {row.text}
-                        </Option>
-                      );
-                    })}
-                </Select>
-                {isEmpty(configComponents) === false &&
-                  configComponents.idEndorsement && (
-                    <Select
-                      placeholder="Aval"
-                      onChange={(value) => {
-                        setDataForm({ ...dataForm, idEndorsement: value });
-                      }}
-                    >
-                      {isEmpty(userEndorsement) === false &&
-                        userEndorsement.map((row) => {
-                          return <Option value={row.id}>{row.text}</Option>;
-                        })}
-                    </Select>
-                  )}
-              </div>
+              {selectuserCustomer !== 3 && (
+                <div className="register_row half">
+                  <Select
+                    placeholder="Tipo de Persona"
+                    value={dataForm.idPersonType}
+                    onChange={(value, option) => {
+                      const configureOption = option.onClick();
+                      setConfigComponents(configureOption);
+                      setErrorsRegister(copyErrors);
+                      setErrorFormulary(false);
+                      setDataForm({ ...dataForm, idPersonType: value });
+                    }}
+                  >
+                    {isEmpty(userPerson) === false &&
+                      userPerson.map((row) => {
+                        return (
+                          <Option
+                            value={row.id}
+                            onClick={() => {
+                              return isNil(row) === false &&
+                                isNil(row.jsonProperties) === false
+                                ? JSON.parse(row.jsonProperties)
+                                : {};
+                            }}
+                          >
+                            {row.text}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                  {isEmpty(configComponents) === false &&
+                    configComponents.idEndorsement && (
+                      <Select
+                        placeholder="Aval"
+                        onChange={(value) => {
+                          setDataForm({ ...dataForm, idEndorsement: value });
+                        }}
+                      >
+                        {isEmpty(userEndorsement) === false &&
+                          userEndorsement.map((row) => {
+                            return <Option value={row.id}>{row.text}</Option>;
+                          })}
+                      </Select>
+                    )}
+                </div>
+              )}{" "}
               <div className="register_row">
-                <Input
+                <CustomInput
                   value={dataForm.givenName}
                   suffix={<UserOutlined />}
                   placeholder={
-                    configComponents.lastName ? "Nombre(s):" : "Razón Social"
+                    configComponents.lastName || selectuserCustomer === 3
+                      ? "Nombre(s):"
+                      : "Razón Social"
                   }
                   onChange={(e) => {
-                    setDataForm({ ...dataForm, givenName: e.target.value });
+                    setDataForm({ ...dataForm, givenName: e });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
                   }}
@@ -561,55 +566,80 @@ const Register = (props) => {
               </div>
               <div className="register_row half">
                 {isEmpty(configComponents) === false &&
+                  selectuserCustomer !== 3 &&
                   configComponents.lastName && (
-                    <Input
+                    <CustomInput
                       value={dataForm.lastName}
                       suffix={<UserOutlined />}
                       placeholder="Primer Apellido"
                       onChange={(e) => {
-                        setDataForm({ ...dataForm, lastName: e.target.value });
+                        setDataForm({ ...dataForm, lastName: e });
                       }}
                     />
                   )}
+                {selectuserCustomer === 3 && (
+                  <CustomInput
+                    value={dataForm.lastName}
+                    suffix={<UserOutlined />}
+                    placeholder="Primer Apellido"
+                    onChange={(e) => {
+                      setDataForm({ ...dataForm, lastName: e });
+                    }}
+                  />
+                )}
                 {isEmpty(configComponents) === false &&
+                  selectuserCustomer !== 3 &&
                   configComponents.mothersMaidenName && (
-                    <Input
+                    <CustomInput
                       value={dataForm.mothersMaidenName}
                       suffix={<UserOutlined />}
                       placeholder="Segundo Apellido"
                       onChange={(e) => {
                         setDataForm({
                           ...dataForm,
-                          mothersMaidenName: e.target.value,
+                          mothersMaidenName: e,
                         });
                       }}
                     />
                   )}
+                {selectuserCustomer === 3 && (
+                  <CustomInput
+                    value={dataForm.mothersMaidenName}
+                    suffix={<UserOutlined />}
+                    placeholder="Segundo Apellido"
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        mothersMaidenName: e,
+                      });
+                    }}
+                  />
+                )}
               </div>
               <label className="fieldset_title">
                 {" "}
                 Información de contacto{" "}
               </label>
               <div className="register_row half">
-                <Input
+                <CustomInput
                   value={dataForm.phoneNumber}
                   suffix={<PhoneOutlined />}
                   placeholder="Teléfono celular"
                   onChange={(e) => {
                     const regexp = /^([0-9])*$/;
-                    if (regexp.test(e.target.value) === true) {
-                      setDataForm({ ...dataForm, phoneNumber: e.target.value });
+                    if (regexp.test(e) === true) {
+                      setDataForm({ ...dataForm, phoneNumber: e });
                     }
                   }}
                 />
-                <Input
+                <CustomInput
                   value={dataForm.username}
                   suffix={<MailOutlined />}
                   placeholder="Correo electrónico"
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
-                      username: e.target.value,
+                      username: e,
                     });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
@@ -618,29 +648,28 @@ const Register = (props) => {
               </div>
               <label className="fieldset_title"> Contraseña </label>
               <div className="register_row half">
-                <Input
+                <CustomInput
                   value={dataForm.password}
                   suffix={<LockOutlined />}
                   placeholder="Contraseña"
                   type="password"
                   onChange={(e) => {
-                    const value = e.target.value;
                     setDataForm({
                       ...dataForm,
-                      password: value,
+                      password: e,
                     });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
-                    handlerEvalutePassword(value);
+                    handlerEvalutePassword(e);
                   }}
                 />
-                <Input
+                <CustomInput
                   value={verifyPassword}
                   suffix={<LockOutlined />}
                   placeholder="Confirmar Contraseña"
                   type="password"
                   onChange={(e) => {
-                    setVerifyPassword(e.target.value);
+                    setVerifyPassword(e);
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
                   }}
@@ -798,7 +827,7 @@ const Register = (props) => {
             </p>
             <div className="codeForm">
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-0"
                   type="number"
                   value={codeVerify.value1}
@@ -806,124 +835,124 @@ const Register = (props) => {
                   minLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                     } else {
                       document.getElementById("input-code-validate-1").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value1: event.target.value,
+                        value1: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-1"
                   type="number"
                   value={codeVerify.value2}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-0").focus();
                     } else {
                       document.getElementById("input-code-validate-2").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value2: event.target.value,
+                        value2: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-2"
                   type="number"
                   value={codeVerify.value3}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-1").focus();
                     } else {
                       document.getElementById("input-code-validate-3").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value3: event.target.value,
+                        value3: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-3"
                   type="number"
                   value={codeVerify.value4}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-2").focus();
                     } else {
                       document.getElementById("input-code-validate-4").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value4: event.target.value,
+                        value4: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-4"
                   type="number"
                   value={codeVerify.value5}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-3").focus();
                     } else {
                       document.getElementById("input-code-validate-5").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value5: event.target.value,
+                        value5: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-5"
                   type="number"
                   value={codeVerify.value6}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-4").focus();
                     } else {
                       document.getElementById("button-send-code").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value6: event.target.value,
+                        value6: event,
                       });
                     }
                   }}
