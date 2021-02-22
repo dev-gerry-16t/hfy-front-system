@@ -140,12 +140,12 @@ const SectionContractAvailable = (props) => {
                     </div>
                     <div className="contract-children-information">
                       {isNil(dataGetContract) === false &&
-                        isNil(dataGetContract.digitalContract) === false &&
+                        isNil(dataGetContract.contractContent) === false &&
                         isDownloadDocument === false && (
                           <div
                             style={{ color: "black !important" }}
                             dangerouslySetInnerHTML={{
-                              __html: dataGetContract.digitalContract,
+                              __html: dataGetContract.contractContent,
                             }}
                           />
                         )}
@@ -279,7 +279,7 @@ const SectionContractAvailable = (props) => {
                   />
                 </div>
                 <div className="conditions-name">
-                  <strong>GERARDO ALDAIR GONZALEZ JIMENEZ</strong>
+                  <strong>{dataGetContract.contractContent}</strong>
                 </div>
                 <Checkbox
                   checked={aceptTerms}

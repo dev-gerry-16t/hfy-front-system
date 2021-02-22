@@ -11,6 +11,7 @@ import IconDanger from "../../assets/icons/Danger.svg";
 import FileReport from "../../assets/icons/FileReport.svg";
 import MessagesIcon from "../../assets/icons/MessagesIcon.svg";
 import DocumentsIcon from "../../assets/icons/DocumentsIcon.svg";
+import Arrow from "../../assets/icons/Arrow.svg";
 import Tools from "../../assets/icons/Tools.svg";
 import Transport from "../../assets/icons/Transport.svg";
 import SectionContractAvailable from "./sections/sectionContractAvailable";
@@ -149,10 +150,9 @@ const Tenant = (props) => {
   };
 
   const handlerCallGetCustomerMessage = async (data) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetCustomerMessage({
-        idCustomer,
         idSystemUser,
         idLoginHistory,
         topIndex: idTopIndexMessage,
@@ -174,31 +174,20 @@ const Tenant = (props) => {
     }
   };
 
-  const handlerCallAddCustomerMessage = async (data) => {
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idContract,
-      idCustomerTenant,
-    } = dataProfile;
+  const handlerCallAddCustomerMessage = async (data, data2) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callAddCustomerMessage({
-        idCustomer,
         idSystemUser,
         idLoginHistory,
-        idCustomerTenant,
-        idContract,
+        ...data2,
         ...data,
       });
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      handlerCallGetCustomerMessage({
-        idContract,
-        idCustomerTenant,
-      });
+      handlerCallGetCustomerMessage(data2);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -229,7 +218,8 @@ const Tenant = (props) => {
       setDataTenant(responseResult);
       handlerCallGetCustomerMessage({
         idContract: responseResult.idContract,
-        idCustomerTenant: idCustomerTenant,
+        idCustomerTenant: responseResult.idCustomerTenant,
+        idCustomer: responseResult.idCustomer,
       });
       if (
         isEmpty(responseResult) === false &&
@@ -552,32 +542,38 @@ const Tenant = (props) => {
         {isVisibleMessages === true && (
           <div className="actions-information-tenant">
             <div className="tabs-tenant-information">
-              <Tabs
-                defaultActiveKey="3"
-                onChange={() => {}}
-                tabBarStyle={{ color: "#A0A3BD" }}
-                tabPosition="top"
-              >
-                <TabPane tab="Mensajes" key="3">
-                  <div>
-                    <button type='button' onClick={()=>{
-                      setIsVisibleMessages(false);
-                    }}>x</button>
-                  </div>
-                  <SectionMessages
-                    dataMessages={dataMessages}
-                    getMoreCoincidences={() => {
-                      handlerCallGetCustomerMessage({
-                        idContract: dataTenant.idContract,
-                        idCustomerTenant: dataTenant.idCustomerTenant,
-                      });
+              <div className="form-modal">
+                <div className="title-head-modal">
+                  <button
+                    className="arrow-back-to"
+                    type="button"
+                    onClick={() => {
+                      setIsVisibleMessages(!isVisibleMessages);
                     }}
-                    onSendMessages={(data) => {
-                      handlerCallAddCustomerMessage(data);
-                    }}
-                  />
-                </TabPane>
-              </Tabs>
+                  >
+                    <img src={Arrow} alt="backTo" width="30" />
+                  </button>
+                  <h1>Mensajes</h1>
+                </div>
+              </div>
+              <SectionMessages
+                dataMessages={dataMessages}
+                getMoreCoincidences={() => {
+                  const { idCustomerTF, idCustomerTenantTF } = dataProfile;
+                  handlerCallGetCustomerMessage({
+                    idContract: dataTenant.idContract,
+                    idCustomerTenant: dataTenant.idCustomerTenant,
+                    idCustomer: dataTenant.idCustomer,
+                  });
+                }}
+                onSendMessages={(data) => {
+                  handlerCallAddCustomerMessage(data, {
+                    idContract: dataTenant.idContract,
+                    idCustomerTenant: dataTenant.idCustomerTenant,
+                    idCustomer: dataTenant.idCustomer,
+                  });
+                }}
+              />
             </div>
           </div>
         )}

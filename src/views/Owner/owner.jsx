@@ -440,6 +440,7 @@ const Owner = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
+          type: 1,
         });
         const responseResult =
           isNil(response) === false &&
@@ -518,6 +519,7 @@ const Owner = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
+          type: 1,
         },
         data.idContract
       );

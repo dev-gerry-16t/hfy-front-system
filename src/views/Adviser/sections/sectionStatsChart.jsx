@@ -11,26 +11,50 @@ const SectionStatsChart = (props) => {
 
   const handlerConvertDataChart = (data) => {
     let arrayMonths = [];
-    let arrayProfit = [];
-    let arrayExpenses = [];
-    let arrayBalance = [];
+    const columns = [
+      { title: "Ventas", columnName: "gananciaFormat" },
+      { title: "Póliza", columnName: "poliza" },
+      { title: "Renovaciones", columnName: "renovaciones" },
+    ];
+    let mapDataChart = [];
+
+    mapDataChart = data.map((row) => {
+      let rowParse = {};
+      let returnObject = {};
+      const re = /&nbsp;/gi;
+      for (const key in row) {
+        const element = row[key];
+        rowParse[key] =
+          isEmpty(element) === false ? element.replace(re, " ") : element;
+      }
+
+      returnObject = {
+        ...rowParse,
+        name: "",
+        y: isNil(row.ganancia) === false ? row.ganancia : 0,
+      };
+
+      return returnObject;
+    });
+
+    let stringColumns = "";
+    columns.forEach((element) => {
+      stringColumns = `${stringColumns}${element.title}: <b> {point.${element.columnName}}</b><br/>`;
+    });
 
     data.forEach((element) => {
       arrayMonths.push(element.mes);
-      arrayProfit.push(element.ganancia);
-      arrayExpenses.push(element.gasto);
-      arrayBalance.push(element.balance);
     });
+
     const dataChart = {
       chart: {
         type: "area",
       },
       title: {
-        text: "Comisiones",
+        text: "Ventas",
       },
       tooltip: {
-        pointFormat:
-          "{series.name}: <b>${point.y:,.0f}</b><br/>Polizas: <b>10</b><br/>Renovaciones: <b>0</b><br/>",
+        pointFormat: stringColumns,
       },
       yAxis: {
         title: {
@@ -46,8 +70,7 @@ const SectionStatsChart = (props) => {
       series: [
         {
           name: "Ganancias",
-          data: arrayProfit,
-          color: "#4E51D8",
+          data: mapDataChart,
         },
       ],
     };

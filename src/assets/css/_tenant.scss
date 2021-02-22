@@ -88,6 +88,13 @@
 .actions-information-tenant {
   margin-top: 20px;
   .tabs-tenant-information {
+    .header-tenant-message{
+      display: flex;
+      margin-bottom: 10px;
+      button{
+        border: none;
+      }
+    }
     .ant-tabs-nav-list {
       width: 100%;
       display: flex;

@@ -12,6 +12,7 @@ import IconArroRight from "../../assets/icons/arrowRight.svg";
 import {
   callGetAgentIndicators,
   callGetAgentContractCoincidences,
+  callGetAgentCommissionChart,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionStatsChart from "./sections/sectionStatsChart";
@@ -25,10 +26,12 @@ const Adviser = (props) => {
     history,
     callGetAgentIndicators,
     callGetAgentContractCoincidences,
+    callGetAgentCommissionChart,
   } = props;
 
   const [dataStats, setDataStats] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataChartBar, setDataChartBar] = useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -89,9 +92,33 @@ const Adviser = (props) => {
     }
   };
 
+  const handlerCallGetAgentCommissionChart = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAgentCommissionChart({
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResultBar =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].dataBar) === false
+          ? JSON.parse(response.response[0].dataBar)
+          : [];
+      setDataChartBar(responseResultBar);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const callAsynApis = async () => {
     await handlerCallGetAgentIndicators();
     await handlerCallGetAgentContractCoincidences();
+    await handlerCallGetAgentCommissionChart();
   };
 
   useEffect(() => {
@@ -133,47 +160,7 @@ const Adviser = (props) => {
           </div>
         </div>
         <div className="main-information-user">
-          <SectionStatsChart
-            dataStatsChart={[
-              {
-                mes: "Noviembre, 2021",
-                ganancia: 35307.5,
-                gananciaFormat: "$ 35,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 35,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-              {
-                mes: "Diciembre, 2021",
-                ganancia: 15307.5,
-                gananciaFormat: "$ 15,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 15,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-              {
-                mes: "Enero, 2021",
-                ganancia: 55307.5,
-                gananciaFormat: "$ 55,307.50 MXN",
-                colorGanancia: "#4E51D8",
-                gasto: 0,
-                gastoFormat: "$ 0.00 MXN",
-                colorGasto: "#EF280F",
-                balance: 55307.5,
-                balanceFormat: "$ 55,307.50 MXN",
-                colorBalance: "#32cd32",
-              },
-            ]}
-            finishCallApis
-          />
+          <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
           <SectionCardOwner
             history={history}
             tenantCoincidences={dataCoincidences}
@@ -197,6 +184,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAgentIndicators: (data) => dispatch(callGetAgentIndicators(data)),
   callGetAgentContractCoincidences: (data) =>
     dispatch(callGetAgentContractCoincidences(data)),
+  callGetAgentCommissionChart: (data) =>
+    dispatch(callGetAgentCommissionChart(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Adviser);
