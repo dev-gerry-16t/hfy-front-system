@@ -459,6 +459,7 @@ const Owner = (props) => {
               ...data,
               idSystemUser,
               idLoginHistory,
+              type: 1,
             }),
             headers: {
               "Content-Type": "application/json",
