@@ -62,22 +62,33 @@ const SectionDetailUser = (props) => {
     );
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="0">
-        <a>Whatsapp</a>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <a>Notificación</a>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <a>Mensaje app</a>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <a>Correo</a>
-      </Menu.Item>
-    </Menu>
-  );
+  const menu = (row) => {
+    return (
+      <Menu>
+        <Menu.Item key="0">
+          <a
+            href={
+              isNil(row.phoneNumber) === false
+                ? `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`
+                : "#"
+            }
+            target="_blank"
+          >
+            Whatsapp
+          </a>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <a>Notificación</a>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <a>Mensaje app</a>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <a>Correo</a>
+        </Menu.Item>
+      </Menu>
+    );
+  };
 
   return (
     <Drawer
@@ -165,7 +176,10 @@ const SectionDetailUser = (props) => {
                 <DescriptionItem
                   title="Enviar mensaje"
                   content={
-                    <Dropdown overlay={menu} trigger={["click"]}>
+                    <Dropdown
+                      overlay={menu(dataDetailCustomer)}
+                      trigger={["click"]}
+                    >
                       <a>Enviar</a>
                     </Dropdown>
                   }

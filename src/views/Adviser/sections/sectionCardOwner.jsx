@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Skeleton } from "antd";
+import { Layout, Avatar, Rate, Modal, Skeleton, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -14,6 +14,7 @@ import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import IconMessages from "../../../assets/icons/ChatContract.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 
 moment.locale("es");
 
@@ -24,6 +25,22 @@ const SectionCardOwner = (props) => {
     finishCallApis,
     onClickSendInvitation,
   } = props;
+
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
 
   const formatDate = (date) => {
     let dateFormat = "";
@@ -83,7 +100,14 @@ const SectionCardOwner = (props) => {
                   <button
                     type="button"
                     onClick={() => {
-                      window.location.href = `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`;
+                      if (isNil(row.phoneNumber) === false) {
+                        window.location.href = `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`;
+                      } else {
+                        showMessageStatusApi(
+                          "Aún no contamos con la información del contacto, intentalo mas tarde",
+                          GLOBAL_CONSTANTS.STATUS_API.SUCCES
+                        );
+                      }
                     }}
                   >
                     <img src={IconMessages} alt="arrow-right" width="20" />

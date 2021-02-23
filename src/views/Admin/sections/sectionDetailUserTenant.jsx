@@ -72,22 +72,33 @@ const SectionDetailUserTenant = (props) => {
     );
   };
 
-  const menu = (
-    <Menu>
-      <Menu.Item key="0">
-        <a>Whatsapp</a>
-      </Menu.Item>
-      <Menu.Item key="1">
-        <a>Notificación</a>
-      </Menu.Item>
-      <Menu.Item key="2">
-        <a>Mensaje app</a>
-      </Menu.Item>
-      <Menu.Item key="3">
-        <a>Correo</a>
-      </Menu.Item>
-    </Menu>
-  );
+  const menu = (row) => {
+    return (
+      <Menu>
+        <Menu.Item key="0">
+          <a
+            href={
+              isNil(row.phoneNumber) === false
+                ? `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`
+                : "#"
+            }
+            target="_blank"
+          >
+            Whatsapp
+          </a>
+        </Menu.Item>
+        <Menu.Item key="1">
+          <a>Notificación</a>
+        </Menu.Item>
+        <Menu.Item key="2">
+          <a>Mensaje app</a>
+        </Menu.Item>
+        <Menu.Item key="3">
+          <a>Correo</a>
+        </Menu.Item>
+      </Menu>
+    );
+  };
 
   return (
     <Drawer
@@ -414,7 +425,7 @@ const SectionDetailUserTenant = (props) => {
                         <DescriptionItem
                           title="Enviar mensaje"
                           content={
-                            <Dropdown overlay={menu} trigger={["click"]}>
+                            <Dropdown overlay={menu(row)} trigger={["click"]}>
                               <a>Enviar</a>
                             </Dropdown>
                           }
@@ -489,7 +500,19 @@ const SectionDetailUserTenant = (props) => {
                             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                               <DescriptionItem
                                 title="Telefono"
-                                content={row.endorsementPhoneNumber}
+                                content={
+                                  <a
+                                    href={
+                                      isNil(row.endorsementPhoneNumber) ===
+                                      false
+                                        ? `https://api.whatsapp.com/send?phone=52${row.endorsementPhoneNumber}`
+                                        : "#"
+                                    }
+                                    target="_blank"
+                                  >
+                                    {row.endorsementPhoneNumber}
+                                  </a>
+                                }
                               />
                             </Col>
                           </Row>
@@ -522,7 +545,18 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="Telefono"
-                          content={row.phoneNumber}
+                          content={
+                            <a
+                              href={
+                                isNil(row.phoneNumber) === false
+                                  ? `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`
+                                  : "#"
+                              }
+                              target="_blank"
+                            >
+                              {row.phoneNumber}
+                            </a>
+                          }
                         />
                       </Col>
                     </Row>
