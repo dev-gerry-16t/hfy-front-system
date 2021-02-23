@@ -309,7 +309,11 @@ const SectionInfoUser = (props) => {
                       setDataForm({ ...dataForm, hasCar: value });
                     }}
                     value={
-                      dataForm.hasCar === true || dataForm.hasCar === 1 ? 1 : 0
+                      dataForm.hasCar === true || dataForm.hasCar === 1
+                        ? 1
+                        : isNil(dataForm.hasCar) === false
+                        ? 0
+                        : null
                     }
                   >
                     <Radio value={1}>Si</Radio>
@@ -438,7 +442,9 @@ const SectionInfoUser = (props) => {
                   content={
                     dataForm.hasCar === true || dataForm.hasCar === 1
                       ? "Si"
-                      : "No"
+                      : isNil(dataForm.hasCar) === false
+                      ? "No"
+                      : null
                   }
                 />
               </Col>

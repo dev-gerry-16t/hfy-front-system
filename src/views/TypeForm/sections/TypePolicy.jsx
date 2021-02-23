@@ -123,6 +123,27 @@ const TypePolicy = (props) => {
                 )}
               </div>
             </div>
+            <div className="section-card-documentation">
+              <div className="section-title-card-doc">
+                <strong style={{ textAlign: "center" }}>
+                  Póliza seguro de responsabilidad <br />
+                  civíl para la propiedad
+                </strong>
+                <span></span>
+              </div>
+              <div className="section-content-card-doc">
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[2]) === false
+                      ? dataDocuments[2]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
+              </div>
+            </div>
           </div>
           <div className="button_actions">
             {/* <button

@@ -157,7 +157,9 @@ const SectionInfoAval = (props) => {
                       dataForm.hasEndorsement === true ||
                       dataForm.hasEndorsement === 1
                         ? 1
-                        : 0
+                        : isNil(dataForm.hasEndorsement) === false
+                        ? 0
+                        : null
                     }
                   >
                     <Radio value={1}>Si</Radio>
@@ -685,7 +687,9 @@ const SectionInfoAval = (props) => {
                     dataForm.hasEndorsement === true ||
                     dataForm.hasEndorsement === 1
                       ? "Si"
-                      : "No"
+                      : isNil(dataForm.hasEndorsement) === false
+                      ? "No"
+                      : null
                   }
                 />
               </Col>

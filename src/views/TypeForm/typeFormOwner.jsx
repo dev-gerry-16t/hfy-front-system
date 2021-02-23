@@ -65,7 +65,7 @@ const TypeFormOwner = (props) => {
     match,
   } = props;
   const frontFunctions = new FrontFunctions();
-  const [current, setCurrent] = React.useState(0);
+  const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataBank, setDataBank] = useState([]);
   const [dataMaritalStatus, setDataMaritalStatus] = useState([]);

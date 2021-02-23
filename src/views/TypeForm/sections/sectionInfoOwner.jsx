@@ -36,7 +36,6 @@ const SectionInfoOwner = (props) => {
     dataIdTypes,
   } = props;
   const initialForm = {
-    isOwner: null,
     givenName: null,
     lastName: null,
     mothersMaidenName: null,
@@ -143,37 +142,6 @@ const SectionInfoOwner = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <div className="option-select-radio">
-                  <span
-                    style={{
-                      color: "var(--color-primary)",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ¿Eres el propietario?
-                  </span>
-                  <Radio.Group
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({
-                        ...dataForm,
-                        isOwner: value,
-                      });
-                    }}
-                    value={
-                      dataForm.isOwner === true || dataForm.isOwner === 1
-                        ? 1
-                        : 0
-                    }
-                  >
-                    <Radio value={1}>Si</Radio>
-                    <Radio value={0}>No, lo estoy representando</Radio>
-                  </Radio.Group>
-                </div>
-              </Col>
-            </Row>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <Input
@@ -548,18 +516,6 @@ const SectionInfoOwner = (props) => {
               Verifica que tu información sea correcta, de lo contrario no
               podras hacer modificaciones.
             </p>
-            <Row>
-              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="¿Eres el propietarios?"
-                  content={
-                    dataForm.isOwner === 1 ? "Si" : "No, lo estoy representando"
-                  }
-                />
-              </Col>
-              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
-            </Row>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                 <DescriptionItem

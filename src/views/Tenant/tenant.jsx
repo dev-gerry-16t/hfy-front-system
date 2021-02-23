@@ -398,9 +398,9 @@ const Tenant = (props) => {
                   onClick={() => {
                     handlerCallGetContract({
                       download: false,
-                      idCustomer: dataTenant.idCustomer,
-                      idCustomerTenant: dataTenant.idCustomerTenant,
                       idContract: dataTenant.idContract,
+                      idCustomerTenant: dataTenant.idCustomerTenant,
+                      idCustomer: dataTenant.idCustomer,
                     });
                     setIsModalVisible(!isModalVisible);
                   }}

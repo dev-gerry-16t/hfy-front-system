@@ -250,7 +250,11 @@ const SectionCurrentAddress = (props) => {
                       setDataForm({ ...dataForm, isOwn: e.target.value });
                     }}
                     value={
-                      dataForm.isOwn === 1 || dataForm.isOwn === true ? 1 : 0
+                      dataForm.isOwn === 1 || dataForm.isOwn === true
+                        ? 1
+                        : isNil(dataForm.isOwn) === false
+                        ? 0
+                        : null
                     }
                   >
                     <Radio value={1}>Propia</Radio>
@@ -411,7 +415,9 @@ const SectionCurrentAddress = (props) => {
                   content={
                     dataForm.isOwn === 1 || dataForm.isOwn === true
                       ? "Propia"
-                      : "Rentada"
+                      : isNil(dataForm.isOwn) === false
+                      ? "Rentada"
+                      : null
                   }
                 />
               </Col>
