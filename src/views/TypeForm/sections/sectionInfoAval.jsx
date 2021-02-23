@@ -693,167 +693,177 @@ const SectionInfoAval = (props) => {
                   }
                 />
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Nombre completo"
-                  content={`${dataForm.endorsementGivenName} ${dataForm.endorsementLastName} ${dataForm.endorsementMothersMaidenName}`}
-                />
-              </Col>
+              {(dataForm.hasEndorsement === true ||
+                dataForm.hasEndorsement === 1) && (
+                <>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                    <DescriptionItem
+                      title="Nombre completo"
+                      content={`${dataForm.endorsementGivenName} ${dataForm.endorsementLastName} ${dataForm.endorsementMothersMaidenName}`}
+                    />
+                  </Col>
+                </>
+              )}
             </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Telefono"
-                  content={dataForm.endorsementPhoneNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Correo"
-                  content={dataForm.endorsementEmailAddress}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="Nacionalidad"
-                  content={dataForm.idEndorsementNationalityText}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Identificacion oficial"
-                  content={dataForm.idEndorsementTypeText}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title={`Numero de ${dataForm.idEndorsementTypeText}`}
-                  content={dataForm.idEndorsementTypeNumber}
-                />
-              </Col>
-            </Row>
-            {dataForm.isRequiresPlaceOfIssue === true && (
-              <Row>
-                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-                <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-                  <DescriptionItem
-                    title={`Lugar de expedición de identificación`}
-                    content={dataForm.endorsementPlaceOfIssue}
-                  />
-                </Col>
-                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-              </Row>
+            {(dataForm.hasEndorsement === true ||
+              dataForm.hasEndorsement === 1) && (
+              <>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Telefono"
+                      content={dataForm.endorsementPhoneNumber}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                    <DescriptionItem
+                      title="Correo"
+                      content={dataForm.endorsementEmailAddress}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title="Nacionalidad"
+                      content={dataForm.idEndorsementNationalityText}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Identificacion oficial"
+                      content={dataForm.idEndorsementTypeText}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Numero de ${dataForm.idEndorsementTypeText}`}
+                      content={dataForm.idEndorsementTypeNumber}
+                    />
+                  </Col>
+                </Row>
+                {dataForm.isRequiresPlaceOfIssue === true && (
+                  <Row>
+                    <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                    <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                      <DescriptionItem
+                        title={`Lugar de expedición de identificación`}
+                        content={dataForm.endorsementPlaceOfIssue}
+                      />
+                    </Col>
+                    <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                  </Row>
+                )}
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="CURP"
+                      content={dataForm.endorsementCitizenId}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                </Row>
+                <p>Dirección de la propiedad en garantia</p>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title="Calle"
+                      content={dataForm.collateralPropertyStreet}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Numero"
+                      content={dataForm.collateralPropertyStreetNumber}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Colonia"
+                      content={dataForm.collateralPropertyNeighborhood}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title="Municipio/Delegación"
+                      content={dataForm.collateralPropertyCity}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Estado"
+                      content={dataForm.collateralPropertyState}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Código postal"
+                      content={dataForm.collateralPropertyZipCode}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Registro público de la propiedad"
+                      content={dataForm.publicPropertyRegistry}
+                    />
+                  </Col>
+                </Row>
+                <p>Escrituras</p>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Numero de las escrituras"
+                      content={dataForm.documentNumber}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Fecha de firma de las escrituras"
+                      content={moment(
+                        dataForm.documentSignedAt,
+                        "YYYY-MM-DD"
+                      ).format("DD MMMM YYYY")}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Lugar de la firma de las escrituras"
+                      content={dataForm.signedAtPlace}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Número de la notaria"
+                      content={dataForm.notaryOfficeNumber}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title="Nombre del notario"
+                      content={dataForm.notaryOfficeNumber}
+                    />
+                  </Col>
+                </Row>
+              </>
             )}
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="CURP"
-                  content={dataForm.endorsementCitizenId}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-            </Row>
-            <p>Dirección de la propiedad en garantia</p>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="Calle"
-                  content={dataForm.collateralPropertyStreet}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Numero"
-                  content={dataForm.collateralPropertyStreetNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Colonia"
-                  content={dataForm.collateralPropertyNeighborhood}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="Municipio/Delegación"
-                  content={dataForm.collateralPropertyCity}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Estado"
-                  content={dataForm.collateralPropertyState}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Código postal"
-                  content={dataForm.collateralPropertyZipCode}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Registro público de la propiedad"
-                  content={dataForm.publicPropertyRegistry}
-                />
-              </Col>
-            </Row>
-            <p>Escrituras</p>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Numero de las escrituras"
-                  content={dataForm.documentNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Fecha de firma de las escrituras"
-                  content={moment(
-                    dataForm.documentSignedAt,
-                    "YYYY-MM-DD"
-                  ).format("DD MMMM YYYY")}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Lugar de la firma de las escrituras"
-                  content={dataForm.signedAtPlace}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Número de la notaria"
-                  content={dataForm.notaryOfficeNumber}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                <DescriptionItem
-                  title="Nombre del notario"
-                  content={dataForm.notaryOfficeNumber}
-                />
-              </Col>
-            </Row>
             <div className="button_actions">
               <button
                 type="button"
