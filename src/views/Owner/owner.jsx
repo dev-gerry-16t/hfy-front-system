@@ -501,7 +501,7 @@ const Owner = (props) => {
         data.idContract
       );
       showMessageStatusApi(
-        "Tu comentario se envio correctamente",
+        "Tu comentario se envió correctamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
