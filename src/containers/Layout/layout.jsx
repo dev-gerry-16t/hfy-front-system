@@ -74,8 +74,8 @@ const DefaultLayout = (props) => {
           idLoginHistory,
           documentName: "avatar_image",
           extension: "png/img",
-          preview: data,
-          thumbnail: null,
+          preview: null,
+          thumbnail: data,
         },
         idSystemUser
       );
