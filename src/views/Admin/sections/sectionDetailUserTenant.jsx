@@ -18,6 +18,7 @@ import {
   Dropdown,
   Button,
   Popover,
+  Timeline,
 } from "antd";
 import {
   SyncOutlined,
@@ -41,6 +42,7 @@ const SectionDetailUserTenant = (props) => {
     changeRolesCustomers,
     onSendRatingUser,
     onRedirectTo,
+    dataMessages,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [valueCalification, setValueCalification] = useState({});
@@ -753,6 +755,35 @@ const SectionDetailUserTenant = (props) => {
                 />
               </Col>
             </Row>
+          </Panel>
+          <Panel
+            header={<h3 role="title-section">Comentarios Contrato</h3>}
+            key="5"
+          >
+            <div className="panel-comment-user">
+              {isEmpty(dataMessages) === false ? (
+                <Timeline>
+                  {dataMessages.map((row) => {
+                    return (
+                      <Timeline.Item>
+                        <div>
+                          <p>
+                            <strong>
+                              {row.createdByUser} | {row.createdAt}
+                            </strong>
+                          </p>
+                          {row.comment}
+                        </div>
+                      </Timeline.Item>
+                    );
+                  })}
+                </Timeline>
+              ) : (
+                <strong>
+                  No existen comentarios por parte del Inquilino
+                </strong>
+              )}
+            </div>
           </Panel>
         </Collapse>
       </div>

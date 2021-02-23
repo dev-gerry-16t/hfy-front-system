@@ -551,6 +551,7 @@ const Owner = (props) => {
   return (
     <Content>
       <SectionContractAvailable
+        dataProfile={dataProfile}
         isModalVisible={isVisibleContract}
         onClose={() => {
           setIsVisibleContract(!isVisibleContract);

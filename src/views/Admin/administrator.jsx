@@ -23,6 +23,7 @@ import {
   callGetDetailCustomerTenant,
   callGetDetailCustomerAgent,
   callSwitchCustomerContract,
+  callGetContractComment,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionStatsChart from "./sections/sectionStatsChart";
@@ -51,8 +52,11 @@ const Administrator = (props) => {
     callGetDetailCustomerAgent,
     callSwitchCustomerContract,
     setDataUserProfile,
+    callGetContractComment,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
+  const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
+  const [dataMessages, setDataMessages] = useState([]);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataStats, setDataStats] = useState({});
@@ -127,6 +131,31 @@ const Administrator = (props) => {
           ? response.response[0]
           : {};
       setDataStats(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallContractComment = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractComment({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: idTopIndexMessage,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataMessages(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdTopIndexMessage(responseResult[0].topIndex);
+      }
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -505,6 +534,7 @@ const Administrator = (props) => {
           });
           history.push(`/websystem/typeform-owner/${key}`);
         }}
+        dataMessages={dataMessages}
       />
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
@@ -531,6 +561,7 @@ const Administrator = (props) => {
           });
           history.push(`/websystem/typeform-user/${key}`);
         }}
+        dataMessages={dataMessages}
       />
       <SectionDetailUserAdviser
         isDrawerVisible={isVisibleDetailUserAdviser}
@@ -581,12 +612,24 @@ const Administrator = (props) => {
             onAddUser={() => {
               setIsVisibleAddUser(!isVisibleAddUser);
             }}
-            onOpenDetail={(type, id) => {
+            onOpenDetail={(type, id, data) => {
               if (id === 1) {
                 handlerCallGetDetailCustomer(type);
+                handlerCallContractComment({
+                  idCustomer: data.idCustomer,
+                  idCustomerTenant: null,
+                  idContract: data.idContract,
+                  idDigitalContract: data.idDigitalContract,
+                });
                 setIsVisibleDetailUser(!isVisibleDetailUser);
               } else if (id === 2) {
                 handlerCallGetDetailCustomerTenant(type);
+                handlerCallContractComment({
+                  idCustomer: data.idCustomer,
+                  idCustomerTenant: data.idCustomerTenant,
+                  idContract: data.idContract,
+                  idDigitalContract: data.idDigitalContract,
+                });
                 setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
               } else if (id === 3) {
                 handlerCallGetDetailCustomerAgent(type);
@@ -634,6 +677,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetDetailCustomerAgent: (data) =>
     dispatch(callGetDetailCustomerAgent(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
+  callGetContractComment: (data) => dispatch(callGetContractComment(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

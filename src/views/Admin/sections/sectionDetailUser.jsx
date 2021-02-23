@@ -16,6 +16,7 @@ import {
   Collapse,
   Menu,
   Dropdown,
+  Timeline,
 } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
@@ -31,6 +32,7 @@ const SectionDetailUser = (props) => {
     spinVisible,
     dataDetailCustomer,
     onRedirectTo,
+    dataMessages,
   } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
@@ -333,6 +335,35 @@ const SectionDetailUser = (props) => {
                 />
               </Col>
             </Row>
+          </Panel>
+          <Panel
+            header={<h3 role="title-section">Comentarios Contrato</h3>}
+            key="5"
+          >
+            <div className="panel-comment-user">
+              {isEmpty(dataMessages) === false ? (
+                <Timeline>
+                  {dataMessages.map((row) => {
+                    return (
+                      <Timeline.Item>
+                        <div>
+                          <p>
+                            <strong>
+                              {row.createdByUser} | {row.createdAt}
+                            </strong>
+                          </p>
+                          {row.comment}
+                        </div>
+                      </Timeline.Item>
+                    );
+                  })}
+                </Timeline>
+              ) : (
+                <strong>
+                  No existen comentarios por parte del Propietario
+                </strong>
+              )}
+            </div>
           </Panel>
         </Collapse>
       </div>

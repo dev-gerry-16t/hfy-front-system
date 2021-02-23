@@ -251,6 +251,7 @@ const Tenant = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
+          type: 1,
         });
         const responseResult =
           isNil(response) === false &&
@@ -352,6 +353,7 @@ const Tenant = (props) => {
   return (
     <Content>
       <SectionContractAvailable
+        dataProfile={dataProfile}
         isModalVisible={isModalVisible}
         onClose={() => {
           setIsModalVisible(!isModalVisible);

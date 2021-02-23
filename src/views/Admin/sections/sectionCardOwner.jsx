@@ -192,7 +192,7 @@ const SectionCardOwner = (props) => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <a
             onClick={() => {
-              onOpenDetail(record.idContract, 1);
+              onOpenDetail(record.idContract, 1, record);
             }}
             style={{ marginRight: "5PX" }}
           >
@@ -214,7 +214,7 @@ const SectionCardOwner = (props) => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <a
             onClick={() => {
-              onOpenDetail(record.idContract, 2);
+              onOpenDetail(record.idContract, 2, record);
             }}
             style={{ color: "gray", marginRight: "5PX" }}
           >
@@ -236,7 +236,7 @@ const SectionCardOwner = (props) => {
         <a
           onClick={() => {
             if (isNil(text) === false) {
-              onOpenDetail(record.idContract, 3);
+              onOpenDetail(record.idContract, 3, record);
             }
           }}
           style={{ color: "brown" }}
@@ -453,7 +453,7 @@ const SectionCardOwner = (props) => {
                         <strong>Propietario: </strong>
                         <a
                           onClick={() => {
-                            onOpenDetail(row.idContract, 1);
+                            onOpenDetail(row.idContract, 1, row);
                           }}
                           style={{ marginRight: "5px" }}
                         >
@@ -469,7 +469,7 @@ const SectionCardOwner = (props) => {
                         <strong>Inquilino:</strong>{" "}
                         <a
                           onClick={() => {
-                            onOpenDetail(row.idContract, 2);
+                            onOpenDetail(row.idContract, 2, row);
                           }}
                           style={{ color: "gray", marginRight: "5px" }}
                         >
@@ -488,7 +488,7 @@ const SectionCardOwner = (props) => {
                         <a
                           onClick={() => {
                             if (isNil(row.customerAgentFullName) === false) {
-                              onOpenDetail(row.idContract, 3);
+                              onOpenDetail(row.idContract, 3, row);
                             }
                           }}
                           style={{ color: "brown" }}

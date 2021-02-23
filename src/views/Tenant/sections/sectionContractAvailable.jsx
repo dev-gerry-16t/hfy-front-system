@@ -37,6 +37,7 @@ const SectionContractAvailable = (props) => {
     dataGetContract,
     onDownloadDocument,
     onAcceptContract,
+    dataProfile,
   } = props;
   const [signature, setSignature] = useState("");
   const [startedAt, setStartedAt] = useState(null);
@@ -187,9 +188,8 @@ const SectionContractAvailable = (props) => {
                           color: "var(--color-primary)",
                         }}
                       >
-                        Selecciona la fecha en la que quieres firmar tu contrato
-                        presencial y el dia en el que quieras que inicie el
-                        contrato de arrendamiento.
+                        Selecciona la fecha de firmar de contrato y el dia en el
+                        que quieras que inicie el contrato de arrendamiento.
                       </label>
                     </div>
                     <Row>
@@ -200,7 +200,7 @@ const SectionContractAvailable = (props) => {
                               ? moment(scheduleSignatureDate, "YYYY-MM-DD")
                               : null
                           }
-                          placeholder="Fecha de firma precencial"
+                          placeholder="Fecha de firma"
                           onChange={(momentFormat, date) => {
                             setScheduleSignatureDate(
                               moment(momentFormat).format("YYYY-MM-DD")
@@ -279,7 +279,7 @@ const SectionContractAvailable = (props) => {
                   />
                 </div>
                 <div className="conditions-name">
-                  <strong>{dataGetContract.contractContent}</strong>
+                  <strong>{dataGetContract.fullName}</strong>
                 </div>
                 <Checkbox
                   checked={aceptTerms}
@@ -304,34 +304,40 @@ const SectionContractAvailable = (props) => {
                   terminos y condiciones publicados en la pagina
                   https//homify.ai/terminos-y-condiciones amparados bajo la ley
                 </span>
-                <div style={{ margin: "15px 0px" }}>
-                  <label
-                    style={{
-                      fontSize: "14px",
-                      fontWeight: "500",
-                      color: "var(--color-primary)",
-                    }}
-                  >
-                    Selecciona el dia en el que quieras que inicie el contrato
-                    de arrendamiento.
-                  </label>
-                </div>
-                <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                    <DatePicker
-                      value={
-                        isNil(startedAt) === false
-                          ? moment(startedAt, "YYYY-MM-DD")
-                          : null
-                      }
-                      placeholder="Fecha de inicio del contrato"
-                      onChange={(momentFormat, date) => {
-                        setStartedAt(moment(momentFormat).format("YYYY-MM-DD"));
-                      }}
-                      format="DD MMMM YYYY"
-                    />
-                  </Col>
-                </Row>
+                {dataProfile.idUserType !== 2 && (
+                  <>
+                    <div style={{ margin: "15px 0px" }}>
+                      <label
+                        style={{
+                          fontSize: "14px",
+                          fontWeight: "500",
+                          color: "var(--color-primary)",
+                        }}
+                      >
+                        Selecciona el dia en el que quieras que inicie el
+                        contrato de arrendamiento.
+                      </label>
+                    </div>
+                    <Row>
+                      <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                        <DatePicker
+                          value={
+                            isNil(startedAt) === false
+                              ? moment(startedAt, "YYYY-MM-DD")
+                              : null
+                          }
+                          placeholder="Fecha de inicio del contrato"
+                          onChange={(momentFormat, date) => {
+                            setStartedAt(
+                              moment(momentFormat).format("YYYY-MM-DD")
+                            );
+                          }}
+                          format="DD MMMM YYYY"
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}{" "}
               </div>
             )}
             {openSection === 3 && (
@@ -360,14 +366,16 @@ const SectionContractAvailable = (props) => {
         </div>
         {openSection === 1 && signaturePrecencial === false && (
           <div className="two-action-buttons">
-            <button
-              type="button"
-              onClick={() => {
-                setSignaturePrecencial(!signaturePrecencial);
-              }}
-            >
-              <span>Firma precencial</span>
-            </button>
+            {dataProfile.idUserType !== 2 && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSignaturePrecencial(!signaturePrecencial);
+                }}
+              >
+                <span>Firma presencial</span>
+              </button>
+            )}
             <button
               type="button"
               onClick={() => {
