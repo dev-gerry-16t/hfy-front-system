@@ -245,7 +245,7 @@ const Administrator = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      setDataOwnerSearch({ ...dataOwnerSearch, ...responseResult });
+      setDataOwnerSearch(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -270,7 +270,7 @@ const Administrator = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      setDataTenantSearch({ ...dataTenantSearch, ...responseResult });
+      setDataTenantSearch(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -295,7 +295,7 @@ const Administrator = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      setDataSecondTenant({ ...dataSecondTenant, ...responseResult });
+      setDataSecondTenant(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -320,7 +320,7 @@ const Administrator = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : {};
-      setDataAdviserSearch({ ...dataAdviserSearch, ...responseResult });
+      setDataAdviserSearch(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -337,11 +337,16 @@ const Administrator = (props) => {
         idLoginHistory,
         ...data,
       });
+      showMessageStatusApi(
+        "La solicitud se proceso exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -477,8 +482,12 @@ const Administrator = (props) => {
         onSearchAdviser={(data) => {
           handlerCallGetSearchProspectAdviser(data);
         }}
-        onSendInformation={(data) => {
-          handlerCallGetAddProspect(data);
+        onSendInformation={async (data) => {
+          try {
+            await handlerCallGetAddProspect(data);
+          } catch (error) {
+            throw error;
+          }
         }}
       />
       <SectionDetailUser
@@ -533,9 +542,10 @@ const Administrator = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, Administrador</h2>
+            <h2>Hola, {dataProfile.showName}</h2>
             <span>
-              Último inicio de sesión: <strong>25 enero 2021</strong>
+              Último inicio de sesión:{" "}
+              <strong>{dataProfile.lastSessionStarted}</strong>
             </span>
           </div>
         </div>

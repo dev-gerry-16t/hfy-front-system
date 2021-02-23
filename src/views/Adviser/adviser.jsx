@@ -130,9 +130,12 @@ const Adviser = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, Asesor</h2>
+            <h2>Hola, {dataProfile.showName}</h2>
             <span>
-              Último inicio de sesión: <strong>25 enero 2021</strong>
+              Último inicio de sesión: <strong>{dataProfile.lastSessionStarted}</strong>
+            </span>
+            <span>
+              Número de Asesor: <strong>{dataProfile.agentNo}</strong>
             </span>
           </div>
         </div>

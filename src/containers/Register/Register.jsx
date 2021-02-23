@@ -135,7 +135,7 @@ const Register = (props) => {
     } catch (error) {}
   };
 
-  const handlerCallApiPersonTypes = async (data) => {
+  const handlerCallApiPersonTypes = async (data, person) => {
     const { match } = props;
     const params = isEmpty(match.params) === false ? match.params : {};
     try {
@@ -146,7 +146,7 @@ const Register = (props) => {
           : [];
       if (isEmpty(params) === false && isEmpty(responseResult) === false) {
         const filterCondition = responseResult.find((row) => {
-          return row.idPersonType == params.idCustomerType;
+          return row.idPersonType == person;
         });
         const parseResult = JSON.parse(filterCondition.jsonProperties);
         setConfigComponents(parseResult);
@@ -173,10 +173,13 @@ const Register = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : {};
-      await handlerCallApiPersonTypes({
-        idType: 1,
-        idCustomerType: responseResult.idCustomerType,
-      });
+      await handlerCallApiPersonTypes(
+        {
+          idType: 1,
+          idCustomerType: responseResult.idCustomerType,
+        },
+        responseResult.idPersonType
+      );
       await handlerCallApiEndorsement({
         idType: 1,
       });
@@ -400,10 +403,13 @@ const Register = (props) => {
               <button
                 type="button"
                 onClick={async () => {
-                  await handlerCallApiPersonTypes({
-                    idType: 1,
-                    idCustomerType: selectuserCustomer,
-                  });
+                  await handlerCallApiPersonTypes(
+                    {
+                      idType: 1,
+                      idCustomerType: selectuserCustomer,
+                    },
+                    dataForm.idPersonType
+                  );
                   await handlerCallApiEndorsement({
                     idType: 1,
                   });

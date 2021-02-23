@@ -123,6 +123,10 @@ const SectionInfoOwner = (props) => {
           isNil(selectDefaultMaritalStatus) === false
             ? selectDefaultMaritalStatus.text
             : "",
+        isRequiresPlaceOfIssue:
+          isNil(selectDefaultIdType) === false
+            ? selectDefaultIdType.requiresPlaceOfIssue
+            : null,
       });
       setVisibleComponents({ ...visibleComponents, ...visibleField });
     }
@@ -302,12 +306,12 @@ const SectionInfoOwner = (props) => {
                   showSearch
                   value={dataForm.idType}
                   onChange={(value, option) => {
-                    const valueLabelIdentity = option.onClick()
-                      .fieldDescription;
+                    const valueSelect = option.onClick();
                     setDataForm({
                       ...dataForm,
                       idType: value,
                       idTypeText: option.children,
+                      isRequiresPlaceOfIssue: valueSelect.requiresPlaceOfIssue,
                     });
                   }}
                   filterOption={(input, option) =>
@@ -340,18 +344,20 @@ const SectionInfoOwner = (props) => {
                 </Col>
               )}
             </Row>
-            <Row>
-              <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                <Input
-                  value={dataForm.placeOfIssue}
-                  placeholder={"Lugar de expedición de la identificación"}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setDataForm({ ...dataForm, placeOfIssue: value });
-                  }}
-                />
-              </Col>
-            </Row>
+            {dataForm.isRequiresPlaceOfIssue === true && (
+              <Row>
+                <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                  <Input
+                    value={dataForm.placeOfIssue}
+                    placeholder={"Lugar de expedición de la identificación"}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, placeOfIssue: value });
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Select
@@ -627,16 +633,18 @@ const SectionInfoOwner = (props) => {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-                <DescriptionItem
-                  title={`Lugar de expedición de identificación`}
-                  content={dataForm.placeOfIssue}
-                />
-              </Col>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-            </Row>
+            {dataForm.isRequiresPlaceOfIssue === true && (
+              <Row>
+                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                  <DescriptionItem
+                    title={`Lugar de expedición de identificación`}
+                    content={dataForm.placeOfIssue}
+                  />
+                </Col>
+                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+              </Row>
+            )}
             <p>Domicilio Actual</p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>

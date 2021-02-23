@@ -98,6 +98,7 @@ const SectionInfoAval = (props) => {
       const selectDefaultIdType = dataIdTypes.find((row) => {
         return dataFormSave.idEndorsementType === row.idType;
       });
+      console.log("selectDefaultIdType", selectDefaultIdType);
       setDataForm({
         ...dataFormSave,
         idEndorsementNationalityText:
@@ -106,6 +107,10 @@ const SectionInfoAval = (props) => {
             : "",
         idEndorsementTypeText:
           isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+        isRequiresPlaceOfIssue:
+          isNil(selectDefaultIdType) === false
+            ? selectDefaultIdType.requiresPlaceOfIssue
+            : null,
       });
       onChangeZipCode(dataFormSave.collateralPropertyZipCode);
     }
@@ -282,12 +287,13 @@ const SectionInfoAval = (props) => {
                       showSearch
                       value={dataForm.idEndorsementType}
                       onChange={(value, option) => {
-                        const valueLabelIdentity = option.onClick()
-                          .fieldDescription;
+                        const valueSelect = option.onClick();
                         setDataForm({
                           ...dataForm,
                           idEndorsementType: value,
                           idEndorsementTypeText: option.children,
+                          isRequiresPlaceOfIssue:
+                            valueSelect.requiresPlaceOfIssue,
                         });
                       }}
                       filterOption={(input, option) =>
@@ -323,21 +329,23 @@ const SectionInfoAval = (props) => {
                     </Col>
                   )}
                 </Row>
-                <Row>
-                  <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                    <Input
-                      value={dataForm.endorsementPlaceOfIssue}
-                      placeholder={"Lugar de expedición de la identificación"}
-                      onChange={(e) => {
-                        const value = e.target.value;
-                        setDataForm({
-                          ...dataForm,
-                          endorsementPlaceOfIssue: value,
-                        });
-                      }}
-                    />
-                  </Col>
-                </Row>
+                {dataForm.isRequiresPlaceOfIssue === true && (
+                  <Row>
+                    <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                      <Input
+                        value={dataForm.endorsementPlaceOfIssue}
+                        placeholder={"Lugar de expedición de la identificación"}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setDataForm({
+                            ...dataForm,
+                            endorsementPlaceOfIssue: value,
+                          });
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                )}
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
@@ -726,16 +734,18 @@ const SectionInfoAval = (props) => {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-                <DescriptionItem
-                  title={`Lugar de expedición de identificación`}
-                  content={dataForm.endorsementPlaceOfIssue}
-                />
-              </Col>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-            </Row>
+            {dataForm.isRequiresPlaceOfIssue === true && (
+              <Row>
+                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                  <DescriptionItem
+                    title={`Lugar de expedición de identificación`}
+                    content={dataForm.endorsementPlaceOfIssue}
+                  />
+                </Col>
+                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+              </Row>
+            )}
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem

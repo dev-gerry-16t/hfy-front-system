@@ -67,6 +67,13 @@ const SectionAddUsers = (props) => {
         lastNameOwner: dataOwnerSearch.lastName,
         mothersLastNameOwner: dataOwnerSearch.mothersMaidenName,
       });
+    } else {
+      setDataForm({
+        ...dataForm,
+        nameOwner: null,
+        lastNameOwner: null,
+        mothersLastNameOwner: null,
+      });
     }
   }, [dataOwnerSearch]);
 
@@ -78,6 +85,14 @@ const SectionAddUsers = (props) => {
         lastNameTenant: dataTenantSearch.lastName,
         mothersLastNameTenant: dataTenantSearch.mothersMaidenName,
         personType: dataTenantSearch.idPersonType,
+      });
+    } else {
+      setDataForm({
+        ...dataForm,
+        nameTenant: null,
+        lastNameTenant: null,
+        mothersLastNameTenant: null,
+        personType: null,
       });
     }
   }, [dataTenantSearch]);
@@ -91,6 +106,14 @@ const SectionAddUsers = (props) => {
         mothersLastNameTenant2: dataSecondTenant.mothersMaidenName,
         personType2: dataSecondTenant.idPersonType,
       });
+    } else {
+      setDataForm({
+        ...dataForm,
+        nameTenant2: null,
+        lastNameTenant2: null,
+        mothersLastNameTenant2: null,
+        personType2: null,
+      });
     }
   }, [dataSecondTenant]);
 
@@ -101,6 +124,13 @@ const SectionAddUsers = (props) => {
         nameAdviser: dataAdviserSearch.givenName,
         lastNameAdviser: dataAdviserSearch.lastName,
         mothersLastNameAdviser: dataAdviserSearch.mothersMaidenName,
+      });
+    } else {
+      setDataForm({
+        ...dataForm,
+        nameAdviser: null,
+        lastNameAdviser: null,
+        mothersLastNameAdviser: null,
       });
     }
   }, [dataAdviserSearch]);
@@ -403,7 +433,7 @@ const SectionAddUsers = (props) => {
           <div className="button_init_primary">
             <button
               type="button"
-              onClick={() => {
+              onClick={async () => {
                 const arrayTenants = [];
 
                 if (
@@ -450,7 +480,10 @@ const SectionAddUsers = (props) => {
                   customerTenant: arrayTenants,
                   idCustomerAgent: dataAdviserSearch.idCustomerAgent,
                 };
-                onSendInformation(dataResult);
+                try {
+                  await onSendInformation(dataResult);
+                  onClose();
+                } catch (error) {}
               }}
             >
               <span>Enviar Prospectos</span>

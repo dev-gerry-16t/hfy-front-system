@@ -80,7 +80,12 @@ const SectionCardOwner = (props) => {
                   </div>
                 </div>
                 <div className="button-collapse">
-                  <button type="button" onClick={() => {}}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      window.location.href = `https://api.whatsapp.com/send?phone=52${row.phoneNumber}`;
+                    }}
+                  >
                     <img src={IconMessages} alt="arrow-right" width="20" />
                   </button>
                 </div>
