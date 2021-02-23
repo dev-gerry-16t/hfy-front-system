@@ -765,7 +765,6 @@ const Register = (props) => {
                         await handlerCallApiRegister({
                           ...dataForm,
                           idCustomerType: selectuserCustomer,
-                          offset: "-06:00",
                         });
                         setUserType(3);
                         setSpinVisible(false);
@@ -979,7 +978,6 @@ const Register = (props) => {
                     await handlerCallVerifyCode({
                       code: numberResult,
                       idRequestSignUp,
-                      offset: "-06:00",
                       idInvitation: dataForm.idInvitation,
                     });
                     setUserType(4);
@@ -1018,7 +1016,6 @@ const Register = (props) => {
                       await handlerCallApiRegister({
                         ...dataForm,
                         idCustomerType: selectuserCustomer,
-                        offset: "-06:00",
                       });
                     }
                   } catch (error) {

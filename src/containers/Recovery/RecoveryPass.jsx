@@ -368,7 +368,6 @@ const RecoveryPassword = (props) => {
                       idRequestRecoveryPassword:
                         dataForm.idRequestPasswordRecovery,
                       code: numberResult,
-                      offset: "-06:00",
                     });
                     setDataForm({
                       ...dataForm,
