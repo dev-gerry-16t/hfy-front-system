@@ -79,7 +79,7 @@ const Tenant = (props) => {
         <span style={{ fontSize: "12px" }}>
           Antes de iniciar el formulario debes tener lista una identificación
           oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-          empresa donde trabajas que acredite desde cuando estas laborando en la
+          empresa donde trabajas que acredite desde cuando estás laborando en la
           empresa. Adicional, necesitaras la escritura del inmueble que quedara
           como garantía y los datos e identificación del Aval.
         </span>
@@ -104,7 +104,7 @@ const Tenant = (props) => {
           color: "var(--color-primary)",
         }}
       >
-        Solicitud de Investigación Persona Física con Aval
+        Solicitud de Investigación Persona Física con o sin Aval
       </div>
     ),
     duration: 0,

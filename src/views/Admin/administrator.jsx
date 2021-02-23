@@ -552,11 +552,11 @@ const Administrator = (props) => {
         changeRolesCustomers={(id) => {
           handlerCallSwitchCustomerContract(id);
         }}
-        onRedirectTo={async (key, idCustomer, idContract) => {
+        onRedirectTo={async (key, idCustomer, idContract, idCustomerTenant) => {
           await setDataUserProfile({
             ...dataProfile,
-            idCustomerTenantTF: idCustomer,
-            idCustomerTF: null,
+            idCustomerTenantTF: idCustomerTenant,
+            idCustomerTF: idCustomer,
             idContract: idContract,
           });
           history.push(`/websystem/typeform-user/${key}`);

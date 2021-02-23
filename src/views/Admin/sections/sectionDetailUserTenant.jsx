@@ -443,8 +443,9 @@ const SectionDetailUserTenant = (props) => {
                                   onClick={(value) => {
                                     onRedirectTo(
                                       value.key,
-                                      row.idCustomerTenant,
-                                      row.idContract
+                                      row.idCustomer,
+                                      row.idContract,
+                                      row.idCustomerTenant
                                     );
                                   }}
                                 >
@@ -779,9 +780,7 @@ const SectionDetailUserTenant = (props) => {
                   })}
                 </Timeline>
               ) : (
-                <strong>
-                  No existen comentarios por parte del Inquilino
-                </strong>
+                <strong>No existen comentarios por parte del Inquilino</strong>
               )}
             </div>
           </Panel>
