@@ -25,7 +25,7 @@ import Show from "../../../assets/icons/Show.svg";
 import Delete from "../../../assets/icons/Delete.svg";
 import {
   callAddDocument,
-  callAddTypeFormDocument,
+  callAddDocumentContract,
 } from "../../../utils/actions/actions";
 import ENVIROMENT from "../../../utils/constants/enviroments";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -38,7 +38,7 @@ const CustomFileUpload = (props) => {
     typeDocument,
     dataDocument,
     callAddDocument,
-    callAddTypeFormDocument,
+    callAddDocumentContract,
     dataProfile,
     onSuccesUpload,
   } = props;
@@ -88,7 +88,7 @@ const CustomFileUpload = (props) => {
 
   const handlerAddTypeFormDocument = async (data, id) => {
     try {
-      await callAddTypeFormDocument(data, id);
+      await callAddDocumentContract(data, id);
       setSpinVisibleUpload(false);
     } catch (error) {
       showMessageStatusApi(
@@ -99,14 +99,14 @@ const CustomFileUpload = (props) => {
   };
 
   const handlerAddDocument = async (data, infoDoc) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const { idSystemUser, idLoginHistory } = dataProfile;
     const dataDocument = {
       documentName: data.name,
       extension: data.type,
       preview: null,
       thumbnail: null,
       idDocumentType: infoDoc.idDocumentType,
-      idCustomer,
+      idCustomer: infoDoc.idCustomer,
       idSystemUser,
       idLoginHistory,
     };
@@ -126,14 +126,13 @@ const CustomFileUpload = (props) => {
           : null;
       await handlerAddTypeFormDocument(
         {
-          idCustomer,
-          idTypeForm: infoDoc.idTypeForm,
-          idCustomerTenant: idCustomer,
-          type: typeDocument,
+          idDigitalContract: infoDoc.idDigitalContract,
+          idDocument: documentId,
           idSystemUser,
           idLoginHistory,
+          type: null,
         },
-        documentId
+        infoDoc.idContract
       );
       setTimeout(() => {
         setSpinVisible(false);
@@ -142,7 +141,6 @@ const CustomFileUpload = (props) => {
         "Documento subido exitosamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
-      onSuccesUpload(infoDoc.idDocumentType);
     } catch (error) {
       showMessageStatusApi(
         "No se logro subir el archivo, intenta nuevamente o mas tarde",
@@ -294,8 +292,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callAddDocument: (file, data, callback) =>
     dispatch(callAddDocument(file, data, callback)),
-  callAddTypeFormDocument: (data, id) =>
-    dispatch(callAddTypeFormDocument(data, id)),
+  callAddDocumentContract: (data, id) =>
+    dispatch(callAddDocumentContract(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(CustomFileUpload);

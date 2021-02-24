@@ -80,6 +80,8 @@ const API_CONSTANTS = {
   GET_CONTRACT_COMMENT: `${API.API_SECURE}${API.ADMIN}/getContractComment`,
   SET_CONTRACT: `${API.API_SECURE}${API.ADMIN}/setContract/`,
   ADD_CONTRACT_COMMENT: `${API.API_SECURE}${API.ADMIN}/addContractComment/`,
+  GET_CONTRACT_DOCUMENT: `${API.API_SECURE}${API.ADMIN}/getDigitalContractDocument`,
+  ADD_CONTRACT_DOCUMENT: `${API.API_SECURE}${API.ADMIN}/addDigitalContractDocument/`,
 };
 
 export { API_CONSTANTS, HEADER };

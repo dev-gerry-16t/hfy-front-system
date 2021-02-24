@@ -24,6 +24,8 @@ import {
   callGetDetailCustomerAgent,
   callSwitchCustomerContract,
   callGetContractComment,
+  callAddDocumentContract,
+  callGetContractDocument,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionStatsChart from "./sections/sectionStatsChart";
@@ -54,6 +56,8 @@ const Administrator = (props) => {
     callSwitchCustomerContract,
     setDataUserProfile,
     callGetContractComment,
+    callAddDocumentContract,
+    callGetContractDocument,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
@@ -61,6 +65,7 @@ const Administrator = (props) => {
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataDocuments, setDataDocuments] = useState([]);
   const [dataStats, setDataStats] = useState({});
   const [dataDetailCustomer, setDataDetailCustomer] = useState({});
   const [dataDetailCustomerTenant, setDataDetailCustomerTenant] = useState([]);
@@ -158,6 +163,28 @@ const Administrator = (props) => {
       if (isEmpty(responseResult) === false) {
         setIdTopIndexMessage(responseResult[0].topIndex);
       }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallContractDocument = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractDocument({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        type: null,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDocuments(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -492,11 +519,11 @@ const Administrator = (props) => {
   return (
     <Content>
       <SectionUploadDocument
+        dataDocuments={dataDocuments}
         isModalVisible={isVisibleAddDocs}
         onClose={() => {
           setIsVisibleAddDocs(!isVisibleAddDocs);
         }}
-        dataDocuments={{}}
       />
       <SectionAddUsers
         isModalVisible={isVisibleAddUser}
@@ -556,6 +583,7 @@ const Administrator = (props) => {
           try {
             await handlerCallUpdateContract(data);
             await handlerCallGetDetailCustomerTenant(data.idContract);
+            callAsynApis();
           } catch (error) {}
         }}
         changeRolesCustomers={(id) => {
@@ -616,7 +644,8 @@ const Administrator = (props) => {
           <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
           <SectionStatsChartPie dataStatsChart={dataChartPie} finishCallApis />
           <SectionCardOwner
-            onOpenUploadDocument={() => {
+            onOpenUploadDocument={(id) => {
+              handlerCallContractDocument(id);
               setIsVisibleAddDocs(!isVisibleAddDocs);
             }}
             history={history}
@@ -690,6 +719,9 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetDetailCustomerAgent(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
+  callAddDocumentContract: (data, id) =>
+    dispatch(callAddDocumentContract(data, id)),
+  callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

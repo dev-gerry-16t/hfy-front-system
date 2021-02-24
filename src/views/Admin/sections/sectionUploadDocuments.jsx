@@ -22,7 +22,7 @@ import {
   CloseOutlined,
 } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import CustomFileUpload from "../../TypeForm/sections/customFileUpload";
+import CustomFileUpload from "./customFileUpload";
 
 const { Option } = Select;
 
@@ -59,7 +59,6 @@ const CustomSubSectionCardDocument = (props) => {
 
 const SectionUploadDocument = (props) => {
   const { isModalVisible, onClose, dataDocuments } = props;
-
   return (
     <Modal
       style={{ top: 20 }}
@@ -78,7 +77,7 @@ const SectionUploadDocument = (props) => {
           >
             <img src={Arrow} alt="backTo" width="30" />
           </button>
-          <h1>Documentación firmada</h1>
+          <h1>Documentación</h1>
         </div>
         <div className="main-form-information">
           <p>
@@ -99,8 +98,8 @@ const SectionUploadDocument = (props) => {
                   acceptFile="image/png, image/jpeg, image/jpg"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
-                    isNil(dataDocuments[6]) === false
-                      ? dataDocuments[6]
+                    isNil(dataDocuments[2]) === false
+                      ? dataDocuments[2]
                       : {}
                   }
                   typeDocument={1}
@@ -115,8 +114,8 @@ const SectionUploadDocument = (props) => {
                   acceptFile="image/png, image/jpeg, image/jpg"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
-                    isNil(dataDocuments[6]) === false
-                      ? dataDocuments[6]
+                    isNil(dataDocuments[0]) === false
+                      ? dataDocuments[0]
                       : {}
                   }
                   typeDocument={1}
@@ -131,8 +130,8 @@ const SectionUploadDocument = (props) => {
                   acceptFile="image/png, image/jpeg, image/jpg"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
-                    isNil(dataDocuments[6]) === false
-                      ? dataDocuments[6]
+                    isNil(dataDocuments[1]) === false
+                      ? dataDocuments[1]
                       : {}
                   }
                   typeDocument={1}

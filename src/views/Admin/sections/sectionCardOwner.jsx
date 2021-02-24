@@ -35,6 +35,7 @@ import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 import DocumentIcon from "../../../assets/icons/DocumentsIcon.svg";
+import Lock from "../../../assets/icons/Lock.svg";
 
 moment.locale("es");
 const { Option } = Select;
@@ -421,10 +422,10 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Documentos",
-      dataIndex: "documents",
-      key: "documents",
+      dataIndex: "hasAllDocumentation",
+      key: "hasAllDocumentation",
       align: "center",
-      render: () => {
+      render: (documents, record) => {
         return (
           <div>
             <button
@@ -432,10 +433,16 @@ const SectionCardOwner = (props) => {
               type="button"
               style={{ border: "none", background: "transparent" }}
               onClick={() => {
-                onOpenUploadDocument();
+                if (documents === false) {
+                  onOpenUploadDocument(record.idContract);
+                }
               }}
             >
-              <img src={DocumentIcon} alt="backTo" width="20" />
+              {documents === false ? (
+                <img src={DocumentIcon} alt="backTo" width="20" />
+              ) : (
+                <img src={Lock} alt="backTo" width="20" />
+              )}
             </button>
           </div>
         );
@@ -565,10 +572,16 @@ const SectionCardOwner = (props) => {
                               background: "transparent",
                             }}
                             onClick={() => {
-                              onOpenUploadDocument();
+                              if (row.hasAllDocumentation === false) {
+                                onOpenUploadDocument(row.idContract);
+                              }
                             }}
                           >
-                            <img src={DocumentIcon} alt="backTo" width="20" />
+                            {row.hasAllDocumentation === false ? (
+                              <img src={DocumentIcon} alt="backTo" width="20" />
+                            ) : (
+                              <img src={Lock} alt="backTo" width="20" />
+                            )}
                           </button>
                         </div>
                       </td>
