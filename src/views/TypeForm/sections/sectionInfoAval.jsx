@@ -126,6 +126,26 @@ const SectionInfoAval = (props) => {
     }
   }, [dataZipCodeAdress]);
 
+  const getTypeIdDocument = (type) => {
+    let word = "";
+
+    switch (type) {
+      case 1:
+        word = "IFE/INE Frontal y Vuelta";
+        break;
+      case 2:
+        word = "Pasaporte";
+        break;
+      case 3:
+        word = "FM3";
+        break;
+      default:
+        word = "IFE/INE Frontal y Vuelta";
+        break;
+    }
+    return word;
+  };
+
   return (
     <div className="content-typeform-formulary">
       <h3>
@@ -605,8 +625,10 @@ const SectionInfoAval = (props) => {
                 <div className="section-top-documentation">
                   <div className="section-card-documentation">
                     <div className="section-title-card-doc">
-                      <strong>INE</strong>
-                      <span>Frente y vuelta</span>
+                      <strong>Identificación oficial</strong>
+                      <span>
+                        {getTypeIdDocument(dataForm.idEndorsementType)}
+                      </span>
                     </div>
                     <div className="section-content-card-doc">
                       <CustomFileUpload
@@ -619,16 +641,19 @@ const SectionInfoAval = (props) => {
                         }
                         typeDocument={typeDocument}
                       />
-                      <CustomFileUpload
-                        acceptFile="image/png, image/jpeg, image/jpg"
-                        dataDocument={
-                          isEmpty(dataDocuments) === false &&
-                          isNil(dataDocuments[1]) === false
-                            ? dataDocuments[1]
-                            : {}
-                        }
-                        typeDocument={typeDocument}
-                      />
+                      {(dataForm.idEndorsementType === 1 ||
+                        isNil(dataForm.idEndorsementType) === true) && (
+                        <CustomFileUpload
+                          acceptFile="image/png, image/jpeg, image/jpg"
+                          dataDocument={
+                            isEmpty(dataDocuments) === false &&
+                            isNil(dataDocuments[1]) === false
+                              ? dataDocuments[1]
+                              : {}
+                          }
+                          typeDocument={typeDocument}
+                        />
+                      )}
                     </div>
                   </div>
                   <div className="section-card-documentation">
