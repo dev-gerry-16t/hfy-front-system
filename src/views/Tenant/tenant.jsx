@@ -480,7 +480,11 @@ const Tenant = (props) => {
             <div className="section-information-actions">
               <div className="section-information-info">
                 <div className="section-information-data">
-                  <Avatar size={50} icon={<UserOutlined />} />
+                  {isNil(dataTenant.profileThumbnail) === false ? (
+                    <Avatar size={50} src={dataTenant.profileThumbnail} />
+                  ) : (
+                    <Avatar size={50} icon={<UserOutlined />} />
+                  )}
                   <div className="info-user">
                     <strong>{dataTenant.fullName}</strong>
                     <Rate

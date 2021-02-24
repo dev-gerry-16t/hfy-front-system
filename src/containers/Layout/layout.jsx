@@ -2,7 +2,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu, Drawer, Dropdown } from "antd";
+import { Layout, Menu, Drawer, Dropdown, Avatar } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -21,6 +21,7 @@ import IconCloseLogout from "../../assets/icons/Logout.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import { callSetImageProfile } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 
 const { Header, Sider } = Layout;
 
@@ -37,6 +38,7 @@ const DefaultLayout = (props) => {
     dataProfileMenu,
     dataProfile,
     callSetImageProfile,
+    setDataUserProfile,
   } = props;
   const [collapsed, setCollapsed] = useState(false);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
@@ -79,6 +81,10 @@ const DefaultLayout = (props) => {
         },
         idSystemUser
       );
+      await setDataUserProfile({
+        ...dataProfile,
+        thumbnail: data,
+      });
     } catch (error) {}
   };
 
@@ -341,11 +347,20 @@ const DefaultLayout = (props) => {
                   <span>{dataProfile.userType}</span>
                 </div>
                 <button className="button-header">
-                  <img src={IconNotification} />
+                  <img className="icon-header-1" src={IconNotification} />
                 </button>
-                <Dropdown overlay={menu} placement="bottomRight" arrow>
+                <Dropdown
+                  overlay={menu}
+                  placement="bottomRight"
+                  arrow
+                  trigger="click"
+                >
                   <button className="button-header">
-                    <img src={IconProfile} />
+                    {isNil(dataProfile.thumbnail) === false ? (
+                      <Avatar size={50} src={dataProfile.thumbnail} />
+                    ) : (
+                      <img className="icon-header-2" src={IconProfile} />
+                    )}
                   </button>
                 </Dropdown>
               </div>
@@ -398,6 +413,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);

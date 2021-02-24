@@ -65,7 +65,11 @@ const SectionCardOwner = (props) => {
               <div className="data-renter-info">
                 <div className="box-info-user">
                   <div className="avatar-user">
-                    <Avatar size={50} icon={<UserOutlined />} />
+                    {isNil(row.profileThumbnail) === false ? (
+                      <Avatar size={50} src={row.profileThumbnail} />
+                    ) : (
+                      <Avatar size={50} icon={<UserOutlined />} />
+                    )}
                   </div>
                   <div className="info-user">
                     <strong>{row.fullName}</strong>
