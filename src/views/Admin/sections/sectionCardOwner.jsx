@@ -34,6 +34,7 @@ import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
+import DocumentIcon from "../../../assets/icons/DocumentsIcon.svg";
 
 moment.locale("es");
 const { Option } = Select;
@@ -49,6 +50,7 @@ const SectionCardOwner = (props) => {
     onGetPolicyStatus,
     dataAllPolicyStatus,
     onClosePolicy,
+    onOpenUploadDocument,
   } = props;
 
   const [openPopover, setOpenPopover] = useState({});
@@ -61,8 +63,8 @@ const SectionCardOwner = (props) => {
       component = (
         <Popover
           visible={
-            isNil(openPopover[`popover1-${record.key}`]) === false
-              ? openPopover[`popover1-${record.key}`]
+            isNil(openPopover[`popover1-${record.idContract}`]) === false
+              ? openPopover[`popover1-${record.idContract}`]
               : false
           }
           content={
@@ -122,7 +124,7 @@ const SectionCardOwner = (props) => {
                 type="button"
                 onClick={() => {
                   setOpenPopover({
-                    [`popover1-${record.key}`]: false,
+                    [`popover1-${record.idContract}`]: false,
                   });
                 }}
                 style={{
@@ -144,7 +146,7 @@ const SectionCardOwner = (props) => {
             size="small"
             onClick={() => {
               setOpenPopover({
-                [`popover1-${record.key}`]: true,
+                [`popover1-${record.idContract}`]: true,
               });
               onGetPolicyStatus(record.idContract);
             }}
@@ -294,8 +296,8 @@ const SectionCardOwner = (props) => {
             <div>
               <Popover
                 visible={
-                  isNil(openPopover[`popover-${record.key}`]) === false
-                    ? openPopover[`popover-${record.key}`]
+                  isNil(openPopover[`popover-${record.idContract}`]) === false
+                    ? openPopover[`popover-${record.idContract}`]
                     : false
                 }
                 content={
@@ -355,7 +357,7 @@ const SectionCardOwner = (props) => {
                       type="button"
                       onClick={() => {
                         setOpenPopover({
-                          [`popover-${record.key}`]: false,
+                          [`popover-${record.idContract}`]: false,
                         });
                       }}
                       style={{
@@ -377,7 +379,7 @@ const SectionCardOwner = (props) => {
                   size="small"
                   onClick={() => {
                     setOpenPopover({
-                      [`popover-${record.key}`]: true,
+                      [`popover-${record.idContract}`]: true,
                     });
                     onGetPolicyStatus(record.idContract);
                   }}
@@ -415,6 +417,28 @@ const SectionCardOwner = (props) => {
           );
         }
         return component;
+      },
+    },
+    {
+      title: "Documentos",
+      dataIndex: "documents",
+      key: "documents",
+      align: "center",
+      render: () => {
+        return (
+          <div>
+            <button
+              className="arrow-back-to"
+              type="button"
+              style={{ border: "none", background: "transparent" }}
+              onClick={() => {
+                onOpenUploadDocument();
+              }}
+            >
+              <img src={DocumentIcon} alt="backTo" width="20" />
+            </button>
+          </div>
+        );
       },
     },
   ];
@@ -529,6 +553,24 @@ const SectionCardOwner = (props) => {
                       <td>
                         <strong>Monto Renta:</strong>
                         <span> {row.currentRent}</span>
+                      </td>
+                      <td style={{ display: "flex" }}>
+                        <strong>Documentos:</strong>
+                        <div>
+                          <button
+                            className="arrow-back-to"
+                            type="button"
+                            style={{
+                              border: "none",
+                              background: "transparent",
+                            }}
+                            onClick={() => {
+                              onOpenUploadDocument();
+                            }}
+                          >
+                            <img src={DocumentIcon} alt="backTo" width="20" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   </table>

@@ -33,6 +33,7 @@ import SectionAddUsers from "./sections/sectionAddUsers";
 import SectionDetailUser from "./sections/sectionDetailUser";
 import SectionDetailUserTenant from "./sections/sectionDetailUserTenant";
 import SectionDetailUserAdviser from "./sections/sectionUserDetailAdviser";
+import SectionUploadDocument from "./sections/sectionUploadDocuments";
 
 const { Content } = Layout;
 
@@ -58,6 +59,7 @@ const Administrator = (props) => {
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [dataMessages, setDataMessages] = useState([]);
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
+  const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataStats, setDataStats] = useState({});
   const [dataDetailCustomer, setDataDetailCustomer] = useState({});
@@ -489,6 +491,13 @@ const Administrator = (props) => {
 
   return (
     <Content>
+      <SectionUploadDocument
+        isModalVisible={isVisibleAddDocs}
+        onClose={() => {
+          setIsVisibleAddDocs(!isVisibleAddDocs);
+        }}
+        dataDocuments={{}}
+      />
       <SectionAddUsers
         isModalVisible={isVisibleAddUser}
         dataOwnerSearch={dataOwnerSearch}
@@ -607,6 +616,9 @@ const Administrator = (props) => {
           <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
           <SectionStatsChartPie dataStatsChart={dataChartPie} finishCallApis />
           <SectionCardOwner
+            onOpenUploadDocument={() => {
+              setIsVisibleAddDocs(!isVisibleAddDocs);
+            }}
             history={history}
             dataAllPolicyStatus={dataAllPolicyStatus}
             onAddUser={() => {

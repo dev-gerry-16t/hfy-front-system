@@ -292,7 +292,31 @@ const SectionDetailUserTenant = (props) => {
                               </Row>
                             </>
                           }
-                          title="Resultado de investigación 0-5"
+                          title={
+                            <div>
+                              <span>Resultado definitivo</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setOpenPopover({
+                                    [row.idCustomerTenant]:
+                                      isNil(
+                                        openPopover[row.idCustomerTenant]
+                                      ) === false
+                                        ? !openPopover[row.idCustomerTenant]
+                                        : false,
+                                  });
+                                }}
+                                style={{
+                                  marginLeft: 5,
+                                  background: "transparent",
+                                  border: "none",
+                                }}
+                              >
+                                <i className="fa fa-times" />
+                              </button>
+                            </div>
+                          }
                           trigger="click"
                           visible={
                             isNil(openPopover[row.idCustomerTenant]) === false
