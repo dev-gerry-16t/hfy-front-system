@@ -464,6 +464,8 @@ const Owner = (props) => {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
+              credentials: "include",
+              mode: "cors",
             },
           }
         );
