@@ -771,8 +771,8 @@ const Administrator = (props) => {
             onGetPolicyStatus={(id) => {
               handlerCallGetAllPolicyStatus(id);
             }}
-            onClosePolicy={(data) => {
-              handlerCallUpdateContract(data);
+            onClosePolicy={async (data) => {
+              await handlerCallUpdateContract(data);
               callAsynApis();
             }}
           />

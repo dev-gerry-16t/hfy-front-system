@@ -58,7 +58,7 @@ const SectionDetailUserTenant = (props) => {
         {title}:
       </strong>
       <br />
-      {content}
+      {isNil(content) === false ? content : "-"}
     </div>
   );
 
@@ -621,21 +621,30 @@ const SectionDetailUserTenant = (props) => {
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Tipo de persona fiscal"
-                  content="Fisica"
+                  content={dataIsMainTenant.personType}
                 />
               </Col>
             </Row>
             <Row>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Estatus" content="Vigente" />
+                <DescriptionItem
+                  title="Estatus"
+                  content={dataIsMainTenant.status}
+                />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Folio" content="212234334" />
+                <DescriptionItem
+                  title="Folio"
+                  content={dataIsMainTenant.hfInvoice}
+                />
               </Col>
             </Row>
             <Row>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
+                <DescriptionItem
+                  title="Vencimiento"
+                  content={dataIsMainTenant.expireAt}
+                />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <a
@@ -662,11 +671,14 @@ const SectionDetailUserTenant = (props) => {
               role="separator"
             />
             <p>
-              <h3>Poliza</h3>
+              <h3>Póliza</h3>
             </p>
             <Row>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem title="Poliza" content="Homify Basica" />
+                <DescriptionItem
+                  title="Póliza"
+                  content={dataIsMainTenant.policy}
+                />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <a
@@ -684,7 +696,7 @@ const SectionDetailUserTenant = (props) => {
                     }
                   }}
                 >
-                  Descargar Poliza
+                  Descargar Póliza
                 </a>
               </Col>
             </Row>
@@ -917,14 +929,15 @@ const SectionDetailUserTenant = (props) => {
                         />
                       </Col>
                     </Row>
-                    <div
-                      className="ant-divider ant-divider-horizontal"
-                      role="separator"
-                    />
+
                     {isNil(row.hasEndorsement) === false &&
                       row.hasEndorsement === true &&
                       row.isMain === true && (
                         <>
+                          <div
+                            className="ant-divider ant-divider-horizontal"
+                            role="separator"
+                          />
                           <h3>Fiador</h3>
                           <Row>
                             <Col span={8}>

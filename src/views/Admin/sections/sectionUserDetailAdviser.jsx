@@ -129,7 +129,7 @@ const SectionDetailUserAdviser = (props) => {
           </Col>
           <Col span={12}>
             <DescriptionItem
-              title="Polizas Totales"
+              title="Pólizas Totales"
               content={dataDetailAgent.totalCommissions}
             />
           </Col>
@@ -153,7 +153,7 @@ const SectionDetailUserAdviser = (props) => {
             />
           </Col>
         </Row>
-        <h3>Información de poliza actual</h3>
+        <h3>Información de póliza actual</h3>
         <Row>
           <Col span={12}>
             <DescriptionItem
@@ -163,7 +163,7 @@ const SectionDetailUserAdviser = (props) => {
           </Col>
           <Col span={12}>
             <DescriptionItem
-              title="Comisión poliza Actual"
+              title="Comisión póliza Actual"
               content={dataDetailAgent.totalCommissionAmount}
             />
           </Col>

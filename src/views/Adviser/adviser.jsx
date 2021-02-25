@@ -152,7 +152,7 @@ const Adviser = (props) => {
               <img src={IconPolicy} alt="icon" width="20px"></img>
             </div>
             <h2>{dataStats.totalPolicies}</h2>
-            <span>Polizas</span>
+            <span>Pólizas</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>

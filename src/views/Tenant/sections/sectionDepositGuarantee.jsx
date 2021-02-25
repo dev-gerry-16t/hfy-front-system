@@ -87,7 +87,7 @@ const SectionDepositGuarantee = (props) => {
           {openSection === 1 && (
             <div className="policy-information-modal">
               <span>
-                <strong>Homify</strong> te ofrece una poliza para que no
+                <strong>Homify</strong> te ofrece una póliza para que no
                 realices tu depòsito en garantía.
               </span>
               <div className="percentage-description">
@@ -107,7 +107,7 @@ const SectionDepositGuarantee = (props) => {
                   </Radio>
                 </div>
                 <div className="description">
-                  Poliza por 2 veces el valor de la renta en caso de
+                  Póliza por 2 veces el valor de la renta en caso de
                   incumplimiento. <br />
                   Costo:2% mas iva mensual del valor de la renta.
                 </div>
@@ -129,7 +129,7 @@ const SectionDepositGuarantee = (props) => {
                   </Radio>
                 </div>
                 <div className="description">
-                  Pago del 50% del valor del deposito en garantía mas una poliza
+                  Pago del 50% del valor del deposito en garantía mas una póliza
                   por el 100% del valor de una renta.
                   <br />
                   Costo: 3% mas iva mensual del valor de una renta.

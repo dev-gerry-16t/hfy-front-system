@@ -55,7 +55,7 @@ const SectionCardOwner = (props) => {
   return (
     <div className="renter-card-information">
       <div className="title-cards flex-title-card">
-        <span>Propietarios</span>
+        <span>Pólizas</span>
       </div>
       <div className="section-information-renters">
         {isEmpty(tenantCoincidences) === false &&
@@ -92,7 +92,7 @@ const SectionCardOwner = (props) => {
                       Vencimiento de contrato: <strong>{row.expireAt}</strong>
                     </div>
                     <div>
-                      Poliza: <strong>{row.policy}</strong>
+                      Póliza: <strong>{row.policy}</strong>
                     </div>
                     <div>
                       {row.commissionType}:{" "}

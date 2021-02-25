@@ -308,12 +308,12 @@ const SectionDetailUser = (props) => {
               role="separator"
             />
             <p>
-              <h3>Poliza</h3>
+              <h3>Póliza</h3>
             </p>
             <Row>
               <Col span={12}>
                 <DescriptionItem
-                  title="Poliza"
+                  title="Póliza"
                   content={dataDetailCustomer.policy}
                 />
               </Col>
@@ -339,7 +339,7 @@ const SectionDetailUser = (props) => {
                     );
                   }}
                 >
-                  Descargar Poliza
+                  Descargar Póliza
                 </a>
               </Col>
             </Row>

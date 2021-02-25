@@ -61,11 +61,11 @@ const TypePolicy = (props) => {
 
   return (
     <div className="content-typeform-formulary">
-      <h3>Poliza y Documentos</h3>
+      <h3>Póliza y Documentos</h3>
       <Row>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
         <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-          <p>Poliza</p>
+          <p>Póliza</p>
           <Row>
             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
               <Select

@@ -4,6 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Layout, Avatar, Rate, Modal, Skeleton } from "antd";
+import EmptyGraph from "../../../assets/icons/EmptyGraph.svg";
 
 const SectionStatsChart = (props) => {
   const { dataStatsChart, finishCallApis } = props;
@@ -74,6 +75,14 @@ const SectionStatsChart = (props) => {
           <HighchartsReact highcharts={Highcharts} options={dataOptions} />
         )}
         {finishCallApis === false && <Skeleton loading active />}
+        {finishCallApis === true && isEmpty(dataOptions) === true && (
+          <div className="empty-screen-make">
+            <div className="info-screen-make" style={{marginTop:10}}>
+              <img src={EmptyGraph} alt="sin_datos" />
+              <label>Aún no hay información</label>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

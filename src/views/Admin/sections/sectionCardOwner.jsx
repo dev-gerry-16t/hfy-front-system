@@ -73,7 +73,7 @@ const SectionCardOwner = (props) => {
               <Row style={{ marginBottom: 10 }}>
                 <Col span={24}>
                   <Select
-                    placeholder="Poliza por"
+                    placeholder="Póliza por"
                     onChange={(value, option) => {
                       setSelectPolicy(value);
                     }}
@@ -109,6 +109,9 @@ const SectionCardOwner = (props) => {
                         ...record,
                         idPolicyStatus: selectPolicy,
                       });
+                      setOpenPopover({
+                        [`popover1-${record.idContract}`]: false,
+                      });
                     }}
                   >
                     Aceptar
@@ -120,7 +123,7 @@ const SectionCardOwner = (props) => {
           }
           title={
             <div>
-              <span>Asignar cierre de Poliza</span>
+              <span>Asignar cierre de Póliza</span>
               <button
                 type="button"
                 onClick={() => {
@@ -274,7 +277,7 @@ const SectionCardOwner = (props) => {
       key: "currentRent",
     },
     {
-      title: "Poliza",
+      title: "Póliza",
       dataIndex: "policy",
       key: "policy",
     },
@@ -285,7 +288,7 @@ const SectionCardOwner = (props) => {
       align: "center",
     },
     {
-      title: "Estatus de poliza",
+      title: "Estatus de póliza",
       dataIndex: "idPolicyStatus",
       key: "idPolicyStatus",
       align: "center",
@@ -306,7 +309,7 @@ const SectionCardOwner = (props) => {
                     <Row style={{ marginBottom: 10 }}>
                       <Col span={24}>
                         <Select
-                          placeholder="Poliza por"
+                          placeholder="Póliza por"
                           onChange={(value, option) => {
                             setSelectPolicy(value);
                           }}
@@ -342,6 +345,9 @@ const SectionCardOwner = (props) => {
                               ...record,
                               idPolicyStatus: selectPolicy,
                             });
+                            setOpenPopover({
+                              [`popover-${record.idContract}`]: false,
+                            });
                           }}
                         >
                           Aceptar
@@ -353,7 +359,7 @@ const SectionCardOwner = (props) => {
                 }
                 title={
                   <div>
-                    <span>Asignar cierre de Poliza</span>
+                    <span>Asignar cierre de Póliza</span>
                     <button
                       type="button"
                       onClick={() => {
