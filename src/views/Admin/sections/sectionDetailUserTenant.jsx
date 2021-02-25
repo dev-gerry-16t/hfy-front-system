@@ -125,7 +125,6 @@ const SectionDetailUserTenant = (props) => {
             <h1>Detalle de Inquilino</h1>
           </div>
         </div>
-        <div className="ant-divider ant-divider-horizontal" role="separator" />
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel
             header={<h3 role="title-section">Información general</h3>}
@@ -144,12 +143,13 @@ const SectionDetailUserTenant = (props) => {
                     onClick={() => {
                       changeRolesCustomers(
                         dataDetailCustomerTenant[0].idContract
-                      );
-                    }}
+                        );
+                      }}
                   />
                 </Col>
               </Row>
             )}
+            <div className="ant-divider ant-divider-horizontal" role="separator" />
 
             {isEmpty(dataDetailCustomerTenant) === false &&
               dataDetailCustomerTenant.map((row) => {
@@ -505,7 +505,8 @@ const SectionDetailUserTenant = (props) => {
                       className="ant-divider ant-divider-horizontal"
                       role="separator"
                     />
-                    {isNil(row.endorsementEmailAddress) === false &&
+                    {isNil(row.hasEndorsement) === false &&
+                      row.hasEndorsement === true &&
                       row.isMain === true && (
                         <>
                           <h3>Fiador</h3>
@@ -659,127 +660,123 @@ const SectionDetailUserTenant = (props) => {
             header={<h3 role="title-section">Documentos personales</h3>}
             key="4"
           >
-            <h3>Inquilino</h3>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem title="Selfie" content={<a>Descargar</a>} />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine frontal"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine vuelta"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Carta laboral"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 1"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 2"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 3"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <h3>Obligado solidario</h3>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem title="Selfie" content={<a>Descargar</a>} />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine frontal"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine vuelta"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Carta laboral"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 1"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 2"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Comprobante de ingreso 3"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <h3>Fiador</h3>
-            <Row>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Escrituras"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine frontal"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine vuelta"
-                  content={<a>Descargar</a>}
-                />
-              </Col>
-            </Row>
+            {isEmpty(dataDetailCustomerTenant) === false &&
+              dataDetailCustomerTenant.map((row) => {
+                return (
+                  <>
+                    <h3>
+                      {row.isMain === true ? "Inquilino" : "Obligado Solidario"}
+                    </h3>
+                    <Row>
+                      <Col span={8}>
+                        <DescriptionItem
+                          title="Selfie"
+                          content={<a>Descargar</a>}
+                        />
+                      </Col>
+                      {row.hasINECustomerTenant === 1 ||
+                      row.hasINECustomerTenant === true ? (
+                        <>
+                          <Col span={8}>
+                            <DescriptionItem
+                              title="Ine frontal"
+                              content={<a>Descargar</a>}
+                            />
+                          </Col>
+                          <Col span={8}>
+                            <DescriptionItem
+                              title="Ine vuelta"
+                              content={<a>Descargar</a>}
+                            />
+                          </Col>
+                        </>
+                      ) : (
+                        <Col span={16}>
+                          <DescriptionItem
+                            title="Identificación oficial"
+                            content={<a>Descargar</a>}
+                          />
+                        </Col>
+                      )}
+                    </Row>
+                    <Row>
+                      <Col span={8}>
+                        <DescriptionItem
+                          title="Carta laboral"
+                          content={<a>Descargar</a>}
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <DescriptionItem
+                          title="Comprobante de ingreso 1"
+                          content={<a>Descargar</a>}
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12}>
+                        <DescriptionItem
+                          title="Comprobante de ingreso 2"
+                          content={<a>Descargar</a>}
+                        />
+                      </Col>
+                      <Col span={12}>
+                        <DescriptionItem
+                          title="Comprobante de ingreso 3"
+                          content={<a>Descargar</a>}
+                        />
+                      </Col>
+                    </Row>
+                    <div
+                      className="ant-divider ant-divider-horizontal"
+                      role="separator"
+                    />
+                    {isNil(row.hasEndorsement) === false &&
+                      row.hasEndorsement === true &&
+                      row.isMain === true && (
+                        <>
+                          <h3>Fiador</h3>
+                          <Row>
+                            <Col span={8}>
+                              <DescriptionItem
+                                title="Escrituras"
+                                content={<a>Descargar</a>}
+                              />
+                            </Col>
+                            {row.hasINEEndorsement === 1 ||
+                            row.hasINEEndorsement === true ? (
+                              <>
+                                <Col span={8}>
+                                  <DescriptionItem
+                                    title="Ine frontal"
+                                    content={<a>Descargar</a>}
+                                  />
+                                </Col>
+                                <Col span={8}>
+                                  <DescriptionItem
+                                    title="Ine vuelta"
+                                    content={<a>Descargar</a>}
+                                  />
+                                </Col>
+                              </>
+                            ) : (
+                              <Col span={16}>
+                                <DescriptionItem
+                                  title="Identificación oficial"
+                                  content={<a>Descargar</a>}
+                                />
+                              </Col>
+                            )}
+                          </Row>
+                        </>
+                      )}
+                    <div
+                      className="ant-divider ant-divider-horizontal"
+                      role="separator"
+                    />
+                  </>
+                );
+              })}
           </Panel>
           <Panel
             header={<h3 role="title-section">Comentarios Contrato</h3>}

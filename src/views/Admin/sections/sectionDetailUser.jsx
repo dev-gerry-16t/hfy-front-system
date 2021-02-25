@@ -115,7 +115,6 @@ const SectionDetailUser = (props) => {
             <h1>Detalle de Propietario</h1>
           </div>
         </div>
-        <div className="ant-divider ant-divider-horizontal" role="separator" />
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel
             header={<h3 role="title-section">Información general</h3>}
