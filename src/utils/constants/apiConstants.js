@@ -82,6 +82,7 @@ const API_CONSTANTS = {
   ADD_CONTRACT_COMMENT: `${API.API_SECURE}${API.ADMIN}/addContractComment/`,
   GET_CONTRACT_DOCUMENT: `${API.API_SECURE}${API.ADMIN}/getDigitalContractDocument`,
   ADD_CONTRACT_DOCUMENT: `${API.API_SECURE}${API.ADMIN}/addDigitalContractDocument/`,
+  GET_CONTRACT_DOCUMENT_BYID: `${API.API_SECURE}${API.ADMIN}/getDocumentByIdContract`,
 };
 
 export { API_CONSTANTS, HEADER };

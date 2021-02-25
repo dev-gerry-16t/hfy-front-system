@@ -26,7 +26,10 @@ import {
   callGetContractComment,
   callAddDocumentContract,
   callGetContractDocument,
+  callGetContractDocumentById,
 } from "../../utils/actions/actions";
+import { API_CONSTANTS, HEADER } from "../../utils/constants/apiConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionStatsChartPie from "./sections/sectionStatsChartPie";
@@ -512,6 +515,49 @@ const Administrator = (props) => {
     }
   };
 
+  const handlerCallGetContractDocumentById = async (data) => {
+    const { idSystemUser, idLoginHistory, token } = dataProfile;
+
+    try {
+      const response = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CONTRACT_DOCUMENT_BYID}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...data,
+            idDigitalContract: null,
+            idSystemUser,
+            idLoginHistory,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (isNil(response.status) === false && response.status !== 200) {
+        throw isNil(response.statusText) === false ? response.statusText : "";
+      }
+      const label = `Contrato_${moment().format("YYYYMMDD-HHmm")}`;
+      const blob = await response.blob();
+      const link = document.createElement("a");
+      link.className = "download";
+      link.download = `${label}.pdf`;
+      link.href = URL.createObjectURL(blob);
+      document.body.appendChild(link);
+      link.click();
+      link.parentElement.removeChild(link);
+    } catch (error) {
+      console.log("error", error);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     callAsynApis();
   }, []);
@@ -571,6 +617,9 @@ const Administrator = (props) => {
           history.push(`/websystem/typeform-owner/${key}`);
         }}
         dataMessages={dataMessages}
+        onDownloadDocumentById={(data) => {
+          handlerCallGetContractDocumentById(data);
+        }}
       />
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
@@ -599,6 +648,14 @@ const Administrator = (props) => {
           history.push(`/websystem/typeform-user/${key}`);
         }}
         dataMessages={dataMessages}
+        onDownloadDocumentById={(data) => {
+          handlerCallGetContractDocumentById({
+            idContract: data.idContract,
+            idCustomer: data.idCustomer,
+            idCustomerTenant: null,
+            type: data.type,
+          });
+        }}
       />
       <SectionDetailUserAdviser
         isDrawerVisible={isVisibleDetailUserAdviser}
@@ -722,6 +779,8 @@ const mapDispatchToProps = (dispatch) => ({
   callAddDocumentContract: (data, id) =>
     dispatch(callAddDocumentContract(data, id)),
   callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
+  callGetContractDocumentById: (data) =>
+    dispatch(callGetContractDocument(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

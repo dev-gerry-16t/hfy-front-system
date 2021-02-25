@@ -33,6 +33,7 @@ const SectionDetailUser = (props) => {
     dataDetailCustomer,
     onRedirectTo,
     dataMessages,
+    onDownloadDocumentById,
   } = props;
   const frontFunctions = new FrontFunctions();
   const initialDataForm = { emailOwner: null };
@@ -285,7 +286,18 @@ const SectionDetailUser = (props) => {
                 />
               </Col>
               <Col span={12}>
-                <a>Descargar Contrato</a>
+                <a
+                  onClick={() => {
+                    onDownloadDocumentById({
+                      idContract: dataDetailCustomer.idContract,
+                      idCustomer: dataDetailCustomer.idCustomer,
+                      idCustomerTenant: null,
+                      type: 1,
+                    });
+                  }}
+                >
+                  Descargar Contrato
+                </a>
               </Col>
             </Row>
             <div
@@ -311,7 +323,18 @@ const SectionDetailUser = (props) => {
             </Row>
             <Row>
               <Col span={12}>
-                <a>Descargar Poliza</a>
+                <a
+                  onClick={() => {
+                    onDownloadDocumentById({
+                      idContract: dataDetailCustomer.idContract,
+                      idCustomer: dataDetailCustomer.idCustomer,
+                      idCustomerTenant: null,
+                      type: 3,
+                    });
+                  }}
+                >
+                  Descargar Poliza
+                </a>
               </Col>
             </Row>
           </Panel>
@@ -324,13 +347,39 @@ const SectionDetailUser = (props) => {
               <Col span={8}>
                 <DescriptionItem
                   title="Ine frontal"
-                  content={<a>Descargar</a>}
+                  content={
+                    <a
+                      onClick={() => {
+                        onDownloadDocumentById({
+                          idContract: dataDetailCustomer.idContract,
+                          idCustomer: dataDetailCustomer.idCustomer,
+                          idCustomerTenant: null,
+                          type: 6,
+                        });
+                      }}
+                    >
+                      Descargar
+                    </a>
+                  }
                 />
               </Col>
               <Col span={8}>
                 <DescriptionItem
                   title="Ine vuelta"
-                  content={<a>Descargar</a>}
+                  content={
+                    <a
+                      onClick={() => {
+                        onDownloadDocumentById({
+                          idContract: dataDetailCustomer.idContract,
+                          idCustomer: dataDetailCustomer.idCustomer,
+                          idCustomerTenant: null,
+                          type: 7,
+                        });
+                      }}
+                    >
+                      Descargar
+                    </a>
+                  }
                 />
               </Col>
             </Row>
