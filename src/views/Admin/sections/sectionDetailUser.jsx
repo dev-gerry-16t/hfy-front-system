@@ -288,12 +288,15 @@ const SectionDetailUser = (props) => {
               <Col span={12}>
                 <a
                   onClick={() => {
-                    onDownloadDocumentById({
-                      idContract: dataDetailCustomer.idContract,
-                      idCustomer: dataDetailCustomer.idCustomer,
-                      idCustomerTenant: null,
-                      type: 1,
-                    });
+                    onDownloadDocumentById(
+                      {
+                        idContract: dataDetailCustomer.idContract,
+                        idCustomer: dataDetailCustomer.idCustomer,
+                        idCustomerTenant: null,
+                        type: 1,
+                      },
+                      `Contrato_${dataDetailCustomer.idContract}`
+                    );
                   }}
                 >
                   Descargar Contrato
@@ -325,12 +328,15 @@ const SectionDetailUser = (props) => {
               <Col span={12}>
                 <a
                   onClick={() => {
-                    onDownloadDocumentById({
-                      idContract: dataDetailCustomer.idContract,
-                      idCustomer: dataDetailCustomer.idCustomer,
-                      idCustomerTenant: null,
-                      type: 3,
-                    });
+                    onDownloadDocumentById(
+                      {
+                        idContract: dataDetailCustomer.idContract,
+                        idCustomer: dataDetailCustomer.idCustomer,
+                        idCustomerTenant: null,
+                        type: 3,
+                      },
+                      `Poliza_${dataDetailCustomer.idContract}`
+                    );
                   }}
                 >
                   Descargar Poliza
@@ -344,44 +350,78 @@ const SectionDetailUser = (props) => {
             key="4"
           >
             <Row>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine frontal"
-                  content={
-                    <a
+              {dataDetailCustomer.hasINECustomer === 1 ||
+              dataDetailCustomer.hasINECustomer === true ? (
+                <>
+                  <Col span={8}>
+                    <DescriptionItem
+                      title="Ine frontal"
+                      content={
+                        <a
+                          onClick={() => {
+                            onDownloadDocumentById(
+                              {
+                                idContract: dataDetailCustomer.idContract,
+                                idCustomer: dataDetailCustomer.idCustomer,
+                                idCustomerTenant: null,
+                                type: 6,
+                              },
+                              "Identificacion_1"
+                            );
+                          }}
+                        >
+                          Descargar
+                        </a>
+                      }
+                    />
+                  </Col>
+                  <Col span={8}>
+                    <DescriptionItem
+                      title="Ine vuelta"
+                      content={
+                        <a
+                          onClick={() => {
+                            onDownloadDocumentById(
+                              {
+                                idContract: dataDetailCustomer.idContract,
+                                idCustomer: dataDetailCustomer.idCustomer,
+                                idCustomerTenant: null,
+                                type: 7,
+                              },
+                              "Identificacion_2"
+                            );
+                          }}
+                        >
+                          Descargar
+                        </a>
+                      }
+                    />
+                  </Col>{" "}
+                </>
+              ) : (
+                <Col span={16}>
+                  <DescriptionItem
+                    title="Identificación oficial"
+                    content={
+                      <a
                       onClick={() => {
-                        onDownloadDocumentById({
-                          idContract: dataDetailCustomer.idContract,
-                          idCustomer: dataDetailCustomer.idCustomer,
-                          idCustomerTenant: null,
-                          type: 6,
-                        });
+                        onDownloadDocumentById(
+                          {
+                            idContract: dataDetailCustomer.idContract,
+                            idCustomer: dataDetailCustomer.idCustomer,
+                            idCustomerTenant: null,
+                            type: 6,
+                          },
+                          "Identificacion_1"
+                        );
                       }}
-                    >
-                      Descargar
-                    </a>
-                  }
-                />
-              </Col>
-              <Col span={8}>
-                <DescriptionItem
-                  title="Ine vuelta"
-                  content={
-                    <a
-                      onClick={() => {
-                        onDownloadDocumentById({
-                          idContract: dataDetailCustomer.idContract,
-                          idCustomer: dataDetailCustomer.idCustomer,
-                          idCustomerTenant: null,
-                          type: 7,
-                        });
-                      }}
-                    >
-                      Descargar
-                    </a>
-                  }
-                />
-              </Col>
+                      >
+                        Descargar
+                      </a>
+                    }
+                  />
+                </Col>
+              )}
             </Row>
           </Panel>
           <Panel

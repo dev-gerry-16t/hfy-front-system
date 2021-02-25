@@ -98,7 +98,6 @@ const SectionInfoAval = (props) => {
       const selectDefaultIdType = dataIdTypes.find((row) => {
         return dataFormSave.idEndorsementType === row.idType;
       });
-      console.log("selectDefaultIdType", selectDefaultIdType);
       setDataForm({
         ...dataFormSave,
         idEndorsementNationalityText:

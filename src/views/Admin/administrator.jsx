@@ -515,11 +515,10 @@ const Administrator = (props) => {
     }
   };
 
-  const handlerCallGetContractDocumentById = async (data) => {
+  const handlerCallGetContractDocumentById = async (data, name) => {
     const { idSystemUser, idLoginHistory, token } = dataProfile;
-
     try {
-      const response = await fetch(
+      const responseInfo = await fetch(
         `${ENVIROMENT}${API_CONSTANTS.GET_CONTRACT_DOCUMENT_BYID}`,
         {
           method: "POST",
@@ -528,6 +527,32 @@ const Administrator = (props) => {
             idDigitalContract: null,
             idSystemUser,
             idLoginHistory,
+            download: false,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (isNil(responseInfo.status) === false && responseInfo.status !== 200) {
+        throw isNil(responseInfo.statusText) === false
+          ? responseInfo.statusText
+          : "";
+      }
+      const resultInfo = await responseInfo.json();
+      const resultExtension = resultInfo.extension;
+
+      const responseDownload = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CONTRACT_DOCUMENT_BYID}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...data,
+            idDigitalContract: null,
+            idSystemUser,
+            idLoginHistory,
+            download: true,
           }),
           headers: {
             "Content-Type": "application/json",
@@ -536,22 +561,25 @@ const Administrator = (props) => {
         }
       );
 
-      if (isNil(response.status) === false && response.status !== 200) {
-        throw isNil(response.statusText) === false ? response.statusText : "";
+      if (
+        isNil(responseDownload.status) === false &&
+        responseDownload.status !== 200
+      ) {
+        throw isNil(responseDownload.statusText) === false
+          ? responseDownload.statusText
+          : "";
       }
-      const label = `Contrato_${moment().format("YYYYMMDD-HHmm")}`;
-      const blob = await response.blob();
+      const blob = await responseDownload.blob();
       const link = document.createElement("a");
       link.className = "download";
-      link.download = `${label}.pdf`;
+      link.download = `${name}.${resultExtension}`;
       link.href = URL.createObjectURL(blob);
       document.body.appendChild(link);
       link.click();
       link.parentElement.removeChild(link);
     } catch (error) {
-      console.log("error", error);
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        "No esta disponible el documento",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -617,8 +645,12 @@ const Administrator = (props) => {
           history.push(`/websystem/typeform-owner/${key}`);
         }}
         dataMessages={dataMessages}
-        onDownloadDocumentById={(data) => {
-          handlerCallGetContractDocumentById(data);
+        onDownloadDocumentById={async (data, name) => {
+          try {
+            await handlerCallGetContractDocumentById(data, name);
+          } catch (error) {
+            throw error;
+          }
         }}
       />
       <SectionDetailUserTenant
@@ -648,13 +680,12 @@ const Administrator = (props) => {
           history.push(`/websystem/typeform-user/${key}`);
         }}
         dataMessages={dataMessages}
-        onDownloadDocumentById={(data) => {
-          handlerCallGetContractDocumentById({
-            idContract: data.idContract,
-            idCustomer: data.idCustomer,
-            idCustomerTenant: null,
-            type: data.type,
-          });
+        onDownloadDocumentById={async (data, name) => {
+          try {
+            await handlerCallGetContractDocumentById(data, name);
+          } catch (error) {
+            throw error;
+          }
         }}
       />
       <SectionDetailUserAdviser

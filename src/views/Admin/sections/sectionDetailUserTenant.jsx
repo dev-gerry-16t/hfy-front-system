@@ -43,9 +43,11 @@ const SectionDetailUserTenant = (props) => {
     onSendRatingUser,
     onRedirectTo,
     dataMessages,
+    onDownloadDocumentById,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [valueCalification, setValueCalification] = useState({});
+  const [dataIsMainTenant, setDataIsMainTenant] = useState({});
   const [openPopover, setOpenPopover] = useState({});
 
   const LoadingSpin = <SyncOutlined spin />;
@@ -102,6 +104,15 @@ const SectionDetailUserTenant = (props) => {
     );
   };
 
+  useEffect(() => {
+    if (isEmpty(dataDetailCustomerTenant) === false) {
+      const dataFilter = dataDetailCustomerTenant.find((row) => {
+        return row.isMain === true;
+      });
+      setDataIsMainTenant(dataFilter);
+    }
+  }, [dataDetailCustomerTenant]);
+
   return (
     <Drawer
       width={500}
@@ -143,13 +154,16 @@ const SectionDetailUserTenant = (props) => {
                     onClick={() => {
                       changeRolesCustomers(
                         dataDetailCustomerTenant[0].idContract
-                        );
-                      }}
+                      );
+                    }}
                   />
                 </Col>
               </Row>
             )}
-            <div className="ant-divider ant-divider-horizontal" role="separator" />
+            <div
+              className="ant-divider ant-divider-horizontal"
+              role="separator"
+            />
 
             {isEmpty(dataDetailCustomerTenant) === false &&
               dataDetailCustomerTenant.map((row) => {
@@ -624,7 +638,23 @@ const SectionDetailUserTenant = (props) => {
                 <DescriptionItem title="Vencimiento" content="29 Enero 2017" />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a>Descargar Contrato</a>
+                <a
+                  onClick={() => {
+                    if (isEmpty(dataIsMainTenant) === false) {
+                      onDownloadDocumentById(
+                        {
+                          idContract: dataIsMainTenant.idContract,
+                          idCustomer: dataIsMainTenant.idCustomer,
+                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
+                          type: 1,
+                        },
+                        `Contrato_${dataIsMainTenant.idContract}`
+                      );
+                    }
+                  }}
+                >
+                  Descargar Contrato
+                </a>
               </Col>
             </Row>
             <div
@@ -639,7 +669,23 @@ const SectionDetailUserTenant = (props) => {
                 <DescriptionItem title="Poliza" content="Homify Basica" />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a>Descargar Poliza</a>
+                <a
+                  onClick={() => {
+                    if (isEmpty(dataIsMainTenant) === false) {
+                      onDownloadDocumentById(
+                        {
+                          idContract: dataIsMainTenant.idContract,
+                          idCustomer: dataIsMainTenant.idCustomer,
+                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
+                          type: 3,
+                        },
+                        `Poliza_${dataIsMainTenant.idContract}`
+                      );
+                    }
+                  }}
+                >
+                  Descargar Poliza
+                </a>
               </Col>
             </Row>
             <div
@@ -651,7 +697,23 @@ const SectionDetailUserTenant = (props) => {
             </p>
             <Row>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a>Descargar Pagares</a>
+                <a
+                  onClick={() => {
+                    if (isEmpty(dataIsMainTenant) === false) {
+                      onDownloadDocumentById(
+                        {
+                          idContract: dataIsMainTenant.idContract,
+                          idCustomer: dataIsMainTenant.idCustomer,
+                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
+                          type: 2,
+                        },
+                        `Pagares_${dataIsMainTenant.idContract}`
+                      );
+                    }
+                  }}
+                >
+                  Descargar Pagares
+                </a>
               </Col>
             </Row>
           </Panel>
@@ -671,7 +733,23 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={8}>
                         <DescriptionItem
                           title="Selfie"
-                          content={<a>Descargar</a>}
+                          content={
+                            <a
+                              onClick={() => {
+                                onDownloadDocumentById(
+                                  {
+                                    idContract: row.idContract,
+                                    idCustomer: row.idCustomer,
+                                    idCustomerTenant: row.idCustomerTenant,
+                                    type: 5,
+                                  },
+                                  `Selfie_${row.idContract}`
+                                );
+                              }}
+                            >
+                              Descargar
+                            </a>
+                          }
                         />
                       </Col>
                       {row.hasINECustomerTenant === 1 ||
@@ -680,13 +758,45 @@ const SectionDetailUserTenant = (props) => {
                           <Col span={8}>
                             <DescriptionItem
                               title="Ine frontal"
-                              content={<a>Descargar</a>}
+                              content={
+                                <a
+                                  onClick={() => {
+                                    onDownloadDocumentById(
+                                      {
+                                        idContract: row.idContract,
+                                        idCustomer: row.idCustomer,
+                                        idCustomerTenant: row.idCustomerTenant,
+                                        type: 6,
+                                      },
+                                      `Identificacion1_${row.idContract}`
+                                    );
+                                  }}
+                                >
+                                  Descargar
+                                </a>
+                              }
                             />
                           </Col>
                           <Col span={8}>
                             <DescriptionItem
                               title="Ine vuelta"
-                              content={<a>Descargar</a>}
+                              content={
+                                <a
+                                  onClick={() => {
+                                    onDownloadDocumentById(
+                                      {
+                                        idContract: row.idContract,
+                                        idCustomer: row.idCustomer,
+                                        idCustomerTenant: row.idCustomerTenant,
+                                        type: 7,
+                                      },
+                                      `Identificacion2_${row.idContract}`
+                                    );
+                                  }}
+                                >
+                                  Descargar
+                                </a>
+                              }
                             />
                           </Col>
                         </>
@@ -694,7 +804,23 @@ const SectionDetailUserTenant = (props) => {
                         <Col span={16}>
                           <DescriptionItem
                             title="Identificación oficial"
-                            content={<a>Descargar</a>}
+                            content={
+                              <a
+                                onClick={() => {
+                                  onDownloadDocumentById(
+                                    {
+                                      idContract: row.idContract,
+                                      idCustomer: row.idCustomer,
+                                      idCustomerTenant: row.idCustomerTenant,
+                                      type: 6,
+                                    },
+                                    `Identificacion1_${row.idContract}`
+                                  );
+                                }}
+                              >
+                                Descargar
+                              </a>
+                            }
                           />
                         </Col>
                       )}
@@ -703,13 +829,45 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={8}>
                         <DescriptionItem
                           title="Carta laboral"
-                          content={<a>Descargar</a>}
+                          content={
+                            <a
+                              onClick={() => {
+                                onDownloadDocumentById(
+                                  {
+                                    idContract: row.idContract,
+                                    idCustomer: row.idCustomer,
+                                    idCustomerTenant: row.idCustomerTenant,
+                                    type: 8,
+                                  },
+                                  `Carta_Laboral_${row.idContract}`
+                                );
+                              }}
+                            >
+                              Descargar
+                            </a>
+                          }
                         />
                       </Col>
                       <Col span={12}>
                         <DescriptionItem
                           title="Comprobante de ingreso 1"
-                          content={<a>Descargar</a>}
+                          content={
+                            <a
+                              onClick={() => {
+                                onDownloadDocumentById(
+                                  {
+                                    idContract: row.idContract,
+                                    idCustomer: row.idCustomer,
+                                    idCustomerTenant: row.idCustomerTenant,
+                                    type: 9,
+                                  },
+                                  `Comprobante_1_${row.idContract}`
+                                );
+                              }}
+                            >
+                              Descargar
+                            </a>
+                          }
                         />
                       </Col>
                     </Row>
@@ -717,13 +875,45 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={12}>
                         <DescriptionItem
                           title="Comprobante de ingreso 2"
-                          content={<a>Descargar</a>}
+                          content={
+                            <a
+                              onClick={() => {
+                                onDownloadDocumentById(
+                                  {
+                                    idContract: row.idContract,
+                                    idCustomer: row.idCustomer,
+                                    idCustomerTenant: row.idCustomerTenant,
+                                    type: 10,
+                                  },
+                                  `Comprobante_2_${row.idContract}`
+                                );
+                              }}
+                            >
+                              Descargar
+                            </a>
+                          }
                         />
                       </Col>
                       <Col span={12}>
                         <DescriptionItem
                           title="Comprobante de ingreso 3"
-                          content={<a>Descargar</a>}
+                          content={
+                            <a
+                              onClick={() => {
+                                onDownloadDocumentById(
+                                  {
+                                    idContract: row.idContract,
+                                    idCustomer: row.idCustomer,
+                                    idCustomerTenant: row.idCustomerTenant,
+                                    type: 11,
+                                  },
+                                  `Comprobante_3_${row.idContract}`
+                                );
+                              }}
+                            >
+                              Descargar
+                            </a>
+                          }
                         />
                       </Col>
                     </Row>
@@ -740,7 +930,24 @@ const SectionDetailUserTenant = (props) => {
                             <Col span={8}>
                               <DescriptionItem
                                 title="Escrituras"
-                                content={<a>Descargar</a>}
+                                content={
+                                  <a
+                                    onClick={() => {
+                                      onDownloadDocumentById(
+                                        {
+                                          idContract: row.idContract,
+                                          idCustomer: row.idCustomer,
+                                          idCustomerTenant:
+                                            row.idCustomerTenant,
+                                          type: 12,
+                                        },
+                                        `Escrituras_${row.idContract}`
+                                      );
+                                    }}
+                                  >
+                                    Descargar
+                                  </a>
+                                }
                               />
                             </Col>
                             {row.hasINEEndorsement === 1 ||
@@ -749,13 +956,47 @@ const SectionDetailUserTenant = (props) => {
                                 <Col span={8}>
                                   <DescriptionItem
                                     title="Ine frontal"
-                                    content={<a>Descargar</a>}
+                                    content={
+                                      <a
+                                        onClick={() => {
+                                          onDownloadDocumentById(
+                                            {
+                                              idContract: row.idContract,
+                                              idCustomer: row.idCustomer,
+                                              idCustomerTenant:
+                                                row.idCustomerTenant,
+                                              type: 13,
+                                            },
+                                            `Identificacion1_${row.idContract}`
+                                          );
+                                        }}
+                                      >
+                                        Descargar
+                                      </a>
+                                    }
                                   />
                                 </Col>
                                 <Col span={8}>
                                   <DescriptionItem
                                     title="Ine vuelta"
-                                    content={<a>Descargar</a>}
+                                    content={
+                                      <a
+                                        onClick={() => {
+                                          onDownloadDocumentById(
+                                            {
+                                              idContract: row.idContract,
+                                              idCustomer: row.idCustomer,
+                                              idCustomerTenant:
+                                                row.idCustomerTenant,
+                                              type: 14,
+                                            },
+                                            `Identificacion1_${row.idContract}`
+                                          );
+                                        }}
+                                      >
+                                        Descargar
+                                      </a>
+                                    }
                                   />
                                 </Col>
                               </>
@@ -763,7 +1004,24 @@ const SectionDetailUserTenant = (props) => {
                               <Col span={16}>
                                 <DescriptionItem
                                   title="Identificación oficial"
-                                  content={<a>Descargar</a>}
+                                  content={
+                                    <a
+                                      onClick={() => {
+                                        onDownloadDocumentById(
+                                          {
+                                            idContract: row.idContract,
+                                            idCustomer: row.idCustomer,
+                                            idCustomerTenant:
+                                              row.idCustomerTenant,
+                                            type: 13,
+                                          },
+                                          `Identificacion1_${row.idContract}`
+                                        );
+                                      }}
+                                    >
+                                      Descargar
+                                    </a>
+                                  }
                                 />
                               </Col>
                             )}

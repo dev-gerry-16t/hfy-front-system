@@ -156,7 +156,7 @@ const SectionCardOwner = (props) => {
           </Button>
         </Popover>
       );
-    } else if (status === 2) {
+    } else if (status === 2 || status === 3) {
       component = (
         <Tag
           icon={
@@ -169,7 +169,7 @@ const SectionCardOwner = (props) => {
           {record.policyStatus}
         </Tag>
       );
-    } else if (contractStatus === 3) {
+    } else if (status === 4) {
       component = (
         <Tag
           icon={
@@ -390,7 +390,7 @@ const SectionCardOwner = (props) => {
               </Popover>
             </div>
           );
-        } else if (status === 2) {
+        } else if (status === 2 || status === 3) {
           component = (
             <Tag
               icon={
@@ -403,7 +403,7 @@ const SectionCardOwner = (props) => {
               {record.policyStatus}
             </Tag>
           );
-        } else if (contractStatus === 3) {
+        } else if (status === 4) {
           component = (
             <Tag
               icon={
