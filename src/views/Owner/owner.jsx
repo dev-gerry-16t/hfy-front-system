@@ -35,7 +35,7 @@ import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionAddProperty from "./sections/sectionAddProperty";
 import SectionAddTenant from "./sections/sectionAddTenant";
 import SectionAdvancement from "./sections/sectionAdvancement";
-import SectionContractAvailable from "../Tenant/sections/sectionContractAvailable";
+import SectionContractAvailable from "../Tenant/sections/sectionContractAvailableOwner";
 
 const { Content } = Layout;
 
@@ -432,7 +432,7 @@ const Owner = (props) => {
     }
   };
 
-  const handlerCallGetContract = async (data) => {
+  const handlerCallGetContract = async (data, name) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       if (data.download === false) {
@@ -440,7 +440,6 @@ const Owner = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
-          type: 1,
         });
         const responseResult =
           isNil(response) === false &&
@@ -459,7 +458,6 @@ const Owner = (props) => {
               ...data,
               idSystemUser,
               idLoginHistory,
-              type: 1,
             }),
             headers: {
               "Content-Type": "application/json",
@@ -472,7 +470,7 @@ const Owner = (props) => {
         if (isNil(response.status) === false && response.status !== 200) {
           throw isNil(response.statusText) === false ? response.statusText : "";
         }
-        const label = `Contrato_${moment().format("YYYYMMDD-HHmm")}`;
+        const label = `${name}_${moment().format("YYYYMMDD-HHmm")}`;
         const blob = await response.blob();
         const link = document.createElement("a");
         link.className = "download";
@@ -522,7 +520,6 @@ const Owner = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
-          type: 1,
         },
         data.idContract
       );
@@ -562,9 +559,16 @@ const Owner = (props) => {
         onAddCommentContract={(data) => {
           handlerCallAddCommentContract(data);
         }}
-        onDownloadDocument={async (data) => {
+        onVisualiceDocument={async (data) => {
           try {
             await handlerCallGetContract(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onDownloadDocument={async (data, name) => {
+          try {
+            await handlerCallGetContract(data, name);
           } catch (error) {
             throw error;
           }
@@ -706,6 +710,7 @@ const Owner = (props) => {
                 idCustomer: data.idCustomer,
                 idCustomerTenant: data.idCustomerTenant,
                 idContract: data.idContract,
+                type: 1,
               });
               setIsVisibleContract(!isVisibleContract);
             }}
