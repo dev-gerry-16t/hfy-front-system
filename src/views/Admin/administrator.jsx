@@ -399,7 +399,7 @@ const Administrator = (props) => {
         ...data,
       });
       showMessageStatusApi(
-        "La solicitud se proceso exitosamente",
+        "La solicitud se procesó exitosamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
@@ -556,7 +556,7 @@ const Administrator = (props) => {
             download: true,
           }),
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "application/octet-stream",
             "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${token}`,
           },

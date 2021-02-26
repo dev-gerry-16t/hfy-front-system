@@ -334,7 +334,7 @@ const Tenant = (props) => {
         data.idContract
       );
       showMessageStatusApi(
-        "Tu solicitud se proceso exitosamente",
+        "Tu solicitud se procesó exitosamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
