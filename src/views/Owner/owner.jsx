@@ -587,9 +587,10 @@ const Owner = (props) => {
         onClose={() => {
           setIsModalVisible(!isModalVisible);
         }}
-        onClickAddProperty={(data) => {
+        onClickAddProperty={async (data) => {
           setSpinVisible(true);
-          handlerCallAddProperty(data);
+          await handlerCallAddProperty(data);
+          await handlerCallGetAllCustomerById();
         }}
         dataZipCodeAdress={dataZipCodeAdress}
         dataZipCatalog={dataZipCatalog}
@@ -640,28 +641,34 @@ const Owner = (props) => {
             </span>
           </div>
           <div className="action-buttons-top">
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalVisible(!isModalVisible);
-                }}
-              >
-                <span>Registrar Propiedad</span>
-              </button>
-            </div>
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={async () => {
-                  setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
-                  await handlerCallTenantCatalog();
-                  await handlerCallBankCatalog();
-                }}
-              >
-                <span>Adelanto de renta</span>
-              </button>
-            </div>
+            {(dataCustomer.canRequestProperty === 1 ||
+              dataCustomer.canRequestProperty === true) && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsModalVisible(!isModalVisible);
+                  }}
+                >
+                  <span>Registrar Propiedad</span>
+                </button>
+              </div>
+            )}
+            {(dataCustomer.canRequestAdvanceRent === 1 ||
+              dataCustomer.canRequestAdvanceRent === true) && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
+                    await handlerCallTenantCatalog();
+                    await handlerCallBankCatalog();
+                  }}
+                >
+                  <span>Adelanto de renta</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -695,6 +702,7 @@ const Owner = (props) => {
             finishCallApis={finishCallApis}
           />
           <SectionCardTenant
+            dataCustomer={dataCustomer}
             history={history}
             tenantCoincidences={tenantCoincidences}
             finishCallApis={finishCallApis}

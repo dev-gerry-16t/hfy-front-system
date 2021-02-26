@@ -23,6 +23,7 @@ const SectionCardTenant = (props) => {
     finishCallApis,
     onClickSendInvitation,
     onOpenContract,
+    dataCustomer,
   } = props;
 
   const formatDate = (date) => {
@@ -39,16 +40,20 @@ const SectionCardTenant = (props) => {
     <div className="renter-card-information">
       <div className="title-cards flex-title-card">
         <span>Inquilinos</span>
-        <div className="button_init_primary">
-          <button
-            type="button"
-            onClick={() => {
-              onClickSendInvitation();
-            }}
-          >
-            <span>Invitar Inquilino</span>
-          </button>
-        </div>
+        {isEmpty(dataCustomer) === false &&
+          (dataCustomer.canInviteTendant === 1 ||
+            dataCustomer.canInviteTendant === true) && (
+            <div className="button_init_primary">
+              <button
+                type="button"
+                onClick={() => {
+                  onClickSendInvitation();
+                }}
+              >
+                <span>Invitar Inquilino</span>
+              </button>
+            </div>
+          )}
       </div>
       <div className="section-information-renters">
         {isEmpty(tenantCoincidences) === false &&
