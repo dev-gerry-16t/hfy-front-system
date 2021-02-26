@@ -47,6 +47,7 @@ const Login = (props) => {
             ? response.response.token
             : null;
         await setDataUserProfile({ idSystemUser, token });
+        await window.smartsupp("email", data.email);
         setSpinVisible(false);
         history.push("/auth");
       } else {
