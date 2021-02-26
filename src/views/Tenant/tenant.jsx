@@ -273,6 +273,7 @@ const Tenant = (props) => {
             }),
             headers: {
               "Content-Type": "application/json",
+              "Access-Control-Allow-Origin": "*",
               Authorization: `Bearer ${token}`,
             },
           }

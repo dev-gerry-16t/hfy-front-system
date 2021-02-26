@@ -531,6 +531,7 @@ const Administrator = (props) => {
           }),
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${token}`,
           },
         }
@@ -556,6 +557,7 @@ const Administrator = (props) => {
           }),
           headers: {
             "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${token}`,
           },
         }

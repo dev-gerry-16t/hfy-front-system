@@ -462,8 +462,7 @@ const Owner = (props) => {
             headers: {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
-              credentials: "include",
-              mode: "cors",
+              "Access-Control-Allow-Origin": "*",
             },
           }
         );
@@ -577,6 +576,9 @@ const Owner = (props) => {
           try {
             await handlerCallSetContract(data);
           } catch (error) {}
+        }}
+        onFinishContractFlow={() => {
+          handlerCallGetTenantCoincidences();
         }}
       />
       <SectionAddProperty

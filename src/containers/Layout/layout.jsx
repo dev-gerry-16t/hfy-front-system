@@ -206,6 +206,29 @@ const DefaultLayout = (props) => {
       theme.className = "theme-light";
       localStorage.setItem("theme-app", "theme-light");
     }
+    window.smartsupp("name", dataProfile.showName);
+    window.smartsupp("variables", {
+      userType: {
+        label: "Tipo de usuario",
+        value: dataProfile.userType,
+      },
+      idSystemUser: {
+        label: "idSystemUser",
+        value: dataProfile.idSystemUser,
+      },
+      idCustomer: {
+        label: "idCustomer",
+        value: dataProfile.idCustomer,
+      },
+      idCustomerTenant: {
+        label: "Id Inquilino",
+        value: dataProfile.idCustomerTenant,
+      },
+      agentNo: {
+        label: "Numero de agente",
+        value: dataProfile.agentNo,
+      },
+    });
   }, []);
 
   useEffect(() => {

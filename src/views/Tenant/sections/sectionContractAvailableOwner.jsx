@@ -48,14 +48,16 @@ const SectionContractAvailable = (props) => {
     onAcceptContract,
     dataProfile,
     onVisualiceDocument,
+    onFinishContractFlow,
   } = props;
   const [signature, setSignature] = useState("");
   const [startedAt, setStartedAt] = useState(null);
   const [scheduleSignatureDate, setScheduleSignatureDate] = useState(null);
   const [valueText, setValueText] = useState(null);
-  const [openSection, setOpenSection] = useState(1);
+  const [openSection, setOpenSection] = useState(null);
   const [aceptTerms, setAceptTerms] = useState(false);
   const [internalModal, setInternalModal] = useState(false);
+  const [isEditableContract, setIsEditableContract] = useState(false);
   const [typeSignatureDigital, setTypeSignatureDigital] = useState(1);
   const [documentSigned, setDocumentSigned] = useState({
     contract: false,
@@ -67,6 +69,20 @@ const SectionContractAvailable = (props) => {
   const signatureRef = useRef(null);
 
   const LoadingSpin = <SyncOutlined spin />;
+
+  useEffect(() => {
+    if (
+      isEmpty(dataGetContract) === false &&
+      dataProfile.idUserType === 3 &&
+      (dataGetContract.isEditable === 1 || dataGetContract.isEditable === true)
+    ) {
+      setOpenSection(1);
+      setIsEditableContract(true);
+    } else {
+      setOpenSection(4);
+      setIsEditableContract(false);
+    }
+  }, [dataGetContract]);
 
   return (
     <Modal
@@ -435,31 +451,32 @@ const SectionContractAvailable = (props) => {
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
                       </button>
-                      {signaturePrecencial === true && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (documentSigned.contract === false) {
-                              setOpenSection(5);
-                              setTypeSignatureDigital(1);
-                            }
-                          }}
-                        >
-                          {documentSigned.contract === false ? (
-                            <FormOutlined style={{ fontSize: 15 }} />
-                          ) : (
-                            <CheckOutlined
-                              style={{
-                                fontSize: 15,
-                                color: "var(--color-primary)",
-                              }}
-                            />
-                          )}{" "}
-                          {documentSigned.contract === false
-                            ? "Firmar"
-                            : "Firmado"}
-                        </button>
-                      )}
+                      {signaturePrecencial === true &&
+                        isEditableContract === true && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (documentSigned.contract === false) {
+                                setOpenSection(5);
+                                setTypeSignatureDigital(1);
+                              }
+                            }}
+                          >
+                            {documentSigned.contract === false ? (
+                              <FormOutlined style={{ fontSize: 15 }} />
+                            ) : (
+                              <CheckOutlined
+                                style={{
+                                  fontSize: 15,
+                                  color: "var(--color-primary)",
+                                }}
+                              />
+                            )}{" "}
+                            {documentSigned.contract === false
+                              ? "Firmar"
+                              : "Firmado"}
+                          </button>
+                        )}
                     </div>
                   </div>
                   <h3
@@ -526,31 +543,32 @@ const SectionContractAvailable = (props) => {
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
                       </button>
-                      {signaturePrecencial === true && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (documentSigned.policy === false) {
-                              setOpenSection(5);
-                              setTypeSignatureDigital(2);
-                            }
-                          }}
-                        >
-                          {documentSigned.policy === false ? (
-                            <FormOutlined style={{ fontSize: 15 }} />
-                          ) : (
-                            <CheckOutlined
-                              style={{
-                                fontSize: 15,
-                                color: "var(--color-primary)",
-                              }}
-                            />
-                          )}{" "}
-                          {documentSigned.policy === false
-                            ? "Firmar"
-                            : "Firmado"}
-                        </button>
-                      )}
+                      {signaturePrecencial === true &&
+                        isEditableContract === true && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (documentSigned.policy === false) {
+                                setOpenSection(5);
+                                setTypeSignatureDigital(2);
+                              }
+                            }}
+                          >
+                            {documentSigned.policy === false ? (
+                              <FormOutlined style={{ fontSize: 15 }} />
+                            ) : (
+                              <CheckOutlined
+                                style={{
+                                  fontSize: 15,
+                                  color: "var(--color-primary)",
+                                }}
+                              />
+                            )}{" "}
+                            {documentSigned.policy === false
+                              ? "Firmar"
+                              : "Firmado"}
+                          </button>
+                        )}
                     </div>
                   </div>
                   <h3
@@ -583,7 +601,7 @@ const SectionContractAvailable = (props) => {
                               idCustomerTenant:
                                 dataGetContract.idCustomerTenant,
                               idContract: dataGetContract.idContract,
-                              type: 3,
+                              type: 4,
                             });
                             setInternalModal(!internalModal);
                           } catch (error) {}
@@ -603,7 +621,7 @@ const SectionContractAvailable = (props) => {
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
                                 idContract: dataGetContract.idContract,
-                                type: 3,
+                                type: 4,
                               },
                               "Pagare"
                             );
@@ -616,31 +634,33 @@ const SectionContractAvailable = (props) => {
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
                       </button>
-                      {signaturePrecencial === true && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            if (documentSigned.payment === false) {
-                              setOpenSection(5);
-                              setTypeSignatureDigital(3);
-                            }
-                          }}
-                        >
-                          {documentSigned.payment === false ? (
-                            <FormOutlined style={{ fontSize: 15 }} />
-                          ) : (
-                            <CheckOutlined
-                              style={{
-                                fontSize: 15,
-                                color: "var(--color-primary)",
-                              }}
-                            />
-                          )}{" "}
-                          {documentSigned.payment === false
-                            ? "Firmar"
-                            : "Firmado"}
-                        </button>
-                      )}
+                      {signaturePrecencial === true &&
+                        dataProfile.idUserType !== 3 &&
+                        isEditableContract === true && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (documentSigned.payment === false) {
+                                setOpenSection(5);
+                                setTypeSignatureDigital(4);
+                              }
+                            }}
+                          >
+                            {documentSigned.payment === false ? (
+                              <FormOutlined style={{ fontSize: 15 }} />
+                            ) : (
+                              <CheckOutlined
+                                style={{
+                                  fontSize: 15,
+                                  color: "var(--color-primary)",
+                                }}
+                              />
+                            )}{" "}
+                            {documentSigned.payment === false
+                              ? "Firmar"
+                              : "Firmado"}
+                          </button>
+                        )}
                     </div>
                   </div>
                 </div>
@@ -658,6 +678,7 @@ const SectionContractAvailable = (props) => {
                     onClick={async () => {
                       onClose();
                       setOpenSection(1);
+                      onFinishContractFlow();
                     }}
                   >
                     <span>Terminar</span>
