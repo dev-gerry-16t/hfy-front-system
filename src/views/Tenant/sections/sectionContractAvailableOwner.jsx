@@ -73,17 +73,21 @@ const SectionContractAvailable = (props) => {
   useEffect(() => {
     if (
       isEmpty(dataGetContract) === false &&
-      dataProfile.idUserType === 3 &&
       (dataGetContract.isEditable === 1 || dataGetContract.isEditable === true)
     ) {
-      setOpenSection(1);
+      if (dataProfile.idUserType === 3) {
+        setOpenSection(1);
+      } else {
+        setOpenSection(4);
+        setSignaturePrecencial(true);
+      }
       setIsEditableContract(true);
     } else {
       setOpenSection(4);
       setIsEditableContract(false);
     }
   }, [dataGetContract]);
-
+  
   return (
     <Modal
       style={{ top: 20 }}

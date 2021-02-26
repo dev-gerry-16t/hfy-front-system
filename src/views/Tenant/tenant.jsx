@@ -14,7 +14,7 @@ import DocumentsIcon from "../../assets/icons/DocumentsIcon.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
 import Tools from "../../assets/icons/Tools.svg";
 import Transport from "../../assets/icons/Transport.svg";
-import SectionContractAvailable from "./sections/sectionContractAvailable";
+import SectionContractAvailable from "./sections/sectionContractAvailableOwner";
 import SectionDepositGuarantee from "./sections/sectionDepositGuarantee";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -251,7 +251,6 @@ const Tenant = (props) => {
           ...data,
           idSystemUser,
           idLoginHistory,
-          type: 1,
         });
         const responseResult =
           isNil(response) === false &&
@@ -363,9 +362,16 @@ const Tenant = (props) => {
         onAddCommentContract={(data) => {
           handlerCallAddCommentContract(data);
         }}
-        onDownloadDocument={async (data) => {
+        onVisualiceDocument={async (data) => {
           try {
             await handlerCallGetContract(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onDownloadDocument={async (data, name) => {
+          try {
+            await handlerCallGetContract(data, name);
           } catch (error) {
             throw error;
           }
@@ -374,6 +380,9 @@ const Tenant = (props) => {
           try {
             await handlerCallSetContract(data);
           } catch (error) {}
+        }}
+        onFinishContractFlow={() => {
+          handlerCallGetAllCustomerTenantById();
         }}
       />
       <SectionDepositGuarantee
@@ -404,6 +413,7 @@ const Tenant = (props) => {
                       idContract: dataTenant.idContract,
                       idCustomerTenant: dataTenant.idCustomerTenant,
                       idCustomer: dataTenant.idCustomer,
+                      type: 1,
                     });
                     setIsModalVisible(!isModalVisible);
                   }}
