@@ -556,7 +556,7 @@ const Administrator = (props) => {
             download: true,
           }),
           headers: {
-            "Content-Type": "application/octet-stream",
+            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
             Authorization: `Bearer ${token}`,
           },
