@@ -243,7 +243,7 @@ const Tenant = (props) => {
     }
   };
 
-  const handlerCallGetContract = async (data) => {
+  const handlerCallGetContract = async (data, name) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       if (data.download === false) {
@@ -274,13 +274,14 @@ const Tenant = (props) => {
               "Content-Type": "application/json",
               "Access-Control-Allow-Origin": "*",
               Authorization: `Bearer ${token}`,
+              "Access-Control-Allow-Credentials": true,
             },
           }
         );
         if (isNil(response.status) === false && response.status !== 200) {
           throw isNil(response.statusText) === false ? response.statusText : "";
         }
-        const label = `Contrato_${moment().format("YYYYMMDD-HHmm")}`;
+        const label = `${name}_${moment().format("YYYYMMDD-HHmm")}`;
         const blob = await response.blob();
         const link = document.createElement("a");
         link.className = "download";
