@@ -71,23 +71,25 @@ const SectionContractAvailable = (props) => {
   const LoadingSpin = <SyncOutlined spin />;
 
   useEffect(() => {
-    if (
-      isEmpty(dataGetContract) === false &&
-      (dataGetContract.isEditable === 1 || dataGetContract.isEditable === true)
-    ) {
-      if (dataProfile.idUserType === 3) {
-        setOpenSection(1);
+    if (isEmpty(dataGetContract) === false && isNil(openSection) === true) {
+      if (
+        dataGetContract.isEditable === 1 ||
+        dataGetContract.isEditable === true
+      ) {
+        if (dataProfile.idUserType === 3) {
+          setOpenSection(1);
+        } else {
+          setOpenSection(4);
+          setSignaturePrecencial(true);
+        }
+        setIsEditableContract(true);
       } else {
         setOpenSection(4);
-        setSignaturePrecencial(true);
+        setIsEditableContract(false);
       }
-      setIsEditableContract(true);
-    } else {
-      setOpenSection(4);
-      setIsEditableContract(false);
     }
   }, [dataGetContract]);
-  
+
   return (
     <Modal
       style={{ top: 20 }}
@@ -369,7 +371,10 @@ const SectionContractAvailable = (props) => {
                         digitalSignature: null,
                         anex2: null,
                         startedAt: startedAt,
-                        scheduleSignatureDate: moment().format("YYYY-MM-DD"),
+                        scheduleSignatureDate:
+                          dataProfile.idUserType === 3
+                            ? moment().format("YYYY-MM-DD")
+                            : null,
                         collectionDays: null,
                         type: 1,
                       });
@@ -738,7 +743,7 @@ const SectionContractAvailable = (props) => {
                   {typeSignatureDigital === 1 &&
                     "Firma de Contrato de arrendamiento"}
                   {typeSignatureDigital === 2 && "Firma de Póliza"}
-                  {typeSignatureDigital === 3 && "Firma de Pagarés"}
+                  {typeSignatureDigital === 4 && "Firma de Pagarés"}
                 </p>
                 <div className="signature">
                   <SignatureCanvas
@@ -790,6 +795,8 @@ const SectionContractAvailable = (props) => {
                   <button
                     type="button"
                     onClick={async () => {
+                      signatureRef.current.clear();
+                      setAceptTerms(false);
                       await onAcceptContract({
                         idCustomer: dataGetContract.idCustomer,
                         idCustomerTenant: dataGetContract.idCustomerTenant,
@@ -798,7 +805,10 @@ const SectionContractAvailable = (props) => {
                         digitalSignature: signature,
                         anex2: null,
                         startedAt: startedAt,
-                        scheduleSignatureDate: moment().format("YYYY-MM-DD"),
+                        scheduleSignatureDate:
+                          dataProfile.idUserType === 3
+                            ? moment().format("YYYY-MM-DD")
+                            : null,
                         collectionDays: null,
                         type: typeSignatureDigital,
                       });
@@ -809,7 +819,7 @@ const SectionContractAvailable = (props) => {
                         });
                       } else if (typeSignatureDigital === 2) {
                         setDocumentSigned({ ...documentSigned, policy: true });
-                      } else if (typeSignatureDigital === 3) {
+                      } else if (typeSignatureDigital === 4) {
                         setDocumentSigned({ ...documentSigned, payment: true });
                       }
                       setOpenSection(4);

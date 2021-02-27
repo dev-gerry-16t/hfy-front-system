@@ -7,7 +7,7 @@
     border: none;
     background: transparent;
   }
-  button:last-child {
+  button:nth-child(3) {
     border: none;
     border-radius: 10px;
     background: rgba(255, 229, 28, 0.719);
@@ -1057,4 +1057,10 @@ $terchiary: #99d2e4;
 
 .ant-divider {
   border-top: 1px solid rgba(0, 0, 0, 0.3) !important;
+}
+
+.center-image-signature-document {
+  position: absolute !important;
+  top: -75px !important;
+  right: 80px !important;
 }

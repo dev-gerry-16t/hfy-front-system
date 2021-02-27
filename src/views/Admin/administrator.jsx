@@ -730,18 +730,6 @@ const Administrator = (props) => {
             <span>Por cerrar</span>
           </div>
         </div>
-        <a
-          href={`${ENVIROMENT}/api/downloadFile`}
-          download
-        >
-          Test de descarga pdf
-        </a><br/>
-        <a
-          href={`${ENVIROMENT}/api/testPDF`}
-          download
-        >
-          Test de descarga jpg
-        </a>
         <div className="main-information-user-admin">
           <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
           <SectionStatsChartPie dataStatsChart={dataChartPie} finishCallApis />
