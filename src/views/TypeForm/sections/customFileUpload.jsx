@@ -99,14 +99,20 @@ const CustomFileUpload = (props) => {
   };
 
   const handlerAddDocument = async (data, infoDoc) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTF,
+      idCustomerTenantTF,
+    } = dataProfile;
     const dataDocument = {
       documentName: data.name,
       extension: data.type,
       preview: null,
       thumbnail: null,
       idDocumentType: infoDoc.idDocumentType,
-      idCustomer,
+      idCustomer: idCustomerTF,
       idSystemUser,
       idLoginHistory,
     };
@@ -126,9 +132,9 @@ const CustomFileUpload = (props) => {
           : null;
       await handlerAddTypeFormDocument(
         {
-          idCustomer,
+          idCustomer: idCustomerTF,
           idTypeForm: infoDoc.idTypeForm,
-          idCustomerTenant: idCustomer,
+          idCustomerTenant: idCustomerTenantTF,
           type: typeDocument,
           idSystemUser,
           idLoginHistory,

@@ -744,27 +744,29 @@ const Administrator = (props) => {
               setIsVisibleAddUser(!isVisibleAddUser);
             }}
             onOpenDetail={(type, id, data) => {
-              if (id === 1) {
-                handlerCallGetDetailCustomer(type);
-                handlerCallContractComment({
-                  idCustomer: data.idCustomer,
-                  idCustomerTenant: null,
-                  idContract: data.idContract,
-                  idDigitalContract: data.idDigitalContract,
-                });
-                setIsVisibleDetailUser(!isVisibleDetailUser);
-              } else if (id === 2) {
-                handlerCallGetDetailCustomerTenant(type);
-                handlerCallContractComment({
-                  idCustomer: data.idCustomer,
-                  idCustomerTenant: data.idCustomerTenant,
-                  idContract: data.idContract,
-                  idDigitalContract: data.idDigitalContract,
-                });
-                setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
-              } else if (id === 3) {
-                handlerCallGetDetailCustomerAgent(type);
-                setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
+              if (data.canViewDatail === true) {
+                if (id === 1) {
+                  handlerCallGetDetailCustomer(type);
+                  handlerCallContractComment({
+                    idCustomer: data.idCustomer,
+                    idCustomerTenant: null,
+                    idContract: data.idContract,
+                    idDigitalContract: data.idDigitalContract,
+                  });
+                  setIsVisibleDetailUser(!isVisibleDetailUser);
+                } else if (id === 2) {
+                  handlerCallGetDetailCustomerTenant(type);
+                  handlerCallContractComment({
+                    idCustomer: data.idCustomer,
+                    idCustomerTenant: data.idCustomerTenant,
+                    idContract: data.idContract,
+                    idDigitalContract: data.idDigitalContract,
+                  });
+                  setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
+                } else if (id === 3) {
+                  handlerCallGetDetailCustomerAgent(type);
+                  setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
+                }
               }
             }}
             dataCoincidences={dataCoincidences}
