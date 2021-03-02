@@ -142,7 +142,6 @@ const CustomFileUpload = (props) => {
         "Documento subido exitosamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
-      onSuccesUpload(infoDoc.idDocumentType);
     } catch (error) {
       showMessageStatusApi(
         "No se logro subir el archivo, intenta nuevamente o mas tarde",

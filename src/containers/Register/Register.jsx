@@ -265,7 +265,7 @@ const Register = (props) => {
       validatePassSecure = false;
     }
 
-    if (isNil(data.idPersonType) === false) {
+    if (isNil(data.idPersonType) === false || selectuserCustomer === 3) {
       validateIdPerson = true;
     } else {
       objectErrors = {

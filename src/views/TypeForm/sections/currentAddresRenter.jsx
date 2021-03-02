@@ -600,7 +600,7 @@ const CurrentAddressRenter = (props) => {
                 <DescriptionItem
                   title="Monto de renta"
                   content={
-                    isNil(dataFormSave.currentRent) === false
+                    isNil(dataForm.currentRent) === false
                       ? frontFunctions.parseFormatCurrency(
                           dataForm.currentRent,
                           2,
@@ -614,7 +614,7 @@ const CurrentAddressRenter = (props) => {
                 <DescriptionItem
                   title="Monto de mantenimiento"
                   content={
-                    isNil(dataFormSave.maintenanceAmount) === false
+                    isNil(dataForm.maintenanceAmount) === false
                       ? frontFunctions.parseFormatCurrency(
                           dataForm.maintenanceAmount,
                           2,

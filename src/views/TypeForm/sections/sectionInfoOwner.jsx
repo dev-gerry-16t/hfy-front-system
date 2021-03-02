@@ -198,8 +198,8 @@ const SectionInfoOwner = (props) => {
                   value={dataForm.phoneNumber}
                   placeholder={"Telefono"}
                   onChange={(e) => {
-                    // const value = e.target.value;
-                    // setDataForm({ ...dataForm, phoneNumber: value });
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, phoneNumber: value });
                   }}
                 />
               </Col>
