@@ -35,6 +35,7 @@ import {
 } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import EmptyDocument from "../../../assets/icons/EmptyDocument.svg";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 
 const { Option } = Select;
 
@@ -129,7 +130,7 @@ const SectionContractAvailable = (props) => {
             isNil(dataGetContract.url) === false ? (
               <iframe
                 className="iframe-docx-hfy"
-                src={`https://docs.google.com/gview?url=http://localhost:3001${dataGetContract.url}&embedded=true`}
+                src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataGetContract.url}&embedded=true`}
               ></iframe>
             ) : (
               <div className="empty-data-document">
@@ -429,6 +430,7 @@ const SectionContractAvailable = (props) => {
                               onVisualiceDocument({
                                 download: false,
                                 process: true,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -456,6 +458,7 @@ const SectionContractAvailable = (props) => {
                               {
                                 download: true,
                                 process: false,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -529,6 +532,7 @@ const SectionContractAvailable = (props) => {
                               onVisualiceDocument({
                                 download: false,
                                 process: true,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -555,6 +559,7 @@ const SectionContractAvailable = (props) => {
                               {
                                 download: true,
                                 process: false,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -628,6 +633,7 @@ const SectionContractAvailable = (props) => {
                               onVisualiceDocument({
                                 download: false,
                                 process: true,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -655,6 +661,7 @@ const SectionContractAvailable = (props) => {
                               {
                                 download: true,
                                 process: false,
+                                url: dataGetContract.url,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,

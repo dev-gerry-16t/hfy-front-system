@@ -25,6 +25,7 @@ import {
   callAddCommentContract,
   callGetContract,
   callGetContractComment,
+  callAddDocumentContractId,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -60,6 +61,7 @@ const Owner = (props) => {
     callAddCommentContract,
     callGetContract,
     callGetContractComment,
+    callAddDocumentContractId,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
@@ -434,6 +436,26 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallAddDocumentContractId = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddDocumentContractId(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetContract = async (data, name) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -450,6 +472,15 @@ const Owner = (props) => {
             ? response.response[0]
             : {};
         setDataGetContract(responseResult);
+        if (isEmpty(responseResult) === false && data.process === true) {
+          handlerCallAddDocumentContractId(
+            {
+              type: data.type,
+              idContract: responseResult.idContract,
+            },
+            responseResult.idDocument
+          );
+        }
       } else {
         const { token } = dataProfile;
         const response = await fetch(
@@ -469,13 +500,20 @@ const Owner = (props) => {
           }
         );
         if (isNil(response.status) === false && response.status !== 200) {
-          throw isNil(response.statusText) === false ? response.statusText : "";
+          const responseResult = await response.json();
+          const responseText =
+            isNil(responseResult) === false &&
+            isNil(responseResult.response) === false &&
+            isNil(responseResult.response.statusText) === false
+              ? responseResult.response.statusText
+              : "";
+          throw responseText;
         }
         const label = `${name}_${moment().format("YYYYMMDD-HHmm")}`;
         const blob = await response.blob();
         const link = document.createElement("a");
         link.className = "download";
-        link.download = `${label}.${"pdf"}`;
+        link.download = `${label}.${"docx"}`;
         link.href = URL.createObjectURL(blob);
         document.body.appendChild(link);
         link.click();
@@ -483,7 +521,9 @@ const Owner = (props) => {
       }
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false && isEmpty(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -720,6 +760,7 @@ const Owner = (props) => {
               handlerCallGetContract({
                 download: false,
                 process: false,
+                url: null,
                 idCustomer: data.idCustomer,
                 idCustomerTenant: data.idCustomerTenant,
                 idContract: data.idContract,
@@ -761,6 +802,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callAddCommentContract(data, id)),
   callGetContract: (data) => dispatch(callGetContract(data)),
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
+  callAddDocumentContractId: (data, id) =>
+    dispatch(callAddDocumentContractId(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

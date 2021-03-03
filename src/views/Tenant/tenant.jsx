@@ -28,6 +28,7 @@ import {
   callGetContractComment,
   callGetCustomerMessage,
   callAddCustomerMessage,
+  callAddDocumentContractId,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -47,6 +48,7 @@ const Tenant = (props) => {
     callGetContractComment,
     callGetCustomerMessage,
     callAddCustomerMessage,
+    callAddDocumentContractId,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
@@ -243,6 +245,26 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallAddDocumentContractId = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddDocumentContractId(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetContract = async (data, name) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -259,6 +281,15 @@ const Tenant = (props) => {
             ? response.response[0]
             : {};
         setDataGetContract(responseResult);
+        if (isEmpty(responseResult) === false && data.process === true) {
+          handlerCallAddDocumentContractId(
+            {
+              type: data.type,
+              idContract: responseResult.idContract,
+            },
+            responseResult.idDocument
+          );
+        }
       } else {
         const { token } = dataProfile;
         const response = await fetch(
@@ -410,6 +441,8 @@ const Tenant = (props) => {
                   type="button"
                   onClick={() => {
                     handlerCallGetContract({
+                      process: false,
+                      url: null,
                       download: false,
                       idContract: dataTenant.idContract,
                       idCustomerTenant: dataTenant.idCustomerTenant,
@@ -618,6 +651,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAllCustomerTenantDashboardById(data)),
   callAddCustomerMessage: (data) => dispatch(callAddCustomerMessage(data)),
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
+  callAddDocumentContractId: (data, id) =>
+    dispatch(callAddDocumentContractId(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);
