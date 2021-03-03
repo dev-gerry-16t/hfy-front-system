@@ -171,6 +171,8 @@ const Owner = (props) => {
         setDataUserProfile({
           ...dataProfile,
           idContract: responseResult.idContract,
+          idCustomerTF: responseResult.idCustomer,
+          idCustomerTenantTF: null,
         });
         notification.open(args);
       }
@@ -717,6 +719,7 @@ const Owner = (props) => {
             onOpenContract={(data) => {
               handlerCallGetContract({
                 download: false,
+                process: false,
                 idCustomer: data.idCustomer,
                 idCustomerTenant: data.idCustomerTenant,
                 idContract: data.idContract,

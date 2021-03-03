@@ -51,6 +51,12 @@ const SectionContractAvailable = (props) => {
     onFinishContractFlow,
   } = props;
   const [signature, setSignature] = useState("");
+  const [reconstructionSection, setReconstructionSection] = useState({
+    contract: true,
+    policy: true,
+    contractTenant: true,
+    payments: true,
+  });
   const [startedAt, setStartedAt] = useState(null);
   const [scheduleSignatureDate, setScheduleSignatureDate] = useState(null);
   const [valueText, setValueText] = useState(null);
@@ -120,13 +126,11 @@ const SectionContractAvailable = (props) => {
           </div>
           <div className="contract-children-information">
             {isNil(dataGetContract) === false &&
-            isNil(dataGetContract.contractContent) === false ? (
-              <div
-                style={{ color: "black !important" }}
-                dangerouslySetInnerHTML={{
-                  __html: dataGetContract.contractContent,
-                }}
-              />
+            isNil(dataGetContract.url) === false ? (
+              <iframe
+                className="iframe-docx-hfy"
+                src={`https://docs.google.com/gview?url=http://localhost:3001${dataGetContract.url}&embedded=true`}
+              ></iframe>
             ) : (
               <div className="empty-data-document">
                 <img
@@ -421,14 +425,22 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            onVisualiceDocument({
-                              download: false,
-                              idCustomer: dataGetContract.idCustomer,
-                              idCustomerTenant:
-                                dataGetContract.idCustomerTenant,
-                              idContract: dataGetContract.idContract,
-                              type: 1,
-                            });
+                            if (reconstructionSection.contract === true) {
+                              onVisualiceDocument({
+                                download: false,
+                                process: true,
+                                idCustomer: dataGetContract.idCustomer,
+                                idCustomerTenant:
+                                  dataGetContract.idCustomerTenant,
+                                idContract: dataGetContract.idContract,
+                                type: 1,
+                              });
+                              setReconstructionSection({
+                                ...reconstructionSection,
+                                contract: false,
+                              });
+                            }
+
                             setInternalModal(!internalModal);
                           } catch (error) {}
                         }}
@@ -443,6 +455,7 @@ const SectionContractAvailable = (props) => {
                             await onDownloadDocument(
                               {
                                 download: true,
+                                process: false,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -512,15 +525,21 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            onVisualiceDocument({
-                              download: false,
-                              idCustomer: dataGetContract.idCustomer,
-                              idCustomerTenant:
-                                dataGetContract.idCustomerTenant,
-                              idContract: dataGetContract.idContract,
-                              type: 2,
-                            });
-
+                            if (reconstructionSection.policy === true) {
+                              onVisualiceDocument({
+                                download: false,
+                                process: true,
+                                idCustomer: dataGetContract.idCustomer,
+                                idCustomerTenant:
+                                  dataGetContract.idCustomerTenant,
+                                idContract: dataGetContract.idContract,
+                                type: 2,
+                              });
+                              setReconstructionSection({
+                                ...reconstructionSection,
+                                policy: false,
+                              });
+                            }
                             setInternalModal(!internalModal);
                           } catch (error) {}
                         }}
@@ -535,6 +554,7 @@ const SectionContractAvailable = (props) => {
                             await onDownloadDocument(
                               {
                                 download: true,
+                                process: false,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -604,14 +624,22 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            onVisualiceDocument({
-                              download: false,
-                              idCustomer: dataGetContract.idCustomer,
-                              idCustomerTenant:
-                                dataGetContract.idCustomerTenant,
-                              idContract: dataGetContract.idContract,
-                              type: 4,
-                            });
+                            if (reconstructionSection.payments === true) {
+                              onVisualiceDocument({
+                                download: false,
+                                process: true,
+                                idCustomer: dataGetContract.idCustomer,
+                                idCustomerTenant:
+                                  dataGetContract.idCustomerTenant,
+                                idContract: dataGetContract.idContract,
+                                type: 4,
+                              });
+                              setReconstructionSection({
+                                ...reconstructionSection,
+                                payments: false,
+                              });
+                            }
+
                             setInternalModal(!internalModal);
                           } catch (error) {}
                         }}
@@ -626,6 +654,7 @@ const SectionContractAvailable = (props) => {
                             await onDownloadDocument(
                               {
                                 download: true,
+                                process: false,
                                 idCustomer: dataGetContract.idCustomer,
                                 idCustomerTenant:
                                   dataGetContract.idCustomerTenant,
@@ -817,10 +846,22 @@ const SectionContractAvailable = (props) => {
                           ...documentSigned,
                           contract: true,
                         });
+                        setReconstructionSection({
+                          ...reconstructionSection,
+                          contract: true,
+                        });
                       } else if (typeSignatureDigital === 2) {
                         setDocumentSigned({ ...documentSigned, policy: true });
+                        setReconstructionSection({
+                          ...reconstructionSection,
+                          policy: true,
+                        });
                       } else if (typeSignatureDigital === 4) {
                         setDocumentSigned({ ...documentSigned, payment: true });
+                        setReconstructionSection({
+                          ...reconstructionSection,
+                          payments: true,
+                        });
                       }
                       setOpenSection(4);
                     }}
