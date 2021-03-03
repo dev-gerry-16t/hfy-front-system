@@ -34,6 +34,7 @@ const SectionAddProperty = (props) => {
     onChangeZipCode,
     dataZipCodeAdress,
     dataZipCatalog,
+    dataPropertyTypes,
   } = props;
   const initialDataForm = {
     street: null,
@@ -302,9 +303,10 @@ const SectionAddProperty = (props) => {
               </Col>
             </Row>
             {isEmpty(totalDepartment) === false &&
-              totalDepartment.map((row) => {
+              totalDepartment.map((row, indx) => {
                 return (
                   <>
+                    <p>Propiedad {indx + 1}</p>
                     <Row>
                       <Col span={11}>
                         <Input
@@ -453,6 +455,36 @@ const SectionAddProperty = (props) => {
                           </Radio.Group>
                         </div>
                       </Col>
+                      <Col span={2} />
+                      <Col span={11}>
+                        <Select
+                          placeholder="Tipo de inmueble"
+                          value={statesDynamic[row.id].idPropertyType}
+                          onChange={(value, option) => {
+                            setStateDynamic({
+                              ...statesDynamic,
+                              [row.id]: {
+                                ...statesDynamic[row.id],
+                                idPropertyType: value,
+                              },
+                            });
+                          }}
+                        >
+                          {isEmpty(dataPropertyTypes) === false &&
+                            dataPropertyTypes.map((row) => {
+                              return (
+                                <Option
+                                  value={row.idPropertyType}
+                                  onClick={() => {
+                                    return row;
+                                  }}
+                                >
+                                  {row.text}
+                                </Option>
+                              );
+                            })}
+                        </Select>
+                      </Col>
                     </Row>
                     <Row>
                       <Col span={11}>
@@ -537,6 +569,10 @@ const SectionAddProperty = (props) => {
                         }}
                       ></Col>
                     </Row>
+                    <div
+                      className="ant-divider ant-divider-horizontal"
+                      role="separator"
+                    />
                   </>
                 );
               })}

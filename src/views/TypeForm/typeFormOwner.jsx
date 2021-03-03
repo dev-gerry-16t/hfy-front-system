@@ -394,7 +394,7 @@ const TypeFormOwner = (props) => {
         isNil(response.response) === false &&
         isEmpty(response.response) === false
           ? response.response
-          : {};
+          : [];
       setDataPropertyTypes(responseResult);
     } catch (error) {
       showMessageStatusApi(

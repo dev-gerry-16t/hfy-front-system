@@ -26,6 +26,7 @@ import {
   callGetContract,
   callGetContractComment,
   callAddDocumentContractId,
+  callGetPropertyTypes,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -62,6 +63,7 @@ const Owner = (props) => {
     callGetContract,
     callGetContractComment,
     callAddDocumentContractId,
+    callGetPropertyTypes,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
@@ -72,6 +74,7 @@ const Owner = (props) => {
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataTenant, setDataTenant] = useState([]);
   const [dataBank, setDataBank] = useState([]);
+  const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataGetContract, setDataGetContract] = useState([]);
   const [tenantCoincidences, setTenantCoincidences] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -384,7 +387,7 @@ const Owner = (props) => {
     } catch (error) {
       setSpinVisible(false);
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
@@ -577,6 +580,30 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallGetPropertyTypes = async () => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetPropertyTypes({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataPropertyTypes(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -624,6 +651,7 @@ const Owner = (props) => {
         }}
       />
       <SectionAddProperty
+        dataPropertyTypes={dataPropertyTypes}
         spinVisible={spinVisible}
         isModalVisible={isModalVisible}
         onClose={() => {
@@ -689,6 +717,7 @@ const Owner = (props) => {
                 <button
                   type="button"
                   onClick={() => {
+                    handlerCallGetPropertyTypes();
                     setIsModalVisible(!isModalVisible);
                   }}
                 >
@@ -804,6 +833,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
+  callGetPropertyTypes: (data) => dispatch(callGetPropertyTypes(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
