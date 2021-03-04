@@ -40,6 +40,9 @@ const SectionInfoAval = (props) => {
     dataZipCodeAdress,
     dataDocuments,
     typeDocument,
+    dataMaritalStatus,
+    dataMaritalRegime,
+    frontFunctions,
   } = props;
   const initialForm = {
     hasEndorsement: null,
@@ -68,9 +71,15 @@ const SectionInfoAval = (props) => {
     endorsementCitizenId: null,
     publicPropertyRegistry: null,
     endorsementPlaceOfIssue: null,
+    idEndorsementMaritalStatus: null,
+    idEndorsementMaritalStatusText: null,
+    idEndorsementMaritalRegime: null,
+    idEndorsementMaritalRegimeText: null,
+    endorsementAssessment: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
+  const [isOpenSelectRegime, setIsOpenSelectRegime] = useState(false);
   const [confirmData, setConfirmData] = useState(false);
 
   const DescriptionItem = ({ title, content }) => (
@@ -88,7 +97,9 @@ const SectionInfoAval = (props) => {
     if (
       isEmpty(dataFormSave) === false &&
       isEmpty(dataNationalities) === false &&
-      isEmpty(dataIdTypes) === false
+      isEmpty(dataIdTypes) === false &&
+      isEmpty(dataIdTypes) === false &&
+      isEmpty(dataMaritalRegime) === false
     ) {
       const selectDefaultNationality = dataNationalities.find((row) => {
         return (
@@ -98,6 +109,18 @@ const SectionInfoAval = (props) => {
       const selectDefaultIdType = dataIdTypes.find((row) => {
         return dataFormSave.idEndorsementType === row.idType;
       });
+      const selectDefaultMaritalStatus = dataMaritalStatus.find((row) => {
+        return dataForm.idEndorsementMaritalStatus === row.idMaritalStatus;
+      });
+      const selectDefaultMaritalRegime = dataMaritalRegime.find((row) => {
+        return dataForm.idEndorsementMaritalRegime === row.idMaritalRegime;
+      });
+      if (
+        isNil(selectDefaultMaritalStatus) === false &&
+        isNil(selectDefaultMaritalStatus.hasMaritalRegime) === false
+      ) {
+        setIsOpenSelectRegime(selectDefaultMaritalStatus.hasMaritalRegime);
+      }
       setDataForm({
         ...dataFormSave,
         idEndorsementNationalityText:
@@ -110,10 +133,24 @@ const SectionInfoAval = (props) => {
           isNil(selectDefaultIdType) === false
             ? selectDefaultIdType.requiresPlaceOfIssue
             : null,
+        idEndorsementMaritalStatusText:
+          isNil(selectDefaultMaritalStatus) === false
+            ? selectDefaultMaritalStatus.text
+            : "",
+        idEndorsementMaritalRegimeText:
+          isNil(selectDefaultMaritalRegime) === false
+            ? selectDefaultMaritalRegime.text
+            : "",
       });
       onChangeZipCode(dataFormSave.collateralPropertyZipCode);
     }
-  }, [dataNationalities, dataIdTypes, dataFormSave]);
+  }, [
+    dataNationalities,
+    dataIdTypes,
+    dataFormSave,
+    dataMaritalStatus,
+    dataMaritalRegime,
+  ]);
 
   useEffect(() => {
     if (isEmpty(dataZipCodeAdress) === false) {
@@ -382,21 +419,69 @@ const SectionInfoAval = (props) => {
                     />
                   </Col>
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
-                    <Input
-                      value={dataForm.publicPropertyRegistry}
-                      placeholder="Registro público de la propiedad"
-                      onChange={(e) => {
-                        const value = e.target.value;
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Select
+                      placeholder="Estado Civil"
+                      value={dataForm.idEndorsementMaritalStatus}
+                      onChange={(value, option) => {
+                        const dataClick = option.onClick();
+                        setIsOpenSelectRegime(dataClick.hasMaritalRegime);
                         setDataForm({
                           ...dataForm,
-                          publicPropertyRegistry: value,
+                          idEndorsementMaritalStatus: value,
+                          idEndorsementMaritalStatusText: option.children,
                         });
                       }}
-                    />
+                    >
+                      {isEmpty(dataMaritalStatus) === false &&
+                        dataMaritalStatus.map((row) => {
+                          return (
+                            <Option
+                              value={row.idMaritalStatus}
+                              onClick={() => {
+                                return row;
+                              }}
+                            >
+                              {row.text}
+                            </Option>
+                          );
+                        })}
+                    </Select>
                   </Col>
                 </Row>
-                <p>Dirección de la propiedad en garantia</p>
+                <Row>
+                  {isOpenSelectRegime === true && (
+                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <Select
+                        placeholder="Régimen"
+                        value={dataForm.idEndorsementMaritalRegime}
+                        onChange={(value, option) => {
+                          setDataForm({
+                            ...dataForm,
+                            idEndorsementMaritalRegime: value,
+                            idEndorsementMaritalRegimeText: option.children,
+                          });
+                        }}
+                      >
+                        {isEmpty(dataMaritalRegime) === false &&
+                          dataMaritalRegime.map((row) => {
+                            return (
+                              <Option
+                                value={row.idMaritalRegime}
+                                onClick={() => {
+                                  return row;
+                                }}
+                              >
+                                {row.text}
+                              </Option>
+                            );
+                          })}
+                      </Select>
+                    </Col>
+                  )}
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                </Row>
+                <p>Dirección de la propiedad en garantía</p>
                 <Row>
                   <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                     <Input
@@ -543,6 +628,50 @@ const SectionInfoAval = (props) => {
                     )}
                   </Col>
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.publicPropertyRegistry}
+                      placeholder="Registro público/Folio real"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          publicPropertyRegistry: value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <NumberFormat
+                      id={null}
+                      customInput={Input}
+                      thousandSeparator=","
+                      decimalSeparator="."
+                      decimalPrecision={2}
+                      allowNegative={false}
+                      prefix="$"
+                      suffix=""
+                      value={dataForm.endorsementAssessment}
+                      className="inputLogin"
+                      floatingLabelText=""
+                      isVisible
+                      toBlock={false}
+                      disable={false}
+                      placeholder="Gravamen"
+                      onValueChange={(values) => {
+                        const { formattedValue, value, floatValue } = values;
+                        setDataForm({
+                          ...dataForm,
+                          endorsementAssessment: floatValue,
+                        });
+                      }}
+                      onClick={(event) => {}}
+                      onFocus={(event) => {}}
+                      onBlur={(event) => {}}
+                    />
+                  </Col>
                 </Row>
                 <p>Escrituras</p>
                 <Row>
@@ -674,6 +803,28 @@ const SectionInfoAval = (props) => {
                     </div>
                   </div>
                 </div>
+                {isOpenSelectRegime === true && (
+                  <div className="section-top-documentation">
+                    <div className="section-card-documentation">
+                      <div className="section-title-card-doc">
+                        <strong>Acta de Matrimonio</strong>
+                        <span style={{ visibility: "hidden" }}>N/A</span>
+                      </div>
+                      <div className="section-content-card-doc">
+                        <CustomFileUpload
+                          acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                          dataDocument={
+                            isEmpty(dataDocuments) === false &&
+                            isNil(dataDocuments[3]) === false
+                              ? dataDocuments[3]
+                              : {}
+                          }
+                          typeDocument={typeDocument}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
               </>
             )}
             <div className="button_actions">
@@ -783,15 +934,30 @@ const SectionInfoAval = (props) => {
                   </Row>
                 )}
                 <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                     <DescriptionItem
                       title="CURP"
                       content={dataForm.endorsementCitizenId}
                     />
                   </Col>
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Estado CIvil"
+                      content={dataForm.idEndorsementMaritalStatusText}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  {isOpenSelectRegime === true && (
+                    <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                      <DescriptionItem
+                        title="Régimen"
+                        content={dataForm.idEndorsementMaritalRegimeText}
+                      />
+                    </Col>
+                  )}
                 </Row>
-                <p>Dirección de la propiedad en garantia</p>
+                <p>Dirección de la propiedad en garantía</p>
                 <Row>
                   <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                     <DescriptionItem
@@ -839,8 +1005,23 @@ const SectionInfoAval = (props) => {
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <DescriptionItem
-                      title="Registro público de la propiedad"
+                      title="Registro público/Folio real de la propiedad"
                       content={dataForm.publicPropertyRegistry}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DescriptionItem
+                      title="Gravamen"
+                      content={
+                        isNil(dataForm.endorsementAssessment) === false
+                          ? frontFunctions.parseFormatCurrency(
+                              dataForm.endorsementAssessment,
+                              2,
+                              2
+                            )
+                          : null
+                      }
                     />
                   </Col>
                 </Row>

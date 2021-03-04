@@ -40,7 +40,7 @@ const DefaultLayout = (props) => {
     callSetImageProfile,
     setDataUserProfile,
   } = props;
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(true);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {

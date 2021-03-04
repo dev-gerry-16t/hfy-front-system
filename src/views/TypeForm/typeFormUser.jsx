@@ -41,6 +41,8 @@ import {
   callGetNationalities,
   callGetIdTypes,
   callGetOccupations,
+  callGetMaritalStatus,
+  callGetMaritalRegime,
 } from "../../utils/actions/actions";
 
 const { Step } = Steps;
@@ -52,6 +54,8 @@ const TypeFormUser = (props) => {
     callGetTypeFormTenant,
     callSetTypeFormTenant,
     callGetTypeFormDocumentTenant,
+    callGetMaritalRegime,
+    callGetMaritalStatus,
     callGetZipCodeAdress,
     callSetTypeFormReferences,
     callGetNationalities,
@@ -71,6 +75,8 @@ const TypeFormUser = (props) => {
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [dataOccupations, setDataOccupations] = useState([]);
+  const [dataMaritalStatus, setDataMaritalStatus] = useState([]);
+  const [dataMaritalRegime, setDataMaritalRegime] = useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -263,6 +269,54 @@ const TypeFormUser = (props) => {
     }
   };
 
+  const handlerCallGetMaritalStatus = async () => {
+    const { idCustomerTF, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetMaritalStatus({
+        idCustomer: idCustomerTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataMaritalStatus(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetMaritalRegime = async () => {
+    const { idCustomerTF, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetMaritalRegime({
+        idCustomer: idCustomerTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataMaritalRegime(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetTypeFormDocumentTenant = async (id, type) => {
     const {
       idCustomerTenantTF,
@@ -397,6 +451,7 @@ const TypeFormUser = (props) => {
       title: "Información aval",
       content: (
         <SectionInfoAval
+          frontFunctions={frontFunctions}
           dataNationalities={dataNationalities}
           dataIdTypes={dataIdTypes}
           dataFormSave={dataForm}
@@ -424,6 +479,8 @@ const TypeFormUser = (props) => {
             setDataZipCatalog([]);
           }}
           typeDocument={2}
+          dataMaritalStatus={dataMaritalStatus}
+          dataMaritalRegime={dataMaritalRegime}
         />
       ),
       iconActive: Shield,
@@ -478,6 +535,8 @@ const TypeFormUser = (props) => {
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
     await hanlderCallGetOccupations();
+    await handlerCallGetMaritalStatus();
+    await handlerCallGetMaritalRegime();
   };
 
   useEffect(() => {
@@ -551,6 +610,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetNationalities: (data) => dispatch(callGetNationalities(data)),
   callGetIdTypes: (data) => dispatch(callGetIdTypes(data)),
   callGetOccupations: (data) => dispatch(callGetOccupations(data)),
+  callGetMaritalStatus: (data) => dispatch(callGetMaritalStatus(data)),
+  callGetMaritalRegime: (data) => dispatch(callGetMaritalRegime(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);
