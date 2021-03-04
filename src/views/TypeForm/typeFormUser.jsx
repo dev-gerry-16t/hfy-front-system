@@ -362,7 +362,7 @@ const TypeFormUser = (props) => {
           dataNationalities={dataNationalities}
           dataIdTypes={dataIdTypes}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -377,7 +377,7 @@ const TypeFormUser = (props) => {
         <SectionCurrentAddress
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
             setDataForm({ ...dataForm, ...data });
             setDataZipCodeAdress({});
             setDataZipCatalog([]);
@@ -400,7 +400,7 @@ const TypeFormUser = (props) => {
         <SectionCurrentWork
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -460,7 +460,7 @@ const TypeFormUser = (props) => {
             const { params } = match;
             const idSection = params.idSection;
             try {
-              await handlerCallSetTypeFormTenant(data);
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 6 });
               if (isNil(idSection) === false) {
                 history.push("/websystem/dashboard-admin");
               } else {
@@ -489,6 +489,7 @@ const TypeFormUser = (props) => {
   ];
 
   const handlerCallGetTypeFormTenant = async () => {
+    const { params } = match;
     const {
       idCustomerTenantTF,
       idCustomerTF,
@@ -497,6 +498,7 @@ const TypeFormUser = (props) => {
       idSystemUser,
       idLoginHistory,
     } = dataProfile;
+    const idSection = params.idSection;
     try {
       const response = await callGetTypeFormTenant({
         idCustomer: idCustomerTF,
@@ -518,6 +520,13 @@ const TypeFormUser = (props) => {
         isEmpty(response.response2) === false
           ? response.response2
           : [];
+      if (
+        isEmpty(responseResult1) === false &&
+        isNil(responseResult1.stepIn) === false &&
+        isNil(idSection) === true
+      ) {
+        setCurrent(responseResult1.stepIn);
+      }
       setDataForm(responseResult1);
       setDataReferences(responseResult2);
       await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 1);

@@ -233,7 +233,7 @@ const TypeFormOwner = (props) => {
           dataMaritalStatus={dataMaritalStatus}
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
             setDataForm({ ...dataForm, ...data });
             setDataZipCodeAdress({});
             setDataZipCatalog([]);
@@ -258,7 +258,7 @@ const TypeFormOwner = (props) => {
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
             setDataForm({ ...dataForm, ...data });
             setDataZipCodeAdress({});
             setDataZipCatalog([]);
@@ -289,7 +289,7 @@ const TypeFormOwner = (props) => {
           dataDocuments={dataDocuments}
           typeDocument={3}
           onClickNext={(data) => {
-            handlerCallSetTypeFormTenant(data);
+            handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
             setDataForm({ ...dataForm, ...data });
             next();
           }}
@@ -309,7 +309,7 @@ const TypeFormOwner = (props) => {
             const { params } = match;
             const idSection = params.idSection;
             try {
-              await handlerCallSetTypeFormTenant(data);
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 4 });
               if (isNil(idSection) === false) {
                 history.push("/websystem/dashboard-admin");
               } else {
@@ -326,12 +326,14 @@ const TypeFormOwner = (props) => {
   ];
 
   const handlerCallGetTypeFormTenant = async () => {
+    const { params } = match;
     const {
       idCustomer,
       idSystemUser,
       idLoginHistory,
       idContract,
     } = dataProfile;
+    const idSection = params.idSection;
     try {
       const response = await callGetTypeFormOwner({
         idCustomer,
@@ -346,6 +348,13 @@ const TypeFormOwner = (props) => {
         isEmpty(response.response[0]) === false
           ? response.response[0]
           : {};
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.stepIn) === false &&
+        isNil(idSection) === true
+      ) {
+        setCurrent(responseResult.stepIn);
+      }
       setDataForm(responseResult);
       handlerCallGetTypeFormDocument(responseResult.idTypeForm, 3);
     } catch (error) {
