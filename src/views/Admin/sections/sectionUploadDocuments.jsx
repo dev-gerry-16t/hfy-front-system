@@ -81,7 +81,8 @@ const SectionUploadDocument = (props) => {
         </div>
         <div className="main-form-information">
           <p>
-            Sube aquí los documentos firmados por el arrendador y arrendatario
+            Sube aquí los documentos firmados por el arrendador y arrendatario o
+            bien los documentos modificados
           </p>
 
           <div className="content-typeform-formulary">
@@ -95,7 +96,7 @@ const SectionUploadDocument = (props) => {
                 visibleSubtitle={false}
               >
                 <CustomFileUpload
-                  acceptFile="image/png, image/jpeg, image/jpg"
+                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
                     isNil(dataDocuments[2]) === false
@@ -111,7 +112,7 @@ const SectionUploadDocument = (props) => {
                 visibleSubtitle={false}
               >
                 <CustomFileUpload
-                  acceptFile="image/png, image/jpeg, image/jpg"
+                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
                     isNil(dataDocuments[0]) === false
@@ -127,7 +128,7 @@ const SectionUploadDocument = (props) => {
                 visibleSubtitle={false}
               >
                 <CustomFileUpload
-                  acceptFile="image/png, image/jpeg, image/jpg"
+                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
                   dataDocument={
                     isEmpty(dataDocuments) === false &&
                     isNil(dataDocuments[1]) === false

@@ -487,7 +487,9 @@ const Administrator = (props) => {
       );
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -626,6 +628,7 @@ const Administrator = (props) => {
         onSendInformation={async (data) => {
           try {
             await handlerCallGetAddProspect(data);
+            callAsynApis();
           } catch (error) {
             throw error;
           }
@@ -659,6 +662,7 @@ const Administrator = (props) => {
         isDrawerVisible={isVisibleDetailUserTenant}
         onClose={() => {
           setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
+          callAsynApis();
         }}
         dataDetailCustomerTenant={dataDetailCustomerTenant}
         dataDetailReferences={dataDetailReferences}
