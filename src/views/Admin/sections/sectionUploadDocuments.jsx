@@ -81,8 +81,8 @@ const SectionUploadDocument = (props) => {
         </div>
         <div className="main-form-information">
           <p>
-            Sube aquí los documentos firmados por el arrendador y arrendatario o
-            bien los documentos modificados
+            Sube aquí los documentos firmados por los involucrados o bien los
+            documentos modificados con firma electrónica requerida.
           </p>
 
           <div className="content-typeform-formulary">

@@ -51,6 +51,19 @@
   .ant-col {
     margin-bottom: 5px;
   }
+  .price-policy-amount {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      h2 {
+        margin-right: 5px;
+      }
+    }
+  }
   h3 {
     align-self: center;
     margin-bottom: 3%;
@@ -150,6 +163,7 @@
     display: flex;
     justify-content: space-between;
     margin-bottom: 25px;
+    flex-wrap: wrap;
   }
 
   .section-bottom-documentation {
@@ -165,6 +179,7 @@
     box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
     border-radius: 8px;
     padding: 5px 10px;
+    margin-top: 10px;
     .section-title-card-doc {
       display: flex;
       flex-direction: column;

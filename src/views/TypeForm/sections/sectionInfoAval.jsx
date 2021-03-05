@@ -98,7 +98,7 @@ const SectionInfoAval = (props) => {
       isEmpty(dataFormSave) === false &&
       isEmpty(dataNationalities) === false &&
       isEmpty(dataIdTypes) === false &&
-      isEmpty(dataIdTypes) === false &&
+      isEmpty(dataMaritalStatus) === false &&
       isEmpty(dataMaritalRegime) === false
     ) {
       const selectDefaultNationality = dataNationalities.find((row) => {
@@ -110,10 +110,10 @@ const SectionInfoAval = (props) => {
         return dataFormSave.idEndorsementType === row.idType;
       });
       const selectDefaultMaritalStatus = dataMaritalStatus.find((row) => {
-        return dataForm.idEndorsementMaritalStatus === row.idMaritalStatus;
+        return dataFormSave.idEndorsementMaritalStatus === row.idMaritalStatus;
       });
       const selectDefaultMaritalRegime = dataMaritalRegime.find((row) => {
-        return dataForm.idEndorsementMaritalRegime === row.idMaritalRegime;
+        return dataFormSave.idEndorsementMaritalRegime === row.idMaritalRegime;
       });
       if (
         isNil(selectDefaultMaritalStatus) === false &&
@@ -784,6 +784,26 @@ const SectionInfoAval = (props) => {
                       )}
                     </div>
                   </div>
+                  {isOpenSelectRegime === true && (
+                    <div className="section-card-documentation">
+                      <div className="section-title-card-doc">
+                        <strong>Acta de Matrimonio</strong>
+                        <span style={{ visibility: "hidden" }}>N/A</span>
+                      </div>
+                      <div className="section-content-card-doc">
+                        <CustomFileUpload
+                          acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                          dataDocument={
+                            isEmpty(dataDocuments) === false &&
+                            isNil(dataDocuments[3]) === false
+                              ? dataDocuments[3]
+                              : {}
+                          }
+                          typeDocument={typeDocument}
+                        />
+                      </div>
+                    </div>
+                  )}
                   <div className="section-card-documentation">
                     <div className="section-title-card-doc">
                       <strong>Escrituras de la propiedad</strong>
@@ -803,28 +823,6 @@ const SectionInfoAval = (props) => {
                     </div>
                   </div>
                 </div>
-                {isOpenSelectRegime === true && (
-                  <div className="section-top-documentation">
-                    <div className="section-card-documentation">
-                      <div className="section-title-card-doc">
-                        <strong>Acta de Matrimonio</strong>
-                        <span style={{ visibility: "hidden" }}>N/A</span>
-                      </div>
-                      <div className="section-content-card-doc">
-                        <CustomFileUpload
-                          acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-                          dataDocument={
-                            isEmpty(dataDocuments) === false &&
-                            isNil(dataDocuments[3]) === false
-                              ? dataDocuments[3]
-                              : {}
-                          }
-                          typeDocument={typeDocument}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                )}
               </>
             )}
             <div className="button_actions">

@@ -167,9 +167,9 @@ const CustomFileUpload = (props) => {
       >
         <Switch value={requestSignature} onChange={onChange} />
         {requestSignature === true ? (
-          <span style={{ marginLeft: 5 }}>Requiere firma</span>
+          <span style={{ marginLeft: 5 }}>Requiere firma electrónica</span>
         ) : (
-          <span style={{ marginLeft: 5 }}>Ya esta firmado</span>
+          <span style={{ marginLeft: 5 }}>Con firma ológrafa</span>
         )}
       </div>
       <div

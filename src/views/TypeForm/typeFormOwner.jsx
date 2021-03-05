@@ -284,6 +284,7 @@ const TypeFormOwner = (props) => {
       title: "Póliza",
       content: (
         <TypePolicy
+          frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           dataPolicies={dataPolicies}
           dataDocuments={dataDocuments}

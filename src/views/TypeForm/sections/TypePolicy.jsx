@@ -27,17 +27,28 @@ const TypePolicy = (props) => {
     dataDocuments,
     typeDocument,
     dataFormSave,
+    frontFunctions,
   } = props;
   const initialForm = {
     idPolicy: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+  const [taxPolicy, setTaxPolicy] = useState(0);
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
+    if (isEmpty(dataFormSave) === false && isEmpty(dataPolicies) === false) {
+      const selectDefaultPolicy = dataPolicies.find((row) => {
+        return row.id === dataFormSave.idPolicy;
+      });
       setDataForm(dataFormSave);
+      if (
+        isNil(selectDefaultPolicy) === false &&
+        isEmpty(selectDefaultPolicy) === false
+      ) {
+        setTaxPolicy(selectDefaultPolicy.percentBase);
+      }
     }
-  }, [dataFormSave]);
+  }, [dataFormSave, dataPolicies]);
 
   const getTypeIdDocument = (type) => {
     let word = "";
@@ -72,6 +83,9 @@ const TypePolicy = (props) => {
                 value={dataForm.idPolicy}
                 placeholder="¿Que póliza contratas?"
                 onChange={(value, option) => {
+                  const clickOption = option.onClick();
+                  const totalPolicyTax = clickOption.percentBase;
+                  setTaxPolicy(totalPolicyTax);
                   setDataForm({ ...dataForm, idPolicy: value });
                 }}
               >
@@ -89,6 +103,30 @@ const TypePolicy = (props) => {
                     );
                   })}
               </Select>
+            </Col>
+            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+              <div className="price-policy-amount">
+                <p>Costo por cobertura de Póliza</p>
+                {isNil(dataForm.currentRent) === false &&
+                dataForm.currentRent >= 10000 ? (
+                  <div>
+                    <h2>
+                      {isNil(dataForm.currentRent) === false &&
+                      isNil(dataForm.currentRent) === false
+                        ? frontFunctions.parseFormatCurrency(
+                            dataForm.currentRent * taxPolicy,
+                            2
+                          )
+                        : "$0.00"}
+                    </h2>
+                    <strong>MXN</strong>
+                  </div>
+                ) : (
+                  <div>
+                    <h2>Cotiza con tu asesor</h2>
+                  </div>
+                )}
+              </div>
             </Col>
           </Row>
           <p>Documentos</p>

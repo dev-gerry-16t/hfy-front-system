@@ -20,6 +20,7 @@ import {
   Progress,
   Image,
 } from "antd";
+import { FileUnknownOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import Show from "../../../assets/icons/Show.svg";
 import Delete from "../../../assets/icons/Delete.svg";
@@ -177,7 +178,7 @@ const CustomFileUpload = (props) => {
                   const reader = new FileReader();
                   reader.readAsDataURL(file.originFileObj);
                   reader.onload = (event) => {
-                    if (file.type !== "application/pdf") {
+                    if (file.type !== "application/pdf" && file.type !== "") {
                       setPreview(event.target.result);
                     } else {
                       setPreview("");
@@ -222,18 +223,36 @@ const CustomFileUpload = (props) => {
                   <img src={Delete} alt="eliminar" />
                 </button>
               </div>
-              <img src={preview} alt="Preview" />
+              {isEmpty(preview) === true ? (
+                <FileUnknownOutlined style={{ fontSize: 100, color: "grey" }} />
+              ) : (
+                <img src={preview} alt="Preview" />
+              )}
             </div>
           )}
         {isEmpty(dataDocument) === false &&
           isNil(dataDocument.idDocument) === false && (
             <div className="content-preview-document">
-              <Image
-                width={100}
-                height={110}
-                style={{ textAlign: "center" }}
-                src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
-              />
+              <div className="screen-hover-action">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPreviewVisible(!previewVisible);
+                  }}
+                >
+                  <img src={Show} alt="preview" />
+                </button>
+              </div>
+              {isNil(dataDocument.extension) === true ||
+              dataDocument.extension === "docx" ||
+              dataDocument.extension === "pdf" ? (
+                <FileUnknownOutlined style={{ fontSize: 100, color: "grey" }} />
+              ) : (
+                <img
+                  src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
+                  alt="Preview"
+                />
+              )}
             </div>
           )}
         <Modal
@@ -250,7 +269,12 @@ const CustomFileUpload = (props) => {
                 >
                   <img src={Arrow} alt="backTo" width="30" />
                 </button>
-                <h1>{fileName}</h1>
+                <h1>
+                  {isEmpty(dataDocument) === false &&
+                  isNil(dataDocument.idDocument) === false
+                    ? dataDocument.documentType
+                    : fileName}
+                </h1>
               </div>
             </div>
           }
@@ -258,7 +282,40 @@ const CustomFileUpload = (props) => {
           footer={null}
           style={{ top: "20px" }}
         >
-          <Magnifier src={preview} />
+          {isNil(preview) === false &&
+            isEmpty(dataDocument) === false &&
+            isNil(dataDocument.idDocument) === true && (
+              <>
+                {isEmpty(preview) === true ? (
+                  <div style={{ textAlign: "center" }}>
+                    <FileUnknownOutlined
+                      style={{ fontSize: 100, color: "grey" }}
+                    />
+                  </div>
+                ) : (
+                  <Magnifier src={preview} />
+                )}
+              </>
+            )}
+
+          {isEmpty(dataDocument) === false &&
+            isNil(dataDocument.idDocument) === false && (
+              <>
+                {isNil(dataDocument.extension) === true ||
+                dataDocument.extension === "docx" ||
+                dataDocument.extension === "pdf" ? (
+                  <div style={{ textAlign: "center" }}>
+                    <FileUnknownOutlined
+                      style={{ fontSize: 100, color: "grey" }}
+                    />
+                  </div>
+                ) : (
+                  <Magnifier
+                    src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
+                  />
+                )}
+              </>
+            )}
         </Modal>
       </div>
       {isNil(preview) === false &&
