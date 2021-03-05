@@ -118,12 +118,23 @@ const TypeFormUser = (props) => {
         ...data,
       });
       const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
-          : {};
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].message) === false
+          ? response.response[0].message
+          : "";
+      showMessageStatusApi(
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Información actualizada exitosamente.",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -361,10 +372,12 @@ const TypeFormUser = (props) => {
           dataFormSave={dataForm}
           dataNationalities={dataNationalities}
           dataIdTypes={dataIdTypes}
-          onClickNext={(data) => {
-            handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
-            setDataForm({ ...dataForm, ...data });
-            next();
+          onClickNext={async (data) => {
+            try {
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
+              setDataForm({ ...dataForm, ...data });
+              next();
+            } catch (error) {}
           }}
         />
       ),
@@ -376,12 +389,14 @@ const TypeFormUser = (props) => {
       content: (
         <SectionCurrentAddress
           dataFormSave={dataForm}
-          onClickNext={(data) => {
-            handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
-            setDataForm({ ...dataForm, ...data });
-            setDataZipCodeAdress({});
-            setDataZipCatalog([]);
-            next();
+          onClickNext={async (data) => {
+            try {
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
+              setDataForm({ ...dataForm, ...data });
+              setDataZipCodeAdress({});
+              setDataZipCatalog([]);
+              next();
+            } catch (error) {}
           }}
           dataZipCatalog={dataZipCatalog}
           onChangeZipCode={(zipCode) => {
@@ -399,10 +414,12 @@ const TypeFormUser = (props) => {
       content: (
         <SectionCurrentWork
           dataFormSave={dataForm}
-          onClickNext={(data) => {
-            handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
-            setDataForm({ ...dataForm, ...data });
-            next();
+          onClickNext={async (data) => {
+            try {
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
+              setDataForm({ ...dataForm, ...data });
+              next();
+            } catch (error) {}
           }}
           dataOccupations={dataOccupations}
           frontFunctions={frontFunctions}
