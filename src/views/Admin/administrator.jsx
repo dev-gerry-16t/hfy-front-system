@@ -646,6 +646,7 @@ const Administrator = (props) => {
           await setDataUserProfile({
             ...dataProfile,
             idCustomerTenant: null,
+            idCustomerTF: idCustomer,
             idCustomer: idCustomer,
             idContract: idContract,
           });

@@ -477,7 +477,7 @@ const TypeFormUser = (props) => {
             const { params } = match;
             const idSection = params.idSection;
             try {
-              await handlerCallSetTypeFormTenant({ ...data, stepIn: 6 });
+              await handlerCallSetTypeFormTenant({ ...data, stepIn: 5 });
               if (isNil(idSection) === false) {
                 history.push("/websystem/dashboard-admin");
               } else {
