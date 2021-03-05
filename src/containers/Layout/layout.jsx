@@ -192,6 +192,13 @@ const DefaultLayout = (props) => {
   );
 
   useEffect(() => {
+    const documentHead = document.getElementsByTagName("head");
+    const headExtractNode =
+      isNil(documentHead) === false &&
+      isEmpty(documentHead) === false &&
+      isNil(documentHead[0]) === false
+        ? documentHead[0]
+        : [];
     if (isNil(dataProfile) === true) {
       history.push("/");
     }
@@ -206,29 +213,55 @@ const DefaultLayout = (props) => {
       theme.className = "theme-light";
       localStorage.setItem("theme-app", "theme-light");
     }
-    window.smartsupp("name", dataProfile.showName);
-    window.smartsupp("variables", {
-      userType: {
-        label: "Tipo de usuario",
-        value: dataProfile.userType,
-      },
-      idSystemUser: {
-        label: "idSystemUser",
-        value: dataProfile.idSystemUser,
-      },
-      idCustomer: {
-        label: "idCustomer",
-        value: dataProfile.idCustomer,
-      },
-      idCustomerTenant: {
-        label: "Id Inquilino",
-        value: dataProfile.idCustomerTenant,
-      },
-      agentNo: {
-        label: "Numero de agente",
-        value: dataProfile.agentNo,
-      },
-    });
+    if (dataProfile.idUserType !== 1) {
+      const scriptCreate = document.createElement("script");
+      scriptCreate.id = "script-make-smartsupp-hfy";
+      scriptCreate.innerHTML = `
+      var _smartsupp = _smartsupp || {};
+      _smartsupp.key = "c63bfecea33039226338a89e3da23617cb9fd6c0";
+      window.smartsupp ||
+        (function (d) {
+          var s,
+            c,
+            o = (smartsupp = function () {
+              o._.push(arguments);
+            });
+          o._ = [];
+          s = d.getElementsByTagName("script")[0];
+          c = d.createElement("script");
+          c.type = "text/javascript";
+          c.charset = "utf-8";
+          c.async = true;
+          c.src = "https://www.smartsuppchat.com/loader.js?";
+          s.parentNode.insertBefore(c, s);
+        })(document);`;
+      headExtractNode.appendChild(scriptCreate);
+
+      window.smartsupp("email", dataProfile.email);
+      window.smartsupp("name", dataProfile.showName);
+      window.smartsupp("variables", {
+        userType: {
+          label: "Tipo de usuario",
+          value: dataProfile.userType,
+        },
+        idSystemUser: {
+          label: "idSystemUser",
+          value: dataProfile.idSystemUser,
+        },
+        idCustomer: {
+          label: "idCustomer",
+          value: dataProfile.idCustomer,
+        },
+        idCustomerTenant: {
+          label: "Id Inquilino",
+          value: dataProfile.idCustomerTenant,
+        },
+        agentNo: {
+          label: "Numero de agente",
+          value: dataProfile.agentNo,
+        },
+      });
+    }
   }, []);
 
   useEffect(() => {

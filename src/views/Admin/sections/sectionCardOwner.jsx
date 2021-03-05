@@ -567,7 +567,7 @@ const SectionCardOwner = (props) => {
                         <strong>Monto Renta:</strong>
                         <span> {row.currentRent}</span>
                       </td>
-                      <td style={{ display: "flex" }}>
+                      <td style={{ display: "flex", justifyContent: "center" }}>
                         <strong>Documentos:</strong>
                         <div>
                           <button

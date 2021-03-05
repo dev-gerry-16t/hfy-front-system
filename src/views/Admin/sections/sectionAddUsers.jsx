@@ -483,6 +483,7 @@ const SectionAddUsers = (props) => {
                 try {
                   await onSendInformation(dataResult);
                   onClose();
+                  setDataForm(initialDataForm);
                 } catch (error) {}
               }}
             >

@@ -404,7 +404,9 @@ const Administrator = (props) => {
       );
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
