@@ -70,13 +70,15 @@ const SectionChangeImage = (props) => {
         </div>
         <div className="avatar-image">
           <Avatar
-            width={390}
+            width={320}
             height={295}
             label="Haz click para seleccionar imagen"
             onCrop={onCrop}
             onClose={onCloseView}
             src={null}
             ref={refAvatar}
+            cropRadius={50}
+            maxCropRadius={60}
           />
         </div>
         <div className="button_init_primary">

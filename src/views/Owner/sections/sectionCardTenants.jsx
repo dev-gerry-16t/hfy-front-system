@@ -91,7 +91,14 @@ const SectionCardTenant = (props) => {
                         <span>Contrato disponible</span>
                       </div>
                     ) : (
-                      <div className="status-payment">
+                      <div
+                        className="status-payment"
+                        style={{
+                          background: row.customerStatusStyle,
+                          opacity: "0.5",
+                          color: "black",
+                        }}
+                      >
                         <span>{row.customerStatus}</span>
                       </div>
                     )}

@@ -194,6 +194,7 @@ const SectionCardOwner = (props) => {
       title: "Propietario",
       dataIndex: "customerFullName",
       key: "customerFullName",
+      width:230,
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <a
@@ -214,6 +215,7 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Inquilino",
+      width:230,
       dataIndex: "customerTenantFullName",
       key: "customerTenantFullName",
       render: (text, record) => (
@@ -236,6 +238,7 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Asesor",
+      width:200,
       dataIndex: "customerAgentFullName",
       key: "customerAgentFullName",
       render: (text, record) => (
@@ -431,6 +434,7 @@ const SectionCardOwner = (props) => {
       dataIndex: "hasAllDocumentation",
       key: "hasAllDocumentation",
       align: "center",
+      fixed: 'right',
       render: (documents, record) => {
         return (
           <div>
@@ -477,6 +481,8 @@ const SectionCardOwner = (props) => {
             columns={columns}
             dataSource={dataCoincidences}
             className="table-users-hfy"
+            size="small"
+            scroll={{ x: 1500 }}
           />
         )}
         {isEmpty(dataCoincidences) === false && (

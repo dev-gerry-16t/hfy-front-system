@@ -629,7 +629,7 @@ const SectionDetailUserTenant = (props) => {
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                 <DescriptionItem
                   title="Estatus"
-                  content={dataIsMainTenant.status}
+                  content={dataIsMainTenant.contractStatus}
                 />
               </Col>
               <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>

@@ -194,7 +194,7 @@
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 16px;
     .section-information-renters {
-      padding: 10px 0px;
+      padding: 10px 20px;
       .data-renter-info {
         display: flex;
         justify-content: space-between;
@@ -220,7 +220,7 @@
               display: flex;
               justify-content: center;
               span {
-                color: #da1414;
+                // color: #da1414;
               }
             }
             .status-payment-contract {
