@@ -23,6 +23,7 @@ const { Option } = Select;
 const SectionBankInfo = (props) => {
   const { onClickBack, onClickFinish, dataBank, dataFormSave } = props;
   const initialForm = {
+    isInCash: null,
     idBank: null,
     idBankText: null,
     bankBranch: null,
@@ -73,84 +74,119 @@ const SectionBankInfo = (props) => {
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Select
-                  placeholder="Banco"
-                  showSearch
-                  value={dataForm.idBank}
-                  onChange={(value, option) => {
-                    setDataForm({
-                      ...dataForm,
-                      idBank: value,
-                      idBankText: option.children,
-                    });
-                  }}
-                  filterOption={(input, option) =>
-                    option.children
-                      .toLowerCase()
-                      .indexOf(input.toLowerCase()) >= 0
-                  }
-                >
-                  {isEmpty(dataBank) === false &&
-                    dataBank.map((row) => {
-                      return <Option value={row.id}>{row.text}</Option>;
-                    })}
-                </Select>
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
-                  value={dataForm.bankBranch}
-                  placeholder={"Sucursal"}
-                  onChange={(e) => {
-                    setDataForm({
-                      ...dataForm,
-                      bankBranch: e.target.value,
-                    });
-                  }}
-                />
+                <div className="option-select-radio">
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ¿Como quieres tus pagos de renta?
+                  </span>
+                  <Radio.Group
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, isInCash: value });
+                    }}
+                    value={
+                      dataForm.isInCash === true || dataForm.isInCash === 1
+                        ? 1
+                        : isNil(dataForm.isInCash) === false
+                        ? 0
+                        : null
+                    }
+                  >
+                    <Radio value={1}>Efectivo</Radio>
+                    <Radio value={0}>Cuenta Bancaria</Radio>
+                  </Radio.Group>
+                </div>
               </Col>
             </Row>
-            <Row>
-              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                <Input
-                  value={dataForm.accountHolder}
-                  placeholder={"A nombre de"}
-                  onChange={(e) => {
-                    setDataForm({
-                      ...dataForm,
-                      accountHolder: e.target.value,
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <Input
-                  value={dataForm.accountNumber}
-                  placeholder={"Numero de cuenta"}
-                  onChange={(e) => {
-                    setDataForm({
-                      ...dataForm,
-                      accountNumber: e.target.value,
-                    });
-                  }}
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
-                <Input
-                  value={dataForm.clabeNumber}
-                  placeholder={"Clave interbancaria"}
-                  onChange={(e) => {
-                    setDataForm({
-                      ...dataForm,
-                      clabeNumber: e.target.value,
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
+            {(dataForm.isInCash === false || dataForm.isInCash === 0) && (
+              <>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Select
+                      placeholder="Banco"
+                      showSearch
+                      value={dataForm.idBank}
+                      onChange={(value, option) => {
+                        setDataForm({
+                          ...dataForm,
+                          idBank: value,
+                          idBankText: option.children,
+                        });
+                      }}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {isEmpty(dataBank) === false &&
+                        dataBank.map((row) => {
+                          return <Option value={row.id}>{row.text}</Option>;
+                        })}
+                    </Select>
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.bankBranch}
+                      placeholder={"Sucursal"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          bankBranch: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <Input
+                      value={dataForm.accountHolder}
+                      placeholder={"A nombre de"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          accountHolder: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <Input
+                      value={dataForm.accountNumber}
+                      placeholder={"Numero de cuenta"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          accountNumber: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
+                    <Input
+                      value={dataForm.clabeNumber}
+                      placeholder={"Clave interbancaria"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          clabeNumber: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </>
+            )}
+
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DatePicker
