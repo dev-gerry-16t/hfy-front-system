@@ -343,7 +343,7 @@ const SectionContractAvailable = (props) => {
             {openSection === 3 && (
               <div className="contract-section-signature">
                 <p style={{ fontSize: "12px" }}>
-                  No estas de acuerdo con tu contrato, puedes mandarnos tus
+                  No estás de acuerdo con tu contrato, puedes mandarnos tus
                   observaciones
                 </p>
                 <div className="section-type-messages-fixed">

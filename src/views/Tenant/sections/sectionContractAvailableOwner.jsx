@@ -140,7 +140,7 @@ const SectionContractAvailable = (props) => {
                   width={50}
                   height={40}
                 />
-                <label>No esta disponible el documento</label>
+                <label>No está disponible el documento</label>
               </div>
             )}
           </div>
@@ -886,7 +886,7 @@ const SectionContractAvailable = (props) => {
                   className="contract-section-signature"
                 >
                   <p style={{ fontSize: "12px" }}>
-                    No estas de acuerdo con tu contrato, puedes mandarnos tus
+                    No estás de acuerdo con tu contrato, puedes mandarnos tus
                     observaciones
                   </p>
                   <div className="section-type-messages-fixed">

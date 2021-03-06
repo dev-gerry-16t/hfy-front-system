@@ -316,7 +316,7 @@ const Tenant = (props) => {
         const blob = await response.blob();
         const link = document.createElement("a");
         link.className = "download";
-        link.download = `${label}.${"pdf"}`;
+        link.download = `${label}.${"docx"}`;
         link.href = URL.createObjectURL(blob);
         document.body.appendChild(link);
         link.click();
@@ -456,6 +456,13 @@ const Tenant = (props) => {
                 </button>
               </div>
             )}
+            {dataTenant.canDeal === 1 && (
+              <div className="button_init_primary">
+                <button type="button" onClick={() => {}}>
+                  <span>Pagar renta</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -481,7 +488,7 @@ const Tenant = (props) => {
             <span>Moratorios</span>
           </div>
         </div>
-        {dataTenant.canRequestMove !== 0 && (
+        {dataTenant.canDeal !== 0 && (
           <div className="main-information-owner">
             <div className="title-cards">
               <span>Acciones</span>

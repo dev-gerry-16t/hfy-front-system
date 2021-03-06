@@ -10,6 +10,9 @@ import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import IconArroRight from "../../assets/icons/arrowRight.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
+import Tickets from "../../assets/icons/tickets.svg";
+import Payments from "../../assets/icons/payments.svg";
+import Balance from "../../assets/icons/balance.svg";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetContractStats,
@@ -585,7 +588,7 @@ const Administrator = (props) => {
       link.parentElement.removeChild(link);
     } catch (error) {
       showMessageStatusApi(
-        "No esta disponible el documento",
+        "No está disponible el documento",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -717,11 +720,30 @@ const Administrator = (props) => {
         <div className="indicators-amount-renter">
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
-              <img src={IconWallet} alt="icon" width="20px"></img>
+              <img src={Tickets} alt="icon" width="20px"></img>
             </div>
             <h2>{dataStats.grandTotalSale}</h2>
             <span>Ventas</span>
           </div>
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
+              <img src={Payments} alt="icon" width="20px"></img>
+            </div>
+            <h2>{dataStats.totalCommissionAmount}</h2>
+            <span>Comisiones pagadas</span>
+          </div>
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#98FF98" }}>
+              <img src={Balance} alt="icon" width="20px"></img>
+            </div>
+            <h2>{dataStats.totalBalance}</h2>
+            <span>Balance</span>
+          </div>
+        </div>
+        <div
+          className="indicators-amount-renter"
+          style={{ justifyContent: "space-around" }}
+        >
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={IconPolicy} alt="icon" width="20px"></img>

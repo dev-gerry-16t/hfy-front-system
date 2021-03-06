@@ -194,7 +194,7 @@ const SectionCardOwner = (props) => {
       title: "Propietario",
       dataIndex: "customerFullName",
       key: "customerFullName",
-      width:230,
+      width: 230,
       render: (text, record) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <a
@@ -215,7 +215,7 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Inquilino",
-      width:230,
+      width: 230,
       dataIndex: "customerTenantFullName",
       key: "customerTenantFullName",
       render: (text, record) => (
@@ -238,7 +238,7 @@ const SectionCardOwner = (props) => {
     },
     {
       title: "Asesor",
-      width:200,
+      width: 200,
       dataIndex: "customerAgentFullName",
       key: "customerAgentFullName",
       render: (text, record) => (
@@ -278,12 +278,31 @@ const SectionCardOwner = (props) => {
       title: "Monto Renta",
       dataIndex: "currentRent",
       key: "currentRent",
+      width: 150,
+    },
+    {
+      title: "Monto total de contrato",
+      dataIndex: "totalContractAmount",
+      key: "totalContractAmount",
+      width: 150,
     },
     {
       title: "Póliza",
       dataIndex: "policy",
       key: "policy",
     },
+    {
+      title: "Valor de la póliza",
+      dataIndex: "totalPolicyAmount",
+      key: "totalPolicyAmount",
+      width: 150,
+    },
+    {
+      title: "Comisión asesor",
+      dataIndex: "commissionDescription",
+      key: "commissionDescription",
+      width: 250,
+    }, 
     {
       title: "Vencimiento de contrato",
       dataIndex: "expireAt",
@@ -294,6 +313,7 @@ const SectionCardOwner = (props) => {
       title: "Estatus de póliza",
       dataIndex: "idPolicyStatus",
       key: "idPolicyStatus",
+      fixed: "right",
       align: "center",
       render: (status, record) => {
         let component = <div />;
@@ -434,7 +454,7 @@ const SectionCardOwner = (props) => {
       dataIndex: "hasAllDocumentation",
       key: "hasAllDocumentation",
       align: "center",
-      fixed: 'right',
+      fixed: "right",
       render: (documents, record) => {
         return (
           <div>
@@ -482,7 +502,7 @@ const SectionCardOwner = (props) => {
             dataSource={dataCoincidences}
             className="table-users-hfy"
             size="small"
-            scroll={{ x: 1500 }}
+            scroll={{ x: 2500 }}
           />
         )}
         {isEmpty(dataCoincidences) === false && (

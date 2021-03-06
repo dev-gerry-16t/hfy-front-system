@@ -35,8 +35,8 @@ const getEnviroment = () => {
   return location;
 };
 
-ENVIROMENT = getEnviroment();
+//ENVIROMENT = getEnviroment();
 
-//ENVIROMENT=`${INSTANCE_TEST.API_PROTOCOL}${INSTANCE_TEST.DNS_API}`;
+ENVIROMENT=`${INSTANCE_TEST.API_PROTOCOL}${INSTANCE_TEST.DNS_API}`;
 
 export default ENVIROMENT;

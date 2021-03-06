@@ -647,7 +647,7 @@ const Owner = (props) => {
           } catch (error) {}
         }}
         onFinishContractFlow={() => {
-          handlerCallGetTenantCoincidences();
+          handlerCalllSyncApis();
         }}
       />
       <SectionAddProperty
