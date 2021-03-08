@@ -183,6 +183,7 @@ const TypeFormUser = (props) => {
         isNil(response) === false && isNil(response.response2) === false
           ? response.response2
           : [];
+
       setDataZipCodeAdress(responseResult1);
       setDataZipCatalog(responseResult2);
     } catch (error) {
@@ -375,8 +376,8 @@ const TypeFormUser = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
-              setDataForm({ ...dataForm, ...data });
               next();
+              setDataForm({ ...dataForm, ...data });
             } catch (error) {}
           }}
         />
@@ -392,10 +393,10 @@ const TypeFormUser = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
+              next();
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
-              next();
             } catch (error) {}
           }}
           dataZipCatalog={dataZipCatalog}
@@ -417,8 +418,8 @@ const TypeFormUser = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
-              setDataForm({ ...dataForm, ...data });
               next();
+              setDataForm({ ...dataForm, ...data });
             } catch (error) {}
           }}
           dataOccupations={dataOccupations}
@@ -492,8 +493,6 @@ const TypeFormUser = (props) => {
           dataZipCodeAdress={dataZipCodeAdress}
           onClickBack={() => {
             prev();
-            setDataZipCodeAdress({});
-            setDataZipCatalog([]);
           }}
           typeDocument={2}
           dataMaritalStatus={dataMaritalStatus}

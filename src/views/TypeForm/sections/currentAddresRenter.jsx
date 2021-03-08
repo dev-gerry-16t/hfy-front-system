@@ -71,31 +71,33 @@ const CurrentAddressRenter = (props) => {
   );
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
-      onChangeZipCode(dataFormSave.zipCodeProperty);
-    }
-  }, [dataFormSave]);
-
-  useEffect(() => {
     if (
-      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataFormSave) === false &&
       isEmpty(dataPropertyTypes) === false
     ) {
       const selectDefaulPropertyType = dataPropertyTypes.find((row) => {
-        return dataForm.idPropertyType === row.idPropertyType;
+        return dataFormSave.idPropertyType === row.idPropertyType;
       });
       setDataForm({
-        ...dataForm,
-        state: dataZipCodeAdress.state,
-        city: dataZipCodeAdress.municipality,
+        ...dataFormSave,
         idPropertyTypeText:
           isNil(selectDefaulPropertyType) === false
             ? selectDefaulPropertyType.text
             : "",
       });
+      onChangeZipCode(dataFormSave.zipCodeProperty);
     }
-  }, [dataZipCodeAdress, dataPropertyTypes]);
+  }, [dataFormSave, dataPropertyTypes]);
+
+  useEffect(() => {
+    if (isEmpty(dataZipCodeAdress) === false) {
+      setDataForm({
+        ...dataForm,
+        state: dataZipCodeAdress.state,
+        city: dataZipCodeAdress.municipality,
+      });
+    }
+  }, [dataZipCodeAdress]);
 
   return (
     <div className="content-typeform-formulary">

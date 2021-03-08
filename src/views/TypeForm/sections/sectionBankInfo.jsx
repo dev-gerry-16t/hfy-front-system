@@ -49,7 +49,7 @@ const SectionBankInfo = (props) => {
   useEffect(() => {
     if (isEmpty(dataFormSave) === false && isEmpty(dataBank) === false) {
       const selectDefaultDataBank = dataBank.find((row) => {
-        return dataForm.idBank === row.idBank;
+        return dataFormSave.idBank === row.idBank;
       });
       setDataForm({
         ...dataFormSave,

@@ -82,15 +82,8 @@ const SectionInfoOwner = (props) => {
   );
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false) {
-      setDataForm(dataFormSave);
-      onChangeZipCode(dataFormSave.zipCode);
-    }
-  }, [dataFormSave]);
-
-  useEffect(() => {
     if (
-      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataFormSave) === false &&
       isEmpty(dataNationalities) === false &&
       isEmpty(dataIdTypes) === false &&
       isEmpty(dataMaritalStatus) === false
@@ -109,9 +102,7 @@ const SectionInfoOwner = (props) => {
         return dataForm.idMaritalStatus === row.idMaritalStatus;
       });
       setDataForm({
-        ...dataForm,
-        state: dataZipCodeAdress.state,
-        city: dataZipCodeAdress.municipality,
+        ...dataFormSave,
         idCountryNationalityText:
           isNil(selectDefaultNationality) === false
             ? selectDefaultNationality.text
@@ -128,8 +119,19 @@ const SectionInfoOwner = (props) => {
             : null,
       });
       setVisibleComponents({ ...visibleComponents, ...visibleField });
+      onChangeZipCode(dataFormSave.zipCode);
     }
-  }, [dataZipCodeAdress, dataNationalities, dataIdTypes, dataMaritalStatus]);
+  }, [dataFormSave, dataNationalities, dataIdTypes, dataMaritalStatus]);
+
+  useEffect(() => {
+    if (isEmpty(dataZipCodeAdress) === false) {
+      setDataForm({
+        ...dataForm,
+        state: dataZipCodeAdress.state,
+        city: dataZipCodeAdress.municipality,
+      });
+    }
+  }, [dataZipCodeAdress]);
 
   return (
     <div className="content-typeform-formulary">

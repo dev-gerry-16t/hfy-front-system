@@ -246,10 +246,10 @@ const TypeFormOwner = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 1 });
+              next();
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
-              next();
             } catch (error) {}
           }}
           onChangeZipCode={(zipCode) => {
@@ -273,10 +273,10 @@ const TypeFormOwner = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
+              next();
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
-              next();
             } catch (error) {}
           }}
           dataPropertyTypes={dataPropertyTypes}
@@ -307,8 +307,8 @@ const TypeFormOwner = (props) => {
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
-              setDataForm({ ...dataForm, ...data });
               next();
+              setDataForm({ ...dataForm, ...data });
             } catch (error) {}
           }}
           onClickBack={() => prev()}

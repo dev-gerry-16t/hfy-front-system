@@ -87,12 +87,6 @@ const SectionCurrentAddress = (props) => {
         ...dataForm,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
-        currentTimeRangeText:
-          dataFormSave.currentTimeRange === "Y"
-            ? "Años"
-            : dataFormSave.currentTimeRange === "M"
-            ? "Meses"
-            : null,
       });
     }
   }, [dataZipCodeAdress]);

@@ -57,7 +57,7 @@ const SectionCurrentWork = (props) => {
   useEffect(() => {
     if (isEmpty(dataFormSave) === false && isEmpty(dataOccupations) === false) {
       const selectDefaultOccupation = dataOccupations.find((row) => {
-        return dataForm.idOccupationActivity === row.idOccupationActivity;
+        return dataFormSave.idOccupationActivity === row.idOccupationActivity;
       });
 
       setDataForm({
