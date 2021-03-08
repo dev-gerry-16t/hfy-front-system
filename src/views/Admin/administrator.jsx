@@ -723,14 +723,18 @@ const Administrator = (props) => {
               <img src={Tickets} alt="icon" width="20px"></img>
             </div>
             <h2>{dataStats.grandTotalSale}</h2>
-            <span>Ventas</span>
+            <span>
+              Ventas <strong>({dataStats.totalClosings})</strong>
+            </span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
               <img src={Payments} alt="icon" width="20px"></img>
             </div>
             <h2>{dataStats.totalCommissionAmount}</h2>
-            <span>Comisiones pagadas</span>
+            <span>
+              Comisiones pagadas <strong>({dataStats.totalCommissions})</strong>
+            </span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#98FF98" }}>

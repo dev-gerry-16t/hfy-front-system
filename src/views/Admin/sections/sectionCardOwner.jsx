@@ -273,6 +273,14 @@ const SectionCardOwner = (props) => {
       title: "Folio",
       dataIndex: "hfInvoice",
       key: "hfInvoice",
+      render: (label, record) => {
+        const recorsStyle =
+          isNil(record.hfInvoiceStyle) === false &&
+          isEmpty(record.hfInvoiceStyle) === false
+            ? JSON.parse(record.hfInvoiceStyle)
+            : {};
+        return <span style={recorsStyle}>{label}</span>;
+      },
     },
     {
       title: "Monto Renta",
@@ -302,7 +310,7 @@ const SectionCardOwner = (props) => {
       dataIndex: "commissionDescription",
       key: "commissionDescription",
       width: 250,
-    }, 
+    },
     {
       title: "Vencimiento de contrato",
       dataIndex: "expireAt",
@@ -508,6 +516,12 @@ const SectionCardOwner = (props) => {
         {isEmpty(dataCoincidences) === false && (
           <div className="table-card-users-hfy">
             {dataCoincidences.map((row) => {
+              const recorsStyle =
+                isNil(row.hfInvoiceStyle) === false &&
+                isEmpty(row.hfInvoiceStyle) === false
+                  ? JSON.parse(row.hfInvoiceStyle)
+                  : {};
+
               return (
                 <div className="card-users-hfy">
                   <table>
@@ -572,7 +586,8 @@ const SectionCardOwner = (props) => {
                     </tr>
                     <tr>
                       <td>
-                        <strong>Folio:</strong> <span>{row.hfInvoice} </span>
+                        <strong>Folio:</strong>{" "}
+                        <span style={recorsStyle}>{row.hfInvoice}</span>
                       </td>
                       <td>
                         <strong>Póliza:</strong> <span> {row.policy}</span>
