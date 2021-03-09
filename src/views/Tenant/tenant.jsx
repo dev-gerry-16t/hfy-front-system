@@ -23,15 +23,19 @@ import ENVIROMENT from "../../utils/constants/enviroments";
 import {
   callGetAllCustomerTenantDashboardById,
   callSetContract,
+  callAddDocument,
   callAddCommentContract,
   callGetContract,
   callGetContractComment,
   callGetCustomerMessage,
   callAddCustomerMessage,
   callAddDocumentContractId,
+  callGetPaymentContract,
+  callGetPaymentTypes,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
+import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -41,6 +45,9 @@ const Tenant = (props) => {
     history,
     callGetAllCustomerTenantById,
     dataProfile,
+    callAddDocument,
+    callGetPaymentTypes,
+    callGetPaymentContract,
     setDataUserProfile,
     callSetContract,
     callAddCommentContract,
@@ -51,11 +58,14 @@ const Tenant = (props) => {
     callAddDocumentContractId,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dataPayments, setDataPayments] = useState([]);
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
+  const [isVisiblePaymentRent, setIsVisiblePaymentRent] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [dataTenant, setDataTenant] = useState([]);
   const [dataMessages, setDataMessages] = useState([]);
   const [dataGetContract, setDataGetContract] = useState([]);
+  const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
 
@@ -198,6 +208,28 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallGetAllPaymentTypes = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetPaymentTypes({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataPayments(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllCustomerTenantById = async () => {
     const {
       idCustomer,
@@ -223,6 +255,11 @@ const Tenant = (props) => {
         idCustomerTenant: responseResult.idCustomerTenant,
         idCustomer: responseResult.idCustomer,
       });
+      handlerCallGetAllPaymentTypes({
+        type: 1,
+        idContract: responseResult.idContract,
+        idCustomerTenant: responseResult.idCustomerTenant,
+      });
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
@@ -238,6 +275,26 @@ const Tenant = (props) => {
         //notification.open(argsv2);
       }
     } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPaymentContract = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGetPaymentContract({
+        ...data,
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      handlerCallGetAllCustomerTenantById();
+      setSpinVisible(false);
+    } catch (error) {
+      setSpinVisible(false);
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -328,6 +385,36 @@ const Tenant = (props) => {
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
+    }
+  };
+
+  const handlerAddDocument = async (data, type) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const dataDocument = {
+      documentName: data.name,
+      extension: data.type,
+      preview: null,
+      thumbnail: null,
+      idDocumentType: type.idPaymentType,
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+    };
+    try {
+      const response = await callAddDocument(data.originFileObj, dataDocument);
+      const documentId =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.idDocument) === false
+          ? response.response.idDocument
+          : null;
+      return Promise.resolve(documentId);
+    } catch (error) {
+      setSpinVisible(false);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -458,7 +545,13 @@ const Tenant = (props) => {
             )}
             {dataTenant.canDeal === 1 && (
               <div className="button_init_primary">
-                <button type="button" onClick={() => {}}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsVisiblePaymentRent(!isVisiblePaymentRent);
+                    setIsVisibleMessages(false);
+                  }}
+                >
                   <span>Pagar renta</span>
                 </button>
               </div>
@@ -519,7 +612,7 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
-        {isVisibleMessages === false && (
+        {isVisibleMessages === false && isVisiblePaymentRent === false && (
           <div className="main-information-owner">
             <div className="title-cards flex-title-card">
               <span>Propietario</span>
@@ -590,7 +683,7 @@ const Tenant = (props) => {
                     onClick={() => {}}
                     className="button-action-primary"
                   >
-                    <span>Subir documento</span>
+                    <span>Ver documentos</span>
                   </button>
                 </div>
               </div>
@@ -635,6 +728,48 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
+        {isVisiblePaymentRent === true && (
+          <div className="actions-information-tenant">
+            <div className="tabs-tenant-information">
+              <div className="form-modal">
+                <div className="title-head-modal">
+                  <button
+                    className="arrow-back-to"
+                    type="button"
+                    onClick={() => {
+                      setIsVisiblePaymentRent(!isVisiblePaymentRent);
+                    }}
+                  >
+                    <img src={Arrow} alt="backTo" width="30" />
+                  </button>
+                  <h1>Pagar renta</h1>
+                </div>
+              </div>
+              <SectionRegisterPayment
+                dataPayments={dataPayments}
+                spinVisible={spinVisible}
+                onGetDocuments={async (arrayDocument, data) => {
+                  setSpinVisible(true);
+                  const dataDocuments = await Promise.all(
+                    arrayDocument.map((row) => {
+                      const item = handlerAddDocument(row, data);
+                      return item;
+                    })
+                  );
+                  const parseDocument = dataDocuments.join();
+                  const dataSend = {
+                    ...data,
+                    idContract: dataTenant.idContract,
+                    idCustomerTenant: dataTenant.idCustomerTenant,
+                    documents: parseDocument,
+                  };
+                  handlerCallGetAllPaymentContract(dataSend);
+                }}
+                onRegisterPayment={(data) => {}}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </Content>
   );
@@ -648,6 +783,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callAddDocument: (file, data) => dispatch(callAddDocument(file, data)),
+  callGetPaymentContract: (data) => dispatch(callGetPaymentContract(data)),
+  callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callSetContract: (data, id) => dispatch(callSetContract(data, id)),
   callAddCommentContract: (data, id) =>

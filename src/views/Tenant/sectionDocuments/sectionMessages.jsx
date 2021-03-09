@@ -3,6 +3,7 @@ import { Timeline, Input, Button } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import SectionCardItemMessage from "./sectionCardItemMessage";
+import MessagesIcon from "../../../assets/icons/MessagesIcon.svg";
 
 const { TextArea } = Input;
 
@@ -27,15 +28,25 @@ const SectionMessages = (props) => {
                 );
               })}
           </Timeline>
+          {isEmpty(dataMessages) === true && (
+            <div className="empty-screen-make">
+              <div className="info-screen-make" style={{ marginTop: 10 }}>
+                <img src={MessagesIcon} height={62} alt="sin_mensajes" />
+                <label>Aún no hay mensajes</label>
+              </div>
+            </div>
+          )}
           <div style={{ display: "flex", justifyContent: "center" }}>
-            <Button
-              type="link"
-              onClick={() => {
-                getMoreCoincidences();
-              }}
-            >
-              Mostrar mas
-            </Button>
+            {isEmpty(dataMessages) === false && (
+              <Button
+                type="link"
+                onClick={() => {
+                  getMoreCoincidences();
+                }}
+              >
+                Mostrar mas
+              </Button>
+            )}
           </div>
         </div>
         <div className="section-type-messages-fixed">
