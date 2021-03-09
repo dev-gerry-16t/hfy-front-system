@@ -34,6 +34,7 @@ const TypePolicy = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [taxPolicy, setTaxPolicy] = useState(0);
+  const [tax, setTax] = useState(0);
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false && isEmpty(dataPolicies) === false) {
@@ -46,6 +47,7 @@ const TypePolicy = (props) => {
         isEmpty(selectDefaultPolicy) === false
       ) {
         setTaxPolicy(selectDefaultPolicy.percentBase);
+        setTax(selectDefaultPolicy.taxBase);
       }
     }
   }, [dataFormSave, dataPolicies]);
@@ -85,7 +87,9 @@ const TypePolicy = (props) => {
                 onChange={(value, option) => {
                   const clickOption = option.onClick();
                   const totalPolicyTax = clickOption.percentBase;
+                  const totalTax = clickOption.taxBase;
                   setTaxPolicy(totalPolicyTax);
+                  setTax(totalTax);
                   setDataForm({ ...dataForm, idPolicy: value });
                 }}
               >
@@ -120,6 +124,7 @@ const TypePolicy = (props) => {
                         : "$0.00"}
                     </h2>
                     <strong>MXN</strong>
+                    <span style={{marginLeft:5}}> + IVA {tax * 100}%</span>
                   </div>
                 ) : (
                   <div>

@@ -238,50 +238,66 @@ const SectionBankInfo = (props) => {
               Verifica que tu información sea correcta, de lo contrario no
               podras hacer modificaciones.
             </p>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="A nombre de"
-                  content={dataForm.accountHolder}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem title="Banco" content={dataForm.idBankText} />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Sucursal"
-                  content={dataForm.bankBranch}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="Numero de cuenta"
-                  content={dataForm.accountNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Clave interbancaria"
-                  content={dataForm.clabeNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Fecha de firma de contrato"
-                  content={moment(
-                    dataForm.signingAvailabilityAt,
-                    "YYYY-MM-DD"
-                  ).format("DD MMMM YYYY")}
-                />
-              </Col>
-            </Row>
+            {dataForm.isInCash === false || dataForm.isInCash === 0 ? (
+              <>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title="A nombre de"
+                      content={dataForm.accountHolder}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Banco"
+                      content={dataForm.idBankText}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Sucursal"
+                      content={dataForm.bankBranch}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title="Numero de cuenta"
+                      content={dataForm.accountNumber}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Clave interbancaria"
+                      content={dataForm.clabeNumber}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title="Fecha de firma de contrato"
+                      content={moment(
+                        dataForm.signingAvailabilityAt,
+                        "YYYY-MM-DD"
+                      ).format("DD MMMM YYYY")}
+                    />
+                  </Col>
+                </Row>
+              </>
+            ) : (
+              <Row>
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem
+                    title="Información de Pago"
+                    content="Tu pago será en efectivo"
+                  />
+                </Col>
+              </Row>
+            )}
             <div className="button_actions">
               <button
                 type="button"
