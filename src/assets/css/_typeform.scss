@@ -1,3 +1,19 @@
+.content-typeform-formulary {
+  .ant-collapse {
+    background-color: transparent ;
+    .ant-collapse-item {
+      background-color: transparent ;
+      .ant-collapse-header {
+        background-color: #fafafa;
+      }
+      .ant-collapse-content {
+        background-color: transparent;
+        padding-top: 20px;
+      }
+    }
+  }
+}
+
 .steps-style-header {
   position: relative;
   display: flex;
