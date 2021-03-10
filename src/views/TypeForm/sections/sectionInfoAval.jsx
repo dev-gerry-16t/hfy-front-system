@@ -695,7 +695,6 @@ const SectionInfoAval = (props) => {
                             value,
                             dataForm,
                             (newData) => {
-                              console.log("newData", newData);
                               setDataForm({ ...dataForm, ...newData });
                             }
                           );
