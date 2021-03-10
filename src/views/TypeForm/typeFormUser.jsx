@@ -71,7 +71,14 @@ const TypeFormUser = (props) => {
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataDocumentsEndorsement, setDataDocumentsEndorsement] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
+  const [
+    dataZipCodeAdressEndorsement,
+    setDataZipCodeAdressEndorsement,
+  ] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataZipCatalogEndorsement, setDataZipCatalogEndorsement] = useState(
+    []
+  );
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [dataOccupations, setDataOccupations] = useState([]);
@@ -164,7 +171,7 @@ const TypeFormUser = (props) => {
     }
   };
 
-  const hanlderCallGetZipCodeAdress = async (data) => {
+  const hanlderCallGetZipCodeAdress = async (data, isEndorsement = false) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetZipCodeAdress({
@@ -183,9 +190,13 @@ const TypeFormUser = (props) => {
         isNil(response) === false && isNil(response.response2) === false
           ? response.response2
           : [];
-
-      setDataZipCodeAdress(responseResult1);
-      setDataZipCatalog(responseResult2);
+      if (isEndorsement === true) {
+        setDataZipCodeAdressEndorsement(responseResult1);
+        setDataZipCatalogEndorsement(responseResult2);
+      } else {
+        setDataZipCodeAdress(responseResult1);
+        setDataZipCatalog(responseResult2);
+      }
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -486,11 +497,13 @@ const TypeFormUser = (props) => {
               }
             } catch (error) {}
           }}
-          dataZipCatalog={dataZipCatalog}
-          onChangeZipCode={(zipCode) => {
-            hanlderCallGetZipCodeAdress({ type: 1, zipCode });
+          onChangeZipCode={(zipCode, fiador) => {
+            hanlderCallGetZipCodeAdress({ type: 1, zipCode }, fiador);
           }}
+          dataZipCatalog={dataZipCatalog}
           dataZipCodeAdress={dataZipCodeAdress}
+          dataZipCatalogEndorsement={dataZipCatalogEndorsement}
+          dataZipCodeAdressEndorsement={dataZipCodeAdressEndorsement}
           onClickBack={() => {
             prev();
           }}

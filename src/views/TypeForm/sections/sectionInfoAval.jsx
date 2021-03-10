@@ -37,6 +37,8 @@ const SectionInfoAval = (props) => {
     dataFormSave,
     onChangeZipCode,
     dataZipCatalog,
+    dataZipCodeAdressEndorsement,
+    dataZipCatalogEndorsement,
     dataZipCodeAdress,
     dataDocuments,
     typeDocument,
@@ -55,6 +57,7 @@ const SectionInfoAval = (props) => {
     collateralPropertySuite: null,
     collateralPropertyStreetNumber: null,
     collateralPropertyIdZipCoode: null,
+    collateralPropertyZipCode: null,
     collateralPropertyNeighborhood: null,
     collateralPropertyCity: null,
     collateralPropertyState: null,
@@ -76,9 +79,24 @@ const SectionInfoAval = (props) => {
     idEndorsementMaritalRegime: null,
     idEndorsementMaritalRegimeText: null,
     endorsementAssessment: null,
+    endorsementStreet: null,
+    endorsementSuite: null,
+    endorsementStreetNumber: null,
+    endorsementZipCode: null,
+    endorsementIdZipCode: null,
+    endorsementState: null,
+    endorsementCity: null,
+    endorsementNeighborhood: null,
+    assessmentInvoice: null,
+    assessmentTicket: null,
+    assessmentDate: null,
+    assessmentIssuedBy: null,
+    hasAssessment: null,
+    repeatAddress: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
+  const [isOpenInputEndorsement, setIsOpenInputEndorsement] = useState(false);
   const [isOpenSelectRegime, setIsOpenSelectRegime] = useState(false);
   const [confirmData, setConfirmData] = useState(false);
 
@@ -143,6 +161,7 @@ const SectionInfoAval = (props) => {
             : "",
       });
       onChangeZipCode(dataFormSave.collateralPropertyZipCode);
+      onChangeZipCode(dataFormSave.endorsementZipCode, true);
     }
   }, [
     dataNationalities,
@@ -162,6 +181,16 @@ const SectionInfoAval = (props) => {
     }
   }, [dataZipCodeAdress]);
 
+  useEffect(() => {
+    if (isEmpty(dataZipCodeAdressEndorsement) === false) {
+      setDataForm({
+        ...dataForm,
+        endorsementState: dataZipCodeAdressEndorsement.state,
+        endorsementCity: dataZipCodeAdressEndorsement.municipality,
+      });
+    }
+  }, [dataZipCodeAdressEndorsement]);
+
   const getTypeIdDocument = (type) => {
     let word = "";
 
@@ -180,6 +209,33 @@ const SectionInfoAval = (props) => {
         break;
     }
     return word;
+  };
+
+  const repeatAddressEndorsement = (value, data, callback) => {
+    if (value === true || value === 1) {
+      onChangeZipCode(data.endorsementZipCode);
+      callback({
+        collateralPropertyStreet: data.endorsementStreet,
+        collateralPropertyStreetNumber: data.endorsementStreetNumber,
+        collateralPropertyIdZipCoode: data.endorsementIdZipCode,
+        collateralPropertyZipCode: data.endorsementZipCode,
+        collateralPropertyNeighborhood: data.endorsementNeighborhood,
+        collateralPropertyCity: data.endorsementCity,
+        collateralPropertyState: data.endorsementState,
+        repeatAddress: value,
+      });
+    } else {
+      callback({
+        collateralPropertyStreet: null,
+        collateralPropertyStreetNumber: null,
+        collateralPropertyIdZipCoode: null,
+        collateralPropertyZipCode: null,
+        collateralPropertyNeighborhood: null,
+        collateralPropertyCity: null,
+        collateralPropertyState: null,
+        repeatAddress: value,
+      });
+    }
   };
 
   return (
@@ -481,7 +537,184 @@ const SectionInfoAval = (props) => {
                   )}
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 </Row>
+
+                <p>Dirección del Aval</p>
+
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <Input
+                      value={dataForm.endorsementStreet}
+                      placeholder={"Calle"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          endorsementStreet: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.endorsementStreetNumber}
+                      placeholder={"Numero"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          endorsementStreetNumber: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.endorsementZipCode}
+                      placeholder={"Código postal"}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        if (value.length >= 5) {
+                          setDataForm({
+                            ...dataForm,
+                            endorsementZipCode: value,
+                          });
+                          onChangeZipCode(e.target.value, true);
+                        } else {
+                          setDataForm({
+                            ...dataForm,
+                            endorsementNeighborhood: null,
+                            endorsementIdZipCode: null,
+                            endorsementZipCode: value,
+                          });
+                        }
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.endorsementState}
+                      placeholder={"Estado"}
+                      onChange={(e) => {}}
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.endorsementCity}
+                      placeholder={"Municipio/Delegación"}
+                      onChange={(e) => {}}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    {isOpenInputEndorsement === false ? (
+                      <Select
+                        placeholder="Colonia"
+                        value={dataForm.endorsementIdZipCode}
+                        onChange={(value, option) => {
+                          const dataSelect = option.onClick();
+                          setIsOpenInputEndorsement(dataSelect.isOpen);
+                          if (dataSelect.isOpen === true) {
+                            setDataForm({
+                              ...dataForm,
+                              endorsementNeighborhood: null,
+                              endorsementIdZipCode: value,
+                            });
+                          } else {
+                            setDataForm({
+                              ...dataForm,
+                              endorsementNeighborhood: option.children,
+                              endorsementIdZipCode: value,
+                            });
+                          }
+                        }}
+                      >
+                        {isEmpty(dataZipCatalogEndorsement) === false &&
+                          dataZipCatalogEndorsement.map((row) => {
+                            return (
+                              <Option
+                                value={row.idZipCode}
+                                onClick={() => {
+                                  return row;
+                                }}
+                              >
+                                {row.neighborhood}
+                              </Option>
+                            );
+                          })}
+                      </Select>
+                    ) : (
+                      <Input
+                        value={dataForm.endorsementNeighborhood}
+                        placeholder={"Indicar Colonia"}
+                        suffix={
+                          <Tooltip title="Cerrar">
+                            <CloseOutlined
+                              style={{ color: "rgba(0,0,0,.45)" }}
+                              onClick={() => {
+                                setIsOpenInputEndorsement(false);
+                                setDataForm({
+                                  ...dataForm,
+                                  endorsementIdZipCode: null,
+                                  endorsementNeighborhood: null,
+                                });
+                              }}
+                            />
+                          </Tooltip>
+                        }
+                        onChange={(e) => {
+                          setDataForm({
+                            ...dataForm,
+                            endorsementNeighborhood: e.target.value,
+                          });
+                        }}
+                      />
+                    )}
+                  </Col>
+                </Row>
                 <p>Dirección de la propiedad en garantía</p>
+                <Row>
+                  <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                    <div className="option-select-radio">
+                      <span
+                        style={{
+                          color: "var(--color-primary)",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ¿Quieres ocupar la dirección del Aval?
+                      </span>
+                      <Radio.Group
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          repeatAddressEndorsement(
+                            value,
+                            dataForm,
+                            (newData) => {
+                              console.log("newData", newData);
+                              setDataForm({ ...dataForm, ...newData });
+                            }
+                          );
+                        }}
+                        value={
+                          dataForm.repeatAddress === true ||
+                          dataForm.repeatAddress === 1
+                            ? 1
+                            : isNil(dataForm.repeatAddress) === false
+                            ? 0
+                            : null
+                        }
+                      >
+                        <Radio value={1}>Si</Radio>
+                        <Radio value={0}>No, es diferente</Radio>
+                      </Radio.Group>
+                    </div>
+                  </Col>
+                </Row>
                 <Row>
                   <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                     <Input
@@ -643,36 +876,145 @@ const SectionInfoAval = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <NumberFormat
-                      id={null}
-                      customInput={Input}
-                      thousandSeparator=","
-                      decimalSeparator="."
-                      decimalPrecision={2}
-                      allowNegative={false}
-                      prefix="$"
-                      suffix=""
-                      value={dataForm.endorsementAssessment}
-                      className="inputLogin"
-                      floatingLabelText=""
-                      isVisible
-                      toBlock={false}
-                      disable={false}
-                      placeholder="Gravamen"
-                      onValueChange={(values) => {
-                        const { formattedValue, value, floatValue } = values;
-                        setDataForm({
-                          ...dataForm,
-                          endorsementAssessment: floatValue,
-                        });
-                      }}
-                      onClick={(event) => {}}
-                      onFocus={(event) => {}}
-                      onBlur={(event) => {}}
-                    />
+                  <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                    <div className="option-select-radio">
+                      <span
+                        style={{
+                          color: "var(--color-primary)",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        ¿Cuentas con Certificado de Libertad de Gravamen?
+                      </span>
+                      <Radio.Group
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setDataForm({ ...dataForm, hasAssessment: value });
+                        }}
+                        value={
+                          dataForm.hasAssessment === true ||
+                          dataForm.hasAssessment === 1
+                            ? 1
+                            : isNil(dataForm.hasAssessment) === false
+                            ? 0
+                            : null
+                        }
+                      >
+                        <Radio value={1}>Si</Radio>
+                        <Radio value={0}>No, tengo un Gravamen</Radio>
+                      </Radio.Group>
+                    </div>
                   </Col>
                 </Row>
+                {(dataForm.hasAssessment === 1 ||
+                  dataForm.hasAssessment === true) && (
+                  <>
+                    <Row>
+                      <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                        <Input
+                          value={dataForm.assessmentInvoice}
+                          placeholder="Folio"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setDataForm({
+                              ...dataForm,
+                              assessmentInvoice: value,
+                            });
+                          }}
+                        />
+                      </Col>
+                      <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                        <Input
+                          value={dataForm.assessmentTicket}
+                          placeholder="Boleta"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setDataForm({
+                              ...dataForm,
+                              assessmentTicket: value,
+                            });
+                          }}
+                        />
+                      </Col>
+                      <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                        <DatePicker
+                          value={
+                            isNil(dataForm.assessmentDate) === false
+                              ? moment(dataForm.assessmentDate, "YYYY-MM-DD")
+                              : null
+                          }
+                          placeholder="Fecha de expedición"
+                          onChange={(momentFormat, date) => {
+                            setDataForm({
+                              ...dataForm,
+                              assessmentDate: moment(momentFormat).format(
+                                "YYYY-MM-DD"
+                              ),
+                            });
+                          }}
+                          format="DD MMMM YYYY"
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                        <Input
+                          value={dataForm.assessmentInvoice}
+                          placeholder="Expedido por: EJ. Instituto Registral y Catastral...:"
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setDataForm({
+                              ...dataForm,
+                              assessmentInvoice: value,
+                            });
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
+                {(dataForm.hasAssessment === 0 ||
+                  dataForm.hasAssessment === false) && (
+                  <>
+                    <Row>
+                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                        <NumberFormat
+                          id={null}
+                          customInput={Input}
+                          thousandSeparator=","
+                          decimalSeparator="."
+                          decimalPrecision={2}
+                          allowNegative={false}
+                          prefix="$"
+                          suffix=""
+                          value={dataForm.endorsementAssessment}
+                          className="inputLogin"
+                          floatingLabelText=""
+                          isVisible
+                          toBlock={false}
+                          disable={false}
+                          placeholder="Monto del Gravamen"
+                          onValueChange={(values) => {
+                            const {
+                              formattedValue,
+                              value,
+                              floatValue,
+                            } = values;
+                            setDataForm({
+                              ...dataForm,
+                              endorsementAssessment: floatValue,
+                            });
+                          }}
+                          onClick={(event) => {}}
+                          onFocus={(event) => {}}
+                          onBlur={(event) => {}}
+                        />
+                      </Col>
+                    </Row>
+                  </>
+                )}
                 <p>Escrituras</p>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
