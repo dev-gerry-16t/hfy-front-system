@@ -90,6 +90,7 @@ const TypeFormUser = (props) => {
   const [dataMaritalRegime, setDataMaritalRegime] = useState([]);
   const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
   const [dataStates, setDataStates] = useState([]);
+  const [finishCallApis, setFinishCallApis] = useState(false);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -659,6 +660,7 @@ const TypeFormUser = (props) => {
     await hanlderCallGetOccupations();
     await handlerCallGetMaritalStatus();
     await handlerCallGetMaritalRegime();
+    setFinishCallApis(true);
   };
 
   useEffect(() => {
@@ -676,6 +678,7 @@ const TypeFormUser = (props) => {
         <div className="steps-style-header">
           <hr />
           {isEmpty(steps) === false &&
+            finishCallApis === true &&
             steps.map((row, index) => {
               return (
                 <div className="step-icon">
@@ -706,7 +709,8 @@ const TypeFormUser = (props) => {
               );
             })}
         </div>
-        {isEmpty(steps) === false && (
+        {isEmpty(steps) === false &&
+            finishCallApis === true && (
           <div className="steps-content">{steps[current].content}</div>
         )}
       </div>
