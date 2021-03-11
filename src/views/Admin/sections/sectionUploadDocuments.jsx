@@ -1,30 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { Modal } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import CustomFileUpload from "./customFileUpload";
-
-const { Option } = Select;
 
 const CustomSubSectionCardDocument = (props) => {
   const { children, title, subtitle, visibleSubtitle } = props;

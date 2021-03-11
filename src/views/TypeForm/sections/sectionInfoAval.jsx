@@ -1055,13 +1055,13 @@ const SectionInfoAval = (props) => {
                         <Row>
                           <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
                             <Input
-                              value={dataForm.assessmentInvoice}
+                              value={dataForm.assessmentIssuedBy}
                               placeholder="Expedido por: EJ. Instituto Registral y Catastral...:"
                               onChange={(e) => {
                                 const value = e.target.value;
                                 setDataForm({
                                   ...dataForm,
-                                  assessmentInvoice: value,
+                                  assessmentIssuedBy: value,
                                 });
                               }}
                             />

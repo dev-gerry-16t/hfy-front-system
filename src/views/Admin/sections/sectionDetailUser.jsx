@@ -1,45 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Drawer,
-  Collapse,
-  Menu,
-  Dropdown,
-  Timeline,
-} from "antd";
-import { SyncOutlined } from "@ant-design/icons";
+import { Row, Col, Drawer, Collapse, Menu, Dropdown, Timeline } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
 
-const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUser = (props) => {
   const {
     isDrawerVisible,
     onClose,
-    spinVisible,
     dataDetailCustomer,
     onRedirectTo,
     dataMessages,
     onDownloadDocumentById,
   } = props;
-  const frontFunctions = new FrontFunctions();
-  const initialDataForm = { emailOwner: null };
-  const [dataForm, setDataForm] = useState(initialDataForm);
-
-  const LoadingSpin = <SyncOutlined spin />;
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -404,17 +379,17 @@ const SectionDetailUser = (props) => {
                     title="Identificación oficial"
                     content={
                       <a
-                      onClick={() => {
-                        onDownloadDocumentById(
-                          {
-                            idContract: dataDetailCustomer.idContract,
-                            idCustomer: dataDetailCustomer.idCustomer,
-                            idCustomerTenant: null,
-                            type: 6,
-                          },
-                          "Identificacion_1"
-                        );
-                      }}
+                        onClick={() => {
+                          onDownloadDocumentById(
+                            {
+                              idContract: dataDetailCustomer.idContract,
+                              idCustomer: dataDetailCustomer.idCustomer,
+                              idCustomerTenant: null,
+                              type: 6,
+                            },
+                            "Identificacion_1"
+                          );
+                        }}
                       >
                         Descargar
                       </a>

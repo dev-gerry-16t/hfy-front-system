@@ -1,38 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Skeleton,
-  Table,
-  Tag,
-  Button,
-  Popover,
-  Row,
-  Col,
-  Select,
-} from "antd";
+import React, { useState } from "react";
+import { Skeleton, Table, Tag, Button, Popover, Row, Col, Select } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import "moment/locale/es";
 import {
-  UserOutlined,
   CheckSquareOutlined,
-  CloseOutlined,
   CheckOutlined,
   CheckCircleTwoTone,
   EditTwoTone,
 } from "@ant-design/icons";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
-import IconWallet from "../../../assets/icons/wallet.svg";
-import IconActivity from "../../../assets/icons/activity.svg";
-import IconArroRight from "../../../assets/icons/arrowRight.svg";
-import Arrow from "../../../assets/icons/Arrow.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 import DocumentIcon from "../../../assets/icons/DocumentsIcon.svg";
 import Lock from "../../../assets/icons/Lock.svg";
@@ -42,10 +19,8 @@ const { Option } = Select;
 
 const SectionCardOwner = (props) => {
   const {
-    history,
     dataCoincidences,
     finishCallApis,
-    onClickSendInvitation,
     onAddUser,
     onOpenDetail,
     onGetPolicyStatus,

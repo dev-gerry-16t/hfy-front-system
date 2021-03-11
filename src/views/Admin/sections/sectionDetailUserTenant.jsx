@@ -3,15 +3,9 @@ import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import NumberFormat from "react-number-format";
 import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
   Input,
   Row,
   Col,
-  Select,
-  Spin,
   Drawer,
   Collapse,
   Menu,
@@ -27,16 +21,13 @@ import {
   CheckOutlined,
 } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
 
-const { Option } = Select;
 const { Panel } = Collapse;
 
 const SectionDetailUserTenant = (props) => {
   const {
     isDrawerVisible,
     onClose,
-    spinVisible,
     dataDetailCustomerTenant,
     dataDetailReferences,
     changeRolesCustomers,
@@ -45,12 +36,10 @@ const SectionDetailUserTenant = (props) => {
     dataMessages,
     onDownloadDocumentById,
   } = props;
-  const frontFunctions = new FrontFunctions();
+
   const [valueCalification, setValueCalification] = useState({});
   const [dataIsMainTenant, setDataIsMainTenant] = useState({});
   const [openPopover, setOpenPopover] = useState({});
-
-  const LoadingSpin = <SyncOutlined spin />;
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">

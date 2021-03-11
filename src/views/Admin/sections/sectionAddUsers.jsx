@@ -15,7 +15,6 @@ import {
 } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
 
 const { Option } = Select;
 
@@ -34,7 +33,6 @@ const SectionAddUsers = (props) => {
     onSearchOwner,
     onSendInformation,
   } = props;
-  const frontFunctions = new FrontFunctions();
   const initialDataForm = {
     emailOwner: null,
     emailAdviser: null,

@@ -1,36 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import isNil from "lodash/isNil";
-import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Drawer,
-  Collapse,
-  Menu,
-  Dropdown,
-} from "antd";
-import { SyncOutlined } from "@ant-design/icons";
+import { Row, Col, Drawer, Menu, Dropdown } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
-
-const { Option } = Select;
-const { Panel } = Collapse;
 
 const SectionDetailUserAdviser = (props) => {
-  const { isDrawerVisible, onClose, spinVisible, dataDetailAgent } = props;
-  const frontFunctions = new FrontFunctions();
-  const initialDataForm = { emailOwner: null };
-  const [dataForm, setDataForm] = useState(initialDataForm);
-
-  const LoadingSpin = <SyncOutlined spin />;
+  const { isDrawerVisible, onClose, dataDetailAgent } = props;
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">

@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, message } from "antd";
+import { Layout, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import moment from "moment";
 import "moment/locale/es";
 import IconPolicy from "../../assets/icons/Policy.svg";
-import IconWallet from "../../assets/icons/wallet.svg";
-import IconActivity from "../../assets/icons/activity.svg";
-import IconArroRight from "../../assets/icons/arrowRight.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
 import Tickets from "../../assets/icons/tickets.svg";
 import Payments from "../../assets/icons/payments.svg";
@@ -29,9 +25,8 @@ import {
   callGetContractComment,
   callAddDocumentContract,
   callGetContractDocument,
-  callGetContractDocumentById,
 } from "../../utils/actions/actions";
-import { API_CONSTANTS, HEADER } from "../../utils/constants/apiConstants";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionStatsChart from "./sections/sectionStatsChart";
