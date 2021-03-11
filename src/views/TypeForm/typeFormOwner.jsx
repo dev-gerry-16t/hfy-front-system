@@ -87,12 +87,18 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallSetTypeFormTenant = async (data) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idContract,
+    } = dataProfile;
     try {
       const response = await callSetTypeFormOwner({
         idCustomer,
         idSystemUser,
         idLoginHistory,
+        idContract,
         ...data,
       });
       const responseResult =

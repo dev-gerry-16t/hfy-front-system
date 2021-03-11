@@ -711,6 +711,16 @@ const Administrator = (props) => {
               <strong>{dataProfile.lastSessionStarted}</strong>
             </span>
           </div>
+          <div
+            className="action-buttons-top"
+            style={{ justifyContent: "flex-end" }}
+          >
+            <div className="button_init_primary">
+              <button type="button" onClick={() => {}}>
+                <span>Deals (150)</span>
+              </button>
+            </div>
+          </div>
         </div>
         <div className="indicators-amount-renter">
           <div className="cards-amount-renter">
