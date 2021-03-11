@@ -709,6 +709,10 @@ const SectionInfoUser = (props) => {
                     />
                   </Col>
                 </Row>
+                <p>
+                  Información del documento que acredita la legalidad del
+                  representante
+                </p>
                 <Row>
                   <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
                     <div className="option-select-radio">
@@ -718,7 +722,8 @@ const SectionInfoUser = (props) => {
                           fontWeight: "bold",
                         }}
                       >
-                        ¿Quieres ocupar la Información de la Acta Constitutiva?
+                        ¿La legalidad del representante está indicada en el Acta
+                        Constitutiva?
                       </span>
                       <Radio.Group
                         onChange={(e) => {

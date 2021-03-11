@@ -107,8 +107,12 @@ const TypeFormUser = (props) => {
     }
   };
 
-  const next = () => {
-    setCurrent(current + 1);
+  const next = (stepTwo = false) => {
+    if (stepTwo === false) {
+      setCurrent(current + 1);
+    } else {
+      setCurrent(current + 2);
+    }
   };
 
   const prev = () => {
@@ -471,8 +475,12 @@ const TypeFormUser = (props) => {
           dataFormSave={dataForm}
           onClickNext={async (data) => {
             try {
-              await handlerCallSetTypeFormTenant({ ...data, stepIn: 2 });
-              next();
+              await handlerCallSetTypeFormTenant({
+                ...data,
+                stepIn:
+                  dataForm.requiresCustomerTenantEntInfo === false ? 2 : 4,
+              });
+              next(true);
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
