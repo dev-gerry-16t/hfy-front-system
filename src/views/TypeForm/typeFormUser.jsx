@@ -468,7 +468,9 @@ const TypeFormUser = (props) => {
                 stepIn:
                   dataForm.requiresCustomerTenantEntInfo === false ? 2 : 4,
               });
-              next(true);
+              next(
+                dataForm.requiresCustomerTenantEntInfo === false ? false : true
+              );
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);

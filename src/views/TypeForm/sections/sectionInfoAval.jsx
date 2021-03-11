@@ -1346,6 +1346,20 @@ const SectionInfoAval = (props) => {
                 </Collapse>
               </>
             )}
+            {(dataForm.hasEndorsement === 0 ||
+              dataForm.hasEndorsement === false) && (
+              <div className="button_actions">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setConfirmData(true);
+                  }}
+                  className="button_primary"
+                >
+                  <span>Finalizar</span>
+                </button>
+              </div>
+            )}
           </Col>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
         </Row>
