@@ -1,33 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import isNil from "lodash/isNil";
 import moment from "moment";
-import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Checkbox,
-  DatePicker,
-} from "antd";
+import { Modal, Row, Col, Checkbox, DatePicker } from "antd";
 import SignatureCanvas from "react-signature-canvas";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import ChatContract from "../../../assets/icons/ChatContract.svg";
-
-const { Option } = Select;
 
 const SectionContractAvailable = (props) => {
   const {
@@ -48,8 +25,6 @@ const SectionContractAvailable = (props) => {
   const [isDownloadDocument, setIsDownloadDocument] = useState(false);
   const [signaturePrecencial, setSignaturePrecencial] = useState(false);
   const signatureRef = useRef(null);
-
-  const LoadingSpin = <SyncOutlined spin />;
 
   return (
     <Modal

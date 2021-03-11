@@ -1,24 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Upload,
-  message,
-  Radio,
-} from "antd";
 import CustomFileUpload from "./customFileUpload";
-
-const { Dragger } = Upload;
 
 const CustomSubSectionCardDocument = (props) => {
   const { children, title, subtitle, visibleSubtitle } = props;

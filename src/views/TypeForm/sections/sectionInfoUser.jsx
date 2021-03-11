@@ -1,19 +1,7 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
+import { Input, Row, Col, Select, Tooltip, Radio } from "antd";
 import { AuditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
@@ -74,13 +62,6 @@ const SectionInfoUser = (props) => {
     mothersMaidenName: true,
     idEndorsement: true,
   });
-
-  // useEffect(() => {
-  //   if (isEmpty(dataFormSave) === false) {
-  //     console.log("dataFormSave", dataFormSave);
-  //     setDataForm(dataFormSave);
-  //   }
-  // }, [dataFormSave]);
 
   useEffect(() => {
     if (

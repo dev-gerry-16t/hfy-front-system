@@ -2,21 +2,7 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-  DatePicker,
-} from "antd";
-import IconProfile from "../../../assets/icons/Profile.svg";
+import { Input, Row, Col, Select, Radio, DatePicker } from "antd";
 
 const { Option } = Select;
 

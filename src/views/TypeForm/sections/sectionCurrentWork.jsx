@@ -2,31 +2,12 @@ import React, { useState, useEffect } from "react";
 import NumberFormat from "react-number-format";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
-import IconProfile from "../../../assets/icons/Profile.svg";
+import { Input, Row, Col, Select } from "antd";
 
 const { Option } = Select;
 
 const SectionCurrentWork = (props) => {
-  const {
-    onClickBack,
-    onClickNext,
-    dataFormSave,
-    frontFunctions,
-    dataOccupations,
-  } = props;
+  const { onClickNext, dataFormSave, frontFunctions, dataOccupations } = props;
   const initialForm = {
     idOccupationActivity: null,
     idOccupationActivityText: null,

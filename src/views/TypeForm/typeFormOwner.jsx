@@ -1,30 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Steps, Button, message } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import IconCalendar from "../../assets/icons/Calendar.svg";
+import { Layout, message } from "antd";
 import HomeActive from "../../assets/iconSteps/iconHome.svg";
 import HomeInactive from "../../assets/iconSteps/iconHomeInactive.svg";
 import IconProfile from "../../assets/iconSteps/Profile.svg";
 import IconProfileInactive from "../../assets/iconSteps/ProfileInactive.svg";
 import Wallet from "../../assets/iconSteps/wallet.svg";
 import WalletInactive from "../../assets/iconSteps/walletInactive.svg";
-import Work from "../../assets/iconSteps/Work.svg";
-import WorkInactive from "../../assets/iconSteps/WorkInactive.svg";
 import DocumentIcon from "../../assets/iconSteps/document.svg";
 import DocumentIconInactive from "../../assets/iconSteps/documentInactive.svg";
-import Renter from "../../assets/iconSteps/renter.svg";
-import RenterInactive from "../../assets/iconSteps/renterInactive.svg";
-import Shield from "../../assets/iconSteps/Shield.svg";
-import ShieldInactive from "../../assets/iconSteps/ShieldInactive.svg";
-import SectionInfoUser from "./sections/sectionInfoUser";
-import SectionCurrentAddress from "./sections/currentAddress";
-import SectionCurrentWork from "./sections/sectionCurrentWork";
-import SectionInfoReferences from "./sections/sectionInfoReferences";
-import SectionDocumentation from "./sections/sectionDocumentation";
-import SectionInfoAval from "./sections/sectionInfoAval";
 import SectionInfoOwner from "./sections/sectionInfoOwner";
 import CurrentAddressRenter from "./sections/currentAddresRenter";
 import TypePolicy from "./sections/TypePolicy";
@@ -45,7 +31,6 @@ import FrontFunctions from "../../utils/actions/frontFunctions";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import "moment/locale/es";
 
-const { Step } = Steps;
 const { Content } = Layout;
 
 const TypeFormOwner = (props) => {

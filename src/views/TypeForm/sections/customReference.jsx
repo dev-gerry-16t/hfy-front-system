@@ -1,32 +1,10 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
-import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
+import { Input, Row, Col } from "antd";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
-const { Option } = Select;
-
 const CustomReferences = (props) => {
-  const {
-    onClickBack,
-    onClickNext,
-    dataFormSave,
-    title,
-    onClickAdd,
-    dataReferences,
-  } = props;
+  const { title, onClickAdd, dataReferences } = props;
   const initialForm = {
     givenName: null,
     lastName: null,

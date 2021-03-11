@@ -1,5 +1,4 @@
 import React from "react";
-import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 
 const SubSectionSummary = (props) => {

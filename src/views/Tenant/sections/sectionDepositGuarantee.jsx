@@ -1,34 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import isNil from "lodash/isNil";
-import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
+import React, { useState } from "react";
 import ReactPlayer from "react-player";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Checkbox,
-  Radio,
-  Slider,
-} from "antd";
-import SignatureCanvas from "react-signature-canvas";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { Modal, Radio, Slider } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import Info from "../../../assets/icons/Info.svg";
-
-const { Option } = Select;
 
 const SectionDepositGuarantee = (props) => {
   const { isModalVisible, onClose, frontFunctions } = props;
@@ -39,8 +12,6 @@ const SectionDepositGuarantee = (props) => {
     radio2: false,
     radio3: false,
   });
-
-  const LoadingSpin = <SyncOutlined spin />;
 
   return (
     <Modal
@@ -77,7 +48,10 @@ const SectionDepositGuarantee = (props) => {
               onClick={() => {
                 setOpenSection(3);
               }}
-              style={{ border: "1px solid var(--color-primary)", borderRadius: "5px" }}
+              style={{
+                border: "1px solid var(--color-primary)",
+                borderRadius: "5px",
+              }}
             >
               <span style={{ fontSize: 15 }}>?</span>
             </button>

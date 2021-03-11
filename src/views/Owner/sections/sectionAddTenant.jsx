@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-} from "antd";
+import { Modal, Input, Row, Col, Select, Spin } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 

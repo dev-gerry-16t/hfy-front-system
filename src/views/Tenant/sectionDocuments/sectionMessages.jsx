@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import { Timeline, Input, Button } from "antd";
+import { Timeline, Button } from "antd";
 import isEmpty from "lodash/isEmpty";
-import isNil from "lodash/isNil";
 import SectionCardItemMessage from "./sectionCardItemMessage";
 import MessagesIcon from "../../../assets/icons/MessagesIcon.svg";
-
-const { TextArea } = Input;
 
 const SectionMessages = (props) => {
   const { dataMessages, onSendMessages, getMoreCoincidences } = props;

@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, message } from "antd";
-import isEmpty from "lodash/isEmpty";
+import { Layout, message } from "antd";
 import isNil from "lodash/isNil";
-import moment from "moment";
 import "moment/locale/es";
 import IconPolicy from "../../assets/icons/Policy.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
-import IconArroRight from "../../assets/icons/arrowRight.svg";
 import {
   callGetAgentIndicators,
   callGetAgentContractCoincidences,
@@ -132,7 +129,8 @@ const Adviser = (props) => {
           <div className="welcome-user-main">
             <h2>Hola, {dataProfile.showName}</h2>
             <span>
-              Último inicio de sesión: <strong>{dataProfile.lastSessionStarted}</strong>
+              Último inicio de sesión:{" "}
+              <strong>{dataProfile.lastSessionStarted}</strong>
             </span>
             <span>
               Número de Asesor: <strong>{dataProfile.agentNo}</strong>

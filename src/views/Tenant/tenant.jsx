@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, notification, message, Tabs } from "antd";
+import { Layout, Avatar, Rate, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { UserOutlined } from "@ant-design/icons";
@@ -38,7 +38,6 @@ import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
 
 const { Content } = Layout;
-const { TabPane } = Tabs;
 
 const Tenant = (props) => {
   const {

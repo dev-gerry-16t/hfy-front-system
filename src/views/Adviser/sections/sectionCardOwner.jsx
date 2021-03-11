@@ -1,17 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Skeleton, message } from "antd";
+import React from "react";
+import { Avatar, Rate, Skeleton, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import "moment/locale/es";
 import { UserOutlined } from "@ant-design/icons";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
-import IconWallet from "../../../assets/icons/wallet.svg";
-import IconActivity from "../../../assets/icons/activity.svg";
-import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import IconMessages from "../../../assets/icons/ChatContract.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -19,12 +12,7 @@ import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 moment.locale("es");
 
 const SectionCardOwner = (props) => {
-  const {
-    history,
-    tenantCoincidences,
-    finishCallApis,
-    onClickSendInvitation,
-  } = props;
+  const { tenantCoincidences, finishCallApis } = props;
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -40,16 +28,6 @@ const SectionCardOwner = (props) => {
       default:
         break;
     }
-  };
-
-  const formatDate = (date) => {
-    let dateFormat = "";
-    if (date !== "NA") {
-      dateFormat = moment(date, "DD/MM/YYYY").format("DD MMMM YYYY");
-    } else {
-      dateFormat = date;
-    }
-    return dateFormat;
   };
 
   return (

@@ -1,17 +1,13 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Steps, Button, message } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Layout, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import "moment/locale/es";
-import IconCalendar from "../../assets/icons/Calendar.svg";
 import HomeActive from "../../assets/iconSteps/iconHome.svg";
 import HomeInactive from "../../assets/iconSteps/iconHomeInactive.svg";
 import IconProfile from "../../assets/iconSteps/Profile.svg";
 import IconProfileInactive from "../../assets/iconSteps/ProfileInactive.svg";
-import Wallet from "../../assets/iconSteps/wallet.svg";
-import WalletInactive from "../../assets/iconSteps/walletInactive.svg";
 import Work from "../../assets/iconSteps/Work.svg";
 import WorkInactive from "../../assets/iconSteps/WorkInactive.svg";
 import DocumentIcon from "../../assets/iconSteps/document.svg";
@@ -26,10 +22,6 @@ import SectionCurrentWork from "./sections/sectionCurrentWork";
 import SectionInfoReferences from "./sections/sectionInfoReferences";
 import SectionDocumentation from "./sections/sectionDocumentation";
 import SectionInfoAval from "./sections/sectionInfoAval";
-import SectionInfoOwner from "./sections/sectionInfoOwner";
-import CurrentAddressRenter from "./sections/currentAddresRenter";
-import TypePolicy from "./sections/TypePolicy";
-import SectionBankInfo from "./sections/sectionBankInfo";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
@@ -47,7 +39,6 @@ import {
   callGetAllStates,
 } from "../../utils/actions/actions";
 
-const { Step } = Steps;
 const { Content } = Layout;
 
 const TypeFormUser = (props) => {
@@ -167,7 +158,7 @@ const TypeFormUser = (props) => {
       idLoginHistory,
     } = dataProfile;
     try {
-      const response = await callSetTypeFormReferences({
+      await callSetTypeFormReferences({
         idCustomer: idCustomerTF,
         idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
@@ -218,7 +209,6 @@ const TypeFormUser = (props) => {
 
   const hanlderCallGetNationalities = async () => {
     const {
-      idCustomer,
       idSystemUser,
       idLoginHistory,
       idCustomerTenantTF,
@@ -247,7 +237,6 @@ const TypeFormUser = (props) => {
 
   const hanlderCallGetIdTypes = async () => {
     const {
-      idCustomer,
       idSystemUser,
       idLoginHistory,
       idCustomerTenantTF,
@@ -276,7 +265,6 @@ const TypeFormUser = (props) => {
 
   const hanlderCallGetOccupations = async () => {
     const {
-      idCustomer,
       idSystemUser,
       idLoginHistory,
       idCustomerTenantTF,
@@ -415,7 +403,6 @@ const TypeFormUser = (props) => {
     const {
       idCustomerTenantTF,
       idCustomerTF,
-      idCustomer,
       idSystemUser,
       idLoginHistory,
     } = dataProfile;
@@ -599,7 +586,6 @@ const TypeFormUser = (props) => {
     const {
       idCustomerTenantTF,
       idCustomerTF,
-      idCustomer,
       idContract,
       idSystemUser,
       idLoginHistory,
@@ -709,8 +695,7 @@ const TypeFormUser = (props) => {
               );
             })}
         </div>
-        {isEmpty(steps) === false &&
-            finishCallApis === true && (
+        {isEmpty(steps) === false && finishCallApis === true && (
           <div className="steps-content">{steps[current].content}</div>
         )}
       </div>

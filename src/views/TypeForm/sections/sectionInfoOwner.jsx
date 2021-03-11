@@ -1,25 +1,8 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { Input, Row, Col, Select, Tooltip } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
 const { Option } = Select;

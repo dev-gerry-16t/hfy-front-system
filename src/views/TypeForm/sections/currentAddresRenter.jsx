@@ -2,32 +2,13 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import IconProfile from "../../../assets/icons/Profile.svg";
+import { Input, Row, Col, Select, Tooltip, Radio } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
 const CurrentAddressRenter = (props) => {
   const {
-    onClickBack,
     onClickNext,
     dataFormSave,
     frontFunctions,
@@ -57,7 +38,6 @@ const CurrentAddressRenter = (props) => {
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
   const [confirmData, setConfirmData] = useState(false);
-  const [furnished, setFurnished] = useState(true);
 
   const DescriptionItem = ({ title, content }) => (
     <div

@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from "react";
-import { connect } from "react-redux";
-import { Layout, Avatar, Rate, Modal, Skeleton } from "antd";
+import React from "react";
+import { Avatar, Rate, Skeleton } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import "moment/locale/es";
 import { UserOutlined } from "@ant-design/icons";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import IconOwner from "../../../assets/icons/iconHomeIndicator.svg";
-import IconWallet from "../../../assets/icons/wallet.svg";
-import IconActivity from "../../../assets/icons/activity.svg";
 import IconArroRight from "../../../assets/icons/arrowRight.svg";
 import EmptyTenant from "../../../assets/icons/tenantEmpty.svg";
 

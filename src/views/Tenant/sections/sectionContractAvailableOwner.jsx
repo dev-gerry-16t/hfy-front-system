@@ -2,27 +2,10 @@ import React, { useState, useEffect, useRef } from "react";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Checkbox,
-  DatePicker,
-} from "antd";
+import { Modal, Row, Col, Checkbox, DatePicker } from "antd";
 import SignatureCanvas from "react-signature-canvas";
 import {
-  InfoCircleOutlined,
-  UserOutlined,
   SyncOutlined,
-  CloseOutlined,
   MobileOutlined,
   SnippetsOutlined,
   FileDoneOutlined,
@@ -36,8 +19,6 @@ import {
 import Arrow from "../../../assets/icons/Arrow.svg";
 import EmptyDocument from "../../../assets/icons/EmptyDocument.svg";
 import ENVIROMENT from "../../../utils/constants/enviroments";
-
-const { Option } = Select;
 
 const SectionContractAvailable = (props) => {
   const {

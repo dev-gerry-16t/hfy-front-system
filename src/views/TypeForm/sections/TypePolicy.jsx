@@ -1,27 +1,13 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-} from "antd";
-import IconProfile from "../../../assets/icons/Profile.svg";
+import { Row, Col, Select } from "antd";
 import CustomFileUpload from "./customFileUpload";
 
 const { Option } = Select;
 
 const TypePolicy = (props) => {
   const {
-    onClickBack,
     onClickNext,
     dataPolicies,
     dataDocuments,
@@ -124,7 +110,7 @@ const TypePolicy = (props) => {
                         : "$0.00"}
                     </h2>
                     <strong>MXN</strong>
-                    <span style={{marginLeft:5}}> + IVA {tax * 100}%</span>
+                    <span style={{ marginLeft: 5 }}> + IVA {tax * 100}%</span>
                   </div>
                 ) : (
                   <div>

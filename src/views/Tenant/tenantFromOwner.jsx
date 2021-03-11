@@ -1,24 +1,8 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Tabs,
-  Pagination,
-  Carousel,
-  Select,
-  message,
-} from "antd";
+import { Layout, Tabs, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
-import IconWallet from "../../assets/icons/wallet.svg";
-import IconActivity from "../../assets/icons/activity.svg";
-import IconArroRight from "../../assets/icons/arrowRight.svg";
 import SectionDocuments from "./sectionDocuments/sectionDocuments";
 import SectionInfoTenant from "./sectionDocuments/sectionCardInformation";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -37,7 +21,6 @@ import {
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
-const { Option } = Select;
 
 const TenantFromOwner = (props) => {
   const {

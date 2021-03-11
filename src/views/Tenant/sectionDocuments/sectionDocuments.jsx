@@ -1,17 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import isEmpty from "lodash/isEmpty";
-import isNil from "lodash/isNil";
 import moment from "moment";
-import {
-  Pagination,
-  Carousel,
-  Select,
-  Row,
-  Col,
-  DatePicker,
-  Image,
-  Button,
-} from "antd";
+import { Select, Row, Col, DatePicker, Image, Button } from "antd";
 import Search from "../../../assets/icons/Search.svg";
 import EmptyDocument from "../../../assets/icons/EmptyDocument.svg";
 import ENVIROMENT from "../../../utils/constants/enviroments";
@@ -24,7 +14,6 @@ const SectionDocuments = (props) => {
     onSearchDocument,
     dataDocumentsRepository,
   } = props;
-  const dotChange = useRef(null);
   const [selectDateFilter, setSelectDateFilter] = useState(null);
   const [selectDocumentType, setSelectDocumentType] = useState(null);
   const [statesDates, setStatesDates] = useState({
@@ -250,7 +239,10 @@ const SectionDocuments = (props) => {
                   width={50}
                   height={40}
                 />
-                <label>No hay documentos en este periodo de tiempo, prueba buscando en otro periodo o tipo de documento</label>
+                <label>
+                  No hay documentos en este periodo de tiempo, prueba buscando
+                  en otro periodo o tipo de documento
+                </label>
               </div>
             )}
           </div>

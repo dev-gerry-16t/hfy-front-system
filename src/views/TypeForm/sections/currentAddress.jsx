@@ -2,34 +2,13 @@ import React, { useState, useEffect } from "react";
 import NumberFormat from "react-number-format";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import moment from "moment";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-  DatePicker,
-} from "antd";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import IconProfile from "../../../assets/icons/Profile.svg";
+import { Input, Row, Col, Select, Tooltip, Radio } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
 const SectionCurrentAddress = (props) => {
   const {
-    onClickBack,
     onClickNext,
     dataFormSave,
     dataZipCatalog,

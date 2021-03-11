@@ -2,9 +2,8 @@ import React, { useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import NumberFormat from "react-number-format";
-import { Timeline, Input, Row, Col, Select, Upload, Spin } from "antd";
+import { Input, Row, Col, Select, Spin } from "antd";
 import { SyncOutlined } from "@ant-design/icons";
-import Delete from "../../../assets/icons/Delete.svg";
 import PicturesWall from "./customUploadFile";
 import SubSectionSummary from "./subSectionSummary";
 
@@ -12,12 +11,7 @@ const { TextArea } = Input;
 const { Option } = Select;
 
 const SectionRegisterPayment = (props) => {
-  const {
-    dataPayments,
-    onRegisterPayment,
-    spinVisible,
-    onGetDocuments,
-  } = props;
+  const { dataPayments, spinVisible, onGetDocuments } = props;
   const initialDataForm = {
     idIncidence: null,
     idPaymentType: null,

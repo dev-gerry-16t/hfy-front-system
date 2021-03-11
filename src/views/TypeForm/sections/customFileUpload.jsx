@@ -1,25 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import Magnifier from "react-magnifier";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Upload,
-  Radio,
-  message,
-  Progress,
-  Image,
-} from "antd";
+import { Modal, Spin, Upload, message, Progress } from "antd";
 import { FileUnknownOutlined } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 import Show from "../../../assets/icons/Show.svg";
@@ -41,7 +25,6 @@ const CustomFileUpload = (props) => {
     callAddDocument,
     callAddTypeFormDocument,
     dataProfile,
-    onSuccesUpload,
   } = props;
   const [fileList, setFileList] = useState({});
   const [preview, setPreview] = useState(null);

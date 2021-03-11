@@ -3,22 +3,12 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import NumberFormat from "react-number-format";
+import { CloseOutlined } from "@ant-design/icons";
 import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
-import {
-  Layout,
-  Avatar,
-  Rate,
-  Modal,
   Input,
   Row,
   Col,
   Select,
-  Spin,
   Tooltip,
   Radio,
   DatePicker,
@@ -32,7 +22,6 @@ const { Panel } = Collapse;
 
 const SectionInfoAval = (props) => {
   const {
-    onClickBack,
     dataNationalities,
     dataIdTypes,
     onClickFinish,

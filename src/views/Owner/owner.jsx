@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import moment from "moment";
-import { Layout, Avatar, Rate, Modal, notification, message } from "antd";
+import { Layout, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
-import IconArroRight from "../../assets/icons/arrowRight.svg";
 import {
   callGetAllCustomerById,
   callGetAllCustomerCoincidences,
@@ -386,10 +385,7 @@ const Owner = (props) => {
       handlerCallGetTenantCoincidences();
     } catch (error) {
       setSpinVisible(false);
-      showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
+      showMessageStatusApi(error, GLOBAL_CONSTANTS.STATUS_API.ERROR);
     }
   };
 

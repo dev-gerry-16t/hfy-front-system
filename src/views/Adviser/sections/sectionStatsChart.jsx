@@ -3,7 +3,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Avatar, Rate, Modal, Skeleton } from "antd";
+import { Skeleton } from "antd";
 import EmptyGraph from "../../../assets/icons/EmptyGraph.svg";
 
 const SectionStatsChart = (props) => {
