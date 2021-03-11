@@ -43,6 +43,8 @@ import {
   callGetOccupations,
   callGetMaritalStatus,
   callGetMaritalRegime,
+  callGetAllCommercialSocietyTypes,
+  callGetAllStates,
 } from "../../utils/actions/actions";
 
 const { Step } = Steps;
@@ -61,6 +63,8 @@ const TypeFormUser = (props) => {
     callGetNationalities,
     callGetIdTypes,
     callGetOccupations,
+    callGetAllCommercialSocietyTypes,
+    callGetAllStates,
     history,
     match,
   } = props;
@@ -84,6 +88,8 @@ const TypeFormUser = (props) => {
   const [dataOccupations, setDataOccupations] = useState([]);
   const [dataMaritalStatus, setDataMaritalStatus] = useState([]);
   const [dataMaritalRegime, setDataMaritalRegime] = useState([]);
+  const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
+  const [dataStates, setDataStates] = useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -340,6 +346,66 @@ const TypeFormUser = (props) => {
     }
   };
 
+  const handlerCallGetAllCommercialSocietyTypes = async () => {
+    const {
+      idCustomerTF,
+      idCustomerTenantTF,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
+    try {
+      const response = await callGetAllCommercialSocietyTypes({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataCommerceSociety(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllStates = async () => {
+    const {
+      idCustomerTF,
+      idCustomerTenantTF,
+      idSystemUser,
+      idLoginHistory,
+    } = dataProfile;
+    try {
+      const response = await callGetAllStates({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataStates(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetTypeFormDocumentTenant = async (id, type) => {
     const {
       idCustomerTenantTF,
@@ -378,11 +444,13 @@ const TypeFormUser = (props) => {
 
   const steps = [
     {
-      title: "Información personal",
+      title: "Información general",
       content: (
         <SectionInfoUser
           dataFormSave={dataForm}
           dataNationalities={dataNationalities}
+          dataCommerceSociality={dataCommerceSociality}
+          dataStates={dataStates}
           dataIdTypes={dataIdTypes}
           onClickNext={async (data) => {
             try {
@@ -556,6 +624,14 @@ const TypeFormUser = (props) => {
       ) {
         setCurrent(responseResult1.stepIn);
       }
+      if (
+        isEmpty(responseResult1) === false &&
+        isNil(responseResult1.requiresCustomerTenantEntInfo) === false &&
+        responseResult1.requiresCustomerTenantEntInfo === true
+      ) {
+        handlerCallGetAllCommercialSocietyTypes();
+        handlerCallGetAllStates();
+      }
       setDataForm(responseResult1);
       setDataReferences(responseResult2);
       await handlerCallGetTypeFormDocumentTenant(responseResult1.idTypeForm, 1);
@@ -650,6 +726,9 @@ const mapDispatchToProps = (dispatch) => ({
   callGetOccupations: (data) => dispatch(callGetOccupations(data)),
   callGetMaritalStatus: (data) => dispatch(callGetMaritalStatus(data)),
   callGetMaritalRegime: (data) => dispatch(callGetMaritalRegime(data)),
+  callGetAllCommercialSocietyTypes: (data) =>
+    dispatch(callGetAllCommercialSocietyTypes(data)),
+  callGetAllStates: (data) => dispatch(callGetAllStates(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);
