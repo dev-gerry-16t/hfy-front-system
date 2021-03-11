@@ -1109,6 +1109,32 @@ const SectionInfoAval = (props) => {
                         </Row>
                       </>
                     )}
+                    {(dataForm.hasAssessment === 1 ||
+                      dataForm.hasAssessment === true) && (
+                      <div className="section-top-documentation">
+                        <div className="section-card-documentation">
+                          <div className="section-title-card-doc">
+                            <strong>Certificado de libertad de Gravamen</strong>
+                            <span></span>
+                          </div>
+                          <div
+                            className="section-content-card-doc"
+                            style={{ justifyContent: "center" }}
+                          >
+                            <CustomFileUpload
+                              acceptFile="image/png, image/jpeg, image/jpg"
+                              dataDocument={
+                                isEmpty(dataDocuments) === false &&
+                                isNil(dataDocuments[4]) === false
+                                  ? dataDocuments[4]
+                                  : {}
+                              }
+                              typeDocument={typeDocument}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                     <div className="button_actions">
                       <button
                         type="button"

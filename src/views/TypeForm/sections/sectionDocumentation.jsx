@@ -71,106 +71,215 @@ const SectionDocumentation = (props) => {
   return (
     <div className="content-typeform-formulary">
       <h3>Documentación</h3>
-      <div className="section-top-documentation">
-        <CustomSubSectionCardDocument
-          title="Selfie"
-          subtitle="N/A"
-          visibleSubtitle={false}
-        >
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[6]) === false
-                ? dataDocuments[6]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-        </CustomSubSectionCardDocument>
-        <CustomSubSectionCardDocument
-          title="Identificación oficial"
-          subtitle={getTypeIdDocument(dataForm.idType)}
-          visibleSubtitle
-        >
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[0]) === false
-                ? dataDocuments[0]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-          {(dataForm.idType === 1 || isNil(dataForm.idType) === true) && (
-            <CustomFileUpload
-              acceptFile="image/png, image/jpeg, image/jpg"
-              dataDocument={
-                isEmpty(dataDocuments) === false &&
-                isNil(dataDocuments[1]) === false
-                  ? dataDocuments[1]
-                  : {}
-              }
-              typeDocument={typeDocument}
-            />
-          )}
-        </CustomSubSectionCardDocument>
-        <CustomSubSectionCardDocument
-          title="Carta laboral"
-          subtitle="Membretada y firmada"
-          visibleSubtitle
-        >
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[5]) === false
-                ? dataDocuments[5]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-        </CustomSubSectionCardDocument>
-      </div>
-      <div className="section-bottom-documentation">
-        <CustomSubSectionCardDocument
-          title="últimos 3 comprobantes de ingreso"
-          subtitle="N/A"
-          visibleSubtitle={false}
-        >
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[2]) === false
-                ? dataDocuments[2]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[3]) === false
-                ? dataDocuments[3]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-          <CustomFileUpload
-            acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-            dataDocument={
-              isEmpty(dataDocuments) === false &&
-              isNil(dataDocuments[4]) === false
-                ? dataDocuments[4]
-                : {}
-            }
-            typeDocument={typeDocument}
-          />
-        </CustomSubSectionCardDocument>
-      </div>
+      {dataForm.requiresCustomerTenantEntInfo === false && (
+        <>
+          <div className="section-top-documentation">
+            <CustomSubSectionCardDocument
+              title="Selfie"
+              subtitle="N/A"
+              visibleSubtitle={false}
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[6]) === false
+                    ? dataDocuments[6]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+            <CustomSubSectionCardDocument
+              title="Identificación oficial"
+              subtitle={getTypeIdDocument(dataForm.idType)}
+              visibleSubtitle
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[0]) === false
+                    ? dataDocuments[0]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              {(dataForm.idType === 1 || isNil(dataForm.idType) === true) && (
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[1]) === false
+                      ? dataDocuments[1]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
+              )}
+            </CustomSubSectionCardDocument>
+            <CustomSubSectionCardDocument
+              title="Carta laboral"
+              subtitle="Membretada y firmada"
+              visibleSubtitle
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[5]) === false
+                    ? dataDocuments[5]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+          </div>
+          <div className="section-bottom-documentation">
+            <CustomSubSectionCardDocument
+              title="últimos 3 comprobantes de ingreso"
+              subtitle="N/A"
+              visibleSubtitle={false}
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[2]) === false
+                    ? dataDocuments[2]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[3]) === false
+                    ? dataDocuments[3]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[4]) === false
+                    ? dataDocuments[4]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+          </div>
+        </>
+      )}
+      {dataForm.requiresCustomerTenantEntInfo === true && (
+        <>
+          <div className="section-top-documentation">
+            <CustomSubSectionCardDocument
+              title="Identificación oficial"
+              subtitle={getTypeIdDocument(dataForm.legalRepIdType)}
+              visibleSubtitle
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[0]) === false
+                    ? dataDocuments[0]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              {(dataForm.legalRepIdType === 1 ||
+                isNil(dataForm.legalRepIdType) === true) && (
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[1]) === false
+                      ? dataDocuments[1]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
+              )}
+            </CustomSubSectionCardDocument>
+            <CustomSubSectionCardDocument
+              title="Acta Constitutiva"
+              subtitle="N/A"
+              visibleSubtitle={false}
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[5]) === false
+                    ? dataDocuments[5]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+            <CustomSubSectionCardDocument
+              title="Testimonio notarial"
+              subtitle="N/A"
+              visibleSubtitle={false}
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[6]) === false
+                    ? dataDocuments[6]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+          </div>
+          <div className="section-bottom-documentation">
+            <CustomSubSectionCardDocument
+              title="últimos 3 comprobantes de ingreso"
+              subtitle="N/A"
+              visibleSubtitle={false}
+            >
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[2]) === false
+                    ? dataDocuments[2]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[3]) === false
+                    ? dataDocuments[3]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+              <CustomFileUpload
+                acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                dataDocument={
+                  isEmpty(dataDocuments) === false &&
+                  isNil(dataDocuments[4]) === false
+                    ? dataDocuments[4]
+                    : {}
+                }
+                typeDocument={typeDocument}
+              />
+            </CustomSubSectionCardDocument>
+          </div>
+        </>
+      )}
       <div className="button_actions">
         {/* <button
           type="button"
