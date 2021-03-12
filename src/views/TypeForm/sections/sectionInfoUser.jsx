@@ -348,8 +348,7 @@ const SectionInfoUser = (props) => {
             </Row>
             {visibleComponents.idCountryNationality === true &&
               visibleComponents.idType === true &&
-              visibleComponents.idTypeNumber === true &&
-              isNil(dataForm.idType) === false && (
+              visibleComponents.idTypeNumber === true && (
                 <>
                   <Row>
                     <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
@@ -413,16 +412,18 @@ const SectionInfoUser = (props) => {
                       </Select>
                     </Col>
                     <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                    <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
-                      <Input
-                        value={dataForm.idTypeNumber}
-                        placeholder={`Numero de ${dataForm.idTypeText}`}
-                        onChange={(e) => {
-                          const value = e.target.value;
-                          setDataForm({ ...dataForm, idTypeNumber: value });
-                        }}
-                      />
-                    </Col>
+                    {isNil(dataForm.idType) === false && (
+                      <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                        <Input
+                          value={dataForm.idTypeNumber}
+                          placeholder={`Numero de ${dataForm.idTypeText}`}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setDataForm({ ...dataForm, idTypeNumber: value });
+                          }}
+                        />
+                      </Col>
+                    )}
                   </Row>
                 </>
               )}
