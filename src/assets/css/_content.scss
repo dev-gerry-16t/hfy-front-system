@@ -195,6 +195,8 @@
     border-radius: 16px;
     .section-information-renters {
       padding: 10px 20px;
+      max-height: 250px;
+      overflow-y: scroll;
       .data-renter-info {
         display: flex;
         justify-content: space-between;

@@ -33,12 +33,15 @@ const SectionContractAvailable = (props) => {
     onFinishContractFlow,
   } = props;
   const [signature, setSignature] = useState("");
-  const [reconstructionSection, setReconstructionSection] = useState({
+  const reconstructOriginal = {
     contract: true,
     policy: true,
     contractTenant: true,
     payments: true,
-  });
+  };
+  const [reconstructionSection, setReconstructionSection] = useState(
+    reconstructOriginal
+  );
   const [startedAt, setStartedAt] = useState(null);
   const [scheduleSignatureDate, setScheduleSignatureDate] = useState(null);
   const [valueText, setValueText] = useState(null);
@@ -64,7 +67,10 @@ const SectionContractAvailable = (props) => {
         dataGetContract.isEditable === 1 ||
         dataGetContract.isEditable === true
       ) {
-        if (dataProfile.idUserType === 3) {
+        if (
+          dataProfile.idUserType === 3 &&
+          isNil(dataGetContract.startedAt) === true
+        ) {
           setOpenSection(1);
         } else {
           setOpenSection(4);
@@ -134,6 +140,7 @@ const SectionContractAvailable = (props) => {
             type="button"
             onClick={() => {
               onClose();
+              setReconstructionSection(reconstructOriginal);
             }}
           >
             <img src={Arrow} alt="backTo" width="30" />
@@ -408,7 +415,7 @@ const SectionContractAvailable = (props) => {
                         onClick={async () => {
                           try {
                             if (reconstructionSection.contract === true) {
-                              onVisualiceDocument({
+                              await onVisualiceDocument({
                                 download: false,
                                 process: true,
                                 url: dataGetContract.url,
@@ -510,7 +517,7 @@ const SectionContractAvailable = (props) => {
                         onClick={async () => {
                           try {
                             if (reconstructionSection.policy === true) {
-                              onVisualiceDocument({
+                              await onVisualiceDocument({
                                 download: false,
                                 process: true,
                                 url: dataGetContract.url,
@@ -611,7 +618,7 @@ const SectionContractAvailable = (props) => {
                         onClick={async () => {
                           try {
                             if (reconstructionSection.payments === true) {
-                              onVisualiceDocument({
+                              await onVisualiceDocument({
                                 download: false,
                                 process: true,
                                 url: dataGetContract.url,
@@ -705,6 +712,7 @@ const SectionContractAvailable = (props) => {
                       onClose();
                       setOpenSection(1);
                       onFinishContractFlow();
+                      setReconstructionSection(reconstructOriginal);
                     }}
                   >
                     <span>Terminar</span>
@@ -906,6 +914,7 @@ const SectionContractAvailable = (props) => {
                       });
                       setOpenSection(1);
                       onClose();
+                      setReconstructionSection(reconstructOriginal);
                     }}
                   >
                     <span>Enviar</span>
