@@ -69,7 +69,7 @@ const SectionStatsChart = (props) => {
   return (
     <div className="card-chart-information">
       <div className="title-cards">Ganancias</div>
-      <div>
+      <div style={{height:'100%'}}>
         {finishCallApis === true && isEmpty(dataOptions) === false && (
           <HighchartsReact highcharts={Highcharts} options={dataOptions} />
         )}

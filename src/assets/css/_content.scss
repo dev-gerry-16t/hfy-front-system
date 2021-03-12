@@ -90,12 +90,13 @@
   .action-buttons-top {
     display: flex;
     width: 50%;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
   .button_init_primary {
     display: flex;
     justify-content: center;
     width: 45%;
+    margin: 0px 10px;
     button {
       background: var(--color-primary);
       border-radius: 16px;
@@ -221,6 +222,7 @@
               border-radius: 15px;
               display: flex;
               justify-content: center;
+              align-self: flex-start;
               span {
                 // color: #da1414;
               }
@@ -231,6 +233,7 @@
               border-radius: 15px;
               display: flex;
               justify-content: center;
+              align-self: flex-start;
               cursor: pointer;
               span {
                 color: #818181;
