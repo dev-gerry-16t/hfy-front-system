@@ -716,7 +716,12 @@ const Administrator = (props) => {
             style={{ justifyContent: "flex-end" }}
           >
             <div className="button_init_primary">
-              <button type="button" onClick={() => {}}>
+              <button
+                type="button"
+                onClick={() => {
+                  history.push(`/websystem/deals-landingpage`);
+                }}
+              >
                 <span>Deals (150)</span>
               </button>
             </div>

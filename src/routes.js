@@ -4,6 +4,7 @@ const ViewContent = React.lazy(() => import("./views/Owner/owner"));
 const TenantFromOwner = React.lazy(() =>
   import("./views/Tenant/tenantFromOwner")
 );
+const DealsLandingPage = React.lazy(() => import("./views/Deals/deals"));
 const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
 const Adviser = React.lazy(() => import("./views/Adviser/adviser"));
 const Administrator = React.lazy(() => import("./views/Admin/administrator"));
@@ -28,6 +29,14 @@ const routes = [
     path: "/websystem/dashboard-owner/tenant/:idCustomerTenant",
     name: "Inquilino",
     component: TenantFromOwner,
+    exact: true,
+  },
+  {
+    key: "3",
+    id: "Deals",
+    path: "/websystem/deals-landingpage",
+    name: "Deals",
+    component: DealsLandingPage,
     exact: true,
   },
   {
