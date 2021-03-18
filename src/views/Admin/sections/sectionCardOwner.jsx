@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { Skeleton, Table, Tag, Button, Popover, Row, Col, Select } from "antd";
+import {
+  Skeleton,
+  Table,
+  Tag,
+  Button,
+  Popover,
+  Row,
+  Col,
+  Select,
+  Progress,
+} from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -167,49 +177,87 @@ const SectionCardOwner = (props) => {
   const columns = [
     {
       title: "Propietario",
-      dataIndex: "customerFullName",
-      key: "customerFullName",
-      width: 230,
-      render: (text, record) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <a
-            onClick={() => {
-              onOpenDetail(record.idContract, 1, record);
-            }}
-            style={{ marginRight: "5PX" }}
-          >
-            {text}
-          </a>
-          {record.hasCustomerFinishedTF === true ? (
-            <CheckCircleTwoTone twoToneColor="#32cd32" />
-          ) : (
-            <EditTwoTone twoToneColor="#4169e1" />
-          )}
-        </div>
-      ),
+      children: [
+        {
+          title: "Nombre",
+          dataIndex: "customerFullName",
+          key: "customerFullName",
+          width: 230,
+          render: (text, record) => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <a
+                onClick={() => {
+                  onOpenDetail(record.idContract, 1, record);
+                }}
+                style={{ marginRight: "5PX" }}
+              >
+                {text}
+              </a>
+              {record.hasCustomerFinishedTF === true ? (
+                <CheckCircleTwoTone twoToneColor="#32cd32" />
+              ) : (
+                <EditTwoTone twoToneColor="#4169e1" />
+              )}
+            </div>
+          ),
+        },
+        {
+          title: "Fecha inicial",
+          dataIndex: "customerStartedAt",
+          key: "customerStartedAt",
+        },
+        {
+          title: "Avance formulario",
+          dataIndex: "customerPercentCompleted",
+          key: "customerPercentCompleted",
+          width: 200,
+          render: (percent, record) => (
+            <Progress percent={percent} size="small" status="succes" />
+          ),
+        },
+      ],
     },
     {
       title: "Inquilino",
-      width: 230,
-      dataIndex: "customerTenantFullName",
-      key: "customerTenantFullName",
-      render: (text, record) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <a
-            onClick={() => {
-              onOpenDetail(record.idContract, 2, record);
-            }}
-            style={{ color: "gray", marginRight: "5PX" }}
-          >
-            {text}
-          </a>
-          {record.hasCustomerTenantFinishedTF === true ? (
-            <CheckCircleTwoTone twoToneColor="#32cd32" />
-          ) : (
-            <EditTwoTone twoToneColor="#4169e1" />
-          )}
-        </div>
-      ),
+      children: [
+        {
+          title: "Nombre",
+          width: 230,
+          dataIndex: "customerTenantFullName",
+          key: "customerTenantFullName",
+          render: (text, record) => (
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <a
+                onClick={() => {
+                  onOpenDetail(record.idContract, 2, record);
+                }}
+                style={{ color: "gray", marginRight: "5PX" }}
+              >
+                {text}
+              </a>
+              {record.hasCustomerTenantFinishedTF === true ? (
+                <CheckCircleTwoTone twoToneColor="#32cd32" />
+              ) : (
+                <EditTwoTone twoToneColor="#4169e1" />
+              )}
+            </div>
+          ),
+        },
+        {
+          title: "Fecha inicial",
+          dataIndex: "tenantStartedAt",
+          key: "tenantStartedAt",
+        },
+        {
+          title: "Avance formulario",
+          dataIndex: "tenantPercentCompleted",
+          key: "tenantPercentCompleted",
+          width: 200,
+          render: (percent, record) => (
+            <Progress percent={percent} size="small" status="succes" />
+          ),
+        },
+      ],
     },
     {
       title: "Asesor",
@@ -485,7 +533,8 @@ const SectionCardOwner = (props) => {
             dataSource={dataCoincidences}
             className="table-users-hfy"
             size="small"
-            scroll={{ x: 2500 }}
+            bordered
+            scroll={{ x: 3000 }}
           />
         )}
         {isEmpty(dataCoincidences) === false && (

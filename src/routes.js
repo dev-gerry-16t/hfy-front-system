@@ -4,10 +4,11 @@ const ViewContent = React.lazy(() => import("./views/Owner/owner"));
 const TenantFromOwner = React.lazy(() =>
   import("./views/Tenant/tenantFromOwner")
 );
-const DealsLandingPage = React.lazy(() => import("./views/Deals/deals"));
+const LeadsLandingPage = React.lazy(() => import("./views/Leads/leads"));
 const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
 const Adviser = React.lazy(() => import("./views/Adviser/adviser"));
 const Administrator = React.lazy(() => import("./views/Admin/administrator"));
+const AgentsSystem = React.lazy(() => import("./views/Adviser/agents"));
 const TypeFormUser = React.lazy(() => import("./views/TypeForm/typeFormUser"));
 const TypeFormUserOwner = React.lazy(() =>
   import("./views/TypeForm/typeFormOwner")
@@ -33,10 +34,10 @@ const routes = [
   },
   {
     key: "3",
-    id: "Deals",
-    path: "/websystem/deals-landingpage",
-    name: "Deals",
-    component: DealsLandingPage,
+    id: "Leads",
+    path: "/websystem/leads-landingpage",
+    name: "Leads",
+    component: LeadsLandingPage,
     exact: true,
   },
   {
@@ -101,6 +102,14 @@ const routes = [
     path: "/websystem/ownership",
     name: "Propiedades",
     component: MakeScreen,
+    exact: true,
+  },
+  {
+    key: "10",
+    id: "Asesores",
+    path: "/websystem/dashboard-agents",
+    name: "Asesores",
+    component: AgentsSystem,
     exact: true,
   },
 ];

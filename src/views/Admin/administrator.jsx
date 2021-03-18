@@ -9,6 +9,7 @@ import IconDanger from "../../assets/icons/Danger.svg";
 import Tickets from "../../assets/icons/tickets.svg";
 import Payments from "../../assets/icons/payments.svg";
 import Balance from "../../assets/icons/balance.svg";
+import Agents from "../../assets/icons/agent.svg";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetContractStats,
@@ -719,10 +720,10 @@ const Administrator = (props) => {
               <button
                 type="button"
                 onClick={() => {
-                  history.push(`/websystem/deals-landingpage`);
+                  history.push(`/websystem/leads-landingpage`);
                 }}
               >
-                <span>Deals (150)</span>
+                <span>Leads (150)</span>
               </button>
             </div>
           </div>
@@ -771,6 +772,19 @@ const Administrator = (props) => {
             </div>
             <h2>{dataStats.totalForClosing}</h2>
             <span>Por cerrar</span>
+          </div>
+          <div
+            className="cards-amount-renter"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              history.push(`/websystem/dashboard-agents`);
+            }}
+          >
+            <div className="elipse-icon" style={{ backgroundColor: "#ffa420" }}>
+              <img src={Agents} alt="icon" width="20px"></img>
+            </div>
+            <h2>500</h2>
+            <span>Asesores</span>
           </div>
         </div>
         <div className="main-information-user-admin">

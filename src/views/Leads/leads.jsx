@@ -1,15 +1,19 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Layout, Table, Tag } from "antd";
+import { Layout, Table, Tag, Menu, Dropdown, Button } from "antd";
+import Tickets from "../../assets/icons/tickets.svg";
+import Calling from "../../assets/icons/Calling.svg";
+import CallMissed from "../../assets/icons/CallMissed.svg";
 
 const { Content } = Layout;
 
-const DealsLandingPage = () => {
+const LeadsLandingPage = () => {
   const columns = [
     {
       title: "Nombre",
       dataIndex: "name",
       key: "name",
+      width: 200,
     },
     {
       title: "Teléfono",
@@ -22,14 +26,36 @@ const DealsLandingPage = () => {
       key: "email",
     },
     {
+      title: "Fecha de pre-registro",
+      dataIndex: "dateStart",
+      key: "dateStart",
+      width: 200,
+    },
+    {
       title: "Prospecto a",
       dataIndex: "prospect",
       key: "prospect",
     },
     {
+      title: "Póliza",
+      dataIndex: "policy",
+      key: "policy",
+    },
+    {
+      title: "Renta",
+      dataIndex: "currentRent",
+      key: "currentRent",
+    },
+    {
+      title: "Cotización",
+      dataIndex: "quota",
+      key: "quota",
+    },
+    {
       title: "Estatus",
       dataIndex: "status",
       key: "status",
+      fixed: "right",
       render: (status, record) => {
         return (
           <span>
@@ -42,6 +68,28 @@ const DealsLandingPage = () => {
       title: "Asignar",
       dataIndex: "asign",
       key: "asign",
+      fixed: "right",
+      render: (asign, record) => {
+        return (
+          <Dropdown
+            overlay={
+              <Menu onClick={(value) => {}}>
+                <Menu.Item key="0">
+                  <a>Atendido</a>
+                </Menu.Item>
+                <Menu.Item key="1">
+                  <a>No interesado</a>
+                </Menu.Item>
+              </Menu>
+            }
+            trigger={["click"]}
+          >
+            <Button type="primary" shape="round" size="small">
+              Asignar
+            </Button>
+          </Dropdown>
+        );
+      },
     },
   ];
 
@@ -53,6 +101,10 @@ const DealsLandingPage = () => {
       prospect: "Propietario",
       status: "Recibido",
       colorStatus: "blue",
+      policy: "Homify Pro",
+      currentRent: "$27,000.00",
+      quota: "$9,450.00",
+      dateStart: "15 marzo 2021",
       asign: "",
     },
     {
@@ -62,6 +114,10 @@ const DealsLandingPage = () => {
       prospect: "Inquilino",
       status: "Recibido",
       colorStatus: "blue",
+      policy: "",
+      currentRent: "",
+      quota: "",
+      dateStart: "15 marzo 2021",
       asign: "",
     },
     {
@@ -71,6 +127,10 @@ const DealsLandingPage = () => {
       prospect: "Inquilino",
       status: "No interesado",
       colorStatus: "red",
+      policy: "",
+      currentRent: "",
+      quota: "",
+      dateStart: "16 marzo 2021",
       asign: "",
     },
     {
@@ -80,6 +140,10 @@ const DealsLandingPage = () => {
       prospect: "Asesor",
       status: "Atendido",
       colorStatus: "green",
+      policy: "",
+      currentRent: "",
+      quota: "",
+      dateStart: "17 marzo 2021",
       asign: "",
     },
   ];
@@ -88,37 +152,32 @@ const DealsLandingPage = () => {
     <Content>
       <div className="margin-app-main">
         <div className="indicators-amount-renter">
-          {/* <div className="cards-amount-renter">
+          <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
               <img src={Tickets} alt="icon" width="20px"></img>
             </div>
-            <h2>{dataStats.grandTotalSale}</h2>
-            <span>
-              Ventas <strong>({dataStats.totalClosings})</strong>
-            </span>
-          </div>
-          <div className="cards-amount-renter">
-            <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
-              <img src={Payments} alt="icon" width="20px"></img>
-            </div>
-            <h2>{dataStats.totalCommissionAmount}</h2>
-            <span>
-              Comisiones pagadas <strong>({dataStats.totalCommissions})</strong>
-            </span>
+            <h2>102</h2>
+            <span>Recibidos</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#98FF98" }}>
-              <img src={Balance} alt="icon" width="20px"></img>
+              <img src={Calling} alt="icon" width="20px"></img>
             </div>
-            <h2>{dataStats.totalBalance}</h2>
-            <span>Balance</span>
+            <h2>13</h2>
+            <span>Atendidos</span>
           </div>
-       */}
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
+              <img src={CallMissed} alt="icon" width="20px"></img>
+            </div>
+            <h2>12</h2>
+            <span>No interesados</span>
+          </div>
         </div>
         <div className="main-information-user-admin">
           <div className="renter-card-information total-width">
             <div className="title-cards flex-title-card">
-              <span>Pre-registrados</span>
+              <span>Leads</span>
             </div>
             <div className="section-information-renters">
               <Table
@@ -126,6 +185,8 @@ const DealsLandingPage = () => {
                 dataSource={data}
                 className="table-users-hfy"
                 size="small"
+                bordered
+                scroll={{ x: 1500 }}
               />
               <div className="table-card-users-hfy">Table</div>
             </div>
@@ -145,4 +206,4 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(DealsLandingPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LeadsLandingPage);
