@@ -9,6 +9,7 @@ const Tenant = React.lazy(() => import("./views/Tenant/tenant"));
 const Adviser = React.lazy(() => import("./views/Adviser/adviser"));
 const Administrator = React.lazy(() => import("./views/Admin/administrator"));
 const AgentsSystem = React.lazy(() => import("./views/Adviser/agents"));
+const AttorneysSystem = React.lazy(() => import("./views/Attorney/attorney"));
 const TypeFormUser = React.lazy(() => import("./views/TypeForm/typeFormUser"));
 const TypeFormUserOwner = React.lazy(() =>
   import("./views/TypeForm/typeFormOwner")
@@ -110,6 +111,14 @@ const routes = [
     path: "/websystem/dashboard-agents",
     name: "Asesores",
     component: AgentsSystem,
+    exact: true,
+  },
+  {
+    key: "11",
+    id: "Contratos",
+    path: "/websystem/dashboard-attorney",
+    name: "Contratos",
+    component: AttorneysSystem,
     exact: true,
   },
 ];

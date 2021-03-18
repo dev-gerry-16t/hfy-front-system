@@ -10,6 +10,7 @@ const SectionStatsChartPie = (props) => {
   const [dataOptions, setDataOptions] = useState({});
 
   const handlerConvertDataChart = (data) => {
+    console.log('data',data);
     const dataChart = {
       chart: {
         plotBackgroundColor: null,
@@ -21,7 +22,7 @@ const SectionStatsChartPie = (props) => {
         text: "Pólizas",
       },
       tooltip: {
-        pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
+        pointFormat: "{series.name}: <b>{point.amount:.1f}</b>",
       },
       accessibility: {
         point: {
