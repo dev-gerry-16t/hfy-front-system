@@ -2689,6 +2689,366 @@ const callGetDetailCustomerAgent = (data) => async (dispatch, getState) => {
   }
 };
 
+const callGetLandingProspectStats = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_LANDING_PROSPECT_STATS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllProspectStatus = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_ALL_PROSPECT_STATUS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllRelationshipTypes = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_ALL_RELATIONSHIP_TYPES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllPersonalReferencesStatus = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_ALL_PERSONAL_REFERENCE_STATUS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetLandingProspectCoincidences = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_LANDING_PROSPECT_COINCIDENECES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetCustomerAgentCoincidences = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_CUSTOMER_AGENT_COINCIDENCES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetLegalContractCoincidences = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_LEGAL_CONTRACT_COINCIDENCES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callUpdateLandingProspectStatus = (data, id) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.put(
+      API_CONSTANTS.UPDATE_LANDING_PROSPECT_STATUS + id,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callUpdatePersonalReferences = (data, id) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.put(
+      API_CONSTANTS.SET_PERSONAL_REFERENCE_FORM + id,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 export {
   callApiLogin,
   callGetAllCustomers,
@@ -2761,4 +3121,13 @@ export {
   callGetMaritalRegime,
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
+  callGetLandingProspectStats,
+  callGetAllProspectStatus,
+  callGetAllRelationshipTypes,
+  callGetAllPersonalReferencesStatus,
+  callGetLandingProspectCoincidences,
+  callGetCustomerAgentCoincidences,
+  callGetLegalContractCoincidences,
+  callUpdateLandingProspectStatus,
+  callUpdatePersonalReferences,
 };

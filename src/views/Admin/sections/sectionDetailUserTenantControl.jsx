@@ -37,12 +37,31 @@ const SectionDetailUserTenant = (props) => {
     onSendRatingUser,
     onRedirectTo,
     onDownloadDocumentById,
+    dataRelatioshipTypes,
+    dataReferenceStatus,
+    onSaveDataScore,
   } = props;
 
+  const initialDataForm = {
+    currentTime: null,
+    currentTimeRange: null,
+    detailReference: null,
+    detailTenant: null,
+    emailAddress: null,
+    fullName: null,
+    idPersonalReference: null,
+    isRecommended: null,
+    observations: null,
+    personalReferenceStatus: null,
+    phoneNumber: null,
+    rating: null,
+    referenceType: null,
+    relationshipType: null,
+  };
   const [valueCalification, setValueCalification] = useState({});
   const [openPopover, setOpenPopover] = useState({});
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [dataForm, setDataForm] = useState({});
+  const [dataForm, setDataForm] = useState(initialDataForm);
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -117,7 +136,7 @@ const SectionDetailUserTenant = (props) => {
               className="arrow-back-to"
               type="button"
               onClick={() => {
-                setDataForm({});
+                setDataForm(initialDataForm);
                 setIsModalVisible(false);
               }}
             >
@@ -128,7 +147,10 @@ const SectionDetailUserTenant = (props) => {
           <div className="main-form-information">
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem title="Nombre" content={dataForm.fullName} />
+                <DescriptionItem
+                  title="Nombre de la referencia"
+                  content={dataForm.fullName}
+                />
               </Col>
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -166,20 +188,42 @@ const SectionDetailUserTenant = (props) => {
             </Row>
             <p>Ingresa la información de la referencia</p>
             <Row>
-              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
-                <Input
-                  value={dataForm.relationshipType}
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                <Select
                   placeholder="Parentesco"
-                  onChange={(e) => {
+                  showSearch
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                  onChange={(value, option) => {
                     setDataForm({
                       ...dataForm,
-                      relationshipType: e.target.value,
+                      relationshipType: value,
+                      relationshipTypeText: option.children,
                     });
                   }}
-                />
+                  value={dataForm.relationshipType}
+                >
+                  {isEmpty(dataRelatioshipTypes) === false &&
+                    dataRelatioshipTypes.map((row) => {
+                      return (
+                        <Option
+                          value={row.idRelationshipType}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            </Row>
+            <Row>
+              <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
                 <NumberFormat
                   id={null}
                   customInput={Input}
@@ -189,7 +233,11 @@ const SectionDetailUserTenant = (props) => {
                   allowNegative={false}
                   prefix=""
                   suffix=""
-                  value={dataForm.currentTime}
+                  value={
+                    isNil(dataForm.currentTime) === false
+                      ? dataForm.currentTime
+                      : ""
+                  }
                   className="inputLogin"
                   floatingLabelText=""
                   isVisible
@@ -229,9 +277,8 @@ const SectionDetailUserTenant = (props) => {
                   </Option>
                 </Select>
               </Col>
-            </Row>
-            <Row>
-              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <div className="option-select-radio">
                   <span
                     style={{
@@ -262,8 +309,9 @@ const SectionDetailUserTenant = (props) => {
                   </Radio.Group>
                 </div>
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            </Row>
+            <Row>
+              <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
                 <Select
                   placeholder="Estatus"
                   onChange={(value, option) => {
@@ -274,19 +322,23 @@ const SectionDetailUserTenant = (props) => {
                   }}
                   value={dataForm.personalReferenceStatus}
                 >
-                  <Option value={1} onClick={() => {}}>
-                    No contesta
-                  </Option>
-                  <Option value={2} onClick={() => {}}>
-                    Número inválido
-                  </Option>
-                  <Option value={3} onClick={() => {}}>
-                    No es numero del titular
-                  </Option>
+                  {isEmpty(dataReferenceStatus) === false &&
+                    dataReferenceStatus.map((row) => {
+                      return (
+                        <Option
+                          value={row.idPersonalReferenceStatus}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
                 </Select>
               </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <NumberFormat
                   id={null}
                   customInput={Input}
@@ -296,7 +348,9 @@ const SectionDetailUserTenant = (props) => {
                   allowNegative={false}
                   prefix=""
                   suffix=""
-                  value={dataForm.rating}
+                  value={
+                    isNil(dataForm.rating) === false ? dataForm.rating : ""
+                  }
                   className="inputLogin"
                   floatingLabelText=""
                   isVisible
@@ -317,12 +371,15 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-              <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                 <textarea
                   className="textarea-form-modal ant-input"
                   placeholder="Observaciones"
-                  value={dataForm.observations}
+                  value={
+                    isNil(dataForm.observations) === false
+                      ? dataForm.observations
+                      : ""
+                  }
                   maxlength="1000"
                   onChange={(e) => {
                     setDataForm({
@@ -332,11 +389,21 @@ const SectionDetailUserTenant = (props) => {
                   }}
                 />
               </Col>
-              <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
             </Row>
           </div>
           <div className="button_init_primary">
-            <button type="button" onClick={() => {}}>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await onSaveDataScore(
+                    dataForm,
+                    dataDetailCustomerTenant[0].idContract
+                  );
+                  setIsModalVisible(false);
+                } catch (error) {}
+              }}
+            >
               <span>Guardar</span>
             </button>
           </div>
@@ -349,7 +416,7 @@ const SectionDetailUserTenant = (props) => {
               className="arrow-back-to"
               type="button"
               onClick={() => {
-                setDataForm({});
+                onClose();
                 setIsModalVisible(false);
               }}
             >

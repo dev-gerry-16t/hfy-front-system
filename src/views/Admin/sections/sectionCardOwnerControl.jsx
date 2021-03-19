@@ -209,9 +209,11 @@ const SectionCardOwner = (props) => {
           title: "Avance formulario",
           dataIndex: "tenantPercentCompleted",
           key: "tenantPercentCompleted",
-          width: 200,
+          width: 230,
           render: (percent, record) => (
-            <Progress percent={percent} size="small" status="succes" />
+            <div style={{ padding: "0px 15px 0px 0px" }}>
+              <Progress percent={percent} size="small" status="succes" />
+            </div>
           ),
         },
       ],

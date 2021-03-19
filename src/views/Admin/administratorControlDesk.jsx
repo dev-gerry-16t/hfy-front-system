@@ -15,6 +15,9 @@ import {
   callGetDetailCustomerTenant,
   callSwitchCustomerContract,
   callGetContractDocument,
+  callGetAllRelationshipTypes,
+  callGetAllPersonalReferencesStatus,
+  callUpdatePersonalReferences,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -35,6 +38,9 @@ const ControlDesk = (props) => {
     callGetDetailCustomerTenant,
     callSwitchCustomerContract,
     setDataUserProfile,
+    callGetAllRelationshipTypes,
+    callGetAllPersonalReferencesStatus,
+    callUpdatePersonalReferences,
   } = props;
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -42,6 +48,8 @@ const ControlDesk = (props) => {
   const [dataDetailCustomerTenant, setDataDetailCustomerTenant] = useState([]);
   const [dataDetailReferences, setDataDetailReferences] = useState([]);
   const [dataAllPolicyStatus, setDataAllPolicyStatus] = useState([]);
+  const [dataRelatioshipTypes, setDataRelatioshipTypes] = useState([]);
+  const [dataReferenceStatus, setDataReferenceStatus] = useState([]);
   const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
     false
   );
@@ -154,6 +162,48 @@ const ControlDesk = (props) => {
     }
   };
 
+  const handlerCallGetAllRelationshipTypes = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllRelationshipTypes({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataRelatioshipTypes(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPersonalReferencesStatus = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllPersonalReferencesStatus({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataReferenceStatus(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const callAsynApis = async () => {
     await handlerCallGetContractStats();
     await handlerCallGetContractCoincidences();
@@ -175,6 +225,33 @@ const ControlDesk = (props) => {
         data.idContract
       );
     } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallUpdatePersonalReferences = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdatePersonalReferences(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idPersonalReference
+      );
+      showMessageStatusApi(
+        "La información se actualizo correctamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      console.log("error", error);
       showMessageStatusApi(
         isNil(error) === false
           ? error
@@ -281,12 +358,16 @@ const ControlDesk = (props) => {
 
   useEffect(() => {
     callAsynApis();
+    handlerCallGetAllRelationshipTypes();
+    handlerCallGetAllPersonalReferencesStatus();
   }, []);
 
   return (
     <Content>
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
+        dataRelatioshipTypes={dataRelatioshipTypes}
+        dataReferenceStatus={dataReferenceStatus}
         onClose={() => {
           setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
           callAsynApis();
@@ -315,6 +396,14 @@ const ControlDesk = (props) => {
         onDownloadDocumentById={async (data, name) => {
           try {
             await handlerCallGetContractDocumentById(data, name);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onSaveDataScore={async (data, id) => {
+          try {
+            await handlerCallUpdatePersonalReferences(data);
+            await handlerCallGetDetailCustomerTenant(id);
           } catch (error) {
             throw error;
           }
@@ -420,6 +509,12 @@ const mapDispatchToProps = (dispatch) => ({
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetContractDocumentById: (data) =>
     dispatch(callGetContractDocument(data)),
+  callGetAllRelationshipTypes: (data) =>
+    dispatch(callGetAllRelationshipTypes(data)),
+  callGetAllPersonalReferencesStatus: (data) =>
+    dispatch(callGetAllPersonalReferencesStatus(data)),
+  callUpdatePersonalReferences: (data, id) =>
+    dispatch(callUpdatePersonalReferences(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlDesk);
