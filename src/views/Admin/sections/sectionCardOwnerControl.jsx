@@ -217,6 +217,22 @@ const SectionCardOwner = (props) => {
       ],
     },
     {
+      title: "Evaluación inquilino disponible",
+      dataIndex: "canTenantBeEvaluated",
+      key: "canTenantBeEvaluated",
+      render: (status, record) => {
+        return <span>{status === true ? "Si" : "No"}</span>;
+      },
+    },
+    {
+      title: "Referencias por evaluar",
+      dataIndex: "hasPendingReferences",
+      key: "hasPendingReferences",
+      render: (status, record) => {
+        return <span>{status === true ? "Si" : "No"}</span>;
+      },
+    },
+    {
       title: "Contrato",
       dataIndex: "contractStatus",
       key: "contractStatus",
@@ -265,7 +281,7 @@ const SectionCardOwner = (props) => {
             className="table-users-hfy"
             size="small"
             bordered
-            scroll={{ x: 1000 }}
+            scroll={{ x: 1500 }}
           />
         )}
         {finishCallApis === false && <Skeleton loading active />}

@@ -139,7 +139,7 @@ const SectionDetailUserTenant = (props) => {
               </Col>
             </Row>
             <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="Telefono"
                   content={
@@ -154,6 +154,13 @@ const SectionDetailUserTenant = (props) => {
                       {dataForm.phoneNumber}
                     </a>
                   }
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem
+                  title={dataForm.detailTenant}
+                  content={dataForm.detailReference}
                 />
               </Col>
             </Row>
@@ -785,10 +792,16 @@ const SectionDetailUserTenant = (props) => {
                 return (
                   <>
                     <Row>
-                      <Col span={24}>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="Nombre"
-                          content={row.fullName}
+                          content={`${row.fullName} ${row.detailTenant}`}
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Tipo de referencia"
+                          content={row.referenceType}
                         />
                       </Col>
                     </Row>

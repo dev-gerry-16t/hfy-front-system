@@ -338,22 +338,34 @@ const ControlDesk = (props) => {
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={Agents} alt="icon" width="20px"></img>
             </div>
-            <h2>{dataStats.totalClosings}</h2>
-            <span>Inquilinos</span>
+            <h2>{dataStats.totalTenantToEvaluate}</h2>
+            <span>Inquilinos por evaluar</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#98FF98" }}>
               <img src={UserAccept} alt="icon" width="20px"></img>
             </div>
-            <h2>{dataStats.totalForClosing}</h2>
+            <h2>{dataStats.totalTenantApproved}</h2>
             <span>Aceptados</span>
           </div>
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
               <img src={UserMissed} alt="icon" width="20px"></img>
             </div>
-            <h2>500</h2>
+            <h2>{dataStats.totalTenantRejected}</h2>
             <span>Rechazados</span>
+          </div>
+        </div>
+        <div
+          className="indicators-amount-renter"
+          style={{ justifyContent: "space-around" }}
+        >
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
+              <img src={Agents} alt="icon" width="20px"></img>
+            </div>
+            <h2>{dataStats.totalReferencePending}</h2>
+            <span>Referencias por evaluar</span>
           </div>
         </div>
         <div className="main-information-user-admin">

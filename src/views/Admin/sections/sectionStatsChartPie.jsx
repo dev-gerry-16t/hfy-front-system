@@ -10,7 +10,6 @@ const SectionStatsChartPie = (props) => {
   const [dataOptions, setDataOptions] = useState({});
 
   const handlerConvertDataChart = (data) => {
-    console.log('data',data);
     const dataChart = {
       chart: {
         plotBackgroundColor: null,

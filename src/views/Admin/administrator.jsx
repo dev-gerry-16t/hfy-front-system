@@ -735,7 +735,7 @@ const Administrator = (props) => {
             </div>
             <h2>{dataStats.grandTotalSale}</h2>
             <span>
-              Ventas <strong>({dataStats.totalClosings})</strong>
+              Cierres <strong>({dataStats.totalClosings})</strong>
             </span>
           </div>
           <div className="cards-amount-renter">
@@ -760,13 +760,6 @@ const Administrator = (props) => {
           style={{ justifyContent: "space-around" }}
         >
           <div className="cards-amount-renter">
-            <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
-              <img src={IconPolicy} alt="icon" width="20px"></img>
-            </div>
-            <h2>{dataStats.totalClosings}</h2>
-            <span>Cierres</span>
-          </div>
-          <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
               <img src={IconDanger} alt="icon" width="20px"></img>
             </div>
@@ -783,7 +776,7 @@ const Administrator = (props) => {
             <div className="elipse-icon" style={{ backgroundColor: "#ffa420" }}>
               <img src={Agents} alt="icon" width="20px"></img>
             </div>
-            <h2>500</h2>
+            <h2>{dataStats.totalAgent}</h2>
             <span>Asesores</span>
           </div>
         </div>
