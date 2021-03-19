@@ -188,7 +188,6 @@ const LeadsLandingPage = () => {
                 bordered
                 scroll={{ x: 1500 }}
               />
-              <div className="table-card-users-hfy">Table</div>
             </div>
           </div>
         </div>

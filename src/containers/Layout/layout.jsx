@@ -18,6 +18,7 @@ import IconNotification from "../../assets/icons/Notification.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
 import IconCloseLogout from "../../assets/icons/Logout.svg";
+import IconLead from "../../assets/icons/IconLead.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import { callSetImageProfile } from "../../utils/actions/actions";
@@ -51,6 +52,7 @@ const DefaultLayout = (props) => {
     IconChat,
     IconEdit,
     IconClose,
+    IconLead,
   };
 
   const nameLocation = () => {

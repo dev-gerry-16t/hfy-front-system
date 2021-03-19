@@ -14,8 +14,41 @@ const Attorney = () => {
       fixed: "left",
     },
     {
+      title: "Partes involucradas",
+      fixed: "left",
+      children: [
+        {
+          title: "Arrendador",
+          dataIndex: "owner",
+          key: "owner",
+          fixed: "left",
+        },
+        {
+          title: "Arrendatario",
+          dataIndex: "tenant",
+          key: "tenant",
+          fixed: "left",
+        },
+      ],
+    },
+    {
+      title: "Mensajes",
+      dataIndex: "messages",
+      key: "messages",
+    },
+    {
+      title: "Documentación",
+      dataIndex: "documents",
+      key: "documents",
+    },
+    {
       title: "Contrato",
       children: [
+        {
+          title: "Comentarios",
+          dataIndex: "comments",
+          key: "comments",
+        },
         {
           title: "Estatus",
           dataIndex: "status",
@@ -78,15 +111,7 @@ const Attorney = () => {
         },
       ],
     },
-    {
-      title: "Partes involucradas",
-      children: [
-        { title: "Arrendador", dataIndex: "owner", key: "owner" },
-        { title: "Arrendatario", dataIndex: "tenant", key: "tenant" },
-        { title: "Mensajes", dataIndex: "messages", key: "messages" },
-        { title: "Documentación", dataIndex: "documents", key: "documents" },
-      ],
-    },
+
     { title: "Incidencias", dataIndex: "incidents", key: "incidents" },
   ];
 
@@ -136,7 +161,6 @@ const Attorney = () => {
                 bordered
                 scroll={{ x: 2500 }}
               />
-              <div className="table-card-users-hfy">Table</div>
             </div>
           </div>
         </div>
