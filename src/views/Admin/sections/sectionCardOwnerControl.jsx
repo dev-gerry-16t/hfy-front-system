@@ -232,6 +232,12 @@ const SectionCardOwner = (props) => {
       },
     },
     {
+      title: "Monto Renta",
+      dataIndex: "currentRent",
+      key: "currentRent",
+      width: 150,
+    },
+    {
       title: "Folio",
       dataIndex: "hfInvoice",
       key: "hfInvoice",

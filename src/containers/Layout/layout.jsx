@@ -215,7 +215,7 @@ const DefaultLayout = (props) => {
       theme.className = "theme-light";
       localStorage.setItem("theme-app", "theme-light");
     }
-    if (dataProfile.idUserType !== 1) {
+    if (dataProfile.idUserType === 3 || dataProfile.idUserType === 2) {
       const scriptCreate = document.createElement("script");
       scriptCreate.id = "script-make-smartsupp-hfy";
       scriptCreate.innerHTML = `

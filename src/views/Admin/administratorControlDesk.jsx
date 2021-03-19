@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Layout, message } from "antd";
-import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import "moment/locale/es";
-import IconPolicy from "../../assets/icons/Policy.svg";
-import IconDanger from "../../assets/icons/Danger.svg";
+import UserAccept from "../../assets/icons/UserAccept.svg";
+import UserMissed from "../../assets/icons/UserMissed.svg";
 import Agents from "../../assets/icons/agent.svg";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
@@ -15,14 +14,13 @@ import {
   callGetAllPolicyStatus,
   callGetDetailCustomerTenant,
   callSwitchCustomerContract,
-  callGetContractComment,
   callGetContractDocument,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionCardOwner from "./sections/sectionCardOwnerControl";
-import SectionDetailUserTenant from "./sections/sectionDetailUserTenant";
+import SectionDetailUserTenant from "./sections/sectionDetailUserTenantControl";
 
 const { Content } = Layout;
 
@@ -37,10 +35,7 @@ const ControlDesk = (props) => {
     callGetDetailCustomerTenant,
     callSwitchCustomerContract,
     setDataUserProfile,
-    callGetContractComment,
   } = props;
-  const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
-  const [dataMessages, setDataMessages] = useState([]);
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataStats, setDataStats] = useState({});
@@ -81,31 +76,6 @@ const ControlDesk = (props) => {
           ? response.response[0]
           : {};
       setDataStats(responseResult);
-    } catch (error) {
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallContractComment = async (data) => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGetContractComment({
-        idSystemUser,
-        idLoginHistory,
-        topIndex: idTopIndexMessage,
-        ...data,
-      });
-      const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
-          : [];
-      setDataMessages(responseResult);
-      if (isEmpty(responseResult) === false) {
-        setIdTopIndexMessage(responseResult[0].topIndex);
-      }
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -342,7 +312,6 @@ const ControlDesk = (props) => {
           });
           history.push(`/websystem/typeform-user/${key}`);
         }}
-        dataMessages={dataMessages}
         onDownloadDocumentById={async (data, name) => {
           try {
             await handlerCallGetContractDocumentById(data, name);
@@ -367,30 +336,24 @@ const ControlDesk = (props) => {
         >
           <div className="cards-amount-renter">
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
-              <img src={IconPolicy} alt="icon" width="20px"></img>
-            </div>
-            <h2>{dataStats.totalClosings}</h2>
-            <span>Cierres</span>
-          </div>
-          <div className="cards-amount-renter">
-            <div className="elipse-icon" style={{ backgroundColor: "#ffe51c" }}>
-              <img src={IconDanger} alt="icon" width="20px"></img>
-            </div>
-            <h2>{dataStats.totalForClosing}</h2>
-            <span>Por cerrar</span>
-          </div>
-          <div
-            className="cards-amount-renter"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              history.push(`/websystem/dashboard-agents`);
-            }}
-          >
-            <div className="elipse-icon" style={{ backgroundColor: "#ffa420" }}>
               <img src={Agents} alt="icon" width="20px"></img>
             </div>
+            <h2>{dataStats.totalClosings}</h2>
+            <span>Inquilinos</span>
+          </div>
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#98FF98" }}>
+              <img src={UserAccept} alt="icon" width="20px"></img>
+            </div>
+            <h2>{dataStats.totalForClosing}</h2>
+            <span>Aceptados</span>
+          </div>
+          <div className="cards-amount-renter">
+            <div className="elipse-icon" style={{ backgroundColor: "#FF6961" }}>
+              <img src={UserMissed} alt="icon" width="20px"></img>
+            </div>
             <h2>500</h2>
-            <span>Asesores</span>
+            <span>Rechazados</span>
           </div>
         </div>
         <div className="main-information-user-admin">
@@ -404,12 +367,6 @@ const ControlDesk = (props) => {
               if (data.canViewDatail === true) {
                 if (id === 2) {
                   handlerCallGetDetailCustomerTenant(type);
-                  handlerCallContractComment({
-                    idCustomer: data.idCustomer,
-                    idCustomerTenant: data.idCustomerTenant,
-                    idContract: data.idContract,
-                    idDigitalContract: data.idDigitalContract,
-                  });
                   setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
                 }
               }
@@ -449,7 +406,6 @@ const mapDispatchToProps = (dispatch) => ({
   callGetDetailCustomerTenant: (data) =>
     dispatch(callGetDetailCustomerTenant(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
-  callGetContractComment: (data) => dispatch(callGetContractComment(data)),
   callGetContractDocumentById: (data) =>
     dispatch(callGetContractDocument(data)),
 });
