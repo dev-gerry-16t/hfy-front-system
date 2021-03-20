@@ -4,7 +4,6 @@ import { Layout, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import "moment/locale/es";
-import IconPolicy from "../../assets/icons/Policy.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
 import Tickets from "../../assets/icons/tickets.svg";
 import Payments from "../../assets/icons/payments.svg";

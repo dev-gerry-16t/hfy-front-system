@@ -251,7 +251,6 @@ const ControlDesk = (props) => {
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
-      console.log("error", error);
       showMessageStatusApi(
         isNil(error) === false
           ? error

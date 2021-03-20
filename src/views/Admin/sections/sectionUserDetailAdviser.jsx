@@ -31,7 +31,7 @@ const SectionDetailUserAdviser = (props) => {
             Whatsapp
           </a>
         </Menu.Item>
-        <Menu.Item key="1">
+        {/* <Menu.Item key="1">
           <a>Notificación</a>
         </Menu.Item>
         <Menu.Item key="2">
@@ -39,7 +39,7 @@ const SectionDetailUserAdviser = (props) => {
         </Menu.Item>
         <Menu.Item key="3">
           <a>Correo</a>
-        </Menu.Item>
+        </Menu.Item> */}
       </Menu>
     );
   };

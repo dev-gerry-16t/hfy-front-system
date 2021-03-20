@@ -202,7 +202,7 @@ const SectionCardOwner = (props) => {
           ),
         },
         {
-          title: "Fecha inicial",
+          title: "Inicio TypeForm",
           dataIndex: "customerStartedAt",
           key: "customerStartedAt",
         },
@@ -244,7 +244,7 @@ const SectionCardOwner = (props) => {
           ),
         },
         {
-          title: "Fecha inicial",
+          title: "Inicio TypeForm",
           dataIndex: "tenantStartedAt",
           key: "tenantStartedAt",
         },
