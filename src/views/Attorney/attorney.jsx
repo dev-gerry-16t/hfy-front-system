@@ -27,6 +27,7 @@ import {
   callGetContractDocument,
   callGetCustomerMessage,
 } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import DocumentIcon from "../../assets/icons/DocumentsIcon.svg";
 import Lock from "../../assets/icons/Lock.svg";
@@ -38,10 +39,12 @@ const { Content } = Layout;
 
 const Attorney = (props) => {
   const {
+    history,
     dataProfile,
     callGetLegalContractCoincidences,
     callGetContractDocument,
     callGetCustomerMessage,
+    setDataUserProfile,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
@@ -163,6 +166,42 @@ const Attorney = (props) => {
           key: "customerFullName",
           width: 200,
           fixed: "left",
+          render: (name, record) => {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu
+                    onClick={async (value) => {
+                      await setDataUserProfile({
+                        ...dataProfile,
+                        idCustomerTenant: null,
+                        idCustomerTF: record.idCustomer,
+                        idCustomer: record.idCustomer,
+                        idContract: record.idContract,
+                      });
+                      history.push(`/websystem/typeform-owner/${value.key}`);
+                    }}
+                  >
+                    <Menu.Item key="0">
+                      <a>Información personal</a>
+                    </Menu.Item>
+                    <Menu.Item key="1">
+                      <a>Inmueble a rentar</a>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                      <a>Póliza</a>
+                    </Menu.Item>
+                    <Menu.Item key="3">
+                      <a>Datos bancarios</a>
+                    </Menu.Item>
+                  </Menu>
+                }
+                trigger={["click"]}
+              >
+                <a>{name}</a>
+              </Dropdown>
+            );
+          },
         },
         {
           title: "Arrendatario",
@@ -170,6 +209,47 @@ const Attorney = (props) => {
           key: "customerTenantFullName",
           width: 200,
           fixed: "left",
+          render: (name, record) => {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu
+                    onClick={async (value) => {
+                      await setDataUserProfile({
+                        ...dataProfile,
+                        idCustomerTenantTF: record.idCustomerTenant,
+                        idCustomerTF: record.idCustomer,
+                        idContract: record.idContract,
+                      });
+                      history.push(`/websystem/typeform-user/${value.key}`);
+                    }}
+                  >
+                    <Menu.Item key="0">
+                      <a>Información personal</a>
+                    </Menu.Item>
+                    <Menu.Item key="1">
+                      <a>Dirección actual</a>
+                    </Menu.Item>
+                    <Menu.Item key="2">
+                      <a>Información laboral</a>
+                    </Menu.Item>
+                    <Menu.Item key="3">
+                      <a>Referencias</a>
+                    </Menu.Item>
+                    <Menu.Item key="4">
+                      <a>Documentación</a>
+                    </Menu.Item>
+                    <Menu.Item key="5">
+                      <a>Información aval</a>
+                    </Menu.Item>
+                  </Menu>
+                }
+                trigger={["click"]}
+              >
+                <a>{name}</a>
+              </Dropdown>
+            );
+          },
         },
       ],
     },
@@ -670,6 +750,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetLegalContractCoincidences: (data) =>
     dispatch(callGetLegalContractCoincidences(data)),
   callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
