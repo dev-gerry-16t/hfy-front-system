@@ -13,12 +13,14 @@ const SectionCardItemMessage = (props) => {
     <Item>
       <div className="item-messages">
         <div className="item-message-1">
-          <div className="elipse-icon" style={{ backgroundColor: "var(--color-primary)" }}>
+          <div
+            className="elipse-icon"
+            style={{ backgroundColor: "var(--color-primary)" }}
+          >
             <img src={IconMessages} alt="icon" width="20px"></img>
           </div>
           <div className="message-name-send">
             <strong>{dataInfo.sentByUser}</strong>
-            <span style={{ fontSize: "12px" }}>Inquilino</span>
             <span>{dataInfo.sentAt}</span>
           </div>
         </div>
@@ -44,6 +46,7 @@ const SectionCardItemMessage = (props) => {
                 type="button"
                 style={{ backgroundColor: "transparent", border: "none" }}
                 onClick={() => {
+                  setValueText(null);
                   sendResponseMessage({
                     visibilityRule: null,
                     idCustomerMessages: dataInfo.idCustomerMessage,
@@ -63,7 +66,6 @@ const SectionCardItemMessage = (props) => {
                 }}
               >
                 <strong>{dataInfo.sentByUserParent}</strong>
-                <span style={{ fontSize: "12px" }}>Inquilino</span>
                 <span>{dataInfo.sentAtParent}</span>
               </div>
               <div

@@ -339,7 +339,7 @@ const SectionDetailUser = (props) => {
                                 idContract: dataDetailCustomer.idContract,
                                 idCustomer: dataDetailCustomer.idCustomer,
                                 idCustomerTenant: null,
-                                type: 6,
+                                type: 15,
                               },
                               "Identificacion_1"
                             );
@@ -361,7 +361,7 @@ const SectionDetailUser = (props) => {
                                 idContract: dataDetailCustomer.idContract,
                                 idCustomer: dataDetailCustomer.idCustomer,
                                 idCustomerTenant: null,
-                                type: 7,
+                                type: 16,
                               },
                               "Identificacion_2"
                             );

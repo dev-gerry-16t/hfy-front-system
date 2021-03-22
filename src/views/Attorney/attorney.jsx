@@ -99,7 +99,7 @@ const Attorney = (props) => {
         idLoginHistory,
         topIndex: idTopIndexMessage,
         idContract: data.idContract,
-        idCustomerTenant: data.idCustomer,
+        idCustomerTenant: data.idCustomerTenant,
       });
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
@@ -591,24 +591,25 @@ const Attorney = (props) => {
                         <div style={{ marginBottom: "15px" }}>
                           <p style={{ margin: "0px" }}>
                             <strong>
-                              {row.sentByUser} | {row.sentAt} | Inquilino
+                              {row.sentByUser} | {row.sentAt}
                             </strong>
                           </p>
                           {row.customerMessage}
                         </div>
-                        <Timeline>
-                          <Timeline.Item>
-                            <div>
-                              <p style={{ margin: "0px" }}>
-                                <strong>
-                                  {row.sentByUserParent} | {row.sentAtParent} |
-                                  Inquilino
-                                </strong>
-                              </p>
-                              {row.customerMessageParent}
-                            </div>
-                          </Timeline.Item>
-                        </Timeline>
+                        {isNil(row.sentAtParent) === false && (
+                          <Timeline>
+                            <Timeline.Item>
+                              <div>
+                                <p style={{ margin: "0px" }}>
+                                  <strong>
+                                    {row.sentByUserParent} | {row.sentAtParent}
+                                  </strong>
+                                </p>
+                                {row.customerMessageParent}
+                              </div>
+                            </Timeline.Item>
+                          </Timeline>
+                        )}
                       </Timeline.Item>
                     );
                   })}

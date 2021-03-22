@@ -1,16 +1,46 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import { connect } from "react-redux";
-import { Layout, Table, Tag, Menu, Dropdown, Button } from "antd";
+import { Layout, Table, Tag, Menu, Dropdown, Button, message } from "antd";
 import Agents from "../../assets/icons/agent.svg";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import { callGetCustomerAgentCoincidences } from "../../utils/actions/actions";
 
 const { Content } = Layout;
 
-const AgentsSystem = () => {
+const AgentsSystem = (props) => {
+  const { callGetCustomerAgentCoincidences, dataProfile } = props;
+  const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataTotalAgents, setDataTotalAgents] = useState(0);
+
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
   const columns = [
     {
+      title: "Número de asesor",
+      dataIndex: "agentNo",
+      key: "agentNo",
+      fixed: "left",
+    },
+    {
       title: "Nombre",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "fullName",
+      key: "fullName",
       width: 200,
     },
     {
@@ -20,8 +50,8 @@ const AgentsSystem = () => {
     },
     {
       title: "Correo",
-      dataIndex: "email",
-      key: "email",
+      dataIndex: "emailAddress",
+      key: "emailAddress",
     },
     {
       title: "Inmobiliaria",
@@ -30,78 +60,63 @@ const AgentsSystem = () => {
       width: 200,
     },
     {
-      title: "% Cierres",
-      dataIndex: "closures",
-      key: "closures",
+      title: "Efectividad",
+      dataIndex: "percentCompleted",
+      key: "percentCompleted",
     },
     {
       title: "Comisiones Primera vez",
-      dataIndex: "amountFirstTime",
-      key: "amountFirstTime",
+      dataIndex: "totalCommissionsAmount",
+      key: "totalCommissionsAmount",
     },
     {
       title: "Comisión por renovación",
-      dataIndex: "amountLastTime",
-      key: "amountLastTime",
+      dataIndex: "totalRenewalsAmount",
+      key: "totalRenewalsAmount",
     },
     {
       title: "Comisión global",
-      dataIndex: "quota",
-      key: "quota",
+      dataIndex: "grandTotalCommissionsAmount",
+      key: "grandTotalCommissionsAmount",
     },
     {
       title: "Última comisión",
-      dataIndex: "dateComission",
-      key: "dateComission",
+      dataIndex: "lastCommissionAt",
+      key: "lastCommissionAt",
     },
   ];
 
-  const data = [
-    {
-      name: "Javier Rodríguez Pérez",
-      phoneNumber: "5775598757",
-      email: "javi@email.com",
-      realState: "Ainsa",
-      closures: "2%",
-      amountFirstTime: "$15,230.00",
-      amountLastTime: "$3,250.00",
-      quota: "$18,480.00",
-      dateComission: "12 Marzo 2021",
-    },
-    {
-      name: "Pabel Rodríguez Pérez",
-      phoneNumber: "5775598757",
-      email: "pabel@email.com",
-      realState: "Remax",
-      closures: "21%",
-      amountFirstTime: "$15,230.00",
-      amountLastTime: "$3,250.00",
-      quota: "$18,480.00",
-      dateComission: "12 Marzo 2021",
-    },
-    {
-      name: "Norma Rodríguez Pérez",
-      phoneNumber: "5775598757",
-      email: "norma@email.com",
-      realState: "century",
-      closures: "24%",
-      amountFirstTime: "$15,230.00",
-      amountLastTime: "$3,250.00",
-      quota: "$18,480.00",
-      dateComission: "14 Marzo 2021",
-    },
-    {
-      name: "Francisco Rodríguez Pérez",
-      phoneNumber: "5775598757",
-      email: "frank@email.com",
-      realState: "inmuebles21",
-      closures: "15%",
-      amountFirstTime: "$15,230.00",
-      amountLastTime: "$3,250.00",
-      quota: "$18,480.00",
-      dateComission: "18 Marzo 2021",
-    },
-  ];
+  const handlerCallGetCustomerAgentCoincidences = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerAgentCoincidences({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: 0,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      const totalAgents =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].totalAgents) === false
+          ? responseResult[0].totalAgents
+          : 0;
+      setDataTotalAgents(totalAgents);
+      setDataCoincidences(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    handlerCallGetCustomerAgentCoincidences();
+  }, []);
 
   return (
     <Content>
@@ -111,7 +126,7 @@ const AgentsSystem = () => {
             <div className="elipse-icon" style={{ backgroundColor: "#1CE3FF" }}>
               <img src={Agents} alt="icon" width="20px"></img>
             </div>
-            <h2>500</h2>
+            <h2>{dataTotalAgents}</h2>
             <span>Total de asesores</span>
           </div>
         </div>
@@ -123,7 +138,7 @@ const AgentsSystem = () => {
             <div className="section-information-renters">
               <Table
                 columns={columns}
-                dataSource={data}
+                dataSource={dataCoincidences}
                 className="table-users-hfy"
                 size="small"
                 bordered
@@ -144,6 +159,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = (dispatch) => ({});
+const mapDispatchToProps = (dispatch) => ({
+  callGetCustomerAgentCoincidences: (data) =>
+    dispatch(callGetCustomerAgentCoincidences(data)),
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(AgentsSystem);
