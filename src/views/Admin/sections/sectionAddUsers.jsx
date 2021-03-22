@@ -477,6 +477,10 @@ const SectionAddUsers = (props) => {
                   emailAddress: dataForm.emailOwner,
                   customerTenant: arrayTenants,
                   idCustomerAgent: dataAdviserSearch.idCustomerAgent,
+                  CAGivenName: dataForm.nameAdviser,
+                  CALastName: dataForm.lastNameAdviser,
+                  CAMothersMaidenName: dataForm.mothersLastNameAdviser,
+                  CAEmailAddress: dataForm.emailAdviser,
                 };
                 try {
                   await onSendInformation(dataResult);

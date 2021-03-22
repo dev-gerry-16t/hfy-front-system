@@ -260,6 +260,24 @@ const SectionDocumentation = (props) => {
                 typeDocument={typeDocument}
               />
             </CustomSubSectionCardDocument>
+            {(dataForm.isOwn === 0 || dataForm.isOwn === false) && (
+              <CustomSubSectionCardDocument
+                title="Contrato de arrendamiento"
+                subtitle=""
+                visibleSubtitle
+              >
+                <CustomFileUpload
+                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                  dataDocument={
+                    isEmpty(dataDocuments) === false &&
+                    isNil(dataDocuments[7]) === false
+                      ? dataDocuments[7]
+                      : {}
+                  }
+                  typeDocument={typeDocument}
+                />
+              </CustomSubSectionCardDocument>
+            )}
           </div>
         </>
       )}

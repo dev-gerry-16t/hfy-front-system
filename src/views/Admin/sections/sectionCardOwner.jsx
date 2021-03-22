@@ -212,7 +212,9 @@ const SectionCardOwner = (props) => {
           key: "customerPercentCompleted",
           width: 200,
           render: (percent, record) => (
-            <Progress percent={percent} size="small" status="succes" />
+            <div style={{ padding: "0px 15px 0px 0px" }}>
+              <Progress percent={percent} size="small" status="succes" />
+            </div>
           ),
         },
       ],
@@ -254,7 +256,9 @@ const SectionCardOwner = (props) => {
           key: "tenantPercentCompleted",
           width: 200,
           render: (percent, record) => (
-            <Progress percent={percent} size="small" status="succes" />
+            <div style={{ padding: "0px 15px 0px 0px" }}>
+              <Progress percent={percent} size="small" status="succes" />
+            </div>
           ),
         },
       ],

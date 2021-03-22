@@ -380,7 +380,7 @@ const SectionDetailUserTenant = (props) => {
                     <Row>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
-                          title="Telefono"
+                          title="Teléfono"
                           content={
                             isNil(row.phoneNumber) === false
                               ? row.phoneNumber
@@ -530,7 +530,7 @@ const SectionDetailUserTenant = (props) => {
                             </Col>
                             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                               <DescriptionItem
-                                title="Telefono"
+                                title="Teléfono"
                                 content={
                                   <a
                                     href={
@@ -575,7 +575,7 @@ const SectionDetailUserTenant = (props) => {
                       </Col>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
-                          title="Telefono"
+                          title="Teléfono"
                           content={
                             <a
                               href={

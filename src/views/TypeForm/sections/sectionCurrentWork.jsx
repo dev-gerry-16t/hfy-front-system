@@ -20,6 +20,7 @@ const SectionCurrentWork = (props) => {
     antiquity: null,
     bossName: null,
     bossEmailAddress: null,
+    bossPhoneNumber: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -227,11 +228,12 @@ const SectionCurrentWork = (props) => {
                 </Select>
               </Col>
             </Row>
+            <p>Información de tu jefe directo</p>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.bossName}
-                  placeholder={"Nombre de tu jefe"}
+                  placeholder={"Nombre"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, bossName: e.target.value });
                   }}
@@ -241,12 +243,24 @@ const SectionCurrentWork = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.bossEmailAddress}
-                  placeholder={"Correo de tu jefe"}
+                  placeholder={"Correo"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
                       bossEmailAddress: e.target.value,
                     });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.bossPhoneNumber}
+                  placeholder={"Teléfono"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, bossPhoneNumber: value });
                   }}
                 />
               </Col>

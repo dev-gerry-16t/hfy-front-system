@@ -29,6 +29,8 @@ const SectionCurrentAddress = (props) => {
     currentTimeRangeText: null,
     currentTime: null,
     dateChangeAddress: null,
+    lessorFullName: null,
+    lessorPhoneNumber: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -236,6 +238,31 @@ const SectionCurrentAddress = (props) => {
                 </div>
               </Col>
             </Row>
+            {(dataForm.isOwn === 0 || dataForm.isOwn === false) && (
+              <Row>
+                <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                  <Input
+                    value={dataForm.lessorFullName}
+                    placeholder={"Nombre del arrendador"}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, lessorFullName: value });
+                    }}
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
+                  <Input
+                    value={dataForm.lessorPhoneNumber}
+                    placeholder={"Teléfono del arrendador"}
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({ ...dataForm, lessorPhoneNumber: value });
+                    }}
+                  />
+                </Col>
+              </Row>
+            )}
             <Row>
               <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                 <Row>

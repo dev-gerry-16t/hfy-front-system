@@ -97,7 +97,7 @@ const SectionDetailUserAdviser = (props) => {
         <Row>
           <Col span={12}>
             <DescriptionItem
-              title="Telefono"
+              title="Teléfono"
               content={dataDetailAgent.phoneNumber}
             />
           </Col>

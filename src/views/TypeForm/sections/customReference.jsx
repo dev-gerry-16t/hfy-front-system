@@ -61,7 +61,7 @@ const CustomReferences = (props) => {
       <Row>
         <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
           <Input
-            placeholder={"Telefono"}
+            placeholder={"Teléfono"}
             onChange={(e) => {
               setDataForm({ ...dataForm, phoneNumber: e.target.value });
             }}

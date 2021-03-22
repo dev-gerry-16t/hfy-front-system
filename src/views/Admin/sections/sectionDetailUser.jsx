@@ -115,7 +115,7 @@ const SectionDetailUser = (props) => {
             <Row>
               <Col span={12}>
                 <DescriptionItem
-                  title="Telefono"
+                  title="Teléfono"
                   content={dataDetailCustomer.phoneNumber}
                 />
               </Col>
@@ -339,7 +339,7 @@ const SectionDetailUser = (props) => {
                                 idContract: dataDetailCustomer.idContract,
                                 idCustomer: dataDetailCustomer.idCustomer,
                                 idCustomerTenant: null,
-                                type: 15,
+                                type: 6,
                               },
                               "Identificacion_1"
                             );
@@ -361,7 +361,7 @@ const SectionDetailUser = (props) => {
                                 idContract: dataDetailCustomer.idContract,
                                 idCustomer: dataDetailCustomer.idCustomer,
                                 idCustomerTenant: null,
-                                type: 16,
+                                type: 7,
                               },
                               "Identificacion_2"
                             );

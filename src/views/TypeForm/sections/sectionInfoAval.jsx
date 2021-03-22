@@ -338,7 +338,7 @@ const SectionInfoAval = (props) => {
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <Input
                           value={dataForm.endorsementPhoneNumber}
-                          placeholder={"Telefono"}
+                          placeholder={"Teléfono"}
                           onChange={(e) => {
                             const value = e.target.value;
                             setDataForm({
@@ -1402,7 +1402,7 @@ const SectionInfoAval = (props) => {
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <DescriptionItem
-                      title="Telefono"
+                      title="Teléfono"
                       content={dataForm.endorsementPhoneNumber}
                     />
                   </Col>

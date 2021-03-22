@@ -181,7 +181,7 @@ const SectionInfoOwner = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.phoneNumber}
-                  placeholder={"Telefono"}
+                  placeholder={"Teléfono"}
                   onChange={(e) => {
                     const value = e.target.value;
                     setDataForm({ ...dataForm, phoneNumber: value });
@@ -521,7 +521,7 @@ const SectionInfoOwner = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Telefono"
+                  title="Teléfono"
                   content={dataForm.phoneNumber}
                 />
               </Col>
