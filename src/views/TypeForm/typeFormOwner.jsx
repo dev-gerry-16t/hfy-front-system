@@ -320,7 +320,13 @@ const TypeFormOwner = (props) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
               if (isNil(idSection) === false) {
-                history.push("/websystem/dashboard-admin");
+                if (dataProfile.idUserType === 1) {
+                  history.push("/websystem/dashboard-admin");
+                } else if (dataProfile.idUserType === 5) {
+                  history.push("/websystem/dashboard-attorney");
+                } else if (dataProfile.idUserType === 7) {
+                  history.push("/websystem/dashboard-controldesk");
+                }
               } else {
                 history.push("/websystem/dashboard-owner");
               }

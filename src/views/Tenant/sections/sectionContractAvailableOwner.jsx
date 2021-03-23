@@ -803,9 +803,8 @@ const SectionContractAvailable = (props) => {
                     color: "black",
                   }}
                 >
-                  Acepto que al dar click en aceptar estoy aceptando los
-                  terminos y condiciones publicados en la pagina
-                  https//homify.ai/terminos-y-condiciones amparados bajo la ley
+                  Acepto los términos publicados en la pagina
+                  https://segurent.mx/aviso-de-privacidad/
                 </span>
                 <div className="two-action-buttons">
                   <button

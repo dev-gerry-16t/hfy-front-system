@@ -33,7 +33,10 @@ const Login = (props) => {
   const handlerCallApiLogin = async (data) => {
     try {
       if (isEmpty(data.password) === false && isEmpty(data.email) === false) {
-        const response = await callApiLogin(data);
+        const response = await callApiLogin({
+          email: data.email.trim(),
+          password: data.password.trim(),
+        });
         const idSystemUser =
           isNil(response) === false &&
           isNil(response.response) === false &&
@@ -46,7 +49,11 @@ const Login = (props) => {
           isNil(response.response.token) === false
             ? response.response.token
             : null;
-        await setDataUserProfile({ idSystemUser, token, email: data.email });
+        await setDataUserProfile({
+          idSystemUser,
+          token,
+          email: data.email.trim(),
+        });
         setSpinVisible(false);
         history.push("/auth");
       } else {

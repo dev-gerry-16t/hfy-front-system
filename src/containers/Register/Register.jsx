@@ -733,11 +733,7 @@ const Register = (props) => {
                     color: "gray",
                   }}
                 >
-                  Acepto los{" "}
-                  <a href="https://segurent.mx/aviso-de-privacidad/">
-                    Terminos y Condiciones{" "}
-                  </a>
-                  asi como el{" "}
+                  Acepto el{" "}
                   <a href="https://segurent.mx/aviso-de-privacidad/">
                     Aviso de privacidad
                   </a>

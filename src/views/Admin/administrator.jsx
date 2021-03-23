@@ -722,7 +722,7 @@ const Administrator = (props) => {
                   history.push(`/websystem/leads-landingpage`);
                 }}
               >
-                <span>Leads (150)</span>
+                <span>Leads ({dataStats.totalLeads})</span>
               </button>
             </div>
           </div>

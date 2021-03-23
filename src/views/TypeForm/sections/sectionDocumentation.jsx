@@ -50,14 +50,14 @@ const SectionDocumentation = (props) => {
     }
     return word;
   };
-  console.log(
-    "dataForm.isOwn",
-    dataForm.isOwn,
-    dataForm.requiresCustomerTenantEntInfo
-  );
+
   return (
     <div className="content-typeform-formulary">
       <h3>Documentación</h3>
+      <p>
+        Selecciona el documento que se te indica, si estás seguro de que es el documento correcto haz clic en
+        Subir
+      </p>
       {dataForm.requiresCustomerTenantEntInfo === false && (
         <>
           <div className="section-top-documentation">
