@@ -288,7 +288,7 @@ const SectionInfoOwner = (props) => {
                 <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                   <Input
                     value={dataForm.idTypeNumber}
-                    placeholder={`Numero de ${dataForm.idTypeText}`}
+                    placeholder={`Número de ${dataForm.idTypeText}`}
                     onChange={(e) => {
                       const value = e.target.value;
                       setDataForm({ ...dataForm, idTypeNumber: value });
@@ -356,7 +356,7 @@ const SectionInfoOwner = (props) => {
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <Input
                   value={dataForm.suite}
-                  placeholder={"Numero interior"}
+                  placeholder={"Número interior"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, suite: e.target.value });
                   }}
@@ -366,7 +366,7 @@ const SectionInfoOwner = (props) => {
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <Input
                   value={dataForm.streetNumber}
-                  placeholder={"Numero exterior"}
+                  placeholder={"Número exterior"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, streetNumber: e.target.value });
                   }}
@@ -562,7 +562,7 @@ const SectionInfoOwner = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title={`Numero de ${dataForm.idTypeText}`}
+                  title={`Número de ${dataForm.idTypeText}`}
                   content={dataForm.idTypeNumber}
                 />
               </Col>
@@ -594,14 +594,14 @@ const SectionInfoOwner = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero exterior"
+                  title="Número exterior"
                   content={dataForm.streetNumber}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero interior"
+                  title="Número interior"
                   content={dataForm.suite}
                 />
               </Col>

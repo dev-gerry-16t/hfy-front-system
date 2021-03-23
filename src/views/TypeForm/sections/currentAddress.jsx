@@ -98,7 +98,7 @@ const SectionCurrentAddress = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.streetNumber}
-                  placeholder={"Numero"}
+                  placeholder={"Número"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, streetNumber: e.target.value });
                   }}
@@ -377,7 +377,7 @@ const SectionCurrentAddress = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero"
+                  title="Número"
                   content={dataForm.streetNumber}
                 />
               </Col>

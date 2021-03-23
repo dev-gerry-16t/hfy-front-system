@@ -147,7 +147,7 @@ const SectionBankInfo = (props) => {
                   <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                     <Input
                       value={dataForm.accountNumber}
-                      placeholder={"Numero de cuenta"}
+                      placeholder={"Número de cuenta"}
                       onChange={(e) => {
                         setDataForm({
                           ...dataForm,
@@ -251,7 +251,7 @@ const SectionBankInfo = (props) => {
                 <Row>
                   <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                     <DescriptionItem
-                      title="Numero de cuenta"
+                      title="Número de cuenta"
                       content={dataForm.accountNumber}
                     />
                   </Col>

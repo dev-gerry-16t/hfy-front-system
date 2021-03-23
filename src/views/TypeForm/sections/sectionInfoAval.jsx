@@ -429,7 +429,7 @@ const SectionInfoAval = (props) => {
                         <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                           <Input
                             value={dataForm.idEndorsementTypeNumber}
-                            placeholder={`Numero de ${dataForm.idEndorsementTypeText}`}
+                            placeholder={`Número de ${dataForm.idEndorsementTypeText}`}
                             onChange={(e) => {
                               const value = e.target.value;
                               setDataForm({
@@ -582,7 +582,7 @@ const SectionInfoAval = (props) => {
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <Input
                           value={dataForm.endorsementStreetNumber}
-                          placeholder={"Numero"}
+                          placeholder={"Número"}
                           onChange={(e) => {
                             setDataForm({
                               ...dataForm,
@@ -784,7 +784,7 @@ const SectionInfoAval = (props) => {
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <Input
                           value={dataForm.collateralPropertyStreetNumber}
-                          placeholder={"Numero"}
+                          placeholder={"Número"}
                           onChange={(e) => {
                             setDataForm({
                               ...dataForm,
@@ -1153,7 +1153,7 @@ const SectionInfoAval = (props) => {
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <Input
                           value={dataForm.documentNumber}
-                          placeholder={"Numero de las escrituras"}
+                          placeholder={"Número de las escrituras"}
                           onChange={(e) => {
                             setDataForm({
                               ...dataForm,
@@ -1431,7 +1431,7 @@ const SectionInfoAval = (props) => {
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                     <DescriptionItem
-                      title={`Numero de ${dataForm.idEndorsementTypeText}`}
+                      title={`Número de ${dataForm.idEndorsementTypeText}`}
                       content={dataForm.idEndorsementTypeNumber}
                     />
                   </Col>
@@ -1483,7 +1483,7 @@ const SectionInfoAval = (props) => {
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                     <DescriptionItem
-                      title="Numero"
+                      title="Número"
                       content={dataForm.collateralPropertyStreetNumber}
                     />
                   </Col>
@@ -1544,7 +1544,7 @@ const SectionInfoAval = (props) => {
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <DescriptionItem
-                      title="Numero de las escrituras"
+                      title="Número de las escrituras"
                       content={dataForm.documentNumber}
                     />
                   </Col>

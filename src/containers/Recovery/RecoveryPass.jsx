@@ -476,7 +476,7 @@ const RecoveryPassword = (props) => {
                   />
                 )}
                 {securePass.numbers === false && (
-                  <Alert message="Numeros" type="warning" showIcon />
+                  <Alert message="Números" type="warning" showIcon />
                 )}
                 {securePass.specialCharacters === false && (
                   <Alert

@@ -123,7 +123,7 @@ const SectionCurrentWork = (props) => {
                   isVisible
                   toBlock={false}
                   disable={false}
-                  placeholder="Numero de dependientes economicos"
+                  placeholder="Número de dependientes economicos"
                   onValueChange={(values) => {
                     const { formattedValue, value, floatValue } = values;
                     setDataForm({
@@ -305,7 +305,7 @@ const SectionCurrentWork = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero de dependientes"
+                  title="Número de dependientes"
                   content={dataForm.economicDependents}
                 />
               </Col>

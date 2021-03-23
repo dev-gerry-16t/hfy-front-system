@@ -259,7 +259,7 @@ const DefaultLayout = (props) => {
           value: dataProfile.idCustomerTenant,
         },
         agentNo: {
-          label: "Numero de agente",
+          label: "Número de agente",
           value: dataProfile.agentNo,
         },
       });

@@ -141,7 +141,7 @@ const CurrentAddressRenter = (props) => {
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <Input
                   value={dataForm.suiteProperty}
-                  placeholder={"Numero interior"}
+                  placeholder={"Número interior"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, suiteProperty: e.target.value });
                   }}
@@ -151,7 +151,7 @@ const CurrentAddressRenter = (props) => {
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <Input
                   value={dataForm.streetNumberProperty}
-                  placeholder={"Numero exterior"}
+                  placeholder={"Número exterior"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
@@ -504,14 +504,14 @@ const CurrentAddressRenter = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero exterior"
+                  title="Número exterior"
                   content={dataForm.streetNumberProperty}
                 />
               </Col>
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title="Numero interior"
+                  title="Número interior"
                   content={dataForm.suiteProperty}
                 />
               </Col>

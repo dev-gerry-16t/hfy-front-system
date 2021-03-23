@@ -91,7 +91,7 @@ const SectionAddProperty = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.streetNumber}
-                  placeholder={"Numero"}
+                  placeholder={"Número"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, streetNumber: e.target.value });
                   }}

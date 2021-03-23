@@ -162,7 +162,7 @@ const SectionDocumentation = (props) => {
             {(dataForm.isOwn === 0 || dataForm.isOwn === false) && (
               <CustomSubSectionCardDocument
                 title="Contrato de arrendamiento"
-                subtitle=""
+                subtitle="sólo caratula"
                 visibleSubtitle
               >
                 <CustomFileUpload
@@ -285,7 +285,7 @@ const SectionDocumentation = (props) => {
             {(dataForm.isOwn === 0 || dataForm.isOwn === false) && (
               <CustomSubSectionCardDocument
                 title="Contrato de arrendamiento"
-                subtitle=""
+                subtitle="sólo caratula"
                 visibleSubtitle
               >
                 <CustomFileUpload

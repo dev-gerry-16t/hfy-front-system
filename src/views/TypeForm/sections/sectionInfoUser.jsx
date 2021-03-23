@@ -417,7 +417,7 @@ const SectionInfoUser = (props) => {
                       <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                         <Input
                           value={dataForm.idTypeNumber}
-                          placeholder={`Numero de ${dataForm.idTypeText}`}
+                          placeholder={`Número de ${dataForm.idTypeText}`}
                           onChange={(e) => {
                             const value = e.target.value;
                             setDataForm({ ...dataForm, idTypeNumber: value });
@@ -691,7 +691,7 @@ const SectionInfoUser = (props) => {
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
                       value={dataForm.legalRepIdTypeNumber}
-                      placeholder={`Numero de ${
+                      placeholder={`Número de ${
                         isNil(dataForm.legalRepIdTypeText) === false
                           ? dataForm.legalRepIdTypeText
                           : ""
