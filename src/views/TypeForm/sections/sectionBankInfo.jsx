@@ -67,7 +67,7 @@ const SectionBankInfo = (props) => {
                       fontWeight: "bold",
                     }}
                   >
-                    ¿Como quieres tus pagos de renta?
+                    ¿Cómo deseas tus pagos de renta?
                   </span>
                   <Radio.Group
                     onChange={(e) => {

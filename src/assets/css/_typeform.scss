@@ -147,6 +147,9 @@
   input::placeholder {
     font-weight: 100;
   }
+  textarea::placeholder {
+    font-weight: 100;
+  }
   .ant-input-affix-wrapper {
     border-radius: 8px;
     background: transparent;

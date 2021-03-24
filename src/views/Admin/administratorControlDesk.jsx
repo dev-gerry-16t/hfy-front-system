@@ -18,6 +18,7 @@ import {
   callGetAllRelationshipTypes,
   callGetAllPersonalReferencesStatus,
   callUpdatePersonalReferences,
+  callGetAuditReferences,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -41,6 +42,7 @@ const ControlDesk = (props) => {
     callGetAllRelationshipTypes,
     callGetAllPersonalReferencesStatus,
     callUpdatePersonalReferences,
+    callGetAuditReferences,
   } = props;
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -50,6 +52,7 @@ const ControlDesk = (props) => {
   const [dataAllPolicyStatus, setDataAllPolicyStatus] = useState([]);
   const [dataRelatioshipTypes, setDataRelatioshipTypes] = useState([]);
   const [dataReferenceStatus, setDataReferenceStatus] = useState([]);
+  const [dataHistory, setDataHistory] = useState([]);
   const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
     false
   );
@@ -84,6 +87,32 @@ const ControlDesk = (props) => {
           ? response.response[0]
           : {};
       setDataStats(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAuditReferences = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAuditReferences({
+        idCustomer: null,
+        idCustomerTenant: null,
+        idContract: null,
+        idPersonalReference: id,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: -1,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataHistory(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -373,6 +402,7 @@ const ControlDesk = (props) => {
         }}
         dataDetailCustomerTenant={dataDetailCustomerTenant}
         dataDetailReferences={dataDetailReferences}
+        dataHistory={dataHistory}
         onSendRatingUser={async (data) => {
           try {
             await handlerCallUpdateContract(data);
@@ -406,6 +436,9 @@ const ControlDesk = (props) => {
           } catch (error) {
             throw error;
           }
+        }}
+        onCallHistoryData={(data) => {
+          handlerCallGetAuditReferences(data.idPersonalReference);
         }}
       />
       <div className="margin-app-main">
@@ -514,6 +547,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAllPersonalReferencesStatus(data)),
   callUpdatePersonalReferences: (data, id) =>
     dispatch(callUpdatePersonalReferences(data, id)),
+  callGetAuditReferences: (data, id) =>
+    dispatch(callGetAuditReferences(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlDesk);

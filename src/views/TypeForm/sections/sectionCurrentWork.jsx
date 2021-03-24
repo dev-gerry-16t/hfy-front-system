@@ -21,6 +21,8 @@ const SectionCurrentWork = (props) => {
     bossName: null,
     bossEmailAddress: null,
     bossPhoneNumber: null,
+    otherIncomes: null,
+    otherIncomesDescription: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -226,6 +228,62 @@ const SectionCurrentWork = (props) => {
                     Años
                   </Option>
                 </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.otherIncomes}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder="Otros ingresos"
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomes: floatValue,
+                      otherIncomesFormat: formattedValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                <textarea
+                  style={{
+                    background: "transparent",
+                    borderRadius: 10,
+                    fontWeight: "bold",
+                  }}
+                  className="ant-input inputLogin"
+                  placeholder="Descripción de otros ingresos"
+                  value={
+                    isNil(dataForm.otherIncomesDescription) === false
+                      ? dataForm.otherIncomesDescription
+                      : ""
+                  }
+                  maxlength="1000"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomesDescription: e.target.value,
+                    });
+                  }}
+                />
               </Col>
             </Row>
             <p>Información de tu jefe directo</p>

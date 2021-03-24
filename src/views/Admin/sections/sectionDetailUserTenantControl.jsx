@@ -15,6 +15,7 @@ import {
   Modal,
   Select,
   Radio,
+  Timeline,
 } from "antd";
 import {
   SyncOutlined,
@@ -33,6 +34,7 @@ const SectionDetailUserTenant = (props) => {
     onClose,
     dataDetailCustomerTenant,
     dataDetailReferences,
+    dataHistory,
     changeRolesCustomers,
     onSendRatingUser,
     onRedirectTo,
@@ -40,6 +42,7 @@ const SectionDetailUserTenant = (props) => {
     dataRelatioshipTypes,
     dataReferenceStatus,
     onSaveDataScore,
+    onCallHistoryData,
   } = props;
 
   const initialDataForm = {
@@ -144,46 +147,105 @@ const SectionDetailUserTenant = (props) => {
             </button>
             <h1>Información de Referencia {dataForm.index}</h1>
           </div>
-          <div className="main-form-information">
+          <div
+            className="main-form-information"
+            style={{ fontFamily: "Poppins" }}
+          >
             <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Nombre de la referencia"
-                  content={dataForm.fullName}
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Correo"
-                  content={dataForm.emailAddress}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title="Teléfono"
-                  content={
-                    <a
-                      href={
-                        isNil(dataForm.phoneNumber) === false
-                          ? `https://api.whatsapp.com/send?phone=52${dataForm.phoneNumber}`
-                          : "#"
+              <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title="Tipo de referencia"
+                      content={dataForm.referenceType}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title="Nombre de la referencia"
+                      content={dataForm.fullName}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title="Correo"
+                      content={dataForm.emailAddress}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title="Teléfono"
+                      content={
+                        isNil(dataForm.phoneNumber) === false ? (
+                          <a
+                            href={
+                              isNil(dataForm.phoneNumber) === false
+                                ? `https://api.whatsapp.com/send?phone=52${dataForm.phoneNumber}`
+                                : "#"
+                            }
+                            target="_blank"
+                          >
+                            {dataForm.phoneNumber}
+                          </a>
+                        ) : (
+                          "N/A"
+                        )
                       }
-                      target="_blank"
-                    >
-                      {dataForm.phoneNumber}
-                    </a>
-                  }
-                />
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <DescriptionItem
+                      title={dataForm.detailTenant}
+                      content={dataForm.detailReference}
+                    />
+                  </Col>
+                </Row>
               </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DescriptionItem
-                  title={dataForm.detailTenant}
-                  content={dataForm.detailReference}
-                />
+              <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
+                <p style={{ textAlign: "center" }}>Historial de cambios</p>
+                <div style={{ height: 260, overflowY: "scroll" }}>
+                  {isEmpty(dataHistory) === false ? (
+                    <Timeline>
+                      {dataHistory.map((row) => {
+                        return (
+                          <Timeline.Item>
+                            <div>
+                              <p style={{ margin: "0px" }}>
+                                <strong>{row.createdByUser}</strong> |{" "}
+                                <strong>{row.createdAt} hrs</strong>
+                              </p>
+                              <div>
+                                <div
+                                  style={{ color: "black !important" }}
+                                  dangerouslySetInnerHTML={{
+                                    __html:
+                                      isNil(row.description) === false
+                                        ? row.description
+                                        : "",
+                                  }}
+                                />
+                              </div>
+                            </div>
+                          </Timeline.Item>
+                        );
+                      })}
+                    </Timeline>
+                  ) : (
+                    <strong
+                      style={{ display: "flex", justifyContent: "center" }}
+                    >
+                      Aún no hay un historial
+                    </strong>
+                  )}
+                </div>
               </Col>
             </Row>
             <p>Ingresa la información de la referencia</p>
@@ -200,11 +262,11 @@ const SectionDetailUserTenant = (props) => {
                   onChange={(value, option) => {
                     setDataForm({
                       ...dataForm,
-                      relationshipType: value,
-                      relationshipTypeText: option.children,
+                      idRelationshipType: value,
+                      idRelationshipTypeText: option.children,
                     });
                   }}
-                  value={dataForm.relationshipType}
+                  value={dataForm.idRelationshipType}
                 >
                   {isEmpty(dataRelatioshipTypes) === false &&
                     dataRelatioshipTypes.map((row) => {
@@ -317,10 +379,10 @@ const SectionDetailUserTenant = (props) => {
                   onChange={(value, option) => {
                     setDataForm({
                       ...dataForm,
-                      personalReferenceStatus: value,
+                      idPersonalReferenceStatus: value,
                     });
                   }}
-                  value={dataForm.personalReferenceStatus}
+                  value={dataForm.idPersonalReferenceStatus}
                 >
                   {isEmpty(dataReferenceStatus) === false &&
                     dataReferenceStatus.map((row) => {
@@ -907,11 +969,16 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             <a
                               onClick={() => {
-                                setDataForm({ ...row, index: index + 1 });
-                                setIsModalVisible(true);
+                                if (row.canBeEvaluated === true) {
+                                  onCallHistoryData(row);
+                                  setDataForm({ ...row, index: index + 1 });
+                                  setIsModalVisible(true);
+                                }
                               }}
                             >
-                              Asignar un score
+                              {row.canBeEvaluated === true
+                                ? "Asignar un score"
+                                : "No puede ser evaluado"}
                             </a>
                           }
                         />

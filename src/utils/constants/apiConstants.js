@@ -14,6 +14,7 @@ const API = {
   CATALOGS: "/catalogs",
   ADMIN: "/admin",
   LEADS: "/leads",
+  HISTORIC: "/historic",
 };
 
 const API_CONSTANTS = {
@@ -97,6 +98,7 @@ const API_CONSTANTS = {
   GET_LANDING_PROSPECT_COINCIDENECES: `${API.API_SECURE}${API.LEADS}/getLandingProspectCoincidences`,
   GET_LANDING_PROSPECT_STATS: `${API.API_SECURE}${API.LEADS}/getLandingProspectStats`,
   UPDATE_LANDING_PROSPECT_STATUS: `${API.API_SECURE}${API.LEADS}/updateLandingProspect/`,
+  GET_AUDIT_REFERENCES: `${API.API_SECURE}${API.HISTORIC}/getAudit`,
 };
 
 export { API_CONSTANTS, HEADER };

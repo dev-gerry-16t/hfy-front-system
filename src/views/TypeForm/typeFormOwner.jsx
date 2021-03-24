@@ -125,7 +125,7 @@ const TypeFormOwner = (props) => {
     }
   };
 
-  const handlerCallGetTypeFormDocument = async (id, type) => {
+  const handlerCallGetTypeFormDocument = async (data, type) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetTypeFormDocumentTenant({
@@ -133,7 +133,8 @@ const TypeFormOwner = (props) => {
         idCustomerTenant: null,
         idSystemUser,
         idLoginHistory,
-        idTypeForm: id,
+        idTypeForm: data.idTypeForm,
+        isFirstTime: data.isFirstTime,
         type,
       });
       const responseResult =
@@ -371,7 +372,7 @@ const TypeFormOwner = (props) => {
         setCurrent(responseResult.stepIn);
       }
       setDataForm(responseResult);
-      handlerCallGetTypeFormDocument(responseResult.idTypeForm, 3);
+      handlerCallGetTypeFormDocument(responseResult, 3);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",

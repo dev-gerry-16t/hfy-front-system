@@ -48,6 +48,9 @@ html {
   input::placeholder {
     font-weight: 100;
   }
+  textarea::placeholder {
+    font-weight: 100;
+  }
   .ant-input {
     font-family: Poppins;
     font-weight: bold;
