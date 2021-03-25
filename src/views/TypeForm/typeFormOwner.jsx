@@ -25,6 +25,7 @@ import {
   callGetPolicies,
   callGetNationalities,
   callGetIdTypes,
+  callGetTypeFormProperties,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -48,11 +49,13 @@ const TypeFormOwner = (props) => {
     callGetNationalities,
     callGetIdTypes,
     match,
+    callGetTypeFormProperties,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataBank, setDataBank] = useState([]);
+  const [dataProperties, setDataProperties] = useState([]);
   const [dataMaritalStatus, setDataMaritalStatus] = useState([]);
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataPolicies, setDataPolicies] = useState([]);
@@ -83,6 +86,40 @@ const TypeFormOwner = (props) => {
         break;
       default:
         break;
+    }
+  };
+
+  const hanlderCallGetTypeFormProperties = async (id, step) => {
+    const {
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+      idContract,
+    } = dataProfile;
+    try {
+      const response = await callGetTypeFormProperties({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idContract,
+        idTypeForm: id,
+        idSystemUser,
+        idLoginHistory,
+        stepIn: step,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].typeFormProperties) === false
+          ? JSON.parse(response.response[0].typeFormProperties)
+          : [];
+      setDataProperties(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -233,6 +270,7 @@ const TypeFormOwner = (props) => {
       title: "Información personal",
       content: (
         <SectionInfoOwner
+          dataProperties={dataProperties}
           dataMaritalStatus={dataMaritalStatus}
           dataFormSave={dataForm}
           onClickNext={async (data) => {
@@ -260,6 +298,7 @@ const TypeFormOwner = (props) => {
       title: "Inmueble a rentar",
       content: (
         <CurrentAddressRenter
+          dataProperties={dataProperties}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           onClickNext={async (data) => {
@@ -291,6 +330,7 @@ const TypeFormOwner = (props) => {
       title: "Póliza",
       content: (
         <TypePolicy
+          dataProperties={dataProperties}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           dataPolicies={dataPolicies}
@@ -313,6 +353,7 @@ const TypeFormOwner = (props) => {
       title: "Datos bancarios",
       content: (
         <SectionBankInfo
+          dataProperties={dataProperties}
           dataFormSave={dataForm}
           dataBank={dataBank}
           onClickFinish={async (data) => {
@@ -494,6 +535,12 @@ const TypeFormOwner = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isEmpty(dataForm) === false) {
+      hanlderCallGetTypeFormProperties(dataForm.idTypeForm, current);
+    }
+  }, [current, dataForm]);
+
   return (
     <Content>
       <div className="margin-app-main">
@@ -557,6 +604,8 @@ const mapDispatchToProps = (dispatch) => ({
   callSetTypeFormOwner: (data) => dispatch(callSetTypeFormOwner(data)),
   callGetNationalities: (data) => dispatch(callGetNationalities(data)),
   callGetIdTypes: (data) => dispatch(callGetIdTypes(data)),
+  callGetTypeFormProperties: (data) =>
+    dispatch(callGetTypeFormProperties(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);

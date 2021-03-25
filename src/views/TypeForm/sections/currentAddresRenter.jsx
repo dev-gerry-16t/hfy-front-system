@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import NumberFormat from "react-number-format";
-import { Input, Row, Col, Select, Tooltip, Radio } from "antd";
+import { Input, Row, Col, Select, Tooltip, Radio, Alert } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
@@ -16,6 +16,7 @@ const CurrentAddressRenter = (props) => {
     onChangeZipCode,
     dataZipCodeAdress,
     dataPropertyTypes,
+    dataProperties,
   } = props;
   const initialForm = {
     isOwner: null,
@@ -90,6 +91,24 @@ const CurrentAddressRenter = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            {isEmpty(dataProperties) === false && (
+              <div className="message-typeform-requires">
+                <Alert
+                  message={
+                    <div style={{ width: "100%" }}>
+                      Los siguientes campos son requeridos:
+                      <br />
+                      <ul>
+                        {dataProperties.map((row) => {
+                          return <li>{row.label}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  }
+                  type="error"
+                />
+              </div>
+            )}
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">

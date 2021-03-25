@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Row, Col, Select } from "antd";
+import { Row, Col, Select, Alert } from "antd";
 import CustomFileUpload from "./customFileUpload";
 
 const { Option } = Select;
@@ -14,6 +14,7 @@ const TypePolicy = (props) => {
     typeDocument,
     dataFormSave,
     frontFunctions,
+    dataProperties,
   } = props;
   const initialForm = {
     idPolicy: null,
@@ -64,6 +65,24 @@ const TypePolicy = (props) => {
       <Row>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
         <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+          {isEmpty(dataProperties) === false && (
+            <div className="message-typeform-requires">
+              <Alert
+                message={
+                  <div style={{ width: "100%" }}>
+                    Los siguientes campos son requeridos:
+                    <br />
+                    <ul>
+                      {dataProperties.map((row) => {
+                        return <li>{row.label}</li>;
+                      })}
+                    </ul>
+                  </div>
+                }
+                type="error"
+              />
+            </div>
+          )}
           <p>Póliza</p>
           <Row>
             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
