@@ -22,6 +22,8 @@ import {
   EditOutlined,
   CloseOutlined,
   CheckOutlined,
+  CloseCircleFilled,
+  CheckCircleFilled,
 } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
@@ -518,6 +520,10 @@ const SectionDetailUserTenant = (props) => {
 
             {isEmpty(dataDetailCustomerTenant) === false &&
               dataDetailCustomerTenant.map((row) => {
+                const catalogProperties =
+                  isNil(row.typeFormProperties) === false
+                    ? JSON.parse(row.typeFormProperties)
+                    : [];
                 return (
                   <>
                     <h3>
@@ -838,24 +844,32 @@ const SectionDetailUserTenant = (props) => {
                                     );
                                   }}
                                 >
-                                  <Menu.Item key="0">
-                                    <a>Información personal</a>
-                                  </Menu.Item>
-                                  <Menu.Item key="1">
-                                    <a>Dirección actual</a>
-                                  </Menu.Item>
-                                  <Menu.Item key="2">
-                                    <a>Información laboral</a>
-                                  </Menu.Item>
-                                  <Menu.Item key="3">
-                                    <a>Referencias</a>
-                                  </Menu.Item>
-                                  <Menu.Item key="4">
-                                    <a>Documentación</a>
-                                  </Menu.Item>
-                                  <Menu.Item key="5">
-                                    <a>Información aval</a>
-                                  </Menu.Item>
+                                  {isEmpty(catalogProperties) === false &&
+                                    catalogProperties.map((rowMap) => {
+                                      return (
+                                        <Menu.Item
+                                          key={`${rowMap.idStepIn}`}
+                                          style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "space-between",
+                                          }}
+                                        >
+                                          <a style={{ marginRight: 2 }}>
+                                            {rowMap.stepIn}
+                                          </a>
+                                          {rowMap.isCompleted === true ? (
+                                            <CheckCircleFilled
+                                              style={{ color: "green" }}
+                                            />
+                                          ) : (
+                                            <CloseCircleFilled
+                                              style={{ color: "red" }}
+                                            />
+                                          )}
+                                        </Menu.Item>
+                                      );
+                                    })}
                                 </Menu>
                               }
                               trigger={["click"]}

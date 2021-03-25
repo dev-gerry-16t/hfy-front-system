@@ -29,6 +29,7 @@ const SectionDocumentation = (props) => {
     dataDocuments,
     typeDocument,
     dataForm,
+    dataProperties,
   } = props;
 
   const getTypeIdDocument = (type) => {
@@ -55,8 +56,8 @@ const SectionDocumentation = (props) => {
     <div className="content-typeform-formulary">
       <h3>Documentación</h3>
       <p>
-        Selecciona el documento que se te indica, si estás seguro de que es el documento correcto haz clic en
-        Subir
+        Selecciona el documento que se te indica, si estás seguro de que es el
+        documento correcto haz clic en Subir
       </p>
       {dataForm.requiresCustomerTenantEntInfo === false && (
         <>

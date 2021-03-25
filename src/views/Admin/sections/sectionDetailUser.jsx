@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import { Row, Col, Drawer, Collapse, Menu, Dropdown, Timeline } from "antd";
+import { CloseCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const { Panel } = Collapse;
@@ -15,6 +16,7 @@ const SectionDetailUser = (props) => {
     dataMessages,
     onDownloadDocumentById,
   } = props;
+  const [catalogProperties, setCatalogProperties] = useState([]);
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -67,6 +69,13 @@ const SectionDetailUser = (props) => {
       </Menu>
     );
   };
+
+  useEffect(() => {
+    if (isNil(dataDetailCustomer.typeFormProperties) === false) {
+      const catalogProps = JSON.parse(dataDetailCustomer.typeFormProperties);
+      setCatalogProperties(catalogProps);
+    }
+  }, [dataDetailCustomer]);
 
   return (
     <Drawer
@@ -177,18 +186,32 @@ const SectionDetailUser = (props) => {
                             );
                           }}
                         >
-                          <Menu.Item key="0">
-                            <a>Información personal</a>
-                          </Menu.Item>
-                          <Menu.Item key="1">
-                            <a>Inmueble a rentar</a>
-                          </Menu.Item>
-                          <Menu.Item key="2">
-                            <a>Póliza</a>
-                          </Menu.Item>
-                          <Menu.Item key="3">
-                            <a>Datos bancarios</a>
-                          </Menu.Item>
+                          {isEmpty(catalogProperties) === false &&
+                            catalogProperties.map((rowMap) => {
+                              return (
+                                <Menu.Item
+                                  key={`${rowMap.idStepIn}`}
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <a style={{ marginRight: 2 }}>
+                                    {rowMap.stepIn}
+                                  </a>
+                                  {rowMap.isCompleted === true ? (
+                                    <CheckCircleFilled
+                                      style={{ color: "green" }}
+                                    />
+                                  ) : (
+                                    <CloseCircleFilled
+                                      style={{ color: "red" }}
+                                    />
+                                  )}
+                                </Menu.Item>
+                              );
+                            })}
                         </Menu>
                       }
                       trigger={["click"]}

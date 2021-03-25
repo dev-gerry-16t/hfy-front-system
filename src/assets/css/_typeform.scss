@@ -1,8 +1,8 @@
 .content-typeform-formulary {
   .ant-collapse {
-    background-color: transparent ;
+    background-color: transparent;
     .ant-collapse-item {
-      background-color: transparent ;
+      background-color: transparent;
       .ant-collapse-header {
         background-color: #fafafa;
       }
@@ -58,6 +58,13 @@
   img {
     width: 20px;
   }
+}
+
+.message-typeform-requires {
+  height: 100px;
+  overflow-y: scroll;
+  position: relative;
+  bottom: 25px;
 }
 
 .content-typeform-formulary {
@@ -310,6 +317,9 @@
   }
 }
 @media screen and (max-width: 715px) {
+  .message-typeform-requires {
+    bottom: 10px;
+  }
   .title-steps-typeform {
     font-size: 8px;
   }

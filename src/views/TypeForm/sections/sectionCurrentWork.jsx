@@ -2,12 +2,18 @@ import React, { useState, useEffect } from "react";
 import NumberFormat from "react-number-format";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Input, Row, Col, Select } from "antd";
+import { Input, Row, Col, Select, Alert } from "antd";
 
 const { Option } = Select;
 
 const SectionCurrentWork = (props) => {
-  const { onClickNext, dataFormSave, frontFunctions, dataOccupations } = props;
+  const {
+    onClickNext,
+    dataFormSave,
+    frontFunctions,
+    dataOccupations,
+    dataProperties,
+  } = props;
   const initialForm = {
     idOccupationActivity: null,
     idOccupationActivityText: null,
@@ -79,6 +85,24 @@ const SectionCurrentWork = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            {isEmpty(dataProperties) === false && (
+              <div className="message-typeform-requires">
+                <Alert
+                  message={
+                    <div style={{ width: "100%" }}>
+                      Los siguientes campos son requeridos:
+                      <br />
+                      <ul>
+                        {dataProperties.map((row) => {
+                          return <li>{row.label}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  }
+                  type="error"
+                />
+              </div>
+            )}
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Select

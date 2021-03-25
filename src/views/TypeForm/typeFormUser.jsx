@@ -37,6 +37,7 @@ import {
   callGetMaritalRegime,
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
+  callGetTypeFormProperties,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -56,13 +57,15 @@ const TypeFormUser = (props) => {
     callGetOccupations,
     callGetAllCommercialSocietyTypes,
     callGetAllStates,
+    callGetTypeFormProperties,
     history,
     match,
   } = props;
   const frontFunctions = new FrontFunctions();
-  const [current, setCurrent] = useState(0);
+  const [current, setCurrent] = useState(null);
   const [dataForm, setDataForm] = useState({});
   const [dataReferences, setDataReferences] = useState([]);
+  const [dataProperties, setDataProperties] = useState([]);
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataDocumentsEndorsement, setDataDocumentsEndorsement] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
@@ -199,6 +202,40 @@ const TypeFormUser = (props) => {
         setDataZipCodeAdress(responseResult1);
         setDataZipCatalog(responseResult2);
       }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const hanlderCallGetTypeFormProperties = async (id, step) => {
+    const {
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+      idContract,
+    } = dataProfile;
+    try {
+      const response = await callGetTypeFormProperties({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idContract,
+        idTypeForm: id,
+        idSystemUser,
+        idLoginHistory,
+        stepIn: step,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0].typeFormProperties) === false
+          ? JSON.parse(response.response[0].typeFormProperties)
+          : [];
+      setDataProperties(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -441,6 +478,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoUser
           dataFormSave={dataForm}
+          dataProperties={dataProperties}
           dataNationalities={dataNationalities}
           dataCommerceSociality={dataCommerceSociality}
           dataStates={dataStates}
@@ -462,6 +500,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionCurrentAddress
           dataFormSave={dataForm}
+          dataProperties={dataProperties}
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({
@@ -493,6 +532,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionCurrentWork
           dataFormSave={dataForm}
+          dataProperties={dataProperties}
           onClickNext={async (data) => {
             try {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
@@ -548,6 +588,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionInfoAval
           frontFunctions={frontFunctions}
+          dataProperties={dataProperties}
           dataNationalities={dataNationalities}
           dataIdTypes={dataIdTypes}
           dataFormSave={dataForm}
@@ -667,6 +708,12 @@ const TypeFormUser = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isEmpty(dataForm) === false) {
+      hanlderCallGetTypeFormProperties(dataForm.idTypeForm, current);
+    }
+  }, [current, dataForm]);
+
   return (
     <Content>
       <div className="margin-app-main">
@@ -735,6 +782,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllCommercialSocietyTypes: (data) =>
     dispatch(callGetAllCommercialSocietyTypes(data)),
   callGetAllStates: (data) => dispatch(callGetAllStates(data)),
+  callGetTypeFormProperties: (data) =>
+    dispatch(callGetTypeFormProperties(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);

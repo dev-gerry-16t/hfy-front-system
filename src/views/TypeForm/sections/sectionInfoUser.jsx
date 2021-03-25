@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Input, Row, Col, Select, Tooltip, Radio } from "antd";
+import { Input, Row, Col, Select, Tooltip, Radio, Alert } from "antd";
 import { AuditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import IconProfile from "../../../assets/icons/Profile.svg";
 
@@ -15,6 +15,7 @@ const SectionInfoUser = (props) => {
     dataIdTypes,
     dataCommerceSociality,
     dataStates,
+    dataProperties,
   } = props;
   const initialForm = {
     givenName: null,
@@ -171,6 +172,24 @@ const SectionInfoUser = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            {isEmpty(dataProperties) === false && (
+              <div className="message-typeform-requires">
+                <Alert
+                  message={
+                    <div style={{ width: "100%" }}>
+                      Los siguientes campos son requeridos:
+                      <br />
+                      <ul>
+                        {dataProperties.map((row) => {
+                          return <li>{row.label}</li>;
+                        })}
+                      </ul>
+                    </div>
+                  }
+                  type="error"
+                />
+              </div>
+            )}
             <Row>
               <Col
                 span={visibleComponents.lastName === true ? 8 : 11}
