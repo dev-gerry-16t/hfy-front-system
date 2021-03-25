@@ -2097,8 +2097,9 @@ const callSetContract = (data, id) => async (dispatch, getState) => {
     const responseResultMessage =
       isNil(response) === false &&
       isNil(response.data) === false &&
-      isNil(response.data.response) === false
-        ? response.data.response
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
         : null;
     const responseResultData =
       isNil(response) === false && isNil(response.data) === false
