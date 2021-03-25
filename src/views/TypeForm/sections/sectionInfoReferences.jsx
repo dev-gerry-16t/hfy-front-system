@@ -15,6 +15,11 @@ const SectionInfoReferences = (props) => {
   return (
     <div className="content-typeform-formulary">
       <h3>Referencias</h3>
+      <p>
+        {dataFormSave.isFirstTime === true
+          ? "Los campos marcados con * (asterisco) son obligatorios."
+          : "Por favor verifica la información, los campos marcados con * (asterisco) son obligatorios."}
+      </p>
       <Row>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
         <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>

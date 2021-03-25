@@ -27,7 +27,7 @@ const CustomReferences = (props) => {
       <Row>
         <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
           <Input
-            placeholder={"Nombres"}
+            placeholder={"Nombres*"}
             onChange={(e) => {
               setDataForm({ ...dataForm, givenName: e.target.value });
             }}
@@ -38,7 +38,7 @@ const CustomReferences = (props) => {
         <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
         <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
           <Input
-            placeholder={"Apellido paterno"}
+            placeholder={"Apellido paterno*"}
             onChange={(e) => {
               setDataForm({ ...dataForm, lastName: e.target.value });
             }}
@@ -61,7 +61,7 @@ const CustomReferences = (props) => {
       <Row>
         <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
           <Input
-            placeholder={"Teléfono"}
+            placeholder={"Teléfono*"}
             onChange={(e) => {
               setDataForm({ ...dataForm, phoneNumber: e.target.value });
             }}
