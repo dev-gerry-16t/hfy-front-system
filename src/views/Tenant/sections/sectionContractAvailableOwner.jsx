@@ -710,7 +710,6 @@ const SectionContractAvailable = (props) => {
                     type="button"
                     onClick={async () => {
                       onClose();
-                      setOpenSection(1);
                       onFinishContractFlow();
                       setReconstructionSection(reconstructOriginal);
                     }}
@@ -911,7 +910,6 @@ const SectionContractAvailable = (props) => {
                         idContract: dataGetContract.idContract,
                         comment: valueText,
                       });
-                      setOpenSection(1);
                       onClose();
                       setReconstructionSection(reconstructOriginal);
                     }}
