@@ -243,24 +243,25 @@ const SectionInfoAval = (props) => {
         <Row>
           <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
           <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-            {isEmpty(dataProperties) === false && (
-              <div className="message-typeform-requires">
-                <Alert
-                  message={
-                    <div style={{ width: "100%" }}>
-                      Los siguientes campos son requeridos:
-                      <br />
-                      <ul>
-                        {dataProperties.map((row) => {
-                          return <li>{row.label}</li>;
-                        })}
-                      </ul>
-                    </div>
-                  }
-                  type="error"
-                />
-              </div>
-            )}
+            {isEmpty(dataProperties) === false &&
+              dataForm.isFirstTime === false && (
+                <div className="message-typeform-requires">
+                  <Alert
+                    message={
+                      <div style={{ width: "100%" }}>
+                        Los siguientes campos son requeridos:
+                        <br />
+                        <ul>
+                          {dataProperties.map((row) => {
+                            return <li>{row.label}</li>;
+                          })}
+                        </ul>
+                      </div>
+                    }
+                    type="error"
+                  />
+                </div>
+              )}
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <div className="option-select-radio">
