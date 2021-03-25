@@ -212,7 +212,26 @@ const SectionCardOwner = (props) => {
           width: 230,
           render: (percent, record) => (
             <div style={{ padding: "0px 15px 0px 0px" }}>
-              <Progress percent={percent} size="small" status="succes" />
+              <Progress
+                percent={isNil(percent) === false ? percent : 0}
+                size="small"
+                status="succes"
+              />
+            </div>
+          ),
+        },
+        {
+          title: "Avance formulario Obligado S.",
+          dataIndex: "boundSolidarityPercentCompleted",
+          key: "boundSolidarityPercentCompleted",
+          width: 230,
+          render: (percent, record) => (
+            <div style={{ padding: "0px 15px 0px 0px" }}>
+              <Progress
+                percent={isNil(percent) === false ? percent : 0}
+                size="small"
+                status="succes"
+              />
             </div>
           ),
         },
@@ -283,7 +302,7 @@ const SectionCardOwner = (props) => {
             className="table-users-hfy"
             size="small"
             bordered
-            scroll={{ x: 1500 }}
+            scroll={{ x: 1700 }}
           />
         )}
         {finishCallApis === false && <Skeleton loading active />}

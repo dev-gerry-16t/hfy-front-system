@@ -456,7 +456,11 @@ const RecoveryPassword = (props) => {
                     : "La contraseña debe contener"}
                 </p>
                 <Progress
-                  percent={securePass.percentStatus}
+                  percent={
+                    isNil(securePass.percentStatus) === false
+                      ? securePass.percentStatus
+                      : 0
+                  }
                   status={
                     securePass.percentStatus === 100 ? "success" : "exception"
                   }

@@ -213,7 +213,11 @@ const SectionCardOwner = (props) => {
           width: 200,
           render: (percent, record) => (
             <div style={{ padding: "0px 15px 0px 0px" }}>
-              <Progress percent={percent} size="small" status="succes" />
+              <Progress
+                percent={isNil(percent) === false ? percent : 0}
+                size="small"
+                status="succes"
+              />
             </div>
           ),
         },
@@ -257,7 +261,11 @@ const SectionCardOwner = (props) => {
           width: 200,
           render: (percent, record) => (
             <div style={{ padding: "0px 15px 0px 0px" }}>
-              <Progress percent={percent} size="small" status="succes" />
+              <Progress
+                percent={isNil(percent) === false ? percent : 0}
+                size="small"
+                status="succes"
+              />
             </div>
           ),
         },

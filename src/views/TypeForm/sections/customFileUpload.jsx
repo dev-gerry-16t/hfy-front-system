@@ -58,7 +58,10 @@ const CustomFileUpload = (props) => {
         left: "50px",
       }}
     >
-      <Progress type="circle" percent={timeUpload} />
+      <Progress
+        type="circle"
+        percent={isNil(timeUpload) === false ? timeUpload : 0}
+      />
     </div>
   );
 
