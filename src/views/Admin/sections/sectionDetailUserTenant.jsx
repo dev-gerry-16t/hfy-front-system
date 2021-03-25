@@ -191,7 +191,7 @@ const SectionDetailUserTenant = (props) => {
                                         ? valueCalification[
                                             row.idCustomerTenant
                                           ]
-                                        : row.rating
+                                        : row.ratingNumber
                                     }
                                     className="inputLogin"
                                     floatingLabelText=""
@@ -243,7 +243,7 @@ const SectionDetailUserTenant = (props) => {
                                             ? valueCalification[
                                                 row.idCustomerTenant
                                               ]
-                                            : row.rating,
+                                            : row.ratingNumber,
                                         isApproved: false,
                                       });
                                       setOpenPopover({
@@ -282,7 +282,7 @@ const SectionDetailUserTenant = (props) => {
                                             ? valueCalification[
                                                 row.idCustomerTenant
                                               ]
-                                            : row.rating,
+                                            : row.ratingNumber,
                                         isApproved: true,
                                       });
                                       setOpenPopover({

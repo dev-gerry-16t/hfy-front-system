@@ -59,7 +59,7 @@ const SectionDetailUserTenant = (props) => {
     observations: null,
     personalReferenceStatus: null,
     phoneNumber: null,
-    rating: null,
+    ratingNumber: null,
     referenceType: null,
     relationshipType: null,
   };
@@ -413,7 +413,7 @@ const SectionDetailUserTenant = (props) => {
                   prefix=""
                   suffix=""
                   value={
-                    isNil(dataForm.rating) === false ? dataForm.rating : ""
+                    isNil(dataForm.ratingNumber) === false ? dataForm.ratingNumber : ""
                   }
                   className="inputLogin"
                   floatingLabelText=""
@@ -425,7 +425,7 @@ const SectionDetailUserTenant = (props) => {
                     const { formattedValue, value, floatValue } = values;
                     setDataForm({
                       ...dataForm,
-                      rating: floatValue,
+                      ratingNumber: floatValue,
                     });
                   }}
                   onClick={(event) => {}}
@@ -553,7 +553,7 @@ const SectionDetailUserTenant = (props) => {
                                         ? valueCalification[
                                             row.idCustomerTenant
                                           ]
-                                        : row.rating
+                                        : row.ratingNumber
                                     }
                                     className="inputLogin"
                                     floatingLabelText=""
@@ -605,7 +605,7 @@ const SectionDetailUserTenant = (props) => {
                                             ? valueCalification[
                                                 row.idCustomerTenant
                                               ]
-                                            : row.rating,
+                                            : row.ratingNumber,
                                         isApproved: false,
                                       });
                                       setOpenPopover({
@@ -644,7 +644,7 @@ const SectionDetailUserTenant = (props) => {
                                             ? valueCalification[
                                                 row.idCustomerTenant
                                               ]
-                                            : row.rating,
+                                            : row.ratingNumber,
                                         isApproved: true,
                                       });
                                       setOpenPopover({
