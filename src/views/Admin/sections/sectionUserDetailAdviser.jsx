@@ -116,7 +116,7 @@ const SectionDetailUserAdviser = (props) => {
                 isNil(dataDetailAgent.totalRenewals) === false &&
                 isNil(dataDetailAgent.totalRenewals[0]) === false
                   ? dataDetailAgent.totalRenewals[0]
-                  : "-"
+                  : "N/A"
               }
             />
           </Col>

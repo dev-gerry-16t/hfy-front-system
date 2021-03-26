@@ -74,7 +74,7 @@ const SectionDetailUserTenant = (props) => {
         {title}:
       </strong>
       <br />
-      {isNil(content) === false ? content : "-"}
+      {isNil(content) === false ? content : "N/A"}
     </div>
   );
 
@@ -718,7 +718,7 @@ const SectionDetailUserTenant = (props) => {
                         <DescriptionItem
                           title="Calificación 0-5"
                           content={
-                            isNil(row.rating) === false ? row.rating : "-"
+                            isNil(row.rating) === false ? row.rating : "N/A"
                           }
                         />
                       </Col>
@@ -728,7 +728,7 @@ const SectionDetailUserTenant = (props) => {
                         <DescriptionItem
                           title="Nombre completo"
                           content={
-                            isNil(row.fullName) === false ? row.fullName : "-"
+                            isNil(row.fullName) === false ? row.fullName : "N/A"
                           }
                         />
                       </Col>
@@ -740,7 +740,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.emailAddress) === false
                               ? row.emailAddress
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -752,7 +752,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.phoneNumber) === false
                               ? row.phoneNumber
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -762,7 +762,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.customerType) === false
                               ? row.customerType
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -774,7 +774,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.occupationActivity) === false
                               ? row.occupationActivity
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -784,7 +784,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.currentSalary) === false
                               ? row.currentSalary
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -793,14 +793,14 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="RFC"
-                          content={isNil(row.taxId) === false ? row.taxId : "-"}
+                          content={isNil(row.taxId) === false ? row.taxId : "N/A"}
                         />
                       </Col>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="CURP"
                           content={
-                            isNil(row.citizenId) === false ? row.citizenId : "-"
+                            isNil(row.citizenId) === false ? row.citizenId : "N/A"
                           }
                         />
                       </Col>
@@ -812,7 +812,7 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.fullAddress) === false
                               ? replaceUrl(row.fullAddress)
-                              : "-"
+                              : "N/A"
                           }
                         />
                       </Col>
