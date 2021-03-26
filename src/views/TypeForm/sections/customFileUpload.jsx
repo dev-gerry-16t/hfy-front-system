@@ -91,6 +91,7 @@ const CustomFileUpload = (props) => {
       idSystemUser,
       idLoginHistory,
       idCustomerTF,
+      idContract,
       idCustomerTenantTF,
     } = dataProfile;
     const dataDocument = {
@@ -123,6 +124,7 @@ const CustomFileUpload = (props) => {
           idTypeForm: infoDoc.idTypeForm,
           idCustomerTenant: idCustomerTenantTF,
           type: typeDocument,
+          idContract,
           idSystemUser,
           idLoginHistory,
         },

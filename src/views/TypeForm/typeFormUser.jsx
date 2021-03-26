@@ -159,6 +159,7 @@ const TypeFormUser = (props) => {
       idCustomerTF,
       idSystemUser,
       idLoginHistory,
+      idContract,
     } = dataProfile;
     try {
       await callSetTypeFormReferences({
@@ -166,6 +167,7 @@ const TypeFormUser = (props) => {
         idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
         idLoginHistory,
+        idContract
         ...data,
       });
     } catch (error) {
