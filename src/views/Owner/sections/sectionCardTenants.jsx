@@ -118,6 +118,7 @@ const SectionCardTenant = (props) => {
                           );
                         }}
                       >
+                        Detalle
                         <img src={IconArroRight} alt="arrow-right" width="15" />
                       </button>
                     )}
