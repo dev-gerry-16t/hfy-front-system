@@ -167,7 +167,7 @@ const TypeFormUser = (props) => {
         idCustomerTenant: idCustomerTenantTF,
         idSystemUser,
         idLoginHistory,
-        idContract
+        idContract,
         ...data,
       });
     } catch (error) {
