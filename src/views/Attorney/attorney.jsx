@@ -26,6 +26,7 @@ import {
   callGetLegalContractCoincidences,
   callGetContractDocument,
   callGetCustomerMessage,
+  callGetContractComment,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -45,13 +46,16 @@ const Attorney = (props) => {
     callGetContractDocument,
     callGetCustomerMessage,
     setDataUserProfile,
+    callGetContractComment,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [isVisibleViewImage, setIsVisibleViewImage] = useState(false);
   const [isVisibleMeessages, setIsVisibleMeessages] = useState(false);
+  const [isVisibleComments, setIsVisibleComments] = useState(false);
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataMessages, setDataMessages] = useState([]);
+  const [dataComments, setDataComments] = useState([]);
   const [documentUrl, setDocumentUrl] = useState({});
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
 
@@ -141,6 +145,31 @@ const Attorney = (props) => {
     }
   };
 
+  const handlerCallContractComment = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractComment({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: 0,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataComments(responseResult);
+      // if (isEmpty(responseResult) === false) {
+      //   setIdTopIndexMessage(responseResult[0].topIndex);
+      // }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const columns = [
     {
       title: "Folio",
@@ -165,7 +194,6 @@ const Attorney = (props) => {
           dataIndex: "customerFullName",
           key: "customerFullName",
           width: 200,
-          fixed: "left",
           render: (name, record) => {
             return (
               <Dropdown
@@ -208,7 +236,6 @@ const Attorney = (props) => {
           dataIndex: "customerTenantFullName",
           key: "customerTenantFullName",
           width: 200,
-          fixed: "left",
           render: (name, record) => {
             return (
               <Dropdown
@@ -251,30 +278,59 @@ const Attorney = (props) => {
             );
           },
         },
+        {
+          title: "Conversaciones",
+          dataIndex: "messages",
+          key: "messages",
+          align: "center",
+          width: 150,
+          render: (status, record) => {
+            return (
+              <div>
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => {
+                    setIsVisibleMeessages(true);
+                    setIsVisibleViewImage(true);
+                    handlerCallGetCustomerMessage(record);
+                  }}
+                >
+                  Ver
+                </Button>
+              </div>
+            );
+          },
+        },
+        {
+          title: "Comentarios en contrato",
+          dataIndex: "commentsContract",
+          key: "commentsContract",
+          align: "center",
+          width: 150,
+          render: (status, record) => {
+            return (
+              <div>
+                <Button
+                  type="link"
+                  size="small"
+                  onClick={() => {
+                    handlerCallContractComment({
+                      idCustomer: record.idCustomer,
+                      idCustomerTenant: record.idCustomerTenant,
+                      idContract: record.idContract,
+                      idDigitalContract: record.idDigitalContract,
+                    });
+                    setIsVisibleComments(true);
+                  }}
+                >
+                  Ver
+                </Button>
+              </div>
+            );
+          },
+        },
       ],
-    },
-    {
-      title: "Conversaciones",
-      dataIndex: "messages",
-      key: "messages",
-      align: "center",
-      render: (status, record) => {
-        return (
-          <div>
-            <Button
-              type="link"
-              size="small"
-              onClick={() => {
-                setIsVisibleMeessages(true);
-                setIsVisibleViewImage(true);
-                handlerCallGetCustomerMessage(record);
-              }}
-            >
-              Ver
-            </Button>
-          </div>
-        );
-      },
     },
     {
       title: (
@@ -703,6 +759,51 @@ const Attorney = (props) => {
           )}
         </div>
       </Modal>
+      <Modal
+        style={{ top: 20 }}
+        visible={isVisibleComments}
+        closable={false}
+        footer={false}
+        className="modal-signature-contract"
+      >
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <button
+              className="arrow-back-to"
+              type="button"
+              onClick={() => {
+                setIsVisibleComments(!isVisibleComments);
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <h1>Comentarios</h1>
+          </div>
+
+          {isEmpty(dataComments) === false ? (
+            <Timeline>
+              {dataComments.map((row) => {
+                return (
+                  <Timeline.Item>
+                    <div style={{ marginBottom: "15px" }}>
+                      <p style={{ margin: "0px" }}>
+                        <strong>
+                          {row.createdByUser} | {row.createdAt}
+                        </strong>
+                      </p>
+                      {row.comment}
+                    </div>
+                  </Timeline.Item>
+                );
+              })}
+            </Timeline>
+          ) : (
+            <strong style={{ display: "flex", justifyContent: "center" }}>
+              Aún no hay comentarios
+            </strong>
+          )}
+        </div>
+      </Modal>
       <SectionUploadDocument
         dataDocuments={dataDocuments}
         isModalVisible={isVisibleAddDocs}
@@ -755,6 +856,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetLegalContractCoincidences(data)),
   callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
+  callGetContractComment: (data) => dispatch(callGetContractComment(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Attorney);
