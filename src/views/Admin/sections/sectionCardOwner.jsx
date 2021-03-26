@@ -176,6 +176,21 @@ const SectionCardOwner = (props) => {
 
   const columns = [
     {
+      title: "Folio",
+      dataIndex: "hfInvoice",
+      key: "hfInvoice",
+      width:100,
+      fixed: "left",
+      render: (label, record) => {
+        const recorsStyle =
+          isNil(record.hfInvoiceStyle) === false &&
+          isEmpty(record.hfInvoiceStyle) === false
+            ? JSON.parse(record.hfInvoiceStyle)
+            : {};
+        return <span style={recorsStyle}>{label}</span>;
+      },
+    },
+    {
       title: "Propietario",
       children: [
         {
@@ -302,19 +317,6 @@ const SectionCardOwner = (props) => {
             </Tag>
           </span>
         );
-      },
-    },
-    {
-      title: "Folio",
-      dataIndex: "hfInvoice",
-      key: "hfInvoice",
-      render: (label, record) => {
-        const recorsStyle =
-          isNil(record.hfInvoiceStyle) === false &&
-          isEmpty(record.hfInvoiceStyle) === false
-            ? JSON.parse(record.hfInvoiceStyle)
-            : {};
-        return <span style={recorsStyle}>{label}</span>;
       },
     },
     {

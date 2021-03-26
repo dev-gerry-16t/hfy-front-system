@@ -82,6 +82,24 @@ const SectionContractAvailable = (props) => {
         setIsEditableContract(false);
       }
     }
+    if (
+      isEmpty(dataGetContract) === false &&
+      isEmpty(dataGetContract.signaturesInContract) === false &&
+      isNil(dataGetContract.signaturesInContract) === false
+    ) {
+      const parseSigned = JSON.parse(dataGetContract.signaturesInContract);
+      let object = { contract: false, policy: false, payment: false };
+      parseSigned.forEach((element) => {
+        if (element.type === 1) {
+          object = { ...object, contract: true };
+        } else if (element.type === 2) {
+          object = { ...object, policy: true };
+        } else if (element.type === 3) {
+          object = { ...object, payment: true };
+        }
+      });
+      setDocumentSigned(object);
+    }
   }, [dataGetContract]);
 
   return (
@@ -251,16 +269,19 @@ const SectionContractAvailable = (props) => {
                     <DatePicker
                       value={
                         isNil(scheduleSignatureDate) === false
-                          ? moment(scheduleSignatureDate, "YYYY-MM-DD")
+                          ? moment(scheduleSignatureDate, "YYYY-MM-DD HH:mm:ss")
                           : null
                       }
-                      placeholder="Fecha de firma"
+                      placeholder="Fecha y hora de firma"
                       onChange={(momentFormat, date) => {
                         setScheduleSignatureDate(
-                          moment(momentFormat).format("YYYY-MM-DD")
+                          moment(momentFormat).format("YYYY-MM-DD HH:mm:ss")
                         );
                       }}
-                      format="DD MMMM YYYY"
+                      showTime={{
+                        defaultValue: moment("00:00:00", "HH:mm:ss"),
+                      }}
+                      format="DD MMMM YYYY HH:mm"
                     />
                   </Col>
                 </Row>
@@ -367,7 +388,7 @@ const SectionContractAvailable = (props) => {
                         startedAt: startedAt,
                         scheduleSignatureDate:
                           dataProfile.idUserType === 3
-                            ? moment().format("YYYY-MM-DD")
+                            ? moment().format("YYYY-MM-DD HH:mm:ss")
                             : null,
                         collectionDays: null,
                         type: 1,
@@ -467,7 +488,9 @@ const SectionContractAvailable = (props) => {
                         Descargar
                       </button>
                       {signaturePrecencial === true &&
-                        isEditableContract === true && (
+                        isEditableContract === true &&
+                        (isNil(dataGetContract.isFaceToFace) === true ||
+                          dataGetContract.isFaceToFace === false) && (
                           <button
                             type="button"
                             onClick={() => {
@@ -568,7 +591,9 @@ const SectionContractAvailable = (props) => {
                         Descargar
                       </button>
                       {signaturePrecencial === true &&
-                        isEditableContract === true && (
+                        isEditableContract === true &&
+                        (isNil(dataGetContract.isFaceToFace) === true ||
+                          dataGetContract.isFaceToFace === false) && (
                           <button
                             type="button"
                             onClick={() => {
@@ -671,7 +696,9 @@ const SectionContractAvailable = (props) => {
                       </button>
                       {signaturePrecencial === true &&
                         dataProfile.idUserType !== 3 &&
-                        isEditableContract === true && (
+                        isEditableContract === true &&
+                        (isNil(dataGetContract.isFaceToFace) === true ||
+                          dataGetContract.isFaceToFace === false) && (
                           <button
                             type="button"
                             onClick={() => {

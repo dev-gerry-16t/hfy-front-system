@@ -100,6 +100,12 @@ const SectionDetailUser = (props) => {
             <h1>Detalle de Propietario</h1>
           </div>
         </div>
+        {dataDetailCustomer.canGenerateContract === true && (
+          <div>
+            El propietario aún no define la fecha de inicio del contrato y la
+            fecha de firma del contrato, ¿deseas ingresar la información?
+          </div>
+        )}
         <Collapse defaultActiveKey={["1"]} ghost>
           <Panel
             header={<h3 role="title-section">Información general</h3>}
