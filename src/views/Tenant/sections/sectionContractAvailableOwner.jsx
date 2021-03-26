@@ -303,6 +303,7 @@ const SectionContractAvailable = (props) => {
                         scheduleSignatureDate: scheduleSignatureDate,
                         collectionDays: null,
                         type: 1,
+                        isFaceToFace: true,
                       });
                       setOpenSection(4);
                     }}
@@ -370,6 +371,7 @@ const SectionContractAvailable = (props) => {
                             : null,
                         collectionDays: null,
                         type: 1,
+                        isFaceToFace: false,
                       });
                       setOpenSection(4);
                     }}
@@ -834,6 +836,7 @@ const SectionContractAvailable = (props) => {
                             : null,
                         collectionDays: null,
                         type: typeSignatureDigital,
+                        isFaceToFace: null,
                       });
                       if (typeSignatureDigital === 1) {
                         setDocumentSigned({

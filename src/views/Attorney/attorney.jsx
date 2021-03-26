@@ -176,6 +176,7 @@ const Attorney = (props) => {
       dataIndex: "hfInvoice",
       key: "hfInvoice",
       fixed: "left",
+      width: 100,
       render: (label, record) => {
         const recorsStyle =
           isNil(record.hfInvoiceStyle) === false &&
