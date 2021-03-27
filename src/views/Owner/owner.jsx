@@ -806,7 +806,6 @@ const Owner = (props) => {
               setIsVisibleContract(!isVisibleContract);
             }}
             onViewDocument={(data) => {
-              console.log('data',data);
               setDataDocument(data);
               setIsVisibleModal(true);
             }}
