@@ -25,6 +25,7 @@ import {
   callGetContractComment,
   callAddDocumentContract,
   callGetContractDocument,
+  callSetContract,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -59,6 +60,7 @@ const Administrator = (props) => {
     callGetContractComment,
     callAddDocumentContract,
     callGetContractDocument,
+    callSetContract,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
@@ -464,6 +466,32 @@ const Administrator = (props) => {
     }
   };
 
+  const handlerCallSetContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSetContract(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idContract
+      );
+      showMessageStatusApi(
+        "Tu solicitud se procesó exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const callAsynApis = async () => {
     await handlerCallGetContractStats();
     await handlerCallGetContractCoincidences();
@@ -654,6 +682,14 @@ const Administrator = (props) => {
         onDownloadDocumentById={async (data, name) => {
           try {
             await handlerCallGetContractDocumentById(data, name);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onAcceptContract={async (data) => {
+          try {
+            await handlerCallSetContract(data);
+            await handlerCallGetDetailCustomer(data.idContract);
           } catch (error) {
             throw error;
           }
@@ -865,6 +901,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
   callGetContractDocumentById: (data) =>
     dispatch(callGetContractDocument(data)),
+  callSetContract: (data, id) => dispatch(callSetContract(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);
