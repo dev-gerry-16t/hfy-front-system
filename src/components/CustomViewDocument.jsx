@@ -28,11 +28,11 @@ const CustomViewDocument = (props) => {
           dataDocument.extension === "pdf" ? (
             <iframe
               className="iframe-docx-hfy"
-              src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFilesDocx/${dataDocument.documentId}/${dataDocument.bucketSource}&embedded=true`}
+              src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFilesDocx/${dataDocument.idDocument}/${dataDocument.bucketSource}&embedded=true`}
             />
           ) : (
             <Magnifier
-              src={`${ENVIROMENT}/api/viewFile/${dataDocument.documentId}/${dataDocument.bucketSource}`}
+              src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
             />
           )}
         </div>

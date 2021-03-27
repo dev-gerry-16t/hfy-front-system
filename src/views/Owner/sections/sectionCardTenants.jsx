@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Rate, Skeleton, Button } from "antd";
+import { Avatar, Rate, Skeleton, Button, Menu, Dropdown } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -108,16 +108,54 @@ const SectionCardTenant = (props) => {
                     </div>
                     {isNil(row.infoContractDocument) === false &&
                       isEmpty(row.infoContractDocument) === false && (
-                        <a
-                          onClick={() => {
-                            const parseData = JSON.parse(
-                              row.infoContractDocument
-                            );
-                            onViewDocument(parseData[0]);
-                          }}
+                        <Dropdown
+                          overlay={
+                            <Menu onClick={() => {}}>
+                              <Menu.Item key="0">
+                                <a
+                                  onClick={() => {
+                                    const parseData = JSON.parse(
+                                      row.infoContractDocument
+                                    );
+                                    onViewDocument(parseData[0]);
+                                  }}
+                                  style={{ marginRight: 10 }}
+                                >
+                                  Contrato
+                                </a>
+                              </Menu.Item>
+                              <Menu.Item key="1">
+                                <a
+                                  onClick={() => {
+                                    const parseData = JSON.parse(
+                                      row.infoPolicyDocument
+                                    );
+                                    onViewDocument(parseData[0]);
+                                  }}
+                                  style={{ marginRight: 10 }}
+                                >
+                                  Póliza
+                                </a>
+                              </Menu.Item>
+                              <Menu.Item key="2">
+                                <a
+                                  onClick={() => {
+                                    const parseData = JSON.parse(
+                                      row.infoPaymentDocument
+                                    );
+                                    onViewDocument(parseData[0]);
+                                  }}
+                                  style={{ marginRight: 10 }}
+                                >
+                                  Pagarés
+                                </a>
+                              </Menu.Item>
+                            </Menu>
+                          }
+                          trigger={["click"]}
                         >
-                          Ver contrato
-                        </a>
+                          <a>Ver Documentos</a>
+                        </Dropdown>
                       )}
                   </div>
                 </div>
