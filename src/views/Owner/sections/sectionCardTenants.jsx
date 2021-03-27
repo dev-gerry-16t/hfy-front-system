@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar, Rate, Skeleton } from "antd";
+import { Avatar, Rate, Skeleton, Button } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -18,6 +18,7 @@ const SectionCardTenant = (props) => {
     onClickSendInvitation,
     onOpenContract,
     dataCustomer,
+    onViewDocument,
   } = props;
 
   const formatDate = (date) => {
@@ -105,6 +106,19 @@ const SectionCardTenant = (props) => {
                     <div>
                       Monto de Renta: <strong>{row.rentAmount}</strong>
                     </div>
+                    {isNil(row.infoContractDocument) === false &&
+                      isEmpty(row.infoContractDocument) === false && (
+                        <a
+                          onClick={() => {
+                            const parseData = JSON.parse(
+                              row.infoContractDocument
+                            );
+                            onViewDocument(parseData[0]);
+                          }}
+                        >
+                          Ver contrato
+                        </a>
+                      )}
                   </div>
                 </div>
                 <div className="button-collapse">

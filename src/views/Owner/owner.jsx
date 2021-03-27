@@ -37,6 +37,7 @@ import SectionAddProperty from "./sections/sectionAddProperty";
 import SectionAddTenant from "./sections/sectionAddTenant";
 import SectionAdvancement from "./sections/sectionAdvancement";
 import SectionContractAvailable from "../Tenant/sections/sectionContractAvailableOwner";
+import CustomViewDocument from "../../components/CustomViewDocument";
 
 const { Content } = Layout;
 
@@ -64,6 +65,8 @@ const Owner = (props) => {
     callAddDocumentContractId,
     callGetPropertyTypes,
   } = props;
+  const [dataDocument, setDataDocument] = useState({});
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
   const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
@@ -615,6 +618,13 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <CustomViewDocument
+        isVisibleModal={isVisibleModal}
+        dataDocument={dataDocument}
+        onClose={() => {
+          setIsVisibleModal(false);
+        }}
+      />
       <SectionContractAvailable
         dataProfile={dataProfile}
         isModalVisible={isVisibleContract}
@@ -794,6 +804,11 @@ const Owner = (props) => {
                 type: 1,
               });
               setIsVisibleContract(!isVisibleContract);
+            }}
+            onViewDocument={(data) => {
+              console.log('data',data);
+              setDataDocument(data);
+              setIsVisibleModal(true);
             }}
           />
         </div>
