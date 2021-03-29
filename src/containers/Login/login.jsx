@@ -75,7 +75,7 @@ const Login = (props) => {
   return (
     <div className="App">
       <div className="login_head_logo">
-        <img src={logo} alt="Girl in a jacket" className="login_logo" />
+        <img src={logo} alt="Homify-Pólizas de arrendamiento" className="login_logo" />
       </div>
       <div className="login_main">
         <div className="login_card_form">
