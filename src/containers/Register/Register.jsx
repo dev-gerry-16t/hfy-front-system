@@ -319,8 +319,8 @@ const Register = (props) => {
 
   const handlerEvalutePassword = (pass) => {
     const size = /^(?=.{8,}).*$/;
-    const lowerInPass = /^(?=\w*[a-z])/;
-    const upperInPass = /^(?=\w*[A-Z])/;
+    const lowerInPass = /^(?:.*[a-z])/;
+    const upperInPass = /^(?:.*[A-Z])/;
     const numberInPass = /^(?=.*\d)/;
     const specialCharacter = /^(?=.*[$@$!%*?&])/;
 
@@ -337,6 +337,7 @@ const Register = (props) => {
       lengthCharacter = true;
       lengthCharacterPercent = 25;
     }
+    
     if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
       upperLowerword = true;
       upperLowerwordPercent = 25;
