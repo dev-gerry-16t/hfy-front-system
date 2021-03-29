@@ -8,7 +8,10 @@
       content="width=device-width, initial-scale=1, maximum-scale=1"
     />
     <meta name="theme-color" content="#000000" />
-    <meta name="description" content="Homify" />
+    <meta
+      name="description"
+      content="Homify - Pólizas Jurídicas De Arrendamiento."
+    />
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -25,9 +28,9 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>Homify</title>
+    <title>Homify - Mi renta segura</title>
   </head>
-  <body>
+  <body class="theme-light">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
     <!--
@@ -41,32 +44,27 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
-  <script>
-    function initFreshChat() {
-      window.fcWidget.init({
-        token: "0f733738-b44b-4f92-84e7-8c7d1b2cec36",
-        open: false,
-        host: "https://wchat.freshchat.com",
-        locale: "es",
-      });
-    }
-    function initialize(i, t) {
-      var e;
-      i.getElementById(t)
-        ? initFreshChat()
-        : (((e = i.createElement("script")).id = t),
-          (e.async = !0),
-          (e.src = "https://wchat.freshchat.com/js/widget.js"),
-          (e.onload = initFreshChat),
-          i.head.appendChild(e));
-    }
-    function initiateCall() {
-      initialize(document, "freshchat-js-sdk");
-    }
-    window.addEventListener
-      ? window.addEventListener("load", initiateCall, !1)
-      : window.attachEvent("load", initiateCall, !1);
-  </script>
+  <!-- Smartsupp Live Chat script -->
+  <!-- <script type="text/javascript">
+    var _smartsupp = _smartsupp || {};
+    _smartsupp.key = "c63bfecea33039226338a89e3da23617cb9fd6c0";
+    window.smartsupp ||
+      (function (d) {
+        var s,
+          c,
+          o = (smartsupp = function () {
+            o._.push(arguments);
+          });
+        o._ = [];
+        s = d.getElementsByTagName("script")[0];
+        c = d.createElement("script");
+        c.type = "text/javascript";
+        c.charset = "utf-8";
+        c.async = true;
+        c.src = "https://www.smartsuppchat.com/loader.js?";
+        s.parentNode.insertBefore(c, s);
+      })(document);
+  </script> -->
   <script type="module">
     import { Workbox } from "https://storage.googleapis.com/workbox-cdn/releases/4.1.0/workbox-window.prod.mjs";
     let newWorker;

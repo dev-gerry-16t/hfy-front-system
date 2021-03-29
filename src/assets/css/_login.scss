@@ -5,7 +5,7 @@ button {
 }
 
 .ant-spin {
-  color: #ff0282 !important;
+  color: var(--color-primary) !important;
 }
 
 body,
@@ -46,6 +46,9 @@ html {
 .ant-input-affix-wrapper {
   border-radius: 8px !important;
   input::placeholder {
+    font-weight: 100;
+  }
+  textarea::placeholder {
     font-weight: 100;
   }
   .ant-input {
@@ -90,18 +93,18 @@ html {
       line-height: 40px;
       text-align: center;
       letter-spacing: 1px;
-      color: #ff0282;
+      color: var(--color-primary);
     }
 
     .ant-radio-inner {
       border-color: #4e4b66;
     }
     .ant-radio-inner::after {
-      background-color: #ff0282;
+      background-color: var(--color-primary);
     }
 
     .ant-radio-checked .ant-radio-inner {
-      border-color: #ff0282;
+      border-color: var(--color-primary);
     }
     .login-recover-pass {
       display: flex;
@@ -114,7 +117,7 @@ html {
       font-size: 10px;
       line-height: 28px;
       letter-spacing: 0.75px;
-      color: #ff0282;
+      color: var(--color-primary);
       p {
         margin-top: 0;
         margin-bottom: 0em;
@@ -182,11 +185,32 @@ html {
       display: flex;
       justify-content: center;
       button {
-        background: #ff0282;
+        background: var(--color-primary);
         border-radius: 16px;
         border: none;
         width: 70%;
         padding: 5px 0px;
+        span {
+          font-family: Poppins;
+          font-style: normal;
+          font-weight: 600;
+          font-size: 12px;
+          line-height: 34px;
+          letter-spacing: 0.75px;
+          color: #ffffff;
+        }
+      }
+    }
+    .button_init_primary_disabled {
+      display: flex;
+      justify-content: center;
+      button {
+        background: #df90b8;
+        border-radius: 16px;
+        border: none;
+        width: 70%;
+        padding: 5px 0px;
+        cursor: none;
         span {
           font-family: Poppins;
           font-style: normal;
@@ -227,7 +251,7 @@ html {
       display: flex;
       justify-content: center;
       button {
-        border: 1px solid #ff0282;
+        border: 1px solid var(--color-primary);
         background: #fff;
         border-radius: 16px;
         width: 70%;
@@ -239,7 +263,7 @@ html {
           font-size: 12px;
           line-height: 34px;
           letter-spacing: 0.75px;
-          color: #ff0282;
+          color: var(--color-primary);
         }
       }
     }
@@ -457,4 +481,22 @@ html {
   100% {
     transform: rotate(360deg);
   }
+}
+
+@media screen and (max-width: 520px) {
+  .register_row {
+    flex-direction: column;
+    align-items: flex-start;
+    .ant-select {
+      width: 100% !important;
+      margin-bottom: 10px;
+    }
+    .ant-input-affix-wrapper {
+      width: 100% !important;
+      margin-bottom: 10px;
+    }
+  }
+}
+
+@media screen and (max-width: 390px) {
 }

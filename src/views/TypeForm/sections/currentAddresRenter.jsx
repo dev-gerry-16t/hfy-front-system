@@ -1,0 +1,665 @@
+import React, { useState, useEffect } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import NumberFormat from "react-number-format";
+import { Input, Row, Col, Select, Tooltip, Radio, Alert } from "antd";
+import { CloseOutlined } from "@ant-design/icons";
+
+const { Option } = Select;
+
+const CurrentAddressRenter = (props) => {
+  const {
+    onClickNext,
+    dataFormSave,
+    frontFunctions,
+    dataZipCatalog,
+    onChangeZipCode,
+    dataZipCodeAdress,
+    dataPropertyTypes,
+    dataProperties,
+  } = props;
+  const initialForm = {
+    isOwner: null,
+    streetProperty: null,
+    suiteProperty: null,
+    streetNumberProperty: null,
+    idZipCodeProperty: null,
+    zipCodeProperty: null,
+    city: null,
+    state: null,
+    neighborhoodProperty: null,
+    idPropertyType: null,
+    idPropertyTypeText: null,
+    isFurnished: null,
+    currentRent: null,
+    maintenanceAmount: null,
+    totalParkingSpots: null,
+    hasInsurance: null,
+  };
+  const [dataForm, setDataForm] = useState(initialForm);
+  const [isOpenInput, setIsOpenInput] = useState(false);
+  const [confirmData, setConfirmData] = useState(false);
+
+  const DescriptionItem = ({ title, content }) => (
+    <div
+      className="site-description-item-profile-wrapper"
+      style={{ textAlign: "center" }}
+    >
+      <strong className="site-description-item-profile-p-label">{title}</strong>
+      <br />
+      {content}
+    </div>
+  );
+
+  useEffect(() => {
+    if (
+      isEmpty(dataFormSave) === false &&
+      isEmpty(dataPropertyTypes) === false
+    ) {
+      const selectDefaulPropertyType = dataPropertyTypes.find((row) => {
+        return dataFormSave.idPropertyType === row.idPropertyType;
+      });
+      setDataForm({
+        ...dataFormSave,
+        idPropertyTypeText:
+          isNil(selectDefaulPropertyType) === false
+            ? selectDefaulPropertyType.text
+            : "",
+      });
+      onChangeZipCode(dataFormSave.zipCodeProperty);
+    }
+  }, [dataFormSave, dataPropertyTypes]);
+
+  useEffect(() => {
+    if (isEmpty(dataZipCodeAdress) === false) {
+      setDataForm({
+        ...dataForm,
+        state: dataZipCodeAdress.state,
+        city: dataZipCodeAdress.municipality,
+      });
+    }
+  }, [dataZipCodeAdress]);
+
+  return (
+    <div className="content-typeform-formulary">
+      <h3>
+        {confirmData === false
+          ? "Datos del Inmueble a rentar"
+          : "Confirmar datos del Inmueble a rentar"}
+      </h3>
+      {confirmData === false && (
+        <Row>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            {isEmpty(dataProperties) === false &&
+              dataForm.isFirstTime === false && (
+                <div className="message-typeform-requires">
+                  <Alert
+                    message={
+                      <div style={{ width: "100%" }}>
+                        Los siguientes campos son requeridos:
+                        <br />
+                        <ul>
+                          {dataProperties.map((row) => {
+                            return <li>{row.label}</li>;
+                          })}
+                        </ul>
+                      </div>
+                    }
+                    type="error"
+                  />
+                </div>
+              )}
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <div className="option-select-radio">
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ¿Eres el propietario?
+                  </span>
+                  <Radio.Group
+                    onChange={(e) => {
+                      const value = e.target.value;
+                      setDataForm({
+                        ...dataForm,
+                        isOwner: value,
+                      });
+                    }}
+                    value={
+                      dataForm.isOwner === true || dataForm.isOwner === 1
+                        ? 1
+                        : isNil(dataForm.isOwner) === false
+                        ? 0
+                        : null
+                    }
+                  >
+                    <Radio value={1}>Si</Radio>
+                    <Radio value={0}>No, lo estoy representando</Radio>
+                  </Radio.Group>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                <Input
+                  value={dataForm.streetProperty}
+                  placeholder={"Calle"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      streetProperty: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <Input
+                  value={dataForm.suiteProperty}
+                  placeholder={"Número interior"}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, suiteProperty: e.target.value });
+                  }}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <Input
+                  value={dataForm.streetNumberProperty}
+                  placeholder={"Número exterior"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      streetNumberProperty: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <Input
+                  value={dataForm.zipCodeProperty}
+                  placeholder={"Código postal"}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    if (value.length >= 5) {
+                      setDataForm({ ...dataForm, zipCodeProperty: value });
+                      onChangeZipCode(e.target.value);
+                    } else {
+                      setDataForm({
+                        ...dataForm,
+                        neighborhoodProperty: null,
+                        idZipCodeProperty: null,
+                        zipCodeProperty: value,
+                      });
+                    }
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.state}
+                  placeholder={"Estado"}
+                  onChange={(e) => {}}
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.city}
+                  placeholder={"Municipio/Delegación"}
+                  onChange={(e) => {}}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                {isOpenInput === false ? (
+                  <Select
+                    placeholder="Colonia"
+                    value={dataForm.idZipCodeProperty}
+                    onChange={(value, option) => {
+                      const dataSelect = option.onClick();
+                      setIsOpenInput(dataSelect.isOpen);
+                      if (dataSelect.isOpen === true) {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhoodProperty: null,
+                          idZipCodeProperty: value,
+                        });
+                      } else {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhoodProperty: option.children,
+                          idZipCodeProperty: value,
+                        });
+                      }
+                    }}
+                  >
+                    {isEmpty(dataZipCatalog) === false &&
+                      dataZipCatalog.map((row) => {
+                        return (
+                          <Option
+                            value={row.idZipCode}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.neighborhood}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                ) : (
+                  <Input
+                    value={dataForm.neighborhoodProperty}
+                    placeholder={"Indicar Colonia"}
+                    suffix={
+                      <Tooltip title="Cerrar">
+                        <CloseOutlined
+                          style={{ color: "rgba(0,0,0,.45)" }}
+                          onClick={() => {
+                            setIsOpenInput(false);
+                            setDataForm({
+                              ...dataForm,
+                              idZipCodeProperty: null,
+                              neighborhoodProperty: null,
+                            });
+                          }}
+                        />
+                      </Tooltip>
+                    }
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        neighborhoodProperty: e.target.value,
+                      });
+                    }}
+                  />
+                )}
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Select
+                  value={dataForm.idPropertyType}
+                  placeholder="Tipo de inmueble"
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      idPropertyType: value,
+                      idPropertyTypeText: option.children,
+                    });
+                  }}
+                >
+                  {isEmpty(dataPropertyTypes) === false &&
+                    dataPropertyTypes.map((row) => {
+                      return (
+                        <Option
+                          value={row.idPropertyType}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <div className="option-select-radio">
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ¿El inmueble está asegurado?
+                  </span>
+                  <Radio.Group
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        hasInsurance: e.target.value,
+                      });
+                    }}
+                    value={
+                      dataForm.hasInsurance === true ||
+                      dataForm.hasInsurance === 1
+                        ? 1
+                        : isNil(dataForm.hasInsurance) === false
+                        ? 0
+                        : null
+                    }
+                  >
+                    <Radio value={1}>Si</Radio>
+                    <Radio value={0}>No</Radio>
+                  </Radio.Group>
+                </div>
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <div className="option-select-radio">
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    ¿El inmueble está amueblado?
+                  </span>
+                  <Radio.Group
+                    onChange={(e) => {
+                      setDataForm({ ...dataForm, isFurnished: e.target.value });
+                    }}
+                    value={
+                      dataForm.isFurnished === true ||
+                      dataForm.isFurnished === 1
+                        ? 1
+                        : isNil(dataForm.isFurnished) === false
+                        ? 0
+                        : null
+                    }
+                  >
+                    <Radio value={1}>Si</Radio>
+                    <Radio value={0}>No</Radio>
+                  </Radio.Group>
+                </div>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.currentRent}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder="Monto de renta"
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      currentRent: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.maintenanceAmount}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder={"Monto de mandetimiento"}
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      maintenanceAmount: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.totalParkingSpots}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder={"Lugares de estacionamiento"}
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      totalParkingSpots: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </Col>
+            </Row>
+            <div className="button_actions">
+              {/* <button
+                type="button"
+                onClick={onClickBack}
+                className="button_secondary"
+              >
+                <span>Regresar</span>
+              </button> */}
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmData(true);
+                }}
+                className="button_primary"
+              >
+                <span>Continuar</span>
+              </button>
+            </div>
+          </Col>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+        </Row>
+      )}
+      {confirmData === true && (
+        <Row>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+            <p>
+              Verifica que tu información sea correcta, de lo contrario no
+              podras hacer modificaciones.
+            </p>
+            <Row>
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem
+                  title="¿Eres el propietario?"
+                  content={
+                    dataForm.isOwner === true || dataForm.isOwner === 1
+                      ? "Si"
+                      : isNil(dataForm.isOwner) === false
+                      ? "No, lo estoy representando"
+                      : null
+                  }
+                />
+              </Col>
+              <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Calle"
+                  content={dataForm.streetProperty}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Número exterior"
+                  content={dataForm.streetNumberProperty}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Número interior"
+                  content={dataForm.suiteProperty}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Colonia"
+                  content={dataForm.neighborhoodProperty}
+                />
+              </Col>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Municipio/Delegación"
+                  content={dataForm.city}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem title="Estado" content={dataForm.state} />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem
+                  title="Código postal"
+                  content={dataForm.zipCodeProperty}
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem
+                  title="Tipo de inmueble"
+                  content={dataForm.idPropertyTypeText}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <DescriptionItem
+                  title="¿Está amueblado?"
+                  content={
+                    dataForm.isFurnished === true || dataForm.isFurnished === 1
+                      ? "Si"
+                      : isNil(dataForm.isFurnished) === false
+                      ? "No"
+                      : null
+                  }
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <DescriptionItem
+                  title="¿Está asegurado?"
+                  content={
+                    dataForm.hasInsurance === true ||
+                    dataForm.hasInsurance === 1
+                      ? "Si"
+                      : isNil(dataForm.hasInsurance) === false
+                      ? "No"
+                      : null
+                  }
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Monto de renta"
+                  content={
+                    isNil(dataForm.currentRent) === false
+                      ? frontFunctions.parseFormatCurrency(
+                          dataForm.currentRent,
+                          2,
+                          2
+                        )
+                      : null
+                  }
+                />
+              </Col>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                <DescriptionItem
+                  title="Monto de mantenimiento"
+                  content={
+                    isNil(dataForm.maintenanceAmount) === false
+                      ? frontFunctions.parseFormatCurrency(
+                          dataForm.maintenanceAmount,
+                          2,
+                          2
+                        )
+                      : null
+                  }
+                />
+              </Col>
+              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                <DescriptionItem
+                  title="Estacionamiento"
+                  content={dataForm.totalParkingSpots}
+                />
+              </Col>
+            </Row>
+            <div className="button_actions">
+              <button
+                type="button"
+                onClick={() => {
+                  setConfirmData(false);
+                }}
+                className="button_secondary"
+              >
+                <span>Cancelar</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  onClickNext(dataForm);
+                }}
+                className="button_primary"
+              >
+                <span>Confirmar</span>
+              </button>
+            </div>
+          </Col>
+          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+        </Row>
+      )}
+    </div>
+  );
+};
+
+export default CurrentAddressRenter;

@@ -1,5 +1,77 @@
+.iframe-docx-hfy {
+  width: 100%;
+  height: 500px;
+}
+
+.button-contract-actions {
+  display: flex;
+  margin-left: 20px;
+  flex: 1 1 auto;
+  justify-content: space-evenly;
+  button {
+    border: none;
+    background: transparent;
+  }
+  button:nth-child(3) {
+    border: none;
+    border-radius: 10px;
+    background: rgba(255, 229, 28, 0.719);
+  }
+}
+.empty-screen-make {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  .info-screen-make {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    label {
+      margin: 10px 0px;
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: 600;
+      font-size: 15px;
+      line-height: 34px;
+      letter-spacing: 0.75px;
+      color: #4e4b66;
+    }
+  }
+}
+.ant-picker-clear {
+  display: none;
+}
+.panel-comment-user {
+  padding: 0px 20px !important;
+}
+
+.empty-data-document {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 5px;
+  label {
+    margin: 10px 0px;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 34px;
+    letter-spacing: 0.75px;
+    color: #4e4b66;
+  }
+}
+.ant-select-item {
+  font-family: Poppins;
+}
 .margin-app-main {
   margin: 2vh 4vh;
+}
+.button-drawer-header {
+  display: none;
 }
 .top-main-user {
   display: flex;
@@ -15,14 +87,18 @@
       font-size: 10px;
     }
   }
+  .action-buttons-top {
+    display: flex;
+    width: 50%;
+    justify-content: flex-end;
+  }
   .button_init_primary {
     display: flex;
     justify-content: center;
-    width: 30%;
-    min-width: 340px;
-    max-width: 145px;
+    width: 45%;
+    margin: 0px 10px;
     button {
-      background: #ff0282;
+      background: var(--color-primary);
       border-radius: 16px;
       border: none;
       width: 100%;
@@ -36,6 +112,24 @@
         color: #ffffff;
       }
     }
+  }
+}
+.button-action-primary {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  background: var(--color-primary);
+  border-radius: 16px;
+  border: none;
+  span {
+    font-family: Poppins;
+    padding: 0px 10px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    line-height: 34px;
+    letter-spacing: 0.75px;
+    color: #ffffff;
   }
 }
 .indicators-amount-renter {
@@ -78,6 +172,8 @@
 .main-information-user {
   display: flex;
   justify-content: space-between;
+  flex-wrap: wrap;
+  min-height: 280px;
   .title-cards {
     padding: 10px 0px 5px 20px;
     border-bottom: 1px solid #d6d8e7;
@@ -101,6 +197,93 @@
     border-radius: 16px;
     .section-information-renters {
       padding: 10px 20px;
+      max-height: 520px;
+      overflow-y: scroll;
+      .data-renter-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #d6d8e7;
+        padding-bottom: 10px;
+        .box-info-user {
+          display: flex;
+          flex: 1 1 auto;
+          .avatar-user {
+            margin-right: 20px;
+            align-self: center;
+          }
+          .info-user {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            width: 230px;
+            .status-payment {
+              background: rgba(218, 20, 20, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              align-self: flex-start;
+              span {
+                // color: #da1414;
+              }
+            }
+            .status-payment-contract {
+              background: rgba(142, 227, 49, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              align-self: flex-start;
+              cursor: pointer;
+              span {
+                color: #818181;
+              }
+            }
+          }
+          .info-user-payment {
+            align-self: center;
+          }
+        }
+        .button-collapse {
+          button {
+            background: transparent;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+.main-information-user-admin {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .title-cards {
+    padding: 10px 0px 5px 20px;
+    border-bottom: 1px solid #d6d8e7;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    letter-spacing: 0.75px;
+  }
+  .card-chart-information {
+    background: #ffffff;
+    width: 49%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+  }
+  .renter-card-information {
+    background: #ffffff;
+    width: 62%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    .section-information-renters {
+      padding: 10px 0px;
       .data-renter-info {
         display: flex;
         justify-content: space-between;
@@ -123,8 +306,20 @@
               background: rgba(218, 20, 20, 0.3);
               padding: 4px 10px;
               border-radius: 15px;
+              display: flex;
+              justify-content: center;
               span {
                 color: #da1414;
+              }
+            }
+            .status-payment-contract {
+              background: rgba(142, 227, 49, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              span {
+                color: #818181;
               }
             }
           }
@@ -143,12 +338,334 @@
   }
 }
 
+.main-information-owner {
+  background: #ffffff;
+  box-shadow: 0px 1px 8px 6px #ebebf1;
+  border-radius: 16px;
+  margin-top: 20px;
+  .title-cards {
+    padding: 10px 0px 5px 20px;
+    border-bottom: 1px solid #d6d8e7;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    letter-spacing: 0.75px;
+  }
+  .section-information-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 15px;
+    .section-information-info {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: space-around;
+      .section-information-data {
+        display: flex;
+        align-self: center;
+        .info-user {
+          display: flex;
+          flex-direction: column;
+          margin-left: 15px;
+        }
+      }
+      .section-information-button-1 {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+    .section-information-buttons {
+      display: flex;
+      flex: 1 1 auto;
+      justify-content: space-around;
+      .section-information-button-2 {
+        display: flex;
+        flex-direction: column;
+      }
+      .section-information-button-3 {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
+
+.main-form-information-guarantee {
+  padding: 5px;
+  font-family: Poppins;
+  .policy-information-modal {
+    .percentage-description {
+      display: flex;
+      margin: 10px 0px;
+      .radio-percentage {
+      }
+      .description {
+      }
+    }
+  }
+
+  .value-calculator-policy {
+    display: flex;
+    flex-direction: column;
+    .amount-rent-result {
+      align-self: center;
+    }
+    .slider-percentage {
+    }
+    .calculate-percentage {
+      margin: 15px 0px;
+      .percentage-description {
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .video-how-functionaly {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+  }
+}
+
+.form-modal {
+  .title-head-modal {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    .arrow-back-to {
+      border: none;
+      background: transparent;
+      position: absolute;
+      top: 3px;
+      left: 0px;
+    }
+    .chat-contract-icon {
+      position: absolute;
+      border: none;
+      background: transparent;
+      top: 3px;
+      right: 0px;
+    }
+    h1 {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 40px;
+      text-align: center;
+      letter-spacing: 1px;
+      color: var(--color-primary);
+    }
+  }
+  .main-form-information {
+    padding: 0px 25px;
+    p {
+      font-family: Poppins;
+      font-style: normal;
+      font-weight: bold;
+      font-size: 12px;
+      line-height: 28px;
+      letter-spacing: 0.75px;
+      color: #da006e;
+    }
+    .textarea-form-modal {
+    }
+    .option-select-radio {
+      display: flex;
+      flex-direction: column;
+    }
+    .contract-card-information {
+      box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 20px;
+      .ant-picker {
+        width: 100%;
+      }
+      p {
+        text-align: center;
+      }
+      .contract-children-information {
+        max-height: 300px;
+        overflow-y: scroll;
+        p {
+          color: black;
+        }
+      }
+      .contract-section-signature {
+        .signature {
+          border: 3px double black;
+          width: 320px;
+          height: 150px;
+          text-align: center;
+          margin: 0px auto;
+        }
+        .conditions-name {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          span {
+            margin-top: 10px;
+            font-size: 10px;
+            text-align: center;
+            color: gray;
+          }
+        }
+      }
+    }
+    .add-more-suite {
+      background: var(--color-primary);
+      border-radius: 8px;
+      border: none;
+      color: #fff;
+      span {
+        position: relative;
+        bottom: 1px;
+      }
+    }
+    .ant-row {
+      margin-bottom: 20px;
+    }
+    .ant-select {
+      width: 100%;
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    .ant-input {
+      border-radius: 8px;
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    .value-info-select {
+      font-family: Poppins;
+      font-weight: bold;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+  .button_init_primary {
+    display: flex;
+    justify-content: center;
+    button {
+      background: var(--color-primary);
+      border-radius: 16px;
+      border: none;
+      width: 45%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: #ffffff;
+      }
+    }
+  }
+  .two-action-buttons {
+    display: flex;
+    justify-content: space-around;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12px;
+    button:first-child {
+      background: #fff;
+      color: var(--color-primary);
+      border-radius: 16px;
+      border: 1px solid var(--color-primary);
+      padding: 3px 10px;
+      width: 35%;
+    }
+    button:last-child {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-radius: 16px;
+      border: none;
+      padding: 3px 10px;
+      width: 35%;
+    }
+  }
+}
+
+.flex-title-card {
+  display: flex;
+  justify-content: space-between;
+  .button_init_primary {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    button {
+      background: var(--color-primary);
+      border-radius: 16px;
+      border: none;
+      width: 40%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: #ffffff;
+      }
+    }
+  }
+  .button_init_secondary {
+    flex: 1 1 auto;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 20px;
+    button {
+      background: #fff;
+      border-radius: 16px;
+      border: 1px solid var(--color-primary);
+      width: 40%;
+      span {
+        font-family: Poppins;
+        font-style: normal;
+        font-weight: 600;
+        font-size: 12px;
+        line-height: 34px;
+        letter-spacing: 0.75px;
+        color: var(--color-primary);
+      }
+    }
+  }
+}
+
+.total-advancement-amount {
+  display: flex !important;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative !important;
+  div {
+    display: flex;
+    position: relative;
+    bottom: 15px;
+    strong {
+      position: relative;
+      top: 8px;
+      margin-left: 5px;
+    }
+  }
+}
+
 // antd
 .ant-rate-star:not(:last-child) {
   margin-right: 4px !important;
 }
 .ant-modal-mask {
-  background-color: rgba(0, 0, 0, 0.3) !important;
+  background: rgba(78, 75, 102, 0.3) !important;
+  backdrop-filter: blur(10px);
 }
 .ant-modal-content {
   border-radius: 15px !important;
@@ -157,3 +674,415 @@
   border-radius: 15px 15px 0 0 !important;
 }
 //antd
+@media screen and (max-width: 970px) {
+  .main-information-user {
+    flex-direction: column;
+    .card-chart-information {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+    .renter-card-information {
+      width: 100% !important;
+    }
+  }
+
+  .main-information-user-admin {
+    flex-direction: column;
+    .card-chart-information {
+      width: 100% !important;
+      margin-bottom: 20px;
+    }
+    .renter-card-information {
+      width: 100% !important;
+    }
+  }
+
+  .indicators-amount-renter {
+    flex-direction: column;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    .cards-amount-renter {
+      margin-bottom: 15px;
+      width: 100%;
+    }
+  }
+  .top-main-user {
+    flex-direction: column;
+    .welcome-user-main {
+      width: 100%;
+    }
+    .action-buttons-top {
+      width: 100%;
+      justify-content: space-around;
+    }
+    .button_init_primary {
+      margin: 10px 0px;
+    }
+  }
+}
+
+@media screen and (max-width: 715px) {
+  aside {
+    display: none;
+  }
+  .main-information-owner {
+    .title-cards {
+    }
+    .section-information-actions {
+      display: flex;
+      flex-direction: column;
+      .section-information-info {
+        .section-information-data {
+          margin-top: 15px;
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+          margin-top: 15px;
+        }
+      }
+      .section-information-buttons {
+        margin-top: 20px;
+        .section-information-button-2 {
+          margin-top: 15px;
+        }
+        .section-information-button-3 {
+          margin-top: 15px;
+        }
+      }
+    }
+  }
+  .button-drawer-header {
+    display: block;
+    background: transparent;
+    border: none;
+    margin-left: 10px;
+  }
+  // .top-main-user {
+  //   flex-direction: column;
+  //   .welcome-user-main {
+  //     width: 100%;
+  //   }
+  //   .action-buttons-top {
+  //     width: 100%;
+  //   }
+  // }
+}
+
+@media screen and (max-width: 520px) {
+  .contract-card-information {
+    padding: 10px 2px !important;
+  }
+  .main-information-owner {
+    .title-cards {
+      flex-direction: column;
+      .button_init_secondary {
+        display: block;
+        button {
+          width: 100%;
+        }
+      }
+    }
+    .section-information-actions {
+      display: flex;
+      flex-direction: column;
+      .section-information-info {
+        flex-direction: column;
+        .section-information-data {
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+        }
+      }
+      .section-information-buttons {
+        flex-direction: column;
+        .section-information-button-2 {
+        }
+        .section-information-button-3 {
+        }
+      }
+    }
+  }
+  .margin-app-main {
+    margin: 2vh 5px;
+  }
+  .welcome-user-main {
+    margin-bottom: 10px;
+  }
+  .action-buttons-top {
+    flex-direction: column;
+    .button_init_primary {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  }
+  .data-renter-info {
+    .box-info-user {
+      flex-direction: column;
+      .avatar-user {
+        margin-right: 0px !important;
+        margin-top: 10px;
+        margin-bottom: 5px;
+      }
+      .info-user {
+        .status-payment {
+          margin: 5px 0px;
+        }
+        .status-payment-contract {
+          margin: 5px 0px;
+        }
+      }
+    }
+  }
+  .renter-card-information {
+    min-height: 520px;
+    .title-cards {
+      .button_init_primary {
+        button {
+          min-width: 140px;
+        }
+      }
+    }
+    .info-user-payment {
+      align-self: flex-start !important;
+    }
+  }
+}
+
+.content-infomation-drawer {
+  font-family: Poppins;
+  h3 {
+    margin-bottom: 15px;
+    color: var(--color-primary);
+  }
+  .ant-row {
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 390px) {
+  .main-information-owner {
+    .title-cards {
+      flex-direction: column;
+      .button_init_secondary {
+        display: block;
+        button {
+          width: 100%;
+        }
+      }
+    }
+    .section-information-actions {
+      .section-information-info {
+        .section-information-data {
+          .info-user {
+          }
+        }
+        .section-information-button-1 {
+        }
+      }
+      .section-information-buttons {
+        .section-information-button-2 {
+        }
+        .section-information-button-3 {
+        }
+      }
+    }
+  }
+  .header-title-button {
+    h2 {
+      font-size: 15px;
+    }
+  }
+  .header-info-user {
+    .hi-user-name-type {
+      strong {
+        font-size: 12px !important;
+      }
+      span {
+        font-size: 12px !important;
+      }
+    }
+    .button-header {
+      margin: 0px 5px !important;
+      .icon-header-1 {
+        width: 20px;
+      }
+    }
+  }
+  .renter-card-information {
+    .title-cards {
+      flex-direction: column;
+      span {
+        margin-bottom: 5px;
+      }
+      .button_init_primary {
+        justify-content: center;
+        button {
+          width: 100% !important;
+          min-width: 140px;
+        }
+      }
+    }
+  }
+  .ant-modal-body {
+    padding: 24px 5px !important;
+  }
+  .main-form-information {
+    padding: 0px 5px !important;
+  }
+}
+
+.total-width {
+  width: 100% !important;
+  margin: 20px 0px;
+}
+
+// .ant-notification-notice-close {
+//   display: none;
+// }
+
+// Color variables
+$main: #fff5a5;
+$secundary: #ffd4da;
+$terchiary: #99d2e4;
+
+// animation keyframes
+@keyframes mainAnimation {
+  0% {
+    width: 50px;
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  20% {
+    width: 50px;
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  40% {
+    width: 150px;
+    transform: translateX(-50px) translateY(0px) rotate(0deg);
+  }
+  60% {
+    width: 150px;
+    transform-origin: bottom right;
+    transform: translateX(-150px) translateY(0px) rotate(90deg);
+  }
+  80% {
+    width: 50px;
+    transform: translateX(-25px) translateY(0px) rotate(90deg);
+  }
+  100% {
+    width: 50px;
+    transform: translateX(-50px) translateY(0px) rotate(90deg);
+  }
+}
+@keyframes secundaryAnimation {
+  0% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  20% {
+    transform: translateX(0px) translateY(0px) rotate(180deg);
+  }
+  40% {
+    transform: translateX(0px) translateY(0px) rotate(180deg);
+  }
+  60% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  80% {
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+  }
+  100% {
+    transform: translateX(0px) translateY(0px) rotate(180deg);
+  }
+}
+@keyframes shadowAnimation {
+  0% {
+    width: 150px;
+    transform: translateX(-25px) translateY(0px) rotate(0deg);
+  }
+  20% {
+    width: 75px;
+    transform: translateX(37.5px) translateY(0px) rotate(0deg);
+  }
+  40% {
+    width: 200px;
+    transform: translateX(-25px) translateY(0px) rotate(0deg);
+  }
+  60% {
+    width: 75px;
+    transform: translateX(37.5px) translateY(0px) rotate(0deg);
+  }
+  80% {
+    width: 75px;
+    transform: translateX(37.5px) translateY(0px) rotate(0deg);
+  }
+  100% {
+    width: 150px;
+    transform: translateX(-25px) translateY(0px) rotate(0deg);
+  }
+}
+@keyframes float {
+  0% {
+    top: 50%;
+  }
+  50% {
+    top: 51%;
+  }
+  100% {
+    top: 50%;
+  }
+}
+
+.loader {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  top: 50%;
+  left: 50%;
+  margin-top: -25px;
+  margin-left: -25px;
+  background-color: $main;
+  transform: translateX(0px) translateY(0px) rotate(0deg);
+  animation: mainAnimation 2.6s ease 0s infinite forwards;
+  z-index: 2;
+  &:after {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 0;
+    left: -50px;
+    background-color: $main;
+    transform-origin: top right;
+    transform: translateX(0px) translateY(0px) rotate(0deg);
+    animation: secundaryAnimation 2.6s ease 0s infinite forwards;
+  }
+}
+
+.shadow {
+  position: absolute;
+  width: 100px;
+  height: 10px;
+  top: 50%;
+  left: 50%;
+  margin-top: 50px;
+  margin-left: -75px;
+  border-radius: 50%;
+  background-color: #95a5a6;
+  transform: translateX(0px) translateY(0px) rotate(0deg);
+  animation: shadowAnimation 2.6s ease 0s infinite forwards,
+    float 5s ease-in-out 0s infinite forwards;
+  filter: blur(5px);
+  z-index: 1;
+}
+
+.ant-divider {
+  border-top: 1px solid rgba(0, 0, 0, 0.3) !important;
+}
+
+.center-image-signature-document {
+  position: absolute !important;
+  top: -75px !important;
+  right: 80px !important;
+}

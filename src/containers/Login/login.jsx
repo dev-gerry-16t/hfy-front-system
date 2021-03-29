@@ -33,7 +33,10 @@ const Login = (props) => {
   const handlerCallApiLogin = async (data) => {
     try {
       if (isEmpty(data.password) === false && isEmpty(data.email) === false) {
-        const response = await callApiLogin(data);
+        const response = await callApiLogin({
+          email: data.email.trim(),
+          password: data.password.trim(),
+        });
         const idSystemUser =
           isNil(response) === false &&
           isNil(response.response) === false &&
@@ -46,9 +49,11 @@ const Login = (props) => {
           isNil(response.response.token) === false
             ? response.response.token
             : null;
-        window.fcWidget.user.setEmail(data.email);
-        window.fcWidget.setExternalId(idSystemUser);
-        await setDataUserProfile({ idSystemUser, token });
+        await setDataUserProfile({
+          idSystemUser,
+          token,
+          email: data.email.trim(),
+        });
         setSpinVisible(false);
         history.push("/auth");
       } else {
@@ -70,7 +75,7 @@ const Login = (props) => {
   return (
     <div className="App">
       <div className="login_head_logo">
-        <img src={logo} alt="Girl in a jacket" className="login_logo" />
+        <img src={logo} alt="Homify-Pólizas de arrendamiento" className="login_logo" />
       </div>
       <div className="login_main">
         <div className="login_card_form">
@@ -138,7 +143,14 @@ const Login = (props) => {
                 </div>
               </div>
               <div className="login-recover-pass">
-                <p>Olvidé mi contraseña</p>
+                <p
+                  style={{ cursor: "pointer" }}
+                  onClick={() => {
+                    history.push("/recoveryPass");
+                  }}
+                >
+                  Olvidé mi contraseña
+                </p>
               </div>
               <div className="button_init_primary">
                 <button

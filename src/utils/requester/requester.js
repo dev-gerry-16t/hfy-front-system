@@ -1,5 +1,6 @@
 import axios from "axios";
 import ENVIROMENT from "../constants/enviroments";
+import { loadProgressBar } from "axios-progress-bar";
 
 const axiosInstance = axios.create({
   timeout: 35000,
@@ -7,6 +8,8 @@ const axiosInstance = axios.create({
     return status >= 200 && status < 600;
   },
 });
+
+loadProgressBar(null, axiosInstance);
 
 const RequesterAxios = {
   get: async (path, config) => {
@@ -23,6 +26,9 @@ const RequesterAxios = {
     try {
       const endPoint = `${ENVIROMENT}${path}`;
       const response = await axiosInstance.post(endPoint, body, config);
+      if (response.status === 401) {
+        window.location.href = "/logout";
+      }
       return response;
     } catch (error) {
       throw error;

@@ -1,3 +1,24 @@
+.avatar-image {
+  margin-bottom: 10px;
+  div {
+    div {
+      margin: 0px auto;
+      label {
+        font-family: Poppins !important;
+      }
+    }
+  }
+}
+.ant-dropdown {
+  font-family: Poppins;
+}
+
+.image-avatar-little {
+  position: absolute;
+  right: 15px;
+  bottom: 5px;
+}
+
 .trigger {
   font-size: 18px;
   line-height: 64px;
@@ -21,7 +42,6 @@
   background: #fff;
   display: flex;
   justify-content: space-between;
-  padding: 0px 25px !important;
   font-family: Poppins;
   font-weight: 400;
   color: #4e4b66;
@@ -32,7 +52,7 @@
       margin-right: 5px;
     }
     h2 {
-      margin: 0px;
+      margin: 0px 0px 0px 5px;
     }
   }
   .header-info-user {
@@ -70,18 +90,18 @@
 }
 
 .ant-layout-sider-children {
-  background: #ff0282;
+  background: var(--color-primary);
 }
 
 .ant-layout-sider-trigger {
-  background: #f9449f !important;
+  background: var(--color-primary) !important;
 }
 
 .ant-menu.ant-menu-dark,
 .ant-menu-dark .ant-menu-sub,
 .ant-menu.ant-menu-dark .ant-menu-sub {
   color: rgba(255, 255, 255, 0.65);
-  background: #ff0282 !important;
+  background: var(--color-primary) !important;
 }
 
 .ant-menu-dark.ant-menu-dark:not(.ant-menu-horizontal) .ant-menu-item-selected {
@@ -96,4 +116,20 @@
 .ant-layout-content {
   overflow: scroll;
   overflow-x: hidden;
+}
+
+#nprogress .spinner-icon {
+  border-top-color: var(--color-primary) !important;
+  border-left-color: var(--color-primary) !important;
+}
+
+#nprogress .bar {
+  background: var(--color-primary);
+}
+
+.drawer-menu_header {
+  .ant-drawer-body {
+    padding: 0px !important;
+    background: var(--color-primary);
+  }
 }

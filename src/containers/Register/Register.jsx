@@ -3,7 +3,16 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Radio, Select, Input, Spin, Skeleton } from "antd";
+import {
+  Radio,
+  Select,
+  Input,
+  Spin,
+  Skeleton,
+  Alert,
+  Progress,
+  Checkbox,
+} from "antd";
 import {
   UserOutlined,
   PhoneOutlined,
@@ -17,10 +26,12 @@ import {
   callGetAllEndorsement,
   callGetAllRegisterUser,
   callGetAllVerifyCode,
+  callGetInvitationUser,
 } from "../../utils/actions/actions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
+import CustomInput from "../../components/CustomInput";
 
 const { Option } = Select;
 
@@ -32,9 +43,18 @@ const Register = (props) => {
     callGetAllEndorsement,
     callGetAllRegisterUser,
     callGetAllVerifyCode,
+    callGetInvitationUser,
   } = props;
-  const [userType, setUserType] = useState(1);
+  const [userType, setUserType] = useState(null);
+  const [aceptTerms, setAceptTerms] = useState(false);
   const [userCustomer, setUserCustomer] = useState([]);
+  const [securePass, setSecurePass] = useState({
+    lengthCharacter: false,
+    upperLowerword: false,
+    numbers: false,
+    specialCharacters: false,
+    percentStatus: 0,
+  });
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
   const [userPerson, setUserPerson] = useState([]);
   const [userEndorsement, setUserEndorsement] = useState([]);
@@ -50,6 +70,7 @@ const Register = (props) => {
     phoneNumber: null,
     username: null,
     password: null,
+    idInvitation: null,
   });
 
   const LoadingSpin = <SyncOutlined spin />;
@@ -60,6 +81,12 @@ const Register = (props) => {
       message: "Las contraseñas no coinciden",
       errorEmpty: false,
       messageEmpty: "La contraseña es requerida",
+    },
+    errorPassSecure: {
+      error: false,
+      message: "Tu contraseña no es segura",
+      errorEmpty: false,
+      messageEmpty: "Tu contraseña no es segura",
     },
     errorGivenName: {
       error: false,
@@ -108,13 +135,22 @@ const Register = (props) => {
     } catch (error) {}
   };
 
-  const handlerCallApiPersonTypes = async (data) => {
+  const handlerCallApiPersonTypes = async (data, person) => {
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
     try {
       const response = await callGetAllPersons(data);
       const responseResult =
         isNil(response) === false && isNil(response.result) === false
           ? response.result
           : [];
+      if (isEmpty(params) === false && isEmpty(responseResult) === false) {
+        const filterCondition = responseResult.find((row) => {
+          return row.idPersonType == person;
+        });
+        const parseResult = JSON.parse(filterCondition.jsonProperties);
+        setConfigComponents(parseResult);
+      }
       setUserPerson(responseResult);
     } catch (error) {}
   };
@@ -127,6 +163,42 @@ const Register = (props) => {
           ? response.result
           : [];
       setUserEndorsement(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetInvitationUser = async (id) => {
+    try {
+      const response = await callGetInvitationUser(id);
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      await handlerCallApiPersonTypes(
+        {
+          idType: 1,
+          idCustomerType: responseResult.idCustomerType,
+        },
+        responseResult.idPersonType
+      );
+      await handlerCallApiEndorsement({
+        idType: 1,
+      });
+      setSelectUserCustomer(responseResult.idCustomerType);
+      setDataForm({
+        ...dataForm,
+        idPersonType: responseResult.idPersonType,
+        givenName: responseResult.givenName,
+        lastName:
+          isNil(responseResult.lastName) === false
+            ? responseResult.lastName
+            : null,
+        mothersMaidenName:
+          isNil(responseResult.mothersMaidenName) === false
+            ? responseResult.mothersMaidenName
+            : null,
+        username: responseResult.usernameRequested,
+        idInvitation: responseResult.idInvitation,
+      });
     } catch (error) {}
   };
 
@@ -158,6 +230,7 @@ const Register = (props) => {
     const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
     let objectErrors = errorsRegister;
     let validatePass = true;
+    let validatePassSecure = true;
     let validateIdPerson = true;
     let validateGivenName = true;
     let validateUserName = true;
@@ -184,7 +257,15 @@ const Register = (props) => {
       validatePass = false;
     }
 
-    if (isNil(data.idPersonType) === false) {
+    if (securePass.percentStatus < 100) {
+      objectErrors = {
+        ...objectErrors,
+        errorPassSecure: { ...objectErrors.errorPassSecure, error: true },
+      };
+      validatePassSecure = false;
+    }
+
+    if (isNil(data.idPersonType) === false || selectuserCustomer === 3) {
       validateIdPerson = true;
     } else {
       objectErrors = {
@@ -228,8 +309,58 @@ const Register = (props) => {
     setErrorsRegister(objectErrors);
 
     return (
-      validatePass && validateIdPerson && validateGivenName && validateUserName
+      validatePass &&
+      validateIdPerson &&
+      validateGivenName &&
+      validateUserName &&
+      validatePassSecure
     );
+  };
+
+  const handlerEvalutePassword = (pass) => {
+    const size = /^(?=.{8,}).*$/;
+    const lowerInPass = /^(?:.*[a-z])/;
+    const upperInPass = /^(?:.*[A-Z])/;
+    const numberInPass = /^(?=.*\d)/;
+    const specialCharacter = /^(?=.*[$@$!%*?&])/;
+
+    let lengthCharacter = false;
+    let upperLowerword = false;
+    let numbers = false;
+    let specialCharacters = false;
+    let lengthCharacterPercent = 0;
+    let upperLowerwordPercent = 0;
+    let numbersPercent = 0;
+    let specialCharactersPercent = 0;
+
+    if (size.test(pass) === true) {
+      lengthCharacter = true;
+      lengthCharacterPercent = 25;
+    }
+    
+    if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
+      upperLowerword = true;
+      upperLowerwordPercent = 25;
+    }
+    if (numberInPass.test(pass) === true) {
+      numbers = true;
+      numbersPercent = 25;
+    }
+    if (specialCharacter.test(pass) === true) {
+      specialCharacters = true;
+      specialCharactersPercent = 25;
+    }
+    setSecurePass({
+      lengthCharacter,
+      upperLowerword,
+      numbers,
+      specialCharacters,
+      percentStatus:
+        lengthCharacterPercent +
+        upperLowerwordPercent +
+        numbersPercent +
+        specialCharactersPercent,
+    });
   };
 
   const selectPerson = (
@@ -273,10 +404,13 @@ const Register = (props) => {
               <button
                 type="button"
                 onClick={async () => {
-                  await handlerCallApiPersonTypes({
-                    idType: 1,
-                    idCustomerType: selectuserCustomer,
-                  });
+                  await handlerCallApiPersonTypes(
+                    {
+                      idType: 1,
+                      idCustomerType: selectuserCustomer,
+                    },
+                    dataForm.idPersonType
+                  );
                   await handlerCallApiEndorsement({
                     idType: 1,
                   });
@@ -293,7 +427,7 @@ const Register = (props) => {
   );
 
   const selectForm = (
-    <div className="login_main" style={{ height: "100%" }}>
+    <div className="login_main" style={{ height: "150%" }}>
       <div className="login_card_form large">
         <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
           <div className="register_holder">
@@ -303,7 +437,14 @@ const Register = (props) => {
                   className="arrow-back-to"
                   type="button"
                   onClick={() => {
-                    setUserType(1);
+                    const { match } = props;
+                    const params =
+                      isEmpty(match.params) === false ? match.params : {};
+                    if (isEmpty(params) === false) {
+                      history.push("/login");
+                    } else {
+                      setUserType(1);
+                    }
                   }}
                 >
                   <img src={Arrow} alt="backTo" width="30" />
@@ -334,6 +475,12 @@ const Register = (props) => {
                     <span>{errorsRegister.errorPass.message}</span>
                   </div>
                 )}
+                {errorsRegister.errorPassSecure.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorPassSecure.message}</span>
+                  </div>
+                )}
                 {errorsRegister.errorPass.errorEmpty && (
                   <div>
                     <img src={admiration} alt="exclaim" />
@@ -362,58 +509,63 @@ const Register = (props) => {
                 )}
               </div>
               <label className="fieldset_title">Información personal</label>
-              <div className="register_row half">
-                <Select
-                  placeholder="Tipo de Persona"
-                  onChange={(value, option) => {
-                    const configureOption = option.onClick();
-                    setConfigComponents(configureOption);
-                    setErrorsRegister(copyErrors);
-                    setErrorFormulary(false);
-                    setDataForm({ ...dataForm, idPersonType: value });
-                  }}
-                >
-                  {isEmpty(userPerson) === false &&
-                    userPerson.map((row) => {
-                      return (
-                        <Option
-                          value={row.id}
-                          onClick={() => {
-                            return isNil(row) === false &&
-                              isNil(row.jsonProperties) === false
-                              ? JSON.parse(row.jsonProperties)
-                              : {};
-                          }}
-                        >
-                          {row.text}
-                        </Option>
-                      );
-                    })}
-                </Select>
-                {isEmpty(configComponents) === false &&
-                  configComponents.idEndorsement && (
-                    <Select
-                      placeholder="Aval"
-                      onChange={(value) => {
-                        setDataForm({ ...dataForm, idEndorsement: value });
-                      }}
-                    >
-                      {isEmpty(userEndorsement) === false &&
-                        userEndorsement.map((row) => {
-                          return <Option value={row.id}>{row.text}</Option>;
-                        })}
-                    </Select>
-                  )}
-              </div>
+              {selectuserCustomer !== 3 && (
+                <div className="register_row half">
+                  <Select
+                    placeholder="Tipo de Persona"
+                    value={dataForm.idPersonType}
+                    onChange={(value, option) => {
+                      const configureOption = option.onClick();
+                      setConfigComponents(configureOption);
+                      setErrorsRegister(copyErrors);
+                      setErrorFormulary(false);
+                      setDataForm({ ...dataForm, idPersonType: value });
+                    }}
+                  >
+                    {isEmpty(userPerson) === false &&
+                      userPerson.map((row) => {
+                        return (
+                          <Option
+                            value={row.id}
+                            onClick={() => {
+                              return isNil(row) === false &&
+                                isNil(row.jsonProperties) === false
+                                ? JSON.parse(row.jsonProperties)
+                                : {};
+                            }}
+                          >
+                            {row.text}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                  {isEmpty(configComponents) === false &&
+                    configComponents.idEndorsement && (
+                      <Select
+                        placeholder="Aval"
+                        onChange={(value) => {
+                          setDataForm({ ...dataForm, idEndorsement: value });
+                        }}
+                      >
+                        {isEmpty(userEndorsement) === false &&
+                          userEndorsement.map((row) => {
+                            return <Option value={row.id}>{row.text}</Option>;
+                          })}
+                      </Select>
+                    )}
+                </div>
+              )}{" "}
               <div className="register_row">
-                <Input
+                <CustomInput
                   value={dataForm.givenName}
                   suffix={<UserOutlined />}
                   placeholder={
-                    configComponents.lastName ? "Nombre(s):" : "Razón Social"
+                    configComponents.lastName || selectuserCustomer === 3
+                      ? "Nombre(s):"
+                      : "Razón Social"
                   }
                   onChange={(e) => {
-                    setDataForm({ ...dataForm, givenName: e.target.value });
+                    setDataForm({ ...dataForm, givenName: e });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
                   }}
@@ -421,55 +573,80 @@ const Register = (props) => {
               </div>
               <div className="register_row half">
                 {isEmpty(configComponents) === false &&
+                  selectuserCustomer !== 3 &&
                   configComponents.lastName && (
-                    <Input
+                    <CustomInput
                       value={dataForm.lastName}
                       suffix={<UserOutlined />}
                       placeholder="Primer Apellido"
                       onChange={(e) => {
-                        setDataForm({ ...dataForm, lastName: e.target.value });
+                        setDataForm({ ...dataForm, lastName: e });
                       }}
                     />
                   )}
+                {selectuserCustomer === 3 && (
+                  <CustomInput
+                    value={dataForm.lastName}
+                    suffix={<UserOutlined />}
+                    placeholder="Primer Apellido"
+                    onChange={(e) => {
+                      setDataForm({ ...dataForm, lastName: e });
+                    }}
+                  />
+                )}
                 {isEmpty(configComponents) === false &&
+                  selectuserCustomer !== 3 &&
                   configComponents.mothersMaidenName && (
-                    <Input
+                    <CustomInput
                       value={dataForm.mothersMaidenName}
                       suffix={<UserOutlined />}
                       placeholder="Segundo Apellido"
                       onChange={(e) => {
                         setDataForm({
                           ...dataForm,
-                          mothersMaidenName: e.target.value,
+                          mothersMaidenName: e,
                         });
                       }}
                     />
                   )}
+                {selectuserCustomer === 3 && (
+                  <CustomInput
+                    value={dataForm.mothersMaidenName}
+                    suffix={<UserOutlined />}
+                    placeholder="Segundo Apellido"
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        mothersMaidenName: e,
+                      });
+                    }}
+                  />
+                )}
               </div>
               <label className="fieldset_title">
                 {" "}
                 Información de contacto{" "}
               </label>
               <div className="register_row half">
-                <Input
+                <CustomInput
                   value={dataForm.phoneNumber}
                   suffix={<PhoneOutlined />}
                   placeholder="Teléfono celular"
                   onChange={(e) => {
                     const regexp = /^([0-9])*$/;
-                    if (regexp.test(e.target.value) === true) {
-                      setDataForm({ ...dataForm, phoneNumber: e.target.value });
+                    if (regexp.test(e) === true) {
+                      setDataForm({ ...dataForm, phoneNumber: e });
                     }
                   }}
                 />
-                <Input
+                <CustomInput
                   value={dataForm.username}
                   suffix={<MailOutlined />}
                   placeholder="Correo electrónico"
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
-                      username: e.target.value,
+                      username: e,
                     });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
@@ -478,7 +655,7 @@ const Register = (props) => {
               </div>
               <label className="fieldset_title"> Contraseña </label>
               <div className="register_row half">
-                <Input
+                <CustomInput
                   value={dataForm.password}
                   suffix={<LockOutlined />}
                   placeholder="Contraseña"
@@ -486,26 +663,89 @@ const Register = (props) => {
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
-                      password: e.target.value,
+                      password: e,
                     });
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
+                    handlerEvalutePassword(e);
                   }}
                 />
-                <Input
+                <CustomInput
                   value={verifyPassword}
                   suffix={<LockOutlined />}
                   placeholder="Confirmar Contraseña"
                   type="password"
                   onChange={(e) => {
-                    setVerifyPassword(e.target.value);
+                    setVerifyPassword(e);
                     setErrorsRegister(copyErrors);
                     setErrorFormulary(false);
                   }}
                 />
               </div>
+              <div>
+                <Progress
+                  percent={securePass.percentStatus}
+                  status={
+                    securePass.percentStatus === 100 ? "success" : "exception"
+                  }
+                />
+                <p className="fieldset_title">
+                  {securePass.percentStatus === 100
+                    ? "Tu contraseña es segura"
+                    : "La contraseña debe contener"}
+                </p>
+                {securePass.lengthCharacter === false && (
+                  <Alert
+                    message="Al menos 8 caracteres"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+                {securePass.upperLowerword === false && (
+                  <Alert
+                    message="Letras mayusculas y minusculas (AaBbCc)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+                {securePass.numbers === false && (
+                  <Alert message="Números" type="warning" showIcon />
+                )}
+                {securePass.specialCharacters === false && (
+                  <Alert
+                    message="Caracteres especiales (@$&!%*?)"
+                    type="warning"
+                    showIcon
+                  />
+                )}
+              </div>
+              <div>
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    setAceptTerms(e.target.checked);
+                  }}
+                ></Checkbox>
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "gray",
+                  }}
+                >
+                  Acepto el{" "}
+                  <a href="https://segurent.mx/aviso-de-privacidad/">
+                    Aviso de privacidad
+                  </a>
+                </span>
+              </div>
               <div
-                className="button_init_primary"
+                className={
+                  aceptTerms === true
+                    ? "button_init_primary"
+                    : "button_init_primary_disabled"
+                }
                 style={{ margin: "16px 0 0" }}
               >
                 <button
@@ -522,7 +762,6 @@ const Register = (props) => {
                         await handlerCallApiRegister({
                           ...dataForm,
                           idCustomerType: selectuserCustomer,
-                          offset: "-06:00",
                         });
                         setUserType(3);
                         setSpinVisible(false);
@@ -590,7 +829,7 @@ const Register = (props) => {
             </p>
             <div className="codeForm">
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-0"
                   type="number"
                   value={codeVerify.value1}
@@ -598,124 +837,124 @@ const Register = (props) => {
                   minLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                     } else {
                       document.getElementById("input-code-validate-1").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value1: event.target.value,
+                        value1: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-1"
                   type="number"
                   value={codeVerify.value2}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-0").focus();
                     } else {
                       document.getElementById("input-code-validate-2").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value2: event.target.value,
+                        value2: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-2"
                   type="number"
                   value={codeVerify.value3}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-1").focus();
                     } else {
                       document.getElementById("input-code-validate-3").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value3: event.target.value,
+                        value3: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-3"
                   type="number"
                   value={codeVerify.value4}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-2").focus();
                     } else {
                       document.getElementById("input-code-validate-4").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value4: event.target.value,
+                        value4: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-4"
                   type="number"
                   value={codeVerify.value5}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-3").focus();
                     } else {
                       document.getElementById("input-code-validate-5").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value5: event.target.value,
+                        value5: event,
                       });
                     }
                   }}
                 />
               </div>
               <div className="codeFormItem">
-                <Input
+                <CustomInput
                   id="input-code-validate-5"
                   type="number"
                   value={codeVerify.value6}
                   maxLength={1}
                   onChange={(event) => {
                     setErrorsRegister(copyErrors);
-                    if (event.target.value === "") {
+                    if (event === "") {
                       document.getElementById("input-code-validate-4").focus();
                     } else {
                       document.getElementById("button-send-code").focus();
                     }
-                    if (event.target.value.length <= 1) {
+                    if (event.length <= 1) {
                       setCodeVerify({
                         ...codeVerify,
-                        value6: event.target.value,
+                        value6: event,
                       });
                     }
                   }}
@@ -736,7 +975,7 @@ const Register = (props) => {
                     await handlerCallVerifyCode({
                       code: numberResult,
                       idRequestSignUp,
-                      offset: "-06:00",
+                      idInvitation: dataForm.idInvitation,
                     });
                     setUserType(4);
                   } catch (error) {
@@ -774,7 +1013,6 @@ const Register = (props) => {
                       await handlerCallApiRegister({
                         ...dataForm,
                         idCustomerType: selectuserCustomer,
-                        offset: "-06:00",
                       });
                     }
                   } catch (error) {
@@ -848,7 +1086,15 @@ const Register = (props) => {
   };
 
   useEffect(() => {
-    handlerAsyncCallAppis();
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
+    if (isEmpty(params) === false) {
+      setUserType(2);
+      handlerCallGetInvitationUser(params.idInvitation, params);
+    } else {
+      setUserType(1);
+      handlerAsyncCallAppis();
+    }
   }, []);
 
   return (
@@ -869,6 +1115,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllEndorsement: (data) => dispatch(callGetAllEndorsement(data)),
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
+  callGetInvitationUser: (paramId) => dispatch(callGetInvitationUser(paramId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

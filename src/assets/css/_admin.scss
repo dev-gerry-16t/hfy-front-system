@@ -1,0 +1,19 @@
+.color-green {
+  background: green !important;
+}
+
+.table-users-hfy {
+  table {
+    font-family: Poppins;
+    font-size: 12px !important;
+  }
+}
+
+@media screen and (max-width: 715px) {
+  .ant-drawer-content-wrapper {
+    width: 100% !important;
+  }
+}
+
+@media screen and (max-width: 390px) {
+}
