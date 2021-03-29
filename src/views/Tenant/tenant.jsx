@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
-import { Layout, Avatar, Rate, notification, message } from "antd";
+import {
+  Layout,
+  Avatar,
+  Rate,
+  notification,
+  message,
+  Dropdown,
+  Menu,
+} from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { UserOutlined } from "@ant-design/icons";
@@ -36,6 +44,7 @@ import {
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
+import CustomViewDocument from "../../components/CustomViewDocument";
 
 const { Content } = Layout;
 
@@ -57,6 +66,8 @@ const Tenant = (props) => {
     callAddDocumentContractId,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dataDocument, setDataDocument] = useState({});
+  const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [dataPayments, setDataPayments] = useState([]);
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
   const [isVisiblePaymentRent, setIsVisiblePaymentRent] = useState(false);
@@ -472,6 +483,13 @@ const Tenant = (props) => {
 
   return (
     <Content>
+      <CustomViewDocument
+        isVisibleModal={isVisibleModal}
+        dataDocument={dataDocument}
+        onClose={() => {
+          setIsVisibleModal(false);
+        }}
+      />
       <SectionContractAvailable
         dataProfile={dataProfile}
         isModalVisible={isModalVisible}
@@ -679,13 +697,75 @@ const Tenant = (props) => {
                     alt="Reportar incidencia"
                     height={62}
                   />
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="button-action-primary"
+                  <Dropdown
+                    overlay={
+                      <Menu onClick={() => {}}>
+                        <Menu.Item key="0">
+                          <a
+                            onClick={() => {
+                              if (
+                                isNil(dataTenant.infoContractDocument) === false
+                              ) {
+                                const parseData = JSON.parse(
+                                  dataTenant.infoContractDocument
+                                );
+                                setDataDocument(parseData[0]);
+                                setIsVisibleModal(true);
+                              }
+                            }}
+                            style={{ marginRight: 10 }}
+                          >
+                            Contrato
+                          </a>
+                        </Menu.Item>
+                        <Menu.Item key="1">
+                          <a
+                            onClick={() => {
+                              if (
+                                isNil(dataTenant.infoPolicyDocument) === false
+                              ) {
+                                const parseData = JSON.parse(
+                                  dataTenant.infoPolicyDocument
+                                );
+                                setDataDocument(parseData[0]);
+                                setIsVisibleModal(true);
+                              }
+                            }}
+                            style={{ marginRight: 10 }}
+                          >
+                            Póliza
+                          </a>
+                        </Menu.Item>
+                        <Menu.Item key="2">
+                          <a
+                            onClick={() => {
+                              if (
+                                isNil(dataTenant.infoPaymentDocument) === false
+                              ) {
+                                const parseData = JSON.parse(
+                                  dataTenant.infoPaymentDocument
+                                );
+                                setDataDocument(parseData[0]);
+                                setIsVisibleModal(true);
+                              }
+                            }}
+                            style={{ marginRight: 10 }}
+                          >
+                            Pagarés
+                          </a>
+                        </Menu.Item>
+                      </Menu>
+                    }
+                    trigger={["click"]}
                   >
-                    <span>Ver documentos</span>
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {}}
+                      className="button-action-primary"
+                    >
+                      <span>Ver documentos</span>
+                    </button>
+                  </Dropdown>
                 </div>
               </div>
             </div>
