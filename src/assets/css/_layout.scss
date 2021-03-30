@@ -13,6 +13,39 @@
   font-family: Poppins;
 }
 
+.title-notification {
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 16px;
+  color: rgb(78, 75, 102);
+}
+
+.title-body-description {
+  display: flex;
+  font-family: Poppins;
+  .section-circle-description {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+    padding: 10px 0px;
+    .icon-notification {
+      width: 48px;
+      height: 48px;
+      background: rgb(255, 2, 130);
+      border-radius: 24px;
+    }
+  }
+  .section-info-notification {
+    width: 80%;
+    color: rgb(78, 75, 102);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 13px;
+    align-self: center;
+  }
+}
+
 .image-avatar-little {
   position: absolute;
   right: 15px;
