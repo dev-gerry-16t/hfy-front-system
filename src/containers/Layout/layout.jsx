@@ -3,7 +3,7 @@ import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu, Drawer, Dropdown, Avatar } from "antd";
+import { Layout, Menu, Drawer, Dropdown, Avatar, notification } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -20,6 +20,7 @@ import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
 import IconCloseLogout from "../../assets/icons/Logout.svg";
 import IconLead from "../../assets/icons/IconLead.svg";
+import SD_ALERT_31 from "../../assets/files/SD_ALERT_31.mp3";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import { callSetImageProfile } from "../../utils/actions/actions";
@@ -266,12 +267,48 @@ const DefaultLayout = (props) => {
         },
       });
     }
+    let interval;
     const socket = socketIOClient(ENVIROMENT);
-    socket.on("FromAPI", (data) => {
-      console.log("data", data);
+
+    interval = setInterval(() => {
+      socket.emit("user_subscribed", {
+        idSystemUser: dataProfile.idSystemUser,
+        idLoginHistory: dataProfile.idLoginHistory,
+      });
+    }, 10000);
+
+    socket.on("get_notification", (data) => {
+      if (isEmpty(data) === false) {
+        document.getElementById("audio-notice-hfy").play();
+        data.forEach((element) => {
+          notification.open({
+            message: (
+              <div className="title-notification">{element.subject}</div>
+            ),
+            description: (
+              <div className="title-body-description">
+                <div className="section-circle-description">
+                  <div className="icon-notification"></div>
+                </div>
+                <div
+                  className="section-info-notification"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      isNil(element.content) === false ? element.content : "",
+                  }}
+                />
+              </div>
+            ),
+            onClick: () => {},
+          });
+        });
+      }
     });
 
-    return () => socket.disconnect();
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -288,6 +325,9 @@ const DefaultLayout = (props) => {
 
   return (
     <div className="App">
+      <audio id="audio-notice-hfy">
+        <source src={SD_ALERT_31} />
+      </audio>
       {isNil(dataProfile) === false && (
         <Layout>
           <Drawer
