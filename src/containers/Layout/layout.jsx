@@ -268,14 +268,14 @@ const DefaultLayout = (props) => {
       });
     }
     let interval;
-    const socket = socketIOClient(ENVIROMENT);
+    const socket = socketIOClient("https://hfy-back-system.herokuapp.com");
 
     interval = setInterval(() => {
       socket.emit("user_subscribed", {
         idSystemUser: dataProfile.idSystemUser,
         idLoginHistory: dataProfile.idLoginHistory,
       });
-    }, 10000);
+    }, 30000);
 
     socket.on("get_notification", (data) => {
       if (isEmpty(data) === false) {
