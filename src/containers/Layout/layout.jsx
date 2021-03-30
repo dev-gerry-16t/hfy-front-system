@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense } from "react";
+import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -23,6 +24,7 @@ import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import { callSetImageProfile } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import ENVIROMENT from "../../utils/constants/enviroments";
 
 const { Header, Sider } = Layout;
 
@@ -264,6 +266,12 @@ const DefaultLayout = (props) => {
         },
       });
     }
+    const socket = socketIOClient(ENVIROMENT);
+    socket.on("FromAPI", (data) => {
+      console.log("data", data);
+    });
+
+    return () => socket.disconnect();
   }, []);
 
   useEffect(() => {
