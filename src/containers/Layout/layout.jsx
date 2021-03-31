@@ -134,8 +134,8 @@ const DefaultLayout = (props) => {
       setNumberNotifications(
         isEmpty(responseResult) === false &&
           isNil(responseResult[0]) === false &&
-          isNil(responseResult[0].total) === false
-          ? responseResult[0].total
+          isNil(responseResult[0].totalToBeRead) === false
+          ? responseResult[0].totalToBeRead
           : 0
       );
     } catch (error) {}
@@ -338,20 +338,42 @@ const DefaultLayout = (props) => {
         idSystemUser: dataProfile.idSystemUser,
         idLoginHistory: dataProfile.idLoginHistory,
       });
-    }, 30000);
+    }, 15000);
 
     socket.on("get_notification", (data) => {
       if (isEmpty(data) === false) {
+        handlerCallGetNotifications();
         document.getElementById("audio-notice-hfy").play();
         data.forEach((element) => {
           notification.open({
             message: (
               <div className="title-notification">{element.subject}</div>
             ),
+            duration: 15,
             description: (
-              <div className="title-body-description">
+              <div
+                className="title-body-description"
+                style={{
+                  background: "rgba(255,255,255,1)",
+                  cursor: "pointer",
+                }}
+              >
                 <div className="section-circle-description">
-                  <div className="icon-notification"></div>
+                  <div
+                    className="icon-notification"
+                    style={{
+                      background:
+                        element.isRead === true
+                          ? "#DF90B8"
+                          : "var(--color-primary)",
+                    }}
+                  >
+                    <img
+                      width="25"
+                      src={arrayIconst[element.style]}
+                      alt="icons-notification-homify"
+                    />
+                  </div>
                 </div>
                 <div
                   className="section-info-notification"
@@ -590,6 +612,7 @@ const DefaultLayout = (props) => {
                   <button
                     className="button-header"
                     style={{ position: "relative" }}
+                    onClick={() => {}}
                   >
                     <div className="notification-header">
                       <span>
