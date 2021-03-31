@@ -19,6 +19,8 @@ const API = {
 
 const API_CONSTANTS = {
   GET_ALL_CUSTOMER_BY_ID: `${API.API_SECURE}/customer/getCustomerById`,
+  GET_NOTIFICATIONS: `${API.API_SECURE}/customer/getNotifications`,
+  UPDATE_NOTIFICATIONS: `${API.API_SECURE}/customer/updateNotifications/`,
   GET_ALL_PYMENT_TYPES: `${API.API_SECURE}/customer/getAllPayments`,
   GET_ALL_PYMENT_CONTRACT: `${API.API_SECURE}/customer/getAllPaymentInContract`,
   GET_ALL_CUSTOMER_TENANT_BY_ID: `${API.API_SECURE}/customer/getCustomerTenantsById`,
