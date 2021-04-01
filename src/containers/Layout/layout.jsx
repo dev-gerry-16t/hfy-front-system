@@ -41,6 +41,7 @@ import {
   callGetNotifications,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 
 const { Header, Sider } = Layout;
 
@@ -331,14 +332,14 @@ const DefaultLayout = (props) => {
       });
     }
     let interval;
-    const socket = socketIOClient("https://hfy-back-system.herokuapp.com");
+    const socket = socketIOClient(ENVIROMENTSOCKET);
 
     interval = setInterval(() => {
       socket.emit("user_subscribed", {
         idSystemUser: dataProfile.idSystemUser,
         idLoginHistory: dataProfile.idLoginHistory,
       });
-    }, 15000);
+    }, 30000);
 
     socket.on("get_notification", (data) => {
       if (isEmpty(data) === false) {
@@ -411,7 +412,7 @@ const DefaultLayout = (props) => {
   return (
     <div className="App">
       <audio id="audio-notice-hfy">
-        <source src={SD_ALERT_31} />
+        <source src="https://homify-docs-users.s3.us-east-2.amazonaws.com/SD_ALERT_31.mp3" />
       </audio>
       {isNil(dataProfile) === false && (
         <Layout>
