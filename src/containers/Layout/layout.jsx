@@ -1,8 +1,18 @@
 import React, { useState, useEffect, Suspense } from "react";
+import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Layout, Menu, Drawer, Dropdown, Avatar } from "antd";
+import {
+  Layout,
+  Menu,
+  Drawer,
+  Dropdown,
+  Avatar,
+  notification,
+  List,
+  Popover,
+} from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
@@ -19,10 +29,19 @@ import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
 import IconCloseLogout from "../../assets/icons/Logout.svg";
 import IconLead from "../../assets/icons/IconLead.svg";
+import IconLetter from "../../assets/icons/IconLetter.svg";
+import IconCheck from "../../assets/icons/IconCheck.svg";
+import IconWallet from "../../assets/icons/wallet.svg";
+import SD_ALERT_31 from "../../assets/files/SD_ALERT_31.mp3";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
-import { callSetImageProfile } from "../../utils/actions/actions";
+import {
+  callSetImageProfile,
+  callUpdateNotifications,
+  callGetNotifications,
+} from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 
 const { Header, Sider } = Layout;
 
@@ -40,8 +59,12 @@ const DefaultLayout = (props) => {
     dataProfile,
     callSetImageProfile,
     setDataUserProfile,
+    callUpdateNotifications,
+    callGetNotifications,
   } = props;
   const [collapsed, setCollapsed] = useState(true);
+  const [dataNotifications, setDataNotifications] = useState([]);
+  const [numberNotifications, setNumberNotifications] = useState(0);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
@@ -53,6 +76,9 @@ const DefaultLayout = (props) => {
     IconEdit,
     IconClose,
     IconLead,
+    IconLetter,
+    IconCheck,
+    IconWallet,
   };
 
   const nameLocation = () => {
@@ -87,6 +113,46 @@ const DefaultLayout = (props) => {
         ...dataProfile,
         thumbnail: data,
       });
+    } catch (error) {}
+  };
+
+  const handlerCallGetNotifications = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetNotifications({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+        topIndex: null,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataNotifications(responseResult);
+      setNumberNotifications(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult[0]) === false &&
+          isNil(responseResult[0].totalToBeRead) === false
+          ? responseResult[0].totalToBeRead
+          : 0
+      );
+    } catch (error) {}
+  };
+
+  const handlerCallUpdateNotifications = async (id) => {
+    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callUpdateNotifications(
+        {
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      handlerCallGetNotifications();
     } catch (error) {}
   };
 
@@ -194,6 +260,7 @@ const DefaultLayout = (props) => {
   );
 
   useEffect(() => {
+    handlerCallGetNotifications();
     const documentHead = document.getElementsByTagName("head");
     const headExtractNode =
       isNil(documentHead) === false &&
@@ -264,6 +331,70 @@ const DefaultLayout = (props) => {
         },
       });
     }
+    let interval;
+    const socket = socketIOClient(ENVIROMENTSOCKET);
+
+    interval = setInterval(() => {
+      socket.emit("user_subscribed", {
+        idSystemUser: dataProfile.idSystemUser,
+        idLoginHistory: dataProfile.idLoginHistory,
+      });
+    }, 30000);
+
+    socket.on("get_notification", (data) => {
+      if (isEmpty(data) === false) {
+        handlerCallGetNotifications();
+        document.getElementById("audio-notice-hfy").play();
+        data.forEach((element) => {
+          notification.open({
+            message: (
+              <div className="title-notification">{element.subject}</div>
+            ),
+            duration: 15,
+            description: (
+              <div
+                className="title-body-description"
+                style={{
+                  background: "rgba(255,255,255,1)",
+                  cursor: "pointer",
+                }}
+              >
+                <div className="section-circle-description">
+                  <div
+                    className="icon-notification"
+                    style={{
+                      background:
+                        element.isRead === true
+                          ? "#DF90B8"
+                          : "var(--color-primary)",
+                    }}
+                  >
+                    <img
+                      width="25"
+                      src={arrayIconst[element.style]}
+                      alt="icons-notification-homify"
+                    />
+                  </div>
+                </div>
+                <div
+                  className="section-info-notification"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      isNil(element.content) === false ? element.content : "",
+                  }}
+                />
+              </div>
+            ),
+            onClick: () => {},
+          });
+        });
+      }
+    });
+
+    return () => {
+      socket.disconnect();
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -280,6 +411,9 @@ const DefaultLayout = (props) => {
 
   return (
     <div className="App">
+      <audio id="audio-notice-hfy">
+        <source src="https://homify-docs-users.s3.us-east-2.amazonaws.com/SD_ALERT_31.mp3" />
+      </audio>
       {isNil(dataProfile) === false && (
         <Layout>
           <Drawer
@@ -404,9 +538,91 @@ const DefaultLayout = (props) => {
                   <strong>{dataProfile.showName}</strong>
                   <span>{dataProfile.userType}</span>
                 </div>
-                <button className="button-header">
-                  <img className="icon-header-1" src={IconNotification} />
-                </button>
+                <Popover
+                  className="popover-list-notification"
+                  placement="bottomRight"
+                  title={
+                    <div className="title-notification-small">
+                      Notificaciones
+                    </div>
+                  }
+                  content={
+                    <List
+                      size="small"
+                      style={{
+                        width: 360,
+                        maxHeight: 400,
+                        overflowY: "scroll",
+                      }}
+                      dataSource={dataNotifications}
+                      renderItem={(item) => (
+                        <List.Item
+                          style={{ padding: "0px 0px !important" }}
+                          onClick={() => {
+                            handlerCallUpdateNotifications(item.idNotification);
+                          }}
+                        >
+                          <div
+                            className="title-body-description-1"
+                            style={{
+                              background:
+                                item.isRead === true
+                                  ? "rgba(255,255,255,1)"
+                                  : "rgba(223, 144, 184, 0.2)",
+                              cursor: "pointer",
+                            }}
+                          >
+                            <div className="section-circle-description">
+                              <div
+                                className="icon-notification"
+                                style={{
+                                  background:
+                                    item.isRead === true
+                                      ? "#DF90B8"
+                                      : "var(--color-primary)",
+                                }}
+                              >
+                                <img
+                                  width="25"
+                                  src={arrayIconst[item.style]}
+                                  alt="icons-notification-homify"
+                                />
+                              </div>
+                            </div>
+                            <div className="section-info-notification">
+                              <div className="title-notification-child">
+                                <span>{item.subject}</span>
+                                <span>{item.sentAtFormat}</span>
+                              </div>
+                              <div
+                                dangerouslySetInnerHTML={{
+                                  __html:
+                                    isNil(item.content) === false
+                                      ? item.content
+                                      : "",
+                                }}
+                              />
+                            </div>
+                          </div>
+                        </List.Item>
+                      )}
+                    />
+                  }
+                  trigger="click"
+                >
+                  <button
+                    className="button-header"
+                    style={{ position: "relative" }}
+                    onClick={() => {}}
+                  >
+                    <div className="notification-header">
+                      <span>
+                        {numberNotifications > 10 ? "+10" : numberNotifications}
+                      </span>
+                    </div>
+                    <img className="icon-header-1" src={IconNotification} />
+                  </button>
+                </Popover>
                 <Dropdown
                   overlay={menu}
                   placement="bottomRight"
@@ -471,7 +687,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
+  callUpdateNotifications: (data, id) =>
+    dispatch(callUpdateNotifications(data, id)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
+  callGetNotifications: (data) => dispatch(callGetNotifications(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
