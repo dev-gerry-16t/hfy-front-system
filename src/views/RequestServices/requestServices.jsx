@@ -1,48 +1,48 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Layout, Table, Tag, Menu, Dropdown, Button, message } from "antd";
+import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
-  callGetAllProvidersCoincidences,
+  callGetAllRequestProvidersCoincidences,
   callGetAllCollaborators,
-  callGetAllProviderTypes,
+  callGetAllRequestProviderStatus,
   callGetAllCollaboratorTypes,
   callGetAllProviderPaymentForm,
   callGetPolicies,
-  callSetProvider,
-  callGetProviderById,
+  callUpdateRequestProvider,
+  callGetAllProviders,
+  callGetRequestProviderById,
 } from "../../utils/actions/actions";
-import SectionAddProvider from "./sections/sectionAddProvider";
-import SectionDetailProvider from "./sections/sectionDetailProvider";
+import SectionDetailRequest from "./sections/sectionDetailRequest";
 
 const { Content } = Layout;
 
-const Providers = (props) => {
+const RequestServices = (props) => {
   const {
-    callGetAllProvidersCoincidences,
+    callGetAllRequestProvidersCoincidences,
     callGetAllCollaborators,
-    callGetAllProviderTypes,
+    callGetAllRequestProviderStatus,
     callGetAllCollaboratorTypes,
     callGetAllProviderPaymentForm,
-    callSetProvider,
+    callUpdateRequestProvider,
     callGetPolicies,
-    callGetProviderById,
+    callGetRequestProviderById,
+    callGetAllProviders,
     dataProfile,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
-  const [dataProviderType, setDataProviderType] = useState([]);
+  const [dataRequestStatus, setDataRequestStatus] = useState([]);
   const [dataProviderById, setDataProviderById] = useState({});
   const [dataPaymentForm, setDataPaymentForm] = useState([]);
+  const [dataProviders, setDataProviders] = useState([]);
   const [dataCollaboratorType, setDataCollaboratorType] = useState([]);
   const [dataPolicies, setDataPolicies] = useState([]);
-  const [
-    dataCoincidencesCollaborator,
-    setDataCoincidencesCollaborator,
-  ] = useState([]);
+  const [dataCollaborator, setDataCollaborator] = useState([]);
   const [openAddProvider, setOpenAddProvider] = useState(false);
-  const [openDetailProvider, setOpenDetailProvider] = useState(false);
+  const [openDetailRequest, setOpenDetailRequest] = useState(false);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -63,15 +63,15 @@ const Providers = (props) => {
   const handlerCallGetProviderById = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callGetProviderById({
+      const response = await callGetRequestProviderById({
         idSystemUser,
         idLoginHistory,
-        idProvider: id,
+        idRequestForProvider: id,
       });
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response
-          : [];
+          : {};
       setDataProviderById(responseResult);
     } catch (error) {
       showMessageStatusApi(
@@ -81,10 +81,10 @@ const Providers = (props) => {
     }
   };
 
-  const handlerCallGetAllProvidersCoincidences = async () => {
+  const handlerCallGetAllRequestProvidersCoincidences = async () => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callGetAllProvidersCoincidences({
+      const response = await callGetAllRequestProvidersCoincidences({
         idSystemUser,
         idLoginHistory,
         topIndex: 0,
@@ -102,13 +102,13 @@ const Providers = (props) => {
     }
   };
 
-  const handlerCallGetAllCollaborators = async (data) => {
+  const handlerCallGetAllCollaborators = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllCollaborators({
         idSystemUser,
         idLoginHistory,
-        idProvider: data.idProvider,
+        idProvider: id,
         idCollaboratorType: null,
         type: 1,
       });
@@ -116,7 +116,7 @@ const Providers = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      setDataCoincidencesCollaborator(responseResult);
+      setDataCollaborator(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -125,10 +125,10 @@ const Providers = (props) => {
     }
   };
 
-  const handlerCallGetAllProviderTypes = async () => {
+  const handlerCallGetAllRequestProviderStatus = async () => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callGetAllProviderTypes({
+      const response = await callGetAllRequestProviderStatus({
         idSystemUser,
         idLoginHistory,
         type: 1,
@@ -137,7 +137,7 @@ const Providers = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      setDataProviderType(responseResult);
+      setDataRequestStatus(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -189,14 +189,14 @@ const Providers = (props) => {
     }
   };
 
-  const handlerCallGetPolicies = async () => {
+  const handlerCallGetAllProviders = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callGetPolicies({
-        idCustomer: null,
+      const response = await callGetAllProviders({
+        idContract: id,
         idSystemUser,
         idLoginHistory,
-        type: 4,
+        type: 1,
       });
       const responseResult =
         isNil(response) === false &&
@@ -204,7 +204,7 @@ const Providers = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : {};
-      setDataPolicies(responseResult);
+      setDataProviders(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -213,16 +213,16 @@ const Providers = (props) => {
     }
   };
 
-  const handlerCallSetProvider = async (data) => {
+  const handlerCallUpdateRequestProvider = async (data, id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      await callSetProvider(
+      await callUpdateRequestProvider(
         {
           ...data,
           idSystemUser,
           idLoginHistory,
         },
-        data.idProvider
+        id
       );
       showMessageStatusApi(
         "Tu solicitud se procesó exitosamente",
@@ -240,136 +240,85 @@ const Providers = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetAllProvidersCoincidences();
-    handlerCallGetAllProviderTypes();
+    handlerCallGetAllRequestProvidersCoincidences();
     handlerCallGetAllProviderPaymentForm();
-    handlerCallGetPolicies();
+    handlerCallGetAllRequestProviderStatus();
   }, []);
-
-  const columnsCollaborator = [
-    {
-      title: "Colaborador",
-      dataIndex: "collaboratorType",
-      key: "collaboratorType",
-    },
-    { title: "Nombre", dataIndex: "fullName", key: "fullName" },
-    { title: "Teléfono", dataIndex: "phoneNumber", key: "phoneNumber" },
-    { title: "Correo", dataIndex: "emailAddress", key: "emailAddress" },
-  ];
 
   const columns = [
     {
-      title: "Tipo de proveedor",
-      dataIndex: "providerType",
-      key: "providerType",
-      render: (text, record) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <a
-            onClick={() => {
-              handlerCallGetProviderById(record.idProvider);
-              handlerCallGetAllCollaboratorTypes(record.idProvider);
-              setOpenDetailProvider(!openDetailProvider);
-            }}
-            style={{ marginRight: "5px" }}
-          >
-            {text}
-          </a>
-        </div>
-      ),
+      title: "Contrato",
+      dataIndex: "hfInvoice",
+      key: "hfInvoice",
     },
     {
-      title: "Proveedor",
+      title: "Tipo de proveedor",
       dataIndex: "provider",
       key: "provider",
       width: 300,
     },
+
     {
-      title: "Teléfono",
-      dataIndex: "phoneNumber",
-      key: "phoneNumber",
+      title: "Fecha de Solicitud",
+      dataIndex: "requestedAt",
+      key: "requestedAt",
     },
     {
-      title: "Correo",
-      dataIndex: "emailAddress",
-      key: "emailAddress",
+      title: "Estatus",
+      dataIndex: "requestForProviderStatus",
+      key: "requestForProviderStatus",
     },
     {
-      title: "Forma de pago",
-      dataIndex: "providerPaymentForm",
-      key: "providerPaymentForm",
-    },
-    {
-      title: "RFC",
-      dataIndex: "taxId",
-      key: "taxId",
-    },
-    {
-      title: "Último servicio programado",
-      dataIndex: "lastAssignment",
-      key: "lastAssignment",
+      title: "Detalle",
+      dataIndex: "canEdit",
+      key: "canEdit",
+      render: (text, record) => (
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            cursor: text === true ? "pointer" : "none",
+          }}
+          onClick={() => {
+            if (text === true) {
+              handlerCallGetProviderById(record.idRequestForProvider);
+              handlerCallGetAllProviders(record.idContract);
+              handlerCallGetAllCollaborators(record.idProvider);
+              setOpenDetailRequest(!openDetailRequest);
+            }
+          }}
+        >
+          {text === true ? <EyeTwoTone /> : <EyeInvisibleOutlined />}
+        </div>
+      ),
     },
   ];
 
   return (
     <Content>
-      <SectionDetailProvider
-        isModalVisible={openDetailProvider}
+      <SectionDetailRequest
+        isModalVisible={openDetailRequest}
+        dataProviders={dataProviders}
         dataProviderById={dataProviderById}
-        onSelectProvider={(id) => {
-          handlerCallGetAllCollaboratorTypes(id);
-        }}
-        onSaveProvider={async (data) => {
+        dataCollaborator={dataCollaborator}
+        dataRequestStatus={dataRequestStatus}
+        onSaveRequestProvider={async (data, id) => {
           try {
-            await handlerCallSetProvider(data);
-            handlerCallGetAllProvidersCoincidences();
+            await handlerCallUpdateRequestProvider(data, id);
           } catch (error) {
             throw error;
           }
         }}
-        dataPolicies={dataPolicies}
-        dataProviderType={dataProviderType}
-        dataPaymentForm={dataPaymentForm}
-        dataCollaboratorType={dataCollaboratorType}
         onClose={() => {
-          setOpenDetailProvider(!openDetailProvider);
-        }}
-      />
-      <SectionAddProvider
-        isModalVisible={openAddProvider}
-        onSelectProvider={(id) => {
-          handlerCallGetAllCollaboratorTypes(id);
-        }}
-        onSaveProvider={async (data) => {
-          try {
-            await handlerCallSetProvider(data);
-            handlerCallGetAllProvidersCoincidences();
-          } catch (error) {
-            throw error;
-          }
-        }}
-        dataPolicies={dataPolicies}
-        dataProviderType={dataProviderType}
-        dataPaymentForm={dataPaymentForm}
-        dataCollaboratorType={dataCollaboratorType}
-        onClose={() => {
-          setOpenAddProvider(!openAddProvider);
+          setOpenDetailRequest(false);
         }}
       />
       <div className="margin-app-main">
         <div className="main-information-user-admin">
           <div className="renter-card-information total-width">
             <div className="title-cards flex-title-card">
-              <span>Proveedores</span>
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setOpenAddProvider(true);
-                  }}
-                >
-                  <span>Agregar</span>
-                </button>
-              </div>
+              <span>Solicitudes</span>
             </div>
             <div className="section-information-renters">
               <Table
@@ -378,23 +327,6 @@ const Providers = (props) => {
                 className="table-users-hfy"
                 size="small"
                 bordered
-                expandable={{
-                  expandedRowRender: () => {
-                    return (
-                      <Table
-                        columns={columnsCollaborator}
-                        dataSource={dataCoincidencesCollaborator}
-                        pagination={false}
-                      />
-                    );
-                  },
-                }}
-                scroll={{ x: 1500 }}
-                onExpand={(expanded, row) => {
-                  if (expanded === true) {
-                    handlerCallGetAllCollaborators({ ...row });
-                  }
-                }}
               />
             </div>
           </div>
@@ -413,16 +345,20 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callGetPolicies: (data) => dispatch(callGetPolicies(data)),
-  callGetAllProviderTypes: (data) => dispatch(callGetAllProviderTypes(data)),
+  callGetAllProviders: (data) => dispatch(callGetAllProviders(data)),
+  callGetAllRequestProviderStatus: (data) =>
+    dispatch(callGetAllRequestProviderStatus(data)),
   callGetAllCollaboratorTypes: (data) =>
     dispatch(callGetAllCollaboratorTypes(data)),
   callGetAllProviderPaymentForm: (data) =>
     dispatch(callGetAllProviderPaymentForm(data)),
   callGetAllCollaborators: (data) => dispatch(callGetAllCollaborators(data)),
-  callGetAllProvidersCoincidences: (data) =>
-    dispatch(callGetAllProvidersCoincidences(data)),
-  callGetProviderById: (data) => dispatch(callGetProviderById(data)),
-  callSetProvider: (data, id) => dispatch(callSetProvider(data, id)),
+  callGetAllRequestProvidersCoincidences: (data) =>
+    dispatch(callGetAllRequestProvidersCoincidences(data)),
+  callGetRequestProviderById: (data) =>
+    dispatch(callGetRequestProviderById(data)),
+  callUpdateRequestProvider: (data, id) =>
+    dispatch(callUpdateRequestProvider(data, id)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Providers);
+export default connect(mapStateToProps, mapDispatchToProps)(RequestServices);

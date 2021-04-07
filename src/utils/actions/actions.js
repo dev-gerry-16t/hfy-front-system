@@ -663,6 +663,47 @@ const callGetAllProvidersCoincidences = (data) => async (
   }
 };
 
+const callGetAllRequestProvidersCoincidences = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_REQUEST_PROVIDER_COINCIDENCES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetAllCollaborators = (data) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -671,6 +712,47 @@ const callGetAllCollaborators = (data) => async (dispatch, getState) => {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
       API_CONSTANTS.GET_ALL_COLLABORATORS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetAllRequestProviderStatus = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_ALL_REQUEST_PROVIDER_STATUS,
       data,
       config
     );
@@ -2311,6 +2393,44 @@ const callSetProvider = (data, id) => async (dispatch, getState) => {
   }
 };
 
+const callUpdateRequestProvider = (data, id) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.put(
+      API_CONSTANTS.UPDATE_REQUEST_PROVIDER + id,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callSwitchCustomerContract = (data, id) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -2656,6 +2776,44 @@ const callGetProviderById = (data) => async (dispatch, getState) => {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
       API_CONSTANTS.GET_PROVIDER_BY_ID,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetRequestProviderById = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_REQUEST_PROVIDER_BY_ID,
       data,
       config
     );
@@ -3601,4 +3759,8 @@ export {
   callGetAllProviderPaymentForm,
   callSetProvider,
   callGetProviderById,
+  callGetAllRequestProvidersCoincidences,
+  callGetRequestProviderById,
+  callGetAllRequestProviderStatus,
+  callUpdateRequestProvider,
 };

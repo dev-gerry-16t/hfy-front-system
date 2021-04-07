@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
+import isNil  from "lodash/isNil";
 import NumberFormat from "react-number-format";
 import { Modal, Input, Row, Col, Select, Spin, Tooltip, Radio } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
-import { isNil } from "lodash";
 
 const { Option } = Select;
 

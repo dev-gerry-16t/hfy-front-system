@@ -19,6 +19,7 @@ const ControlDesk = React.lazy(() =>
 );
 const MakeScreen = React.lazy(() => import("./views/MakeScreen/makeScreen"));
 const Providers = React.lazy(() => import("./views/Providers/providers"));
+const RequestProviders = React.lazy(() => import("./views/RequestServices/requestServices"));
 
 const routes = [
   {
@@ -139,6 +140,14 @@ const routes = [
     path: "/websystem/dashboard-providers",
     name: "Proveedores",
     component: Providers,
+    exact: true,
+  },
+  {
+    key: "14",
+    id: "Solicitudes de Proveedor",
+    path: "/websystem/dashboard-request-providers",
+    name: "Solicitudes de Proveedor",
+    component: RequestProviders,
     exact: true,
   },
 ];
