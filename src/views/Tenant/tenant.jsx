@@ -673,7 +673,7 @@ const Tenant = (props) => {
             <span>Moratorios</span>
           </div>
         </div>
-        {dataTenant.canDeal !== 0 && (
+        {dataTenant.canDeal === 1 && (
           <div className="main-information-owner">
             <div className="title-cards">
               <span>Acciones</span>
@@ -690,18 +690,20 @@ const Tenant = (props) => {
                     <span>Cotizar incidencia</span>
                   </button>
                 </div>
-                <div className="section-information-button-3">
-                  <img src={Transport} alt="Reportar incidencia" height={62} />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsVisibleRequestService(!isVisibleRequestService);
-                    }}
-                    className="button-action-primary"
-                  >
-                    <span>Solicitar mudanza</span>
-                  </button>
-                </div>
+                {dataTenant.canRequestMove === 1 && (
+                  <div className="section-information-button-3">
+                    <img src={Transport} alt="Solicitar mudanza" height={62} />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsVisibleRequestService(!isVisibleRequestService);
+                      }}
+                      className="button-action-primary"
+                    >
+                      <span>Solicitar mudanza</span>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>
