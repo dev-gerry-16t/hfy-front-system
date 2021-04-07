@@ -53,7 +53,7 @@ const SectionRequestService = (props) => {
           >
             <img src={Arrow} alt="backTo" width="30" />
           </button>
-          <h1>Solicitar Mudanza o Servicios</h1>
+          <h1>Solicitar Mudanza</h1>
         </div>
         <div className="main-form-information">
           <p>Selecciona un Proveedor</p>

@@ -611,6 +611,33 @@
   }
 }
 
+.two-action-buttons-banner {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  width: 100%;
+  button:first-child {
+    background: #fff;
+    color: var(--color-primary);
+    border-radius: 16px;
+    border: 1px solid var(--color-primary);
+    padding: 3px 10px;
+    width: 35%;
+  }
+  button:last-child {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-radius: 16px;
+    border: none;
+    padding: 3px 10px;
+    width: 35%;
+  }
+}
+
 .flex-title-card {
   display: flex;
   justify-content: space-between;
@@ -879,6 +906,16 @@
 }
 
 @media screen and (max-width: 390px) {
+  .two-action-buttons-banner {
+    flex-direction: column-reverse;
+    button:first-child {
+      width: 100%;
+    }
+    button:last-child {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  }
   .main-information-owner {
     .title-cards {
       flex-direction: column;

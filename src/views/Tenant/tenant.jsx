@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import Dialog from "@material-ui/core/Dialog";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
+import { useTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { connect } from "react-redux";
 import {
@@ -42,6 +45,7 @@ import {
   callGetPaymentTypes,
   callGetAllProviders,
   callAddRequestProviderForTenant,
+  callUpdateMovingDialog,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -69,8 +73,10 @@ const Tenant = (props) => {
     callGetCustomerMessage,
     callAddCustomerMessage,
     callAddDocumentContractId,
+    callUpdateMovingDialog,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
   const [dataProviders, setDataProviders] = useState([]);
   const [isVisibleRequestService, setIsVisibleRequestService] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
@@ -85,6 +91,8 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -247,6 +255,22 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallUpdateMovingDialog = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateMovingDialog({
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllCustomerTenantById = async () => {
     const {
       idCustomer,
@@ -277,6 +301,13 @@ const Tenant = (props) => {
         idContract: responseResult.idContract,
         idCustomerTenant: responseResult.idCustomerTenant,
       });
+      setIsVisibleBannerMove(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.showDialog) == false &&
+          responseResult.showDialog === 1
+          ? true
+          : false
+      );
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
@@ -538,6 +569,50 @@ const Tenant = (props) => {
 
   return (
     <Content>
+      <Dialog
+        open={isVisibleBannerMove}
+        onClose={() => {
+          setIsVisibleBannerMove(!isVisibleBannerMove);
+        }}
+        fullScreen={fullScreen}
+      >
+        <div className="banner-move-tenant">
+          <h1>!Servicio de mudanza!</h1>
+          <span>
+            Por ser parte de Homify te ofrecemos un{" "}
+            <strong>¡Increíble Descuento!</strong> en servicios de Mudanza.
+          </span>
+          <img
+            width="350"
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/move_homify.png"
+            alt=""
+          />
+          <div className="two-action-buttons-banner">
+            <button
+              type="button"
+              onClick={async () => {
+                setIsVisibleBannerMove(false);
+                await handlerCallUpdateMovingDialog({
+                  idCustomerTenant: dataTenant.idCustomerTenant,
+                  idContract: dataTenant.idContract,
+                });
+                handlerCallGetAllCustomerTenantById();
+              }}
+            >
+              <span>Ahora no</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setIsVisibleBannerMove(false);
+                setIsVisibleRequestService(true);
+              }}
+            >
+              <span>¡Me interesa!</span>
+            </button>
+          </div>
+        </div>
+      </Dialog>
       <CustomViewDocument
         isVisibleModal={isVisibleModal}
         dataDocument={dataDocument}
@@ -941,6 +1016,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callUpdateMovingDialog: (data) => dispatch(callUpdateMovingDialog(data)),
   callAddRequestProviderForTenant: (data) =>
     dispatch(callAddRequestProviderForTenant(data)),
   callGetAllProviders: (data) => dispatch(callGetAllProviders(data)),

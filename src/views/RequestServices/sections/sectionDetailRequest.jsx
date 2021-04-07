@@ -169,11 +169,27 @@ const SectionDetailRequest = (props) => {
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
               <DescriptionItem
-                title="Dirección del inquilino"
+                title="Dirección de partida"
+                content={dataForm.fullAddressTenantFrom}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+              <DescriptionItem
+                title="Dirección final"
                 content={dataForm.fullAddressTenant}
               />
             </Col>
           </Row>
+          <div style={{ textAlign: "center" }}>
+            <a
+              href={`https://www.google.com/maps/dir/${dataForm.fullAddressTenantFrom}/${dataForm.fullAddressTenant}`}
+              target="_blank"
+            >
+              Ver Recorrido en Google Maps
+            </a>
+          </div>
           <p>Proveedor</p>
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
