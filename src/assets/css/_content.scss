@@ -3,6 +3,20 @@
   height: 500px;
 }
 
+.table-add-provider {
+  width: 100%;
+  font-family: Poppins;
+  font-size: 12px;
+  thead {
+    color: var(--color-primary);
+  }
+  tbody {
+    tr {
+      height: 50px;
+    }
+  }
+}
+
 .button-contract-actions {
   display: flex;
   margin-left: 20px;

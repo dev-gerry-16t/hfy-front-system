@@ -14,8 +14,11 @@ const TypeFormUser = React.lazy(() => import("./views/TypeForm/typeFormUser"));
 const TypeFormUserOwner = React.lazy(() =>
   import("./views/TypeForm/typeFormOwner")
 );
-const ControlDesk = React.lazy(() => import("./views/Admin/administratorControlDesk"));
+const ControlDesk = React.lazy(() =>
+  import("./views/Admin/administratorControlDesk")
+);
 const MakeScreen = React.lazy(() => import("./views/MakeScreen/makeScreen"));
+const Providers = React.lazy(() => import("./views/Providers/providers"));
 
 const routes = [
   {
@@ -128,6 +131,14 @@ const routes = [
     path: "/websystem/dashboard-controldesk",
     name: "Dashboard",
     component: ControlDesk,
+    exact: true,
+  },
+  {
+    key: "13",
+    id: "Proveedores",
+    path: "/websystem/dashboard-providers",
+    name: "Proveedores",
+    component: Providers,
     exact: true,
   },
 ];

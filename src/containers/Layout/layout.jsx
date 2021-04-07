@@ -332,7 +332,10 @@ const DefaultLayout = (props) => {
       });
     }
     let interval;
-    const socket = socketIOClient(ENVIROMENTSOCKET);
+
+    const socket = socketIOClient(ENVIROMENTSOCKET, {
+      reconnectionDelayMax: 60000,
+    });
 
     interval = setInterval(() => {
       socket.emit("user_subscribed", {
@@ -615,7 +618,12 @@ const DefaultLayout = (props) => {
                     style={{ position: "relative" }}
                     onClick={() => {}}
                   >
-                    <div className="notification-header">
+                    <div
+                      className="notification-header"
+                      style={{
+                        display: numberNotifications === 0 ? "none" : "block",
+                      }}
+                    >
                       <span>
                         {numberNotifications > 10 ? "+10" : numberNotifications}
                       </span>

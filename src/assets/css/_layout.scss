@@ -236,3 +236,11 @@
     background: var(--color-primary);
   }
 }
+
+table {
+  td {
+    .ant-table-content {
+      padding: 10px 20px;
+    }
+  }
+}

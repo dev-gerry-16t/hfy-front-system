@@ -15,9 +15,18 @@ const API = {
   ADMIN: "/admin",
   LEADS: "/leads",
   HISTORIC: "/historic",
+  PROVIDERS: "/providerPayment",
 };
 
 const API_CONSTANTS = {
+  SET_PROVIDER: `${API.API_SECURE}${API.PROVIDERS}/setProvider/`,
+  GET_PROVIDER_BY_ID: `${API.API_SECURE}${API.PROVIDERS}/getProviderById`,
+  GET_ALL_PROVIDERS_COINCIDENCES: `${API.API_SECURE}${API.PROVIDERS}/getProviderCoincidences`,
+  GET_ALL_COLLABORATORS: `${API.API_SECURE}${API.CATALOGS}/getAllCollaborators`,
+  GET_ALL_PROVIDER_TYPES: `${API.API_SECURE}${API.CATALOGS}/getAllProviderTypes`,
+  GET_ALL_COLLABORATOR_TYPES: `${API.API_SECURE}${API.CATALOGS}/getAllCollaboratorTypes`,
+  GET_ALL_PROVIDERS: `${API.API_SECURE}${API.CATALOGS}/getAllProviders`,
+  GET_ALL_PROVIDER_PAYMENT_FORM: `${API.API_SECURE}${API.CATALOGS}/getAllProviderPaymentForms`,
   GET_ALL_CUSTOMER_BY_ID: `${API.API_SECURE}/customer/getCustomerById`,
   GET_NOTIFICATIONS: `${API.API_SECURE}/customer/getNotifications`,
   UPDATE_NOTIFICATIONS: `${API.API_SECURE}/customer/updateNotifications/`,
