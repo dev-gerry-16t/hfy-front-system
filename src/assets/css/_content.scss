@@ -476,6 +476,9 @@
   }
   .main-form-information {
     padding: 0px 25px;
+    .ant-picker {
+      width: 100%;
+    }
     p {
       font-family: Poppins;
       font-style: normal;

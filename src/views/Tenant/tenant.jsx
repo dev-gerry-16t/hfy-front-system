@@ -40,11 +40,14 @@ import {
   callAddDocumentContractId,
   callGetPaymentContract,
   callGetPaymentTypes,
+  callGetAllProviders,
+  callAddRequestProviderForTenant,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
 import CustomViewDocument from "../../components/CustomViewDocument";
+import SectionRequestService from "./sections/sectionRequestService";
 
 const { Content } = Layout;
 
@@ -59,13 +62,17 @@ const Tenant = (props) => {
     setDataUserProfile,
     callSetContract,
     callAddCommentContract,
+    callAddRequestProviderForTenant,
     callGetContract,
     callGetContractComment,
+    callGetAllProviders,
     callGetCustomerMessage,
     callAddCustomerMessage,
     callAddDocumentContractId,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [dataProviders, setDataProviders] = useState([]);
+  const [isVisibleRequestService, setIsVisibleRequestService] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [dataPayments, setDataPayments] = useState([]);
@@ -283,6 +290,8 @@ const Tenant = (props) => {
         });
         notification.open(args);
         //notification.open(argsv2);
+      } else {
+        handlerCallGetAllProviders(responseResult.idContract);
       }
     } catch (error) {
       showMessageStatusApi(
@@ -326,6 +335,28 @@ const Tenant = (props) => {
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallAddRequestProviderForTenant = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddRequestProviderForTenant(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
@@ -477,6 +508,30 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallGetAllProviders = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllProviders({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataProviders(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
   }, []);
@@ -488,6 +543,24 @@ const Tenant = (props) => {
         dataDocument={dataDocument}
         onClose={() => {
           setIsVisibleModal(false);
+        }}
+      />
+      <SectionRequestService
+        isVisibleModal={isVisibleRequestService}
+        dataProviders={dataProviders}
+        onSaveRequestService={async (data) => {
+          try {
+            await handlerCallAddRequestProviderForTenant({
+              ...data,
+              idContract: dataTenant.idContract,
+            });
+          } catch (error) {
+            throw error;
+          }
+        }}
+        frontFunctions={frontFunctions}
+        onClose={() => {
+          setIsVisibleRequestService(!isVisibleRequestService);
         }}
       />
       <SectionContractAvailable
@@ -621,7 +694,9 @@ const Tenant = (props) => {
                   <img src={Transport} alt="Reportar incidencia" height={62} />
                   <button
                     type="button"
-                    onClick={() => {}}
+                    onClick={() => {
+                      setIsVisibleRequestService(!isVisibleRequestService);
+                    }}
                     className="button-action-primary"
                   >
                     <span>Solicitar mudanza</span>
@@ -864,6 +939,9 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callAddRequestProviderForTenant: (data) =>
+    dispatch(callAddRequestProviderForTenant(data)),
+  callGetAllProviders: (data) => dispatch(callGetAllProviders(data)),
   callAddDocument: (file, data) => dispatch(callAddDocument(file, data)),
   callGetPaymentContract: (data) => dispatch(callGetPaymentContract(data)),
   callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
+import "moment/locale/es";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import NumberFormat from "react-number-format";
@@ -225,7 +226,7 @@ const SectionDetailRequest = (props) => {
                   setDataForm({
                     ...dataForm,
                     scheduleDate: moment(momentFormat).format(
-                      "YYYY-MM-DDTHH:mm:ss"
+                      "YYYY-MM-DD HH:mm:ss"
                     ),
                   });
                 }}

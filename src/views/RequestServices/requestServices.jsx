@@ -306,6 +306,7 @@ const RequestServices = (props) => {
         onSaveRequestProvider={async (data, id) => {
           try {
             await handlerCallUpdateRequestProvider(data, id);
+            handlerCallGetAllRequestProvidersCoincidences();
           } catch (error) {
             throw error;
           }
