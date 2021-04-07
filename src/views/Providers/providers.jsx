@@ -32,6 +32,7 @@ const Providers = (props) => {
     dataProfile,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [expandedRowKey, setExpandedRowKey] = useState([]);
   const [dataProviderType, setDataProviderType] = useState([]);
   const [dataProviderById, setDataProviderById] = useState({});
   const [dataPaymentForm, setDataPaymentForm] = useState([]);
@@ -390,10 +391,14 @@ const Providers = (props) => {
                   },
                 }}
                 scroll={{ x: 1500 }}
+                expandedRowKeys={expandedRowKey}
                 onExpand={(expanded, row) => {
+                  const keys = [];
                   if (expanded === true) {
+                    keys.push(row.key);
                     handlerCallGetAllCollaborators({ ...row });
                   }
+                  setExpandedRowKey(keys);
                 }}
               />
             </div>
