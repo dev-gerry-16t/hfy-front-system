@@ -32,6 +32,9 @@ import IconLead from "../../assets/icons/IconLead.svg";
 import IconLetter from "../../assets/icons/IconLetter.svg";
 import IconCheck from "../../assets/icons/IconCheck.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
+import IconProvider from "../../assets/icons/IconProvider.svg";
+import IconRequest from "../../assets/icons/IconRequest.svg";
+import IconDeal from "../../assets/icons/IconDeal.svg";
 import SD_ALERT_31 from "../../assets/files/SD_ALERT_31.mp3";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
@@ -64,6 +67,7 @@ const DefaultLayout = (props) => {
   } = props;
   const [collapsed, setCollapsed] = useState(true);
   const [dataNotifications, setDataNotifications] = useState([]);
+  const [notificationTopIndex, setNotificationTopIndex] = useState(null);
   const [numberNotifications, setNumberNotifications] = useState(0);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
   const [collapsedButton, setCollapsedButton] = useState(false);
@@ -79,6 +83,9 @@ const DefaultLayout = (props) => {
     IconLetter,
     IconCheck,
     IconWallet,
+    IconProvider,
+    IconRequest,
+    IconDeal,
   };
 
   const nameLocation = () => {
@@ -116,14 +123,14 @@ const DefaultLayout = (props) => {
     } catch (error) {}
   };
 
-  const handlerCallGetNotifications = async () => {
+  const handlerCallGetNotifications = async (top = null) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetNotifications({
         idSystemUser,
         idLoginHistory,
         type: 1,
-        topIndex: null,
+        topIndex: top,
       });
       const responseResult =
         isNil(response) === false &&
@@ -132,6 +139,13 @@ const DefaultLayout = (props) => {
           ? response.response
           : [];
       setDataNotifications(responseResult);
+      setNotificationTopIndex(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult[0]) === false &&
+          isNil(responseResult[0].topIndex) === false
+          ? responseResult[0].topIndex
+          : null
+      );
       setNumberNotifications(
         isEmpty(responseResult) === false &&
           isNil(responseResult[0]) === false &&
@@ -550,66 +564,83 @@ const DefaultLayout = (props) => {
                     </div>
                   }
                   content={
-                    <List
-                      size="small"
-                      style={{
-                        width: 360,
-                        maxHeight: 400,
-                        overflowY: "scroll",
-                      }}
-                      dataSource={dataNotifications}
-                      renderItem={(item) => (
-                        <List.Item
-                          style={{ padding: "0px 0px !important" }}
-                          onClick={() => {
-                            handlerCallUpdateNotifications(item.idNotification);
-                          }}
-                        >
-                          <div
-                            className="title-body-description-1"
-                            style={{
-                              background:
-                                item.isRead === true
-                                  ? "rgba(255,255,255,1)"
-                                  : "rgba(223, 144, 184, 0.2)",
-                              cursor: "pointer",
+                    <>
+                      <List
+                        size="small"
+                        style={{
+                          width: 360,
+                          maxHeight: 400,
+                          overflowY: "scroll",
+                        }}
+                        dataSource={dataNotifications}
+                        renderItem={(item) => (
+                          <List.Item
+                            style={{ padding: "0px 0px !important" }}
+                            onClick={() => {
+                              handlerCallUpdateNotifications(
+                                item.idNotification
+                              );
                             }}
                           >
-                            <div className="section-circle-description">
-                              <div
-                                className="icon-notification"
-                                style={{
-                                  background:
-                                    item.isRead === true
-                                      ? "#DF90B8"
-                                      : "var(--color-primary)",
-                                }}
-                              >
-                                <img
-                                  width="25"
-                                  src={arrayIconst[item.style]}
-                                  alt="icons-notification-homify"
+                            <div
+                              className="title-body-description-1"
+                              style={{
+                                background:
+                                  item.isRead === true
+                                    ? "rgba(255,255,255,1)"
+                                    : "rgba(223, 144, 184, 0.2)",
+                                cursor: "pointer",
+                              }}
+                            >
+                              <div className="section-circle-description">
+                                <div
+                                  className="icon-notification"
+                                  style={{
+                                    background:
+                                      item.isRead === true
+                                        ? "#DF90B8"
+                                        : "var(--color-primary)",
+                                  }}
+                                >
+                                  <img
+                                    width="25"
+                                    src={arrayIconst[item.style]}
+                                    alt="icons-notification-homify"
+                                  />
+                                </div>
+                              </div>
+                              <div className="section-info-notification">
+                                <div className="title-notification-child">
+                                  <span>{item.subject}</span>
+                                  <span>{item.sentAtFormat}</span>
+                                </div>
+                                <div
+                                  dangerouslySetInnerHTML={{
+                                    __html:
+                                      isNil(item.content) === false
+                                        ? item.content
+                                        : "",
+                                  }}
                                 />
                               </div>
                             </div>
-                            <div className="section-info-notification">
-                              <div className="title-notification-child">
-                                <span>{item.subject}</span>
-                                <span>{item.sentAtFormat}</span>
-                              </div>
-                              <div
-                                dangerouslySetInnerHTML={{
-                                  __html:
-                                    isNil(item.content) === false
-                                      ? item.content
-                                      : "",
-                                }}
-                              />
-                            </div>
-                          </div>
-                        </List.Item>
+                          </List.Item>
+                        )}
+                      />
+                      {notificationTopIndex !== -1 && (
+                        <div
+                          style={{ padding: "5px 0px", textAlign: "center" }}
+                        >
+                          <a
+                            onClick={() => {
+                              handlerCallGetNotifications(notificationTopIndex);
+                            }}
+                          >
+                            Mostrar más
+                          </a>
+                        </div>
                       )}
-                    />
+                    </>
                   }
                   trigger="click"
                 >
