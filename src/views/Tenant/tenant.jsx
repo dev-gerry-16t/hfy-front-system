@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Dialog from "@material-ui/core/Dialog";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { useTheme } from "@material-ui/core/styles";
 import moment from "moment";
 import { connect } from "react-redux";
 import {
@@ -52,6 +49,7 @@ import SectionMessages from "./sectionDocuments/sectionMessages";
 import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
 import CustomViewDocument from "../../components/CustomViewDocument";
 import SectionRequestService from "./sections/sectionRequestService";
+import CustomDialog from "../../components/CustomDialog";
 
 const { Content } = Layout;
 
@@ -91,8 +89,6 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const frontFunctions = new FrontFunctions();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -569,12 +565,11 @@ const Tenant = (props) => {
 
   return (
     <Content>
-      <Dialog
-        open={isVisibleBannerMove}
+      <CustomDialog
+        isVisibleDialog={isVisibleBannerMove}
         onClose={() => {
           setIsVisibleBannerMove(!isVisibleBannerMove);
         }}
-        fullScreen={fullScreen}
       >
         <div className="banner-move-tenant">
           <h1>!Servicio de mudanza!</h1>
@@ -612,7 +607,7 @@ const Tenant = (props) => {
             </button>
           </div>
         </div>
-      </Dialog>
+      </CustomDialog>
       <CustomViewDocument
         isVisibleModal={isVisibleModal}
         dataDocument={dataDocument}

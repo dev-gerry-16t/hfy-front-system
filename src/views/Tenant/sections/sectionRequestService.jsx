@@ -34,6 +34,7 @@ const SectionRequestService = (props) => {
   };
 
   const [dataForm, setDataForm] = useState(initialState);
+  const [dataTC, setDataTC] = useState("");
 
   return (
     <Modal
@@ -49,6 +50,7 @@ const SectionRequestService = (props) => {
             type="button"
             onClick={() => {
               onClose();
+              setDataTC("");
             }}
           >
             <img src={Arrow} alt="backTo" width="30" />
@@ -69,6 +71,7 @@ const SectionRequestService = (props) => {
                     idProvider: value,
                     budgeAmount: onClickValue.budgeAmount,
                   });
+                  setDataTC(onClickValue.tc);
                 }}
               >
                 {isEmpty(dataProviders) === false &&
@@ -128,11 +131,27 @@ const SectionRequestService = (props) => {
             </h1>
             <strong style={{ marginBottom: 5, marginLeft: 5 }}>MXN</strong>
           </div>
+          {isEmpty(dataTC) === false && (
+            <div
+              style={{
+                margin: "20px 0px",
+                maxHeight: "250px",
+                overflowY: "scroll",
+                fontSize: 12,
+                fontFamily: "Poppins",
+              }}
+              dangerouslySetInnerHTML={{
+                __html: dataTC,
+              }}
+            />
+          )}
+
           <div className="two-action-buttons">
             <button
               type="button"
               onClick={() => {
                 onClose();
+                setDataTC("");
                 setDataForm(initialState);
               }}
             >
@@ -144,6 +163,7 @@ const SectionRequestService = (props) => {
                 try {
                   await onSaveRequestService(dataForm);
                   onClose();
+                  setDataTC("");
                   setDataForm(initialState);
                 } catch (error) {}
               }}
