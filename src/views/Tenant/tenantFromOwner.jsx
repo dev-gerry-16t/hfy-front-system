@@ -348,7 +348,7 @@ const TenantFromOwner = (props) => {
                   }}
                 />
               </TabPane>
-              <TabPane tab="Cotizar incidencia" key="4" />
+              <TabPane tab="Reportar incidencia" key="4" />
             </Tabs>
           </div>
         </div>

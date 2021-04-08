@@ -50,6 +50,8 @@ import SectionRegisterPayment from "./sectionDocuments/sectionRegisterPayment";
 import CustomViewDocument from "../../components/CustomViewDocument";
 import SectionRequestService from "./sections/sectionRequestService";
 import CustomDialog from "../../components/CustomDialog";
+import CustomContentActions from "../../components/CustomContentActions";
+import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 
 const { Content } = Layout;
 
@@ -82,6 +84,7 @@ const Tenant = (props) => {
   const [dataPayments, setDataPayments] = useState([]);
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
   const [isVisiblePaymentRent, setIsVisiblePaymentRent] = useState(false);
+  const [isVisibleIncidence, setIsVisibleIncidence] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [dataTenant, setDataTenant] = useState([]);
   const [dataMessages, setDataMessages] = useState([]);
@@ -712,6 +715,7 @@ const Tenant = (props) => {
                   onClick={() => {
                     setIsVisiblePaymentRent(!isVisiblePaymentRent);
                     setIsVisibleMessages(false);
+                    setIsVisibleIncidence(false);
                   }}
                 >
                   <span>Pagar renta</span>
@@ -757,7 +761,7 @@ const Tenant = (props) => {
                     onClick={() => {}}
                     className="button-action-primary"
                   >
-                    <span>Cotizar incidencia</span>
+                    <span>Solicitar Servicios</span>
                   </button>
                 </div>
                 {dataTenant.canRequestMove === 1 && (
@@ -778,226 +782,217 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
-        {isVisibleMessages === false && isVisiblePaymentRent === false && (
-          <div className="main-information-owner">
-            <div className="title-cards flex-title-card">
-              <span>Propietario</span>
-              <div className="button_init_secondary">
-                <button type="button" onClick={() => {}}>
-                  <span>Reportar Propietario</span>
-                </button>
+        {isVisibleMessages === false &&
+          isVisiblePaymentRent === false &&
+          isVisibleIncidence === false && (
+            <div className="main-information-owner">
+              <div className="title-cards flex-title-card">
+                <span>Propietario</span>
+                <div className="button_init_secondary">
+                  <button type="button" onClick={() => {}}>
+                    <span>Reportar Propietario</span>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div className="section-information-actions">
-              <div className="section-information-info">
-                <div className="section-information-data">
-                  {isNil(dataTenant.profileThumbnail) === false ? (
-                    <Avatar size={50} src={dataTenant.profileThumbnail} />
-                  ) : (
-                    <Avatar size={50} icon={<UserOutlined />} />
-                  )}
-                  <div className="info-user">
-                    <strong>{dataTenant.fullName}</strong>
-                    <Rate
-                      style={{
-                        fontSize: "15px",
-                        position: "relative",
-                        bottom: "5px",
-                      }}
-                      tooltips={[]}
-                      onChange={() => {}}
-                      value={dataTenant.ratingRate}
-                    />
+              <div className="section-information-actions">
+                <div className="section-information-info">
+                  <div className="section-information-data">
+                    {isNil(dataTenant.profileThumbnail) === false ? (
+                      <Avatar size={50} src={dataTenant.profileThumbnail} />
+                    ) : (
+                      <Avatar size={50} icon={<UserOutlined />} />
+                    )}
+                    <div className="info-user">
+                      <strong>{dataTenant.fullName}</strong>
+                      <Rate
+                        style={{
+                          fontSize: "15px",
+                          position: "relative",
+                          bottom: "5px",
+                        }}
+                        tooltips={[]}
+                        onChange={() => {}}
+                        value={dataTenant.ratingRate}
+                      />
+                    </div>
                   </div>
-                </div>
-                <div className="section-information-button-1">
-                  <img src={FileReport} height={62} alt="Reportar incidencia" />
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="button-action-primary"
-                  >
-                    <span>Reportar incidencia</span>
-                  </button>
-                </div>
-              </div>
-              <div className="section-information-buttons">
-                <div className="section-information-button-2">
-                  <img
-                    src={MessagesIcon}
-                    height={62}
-                    alt="Reportar incidencia"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsVisibleMessages(!isVisibleMessages);
-                    }}
-                    className="button-action-primary"
-                  >
-                    <span>Enviar mensaje</span>
-                  </button>
-                </div>
-                <div className="section-information-button-3">
-                  <img
-                    src={DocumentsIcon}
-                    alt="Reportar incidencia"
-                    height={62}
-                  />
-                  <Dropdown
-                    overlay={
-                      <Menu onClick={() => {}}>
-                        <Menu.Item key="0">
-                          <a
-                            onClick={() => {
-                              if (
-                                isNil(dataTenant.infoContractDocument) === false
-                              ) {
-                                const parseData = JSON.parse(
-                                  dataTenant.infoContractDocument
-                                );
-                                setDataDocument(parseData[0]);
-                                setIsVisibleModal(true);
-                              }
-                            }}
-                            style={{ marginRight: 10 }}
-                          >
-                            Contrato
-                          </a>
-                        </Menu.Item>
-                        <Menu.Item key="1">
-                          <a
-                            onClick={() => {
-                              if (
-                                isNil(dataTenant.infoPolicyDocument) === false
-                              ) {
-                                const parseData = JSON.parse(
-                                  dataTenant.infoPolicyDocument
-                                );
-                                setDataDocument(parseData[0]);
-                                setIsVisibleModal(true);
-                              }
-                            }}
-                            style={{ marginRight: 10 }}
-                          >
-                            Póliza
-                          </a>
-                        </Menu.Item>
-                        <Menu.Item key="2">
-                          <a
-                            onClick={() => {
-                              if (
-                                isNil(dataTenant.infoPaymentDocument) === false
-                              ) {
-                                const parseData = JSON.parse(
-                                  dataTenant.infoPaymentDocument
-                                );
-                                setDataDocument(parseData[0]);
-                                setIsVisibleModal(true);
-                              }
-                            }}
-                            style={{ marginRight: 10 }}
-                          >
-                            Pagarés
-                          </a>
-                        </Menu.Item>
-                      </Menu>
-                    }
-                    trigger={["click"]}
-                  >
+                  <div className="section-information-button-1">
+                    <img
+                      src={FileReport}
+                      height={62}
+                      alt="Reportar incidencia"
+                    />
                     <button
                       type="button"
-                      onClick={() => {}}
+                      onClick={() => {
+                        setIsVisibleIncidence(true);
+                      }}
                       className="button-action-primary"
                     >
-                      <span>Ver documentos</span>
+                      <span>Incidencias</span>
                     </button>
-                  </Dropdown>
+                  </div>
+                </div>
+                <div className="section-information-buttons">
+                  <div className="section-information-button-2">
+                    <img
+                      src={MessagesIcon}
+                      height={62}
+                      alt="Reportar incidencia"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsVisibleMessages(!isVisibleMessages);
+                      }}
+                      className="button-action-primary"
+                    >
+                      <span>Enviar mensaje</span>
+                    </button>
+                  </div>
+                  <div className="section-information-button-3">
+                    <img src={DocumentsIcon} alt="Incidencias" height={62} />
+                    <Dropdown
+                      overlay={
+                        <Menu onClick={() => {}}>
+                          <Menu.Item key="0">
+                            <a
+                              onClick={() => {
+                                if (
+                                  isNil(dataTenant.infoContractDocument) ===
+                                  false
+                                ) {
+                                  const parseData = JSON.parse(
+                                    dataTenant.infoContractDocument
+                                  );
+                                  setDataDocument(parseData[0]);
+                                  setIsVisibleModal(true);
+                                }
+                              }}
+                              style={{ marginRight: 10 }}
+                            >
+                              Contrato
+                            </a>
+                          </Menu.Item>
+                          <Menu.Item key="1">
+                            <a
+                              onClick={() => {
+                                if (
+                                  isNil(dataTenant.infoPolicyDocument) === false
+                                ) {
+                                  const parseData = JSON.parse(
+                                    dataTenant.infoPolicyDocument
+                                  );
+                                  setDataDocument(parseData[0]);
+                                  setIsVisibleModal(true);
+                                }
+                              }}
+                              style={{ marginRight: 10 }}
+                            >
+                              Póliza
+                            </a>
+                          </Menu.Item>
+                          <Menu.Item key="2">
+                            <a
+                              onClick={() => {
+                                if (
+                                  isNil(dataTenant.infoPaymentDocument) ===
+                                  false
+                                ) {
+                                  const parseData = JSON.parse(
+                                    dataTenant.infoPaymentDocument
+                                  );
+                                  setDataDocument(parseData[0]);
+                                  setIsVisibleModal(true);
+                                }
+                              }}
+                              style={{ marginRight: 10 }}
+                            >
+                              Pagarés
+                            </a>
+                          </Menu.Item>
+                        </Menu>
+                      }
+                      trigger={["click"]}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {}}
+                        className="button-action-primary"
+                      >
+                        <span>Ver documentos</span>
+                      </button>
+                    </Dropdown>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        {isVisibleMessages === true && (
-          <div className="actions-information-tenant">
-            <div className="tabs-tenant-information">
-              <div className="form-modal">
-                <div className="title-head-modal">
-                  <button
-                    className="arrow-back-to"
-                    type="button"
-                    onClick={() => {
-                      setIsVisibleMessages(!isVisibleMessages);
-                    }}
-                  >
-                    <img src={Arrow} alt="backTo" width="30" />
-                  </button>
-                  <h1>Mensajes</h1>
-                </div>
-              </div>
-              <SectionMessages
-                dataMessages={dataMessages}
-                getMoreCoincidences={() => {
-                  const { idCustomerTF, idCustomerTenantTF } = dataProfile;
-                  handlerCallGetCustomerMessage({
-                    idContract: dataTenant.idContract,
-                    idCustomerTenant: dataTenant.idCustomerTenant,
-                    idCustomer: dataTenant.idCustomer,
-                  });
-                }}
-                onSendMessages={(data) => {
-                  handlerCallAddCustomerMessage(data, {
-                    idContract: dataTenant.idContract,
-                    idCustomerTenant: dataTenant.idCustomerTenant,
-                    idCustomer: dataTenant.idCustomer,
-                  });
-                }}
-              />
-            </div>
-          </div>
-        )}
-        {isVisiblePaymentRent === true && (
-          <div className="actions-information-tenant">
-            <div className="tabs-tenant-information">
-              <div className="form-modal">
-                <div className="title-head-modal">
-                  <button
-                    className="arrow-back-to"
-                    type="button"
-                    onClick={() => {
-                      setIsVisiblePaymentRent(!isVisiblePaymentRent);
-                    }}
-                  >
-                    <img src={Arrow} alt="backTo" width="30" />
-                  </button>
-                  <h1>Pagar renta</h1>
-                </div>
-              </div>
-              <SectionRegisterPayment
-                dataPayments={dataPayments}
-                spinVisible={spinVisible}
-                onGetDocuments={async (arrayDocument, data) => {
-                  setSpinVisible(true);
-                  const dataDocuments = await Promise.all(
-                    arrayDocument.map((row) => {
-                      const item = handlerAddDocument(row, data);
-                      return item;
-                    })
-                  );
-                  const parseDocument = dataDocuments.join();
-                  const dataSend = {
-                    ...data,
-                    idContract: dataTenant.idContract,
-                    idCustomerTenant: dataTenant.idCustomerTenant,
-                    documents: parseDocument,
-                  };
-                  handlerCallGetAllPaymentContract(dataSend);
-                }}
-                onRegisterPayment={(data) => {}}
-              />
-            </div>
-          </div>
-        )}
+          )}
+        <CustomContentActions
+          onClick={() => {
+            setIsVisibleMessages(!isVisibleMessages);
+          }}
+          titleSection="Mensajes"
+          isVisible={isVisibleMessages}
+        >
+          <SectionMessages
+            dataMessages={dataMessages}
+            getMoreCoincidences={() => {
+              const { idCustomerTF, idCustomerTenantTF } = dataProfile;
+              handlerCallGetCustomerMessage({
+                idContract: dataTenant.idContract,
+                idCustomerTenant: dataTenant.idCustomerTenant,
+                idCustomer: dataTenant.idCustomer,
+              });
+            }}
+            onSendMessages={(data) => {
+              handlerCallAddCustomerMessage(data, {
+                idContract: dataTenant.idContract,
+                idCustomerTenant: dataTenant.idCustomerTenant,
+                idCustomer: dataTenant.idCustomer,
+              });
+            }}
+          />
+        </CustomContentActions>
+        <CustomContentActions
+          onClick={() => {
+            setIsVisiblePaymentRent(!isVisiblePaymentRent);
+          }}
+          titleSection="Pagar renta"
+          isVisible={isVisiblePaymentRent}
+        >
+          <SectionRegisterPayment
+            dataPayments={dataPayments}
+            spinVisible={spinVisible}
+            onGetDocuments={async (arrayDocument, data) => {
+              setSpinVisible(true);
+              const dataDocuments = await Promise.all(
+                arrayDocument.map((row) => {
+                  const item = handlerAddDocument(row, data);
+                  return item;
+                })
+              );
+              const parseDocument = dataDocuments.join();
+              const dataSend = {
+                ...data,
+                idContract: dataTenant.idContract,
+                idCustomerTenant: dataTenant.idCustomerTenant,
+                documents: parseDocument,
+              };
+              handlerCallGetAllPaymentContract(dataSend);
+            }}
+            onRegisterPayment={(data) => {}}
+          />
+        </CustomContentActions>
+        <CustomContentActions
+          onClick={() => {
+            setIsVisibleIncidence(!isVisibleIncidence);
+          }}
+          titleSection="Incidencias"
+          isVisible={isVisibleIncidence}
+        >
+          <SectionIncidenceReport />
+        </CustomContentActions>
       </div>
     </Content>
   );
