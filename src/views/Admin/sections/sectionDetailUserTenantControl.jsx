@@ -413,7 +413,7 @@ const SectionDetailUserTenant = (props) => {
                   prefix=""
                   suffix=""
                   value={
-                    isNil(dataForm.ratingNumber) === false ? dataForm.ratingNumber : ""
+                    isNil(dataForm.rating) === false ? dataForm.rating : ""
                   }
                   className="inputLogin"
                   floatingLabelText=""
@@ -425,7 +425,7 @@ const SectionDetailUserTenant = (props) => {
                     const { formattedValue, value, floatValue } = values;
                     setDataForm({
                       ...dataForm,
-                      ratingNumber: floatValue,
+                      rating: floatValue,
                     });
                   }}
                   onClick={(event) => {}}
