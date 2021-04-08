@@ -287,7 +287,15 @@ const SectionDetailProvider = (props) => {
                                     prefix="$"
                                     suffix=""
                                     value={
-                                      dataFormPolicy[row.idPolicy].budgeAmount
+                                      isEmpty(dataFormPolicy) === false &&
+                                      isNil(dataFormPolicy[row.idPolicy]) ===
+                                        false &&
+                                      isNil(
+                                        dataFormPolicy[row.idPolicy].budgeAmount
+                                      ) === false
+                                        ? dataFormPolicy[row.idPolicy]
+                                            .budgeAmount
+                                        : null
                                     }
                                     className="inputLogin"
                                     floatingLabelText=""
