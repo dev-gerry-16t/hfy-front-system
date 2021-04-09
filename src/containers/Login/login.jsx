@@ -94,7 +94,7 @@ const Login = (props) => {
               </div>
               <div className="login_inputs_form">
                 <div className="login-ant-input">
-                  <label className="login-label-placeholder">Usuario</label>
+                  <label className="login-label-placeholder">Correo electrónico</label>
                   <Input
                     value={dataLogin.email}
                     onChange={(e) => {
