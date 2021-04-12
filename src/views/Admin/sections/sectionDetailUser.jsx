@@ -40,6 +40,7 @@ const SectionDetailUser = (props) => {
   const [catalogProperties, setCatalogProperties] = useState([]);
   const [internalModal, setInternalModal] = useState(false);
   const [signaturePrecencial, setSignaturePrecencial] = useState(false);
+  const [generateContract, setGenerateContract] = useState(false);
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -259,9 +260,10 @@ const SectionDetailUser = (props) => {
                     type="button"
                     onClick={async () => {
                       try {
+                        setGenerateContract(true);
                         await onAcceptContract({
                           idCustomer: dataDetailCustomer.idCustomer,
-                          idCustomerTenant: null,
+                          idCustomerTenant: dataDetailCustomer.idCustomerTenant,
                           idPolicy: null,
                           idContract: dataDetailCustomer.idContract,
                           digitalSignature: null,
@@ -272,14 +274,23 @@ const SectionDetailUser = (props) => {
                           type: 1,
                           isFaceToFace: !signaturePrecencial,
                         });
+
                         setInternalModal(false);
                         setSignaturePrecencial(false);
                         setScheduleSignatureDate(null);
                         setStartedAt(null);
+                        setGenerateContract(false);
                       } catch (error) {}
                     }}
                   >
-                    <span>Aceptar</span>
+                    <span>
+                      {generateContract === true
+                        ? "Espera por favor"
+                        : "Aceptar"}
+                    </span>
+                    {generateContract === true && (
+                      <i className="fa fa-circle-o-notch fa-spin fa-3x fa-fw" />
+                    )}
                   </button>
                 </div>
               </div>

@@ -32,6 +32,7 @@ const SectionCurrentAddress = (props) => {
     dateChangeAddress: null,
     lessorFullName: null,
     lessorPhoneNumber: null,
+    currentRent: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -259,29 +260,62 @@ const SectionCurrentAddress = (props) => {
               </Col>
             </Row>
             {(dataForm.isOwn === 0 || dataForm.isOwn === false) && (
-              <Row>
-                <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                  <Input
-                    value={dataForm.lessorFullName}
-                    placeholder={"Nombre del arrendador"}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({ ...dataForm, lessorFullName: value });
-                    }}
-                  />
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
-                  <Input
-                    value={dataForm.lessorPhoneNumber}
-                    placeholder={"Teléfono del arrendador"}
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({ ...dataForm, lessorPhoneNumber: value });
-                    }}
-                  />
-                </Col>
-              </Row>
+              <>
+                <Row>
+                  <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                    <Input
+                      value={dataForm.lessorFullName}
+                      placeholder={"Nombre del arrendador"}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({ ...dataForm, lessorFullName: value });
+                      }}
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={9} xs={{ span: 24 }} md={{ span: 9 }}>
+                    <Input
+                      value={dataForm.lessorPhoneNumber}
+                      placeholder={"Teléfono del arrendador"}
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({ ...dataForm, lessorPhoneNumber: value });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <NumberFormat
+                      id={null}
+                      customInput={Input}
+                      thousandSeparator=","
+                      decimalSeparator="."
+                      decimalPrecision={2}
+                      allowNegative={false}
+                      prefix="$"
+                      suffix=""
+                      value={dataForm.currentRent}
+                      className="inputLogin"
+                      floatingLabelText=""
+                      isVisible
+                      toBlock={false}
+                      disable={false}
+                      placeholder="¿Cuánto pagas de renta?"
+                      onValueChange={(values) => {
+                        const { formattedValue, value, floatValue } = values;
+                        setDataForm({
+                          ...dataForm,
+                          currentRent: floatValue,
+                        });
+                      }}
+                      onClick={(event) => {}}
+                      onFocus={(event) => {}}
+                      onBlur={(event) => {}}
+                    />
+                  </Col>
+                </Row>
+              </>
             )}
             <Row>
               <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>

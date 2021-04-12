@@ -792,15 +792,39 @@ const SectionDetailUserTenant = (props) => {
                     <Row>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
+                          title="Renta (Propiedad)"
+                          content={
+                            isNil(row.currentRent) === false ? row.currentRent : "N/A"
+                          }
+                        />
+                      </Col>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
+                          title="Renta (Dirección actual)"
+                          content={
+                            isNil(row.currentRentForCurrentAddress) === false
+                              ? row.currentRentForCurrentAddress
+                              : "N/A"
+                          }
+                        />
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                        <DescriptionItem
                           title="RFC"
-                          content={isNil(row.taxId) === false ? row.taxId : "N/A"}
+                          content={
+                            isNil(row.taxId) === false ? row.taxId : "N/A"
+                          }
                         />
                       </Col>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="CURP"
                           content={
-                            isNil(row.citizenId) === false ? row.citizenId : "N/A"
+                            isNil(row.citizenId) === false
+                              ? row.citizenId
+                              : "N/A"
                           }
                         />
                       </Col>
