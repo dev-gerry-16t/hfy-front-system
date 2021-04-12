@@ -8,9 +8,130 @@
     font-weight: bold;
     color: var(--color-primary);
   }
-  span{
+  span {
     font-size: 16px;
     font-weight: 500;
+  }
+}
+
+.content-card-incidence-dialog {
+  min-height: 600px;
+  min-width: 320px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  .top-background-dialog {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    min-height: 191px;
+    height: 50%;
+    width: 100%;
+    background: rgba(124, 88, 106, 0.1);
+    z-index: 0;
+    img {
+      position: absolute;
+      top: -100px;
+    }
+  }
+  .content-cards-dialog {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    .card-information {
+      position: relative;
+      font-family: Poppins;
+      padding: 10px;
+      top: 100px;
+      min-width: 260px;
+      width: 90%;
+      min-height: 191px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 1px 1px 18px rgba(0, 0, 0, 0.3);
+      margin-bottom: 15px;
+      .tag-card {
+        width: 23px;
+        height: 46px;
+        background: var(--color-primary);
+        position: absolute;
+        top: -9px;
+        margin: 0px auto;
+        right: 5px;
+      }
+      .section-message {
+        display: flex;
+        margin-top: 15px;
+        .text-comment-dialog {
+          width: 100%;
+          border-radius: 10px 0px 0px 10px;
+          border: 1px solid var(--color-primary);
+          outline: none;
+        }
+        button {
+          border-radius: 0px 10px 10px 0px;
+          outline: none;
+          border: none;
+          background: var(--color-primary);
+          color: #fff;
+          margin: 0px auto;
+        }
+      }
+
+      label {
+        font-weight: 800;
+      }
+      h3 {
+        color: var(--color-primary);
+        font-weight: bolder;
+      }
+      strong[title="folio"] {
+        right: 10px;
+        bottom: 10px;
+        position: absolute;
+      }
+      span[title="date"] {
+        left: 10px;
+        bottom: 10px;
+        position: absolute;
+        color: #4e4b66;
+      }
+    }
+  }
+
+  .bottom-background-information {
+    height: 50%;
+    width: 100%;
+    min-height: 300px;
+    z-index: 0;
+  }
+}
+
+.incidence-history-list {
+  cursor: pointer;
+  .ant-list-item {
+    padding: 20px 0px !important;
+  }
+}
+.incidence-history-list:hover {
+  background: rgba(223, 144, 184, 0.1);
+}
+
+.center-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 20px 0px 15px 0px;
+  flex-direction: column !important;
+  span {
+    font-family: Poppins;
+    font-size: 18px;
+    color: #4e4b66;
   }
 }
 
@@ -338,6 +459,51 @@
       }
     }
   }
+  .section-history-messages-dialog {
+    width: 100%;
+    max-height: 385px;
+    .item-messages {
+      box-shadow: 0px 1px 8px 6px #ebebf1;
+      border-radius: 16px;
+      padding: 15px;
+      width: 100%;
+      .item-message-1 {
+        display: flex;
+        .elipse-icon {
+          display: flex;
+          justify-content: center;
+          border-radius: 20px;
+          width: 30px;
+          height: 30px;
+          position: relative;
+          bottom: 5px;
+        }
+        .message-name-send {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          bottom: 10px;
+          margin-left: 15px;
+          span {
+            position: relative;
+            bottom: 5px;
+          }
+        }
+      }
+      .item-message-2 {
+      }
+      .response-message-item {
+        display: flex;
+        border-top: 1px solid #d6d8e7;
+        margin-top: 10px;
+        textarea {
+          outline: none;
+          border: none;
+          width: 100%;
+        }
+      }
+    }
+  }
   .section-type-messages-fixed {
     width: 45%;
     .section-type-messages {
@@ -566,8 +732,8 @@
   }
 }
 @media screen and (max-width: 390px) {
-  .banner-move-tenant{
-    h1{
+  .banner-move-tenant {
+    h1 {
       font-size: 22px;
     }
   }

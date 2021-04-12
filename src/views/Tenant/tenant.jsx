@@ -43,6 +43,11 @@ import {
   callGetAllProviders,
   callAddRequestProviderForTenant,
   callUpdateMovingDialog,
+  callGetAllIncidenceTypes,
+  callAddIncidence,
+  callGetAllIncidenceCoincidences,
+  callGetIncidenceById,
+  callUpdateIncidence,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -52,6 +57,7 @@ import SectionRequestService from "./sections/sectionRequestService";
 import CustomDialog from "../../components/CustomDialog";
 import CustomContentActions from "../../components/CustomContentActions";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
+import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 
 const { Content } = Layout;
 
@@ -61,6 +67,7 @@ const Tenant = (props) => {
     callGetAllCustomerTenantById,
     dataProfile,
     callAddDocument,
+    callAddIncidence,
     callGetPaymentTypes,
     callGetPaymentContract,
     setDataUserProfile,
@@ -74,12 +81,22 @@ const Tenant = (props) => {
     callAddCustomerMessage,
     callAddDocumentContractId,
     callUpdateMovingDialog,
+    callGetAllIncidenceTypes,
+    callGetAllIncidenceCoincidences,
+    callGetIncidenceById,
+    callUpdateIncidence,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
+    false
+  );
   const [dataProviders, setDataProviders] = useState([]);
+  const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
+  const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
   const [isVisibleRequestService, setIsVisibleRequestService] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
+  const [dataIncidenceDetail, setDataIncidenceDetail] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
   const [dataPayments, setDataPayments] = useState([]);
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
@@ -232,6 +249,28 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallGetAllIncidenceCoincidences = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllIncidenceCoincidences({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: null,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataIncideCoincidence(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllPaymentTypes = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -251,6 +290,27 @@ const Tenant = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallAddIncidence = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddIncidence({
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      setSpinVisible(false);
+    } catch (error) {
+      setSpinVisible(false);
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -321,7 +381,9 @@ const Tenant = (props) => {
         notification.open(args);
         //notification.open(argsv2);
       } else {
-        handlerCallGetAllProviders(responseResult.idContract);
+        await handlerCallGetAllProviders(responseResult.idContract);
+        await handlerCallGetAllIncidenceTypes(responseResult.idContract);
+        await handlerCallGetAllIncidenceCoincidences(responseResult.idContract);
       }
     } catch (error) {
       showMessageStatusApi(
@@ -348,6 +410,28 @@ const Tenant = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallGetIncidenceById = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetIncidenceById({
+        idSystemUser,
+        idLoginHistory,
+        idIncidence: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataIncidenceDetail(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -472,7 +556,11 @@ const Tenant = (props) => {
       idLoginHistory,
     };
     try {
-      const response = await callAddDocument(data.originFileObj, dataDocument);
+      const response = await callAddDocument(
+        data.originFileObj,
+        dataDocument,
+        () => {}
+      );
       const documentId =
         isNil(response) === false &&
         isNil(response.response) === false &&
@@ -486,6 +574,7 @@ const Tenant = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -538,6 +627,56 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallUpdateIncidence = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateIncidence(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "Se envío correctamente tu comentario",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGetAllIncidenceTypes = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllIncidenceTypes({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataIncidenceTypes(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllProviders = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -568,6 +707,24 @@ const Tenant = (props) => {
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={isVisibleDetailIncidence}
+        onClose={() => {
+          setIsVisibleDetailIncidence(!isVisibleDetailIncidence);
+        }}
+      >
+        <SectionDetailIncidence
+          dataIncidenceDetail={dataIncidenceDetail}
+          onSendAnnotations={async (data, id) => {
+            try {
+              await handlerCallUpdateIncidence(data, id);
+              handlerCallGetIncidenceById(id);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        />
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleBannerMove}
         onClose={() => {
@@ -991,7 +1148,39 @@ const Tenant = (props) => {
           titleSection="Incidencias"
           isVisible={isVisibleIncidence}
         >
-          <SectionIncidenceReport />
+          <SectionIncidenceReport
+            dataIncidence={dataIncidenceTypes}
+            spinVisible={spinVisible}
+            dataIncideCoincidence={dataIncideCoincidence}
+            onGetById={async (data) => {
+              await handlerCallGetIncidenceById(data.idIncidence);
+              setIsVisibleDetailIncidence(true);
+            }}
+            onSendReport={async (arrayDocument, data) => {
+              try {
+                setSpinVisible(true);
+                let parseDocument = null;
+                if (isEmpty(arrayDocument) === false) {
+                  const dataDocuments = await Promise.all(
+                    arrayDocument.map(async (row) => {
+                      const item = await handlerAddDocument(row, data);
+                      return item;
+                    })
+                  );
+                  parseDocument = dataDocuments.join();
+                }
+                const dataSend = {
+                  ...data,
+                  idContract: dataTenant.idContract,
+                  documents: parseDocument,
+                };
+                await handlerCallAddIncidence(dataSend);
+                handlerCallGetAllIncidenceCoincidences();
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
         </CustomContentActions>
       </div>
     </Content>
@@ -1006,11 +1195,17 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callUpdateIncidence: (data, id) => dispatch(callUpdateIncidence(data, id)),
+  callGetAllIncidenceCoincidences: (data) =>
+    dispatch(callGetAllIncidenceCoincidences(data)),
+  callAddIncidence: (data) => dispatch(callAddIncidence(data)),
   callUpdateMovingDialog: (data) => dispatch(callUpdateMovingDialog(data)),
   callAddRequestProviderForTenant: (data) =>
     dispatch(callAddRequestProviderForTenant(data)),
   callGetAllProviders: (data) => dispatch(callGetAllProviders(data)),
-  callAddDocument: (file, data) => dispatch(callAddDocument(file, data)),
+  callGetAllIncidenceTypes: (data) => dispatch(callGetAllIncidenceTypes(data)),
+  callAddDocument: (file, data, callback) =>
+    dispatch(callAddDocument(file, data, callback)),
   callGetPaymentContract: (data) => dispatch(callGetPaymentContract(data)),
   callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
@@ -1021,6 +1216,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
   callGetAllCustomerTenantById: (data) =>
     dispatch(callGetAllCustomerTenantDashboardById(data)),
+  callGetIncidenceById: (data) => dispatch(callGetIncidenceById(data)),
   callAddCustomerMessage: (data) => dispatch(callAddCustomerMessage(data)),
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
   callAddDocumentContractId: (data, id) =>
