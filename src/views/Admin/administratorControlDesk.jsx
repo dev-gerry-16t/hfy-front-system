@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Layout, message } from "antd";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import "moment/locale/es";
 import UserAccept from "../../assets/icons/UserAccept.svg";
 import UserMissed from "../../assets/icons/UserMissed.svg";
@@ -19,12 +20,18 @@ import {
   callGetAllPersonalReferencesStatus,
   callUpdatePersonalReferences,
   callGetAuditReferences,
+  callGetDetailCustomer,
+  callSetContract,
+  callGetContract,
+  callAddDocumentContractId,
+  callGetContractComment,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionCardOwner from "./sections/sectionCardOwnerControl";
 import SectionDetailUserTenant from "./sections/sectionDetailUserTenantControl";
+import SectionDetailUser from "./sections/sectionDetailUser";
 
 const { Content } = Layout;
 
@@ -43,6 +50,11 @@ const ControlDesk = (props) => {
     callGetAllPersonalReferencesStatus,
     callUpdatePersonalReferences,
     callGetAuditReferences,
+    callGetDetailCustomer,
+    callSetContract,
+    callGetContract,
+    callAddDocumentContractId,
+    callGetContractComment,
   } = props;
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -56,6 +68,10 @@ const ControlDesk = (props) => {
   const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
     false
   );
+  const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
+  const [dataDetailCustomer, setDataDetailCustomer] = useState({});
+  const [dataMessages, setDataMessages] = useState([]);
+  const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -113,6 +129,29 @@ const ControlDesk = (props) => {
           ? response.response
           : {};
       setDataHistory(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDetailCustomer = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetDetailCustomer({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataDetailCustomer(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -384,6 +423,111 @@ const ControlDesk = (props) => {
     }
   };
 
+  const handlerCallAddDocumentContractId = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddDocumentContractId(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGetContract = async (data, name) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      if (data.download === false) {
+        const response = await callGetContract({
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        });
+        const responseResult =
+          isNil(response) === false &&
+          isNil(response.response) === false &&
+          isNil(response.response[0]) === false
+            ? response.response[0]
+            : {};
+        if (isEmpty(responseResult) === false && data.process === true) {
+          await handlerCallAddDocumentContractId(
+            {
+              type: data.type,
+              idContract: responseResult.idContract,
+            },
+            responseResult.idDocument
+          );
+        }
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallSetContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSetContract(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        data.idContract
+      );
+      showMessageStatusApi(
+        "Tu solicitud se procesó exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallContractComment = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetContractComment({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: idTopIndexMessage,
+        ...data,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataMessages(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIdTopIndexMessage(responseResult[0].topIndex);
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     callAsynApis();
     handlerCallGetAllRelationshipTypes();
@@ -392,6 +536,66 @@ const ControlDesk = (props) => {
 
   return (
     <Content>
+      <SectionDetailUser
+        isDrawerVisible={isVisibleDetailUser}
+        onClose={() => {
+          setIsVisibleDetailUser(!isVisibleDetailUser);
+        }}
+        dataDetailCustomer={dataDetailCustomer}
+        onRedirectTo={async (key, idCustomer, idContract) => {
+          await setDataUserProfile({
+            ...dataProfile,
+            idCustomerTenant: null,
+            idCustomerTF: idCustomer,
+            idCustomer: idCustomer,
+            idContract: idContract,
+          });
+          history.push(`/websystem/typeform-owner/${key}`);
+        }}
+        dataMessages={dataMessages}
+        onDownloadDocumentById={async (data, name) => {
+          try {
+            await handlerCallGetContractDocumentById(data, name);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onAcceptContract={async (data) => {
+          try {
+            await handlerCallSetContract(data);
+            await handlerCallGetContract({
+              download: false,
+              process: true,
+              url: "url",
+              idCustomer: data.idCustomer,
+              idCustomerTenant: data.idCustomerTenant,
+              idContract: data.idContract,
+              type: 1,
+            });
+            await handlerCallGetContract({
+              download: false,
+              process: true,
+              url: "url",
+              idCustomer: data.idCustomer,
+              idCustomerTenant: data.idCustomerTenant,
+              idContract: data.idContract,
+              type: 2,
+            });
+            await handlerCallGetContract({
+              download: false,
+              process: true,
+              url: "url",
+              idCustomer: data.idCustomer,
+              idCustomerTenant: data.idCustomerTenant,
+              idContract: data.idContract,
+              type: 4,
+            });
+            await handlerCallGetDetailCustomer(data.idContract);
+          } catch (error) {
+            throw error;
+          }
+        }}
+      />
       <SectionDetailUserTenant
         isDrawerVisible={isVisibleDetailUserTenant}
         dataRelatioshipTypes={dataRelatioshipTypes}
@@ -498,7 +702,16 @@ const ControlDesk = (props) => {
             dataAllPolicyStatus={dataAllPolicyStatus}
             onOpenDetail={(type, id, data) => {
               if (data.canViewDatail === true) {
-                if (id === 2) {
+                if (id === 1) {
+                  handlerCallGetDetailCustomer(type);
+                  handlerCallContractComment({
+                    idCustomer: data.idCustomer,
+                    idCustomerTenant: null,
+                    idContract: data.idContract,
+                    idDigitalContract: data.idDigitalContract,
+                  });
+                  setIsVisibleDetailUser(!isVisibleDetailUser);
+                } else if (id === 2) {
                   handlerCallGetDetailCustomerTenant(type);
                   setIsVisibleDetailUserTenant(!isVisibleDetailUserTenant);
                 }
@@ -529,6 +742,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callGetContract: (data) => dispatch(callGetContract(data)),
   callGetContractStats: (data) => dispatch(callGetContractStats(data)),
   callGetContractCoincidences: (data) =>
     dispatch(callGetContractCoincidences(data)),
@@ -549,6 +763,11 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callUpdatePersonalReferences(data, id)),
   callGetAuditReferences: (data, id) =>
     dispatch(callGetAuditReferences(data, id)),
+  callGetDetailCustomer: (data) => dispatch(callGetDetailCustomer(data)),
+  callSetContract: (data, id) => dispatch(callSetContract(data, id)),
+  callAddDocumentContractId: (data, id) =>
+    dispatch(callAddDocumentContractId(data, id)),
+  callGetContractComment: (data) => dispatch(callGetContractComment(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlDesk);
