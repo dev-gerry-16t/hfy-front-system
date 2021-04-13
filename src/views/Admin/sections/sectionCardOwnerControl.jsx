@@ -269,7 +269,7 @@ const SectionCardOwner = (props) => {
             <div style={{ display: "flex", alignItems: "center" }}>
               <a
                 onClick={() => {
-                  // onOpenDetail(record.idContract, 1, record);
+                  onOpenDetail(record.idContract, 1, record);
                 }}
                 style={{ marginRight: "5PX" }}
               >
