@@ -19,7 +19,10 @@ const ControlDesk = React.lazy(() =>
 );
 const MakeScreen = React.lazy(() => import("./views/MakeScreen/makeScreen"));
 const Providers = React.lazy(() => import("./views/Providers/providers"));
-const RequestProviders = React.lazy(() => import("./views/RequestServices/requestServices"));
+const RequestProviders = React.lazy(() =>
+  import("./views/RequestServices/requestServices")
+);
+const Incidences = React.lazy(() => import("./views/Incidences/incidences"));
 
 const routes = [
   {
@@ -148,6 +151,14 @@ const routes = [
     path: "/websystem/dashboard-request-providers",
     name: "Solicitudes de Proveedor",
     component: RequestProviders,
+    exact: true,
+  },
+  {
+    key: "15",
+    id: "Incidencias",
+    path: "/websystem/dashboard-incidences",
+    name: "Incidencias Reportadas",
+    component: Incidences,
     exact: true,
   },
 ];

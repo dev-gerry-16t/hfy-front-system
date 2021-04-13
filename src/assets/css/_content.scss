@@ -479,6 +479,24 @@
     .ant-picker {
       width: 100%;
     }
+    .section-message {
+      display: flex;
+      margin-top: 15px;
+      .text-comment-dialog {
+        width: 100%;
+        border-radius: 10px 0px 0px 10px;
+        border: 1px solid var(--color-primary);
+        outline: none;
+      }
+      button {
+        border-radius: 0px 10px 10px 0px;
+        outline: none;
+        border: none;
+        background: var(--color-primary);
+        color: #fff;
+        margin: 0px auto;
+      }
+    }
     p {
       font-family: Poppins;
       font-style: normal;
