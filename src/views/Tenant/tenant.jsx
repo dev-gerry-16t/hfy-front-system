@@ -711,6 +711,7 @@ const Tenant = (props) => {
         isVisibleDialog={isVisibleDetailIncidence}
         onClose={() => {
           setIsVisibleDetailIncidence(!isVisibleDetailIncidence);
+          handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
         }}
       >
         <SectionDetailIncidence

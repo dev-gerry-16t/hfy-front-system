@@ -379,6 +379,7 @@ const Incidences = (props) => {
         isModalVisible={isVisibleDetailIncidence}
         onClose={() => {
           setIsVisibleDetailIncidence(!isVisibleDetailIncidence);
+          handlerCallGetAllIncidenceCoincidences();
         }}
         dataIncidenceTypes={dataIncidenceTypes}
         dataIncidenceId={
@@ -408,6 +409,7 @@ const Incidences = (props) => {
         onSendInformationIncidence={async (data, id) => {
           try {
             await handlerCallUpdateIncidence(data, id);
+            handlerCallGetIncidenceById(id);
           } catch (error) {
             throw error;
           }

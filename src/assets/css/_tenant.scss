@@ -109,6 +109,15 @@
     width: 100%;
     min-height: 300px;
     z-index: 0;
+    .sticker-status {
+      font-family: Poppins;
+      margin-top: 8px;
+      position: absolute;
+      top: 0px;
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(1px);
+      border-radius: 0px 5px 5px 0px;
+    }
   }
 }
 

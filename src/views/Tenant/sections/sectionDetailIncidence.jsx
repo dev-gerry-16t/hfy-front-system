@@ -37,6 +37,25 @@ const SectionDetailIncidence = (props) => {
                   );
                 } catch (error) {}
               }}
+              onClickAcceptService={async () => {
+                try {
+                  await onSendAnnotations(
+                    { confirmProvider: true },
+                    dataIncidenceDetail.result1.idIncidence
+                  );
+                } catch (error) {}
+              }}
+              onClickSendMessageService={async () => {
+                try {
+                  if (isEmpty(comment1) === false) {
+                    await onSendAnnotations(
+                      { annotations: comment1, confirmProvider: false },
+                      dataIncidenceDetail.result1.idIncidence
+                    );
+                    setComment1("");
+                  }
+                } catch (error) {}
+              }}
               onClickSendMessage={async () => {
                 try {
                   if (isEmpty(comment1) === false) {
@@ -72,7 +91,14 @@ const SectionDetailIncidence = (props) => {
               }}
             />
           </div>
-          <div className="bottom-background-information"></div>
+          <div className="bottom-background-information">
+            <div className="sticker-status">
+              <span>
+                Estatus:{" "}
+                <strong>{dataIncidenceDetail.result1.incidenceStatus}</strong>
+              </span>
+            </div>
+          </div>
         </>
       )}
       {isVisibleAllComments === true && (
