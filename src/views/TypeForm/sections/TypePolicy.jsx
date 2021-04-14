@@ -20,6 +20,7 @@ const TypePolicy = (props) => {
     idPolicy: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+  const [minumunPolicy, setTaxMinumunPolicy] = useState(0);
   const [taxPolicy, setTaxPolicy] = useState(0);
   const [tax, setTax] = useState(0);
 
@@ -35,6 +36,7 @@ const TypePolicy = (props) => {
       ) {
         setTaxPolicy(selectDefaultPolicy.percentBase);
         setTax(selectDefaultPolicy.taxBase);
+        setTaxMinumunPolicy(selectDefaultPolicy.minimunAmount);
       }
     }
   }, [dataFormSave, dataPolicies]);
@@ -94,6 +96,7 @@ const TypePolicy = (props) => {
                   const totalPolicyTax = clickOption.percentBase;
                   const totalTax = clickOption.taxBase;
                   setTaxPolicy(totalPolicyTax);
+                  setTaxMinumunPolicy(clickOption.minimunAmount);
                   setTax(totalTax);
                   setDataForm({ ...dataForm, idPolicy: value });
                 }}
@@ -117,13 +120,14 @@ const TypePolicy = (props) => {
               <div className="price-policy-amount">
                 <p>Costo por cobertura de Póliza</p>
                 {isNil(dataForm.currentRent) === false &&
-                dataForm.currentRent >= 10000 ? (
+                minumunPolicy > dataForm.currentRent * taxPolicy ? (
                   <div>
                     <h2>
                       {isNil(dataForm.currentRent) === false &&
                       isNil(dataForm.currentRent) === false
                         ? frontFunctions.parseFormatCurrency(
-                            dataForm.currentRent * taxPolicy,
+                            minumunPolicy,
+                            2,
                             2
                           )
                         : "$0.00"}
@@ -133,7 +137,18 @@ const TypePolicy = (props) => {
                   </div>
                 ) : (
                   <div>
-                    <h2>Cotiza con tu asesor</h2>
+                    <h2>
+                      {isNil(dataForm.currentRent) === false &&
+                      isNil(dataForm.currentRent) === false
+                        ? frontFunctions.parseFormatCurrency(
+                            dataForm.currentRent * taxPolicy,
+                            2,
+                            2
+                          )
+                        : "$0.00"}
+                    </h2>
+                    <strong>MXN</strong>
+                    <span style={{ marginLeft: 5 }}> + IVA {tax * 100}%</span>
                   </div>
                 )}
               </div>
