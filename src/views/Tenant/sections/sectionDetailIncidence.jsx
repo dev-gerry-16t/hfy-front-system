@@ -3,10 +3,12 @@ import isEmpty from "lodash/isEmpty";
 import WidgetComment from "../widgets/widgetComments";
 import WidgetDetailIncidence from "../widgets/widgetDetailIncidence";
 import IconMessages from "../../../assets/icons/chaticon.svg";
+import WidgetPaymentAccept from "../widgets/widgetPaymentAccept";
 
 const SectionDetailIncidence = (props) => {
   const { dataIncidenceDetail, onSendAnnotations } = props;
   const [comment, setComment] = useState("");
+  const [comment1, setComment1] = useState("");
   const [isVisibleAllComments, setIsVisibleAllComments] = useState(false);
 
   return (
@@ -20,6 +22,33 @@ const SectionDetailIncidence = (props) => {
             />
           </div>
           <div className="content-cards-dialog">
+            <WidgetPaymentAccept
+              isVisiblePayment={dataIncidenceDetail.result1.requieresPayment}
+              dataIncidenceDetail={dataIncidenceDetail.result1}
+              valueTextArea={comment1}
+              onChangeTextArea={(value) => {
+                setComment1(value);
+              }}
+              onClickAcceptPayment={async () => {
+                try {
+                  await onSendAnnotations(
+                    { isPaymentAccepted: true },
+                    dataIncidenceDetail.result1.idIncidence
+                  );
+                } catch (error) {}
+              }}
+              onClickSendMessage={async () => {
+                try {
+                  if (isEmpty(comment1) === false) {
+                    await onSendAnnotations(
+                      { annotations: comment1, isPaymentAccepted: false },
+                      dataIncidenceDetail.result1.idIncidence
+                    );
+                    setComment1("");
+                  }
+                } catch (error) {}
+              }}
+            />
             <WidgetDetailIncidence dataIncidenceDetail={dataIncidenceDetail} />
             <WidgetComment
               dataIncidenceDetail={dataIncidenceDetail}

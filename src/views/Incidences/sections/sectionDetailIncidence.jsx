@@ -443,7 +443,7 @@ const SectionDetailIncidence = (props) => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                       <Select
                         value={dataForm.idRequestForProviderStatus}
                         placeholder="Estatus del servicio"
