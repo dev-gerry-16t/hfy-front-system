@@ -558,7 +558,13 @@ const SectionDetailIncidence = (props) => {
                   <p style={{ fontSize: 15 }}>
                     4. Asignar responsable de la incidencia
                   </p>
-                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      marginBottom: 10,
+                    }}
+                  >
                     <span>
                       <i
                         style={{
@@ -588,7 +594,7 @@ const SectionDetailIncidence = (props) => {
                         }}
                         className="fa fa-check-circle"
                       />{" "}
-                      Acepto
+                      Aceptó
                     </span>
                     <span>
                       {" "}
@@ -599,14 +605,14 @@ const SectionDetailIncidence = (props) => {
                         }}
                         className="fa fa-times-circle"
                       />{" "}
-                      Rechazo
+                      Rechazó
                     </span>
                   </div>
                   {isEmpty(dataCustomerForIncidence) === false &&
                     dataCustomerForIncidence.map((row) => {
                       return (
                         <Row>
-                          <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
+                          <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                             <Checkbox
                               checked={
                                 isEmpty(dataFormForIncidence) === false
@@ -624,8 +630,7 @@ const SectionDetailIncidence = (props) => {
                               }}
                             >{`${row.customerType} ${row.fullName}`}</Checkbox>
                           </Col>
-                          <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                          <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                          <Col span={22} xs={{ span: 22 }} md={{ span: 22 }}>
                             <NumberFormat
                               id={null}
                               customInput={Input}
@@ -665,8 +670,8 @@ const SectionDetailIncidence = (props) => {
                               onBlur={(event) => {}}
                             />
                           </Col>
-                          <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                          <Col span={1} xs={{ span: 24 }} md={{ span: 1 }}>
+                          <Col span={1} xs={{ span: 1 }} md={{ span: 1 }} />
+                          <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
                             <i
                               style={{
                                 marginTop: 8,

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 
 const WidgetPaymentAccept = (props) => {
   const {
@@ -12,8 +13,10 @@ const WidgetPaymentAccept = (props) => {
   } = props;
   const [isVisibleComments, setIsVisibleComments] = useState(false);
   let component = <></>;
-
-  if (isVisiblePayment === true) {
+  if (
+    isVisiblePayment === true &&
+    isNil(dataIncidenceDetail.isPaymentAccepted) === true
+  ) {
     component = (
       <div className="card-information">
         <div className="tag-card"></div>
@@ -88,6 +91,17 @@ const WidgetPaymentAccept = (props) => {
             </>
           )}
         </div>
+      </div>
+    );
+  } else if (
+    isVisiblePayment === true &&
+    isNil(dataIncidenceDetail.isPaymentAccepted) === false &&
+    dataIncidenceDetail.isPaymentAccepted === true
+  ) {
+    component = (
+      <div className="card-information">
+        <div className="tag-card"></div>
+        En unos momentos te asignaremos tu servicio solicitado
       </div>
     );
   }
