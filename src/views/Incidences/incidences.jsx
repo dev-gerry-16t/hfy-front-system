@@ -16,7 +16,6 @@ import {
   callGetAllIncidencePaymentsMethods,
   callGetAllProviders,
   callGetAllProviderTypes,
-  callAddRequestProviderForTenant,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
@@ -36,7 +35,6 @@ const Incidences = (props) => {
     callGetAllProviders,
     callGetAllProviderTypes,
     callUpdateIncidence,
-    callAddRequestProviderForTenant,
   } = props;
 
   const [dataProviders, setDataProviders] = useState([]);
@@ -303,25 +301,6 @@ const Incidences = (props) => {
     }
   };
 
-  const handlerCallAddRequestProviderForTenant = async (data) => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      await callAddRequestProviderForTenant({
-        ...data,
-        idSystemUser,
-        idLoginHistory,
-      });
-    } catch (error) {
-      showMessageStatusApi(
-        isNil(error) === false
-          ? error
-          : "Error en el sistema, no se pudo ejecutar la petición",
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-      throw error;
-    }
-  };
-
   const columns = [
     {
       title: "Contrato",
@@ -428,13 +407,6 @@ const Incidences = (props) => {
         }}
         onSendInformationIncidence={async (data, id) => {
           try {
-            await handlerCallAddRequestProviderForTenant({
-              idProvider: data.idProvider,
-              idContract: data.idContract,
-              scheduleDate: data.scheduleDate,
-              idIncidence: data.idIncidence,
-              customerRequestedForPayment: data.customerRequestedForPayment,
-            });
             await handlerCallUpdateIncidence(data, id);
           } catch (error) {
             throw error;
@@ -494,8 +466,6 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllProviders: (data) => dispatch(callGetAllProviders(data)),
   callGetAllProviderTypes: (data) => dispatch(callGetAllProviderTypes(data)),
   callUpdateIncidence: (data, id) => dispatch(callUpdateIncidence(data, id)),
-  callAddRequestProviderForTenant: (data) =>
-    dispatch(callAddRequestProviderForTenant(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Incidences);

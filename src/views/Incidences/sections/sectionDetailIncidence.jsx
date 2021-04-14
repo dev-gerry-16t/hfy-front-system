@@ -104,6 +104,47 @@ const SectionDetailIncidence = (props) => {
     </div>
   );
 
+  const callIconForPayment = (key, select, type) => {
+    let result = "";
+    if (type === "icon") {
+      switch (key) {
+        case null: {
+          if (select === true) {
+            result = "fa fa-minus-circle";
+          } else {
+            result = "fa fa-circle-o";
+          }
+          break;
+        }
+        case false:
+          result = "fa fa-times-circle";
+          break;
+        case true:
+          result = "fa fa-check-circle";
+          break;
+        default:
+          result = "fa fa-circle-o";
+          break;
+      }
+    } else if (type === "color") {
+      switch (key) {
+        case null:
+          result = "gray";
+          break;
+        case false:
+          result = "red";
+          break;
+        case true:
+          result = "green";
+          break;
+        default:
+          result = "gray";
+          break;
+      }
+    }
+    return result;
+  };
+
   useEffect(() => {
     if (
       isEmpty(dataIncidenceId) === false &&
@@ -517,11 +558,55 @@ const SectionDetailIncidence = (props) => {
                   <p style={{ fontSize: 15 }}>
                     4. Asignar responsable de la incidencia
                   </p>
+                  <div style={{display:'flex',justifyContent:'space-between',marginBottom:10}}>
+                    <span>
+                      <i
+                        style={{
+                          marginTop: 8,
+                          color: "gray",
+                        }}
+                        className="fa fa-circle-o"
+                      />{" "}
+                      Sin asignación
+                    </span>
+                    <span>
+                      <i
+                        style={{
+                          marginTop: 8,
+                          color: "gray",
+                        }}
+                        className="fa fa-minus-circle"
+                      />{" "}
+                      Pendiente
+                    </span>
+                    <span>
+                      {" "}
+                      <i
+                        style={{
+                          marginTop: 8,
+                          color: "green",
+                        }}
+                        className="fa fa-check-circle"
+                      />{" "}
+                      Acepto
+                    </span>
+                    <span>
+                      {" "}
+                      <i
+                        style={{
+                          marginTop: 8,
+                          color: "red",
+                        }}
+                        className="fa fa-times-circle"
+                      />{" "}
+                      Rechazo
+                    </span>
+                  </div>
                   {isEmpty(dataCustomerForIncidence) === false &&
                     dataCustomerForIncidence.map((row) => {
                       return (
                         <Row>
-                          <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                          <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
                             <Checkbox
                               checked={
                                 isEmpty(dataFormForIncidence) === false
@@ -578,6 +663,26 @@ const SectionDetailIncidence = (props) => {
                               onClick={(event) => {}}
                               onFocus={(event) => {}}
                               onBlur={(event) => {}}
+                            />
+                          </Col>
+                          <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                          <Col span={1} xs={{ span: 24 }} md={{ span: 1 }}>
+                            <i
+                              style={{
+                                marginTop: 8,
+                                color: callIconForPayment(
+                                  dataFormForIncidence[row.idCustomer]
+                                    .isPaymentAccepted,
+                                  dataFormForIncidence[row.idCustomer].select,
+                                  "color"
+                                ),
+                              }}
+                              className={callIconForPayment(
+                                dataFormForIncidence[row.idCustomer]
+                                  .isPaymentAccepted,
+                                dataFormForIncidence[row.idCustomer].select,
+                                "icon"
+                              )}
                             />
                           </Col>
                         </Row>
