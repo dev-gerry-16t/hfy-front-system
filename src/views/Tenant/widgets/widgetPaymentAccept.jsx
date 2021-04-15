@@ -127,6 +127,43 @@ const WidgetPaymentAccept = (props) => {
   } else if (
     isVisiblePayment === true &&
     isNil(dataIncidenceDetail.isPaymentAccepted) === false &&
+    dataIncidenceDetail.isPaymentAccepted === false &&
+    dataIncidenceDetail.requieresConfirmation === false &&
+    isNil(dataIncidenceDetail.confirmProvider) === true
+  ) {
+    component = (
+      <div className="card-information">
+        <div className="tag-card"></div>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <h3>Rechazaste el pago de incidencia con monto de:</h3>
+          <strong style={{ fontSize: 18, margin: "10px 0px" }}>
+            {dataIncidenceDetail.amountFormat}
+          </strong>
+          <span style={{ margin: "10px 0px" }}>¿Deseas aceptar el cargo?</span>
+          <div className="two-action-buttons-banner">
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  onClickAcceptPayment(true);
+                } catch (error) {}
+              }}
+            >
+              <span>Aceptar</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  } else if (
+    isVisiblePayment === true &&
+    isNil(dataIncidenceDetail.isPaymentAccepted) === false &&
     dataIncidenceDetail.isPaymentAccepted === true &&
     dataIncidenceDetail.requieresConfirmation === true &&
     isNil(dataIncidenceDetail.confirmProvider) === true
