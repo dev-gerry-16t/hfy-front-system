@@ -31,6 +31,7 @@ const SectionInfoUser = (props) => {
     idCountryNationalityText: null,
     idType: null,
     idTypeText: null,
+    fieldDescription: null,
     idTypeNumber: null,
     placeOfIssue: null,
     enterpriseIdCommercialSocietyType: null,
@@ -53,6 +54,7 @@ const SectionInfoUser = (props) => {
     legalRepSignedAtPlace: null,
     legalRepIdType: null,
     legalRepIdTypeText: null,
+    legalRepFieldDescription: null,
     legalRepIdTypeNumber: null,
     NIV: null,
   };
@@ -98,6 +100,10 @@ const SectionInfoUser = (props) => {
             isNil(selectDefaultLegalIdType) === false
               ? selectDefaultLegalIdType.text
               : "",
+          legalRepFieldDescription:
+            isNil(selectDefaultLegalIdType) === false
+              ? selectDefaultLegalIdType.fieldDescription
+              : "",
           enterpriseIdStatePublicPropertyText:
             isNil(selectDefaultState) === false ? selectDefaultState.text : "",
         });
@@ -117,6 +123,10 @@ const SectionInfoUser = (props) => {
           idTypeText:
             isNil(selectDefaultIdType) === false
               ? selectDefaultIdType.text
+              : "",
+          fieldDescription:
+            isNil(selectDefaultIdType) === false
+              ? selectDefaultIdType.fieldDescription
               : "",
           isRequiresPlaceOfIssue:
             isNil(selectDefaultIdType) === false
@@ -411,7 +421,8 @@ const SectionInfoUser = (props) => {
                           setDataForm({
                             ...dataForm,
                             idType: value,
-                            idTypeText: option.children,
+                            idTypeText: valueSelect.text,
+                            fieldDescription: valueSelect.fieldDescription,
                             isRequiresPlaceOfIssue:
                               valueSelect.requiresPlaceOfIssue,
                           });
@@ -437,7 +448,7 @@ const SectionInfoUser = (props) => {
                       <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                         <Input
                           value={dataForm.idTypeNumber}
-                          placeholder={`Número de ${dataForm.idTypeText}`}
+                          placeholder={dataForm.fieldDescription}
                           onChange={(e) => {
                             const value = e.target.value;
                             setDataForm({ ...dataForm, idTypeNumber: value });
@@ -688,7 +699,9 @@ const SectionInfoUser = (props) => {
                         setDataForm({
                           ...dataForm,
                           legalRepIdType: value,
-                          legalRepIdTypeText: option.children,
+                          legalRepIdTypeText: valueSelect.text,
+                          legalRepFieldDescription:
+                            valueSelect.fieldDescription,
                         });
                       }}
                       filterOption={(input, option) =>
@@ -711,11 +724,7 @@ const SectionInfoUser = (props) => {
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
                       value={dataForm.legalRepIdTypeNumber}
-                      placeholder={`Número de ${
-                        isNil(dataForm.legalRepIdTypeText) === false
-                          ? dataForm.legalRepIdTypeText
-                          : ""
-                      }`}
+                      placeholder={dataForm.legalRepFieldDescription}
                       onChange={(e) => {
                         const value = e.target.value;
                         setDataForm({
@@ -913,7 +922,7 @@ const SectionInfoUser = (props) => {
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                     <DescriptionItem
-                      title={`Número de ${dataForm.idTypeText}`}
+                      title={dataForm.fieldDescription}
                       content={dataForm.idTypeNumber}
                     />
                   </Col>
@@ -1075,7 +1084,7 @@ const SectionInfoUser = (props) => {
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                     <DescriptionItem
-                      title={`Número de ${dataForm.legalRepIdTypeText}`}
+                      title={dataForm.legalRepFieldDescription}
                       content={dataForm.legalRepIdTypeNumber}
                     />
                   </Col>

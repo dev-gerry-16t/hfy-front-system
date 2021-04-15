@@ -63,6 +63,7 @@ const SectionInfoAval = (props) => {
     idEndorsementNationalityText: null,
     idEndorsementType: null,
     idEndorsementTypeText: null,
+    idEndorsementFieldDescription: null,
     idEndorsementTypeNumber: null,
     endorsementCitizenId: null,
     publicPropertyRegistry: null,
@@ -141,6 +142,10 @@ const SectionInfoAval = (props) => {
             : "",
         idEndorsementTypeText:
           isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+        idEndorsementFieldDescription:
+          isNil(selectDefaultIdType) === false
+            ? selectDefaultIdType.fieldDescription
+            : "",
         isRequiresPlaceOfIssue:
           isNil(selectDefaultIdType) === false
             ? selectDefaultIdType.requiresPlaceOfIssue
@@ -424,7 +429,9 @@ const SectionInfoAval = (props) => {
                             setDataForm({
                               ...dataForm,
                               idEndorsementType: value,
-                              idEndorsementTypeText: option.children,
+                              idEndorsementTypeText: value.text,
+                              idEndorsementFieldDescription:
+                                value.fieldDescription,
                               isRequiresPlaceOfIssue:
                                 valueSelect.requiresPlaceOfIssue,
                             });
@@ -450,7 +457,7 @@ const SectionInfoAval = (props) => {
                         <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                           <Input
                             value={dataForm.idEndorsementTypeNumber}
-                            placeholder={`Número de ${dataForm.idEndorsementTypeText}`}
+                            placeholder={dataForm.idEndorsementFieldDescription}
                             onChange={(e) => {
                               const value = e.target.value;
                               setDataForm({
@@ -1452,7 +1459,7 @@ const SectionInfoAval = (props) => {
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                     <DescriptionItem
-                      title={`Número de ${dataForm.idEndorsementTypeText}`}
+                      title={dataForm.idEndorsementFieldDescription}
                       content={dataForm.idEndorsementTypeNumber}
                     />
                   </Col>
