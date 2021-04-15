@@ -41,6 +41,7 @@ const SectionInfoOwner = (props) => {
     idCountryNationalityText: null,
     idType: null,
     idTypeText: null,
+    fieldDescription: null,
     idTypeNumber: null,
     placeOfIssue: null,
   };
@@ -77,13 +78,13 @@ const SectionInfoOwner = (props) => {
           ? JSON.parse(dataFormSave.jsonProperties)
           : {};
       const selectDefaultNationality = dataNationalities.find((row) => {
-        return dataForm.idCountryNationality === row.idCountryNationality;
+        return dataFormSave.idCountryNationality === row.idCountryNationality;
       });
       const selectDefaultIdType = dataIdTypes.find((row) => {
-        return dataForm.idType === row.idType;
+        return dataFormSave.idType === row.idType;
       });
       const selectDefaultMaritalStatus = dataMaritalStatus.find((row) => {
-        return dataForm.idMaritalStatus === row.idMaritalStatus;
+        return dataFormSave.idMaritalStatus === row.idMaritalStatus;
       });
       setDataForm({
         ...dataFormSave,
@@ -93,6 +94,10 @@ const SectionInfoOwner = (props) => {
             : "",
         idTypeText:
           isNil(selectDefaultIdType) === false ? selectDefaultIdType.text : "",
+        fieldDescription:
+          isNil(selectDefaultIdType) === false
+            ? selectDefaultIdType.fieldDescription
+            : "",
         idMaritalStatusText:
           isNil(selectDefaultMaritalStatus) === false
             ? selectDefaultMaritalStatus.text
@@ -280,10 +285,12 @@ const SectionInfoOwner = (props) => {
                   value={dataForm.idType}
                   onChange={(value, option) => {
                     const valueSelect = option.onClick();
+                    console.log("valueSelect", valueSelect);
                     setDataForm({
                       ...dataForm,
                       idType: value,
-                      idTypeText: option.children,
+                      idTypeText: valueSelect.text,
+                      fieldDescription: valueSelect.fieldDescription,
                       isRequiresPlaceOfIssue: valueSelect.requiresPlaceOfIssue,
                     });
                   }}
@@ -308,7 +315,7 @@ const SectionInfoOwner = (props) => {
                 <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                   <Input
                     value={dataForm.idTypeNumber}
-                    placeholder={`Número de ${dataForm.idTypeText}`}
+                    placeholder={dataForm.fieldDescription}
                     onChange={(e) => {
                       const value = e.target.value;
                       setDataForm({ ...dataForm, idTypeNumber: value });
@@ -582,7 +589,7 @@ const SectionInfoOwner = (props) => {
               <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                 <DescriptionItem
-                  title={`Número de ${dataForm.idTypeText}`}
+                  title={dataForm.fieldDescription}
                   content={dataForm.idTypeNumber}
                 />
               </Col>
