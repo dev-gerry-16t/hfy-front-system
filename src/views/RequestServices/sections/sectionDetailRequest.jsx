@@ -73,6 +73,15 @@ const SectionDetailRequest = (props) => {
     </div>
   );
 
+  const replaceUrl = (address) => {
+    let domainPath = "https://www.google.com/maps/search/";
+    if (isNil(address) === false) {
+      const replaceString = address.replaceAll(" ", "+");
+      domainPath = domainPath + replaceString;
+    }
+    return domainPath;
+  };
+
   useEffect(() => {
     if (
       isEmpty(dataProviderById) === false &&
@@ -154,6 +163,14 @@ const SectionDetailRequest = (props) => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <DescriptionItem
+                title="Folio de incidencia"
+                content={dataForm.incidenceInvoice}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <DescriptionItem
                 title="Nombre del inquilino"
                 content={dataForm.customerTenantFullName}
               />
@@ -166,30 +183,53 @@ const SectionDetailRequest = (props) => {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <DescriptionItem
-                title="Dirección de partida"
-                content={dataForm.fullAddressTenantFrom}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <DescriptionItem
-                title="Dirección final"
-                content={dataForm.fullAddressTenant}
-              />
-            </Col>
-          </Row>
-          <div style={{ textAlign: "center" }}>
-            <a
-              href={`https://www.google.com/maps/dir/${dataForm.fullAddressTenantFrom}/${dataForm.fullAddressTenant}`}
-              target="_blank"
-            >
-              Ver Recorrido en Google Maps
-            </a>
-          </div>
+          {dataForm.isForMoving === true ? (
+            <>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <DescriptionItem
+                    title="Dirección de partida"
+                    content={dataForm.fullAddressTenantFrom}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <DescriptionItem
+                    title="Dirección final"
+                    content={dataForm.fullAddressTenant}
+                  />
+                </Col>
+              </Row>
+              <div style={{ textAlign: "center" }}>
+                <a
+                  href={`https://www.google.com/maps/dir/${dataForm.fullAddressTenantFrom}/${dataForm.fullAddressTenant}`}
+                  target="_blank"
+                >
+                  Ver Recorrido en Google Maps
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <DescriptionItem
+                    title="Dirección"
+                    content={dataForm.fullAddressTenant}
+                  />
+                </Col>
+              </Row>
+              <div style={{ textAlign: "center" }}>
+                <a
+                  href={replaceUrl(dataForm.fullAddressTenant)}
+                  target="_blank"
+                >
+                  Ver en Google Maps
+                </a>
+              </div>
+            </>
+          )}
           <p>Proveedor</p>
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>

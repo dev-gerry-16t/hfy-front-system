@@ -93,6 +93,7 @@ const SectionDetailIncidence = (props) => {
   const [dataFormForIncidence, setDataFormForIncidence] = useState({});
   const [previewVisible, setPreviewVisible] = useState(false);
   const [dataDocumentSelect, setDataDocumentSelect] = useState({});
+  const [infoCatalog, setInfoCatalog] = useState({});
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -148,7 +149,8 @@ const SectionDetailIncidence = (props) => {
   useEffect(() => {
     if (
       isEmpty(dataIncidenceId) === false &&
-      isEmpty(dataIncidencePaymentMethods) === false
+      isEmpty(dataIncidencePaymentMethods) === false &&
+      isEmpty(dataIncidenceTypes) === false
     ) {
       const sielectDefaultPaymentMethods = dataIncidencePaymentMethods.find(
         (row) => {
@@ -158,12 +160,20 @@ const SectionDetailIncidence = (props) => {
           );
         }
       );
+      const sielectDefaultIncidenceType = dataIncidenceTypes.find((row) => {
+        return row.idIncidenceType === dataIncidenceId.idIncidenceType;
+      });
       if (isNil(dataIncidenceId.idProviderType) === false) {
         onGetAllProvider(
           dataIncidenceId.idProviderType,
           dataIncidenceId.idContract
         );
       }
+      setInfoCatalog(
+        isNil(sielectDefaultIncidenceType) === false
+          ? sielectDefaultIncidenceType
+          : {}
+      );
       setDataForm({
         ...dataForm,
         ...dataIncidenceId,
@@ -173,7 +183,7 @@ const SectionDetailIncidence = (props) => {
             : null,
       });
     }
-  }, [dataIncidenceId, dataIncidencePaymentMethods]);
+  }, [dataIncidenceId, dataIncidencePaymentMethods, dataIncidenceTypes]);
 
   useEffect(() => {
     if (isEmpty(dataCustomerForIncidence) === false) {
@@ -247,6 +257,14 @@ const SectionDetailIncidence = (props) => {
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <DescriptionItem
+                    title="Folio de incidencia"
+                    content={dataIncidenceId.incidenceInvoice}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <DescriptionItem
                     title="Propietario"
                     content={dataIncidenceId.customerFullName}
                   />
@@ -286,6 +304,7 @@ const SectionDetailIncidence = (props) => {
                         ...dataForm,
                         idIncidenceType: value,
                       });
+                      setInfoCatalog(optionClick);
                     }}
                   >
                     {isEmpty(dataIncidenceTypes) === false &&
@@ -304,6 +323,22 @@ const SectionDetailIncidence = (props) => {
                   </Select>
                 </Col>
               </Row>
+              {isEmpty(infoCatalog) === false && infoCatalog.isOpen === true && (
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <Input
+                      value={dataForm.incidenceType}
+                      placeholder={"Otro tipo de incidencia"}
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          incidenceType: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+              )}
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                   <label
@@ -324,7 +359,6 @@ const SectionDetailIncidence = (props) => {
                       fontFamily: "Poppins",
                     }}
                     value={dataForm.description}
-                    maxlength="500"
                     onChange={(e) => {
                       setDataForm({
                         ...dataForm,
@@ -762,7 +796,6 @@ const SectionDetailIncidence = (props) => {
                   placeholder="Ingresar comentario"
                   className="text-comment-dialog"
                   value={dataForm.annotations}
-                  maxlength="150"
                   onChange={(e) => {
                     setDataForm({ ...dataForm, annotations: e.target.value });
                   }}

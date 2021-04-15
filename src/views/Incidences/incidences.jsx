@@ -303,6 +303,11 @@ const Incidences = (props) => {
 
   const columns = [
     {
+      title: "Folio",
+      dataIndex: "incidenceInvoice",
+      key: "incidenceInvoice",
+    },
+    {
       title: "Contrato",
       dataIndex: "hfInvoice",
       key: "hfInvoice",

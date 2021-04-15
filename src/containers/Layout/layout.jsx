@@ -166,7 +166,7 @@ const DefaultLayout = (props) => {
         },
         id
       );
-      handlerCallGetNotifications();
+      handlerCallGetNotifications(notificationTopIndex);
     } catch (error) {}
   };
 

@@ -75,7 +75,6 @@ const WidgetPaymentAccept = (props) => {
                   placeholder="Ingresa tus motivos"
                   className="text-comment-dialog"
                   value={valueTextArea}
-                  maxlength="150"
                   onChange={(e) => {
                     onChangeTextArea(e.target.value);
                   }}
@@ -193,7 +192,6 @@ const WidgetPaymentAccept = (props) => {
                   placeholder="Ingresa tus motivos"
                   className="text-comment-dialog"
                   value={valueTextArea}
-                  maxlength="150"
                   onChange={(e) => {
                     onChangeTextArea(e.target.value);
                   }}

@@ -189,13 +189,14 @@ const RequestServices = (props) => {
     }
   };
 
-  const handlerCallGetAllProviders = async (id) => {
+  const handlerCallGetAllProviders = async (id, idProvider) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllProviders({
         idContract: id,
         idSystemUser,
         idLoginHistory,
+        idRequestForProvider: idProvider,
         type: 1,
       });
       const responseResult =
@@ -247,6 +248,11 @@ const RequestServices = (props) => {
 
   const columns = [
     {
+      title: "Folio de incidencia",
+      dataIndex: "incidenceInvoice",
+      key: "incidenceInvoice",
+    },
+    {
       title: "Contrato",
       dataIndex: "hfInvoice",
       key: "hfInvoice",
@@ -283,7 +289,10 @@ const RequestServices = (props) => {
           onClick={() => {
             if (text === true) {
               handlerCallGetProviderById(record.idRequestForProvider);
-              handlerCallGetAllProviders(record.idContract);
+              handlerCallGetAllProviders(
+                record.idContract,
+                record.idRequestForProvider
+              );
               handlerCallGetAllCollaborators(record.idProvider);
               setOpenDetailRequest(!openDetailRequest);
             }

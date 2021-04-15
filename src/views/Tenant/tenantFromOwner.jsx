@@ -17,7 +17,15 @@ import {
   callGetPaymentContractDocument,
   callAddCustomerMessage,
   callGetCustomerMessage,
+  callGetAllIncidenceTypes,
+  callGetAllIncidenceCoincidences,
+  callGetIncidenceById,
+  callAddIncidence,
+  callUpdateIncidence,
 } from "../../utils/actions/actions";
+import SectionIncidenceReport from "./sections/sectionIncidenceReport";
+import CustomDialog from "../../components/CustomDialog";
+import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -34,6 +42,11 @@ const TenantFromOwner = (props) => {
     callGetPaymentContractDocument,
     callAddCustomerMessage,
     callGetCustomerMessage,
+    callGetAllIncidenceTypes,
+    callGetAllIncidenceCoincidences,
+    callGetIncidenceById,
+    callAddIncidence,
+    callUpdateIncidence,
   } = props;
   const { params } = match;
   const idCustomerTenant = params.idCustomerTenant;
@@ -46,6 +59,12 @@ const TenantFromOwner = (props) => {
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [idTopIndexDocuments, setIdTopIndexDocuments] = useState(-1);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
+  const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
+  const [dataIncidenceDetail, setDataIncidenceDetail] = useState({});
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
+    false
+  );
 
   const dotChange = useRef(null);
   const contentStyle = {
@@ -145,6 +164,121 @@ const TenantFromOwner = (props) => {
     }
   };
 
+  const handlerCallGetAllIncidenceTypes = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllIncidenceTypes({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      setDataIncidenceTypes(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallAddIncidence = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callAddIncidence({
+        idSystemUser,
+        idLoginHistory,
+        ...data,
+      });
+      setSpinVisible(false);
+    } catch (error) {
+      setSpinVisible(false);
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGetIncidenceById = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetIncidenceById({
+        idSystemUser,
+        idLoginHistory,
+        idIncidence: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataIncidenceDetail(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallUpdateIncidence = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateIncidence(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "Se envío correctamente tu comentario",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGetAllIncidenceCoincidences = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllIncidenceCoincidences({
+        idContract: id,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: null,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataIncideCoincidence(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllCustomerTenantById = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -163,15 +297,17 @@ const TenantFromOwner = (props) => {
       setDataTenant(responseResult);
       if (isEmpty(responseResult) === false) {
         setIdContractData(responseResult.idContract);
-        handlerCallGetAllPaymentTypes({
+        await handlerCallGetAllPaymentTypes({
           type: 1,
           idContract: responseResult.idContract,
           idCustomerTenant,
         });
-        handlerCallGetCustomerMessage({
+        await handlerCallGetCustomerMessage({
           idContract: responseResult.idContract,
           idCustomerTenant,
         });
+        await handlerCallGetAllIncidenceTypes(responseResult.idContract);
+        await handlerCallGetAllIncidenceCoincidences(responseResult.idContract);
       }
     } catch (error) {
       showMessageStatusApi(
@@ -291,6 +427,25 @@ const TenantFromOwner = (props) => {
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={isVisibleDetailIncidence}
+        onClose={() => {
+          setIsVisibleDetailIncidence(!isVisibleDetailIncidence);
+          handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
+        }}
+      >
+        <SectionDetailIncidence
+          dataIncidenceDetail={dataIncidenceDetail}
+          onSendAnnotations={async (data, id) => {
+            try {
+              await handlerCallUpdateIncidence(data, id);
+              handlerCallGetIncidenceById(id);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        />
+      </CustomDialog>
       <div className="margin-app-main">
         <SectionInfoTenant dataTenant={dataTenant} />
         <div className="actions-information-tenant">
@@ -348,7 +503,43 @@ const TenantFromOwner = (props) => {
                   }}
                 />
               </TabPane>
-              <TabPane tab="Reportar incidencia" key="4" />
+              <TabPane tab="Incidencias" key="4">
+                <SectionIncidenceReport
+                  dataIncidence={dataIncidenceTypes}
+                  spinVisible={spinVisible}
+                  dataIncideCoincidence={dataIncideCoincidence}
+                  onGetById={async (data) => {
+                    await handlerCallGetIncidenceById(data.idIncidence);
+                    setIsVisibleDetailIncidence(true);
+                  }}
+                  onSendReport={async (arrayDocument, data) => {
+                    try {
+                      setSpinVisible(true);
+                      let parseDocument = null;
+                      if (isEmpty(arrayDocument) === false) {
+                        const dataDocuments = await Promise.all(
+                          arrayDocument.map(async (row) => {
+                            const item = await handlerAddDocument(row, data);
+                            return item;
+                          })
+                        );
+                        parseDocument = dataDocuments.join();
+                      }
+                      const dataSend = {
+                        ...data,
+                        idContract: dataTenant.idContract,
+                        documents: parseDocument,
+                      };
+                      await handlerCallAddIncidence(dataSend);
+                      handlerCallGetAllIncidenceCoincidences(
+                        dataTenant.idContract
+                      );
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
+                />
+              </TabPane>
             </Tabs>
           </div>
         </div>
@@ -375,6 +566,12 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetPaymentContractDocument(data)),
   callAddCustomerMessage: (data) => dispatch(callAddCustomerMessage(data)),
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
+  callGetAllIncidenceTypes: (data) => dispatch(callGetAllIncidenceTypes(data)),
+  callGetAllIncidenceCoincidences: (data) =>
+    dispatch(callGetAllIncidenceCoincidences(data)),
+  callGetIncidenceById: (data) => dispatch(callGetIncidenceById(data)),
+  callAddIncidence: (data) => dispatch(callAddIncidence(data)),
+  callUpdateIncidence: (data, id) => dispatch(callUpdateIncidence(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);

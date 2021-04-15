@@ -12,7 +12,12 @@ const WidgetDetailIncidence = (props) => {
           : ""}
       </h3>
       <label>Descripción de incidencia:</label>
-      <p>
+      <p
+        style={{
+          maxHeight: 85,
+          overflowY: "scroll",
+        }}
+      >
         {isEmpty(dataIncidenceDetail) === false
           ? dataIncidenceDetail.result1.description
           : ""}
@@ -22,9 +27,9 @@ const WidgetDetailIncidence = (props) => {
           ? dataIncidenceDetail.result1.createdAtFormat
           : ""}
       </span>
-      <strong title="folio">
+      <strong title="folio">Folio:{" "}
         {isEmpty(dataIncidenceDetail) === false
-          ? dataIncidenceDetail.result1.hfInvoice
+          ? dataIncidenceDetail.result1.incidenceInvoice
           : ""}
       </strong>
     </div>

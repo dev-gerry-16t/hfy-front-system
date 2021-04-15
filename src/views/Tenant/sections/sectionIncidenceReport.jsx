@@ -102,7 +102,7 @@ const SectionIncidenceReport = (props) => {
                                   "DD/MM/YYYY HH:mm"
                                 ).format("DD MMMM YYYY HH:mm")
                               : ""
-                          }`}
+                          } | Folio: ${item.incidenceInvoice}`}
                           description={item.incidenceType}
                         />
                         <div>
@@ -242,6 +242,14 @@ const SectionIncidenceReport = (props) => {
                 className="two-action-buttons-banner"
                 style={{ marginTop: 25 }}
               >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsVisibleAddReport(false);
+                  }}
+                >
+                  <span>Regresar</span>
+                </button>
                 <button
                   type="button"
                   onClick={async () => {

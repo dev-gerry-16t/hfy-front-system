@@ -1176,7 +1176,7 @@ const Tenant = (props) => {
                   documents: parseDocument,
                 };
                 await handlerCallAddIncidence(dataSend);
-                handlerCallGetAllIncidenceCoincidences();
+                handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
               } catch (error) {
                 throw error;
               }
