@@ -285,7 +285,6 @@ const SectionInfoOwner = (props) => {
                   value={dataForm.idType}
                   onChange={(value, option) => {
                     const valueSelect = option.onClick();
-                    console.log("valueSelect", valueSelect);
                     setDataForm({
                       ...dataForm,
                       idType: value,
