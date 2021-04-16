@@ -21,6 +21,8 @@ import {
   CheckCircleTwoTone,
   EditTwoTone,
   QuestionCircleOutlined,
+  CloseCircleFilled,
+  CheckCircleFilled,
 } from "@ant-design/icons";
 import {
   callGetLegalContractCoincidences,
@@ -196,6 +198,10 @@ const Attorney = (props) => {
           key: "customerFullName",
           width: 200,
           render: (name, record) => {
+            const catalogProperties =
+              isNil(record.customerTypeFormProperties) === false
+                ? JSON.parse(record.customerTypeFormProperties)
+                : [];
             return (
               <Dropdown
                 overlay={
@@ -211,18 +217,26 @@ const Attorney = (props) => {
                       history.push(`/websystem/typeform-owner/${value.key}`);
                     }}
                   >
-                    <Menu.Item key="0">
-                      <a>Información personal</a>
-                    </Menu.Item>
-                    <Menu.Item key="1">
-                      <a>Inmueble a rentar</a>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                      <a>Póliza</a>
-                    </Menu.Item>
-                    <Menu.Item key="3">
-                      <a>Datos bancarios</a>
-                    </Menu.Item>
+                    {isEmpty(catalogProperties) === false &&
+                      catalogProperties.map((rowMap) => {
+                        return (
+                          <Menu.Item
+                            key={`${rowMap.idStepIn}`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <a style={{ marginRight: 2 }}>{rowMap.stepIn}</a>
+                            {rowMap.isCompleted === true ? (
+                              <CheckCircleFilled style={{ color: "green" }} />
+                            ) : (
+                              <CloseCircleFilled style={{ color: "red" }} />
+                            )}
+                          </Menu.Item>
+                        );
+                      })}
                   </Menu>
                 }
                 trigger={["click"]}
@@ -238,6 +252,10 @@ const Attorney = (props) => {
           key: "customerTenantFullName",
           width: 200,
           render: (name, record) => {
+            const catalogProperties =
+              isNil(record.customerTenantTypeFormProperties) === false
+                ? JSON.parse(record.customerTenantTypeFormProperties)
+                : [];
             return (
               <Dropdown
                 overlay={
@@ -252,30 +270,99 @@ const Attorney = (props) => {
                       history.push(`/websystem/typeform-user/${value.key}`);
                     }}
                   >
-                    <Menu.Item key="0">
-                      <a>Información personal</a>
-                    </Menu.Item>
-                    <Menu.Item key="1">
-                      <a>Dirección actual</a>
-                    </Menu.Item>
-                    <Menu.Item key="2">
-                      <a>Información laboral</a>
-                    </Menu.Item>
-                    <Menu.Item key="3">
-                      <a>Referencias</a>
-                    </Menu.Item>
-                    <Menu.Item key="4">
-                      <a>Documentación</a>
-                    </Menu.Item>
-                    <Menu.Item key="5">
-                      <a>Información aval</a>
-                    </Menu.Item>
+                    {isEmpty(catalogProperties) === false &&
+                      catalogProperties.map((rowMap) => {
+                        return (
+                          <Menu.Item
+                            key={`${rowMap.idStepIn}`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                          >
+                            <a style={{ marginRight: 2 }}>{rowMap.stepIn}</a>
+                            {rowMap.isCompleted === true ? (
+                              <CheckCircleFilled style={{ color: "green" }} />
+                            ) : (
+                              <CloseCircleFilled style={{ color: "red" }} />
+                            )}
+                          </Menu.Item>
+                        );
+                      })}
                   </Menu>
                 }
                 trigger={["click"]}
               >
                 <a>{name}</a>
               </Dropdown>
+            );
+          },
+        },
+        {
+          title: "Obligado Solidario",
+          dataIndex: "customerTenantBoundSolidarityFullName",
+          key: "customerTenantBoundSolidarityFullName",
+          width: 200,
+          render: (name, record) => {
+            const catalogProperties =
+              isNil(record.customerTenantBoundSolidarityTypeFormProperties) ===
+              false
+                ? JSON.parse(
+                    record.customerTenantBoundSolidarityTypeFormProperties
+                  )
+                : [];
+            return (
+              <>
+                {record.hasBoundSolidarity === true ? (
+                  <Dropdown
+                    overlay={
+                      <Menu
+                        onClick={async (value) => {
+                          await setDataUserProfile({
+                            ...dataProfile,
+                            idCustomerTenantTF:
+                              record.idCustomerTenantBoundSolidarity,
+                            idCustomerTF: record.idCustomer,
+                            idContract: record.idContract,
+                          });
+                          history.push(`/websystem/typeform-user/${value.key}`);
+                        }}
+                      >
+                        {isEmpty(catalogProperties) === false &&
+                          catalogProperties.map((rowMap) => {
+                            return (
+                              <Menu.Item
+                                key={`${rowMap.idStepIn}`}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "space-between",
+                                }}
+                              >
+                                <a style={{ marginRight: 2 }}>
+                                  {rowMap.stepIn}
+                                </a>
+                                {rowMap.isCompleted === true ? (
+                                  <CheckCircleFilled
+                                    style={{ color: "green" }}
+                                  />
+                                ) : (
+                                  <CloseCircleFilled style={{ color: "red" }} />
+                                )}
+                              </Menu.Item>
+                            );
+                          })}
+                      </Menu>
+                    }
+                    trigger={["click"]}
+                  >
+                    <a>{name}</a>
+                  </Dropdown>
+                ) : (
+                  <>{name}</>
+                )}
+              </>
             );
           },
         },
