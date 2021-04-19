@@ -13,8 +13,10 @@
   font-family: Poppins;
 }
 
-.ant-popover-inner-content {
-  padding: 5px 0px !important;
+#layout-popover-list {
+  .ant-popover-inner-content {
+    padding: 5px 0px !important;
+  }
 }
 
 .title-notification {

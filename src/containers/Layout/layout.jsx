@@ -557,6 +557,7 @@ const DefaultLayout = (props) => {
                 </div>
                 <Popover
                   className="popover-list-notification"
+                  id="layout-popover-list"
                   placement="bottomRight"
                   title={
                     <div className="title-notification-small">

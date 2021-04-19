@@ -437,25 +437,22 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            if (reconstructionSection.contract === true) {
-                              await onVisualiceDocument({
-                                download: false,
-                                process: true,
-                                url: dataGetContract.url,
-                                idCustomer: dataGetContract.idCustomer,
-                                idCustomerTenant:
-                                  dataGetContract.idCustomerTenant,
-                                idContract: dataGetContract.idContract,
-                                type: 1,
-                              });
-                              setReconstructionSection({
-                                ...reconstructionSection,
-                                contract: false,
-                              });
-                            }
-
+                            setIsDownloadDocument(true);
+                            await onVisualiceDocument({
+                              download: false,
+                              process: true,
+                              url: dataGetContract.url,
+                              idCustomer: dataGetContract.idCustomer,
+                              idCustomerTenant:
+                                dataGetContract.idCustomerTenant,
+                              idContract: dataGetContract.idContract,
+                              type: 1,
+                            });
+                            setIsDownloadDocument(false);
                             setInternalModal(!internalModal);
-                          } catch (error) {}
+                          } catch (error) {
+                            setIsDownloadDocument(false);
+                          }
                         }}
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
@@ -541,24 +538,22 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            if (reconstructionSection.policy === true) {
-                              await onVisualiceDocument({
-                                download: false,
-                                process: true,
-                                url: dataGetContract.url,
-                                idCustomer: dataGetContract.idCustomer,
-                                idCustomerTenant:
-                                  dataGetContract.idCustomerTenant,
-                                idContract: dataGetContract.idContract,
-                                type: 2,
-                              });
-                              setReconstructionSection({
-                                ...reconstructionSection,
-                                policy: false,
-                              });
-                            }
+                            setIsDownloadDocument(true);
+                            await onVisualiceDocument({
+                              download: false,
+                              process: true,
+                              url: dataGetContract.url,
+                              idCustomer: dataGetContract.idCustomer,
+                              idCustomerTenant:
+                                dataGetContract.idCustomerTenant,
+                              idContract: dataGetContract.idContract,
+                              type: 2,
+                            });
+                            setIsDownloadDocument(false);
                             setInternalModal(!internalModal);
-                          } catch (error) {}
+                          } catch (error) {
+                            setIsDownloadDocument(false);
+                          }
                         }}
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
@@ -644,25 +639,22 @@ const SectionContractAvailable = (props) => {
                         type="button"
                         onClick={async () => {
                           try {
-                            if (reconstructionSection.payments === true) {
-                              await onVisualiceDocument({
-                                download: false,
-                                process: true,
-                                url: dataGetContract.url,
-                                idCustomer: dataGetContract.idCustomer,
-                                idCustomerTenant:
-                                  dataGetContract.idCustomerTenant,
-                                idContract: dataGetContract.idContract,
-                                type: 4,
-                              });
-                              setReconstructionSection({
-                                ...reconstructionSection,
-                                payments: false,
-                              });
-                            }
-
+                            setIsDownloadDocument(true);
+                            await onVisualiceDocument({
+                              download: false,
+                              process: true,
+                              url: dataGetContract.url,
+                              idCustomer: dataGetContract.idCustomer,
+                              idCustomerTenant:
+                                dataGetContract.idCustomerTenant,
+                              idContract: dataGetContract.idContract,
+                              type: 4,
+                            });
+                            setIsDownloadDocument(false);
                             setInternalModal(!internalModal);
-                          } catch (error) {}
+                          } catch (error) {
+                            setIsDownloadDocument(false);
+                          }
                         }}
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
@@ -766,7 +758,7 @@ const SectionContractAvailable = (props) => {
                     width: "98%",
                   }}
                 >
-                  Descargando...
+                  Procesando...
                 </div>
                 <div class="loader"></div>
                 <div class="shadow"></div>
