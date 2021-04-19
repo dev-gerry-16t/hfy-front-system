@@ -14,6 +14,7 @@ import {
   message,
   Tooltip,
   Timeline,
+  Spin,
 } from "antd";
 import {
   CheckSquareOutlined,
@@ -23,6 +24,7 @@ import {
   QuestionCircleOutlined,
   CloseCircleFilled,
   CheckCircleFilled,
+  SyncOutlined,
 } from "@ant-design/icons";
 import {
   callGetLegalContractCoincidences,
@@ -36,9 +38,12 @@ import DocumentIcon from "../../assets/icons/DocumentsIcon.svg";
 import Lock from "../../assets/icons/Lock.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
 import SectionUploadDocument from "../Admin/sections/sectionUploadDocuments";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 
 const { Content } = Layout;
+
+const LoadingSpin = <SyncOutlined spin />;
 
 const Attorney = (props) => {
   const {
@@ -60,6 +65,7 @@ const Attorney = (props) => {
   const [dataComments, setDataComments] = useState([]);
   const [documentUrl, setDocumentUrl] = useState({});
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
+  const [spinVisible, setSpinVisible] = useState(false);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -169,6 +175,63 @@ const Attorney = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallGetContractDocumentById = async (
+    data,
+    name,
+    resultExtension,
+    onlyView = false
+  ) => {
+    const { idSystemUser, idLoginHistory, token } = dataProfile;
+    try {
+      const responseDownload = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CONTRACT_DOCUMENT_BYID}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...data,
+            idDigitalContract: null,
+            idSystemUser,
+            idLoginHistory,
+            download: true,
+            onlyView,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (
+        isNil(responseDownload.status) === false &&
+        responseDownload.status !== 200
+      ) {
+        throw isNil(responseDownload.statusText) === false
+          ? responseDownload.statusText
+          : "";
+      }
+      if (onlyView === false) {
+        const blob = await responseDownload.blob();
+        const link = document.createElement("a");
+        link.className = "download";
+        link.download = `${name}.${resultExtension}`;
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        link.parentElement.removeChild(link);
+      } else {
+        return await responseDownload.json();
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "No está disponible el documento",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -481,6 +544,15 @@ const Attorney = (props) => {
               isNil(dataObjectDocument.extension) === false
                 ? dataObjectDocument.extension
                 : "";
+            const canGenerateDocument =
+              isNil(dataObjectDocument.canGenerateDocument) === false
+                ? dataObjectDocument.canGenerateDocument
+                : false;
+            const idPreviousDocument =
+              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
+              isNil(dataObjectDocument.idPreviousDocument) === false
+                ? dataObjectDocument.idPreviousDocument
+                : "";
             let url = "";
 
             if (extension === "docx" || extension === "pdf") {
@@ -498,21 +570,76 @@ const Attorney = (props) => {
                     <Button
                       type="link"
                       size="small"
-                      onClick={() => {
-                        setDocumentUrl({ url, extension });
-                        setIsVisibleViewImage(!isVisibleViewImage);
+                      onClick={async () => {
+                        if (canGenerateDocument === true) {
+                          setSpinVisible(true);
+                          try {
+                            const response = await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 1,
+                                typeProcess: 1,
+                              },
+                              `Contrato_${record.idContract}`,
+                              extension,
+                              true
+                            );
+
+                            setSpinVisible(false);
+                            await setDocumentUrl({
+                              url: response.response.url,
+                              extension,
+                            });
+                            setIsVisibleViewImage(!isVisibleViewImage);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        } else {
+                          setDocumentUrl({ url, extension });
+                          setIsVisibleViewImage(!isVisibleViewImage);
+                        }
                       }}
                     >
                       Ver
                     </Button>
-                    <a
-                      href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Contrato_${record.idContract}/${extension}`}
-                      className="download"
-                      download
-                      style={{ fontSize: 14 }}
-                    >
-                      Descargar
-                    </a>
+                    {canGenerateDocument === true ? (
+                      <Button
+                        type="link"
+                        size="small"
+                        onClick={async () => {
+                          setSpinVisible(true);
+                          try {
+                            await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 1,
+                                typeProcess: 1,
+                              },
+                              `Contrato_${record.idContract}`,
+                              extension
+                            );
+                            setSpinVisible(false);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        }}
+                      >
+                        Descargar
+                      </Button>
+                    ) : (
+                      <a
+                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
+                        className="download"
+                        download
+                        style={{ fontSize: 14 }}
+                      >
+                        Descargar
+                      </a>
+                    )}
                   </>
                 ) : (
                   "No disponible"
@@ -615,6 +742,15 @@ const Attorney = (props) => {
               isNil(dataObjectDocument.extension) === false
                 ? dataObjectDocument.extension
                 : "";
+            const canGenerateDocument =
+              isNil(dataObjectDocument.canGenerateDocument) === false
+                ? dataObjectDocument.canGenerateDocument
+                : false;
+            const idPreviousDocument =
+              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
+              isNil(dataObjectDocument.idPreviousDocument) === false
+                ? dataObjectDocument.idPreviousDocument
+                : "";
             let url = "";
 
             if (extension === "docx" || extension === "pdf") {
@@ -632,21 +768,76 @@ const Attorney = (props) => {
                     <Button
                       type="link"
                       size="small"
-                      onClick={() => {
-                        setDocumentUrl({ url, extension });
-                        setIsVisibleViewImage(!isVisibleViewImage);
+                      onClick={async () => {
+                        if (canGenerateDocument === true) {
+                          setSpinVisible(true);
+                          try {
+                            const response = await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 3,
+                                typeProcess: 2,
+                              },
+                              `Poliza_${record.idContract}`,
+                              extension,
+                              true
+                            );
+
+                            setSpinVisible(false);
+                            await setDocumentUrl({
+                              url: response.response.url,
+                              extension,
+                            });
+                            setIsVisibleViewImage(!isVisibleViewImage);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        } else {
+                          setDocumentUrl({ url, extension });
+                          setIsVisibleViewImage(!isVisibleViewImage);
+                        }
                       }}
                     >
                       Ver
                     </Button>
-                    <a
-                      href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Poliza_${record.idContract}/${extension}`}
-                      className="download"
-                      download
-                      style={{ fontSize: 14 }}
-                    >
-                      Descargar
-                    </a>
+                    {canGenerateDocument === true ? (
+                      <Button
+                        type="link"
+                        size="small"
+                        onClick={async () => {
+                          setSpinVisible(true);
+                          try {
+                            await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 3,
+                                typeProcess: 2,
+                              },
+                              `Poliza_${record.idContract}`,
+                              extension
+                            );
+                            setSpinVisible(false);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        }}
+                      >
+                        Descargar
+                      </Button>
+                    ) : (
+                      <a
+                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
+                        className="download"
+                        download
+                        style={{ fontSize: 14 }}
+                      >
+                        Descargar
+                      </a>
+                    )}
                   </>
                 ) : (
                   "No disponible"
@@ -690,6 +881,15 @@ const Attorney = (props) => {
               isNil(dataObjectDocument.extension) === false
                 ? dataObjectDocument.extension
                 : "";
+            const canGenerateDocument =
+              isNil(dataObjectDocument.canGenerateDocument) === false
+                ? dataObjectDocument.canGenerateDocument
+                : false;
+            const idPreviousDocument =
+              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
+              isNil(dataObjectDocument.idPreviousDocument) === false
+                ? dataObjectDocument.idPreviousDocument
+                : "";
             let url = "";
 
             if (extension === "docx" || extension === "pdf") {
@@ -707,21 +907,76 @@ const Attorney = (props) => {
                     <Button
                       type="link"
                       size="small"
-                      onClick={() => {
-                        setDocumentUrl({ url, extension });
-                        setIsVisibleViewImage(!isVisibleViewImage);
+                      onClick={async () => {
+                        if (canGenerateDocument === true) {
+                          setSpinVisible(true);
+                          try {
+                            const response = await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 2,
+                                typeProcess: 4,
+                              },
+                              `Pagare_${record.idContract}`,
+                              extension,
+                              true
+                            );
+
+                            setSpinVisible(false);
+                            await setDocumentUrl({
+                              url: response.response.url,
+                              extension,
+                            });
+                            setIsVisibleViewImage(!isVisibleViewImage);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        } else {
+                          setDocumentUrl({ url, extension });
+                          setIsVisibleViewImage(!isVisibleViewImage);
+                        }
                       }}
                     >
                       Ver
                     </Button>
-                    <a
-                      href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
-                      className="download"
-                      download
-                      style={{ fontSize: 14 }}
-                    >
-                      Descargar
-                    </a>
+                    {canGenerateDocument === true ? (
+                      <Button
+                        type="link"
+                        size="small"
+                        onClick={async () => {
+                          setSpinVisible(true);
+                          try {
+                            await handlerCallGetContractDocumentById(
+                              {
+                                idContract: record.idContract,
+                                idCustomer: record.idCustomer,
+                                idCustomerTenant: record.idCustomerTenant,
+                                type: 2,
+                                typeProcess: 4,
+                              },
+                              `Pagare_${record.idContract}`,
+                              extension
+                            );
+                            setSpinVisible(false);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        }}
+                      >
+                        Descargar
+                      </Button>
+                    ) : (
+                      <a
+                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
+                        className="download"
+                        download
+                        style={{ fontSize: 14 }}
+                      >
+                        Descargar
+                      </a>
+                    )}
                   </>
                 ) : (
                   "No disponible"
@@ -915,14 +1170,16 @@ const Attorney = (props) => {
               <span>Información legal</span>
             </div>
             <div className="section-information-renters">
-              <Table
-                columns={columns}
-                dataSource={dataCoincidences}
-                className="table-users-hfy"
-                size="small"
-                bordered
-                scroll={{ x: 3500 }}
-              />
+              <Spin indicator={LoadingSpin} spinning={spinVisible} delay={100}>
+                <Table
+                  columns={columns}
+                  dataSource={dataCoincidences}
+                  className="table-users-hfy"
+                  size="small"
+                  bordered
+                  scroll={{ x: 3500 }}
+                />
+              </Spin>
             </div>
           </div>
         </div>

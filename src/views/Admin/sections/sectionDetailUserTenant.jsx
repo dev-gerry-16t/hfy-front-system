@@ -13,6 +13,7 @@ import {
   Button,
   Popover,
   Timeline,
+  Spin,
 } from "antd";
 import {
   SyncOutlined,
@@ -25,6 +26,8 @@ import {
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const { Panel } = Collapse;
+
+const LoadingSpin = <SyncOutlined spin />;
 
 const SectionDetailUserTenant = (props) => {
   const {
@@ -42,6 +45,7 @@ const SectionDetailUserTenant = (props) => {
   const [valueCalification, setValueCalification] = useState({});
   const [dataIsMainTenant, setDataIsMainTenant] = useState({});
   const [openPopover, setOpenPopover] = useState({});
+  const [spinVisible, setSpinVisible] = useState(false);
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -431,14 +435,18 @@ const SectionDetailUserTenant = (props) => {
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="RFC"
-                          content={isNil(row.taxId) === false ? row.taxId : "N/A"}
+                          content={
+                            isNil(row.taxId) === false ? row.taxId : "N/A"
+                          }
                         />
                       </Col>
                       <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                         <DescriptionItem
                           title="CURP"
                           content={
-                            isNil(row.citizenId) === false ? row.citizenId : "N/A"
+                            isNil(row.citizenId) === false
+                              ? row.citizenId
+                              : "N/A"
                           }
                         />
                       </Col>
@@ -623,122 +631,147 @@ const SectionDetailUserTenant = (props) => {
             header={<h3 role="title-section">Documentos Legales</h3>}
             key="3"
           >
-            <p>
-              <h3>Contrato</h3>
-            </p>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Tipo de persona fiscal"
-                  content={dataIsMainTenant.personType}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Estatus"
-                  content={dataIsMainTenant.contractStatus}
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Folio"
-                  content={dataIsMainTenant.hfInvoice}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Vencimiento"
-                  content={dataIsMainTenant.expireAt}
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a
-                  onClick={() => {
-                    if (isEmpty(dataIsMainTenant) === false) {
-                      onDownloadDocumentById(
-                        {
-                          idContract: dataIsMainTenant.idContract,
-                          idCustomer: dataIsMainTenant.idCustomer,
-                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
-                          type: 1,
-                        },
-                        `Contrato_${dataIsMainTenant.idContract}`
-                      );
-                    }
-                  }}
-                >
-                  Descargar Contrato
-                </a>
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <p>
-              <h3>Póliza</h3>
-            </p>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <DescriptionItem
-                  title="Póliza"
-                  content={dataIsMainTenant.policy}
-                />
-              </Col>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a
-                  onClick={() => {
-                    if (isEmpty(dataIsMainTenant) === false) {
-                      onDownloadDocumentById(
-                        {
-                          idContract: dataIsMainTenant.idContract,
-                          idCustomer: dataIsMainTenant.idCustomer,
-                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
-                          type: 3,
-                        },
-                        `Poliza_${dataIsMainTenant.idContract}`
-                      );
-                    }
-                  }}
-                >
-                  Descargar Póliza
-                </a>
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <p>
-              <h3>Pagares</h3>
-            </p>
-            <Row>
-              <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                <a
-                  onClick={() => {
-                    if (isEmpty(dataIsMainTenant) === false) {
-                      onDownloadDocumentById(
-                        {
-                          idContract: dataIsMainTenant.idContract,
-                          idCustomer: dataIsMainTenant.idCustomer,
-                          idCustomerTenant: dataIsMainTenant.idCustomerTenant,
-                          type: 2,
-                        },
-                        `Pagares_${dataIsMainTenant.idContract}`
-                      );
-                    }
-                  }}
-                >
-                  Descargar Pagares
-                </a>
-              </Col>
-            </Row>
+            <Spin indicator={LoadingSpin} spinning={spinVisible} delay={100}>
+              <p>
+                <h3>Contrato</h3>
+              </p>
+              <Row>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <DescriptionItem
+                    title="Tipo de persona fiscal"
+                    content={dataIsMainTenant.personType}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <DescriptionItem
+                    title="Estatus"
+                    content={dataIsMainTenant.contractStatus}
+                  />
+                </Col>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <DescriptionItem
+                    title="Folio"
+                    content={dataIsMainTenant.hfInvoice}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <DescriptionItem
+                    title="Vencimiento"
+                    content={dataIsMainTenant.expireAt}
+                  />
+                </Col>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <a
+                    onClick={async () => {
+                      setSpinVisible(true);
+                      try {
+                        if (isEmpty(dataIsMainTenant) === false) {
+                          await onDownloadDocumentById(
+                            {
+                              idContract: dataIsMainTenant.idContract,
+                              idCustomer: dataIsMainTenant.idCustomer,
+                              idCustomerTenant:
+                                dataIsMainTenant.idCustomerTenant,
+                              type: 1,
+                              typeProcess: 1,
+                            },
+                            `Contrato_${dataIsMainTenant.idContract}`
+                          );
+                        }
+                        setSpinVisible(false);
+                      } catch (error) {
+                        setSpinVisible(false);
+                      }
+                    }}
+                  >
+                    Descargar Contrato
+                  </a>
+                </Col>
+              </Row>
+              <div
+                className="ant-divider ant-divider-horizontal"
+                role="separator"
+              />
+              <p>
+                <h3>Póliza</h3>
+              </p>
+              <Row>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <DescriptionItem
+                    title="Póliza"
+                    content={dataIsMainTenant.policy}
+                  />
+                </Col>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <a
+                    onClick={async () => {
+                      setSpinVisible(true);
+                      try {
+                        if (isEmpty(dataIsMainTenant) === false) {
+                          await onDownloadDocumentById(
+                            {
+                              idContract: dataIsMainTenant.idContract,
+                              idCustomer: dataIsMainTenant.idCustomer,
+                              idCustomerTenant:
+                                dataIsMainTenant.idCustomerTenant,
+                              type: 3,
+                              typeProcess: 2,
+                            },
+                            `Poliza_${dataIsMainTenant.idContract}`
+                          );
+                        }
+                        setSpinVisible(false);
+                      } catch (error) {
+                        setSpinVisible(false);
+                      }
+                    }}
+                  >
+                    Descargar Póliza
+                  </a>
+                </Col>
+              </Row>
+              <div
+                className="ant-divider ant-divider-horizontal"
+                role="separator"
+              />
+              <p>
+                <h3>Pagares</h3>
+              </p>
+              <Row>
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <a
+                    onClick={async () => {
+                      try {
+                        setSpinVisible(true);
+                        if (isEmpty(dataIsMainTenant) === false) {
+                          await onDownloadDocumentById(
+                            {
+                              idContract: dataIsMainTenant.idContract,
+                              idCustomer: dataIsMainTenant.idCustomer,
+                              idCustomerTenant:
+                                dataIsMainTenant.idCustomerTenant,
+                              type: 2,
+                              typeProcess: 4,
+                            },
+                            `Pagares_${dataIsMainTenant.idContract}`
+                          );
+                        }
+                        setSpinVisible(false);
+                      } catch (error) {
+                        setSpinVisible(false);
+                      }
+                    }}
+                  >
+                    Descargar Pagares
+                  </a>
+                </Col>
+              </Row>
+            </Spin>
           </Panel>
-
           <Panel
             header={<h3 role="title-section">Documentos personales</h3>}
             key="4"
