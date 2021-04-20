@@ -224,6 +224,7 @@ const TypePolicy = (props) => {
                           {" "}
                           + IVA {tax * 100}%
                         </span>
+                        <button>Pagar</button>
                       </div>
                     ) : (
                       <div>
@@ -244,6 +245,7 @@ const TypePolicy = (props) => {
                           {" "}
                           + IVA {tax * 100}%
                         </span>
+                        <button>Pagar</button>
                       </div>
                     )}
                   </div>

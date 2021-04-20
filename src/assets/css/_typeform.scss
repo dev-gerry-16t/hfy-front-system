@@ -108,6 +108,17 @@
       h2 {
         margin-right: 5px;
       }
+      button {
+        background: var(--color-primary);
+        color: #fff;
+        border: none;
+        padding: 10px 10px;
+        border-radius: 5px;
+        margin-left: 10px;
+        box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2);
+        transition: background-color 15ms linear,
+          box-shadow 280ms cubic-bezier(0.4, 0, 0.2, 1);
+      }
     }
   }
   h3 {
