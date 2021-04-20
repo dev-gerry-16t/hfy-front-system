@@ -26,6 +26,7 @@ import {
   callGetNationalities,
   callGetIdTypes,
   callGetTypeFormProperties,
+  callGetPolicyPaymentMethod,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -50,6 +51,7 @@ const TypeFormOwner = (props) => {
     callGetIdTypes,
     match,
     callGetTypeFormProperties,
+    callGetPolicyPaymentMethod,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
@@ -64,6 +66,7 @@ const TypeFormOwner = (props) => {
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
+  const [dataPolicyMethods, setDataPolicyMethods] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -115,6 +118,35 @@ const TypeFormOwner = (props) => {
           ? JSON.parse(response.response[0].typeFormProperties)
           : [];
       setDataProperties(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const hanlderCallGetPolicyPaymentMethod = async (id, step) => {
+    const {
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenantTF,
+      idCustomerTF,
+    } = dataProfile;
+    try {
+      const response = await callGetPolicyPaymentMethod({
+        idCustomer: idCustomerTF,
+        idCustomerTenant: idCustomerTenantTF,
+        idTypeForm: id,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataPolicyMethods(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -335,6 +367,7 @@ const TypeFormOwner = (props) => {
           dataFormSave={dataForm}
           dataPolicies={dataPolicies}
           dataDocuments={dataDocuments}
+          dataPolicyMethods={dataPolicyMethods}
           typeDocument={3}
           onClickNext={async (data) => {
             try {
@@ -414,6 +447,7 @@ const TypeFormOwner = (props) => {
       }
       setDataForm(responseResult);
       handlerCallGetTypeFormDocument(responseResult, 3);
+      hanlderCallGetPolicyPaymentMethod(responseResult.idTypeForm);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -606,6 +640,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetIdTypes: (data) => dispatch(callGetIdTypes(data)),
   callGetTypeFormProperties: (data) =>
     dispatch(callGetTypeFormProperties(data)),
+  callGetPolicyPaymentMethod: (data) =>
+    dispatch(callGetPolicyPaymentMethod(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);

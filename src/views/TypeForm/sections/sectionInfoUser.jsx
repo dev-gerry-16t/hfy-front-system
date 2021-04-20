@@ -201,6 +201,43 @@ const SectionInfoUser = (props) => {
                   />
                 </div>
               )}
+            {dataForm.hasTenant === true && (
+              <>
+                <p>Información de pago de póliza</p>
+                <Row>
+                  <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+                  <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                    <div className="price-policy-amount">
+                      <p>Método de pago por póliza</p>
+                      <div>
+                        <h2>{dataForm.policyPaymentMethod}</h2>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+                </Row>
+                <Row>
+                  <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                    <div className="price-policy-amount">
+                      <p>Costo por cobertura de Póliza</p>
+                      <div>
+                        <h2>{dataForm.totalPolicyAmount}</h2>
+                        <span style={{ marginLeft: 5 }}> + IVA</span>
+                      </div>
+                    </div>
+                  </Col>
+                  <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                    <div className="price-policy-amount">
+                      <p>Se te asigno el pago de</p>
+                      <div>
+                        <h2>{dataForm.totalCustomerTenantPolicyAmount}</h2>
+                        <span style={{ marginLeft: 5 }}> + IVA</span>
+                      </div>
+                    </div>
+                  </Col>
+                </Row>
+              </>
+            )}
             <Row>
               <Col
                 span={visibleComponents.lastName === true ? 8 : 11}
