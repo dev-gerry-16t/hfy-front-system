@@ -3,6 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Row, Col, Select, Alert } from "antd";
 import CustomFileUpload from "./customFileUpload";
+import CustomPaymentModal from "../../../components/CustomPaymentModal";
 
 const { Option } = Select;
 
@@ -27,6 +28,7 @@ const TypePolicy = (props) => {
   const [taxPolicy, setTaxPolicy] = useState(0);
   const [tax, setTax] = useState(0);
   const [percentPayment, setPercentPayment] = useState(1);
+  const [isModalVisible, setIsVisibleModal] = useState(false);
 
   useEffect(() => {
     if (
@@ -80,6 +82,13 @@ const TypePolicy = (props) => {
 
   return (
     <div className="content-typeform-formulary">
+      <CustomPaymentModal
+        isModalVisible={isModalVisible}
+        onClose={() => {
+          setIsVisibleModal(!isModalVisible);
+        }}
+        spinVisible={false}
+      />
       <h3>Póliza y Documentos</h3>
       <Row>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
@@ -224,7 +233,13 @@ const TypePolicy = (props) => {
                           {" "}
                           + IVA {tax * 100}%
                         </span>
-                        <button>Pagar</button>
+                        <button
+                          onClick={() => {
+                            setIsVisibleModal(true);
+                          }}
+                        >
+                          Pagar
+                        </button>
                       </div>
                     ) : (
                       <div>
@@ -245,7 +260,13 @@ const TypePolicy = (props) => {
                           {" "}
                           + IVA {tax * 100}%
                         </span>
-                        <button>Pagar</button>
+                        <button
+                          onClick={() => {
+                            setIsVisibleModal(true);
+                          }}
+                        >
+                          Pagar
+                        </button>
                       </div>
                     )}
                   </div>
