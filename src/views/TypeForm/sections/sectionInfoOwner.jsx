@@ -328,63 +328,6 @@ const SectionInfoOwner = (props) => {
                 </Col>
               )}
             </Row>
-            {dataForm.requiresCustomerTenantEntInfo === true && (
-              <Row>
-                <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
-                  <Select
-                    placeholder="Estado de emisión"
-                    showSearch
-                    value={dataForm.enterpriseIdStatePublicProperty}
-                    onChange={(value, option) => {
-                      setDataForm({
-                        ...dataForm,
-                        enterpriseIdStatePublicProperty: value,
-                        enterpriseIdStatePublicPropertyText: option.children,
-                      });
-                    }}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {isEmpty(dataStates) === false &&
-                      dataStates.map((row) => {
-                        return <Option value={row.idState}>{row.text}</Option>;
-                      })}
-                  </Select>
-                </Col>
-                <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
-                  <Tooltip
-                    placement="top"
-                    title="Estado donde se emitió el Registro Público de la Propiedad de la empresa."
-                  >
-                    <div
-                      style={{
-                        padding: "5px 0px 0px 5px",
-                      }}
-                    >
-                      <QuestionCircleOutlined />
-                    </div>
-                  </Tooltip>
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
-                    value={dataForm.enterpriseCommercialInvoice}
-                    placeholder="Folio Mercantil"
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({
-                        ...dataForm,
-                        enterpriseCommercialInvoice: value,
-                      });
-                    }}
-                    suffix={<img src={IconProfile} alt="profile" width="15" />}
-                  />
-                </Col>
-              </Row>
-            )}
             <Row>
               {visibleComponents.phoneNumber === true && (
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -780,6 +723,65 @@ const SectionInfoOwner = (props) => {
               <>
                 <p>Información Acta Constitutiva</p>
                 <Row>
+                  <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
+                    <Select
+                      placeholder="Estado de emisión"
+                      showSearch
+                      value={dataForm.enterpriseIdStatePublicProperty}
+                      onChange={(value, option) => {
+                        setDataForm({
+                          ...dataForm,
+                          enterpriseIdStatePublicProperty: value,
+                          enterpriseIdStatePublicPropertyText: option.children,
+                        });
+                      }}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {isEmpty(dataStates) === false &&
+                        dataStates.map((row) => {
+                          return (
+                            <Option value={row.idState}>{row.text}</Option>
+                          );
+                        })}
+                    </Select>
+                  </Col>
+                  <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
+                    <Tooltip
+                      placement="top"
+                      title="Estado donde se emitió el Registro Público de la Propiedad de la empresa."
+                    >
+                      <div
+                        style={{
+                          padding: "5px 0px 0px 5px",
+                        }}
+                      >
+                        <QuestionCircleOutlined />
+                      </div>
+                    </Tooltip>
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.enterpriseCommercialInvoice}
+                      placeholder="Folio Mercantil"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          enterpriseCommercialInvoice: value,
+                        });
+                      }}
+                      suffix={
+                        <img src={IconProfile} alt="profile" width="15" />
+                      }
+                    />
+                  </Col>
+                </Row>
+                <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
                       value={dataForm.enterprisePublicWrtitingNo}
@@ -1120,59 +1122,64 @@ const SectionInfoOwner = (props) => {
                 />
               </Col>
             </Row>
-            <Row>
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <DescriptionItem
-                  title="RFC con Homoclave"
-                  content={dataForm.taxId}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem title="CURP" content={dataForm.citizenId} />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Nacionalidad"
-                  content={dataForm.idCountryNationalityText}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Identificación oficial"
-                  content={dataForm.idTypeText}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title={dataForm.fieldDescription}
-                  content={dataForm.idTypeNumber}
-                />
-              </Col>
-              <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-              <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <DescriptionItem
-                  title="Estado civil"
-                  content={dataForm.idMaritalStatusText}
-                />
-              </Col>
-            </Row>
-            {dataForm.isRequiresPlaceOfIssue === true && (
+            {dataForm.requiresCustomerEntInfo === false && (
               <Row>
-                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-                <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                   <DescriptionItem
-                    title={`Lugar de expedición de identificación`}
-                    content={dataForm.placeOfIssue}
+                    title="RFC con Homoclave"
+                    content={dataForm.taxId}
                   />
                 </Col>
-                <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem title="CURP" content={dataForm.citizenId} />
+                </Col>
+                <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem
+                    title="Nacionalidad"
+                    content={dataForm.idCountryNationalityText}
+                  />
+                </Col>
               </Row>
             )}
+            {dataForm.requiresCustomerEntInfo === false && (
+              <Row>
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem
+                    title="Identificación oficial"
+                    content={dataForm.idTypeText}
+                  />
+                </Col>
+                <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem
+                    title={dataForm.fieldDescription}
+                    content={dataForm.idTypeNumber}
+                  />
+                </Col>
+                <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                  <DescriptionItem
+                    title="Estado civil"
+                    content={dataForm.idMaritalStatusText}
+                  />
+                </Col>
+              </Row>
+            )}
+            {dataForm.isRequiresPlaceOfIssue === true &&
+              dataForm.requiresCustomerEntInfo === false && (
+                <Row>
+                  <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                  <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+                    <DescriptionItem
+                      title={`Lugar de expedición de identificación`}
+                      content={dataForm.placeOfIssue}
+                    />
+                  </Col>
+                  <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+                </Row>
+              )}
             <p>Domicilio Actual</p>
             <Row>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
@@ -1219,6 +1226,133 @@ const SectionInfoOwner = (props) => {
                 />
               </Col>
             </Row>
+            {dataForm.requiresCustomerTenantEntInfo === true && (
+              <>
+                <p style={{ textAlign: "center" }}>
+                  Información Acta Constitutiva
+                </p>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Estado de emisión`}
+                      content={dataForm.enterpriseIdStatePublicPropertyText}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Número de escritura pública`}
+                      content={dataForm.enterprisePublicWrtitingNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Libro`}
+                      content={dataForm.enterprisePublicBookNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Nombre del Notario`}
+                      content={dataForm.enterpriseNotaryName}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Número de Notaría`}
+                      content={dataForm.enterpriseNotaryOfficeNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Lugar de Firma de escritura`}
+                      content={dataForm.enterprisePublicBookNo}
+                    />
+                  </Col>
+                </Row>
+                <p style={{ textAlign: "center" }}>Representante Legal</p>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Nombre`}
+                      content={dataForm.legalRepGivenName}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Apellido paterno`}
+                      content={dataForm.legalRepLastName}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Apellido materno`}
+                      content={dataForm.legalRepMothersMaidenName}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Identificación oficial`}
+                      content={dataForm.legalRepIdTypeText}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={dataForm.legalRepFieldDescription}
+                      content={dataForm.legalRepIdTypeNumber}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Número de escritura pública`}
+                      content={dataForm.legalRepPublicWritingNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Libro`}
+                      content={dataForm.legalRepPublicBookNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Nombre del Notario`}
+                      content={dataForm.legalRepNotaryName}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                    <DescriptionItem
+                      title={`Número de Notaría`}
+                      content={dataForm.legalRepNotaryOfficeNo}
+                    />
+                  </Col>
+                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <DescriptionItem
+                      title={`Lugar de Firma de escritura`}
+                      content={dataForm.legalRepSignedAtPlace}
+                    />
+                  </Col>
+                </Row>
+              </>
+            )}
             <div className="button_actions">
               <button
                 type="button"

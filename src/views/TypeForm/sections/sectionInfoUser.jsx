@@ -332,63 +332,6 @@ const SectionInfoUser = (props) => {
                 </Col>
               )}
             </Row>
-            {dataForm.requiresCustomerTenantEntInfo === true && (
-              <Row>
-                <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
-                  <Select
-                    placeholder="Estado de emisión"
-                    showSearch
-                    value={dataForm.enterpriseIdStatePublicProperty}
-                    onChange={(value, option) => {
-                      setDataForm({
-                        ...dataForm,
-                        enterpriseIdStatePublicProperty: value,
-                        enterpriseIdStatePublicPropertyText: option.children,
-                      });
-                    }}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {isEmpty(dataStates) === false &&
-                      dataStates.map((row) => {
-                        return <Option value={row.idState}>{row.text}</Option>;
-                      })}
-                  </Select>
-                </Col>
-                <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
-                  <Tooltip
-                    placement="top"
-                    title="Estado donde se emitió el Registro Público de la Propiedad de la empresa."
-                  >
-                    <div
-                      style={{
-                        padding: "5px 0px 0px 5px",
-                      }}
-                    >
-                      <QuestionCircleOutlined />
-                    </div>
-                  </Tooltip>
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
-                    value={dataForm.enterpriseCommercialInvoice}
-                    placeholder="Folio Mercantil"
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({
-                        ...dataForm,
-                        enterpriseCommercialInvoice: value,
-                      });
-                    }}
-                    suffix={<img src={IconProfile} alt="profile" width="15" />}
-                  />
-                </Col>
-              </Row>
-            )}
             <Row>
               {visibleComponents.phoneNumber === true && (
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -599,6 +542,65 @@ const SectionInfoUser = (props) => {
             {dataForm.requiresCustomerTenantEntInfo === true && (
               <>
                 <p>Información Acta Constitutiva</p>
+                <Row>
+                  <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
+                    <Select
+                      placeholder="Estado de emisión"
+                      showSearch
+                      value={dataForm.enterpriseIdStatePublicProperty}
+                      onChange={(value, option) => {
+                        setDataForm({
+                          ...dataForm,
+                          enterpriseIdStatePublicProperty: value,
+                          enterpriseIdStatePublicPropertyText: option.children,
+                        });
+                      }}
+                      filterOption={(input, option) =>
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      }
+                    >
+                      {isEmpty(dataStates) === false &&
+                        dataStates.map((row) => {
+                          return (
+                            <Option value={row.idState}>{row.text}</Option>
+                          );
+                        })}
+                    </Select>
+                  </Col>
+                  <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
+                    <Tooltip
+                      placement="top"
+                      title="Estado donde se emitió el Registro Público de la Propiedad de la empresa."
+                    >
+                      <div
+                        style={{
+                          padding: "5px 0px 0px 5px",
+                        }}
+                      >
+                        <QuestionCircleOutlined />
+                      </div>
+                    </Tooltip>
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.enterpriseCommercialInvoice}
+                      placeholder="Folio Mercantil"
+                      onChange={(e) => {
+                        const value = e.target.value;
+                        setDataForm({
+                          ...dataForm,
+                          enterpriseCommercialInvoice: value,
+                        });
+                      }}
+                      suffix={
+                        <img src={IconProfile} alt="profile" width="15" />
+                      }
+                    />
+                  </Col>
+                </Row>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
