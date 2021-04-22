@@ -40,6 +40,7 @@ const SectionDetailRequest = (props) => {
     budgeAmount: null,
     collaborator: [],
     idCollaborator: null,
+    observations: "",
   };
 
   const [dataForm, setDataForm] = useState(initialState);
@@ -180,6 +181,36 @@ const SectionDetailRequest = (props) => {
               <DescriptionItem
                 title="Teléfono"
                 content={dataForm.customerTenantPhoneNumber}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+              <label
+                style={{
+                  color: "var(--color-primary)",
+                  fontFamily: "Poppins",
+                }}
+              >
+                Observaciones del inquilino
+              </label>
+              <textarea
+                style={{
+                  outline: "none",
+                  border: "1px solid #d9d9d9",
+                  width: "100%",
+                  minHeight: 100,
+                  borderRadius: "10px",
+                  fontFamily: "Poppins",
+                }}
+                placeholder=""
+                value={dataForm.observations}
+                onChange={(e) => {
+                  setDataForm({
+                    ...dataForm,
+                    observations: e.target.value,
+                  });
+                }}
               />
             </Col>
           </Row>

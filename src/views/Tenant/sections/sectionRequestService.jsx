@@ -32,6 +32,7 @@ const SectionRequestService = (props) => {
     idProvider: null,
     scheduleDate: null,
     budgeAmount: null,
+    observations: "",
   };
 
   const [dataForm, setDataForm] = useState(initialState);
@@ -117,6 +118,36 @@ const SectionRequestService = (props) => {
               />
             </Col>
           </Row>
+          <Row>
+            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+              <label
+                style={{
+                  color: "var(--color-primary)",
+                  fontFamily: "Poppins",
+                }}
+              >
+                Observaciones
+              </label>
+              <textarea
+                style={{
+                  outline: "none",
+                  border: "1px solid #d9d9d9",
+                  width: "100%",
+                  minHeight: 100,
+                  borderRadius: "10px",
+                  fontFamily: "Poppins",
+                }}
+                placeholder="Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar el detalle de tu mudanza y con gusto realizamos una cotización personalizada.Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar el detalle de tu mudanza y con gusto realizamos una cotización personalizada."
+                value={dataForm.observations}
+                onChange={(e) => {
+                  setDataForm({
+                    ...dataForm,
+                    observations: e.target.value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
           <p>Costo del Servicio</p>
           <div
             style={{
@@ -179,6 +210,7 @@ const SectionRequestService = (props) => {
                 onClose();
                 setDataTC("");
                 setDataForm(initialState);
+                setAceptTerms(false);
               }}
             >
               <span>Cancelar</span>
@@ -193,6 +225,7 @@ const SectionRequestService = (props) => {
                     onClose();
                     setDataTC("");
                     setDataForm(initialState);
+                    setAceptTerms(false);
                   }
                 } catch (error) {}
               }}
