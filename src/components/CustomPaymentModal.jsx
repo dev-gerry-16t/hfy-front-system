@@ -218,8 +218,9 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
       } else {
         console.log("paymentMethod", paymentMethod);
         await hanlderCallPostPaymentService({
-          id: paymentMethod.id,
+          payment_method: paymentMethod.id,
           amount: 10000,
+          description: "Pago de Póliza",
         });
         setPaymentMethods(paymentMethod);
       }
