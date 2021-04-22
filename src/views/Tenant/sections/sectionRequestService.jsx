@@ -12,6 +12,7 @@ import {
   Radio,
   Button,
   DatePicker,
+  Checkbox,
 } from "antd";
 import moment from "moment";
 import "moment/locale/es";
@@ -35,6 +36,7 @@ const SectionRequestService = (props) => {
 
   const [dataForm, setDataForm] = useState(initialState);
   const [dataTC, setDataTC] = useState("");
+  const [aceptTerms, setAceptTerms] = useState(false);
 
   return (
     <Modal
@@ -132,18 +134,42 @@ const SectionRequestService = (props) => {
             <strong style={{ marginBottom: 5, marginLeft: 5 }}>MXN</strong>
           </div>
           {isEmpty(dataTC) === false && (
-            <div
-              style={{
-                margin: "20px 0px",
-                maxHeight: "250px",
-                overflowY: "scroll",
-                fontSize: 12,
-                fontFamily: "Poppins",
-              }}
-              dangerouslySetInnerHTML={{
-                __html: dataTC,
-              }}
-            />
+            <>
+              <div
+                style={{
+                  margin: "20px 0px",
+                  maxHeight: "250px",
+                  overflowY: "scroll",
+                  fontSize: 12,
+                  fontFamily: "Poppins",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: dataTC,
+                }}
+              />
+              <div
+                style={{
+                  marginBottom: 25,
+                }}
+              >
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    setAceptTerms(e.target.checked);
+                  }}
+                ></Checkbox>
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 12,
+                    color: "gray",
+                  }}
+                >
+                  Acepto los términos y condiciones del servicio
+                </span>
+              </div>
+            </>
           )}
 
           <div className="two-action-buttons">
@@ -159,12 +185,15 @@ const SectionRequestService = (props) => {
             </button>
             <button
               type="button"
+              className={aceptTerms === true ? "" : "disabled"}
               onClick={async () => {
                 try {
-                  await onSaveRequestService(dataForm);
-                  onClose();
-                  setDataTC("");
-                  setDataForm(initialState);
+                  if (aceptTerms === true) {
+                    await onSaveRequestService(dataForm);
+                    onClose();
+                    setDataTC("");
+                    setDataForm(initialState);
+                  }
                 } catch (error) {}
               }}
             >
