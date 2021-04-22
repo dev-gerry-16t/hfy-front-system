@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import NumberFormat from "react-number-format";
 import {
   Elements,
@@ -10,8 +11,20 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { Modal, Input, Row, Col, Select, Spin, Tooltip, Radio } from "antd";
+import {
+  Modal,
+  Input,
+  Row,
+  Col,
+  Select,
+  Spin,
+  Tooltip,
+  Radio,
+  message,
+} from "antd";
 import { SyncOutlined, CloseOutlined } from "@ant-design/icons";
+import GLOBAL_CONSTANTS from "../utils/constants/globalConstants";
+import { callPostPaymentService } from "../utils/actions/actions";
 import Arrow from "../assets/icons/Arrow.svg";
 
 const { Option } = Select;
@@ -139,7 +152,7 @@ const ResetButton = ({ onClick }) => (
   </button>
 );
 
-const MyCustomCheck = ({ isModalVisible }) => {
+const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [dataForm, setDataForm] = useState({ email: "", phone: "", name: "" });
@@ -148,9 +161,37 @@ const MyCustomCheck = ({ isModalVisible }) => {
   const [processing, setProcessing] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const hanlderCallPostPaymentService = async (data) => {
+    try {
+      const response = await callPostPaymentServices(data);
+    } catch (error) {
+      console.log("error", error);
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
-
     if (!stripe || !elements) {
       return;
     }
@@ -162,21 +203,27 @@ const MyCustomCheck = ({ isModalVisible }) => {
     if (cardComplete) {
       setProcessing(true);
     }
+    try {
+      const cardElement = elements.getElement(CardElement);
+      const { error, paymentMethod } = await stripe.createPaymentMethod({
+        type: "card",
+        card: cardElement,
+        billing_details: dataForm,
+      });
 
-    const cardElement = elements.getElement(CardElement);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      card: cardElement,
-      billing_details: dataForm,
-    });
+      setProcessing(false);
 
-    setProcessing(false);
-
-    if (error) {
-      setErrors(error);
-    } else {
-      setPaymentMethods(paymentMethod);
-    }
+      if (error) {
+        setErrors(error);
+      } else {
+        console.log("paymentMethod", paymentMethod);
+        await hanlderCallPostPaymentService({
+          id: paymentMethod.id,
+          amount: 10000,
+        });
+        setPaymentMethods(paymentMethod);
+      }
+    } catch (error) {}
   };
 
   const reset = () => {
@@ -277,7 +324,12 @@ const ELEMENTS_OPTIONS = {
 };
 
 const CustomPaymentModal = (props) => {
-  const { isModalVisible, onClose, spinVisible } = props;
+  const {
+    isModalVisible,
+    onClose,
+    spinVisible,
+    callPostPaymentService,
+  } = props;
   const [visiblePayment, setVisiblePayment] = useState(true);
   const LoadingSpin = <SyncOutlined spin />;
 
@@ -339,7 +391,10 @@ const CustomPaymentModal = (props) => {
                     <span style={{ marginLeft: 5 }}> + IVA 16%</span>
                   </div>
                 </div>
-                <MyCustomCheck isModalVisible={visiblePayment} />
+                <MyCustomCheck
+                  isModalVisible={visiblePayment}
+                  callPostPaymentServices={callPostPaymentService}
+                />
               </div>
             </Elements>
           </div>
@@ -349,4 +404,15 @@ const CustomPaymentModal = (props) => {
   );
 };
 
-export default CustomPaymentModal;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(CustomPaymentModal);

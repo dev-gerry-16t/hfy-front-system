@@ -139,35 +139,34 @@
     .ErrorMessage svg {
       margin-right: 10px;
     }
+  }
+  .Result {
+    margin-top: 50px;
+    text-align: center;
+    animation: fade 200ms ease-out;
+  }
 
-    .Result {
-      margin-top: 50px;
-      text-align: center;
-      animation: fade 200ms ease-out;
-    }
+  .ResultTitle {
+    color: #fff;
+    font-weight: 500;
+    margin-bottom: 8px;
+    font-size: 17px;
+    text-align: center;
+  }
 
-    .ResultTitle {
-      color: #fff;
-      font-weight: 500;
-      margin-bottom: 8px;
-      font-size: 17px;
-      text-align: center;
-    }
+  .ResultMessage {
+    color: #9cdbff;
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 25px;
+    line-height: 1.6em;
+    text-align: center;
+  }
 
-    .ResultMessage {
-      color: #9cdbff;
-      font-size: 14px;
-      font-weight: 400;
-      margin-bottom: 25px;
-      line-height: 1.6em;
-      text-align: center;
-    }
-
-    .ResetButton {
-      border: 0;
-      cursor: pointer;
-      background: transparent;
-    }
+  .ResetButton {
+    border: 0;
+    cursor: pointer;
+    background: var(--color-primary);
   }
   .price-policy-amount {
     display: flex;
