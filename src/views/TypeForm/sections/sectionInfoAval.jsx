@@ -87,6 +87,7 @@ const SectionInfoAval = (props) => {
     assessmentIssuedBy: null,
     hasAssessment: null,
     repeatAddress: null,
+    endorsementTaxId: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -361,7 +362,21 @@ const SectionInfoAval = (props) => {
                       </Col>
                     </Row>
                     <Row>
-                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                        <Input
+                          value={dataForm.endorsementTaxId}
+                          placeholder={"RFC con Homoclave"}
+                          onChange={(e) => {
+                            const value = e.target.value;
+                            setDataForm({
+                              ...dataForm,
+                              endorsementTaxId: value,
+                            });
+                          }}
+                        />
+                      </Col>
+                      <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                         <Input
                           value={dataForm.endorsementPhoneNumber}
                           placeholder={"Teléfono"}
@@ -374,8 +389,8 @@ const SectionInfoAval = (props) => {
                           }}
                         />
                       </Col>
-                      <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
                         <Input
                           value={dataForm.endorsementEmailAddress}
                           placeholder={"Correo"}
