@@ -137,7 +137,7 @@ const SectionRequestService = (props) => {
                   borderRadius: "10px",
                   fontFamily: "Poppins",
                 }}
-                placeholder="Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar el detalle de tu mudanza y con gusto realizamos una cotización personalizada.Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar el detalle de tu mudanza y con gusto realizamos una cotización personalizada."
+                placeholder="Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar los detalles de tu mudanza y con gusto te contactamos para realizar una cotización personalizada."
                 value={dataForm.observations}
                 onChange={(e) => {
                   setDataForm({
