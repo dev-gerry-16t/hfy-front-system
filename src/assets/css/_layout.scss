@@ -13,8 +13,10 @@
   font-family: Poppins;
 }
 
-.ant-popover-inner-content {
-  padding: 5px 0px !important;
+#layout-popover-list {
+  .ant-popover-inner-content {
+    padding: 5px 0px !important;
+  }
 }
 
 .title-notification {
@@ -67,6 +69,7 @@
   display: flex;
   font-family: Poppins;
   margin: 0px 5px;
+  padding: 10px 0px;
   .section-circle-description {
     width: 20%;
     display: flex;
@@ -234,5 +237,13 @@
   .ant-drawer-body {
     padding: 0px !important;
     background: var(--color-primary);
+  }
+}
+
+table {
+  td {
+    .ant-table-content {
+      padding: 10px 20px;
+    }
   }
 }

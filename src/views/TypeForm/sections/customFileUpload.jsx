@@ -79,7 +79,9 @@ const CustomFileUpload = (props) => {
       setSpinVisibleUpload(false);
     } catch (error) {
       showMessageStatusApi(
-        "No se pudo asociar el documento al contrato indicado",
+        isNil(error) === false
+          ? error
+          : "No se pudo asociar el documento al contrato indicado",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }

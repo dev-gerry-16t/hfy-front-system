@@ -3,6 +3,20 @@
   height: 500px;
 }
 
+.table-add-provider {
+  width: 100%;
+  font-family: Poppins;
+  font-size: 12px;
+  thead {
+    color: var(--color-primary);
+  }
+  tbody {
+    tr {
+      height: 50px;
+    }
+  }
+}
+
 .button-contract-actions {
   display: flex;
   margin-left: 20px;
@@ -462,6 +476,27 @@
   }
   .main-form-information {
     padding: 0px 25px;
+    .ant-picker {
+      width: 100%;
+    }
+    .section-message {
+      display: flex;
+      margin-top: 15px;
+      .text-comment-dialog {
+        width: 100%;
+        border-radius: 10px 0px 0px 10px;
+        border: 1px solid var(--color-primary);
+        outline: none;
+      }
+      button {
+        border-radius: 0px 10px 10px 0px;
+        outline: none;
+        border: none;
+        background: var(--color-primary);
+        color: #fff;
+        margin: 0px auto;
+      }
+    }
     p {
       font-family: Poppins;
       font-style: normal;
@@ -591,6 +626,37 @@
       padding: 3px 10px;
       width: 35%;
     }
+    .disabled {
+      background: #df90b8 !important;
+      cursor: none;
+    }
+  }
+}
+
+.two-action-buttons-banner {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-around;
+  font-family: Poppins;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 12px;
+  width: 100%;
+  button:first-child {
+    background: #fff;
+    color: var(--color-primary);
+    border-radius: 16px;
+    border: 1px solid var(--color-primary);
+    padding: 3px 10px;
+    width: 35%;
+  }
+  button:last-child {
+    background: var(--color-primary);
+    color: #ffffff;
+    border-radius: 16px;
+    border: none;
+    padding: 3px 10px;
+    width: 35%;
   }
 }
 
@@ -862,6 +928,16 @@
 }
 
 @media screen and (max-width: 390px) {
+  .two-action-buttons-banner {
+    flex-direction: column-reverse;
+    button:first-child {
+      width: 100%;
+    }
+    button:last-child {
+      margin-bottom: 10px;
+      width: 100%;
+    }
+  }
   .main-information-owner {
     .title-cards {
       flex-direction: column;

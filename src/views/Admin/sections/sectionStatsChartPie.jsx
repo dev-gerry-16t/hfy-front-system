@@ -61,7 +61,7 @@ const SectionStatsChartPie = (props) => {
 
   return (
     <div className="card-chart-information ">
-      <div className="title-cards">Grafica</div>
+      <div className="title-cards">Gráfica</div>
       <div>
         {finishCallApis === true && isEmpty(dataOptions) === false && (
           <HighchartsReact highcharts={Highcharts} options={dataOptions} />

@@ -15,19 +15,30 @@ const TypePolicy = (props) => {
     dataFormSave,
     frontFunctions,
     dataProperties,
+    dataPolicyMethods,
   } = props;
+
   const initialForm = {
     idPolicy: null,
+    idPolicyPaymentMethod: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [minumunPolicy, setTaxMinumunPolicy] = useState(0);
   const [taxPolicy, setTaxPolicy] = useState(0);
   const [tax, setTax] = useState(0);
+  const [percentPayment, setPercentPayment] = useState(1);
 
   useEffect(() => {
-    if (isEmpty(dataFormSave) === false && isEmpty(dataPolicies) === false) {
+    if (
+      isEmpty(dataFormSave) === false &&
+      isEmpty(dataPolicies) === false &&
+      isEmpty(dataPolicyMethods) === false
+    ) {
       const selectDefaultPolicy = dataPolicies.find((row) => {
         return row.id === dataFormSave.idPolicy;
+      });
+      const selectDefaultPolicyMethods = dataPolicyMethods.find((row) => {
+        return row.idPolicyPaymentMethod === dataFormSave.idPolicyPaymentMethod;
       });
       setDataForm(dataFormSave);
       if (
@@ -38,8 +49,14 @@ const TypePolicy = (props) => {
         setTax(selectDefaultPolicy.taxBase);
         setTaxMinumunPolicy(selectDefaultPolicy.minimunAmount);
       }
+      if (
+        isNil(selectDefaultPolicyMethods) === false &&
+        isNil(selectDefaultPolicyMethods.percentCustomer) === false
+      ) {
+        setPercentPayment(selectDefaultPolicyMethods.percentCustomer);
+      }
     }
-  }, [dataFormSave, dataPolicies]);
+  }, [dataFormSave, dataPolicies, dataPolicyMethods]);
 
   const getTypeIdDocument = (type) => {
     let word = "";
@@ -154,6 +171,88 @@ const TypePolicy = (props) => {
               </div>
             </Col>
           </Row>
+          {isEmpty(dataPolicyMethods) === false && (
+            <>
+              <p>Selecciona el porcentaje acordado a pagar</p>
+              <Row>
+                {dataPolicyMethods.map((row) => {
+                  return (
+                    <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                      <div className="buttons-typeform-payment">
+                        <button
+                          className={`${
+                            row.idPolicyPaymentMethod ===
+                            dataForm.idPolicyPaymentMethod
+                              ? "select-button"
+                              : "not-select-button"
+                          }`}
+                          onClick={() => {
+                            setDataForm({
+                              ...dataForm,
+                              idPolicyPaymentMethod: row.idPolicyPaymentMethod,
+                            });
+                            setPercentPayment(row.percentCustomer);
+                          }}
+                        >
+                          {row.text}
+                        </button>
+                      </div>
+                    </Col>
+                  );
+                })}
+              </Row>
+              <Row>
+                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <div className="price-policy-amount">
+                    <p>Total a pagar</p>
+                    {isNil(dataForm.currentRent) === false &&
+                    minumunPolicy > dataForm.currentRent * taxPolicy ? (
+                      <div>
+                        <h2>
+                          {isNil(dataForm.currentRent) === false &&
+                          isNil(dataForm.currentRent) === false
+                            ? frontFunctions.parseFormatCurrency(
+                                minumunPolicy * percentPayment,
+                                2,
+                                2
+                              )
+                            : "$0.00"}
+                        </h2>
+                        <strong>MXN</strong>
+                        <span style={{ marginLeft: 5 }}>
+                          {" "}
+                          + IVA {tax * 100}%
+                        </span>
+                      </div>
+                    ) : (
+                      <div>
+                        <h2>
+                          {isNil(dataForm.currentRent) === false &&
+                          isNil(dataForm.currentRent) === false
+                            ? frontFunctions.parseFormatCurrency(
+                                dataForm.currentRent *
+                                  taxPolicy *
+                                  percentPayment,
+                                2,
+                                2
+                              )
+                            : "$0.00"}
+                        </h2>
+                        <strong>MXN</strong>
+                        <span style={{ marginLeft: 5 }}>
+                          {" "}
+                          + IVA {tax * 100}%
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Col>
+                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+              </Row>
+            </>
+          )}
+
           <p>Documentos</p>
           <div className="section-top-documentation">
             <div className="section-card-documentation">

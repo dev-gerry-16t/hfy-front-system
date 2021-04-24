@@ -14,16 +14,20 @@ import {
   Button,
   Modal,
   DatePicker,
+  Spin,
 } from "antd";
 import {
   CloseCircleFilled,
   CheckCircleFilled,
   MobileOutlined,
   SnippetsOutlined,
+  SyncOutlined,
 } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const { Panel } = Collapse;
+
+const LoadingSpin = <SyncOutlined spin />;
 
 const SectionDetailUser = (props) => {
   const {
@@ -41,6 +45,7 @@ const SectionDetailUser = (props) => {
   const [internalModal, setInternalModal] = useState(false);
   const [signaturePrecencial, setSignaturePrecencial] = useState(false);
   const [generateContract, setGenerateContract] = useState(false);
+  const [spinVisible, setSpinVisible] = useState(false);
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -490,96 +495,112 @@ const SectionDetailUser = (props) => {
             header={<h3 role="title-section">Documentos Legales</h3>}
             key="3"
           >
-            <p>
-              <h3>Contrato</h3>
-            </p>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Tipo de persona fiscal"
-                  content={dataDetailCustomer.personType}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Estatus"
-                  content={dataDetailCustomer.contractStatus}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Folio"
-                  content={dataDetailCustomer.hfInvoice}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Vencimiento"
-                  content={dataDetailCustomer.expireAt}
-                />
-              </Col>
-              <Col span={12}>
-                <a
-                  onClick={() => {
-                    onDownloadDocumentById(
-                      {
-                        idContract: dataDetailCustomer.idContract,
-                        idCustomer: dataDetailCustomer.idCustomer,
-                        idCustomerTenant: null,
-                        type: 1,
-                      },
-                      `Contrato_${dataDetailCustomer.idContract}`
-                    );
-                  }}
-                >
-                  Descargar Contrato
-                </a>
-              </Col>
-            </Row>
-            <div
-              className="ant-divider ant-divider-horizontal"
-              role="separator"
-            />
-            <p>
-              <h3>Póliza</h3>
-            </p>
-            <Row>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Póliza"
-                  content={dataDetailCustomer.policy}
-                />
-              </Col>
-              <Col span={12}>
-                <DescriptionItem
-                  title="Vencimiento"
-                  content={dataDetailCustomer.expireAtPolicy}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={12}>
-                <a
-                  onClick={() => {
-                    onDownloadDocumentById(
-                      {
-                        idContract: dataDetailCustomer.idContract,
-                        idCustomer: dataDetailCustomer.idCustomer,
-                        idCustomerTenant: null,
-                        type: 3,
-                      },
-                      `Poliza_${dataDetailCustomer.idContract}`
-                    );
-                  }}
-                >
-                  Descargar Póliza
-                </a>
-              </Col>
-            </Row>
+            <Spin indicator={LoadingSpin} spinning={spinVisible} delay={100}>
+              <p>
+                <h3>Contrato</h3>
+              </p>
+              <Row>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Tipo de persona fiscal"
+                    content={dataDetailCustomer.personType}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Estatus"
+                    content={dataDetailCustomer.contractStatus}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Folio"
+                    content={dataDetailCustomer.hfInvoice}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Vencimiento"
+                    content={dataDetailCustomer.expireAt}
+                  />
+                </Col>
+                <Col span={12}>
+                  <a
+                    onClick={async () => {
+                      setSpinVisible(true);
+                      try {
+                        await onDownloadDocumentById(
+                          {
+                            idContract: dataDetailCustomer.idContract,
+                            idCustomer: dataDetailCustomer.idCustomer,
+                            idCustomerTenant: null,
+                            type: 1,
+                            typeProcess: 1,
+                          },
+                          `Contrato_${dataDetailCustomer.idContract}`
+                        );
+                        setSpinVisible(false);
+                      } catch (error) {
+                        setSpinVisible(false);
+                      }
+                    }}
+                  >
+                    Descargar Contrato
+                  </a>
+                </Col>
+              </Row>
+              <div
+                className="ant-divider ant-divider-horizontal"
+                role="separator"
+              />
+              <p>
+                <h3>Póliza</h3>
+              </p>
+              <Row>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Póliza"
+                    content={dataDetailCustomer.policy}
+                  />
+                </Col>
+                <Col span={12}>
+                  <DescriptionItem
+                    title="Vencimiento"
+                    content={dataDetailCustomer.expireAtPolicy}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={12}>
+                  <a
+                    onClick={async () => {
+                      setSpinVisible(true);
+                      try {
+                        await onDownloadDocumentById(
+                          {
+                            idContract: dataDetailCustomer.idContract,
+                            idCustomer: dataDetailCustomer.idCustomer,
+                            idCustomerTenant: null,
+                            type: 3,
+                            typeProcess: 2,
+                          },
+                          `Poliza_${dataDetailCustomer.idContract}`
+                        );
+                        setSpinVisible(false);
+                      } catch (error) {
+                        setSpinVisible(false);
+                      }
+                    }}
+                  >
+                    Descargar Póliza
+                  </a>
+                </Col>
+              </Row>
+            </Spin>
           </Panel>
 
           <Panel
