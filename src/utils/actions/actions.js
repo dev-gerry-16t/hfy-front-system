@@ -2247,6 +2247,49 @@ const callAddDocument = (file, data, callback) => async (
   }
 };
 
+const callBulkPotentialAgent = (file, data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  const formData = new FormData();
+  formData.append("file", file[0]);
+  formData.append("fileProperties", JSON.stringify(data));
+  try {
+    const config = {
+      headers: { ...HEADER },
+    };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.BULK_POTENTIAL_AGENT,
+      formData,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetTypeFormTenant = (data) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -3124,6 +3167,47 @@ const callGetRequestProviderById = (data) => async (dispatch, getState) => {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
       API_CONSTANTS.GET_REQUEST_PROVIDER_BY_ID,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetRequestProviderPropierties = (data) => async (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_REQUEST_PROVIDER_PROPIERTIES,
       data,
       config
     );
@@ -4201,4 +4285,5 @@ export {
   callGetAllCustomerForIncidence,
   callGetAllIncidencePaymentsMethods,
   callGetPolicyPaymentMethod,
+  callBulkPotentialAgent,
 };

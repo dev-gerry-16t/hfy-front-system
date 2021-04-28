@@ -15,6 +15,7 @@ import {
   callGetLandingProspectCoincidences,
   callGetAllProspectStatus,
   callUpdateLandingProspectStatus,
+  callBulkPotentialAgent,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -26,6 +27,7 @@ const LeadsLandingPage = (props) => {
     callGetLandingProspectCoincidences,
     callGetAllProspectStatus,
     callUpdateLandingProspectStatus,
+    callBulkPotentialAgent,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataStats, setDataStats] = useState({});
@@ -53,6 +55,27 @@ const LeadsLandingPage = (props) => {
         break;
       default:
         break;
+    }
+  };
+
+  const handlerCallBulkPotentialAgent = async (file) => {
+    console.log('file',file);
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    const dataDocument = {
+      idSystemUser,
+      idLoginHistory,
+    };
+    try {
+      const response = await callBulkPotentialAgent(file, dataDocument);
+      showMessageStatusApi(
+        "Documento subido exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        "No se logro subir el archivo, intenta nuevamente o mas tarde",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -331,6 +354,22 @@ const LeadsLandingPage = (props) => {
           <div className="renter-card-information total-width">
             <div className="title-cards flex-title-card">
               <span>Leads</span>
+              <label
+                className="button_init_primary_label"
+                type="button"
+                for="file-input"
+                onClick={() => {}}
+              >
+                <span>Marketing Asesores</span>
+              </label>
+              <input
+                id="file-input"
+                type="file"
+                accept=".xls,.xlsx"
+                onChange={(e) => {
+                  handlerCallBulkPotentialAgent(e.target.files);
+                }}
+              />
             </div>
             <div className="section-information-renters">
               <Table
@@ -364,6 +403,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllProspectStatus: (data) => dispatch(callGetAllProspectStatus(data)),
   callUpdateLandingProspectStatus: (data, id) =>
     dispatch(callUpdateLandingProspectStatus(data, id)),
+  callBulkPotentialAgent: (file, data) =>
+    dispatch(callBulkPotentialAgent(file, data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeadsLandingPage);

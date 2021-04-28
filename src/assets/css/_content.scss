@@ -183,6 +183,17 @@
   }
 }
 
+.button_init_primary_label {
+  text-align: center;
+  background: var(--color-primary);
+  border-radius: 16px;
+  border: none;
+  width: 40%;
+  span{
+    color: #ffffff;
+  }
+}
+
 .main-information-user {
   display: flex;
   justify-content: space-between;
