@@ -363,6 +363,11 @@ const SectionCardOwner = (props) => {
       width: 250,
       render: (status, record) => {
         let component = <div />;
+        const styleStatus =
+          isNil(record.plicyStatusStyle) === false &&
+          isEmpty(record.plicyStatusStyle) === false
+            ? JSON.parse(record.plicyStatusStyle)
+            : {};
         if (record.canBeChanged === true) {
           component = (
             <div>
@@ -450,10 +455,14 @@ const SectionCardOwner = (props) => {
                 <Button
                   type="primary"
                   shape="round"
-                  icon={<CheckSquareOutlined />}
+                  icon={
+                    <span className="anticon">
+                      <i className={styleStatus.style} aria-hidden="true" />
+                    </span>
+                  }
                   size="small"
                   style={{
-                    background: record.plicyStatusStyle,
+                    background: styleStatus.color,
                     border: "none",
                   }}
                   onClick={() => {
@@ -473,10 +482,10 @@ const SectionCardOwner = (props) => {
             <Tag
               icon={
                 <span className="anticon">
-                  <i className="fa fa-handshake-o" aria-hidden="true" />
+                  <i className={styleStatus.style} aria-hidden="true" />
                 </span>
               }
-              color={record.plicyStatusStyle}
+              color={styleStatus.color}
             >
               {record.policyStatus}
             </Tag>
