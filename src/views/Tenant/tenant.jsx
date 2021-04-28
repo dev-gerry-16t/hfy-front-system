@@ -371,6 +371,14 @@ const Tenant = (props) => {
       );
       if (
         isEmpty(responseResult) === false &&
+        isNil(responseResult.requieresMoveSignature) === false &&
+        (responseResult.requieresMoveSignature === true ||
+          responseResult.requieresMoveSignature === 1)
+      ) {
+        console.log('responseResult.requieresMoveSignature',responseResult.requieresMoveSignature);
+      }
+      if (
+        isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
         responseResult.isTypeFormCompleted === false
       ) {

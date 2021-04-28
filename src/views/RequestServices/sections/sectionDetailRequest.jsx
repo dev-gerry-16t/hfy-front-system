@@ -167,6 +167,14 @@ const SectionDetailRequest = (props) => {
             </Row>
             <p>Información de Inquilino</p>
             <Row>
+              <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
+                <DescriptionItem
+                  title="Firma del contrato de servicio"
+                  content={dataForm.isFaceToFace}
+                />
+              </Col>
+            </Row>
+            <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <DescriptionItem
                   title="Folio de incidencia"
