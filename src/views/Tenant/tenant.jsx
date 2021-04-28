@@ -375,7 +375,12 @@ const Tenant = (props) => {
         (responseResult.requieresMoveSignature === true ||
           responseResult.requieresMoveSignature === 1)
       ) {
-        console.log('responseResult.requieresMoveSignature',responseResult.requieresMoveSignature);
+        setIsVisibleBannerMove(
+          responseResult.requieresMoveSignature === 1 ||
+            responseResult.requieresMoveSignature === true
+            ? true
+            : false
+        );
       }
       if (
         isEmpty(responseResult) === false &&
@@ -743,92 +748,102 @@ const Tenant = (props) => {
         }}
       >
         <div className="banner-move-tenant">
-          <h1>
-            {isHowAreYou === false
-              ? "¡Servicio de mudanza!"
-              : "Mudanzas homify"}
-          </h1>
-          {isHowAreYou === false && (
+          {dataTenant.requieresMoveSignature === true ? (
             <>
-              <span>
-                Por ser parte de homify te ofrecemos un{" "}
-                <strong>¡Increíble Descuento!</strong> en servicios de Mudanza.
-              </span>
-              <img
-                width="350"
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/move_homify.png"
-                alt=""
-              />
+              <h1>Contrato de servicio de mudanza</h1>
+            </>
+          ) : (
+            <>
+              <h1>
+                {isHowAreYou === false
+                  ? "¡Servicio de mudanza!"
+                  : "Mudanzas homify"}
+              </h1>
+              {isHowAreYou === false && (
+                <>
+                  <span>
+                    Por ser parte de homify te ofrecemos un{" "}
+                    <strong>¡Increíble Descuento!</strong> en servicios de
+                    Mudanza.
+                  </span>
+                  <img
+                    width="350"
+                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/move_homify.png"
+                    alt=""
+                  />
+                </>
+              )}
+              {isHowAreYou === true && (
+                <div>
+                  <p>
+                    Somos una empresa con experiencia en el mercado, brindando
+                    servicios de mudanzas en la Ciudad de México, con nosotros
+                    podrás encontrar el mejor servicio a nivel local o foráneo,
+                    con un precio accesible y la garantía de todas tus
+                    pertenencias llegaran en perfecto estado.
+                  </p>
+                  <p>
+                    Nos especializamos en movimiento de muebles, cambio de
+                    departamento, empaque. Además nuestro personal está
+                    ampliamente capacitado para brindar la asesoría oportuna.
+                  </p>
+                  <p>
+                    Con nosotros obtendrás los resultados que esperas, nos
+                    distinguimos por la alta atención a los detalles y por la
+                    infraestructura con la que contamos. Te garantizamos un
+                    servicio de mudanza confiable y dentro de los plazos
+                    acordados.
+                  </p>
+                  <p>
+                    <strong>
+                      En mudanzas HOMIFY hacemos que nuestros clientes se
+                      sientan seguros y sin preocupaciones.
+                    </strong>
+                  </p>
+                  <ul>
+                    <li>Maniobra de carga y descarga</li>
+                    <li>Empaque y desempaqué</li>
+                    <li>Movimientos internos</li>
+                    <li>Transporte de maneje de departamentos y casas</li>
+                  </ul>
+                </div>
+              )}
+              <Button
+                onClick={() => {
+                  setIsHowAreYou(!isHowAreYou);
+                }}
+                type="link"
+                size="small"
+                style={{ marginBottom: 20 }}
+              >
+                {isHowAreYou === false ? "¿Quiénes somos?" : "Regresar"}
+              </Button>
+              <div className="two-action-buttons-banner">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsVisibleBannerMove(false);
+                    await handlerCallUpdateMovingDialog({
+                      idCustomerTenant: dataTenant.idCustomerTenant,
+                      idContract: dataTenant.idContract,
+                    });
+                    handlerCallGetAllCustomerTenantById();
+                  }}
+                >
+                  <span>Ahora no</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsVisibleBannerMove(false);
+                    setIsVisibleRequestService(true);
+                  }}
+                >
+                  <span>¡Me interesa!</span>
+                </button>
+              </div>
             </>
           )}
-          {isHowAreYou === true && (
-            <div>
-              <p>
-                Somos una empresa con experiencia en el mercado, brindando
-                servicios de mudanzas en la Ciudad de México, con nosotros
-                podrás encontrar el mejor servicio a nivel local o foráneo, con
-                un precio accesible y la garantía de todas tus pertenencias
-                llegaran en perfecto estado.
-              </p>
-              <p>
-                Nos especializamos en movimiento de muebles, cambio de
-                departamento, empaque. Además nuestro personal está ampliamente
-                capacitado para brindar la asesoría oportuna.
-              </p>
-              <p>
-                Con nosotros obtendrás los resultados que esperas, nos
-                distinguimos por la alta atención a los detalles y por la
-                infraestructura con la que contamos. Te garantizamos un servicio
-                de mudanza confiable y dentro de los plazos acordados.
-              </p>
-              <p>
-                <strong>
-                  En mudanzas HOMIFY hacemos que nuestros clientes se sientan
-                  seguros y sin preocupaciones.
-                </strong>
-              </p>
-              <ul>
-                <li>Maniobra de carga y descarga</li>
-                <li>Empaque y desempaqué</li>
-                <li>Movimientos internos</li>
-                <li>Transporte de maneje de departamentos y casas</li>
-              </ul>
-            </div>
-          )}
-          <Button
-            onClick={() => {
-              setIsHowAreYou(!isHowAreYou);
-            }}
-            type="link"
-            size="small"
-            style={{ marginBottom: 20 }}
-          >
-            {isHowAreYou === false ? "¿Quiénes somos?" : "Regresar"}
-          </Button>
-          <div className="two-action-buttons-banner">
-            <button
-              type="button"
-              onClick={async () => {
-                setIsVisibleBannerMove(false);
-                await handlerCallUpdateMovingDialog({
-                  idCustomerTenant: dataTenant.idCustomerTenant,
-                  idContract: dataTenant.idContract,
-                });
-                handlerCallGetAllCustomerTenantById();
-              }}
-            >
-              <span>Ahora no</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsVisibleBannerMove(false);
-                setIsVisibleRequestService(true);
-              }}
-            >
-              <span>¡Me interesa!</span>
-            </button>
-          </div>
         </div>
       </CustomDialog>
       <CustomViewDocument
