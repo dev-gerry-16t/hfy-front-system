@@ -340,7 +340,7 @@ const LeadsLandingPage = (props) => {
       key: "emailAddress",
     },
     {
-      title: "Se agrego el dia",
+      title: "Se agregó el dia",
       dataIndex: "createdAtFormat",
       key: "createdAtFormat",
       render: (status, record) => {
@@ -465,7 +465,7 @@ const LeadsLandingPage = (props) => {
                 for="file-input"
                 onClick={() => {}}
               >
-                <span>Marketing Asesores</span>
+                <span>Exportar xlsx</span>
               </label>
               <input
                 id="file-input"
