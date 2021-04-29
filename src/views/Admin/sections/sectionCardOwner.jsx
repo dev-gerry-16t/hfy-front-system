@@ -179,7 +179,7 @@ const SectionCardOwner = (props) => {
       title: "Folio",
       dataIndex: "hfInvoice",
       key: "hfInvoice",
-      width:100,
+      width: 100,
       fixed: "left",
       render: (label, record) => {
         const recorsStyle =
@@ -360,10 +360,15 @@ const SectionCardOwner = (props) => {
       key: "idPolicyStatus",
       fixed: "right",
       align: "center",
+      width: 250,
       render: (status, record) => {
         let component = <div />;
-        const contractStatus = record.contractStatus;
-        if (status === 1) {
+        const styleStatus =
+          isNil(record.plicyStatusStyle) === false &&
+          isEmpty(record.plicyStatusStyle) === false
+            ? JSON.parse(record.plicyStatusStyle)
+            : {};
+        if (record.canBeChanged === true) {
           component = (
             <div>
               <Popover
@@ -450,8 +455,16 @@ const SectionCardOwner = (props) => {
                 <Button
                   type="primary"
                   shape="round"
-                  icon={<CheckSquareOutlined />}
+                  icon={
+                    <span className="anticon">
+                      <i className={styleStatus.style} aria-hidden="true" />
+                    </span>
+                  }
                   size="small"
+                  style={{
+                    background: styleStatus.color,
+                    border: "none",
+                  }}
                   onClick={() => {
                     setOpenPopover({
                       [`popover-${record.idContract}`]: true,
@@ -464,28 +477,15 @@ const SectionCardOwner = (props) => {
               </Popover>
             </div>
           );
-        } else if (status === 2 || status === 3) {
+        } else {
           component = (
             <Tag
               icon={
                 <span className="anticon">
-                  <i className="fa fa-handshake-o" aria-hidden="true" />
+                  <i className={styleStatus.style} aria-hidden="true" />
                 </span>
               }
-              color="#00bb2d"
-            >
-              {record.policyStatus}
-            </Tag>
-          );
-        } else if (status === 4) {
-          component = (
-            <Tag
-              icon={
-                <span className="anticon">
-                  <i className="fa fa-ban" aria-hidden="true" />
-                </span>
-              }
-              color="#ff0000"
+              color={styleStatus.color}
             >
               {record.policyStatus}
             </Tag>

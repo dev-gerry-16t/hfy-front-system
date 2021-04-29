@@ -5,6 +5,8 @@ import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
 import {
   callGetAllRequestProvidersCoincidences,
   callGetAllCollaborators,
@@ -240,6 +242,50 @@ const RequestServices = (props) => {
     }
   };
 
+  const handlerCallGetRequestProviderPropierties = async (data, name) => {
+    const { idSystemUser, idLoginHistory, token } = dataProfile;
+    try {
+      const responseDownload = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_REQUEST_PROVIDER_PROPIERTIES}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            ...data,
+            idSystemUser,
+            idLoginHistory,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (
+        isNil(responseDownload.status) === false &&
+        responseDownload.status !== 200
+      ) {
+        throw isNil(responseDownload.statusText) === false
+          ? responseDownload.statusText
+          : "";
+      }
+      const blob = await responseDownload.blob();
+      const link = document.createElement("a");
+      link.className = "download";
+      link.download = `${name}.docx`;
+      link.href = URL.createObjectURL(blob);
+      document.body.appendChild(link);
+      link.click();
+      link.parentElement.removeChild(link);
+    } catch (error) {
+      showMessageStatusApi(
+        "No está disponible el documento",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetAllRequestProvidersCoincidences();
     handlerCallGetAllProviderPaymentForm();
@@ -316,6 +362,17 @@ const RequestServices = (props) => {
           try {
             await handlerCallUpdateRequestProvider(data, id);
             handlerCallGetAllRequestProvidersCoincidences();
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onDownloadDocument={async (data) => {
+          try {
+            await handlerCallGetRequestProviderPropierties(
+              data,
+              "Contrato_de_servicio"
+            );
+            await handlerCallGetProviderById(data.idRequestForProvider);
           } catch (error) {
             throw error;
           }

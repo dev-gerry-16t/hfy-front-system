@@ -183,6 +183,23 @@
   }
 }
 
+.button_init_primary_label {
+  text-align: center;
+  background: var(--color-primary);
+  border-radius: 16px;
+  border: none;
+  width: 20%;
+  margin-right: 20px;
+  cursor: pointer;
+  span {
+    color: #ffffff;
+  }
+}
+
+.button_init_primary_label:hover {
+  opacity: 0.6;
+}
+
 .main-information-user {
   display: flex;
   justify-content: space-between;
@@ -551,6 +568,38 @@
         }
       }
     }
+    .contract-card-information-dialog {
+      p {
+        text-align: center;
+      }
+      .contract-children-information {
+        max-height: 300px;
+        overflow-y: scroll;
+        p {
+          color: black;
+        }
+      }
+      .contract-section-signature {
+        .signature {
+          border: 3px double black;
+          width: 320px;
+          height: 150px;
+          text-align: center;
+          margin: 0px auto;
+        }
+        .conditions-name {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          span {
+            margin-top: 10px;
+            font-size: 10px;
+            text-align: center;
+            color: gray;
+          }
+        }
+      }
+    }
     .add-more-suite {
       background: var(--color-primary);
       border-radius: 8px;
@@ -625,6 +674,10 @@
       border: none;
       padding: 3px 10px;
       width: 35%;
+    }
+    .disabled {
+      background: #df90b8 !important;
+      cursor: none;
     }
   }
 }

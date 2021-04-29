@@ -12,6 +12,7 @@ import {
   Radio,
   Button,
   DatePicker,
+  Checkbox,
 } from "antd";
 import moment from "moment";
 import "moment/locale/es";
@@ -31,10 +32,12 @@ const SectionRequestService = (props) => {
     idProvider: null,
     scheduleDate: null,
     budgeAmount: null,
+    observations: "",
   };
 
   const [dataForm, setDataForm] = useState(initialState);
   const [dataTC, setDataTC] = useState("");
+  const [aceptTerms, setAceptTerms] = useState(false);
 
   return (
     <Modal
@@ -115,6 +118,36 @@ const SectionRequestService = (props) => {
               />
             </Col>
           </Row>
+          <Row>
+            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+              <label
+                style={{
+                  color: "var(--color-primary)",
+                  fontFamily: "Poppins",
+                }}
+              >
+                Observaciones
+              </label>
+              <textarea
+                style={{
+                  outline: "none",
+                  border: "1px solid #d9d9d9",
+                  width: "100%",
+                  minHeight: 100,
+                  borderRadius: "10px",
+                  fontFamily: "Poppins",
+                }}
+                placeholder="Puedes indicar aquí instrucciones de llegada a tu domicilio, cómo referencias. Si tu mudanza no cumple con los términos y condiciones puedes indicar los detalles de tu mudanza y con gusto te contactamos para realizar una cotización personalizada."
+                value={dataForm.observations}
+                onChange={(e) => {
+                  setDataForm({
+                    ...dataForm,
+                    observations: e.target.value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
           <p>Costo del Servicio</p>
           <div
             style={{
@@ -132,18 +165,42 @@ const SectionRequestService = (props) => {
             <strong style={{ marginBottom: 5, marginLeft: 5 }}>MXN</strong>
           </div>
           {isEmpty(dataTC) === false && (
-            <div
-              style={{
-                margin: "20px 0px",
-                maxHeight: "250px",
-                overflowY: "scroll",
-                fontSize: 12,
-                fontFamily: "Poppins",
-              }}
-              dangerouslySetInnerHTML={{
-                __html: dataTC,
-              }}
-            />
+            <>
+              <div
+                style={{
+                  margin: "20px 0px",
+                  maxHeight: "250px",
+                  overflowY: "scroll",
+                  fontSize: 12,
+                  fontFamily: "Poppins",
+                }}
+                dangerouslySetInnerHTML={{
+                  __html: dataTC,
+                }}
+              />
+              <div
+                style={{
+                  marginBottom: 25,
+                }}
+              >
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    setAceptTerms(e.target.checked);
+                  }}
+                ></Checkbox>
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 12,
+                    color: "gray",
+                  }}
+                >
+                  Acepto los términos y condiciones del servicio
+                </span>
+              </div>
+            </>
           )}
 
           <div className="two-action-buttons">
@@ -153,18 +210,23 @@ const SectionRequestService = (props) => {
                 onClose();
                 setDataTC("");
                 setDataForm(initialState);
+                setAceptTerms(false);
               }}
             >
               <span>Cancelar</span>
             </button>
             <button
               type="button"
+              className={aceptTerms === true ? "" : "disabled"}
               onClick={async () => {
                 try {
-                  await onSaveRequestService(dataForm);
-                  onClose();
-                  setDataTC("");
-                  setDataForm(initialState);
+                  if (aceptTerms === true) {
+                    await onSaveRequestService(dataForm);
+                    onClose();
+                    setDataTC("");
+                    setDataForm(initialState);
+                    setAceptTerms(false);
+                  }
                 } catch (error) {}
               }}
             >

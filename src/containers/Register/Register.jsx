@@ -735,7 +735,7 @@ const Register = (props) => {
                   }}
                 >
                   Acepto el{" "}
-                  <a href="https://segurent.mx/aviso-de-privacidad/">
+                  <a href="https://www.homify.ai/aviso-de-privacidad">
                     Aviso de privacidad
                   </a>
                 </span>

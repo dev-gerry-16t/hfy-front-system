@@ -150,7 +150,7 @@ const CustomFileUpload = (props) => {
 
   return (
     <Spin indicator={LoadingSpin} spinning={spinVisible}>
-      {/* {dataDocument.isRequired === true && (
+      {dataDocument.isRequired === true && (
         <div
           style={{
             textAlign: "center",
@@ -160,7 +160,7 @@ const CustomFileUpload = (props) => {
         >
           Documento obligatorio
         </div>
-      )} */}
+      )}
       <div
         className={`section-drop-document ${
           (isNil(preview) === false ||
