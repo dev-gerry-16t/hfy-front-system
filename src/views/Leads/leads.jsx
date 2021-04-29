@@ -16,6 +16,7 @@ import {
   callGetAllProspectStatus,
   callUpdateLandingProspectStatus,
   callBulkPotentialAgent,
+  callGetPotentialAgentCoincidences,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -28,8 +29,10 @@ const LeadsLandingPage = (props) => {
     callGetAllProspectStatus,
     callUpdateLandingProspectStatus,
     callBulkPotentialAgent,
+    callGetPotentialAgentCoincidences,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataCoincidencesAdvisor, setDataCoincidencesAdvisor] = useState([]);
   const [dataStats, setDataStats] = useState({});
   const [dataProspectStatus, setDataProspectStatus] = useState([]);
 
@@ -73,6 +76,28 @@ const LeadsLandingPage = (props) => {
     } catch (error) {
       showMessageStatusApi(
         "No se logro subir el archivo, intenta nuevamente o mas tarde",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGetPotentialAgentCoincidences = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetPotentialAgentCoincidences({
+        idSystemUser,
+        idLoginHistory,
+        topIndex: 0,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataCoincidencesAdvisor(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
@@ -290,10 +315,74 @@ const LeadsLandingPage = (props) => {
     },
   ];
 
+  const columnsAdvisor = [
+    {
+      title: "Agregados por",
+      dataIndex: "createdByUser",
+      key: "createdByUser",
+    },
+    {
+      title: "Registrado",
+      dataIndex: "isRegistered",
+      key: "isRegistered",
+      render: (status, record) => {
+        return status === true ? "Si" : "No";
+      },
+    },
+    {
+      title: "Nombre",
+      dataIndex: "fullName",
+      key: "fullName",
+    },
+    {
+      title: "Correo",
+      dataIndex: "emailAddress",
+      key: "emailAddress",
+    },
+    {
+      title: "Se agrego el dia",
+      dataIndex: "createdAtFormat",
+      key: "createdAtFormat",
+      render: (status, record) => {
+        return status[0];
+      },
+    },
+    {
+      title: "Número telefónico",
+      dataIndex: "phoneNumber",
+      key: "phoneNumber",
+    },
+    {
+      title: "Estatus del mensaje",
+      dataIndex: "lastWSStatus",
+      key: "lastWSStatus",
+      fixed: "right",
+      align: "center",
+      render: (status, record) => {
+        const style = record.lastWSStatusStyle;
+        return (
+          <span>
+            <Tag
+              color={
+                isEmpty(style) === false && isNil(style) === false
+                  ? style
+                  : "gray"
+              }
+            >
+              {status}
+            </Tag>
+            {record.lastWSReadAt}
+          </span>
+        );
+      },
+    },
+  ];
+
   useEffect(() => {
     handlerCallGetLandingProspectCoincidences();
     handlerCallGetLandingProspectStats();
     handlerCallGetAllProspectStatus();
+    handlerCallGetPotentialAgentCoincidences();
   }, []);
 
   return (
@@ -353,6 +442,23 @@ const LeadsLandingPage = (props) => {
           <div className="renter-card-information total-width">
             <div className="title-cards flex-title-card">
               <span>Leads</span>
+            </div>
+            <div className="section-information-renters">
+              <Table
+                columns={columns}
+                dataSource={dataCoincidences}
+                className="table-users-hfy"
+                size="small"
+                bordered
+                scroll={{ x: 2000 }}
+              />
+            </div>
+          </div>
+        </div>
+        <div className="main-information-user-admin">
+          <div className="renter-card-information total-width">
+            <div className="title-cards flex-title-card">
+              <span>Marketing asesores</span>
               <label
                 className="button_init_primary_label"
                 type="button"
@@ -365,19 +471,24 @@ const LeadsLandingPage = (props) => {
                 id="file-input"
                 type="file"
                 accept=".xls,.xlsx"
-                onChange={(e) => {
-                  handlerCallBulkPotentialAgent(e.target.files);
+                onChange={async (e) => {
+                  try {
+                    await handlerCallBulkPotentialAgent(e.target.files);
+                    document.getElementById("file-input").value = "";
+                    handlerCallGetPotentialAgentCoincidences();
+                  } catch (error) {
+                    document.getElementById("file-input").value = "";
+                  }
                 }}
               />
             </div>
             <div className="section-information-renters">
               <Table
-                columns={columns}
-                dataSource={dataCoincidences}
+                columns={columnsAdvisor}
+                dataSource={dataCoincidencesAdvisor}
                 className="table-users-hfy"
                 size="small"
                 bordered
-                scroll={{ x: 2000 }}
               />
             </div>
           </div>
@@ -404,6 +515,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callUpdateLandingProspectStatus(data, id)),
   callBulkPotentialAgent: (file, data) =>
     dispatch(callBulkPotentialAgent(file, data)),
+  callGetPotentialAgentCoincidences: (data) =>
+    dispatch(callGetPotentialAgentCoincidences(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeadsLandingPage);
