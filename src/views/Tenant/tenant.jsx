@@ -115,7 +115,7 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const [isHowAreYou, setIsHowAreYou] = useState(false);
-  const [urlContract, setUrlContract] = useState("");
+  const [urlContract, setUrlContract] = useState({});
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -222,7 +222,7 @@ const Tenant = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      await setUrlContract(responseResult.url);
+      await setUrlContract(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -710,7 +710,7 @@ const Tenant = (props) => {
         id
       );
       showMessageStatusApi(
-        "¡Muy bien! haz completado el proceso del servicio de mudanza, pronto estaremos contigo",
+        "¡Muy bien! has completado el proceso del servicio de mudanza, pronto estaremos contigo",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
@@ -806,17 +806,18 @@ const Tenant = (props) => {
         <div className="banner-move-tenant">
           {dataTenant.requieresMoveSignature === true ? (
             <CustomSignatureContract
-              srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract}&embedded=true`}
+              srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract.url}&embedded=true`}
               cancelButton={() => {
                 setIsVisibleBannerMove(false);
               }}
-              name={dataTenant.fullName}
+              name={urlContract.fullNameTenant}
               onSignContract={async (data) => {
                 try {
                   await handlerCallSignRequestForProvider(
                     data,
                     dataTenant.idRequestForProvider
                   );
+                  await handlerCallGetAllCustomerTenantById();
                 } catch (error) {
                   throw error;
                 }
