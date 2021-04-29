@@ -59,7 +59,6 @@ const LeadsLandingPage = (props) => {
   };
 
   const handlerCallBulkPotentialAgent = async (file) => {
-    console.log('file',file);
     const { idSystemUser, idLoginHistory } = dataProfile;
     const dataDocument = {
       idSystemUser,

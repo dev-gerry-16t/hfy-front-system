@@ -182,7 +182,8 @@ const SectionDetailRequest = (props) => {
                 />
               </Col>
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              {dataForm.canGenerateDocument === true && (
+              {(dataForm.canGenerateDocument === true ||
+                isNil(dataForm.idDocument) === false) && (
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <DescriptionItem
                     title="Contrato de servicio"
@@ -200,6 +201,7 @@ const SectionDetailRequest = (props) => {
                               bucketSource: dataForm.bucketSource,
                               idRequestForProvider:
                                 dataForm.idRequestForProvider,
+                              canGenerateDocument: dataForm.canGenerateDocument,
                               download: true,
                             });
                             setSpinVisible(false);
