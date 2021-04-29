@@ -200,6 +200,7 @@ const SectionDetailRequest = (props) => {
                               bucketSource: dataForm.bucketSource,
                               idRequestForProvider:
                                 dataForm.idRequestForProvider,
+                              download: true,
                             });
                             setSpinVisible(false);
                           } catch (error) {

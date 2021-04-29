@@ -49,6 +49,8 @@ import {
   callGetAllIncidenceCoincidences,
   callGetIncidenceById,
   callUpdateIncidence,
+  callGetRequestProviderPropierties,
+  callSignRequestForProvider,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -59,6 +61,7 @@ import CustomDialog from "../../components/CustomDialog";
 import CustomContentActions from "../../components/CustomContentActions";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
+import CustomSignatureContract from "../../components/customSignatureContract";
 
 const { Content } = Layout;
 
@@ -86,6 +89,8 @@ const Tenant = (props) => {
     callGetAllIncidenceCoincidences,
     callGetIncidenceById,
     callUpdateIncidence,
+    callGetRequestProviderPropierties,
+    callSignRequestForProvider,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -110,6 +115,7 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const [isHowAreYou, setIsHowAreYou] = useState(false);
+  const [urlContract, setUrlContract] = useState("");
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -202,6 +208,27 @@ const Tenant = (props) => {
     ),
     duration: 0,
     style: { marginTop: "4vw" },
+  };
+
+  const handlerCallGetRequestProviderPropierties = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestProviderPropierties({
+        idSystemUser,
+        idLoginHistory,
+        idRequestForProvider: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      await setUrlContract(responseResult.url);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetCustomerMessage = async (data) => {
@@ -375,6 +402,9 @@ const Tenant = (props) => {
         (responseResult.requieresMoveSignature === true ||
           responseResult.requieresMoveSignature === 1)
       ) {
+        await handlerCallGetRequestProviderPropierties(
+          responseResult.idRequestForProvider
+        );
         setIsVisibleBannerMove(
           responseResult.requieresMoveSignature === 1 ||
             responseResult.requieresMoveSignature === true
@@ -668,6 +698,32 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallSignRequestForProvider = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSignRequestForProvider(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! haz completado el proceso del servicio de mudanza, pronto estaremos contigo",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetAllIncidenceTypes = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -749,9 +805,23 @@ const Tenant = (props) => {
       >
         <div className="banner-move-tenant">
           {dataTenant.requieresMoveSignature === true ? (
-            <>
-              <h1>Contrato de servicio de mudanza</h1>
-            </>
+            <CustomSignatureContract
+              srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract}&embedded=true`}
+              cancelButton={() => {
+                setIsVisibleBannerMove(false);
+              }}
+              name={dataTenant.fullName}
+              onSignContract={async (data) => {
+                try {
+                  await handlerCallSignRequestForProvider(
+                    data,
+                    dataTenant.idRequestForProvider
+                  );
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
           ) : (
             <>
               <h1>
@@ -1299,6 +1369,10 @@ const mapDispatchToProps = (dispatch) => ({
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
+  callGetRequestProviderPropierties: (data) =>
+    dispatch(callGetRequestProviderPropierties(data)),
+  callSignRequestForProvider: (data, id) =>
+    dispatch(callSignRequestForProvider(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

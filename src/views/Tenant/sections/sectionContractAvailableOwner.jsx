@@ -824,7 +824,7 @@ const SectionContractAvailable = (props) => {
                   }}
                 >
                   Acepto los términos publicados en la pagina
-                  https://segurent.mx/aviso-de-privacidad/
+                  https://www.homify.ai/aviso-de-privacidad
                 </span>
                 <div className="two-action-buttons">
                   <button
