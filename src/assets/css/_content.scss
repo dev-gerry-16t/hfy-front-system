@@ -183,6 +183,23 @@
   }
 }
 
+.button_init_primary_label {
+  text-align: center;
+  background: var(--color-primary);
+  border-radius: 16px;
+  border: none;
+  width: 20%;
+  margin-right: 20px;
+  cursor: pointer;
+  span {
+    color: #ffffff;
+  }
+}
+
+.button_init_primary_label:hover {
+  opacity: 0.6;
+}
+
 .main-information-user {
   display: flex;
   justify-content: space-between;
@@ -383,6 +400,16 @@
           display: flex;
           flex-direction: column;
           margin-left: 15px;
+          .status-payment-contract {
+            padding: 4px 10px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-self: flex-start;
+            span {
+              color: #fff;
+            }
+          }
         }
       }
       .section-information-button-1 {
@@ -520,6 +547,38 @@
       .ant-picker {
         width: 100%;
       }
+      p {
+        text-align: center;
+      }
+      .contract-children-information {
+        max-height: 300px;
+        overflow-y: scroll;
+        p {
+          color: black;
+        }
+      }
+      .contract-section-signature {
+        .signature {
+          border: 3px double black;
+          width: 320px;
+          height: 150px;
+          text-align: center;
+          margin: 0px auto;
+        }
+        .conditions-name {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          span {
+            margin-top: 10px;
+            font-size: 10px;
+            text-align: center;
+            color: gray;
+          }
+        }
+      }
+    }
+    .contract-card-information-dialog {
       p {
         text-align: center;
       }

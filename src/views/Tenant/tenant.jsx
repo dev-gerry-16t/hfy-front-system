@@ -49,6 +49,8 @@ import {
   callGetAllIncidenceCoincidences,
   callGetIncidenceById,
   callUpdateIncidence,
+  callGetRequestProviderPropierties,
+  callSignRequestForProvider,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -59,6 +61,7 @@ import CustomDialog from "../../components/CustomDialog";
 import CustomContentActions from "../../components/CustomContentActions";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
+import CustomSignatureContract from "../../components/customSignatureContract";
 
 const { Content } = Layout;
 
@@ -86,6 +89,8 @@ const Tenant = (props) => {
     callGetAllIncidenceCoincidences,
     callGetIncidenceById,
     callUpdateIncidence,
+    callGetRequestProviderPropierties,
+    callSignRequestForProvider,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -110,6 +115,7 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const [isHowAreYou, setIsHowAreYou] = useState(false);
+  const [urlContract, setUrlContract] = useState({});
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -147,7 +153,7 @@ const Tenant = (props) => {
           className="button-action-primary"
           style={{ marginTop: "25px" }}
         >
-          <span>Ir al formulario</span>
+          <span>Responder TypeForm</span>
         </button>
       </div>
     ),
@@ -202,6 +208,27 @@ const Tenant = (props) => {
     ),
     duration: 0,
     style: { marginTop: "4vw" },
+  };
+
+  const handlerCallGetRequestProviderPropierties = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestProviderPropierties({
+        idSystemUser,
+        idLoginHistory,
+        idRequestForProvider: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      await setUrlContract(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetCustomerMessage = async (data) => {
@@ -369,6 +396,22 @@ const Tenant = (props) => {
           ? true
           : false
       );
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.requieresMoveSignature) === false &&
+        (responseResult.requieresMoveSignature === true ||
+          responseResult.requieresMoveSignature === 1)
+      ) {
+        await handlerCallGetRequestProviderPropierties(
+          responseResult.idRequestForProvider
+        );
+        setIsVisibleBannerMove(
+          responseResult.requieresMoveSignature === 1 ||
+            responseResult.requieresMoveSignature === true
+            ? true
+            : false
+        );
+      }
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
@@ -655,6 +698,32 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallSignRequestForProvider = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callSignRequestForProvider(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! has completado el proceso del servicio de mudanza, pronto estaremos contigo",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetAllIncidenceTypes = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -735,92 +804,117 @@ const Tenant = (props) => {
         }}
       >
         <div className="banner-move-tenant">
-          <h1>
-            {isHowAreYou === false
-              ? "¡Servicio de mudanza!"
-              : "Mudanzas homify"}
-          </h1>
-          {isHowAreYou === false && (
+          {dataTenant.requieresMoveSignature === true ? (
+            <CustomSignatureContract
+              srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract.url}&embedded=true`}
+              cancelButton={() => {
+                setIsVisibleBannerMove(false);
+              }}
+              name={urlContract.fullNameTenant}
+              onSignContract={async (data) => {
+                try {
+                  await handlerCallSignRequestForProvider(
+                    data,
+                    dataTenant.idRequestForProvider
+                  );
+                  await handlerCallGetAllCustomerTenantById();
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
+          ) : (
             <>
-              <span>
-                Por ser parte de homify te ofrecemos un{" "}
-                <strong>¡Increíble Descuento!</strong> en servicios de Mudanza.
-              </span>
-              <img
-                width="350"
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/move_homify.png"
-                alt=""
-              />
+              <h1>
+                {isHowAreYou === false
+                  ? "¡Servicio de mudanza!"
+                  : "Mudanzas homify"}
+              </h1>
+              {isHowAreYou === false && (
+                <>
+                  <span>
+                    Por ser parte de homify te ofrecemos un{" "}
+                    <strong>¡Increíble Descuento!</strong> en servicios de
+                    Mudanza.
+                  </span>
+                  <img
+                    width="350"
+                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/move_homify.png"
+                    alt=""
+                  />
+                </>
+              )}
+              {isHowAreYou === true && (
+                <div>
+                  <p>
+                    Somos una empresa con experiencia en el mercado, brindando
+                    servicios de mudanzas en la Ciudad de México, con nosotros
+                    podrás encontrar el mejor servicio a nivel local o foráneo,
+                    con un precio accesible y la garantía de todas tus
+                    pertenencias llegaran en perfecto estado.
+                  </p>
+                  <p>
+                    Nos especializamos en movimiento de muebles, cambio de
+                    departamento, empaque. Además nuestro personal está
+                    ampliamente capacitado para brindar la asesoría oportuna.
+                  </p>
+                  <p>
+                    Con nosotros obtendrás los resultados que esperas, nos
+                    distinguimos por la alta atención a los detalles y por la
+                    infraestructura con la que contamos. Te garantizamos un
+                    servicio de mudanza confiable y dentro de los plazos
+                    acordados.
+                  </p>
+                  <p>
+                    <strong>
+                      En mudanzas HOMIFY hacemos que nuestros clientes se
+                      sientan seguros y sin preocupaciones.
+                    </strong>
+                  </p>
+                  <ul>
+                    <li>Maniobra de carga y descarga</li>
+                    <li>Empaque y desempaqué</li>
+                    <li>Movimientos internos</li>
+                    <li>Transporte de maneje de departamentos y casas</li>
+                  </ul>
+                </div>
+              )}
+              <Button
+                onClick={() => {
+                  setIsHowAreYou(!isHowAreYou);
+                }}
+                type="link"
+                size="small"
+                style={{ marginBottom: 20 }}
+              >
+                {isHowAreYou === false ? "¿Quiénes somos?" : "Regresar"}
+              </Button>
+              <div className="two-action-buttons-banner">
+                <button
+                  type="button"
+                  onClick={async () => {
+                    setIsVisibleBannerMove(false);
+                    await handlerCallUpdateMovingDialog({
+                      idCustomerTenant: dataTenant.idCustomerTenant,
+                      idContract: dataTenant.idContract,
+                    });
+                    handlerCallGetAllCustomerTenantById();
+                  }}
+                >
+                  <span>Ahora no</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsVisibleBannerMove(false);
+                    setIsVisibleRequestService(true);
+                  }}
+                >
+                  <span>¡Me interesa!</span>
+                </button>
+              </div>
             </>
           )}
-          {isHowAreYou === true && (
-            <div>
-              <p>
-                Somos una empresa con experiencia en el mercado, brindando
-                servicios de mudanzas en la Ciudad de México, con nosotros
-                podrás encontrar el mejor servicio a nivel local o foráneo, con
-                un precio accesible y la garantía de todas tus pertenencias
-                llegaran en perfecto estado.
-              </p>
-              <p>
-                Nos especializamos en movimiento de muebles, cambio de
-                departamento, empaque. Además nuestro personal está ampliamente
-                capacitado para brindar la asesoría oportuna.
-              </p>
-              <p>
-                Con nosotros obtendrás los resultados que esperas, nos
-                distinguimos por la alta atención a los detalles y por la
-                infraestructura con la que contamos. Te garantizamos un servicio
-                de mudanza confiable y dentro de los plazos acordados.
-              </p>
-              <p>
-                <strong>
-                  En mudanzas HOMIFY hacemos que nuestros clientes se sientan
-                  seguros y sin preocupaciones.
-                </strong>
-              </p>
-              <ul>
-                <li>Maniobra de carga y descarga</li>
-                <li>Empaque y desempaqué</li>
-                <li>Movimientos internos</li>
-                <li>Transporte de maneje de departamentos y casas</li>
-              </ul>
-            </div>
-          )}
-          <Button
-            onClick={() => {
-              setIsHowAreYou(!isHowAreYou);
-            }}
-            type="link"
-            size="small"
-            style={{ marginBottom: 20 }}
-          >
-            {isHowAreYou === false ? "¿Quiénes somos?" : "Regresar"}
-          </Button>
-          <div className="two-action-buttons-banner">
-            <button
-              type="button"
-              onClick={async () => {
-                setIsVisibleBannerMove(false);
-                await handlerCallUpdateMovingDialog({
-                  idCustomerTenant: dataTenant.idCustomerTenant,
-                  idContract: dataTenant.idContract,
-                });
-                handlerCallGetAllCustomerTenantById();
-              }}
-            >
-              <span>Ahora no</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setIsVisibleBannerMove(false);
-                setIsVisibleRequestService(true);
-              }}
-            >
-              <span>¡Me interesa!</span>
-            </button>
-          </div>
         </div>
       </CustomDialog>
       <CustomViewDocument
@@ -934,6 +1028,20 @@ const Tenant = (props) => {
                 </button>
               </div>
             )}
+            {isEmpty(dataTenant) === false &&
+              isNil(dataTenant.isTypeFormCompleted) === false &&
+              dataTenant.isTypeFormCompleted === false && (
+                <div className="button_init_primary">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      history.push("/websystem/typeform-user");
+                    }}
+                  >
+                    <span>Responder TypeForm</span>
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -1026,6 +1134,14 @@ const Tenant = (props) => {
                         onChange={() => {}}
                         value={dataTenant.ratingRate}
                       />
+                      {isNil(dataTenant.customerStatus) === false && (
+                        <div
+                          className="status-payment-contract"
+                          style={{ background: dataTenant.customerStatusStyle }}
+                        >
+                          <span>{dataTenant.customerStatus}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="section-information-button-1">
@@ -1276,6 +1392,10 @@ const mapDispatchToProps = (dispatch) => ({
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
+  callGetRequestProviderPropierties: (data) =>
+    dispatch(callGetRequestProviderPropierties(data)),
+  callSignRequestForProvider: (data, id) =>
+    dispatch(callSignRequestForProvider(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);
