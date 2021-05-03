@@ -383,6 +383,16 @@
           display: flex;
           flex-direction: column;
           margin-left: 15px;
+          .status-payment-contract {
+            padding: 4px 10px;
+            border-radius: 15px;
+            display: flex;
+            justify-content: center;
+            align-self: flex-start;
+            span {
+              color: #fff;
+            }
+          }
         }
       }
       .section-information-button-1 {
