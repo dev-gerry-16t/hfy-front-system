@@ -147,7 +147,7 @@ const Tenant = (props) => {
           className="button-action-primary"
           style={{ marginTop: "25px" }}
         >
-          <span>Ir al formulario</span>
+          <span>Responder TypeForm</span>
         </button>
       </div>
     ),
@@ -380,7 +380,7 @@ const Tenant = (props) => {
           idCustomerTF: responseResult.idCustomer,
           idContract: responseResult.idContract,
         });
-        //notification.open(args);
+        notification.open(args);
         //notification.open(argsv2);
       } else {
         await handlerCallGetAllProviders(responseResult.idContract);
@@ -944,7 +944,7 @@ const Tenant = (props) => {
                       history.push("/websystem/typeform-user");
                     }}
                   >
-                    <span>Responder formulario</span>
+                    <span>Responder TypeForm</span>
                   </button>
                 </div>
               )}
