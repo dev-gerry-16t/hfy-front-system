@@ -423,7 +423,7 @@ const Tenant = (props) => {
           idCustomerTF: responseResult.idCustomer,
           idContract: responseResult.idContract,
         });
-        notification.open(args);
+        //notification.open(args);
         //notification.open(argsv2);
       } else {
         await handlerCallGetAllProviders(responseResult.idContract);
@@ -1028,6 +1028,20 @@ const Tenant = (props) => {
                 </button>
               </div>
             )}
+            {isEmpty(dataTenant) === false &&
+              isNil(dataTenant.isTypeFormCompleted) === false &&
+              dataTenant.isTypeFormCompleted === false && (
+                <div className="button_init_primary">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      history.push("/websystem/typeform-user");
+                    }}
+                  >
+                    <span>Responder formulario</span>
+                  </button>
+                </div>
+              )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -1120,6 +1134,14 @@ const Tenant = (props) => {
                         onChange={() => {}}
                         value={dataTenant.ratingRate}
                       />
+                      {isNil(dataTenant.customerStatus) === false && (
+                        <div
+                          className="status-payment-contract"
+                          style={{ background: dataTenant.customerStatusStyle }}
+                        >
+                          <span>{dataTenant.customerStatus}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                   <div className="section-information-button-1">
