@@ -214,7 +214,7 @@ const TypePolicy = (props) => {
                 <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
                 <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                   <div className="price-policy-amount">
-                    <p>Total a pagar</p>
+                    <p>Total a pagar (IVA incluido)</p>
                     {isNil(dataForm.currentRent) === false &&
                     minumunPolicy > dataForm.currentRent * taxPolicy ? (
                       <div>
@@ -222,24 +222,21 @@ const TypePolicy = (props) => {
                           {isNil(dataForm.currentRent) === false &&
                           isNil(dataForm.currentRent) === false
                             ? frontFunctions.parseFormatCurrency(
-                                minumunPolicy * percentPayment,
+                                minumunPolicy * percentPayment +
+                                  minumunPolicy * percentPayment * tax,
                                 2,
                                 2
                               )
                             : "$0.00"}
                         </h2>
                         <strong>MXN</strong>
-                        <span style={{ marginLeft: 5 }}>
-                          {" "}
-                          + IVA {tax * 100}%
-                        </span>
-                        <button
+                        {/* <button
                           onClick={() => {
                             setIsVisibleModal(true);
                           }}
                         >
                           Pagar
-                        </button>
+                        </button> */}
                       </div>
                     ) : (
                       <div>
@@ -249,24 +246,24 @@ const TypePolicy = (props) => {
                             ? frontFunctions.parseFormatCurrency(
                                 dataForm.currentRent *
                                   taxPolicy *
-                                  percentPayment,
+                                  percentPayment +
+                                  dataForm.currentRent *
+                                    taxPolicy *
+                                    percentPayment *
+                                    tax,
                                 2,
                                 2
                               )
                             : "$0.00"}
                         </h2>
                         <strong>MXN</strong>
-                        <span style={{ marginLeft: 5 }}>
-                          {" "}
-                          + IVA {tax * 100}%
-                        </span>
-                        <button
+                        {/* <button
                           onClick={() => {
                             setIsVisibleModal(true);
                           }}
                         >
                           Pagar
-                        </button>
+                        </button> */}
                       </div>
                     )}
                   </div>

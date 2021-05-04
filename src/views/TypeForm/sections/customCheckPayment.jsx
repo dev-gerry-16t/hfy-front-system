@@ -1,37 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { connect } from "react-redux";
 import NumberFormat from "react-number-format";
-import {
-  Elements,
-  CardElement,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
-  useStripe,
-  useElements,
-} from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-import {
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-  message,
-} from "antd";
-import { SyncOutlined, CloseOutlined } from "@ant-design/icons";
-import GLOBAL_CONSTANTS from "../utils/constants/globalConstants";
-import { callPostPaymentService } from "../utils/actions/actions";
-import Arrow from "../assets/icons/Arrow.svg";
-
-const { Option } = Select;
-
-const stripePromise = loadStripe(
-  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
-);
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { message, Spin } from "antd";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -43,9 +14,6 @@ const CARD_OPTIONS = {
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
       fontSize: "16px",
       fontSmoothing: "antialiased",
-      ":-webkit-autofill": {
-        color: "#000",
-      },
       "::placeholder": {
         color: "#d9e1eb",
       },
@@ -152,7 +120,11 @@ const ResetButton = ({ onClick }) => (
   </button>
 );
 
-const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
+const CustomCheckPayment = ({
+  callPostPaymentServices,
+  totalPolicy,
+  onRedirect,
+}) => {
   const stripe = useStripe();
   const elements = useElements();
   const [dataForm, setDataForm] = useState({ email: "", phone: "", name: "" });
@@ -176,6 +148,23 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
         break;
     }
   };
+
+  const LoadingSpin = (
+    <div
+      style={{
+        top: "6em",
+        position: "absolute",
+        left: "0px",
+        width: "100%",
+      }}
+    >
+      <div className="circle-loader">
+        <div className="checkmark draw"></div>
+      </div>
+      <br />
+      <span>Procesando tu pago...</span>
+    </div>
+  );
 
   const hanlderCallPostPaymentService = async (data) => {
     try {
@@ -210,19 +199,19 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
         card: cardElement,
         billing_details: dataForm,
       });
-
-      setProcessing(false);
-
       if (error) {
         setErrors(error);
       } else {
-        console.log("paymentMethod", paymentMethod);
         await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
           amount: 10000,
           description: "Pago de Póliza",
         });
         setPaymentMethods(paymentMethod);
+        setProcessing(false);
+        setTimeout(() => {
+          onRedirect();
+        }, 5000);
       }
     } catch (error) {}
   };
@@ -238,182 +227,110 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
     });
   };
 
-  useEffect(() => {
-    if (isModalVisible === false) {
-      reset();
-      elements.getElement(CardElement).clear();
-    }
-  }, [isModalVisible]);
-
   return paymentMethods ? (
-    <div className="Result">
-      <div className="ResultTitle" role="alert">
-        Payment successful
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        paddingTop: "15px",
+        flexDirection: "column",
+        alignItems: "center",
+      }}
+    >
+      <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
+        ¡Gracias por tu pago!
+      </h2>
+      <div className="circle-loader load-complete">
+        <div className="checkmark draw" style={{ display: "block" }}></div>
       </div>
-      <div className="ResultMessage">
-        Thanks for trying Stripe Elements. No money was charged, but we
-        generated a PaymentMethod: {paymentMethods.id}
-      </div>
-      <ResetButton onClick={reset} />
+      <span>Tu pago se realizó correctamente</span>
     </div>
   ) : (
-    <form className="Form" onSubmit={handleSubmit}>
-      <fieldset className="FormGroup">
-        <Field
-          label="Nombre"
-          id="name"
-          type="text"
-          placeholder="Jane Doe"
-          required
-          autoComplete="name"
-          value={dataForm.name}
-          onChange={(e) => {
-            setDataForm({ ...dataForm, name: e.target.value });
+    <Spin indicator={LoadingSpin} spinning={processing}>
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <img
+          src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+          alt="homify"
+          width="45"
+          style={{
+            borderRadius: "50%",
+            boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
           }}
         />
-        <Field
-          label="Correo"
-          id="email"
-          type="email"
-          placeholder="janedoe@gmail.com"
-          required
-          autoComplete="email"
-          value={dataForm.email}
-          onChange={(e) => {
-            setDataForm({ ...dataForm, email: e.target.value });
+      </div>
+      <div className="price-policy-amount">
+        <p
+          style={{
+            textAlign: "center",
+            fontSize: 16,
+            marginBottom: 5,
+            color: "#0a2540",
           }}
-        />
-        <Field
-          label="Teléfono"
-          id="phone"
-          type="tel"
-          placeholder="55-52-98-99"
-          required
-          autoComplete="tel"
-          value={dataForm.phone}
-          format="+52 (##) ##-##-##-##"
-          mask=""
-          onChange={(e) => {
-            const { formattedValue, value, floatValue } = e;
-            setDataForm({ ...dataForm, phone: floatValue });
-          }}
-          CustomNumber={true}
-        />
-      </fieldset>
-      <fieldset className="FormGroup">
-        <CardField
-          onChange={(e) => {
-            setErrors(e.error);
-            setCardComplete(e.complete);
-          }}
-        />
-      </fieldset>
-      {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
-      <SubmitButton processing={processing} error={errors} disabled={!stripe}>
-        Pagar
-      </SubmitButton>
-    </form>
-  );
-};
-
-const ELEMENTS_OPTIONS = {
-  fonts: [
-    {
-      cssSrc: "https://fonts.googleapis.com/css?family=Poppins",
-    },
-  ],
-};
-
-const CustomPaymentModal = (props) => {
-  const {
-    isModalVisible,
-    onClose,
-    spinVisible,
-    callPostPaymentService,
-  } = props;
-  const [visiblePayment, setVisiblePayment] = useState(true);
-  const LoadingSpin = <SyncOutlined spin />;
-
-  useEffect(() => {
-    if (isModalVisible === true) {
-      setVisiblePayment(true);
-    }
-  }, [isModalVisible]);
-  return (
-    <Modal
-      style={{ top: 20 }}
-      visible={isModalVisible}
-      closable={false}
-      footer={false}
-    >
-      <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
-        <div className="form-modal">
-          <div className="title-head-modal">
-            <button
-              className="arrow-back-to"
-              type="button"
-              onClick={() => {
-                onClose();
-                setVisiblePayment(false);
-              }}
-            >
-              <img src={Arrow} alt="backTo" width="30" />
-            </button>
-            <h1>Realizar Pago</h1>
-          </div>
-          <div className="main-form-information">
-            <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-              <div className="checkout-payment-hfy">
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <img
-                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
-                    alt="homify"
-                    width="45"
-                    style={{
-                      borderRadius: "50%",
-                      boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
-                    }}
-                  />
-                </div>
-                <div className="price-policy-amount">
-                  <p
-                    style={{
-                      textAlign: "center",
-                      fontSize: 16,
-                      marginBottom: 5,
-                      color: "#0a2540",
-                    }}
-                  >
-                    Monto a pagar
-                  </p>
-                  <div>
-                    <h2>$ 1,000.00</h2>
-                    <strong>MXN</strong>
-                    <span style={{ marginLeft: 5 }}> + IVA 16%</span>
-                  </div>
-                </div>
-                <MyCustomCheck
-                  isModalVisible={visiblePayment}
-                  callPostPaymentServices={callPostPaymentService}
-                />
-              </div>
-            </Elements>
-          </div>
+        >
+          Monto a pagar
+        </p>
+        <div>
+          <h2>{totalPolicy}</h2>
         </div>
-      </Spin>
-    </Modal>
+      </div>
+      <form className="Form" onSubmit={handleSubmit}>
+        <fieldset className="FormGroup">
+          <Field
+            label="Nombre"
+            id="name"
+            type="text"
+            placeholder="Ingresa tu nombre"
+            required
+            autoComplete="name"
+            value={dataForm.name}
+            onChange={(e) => {
+              setDataForm({ ...dataForm, name: e.target.value });
+            }}
+          />
+          <Field
+            label="Correo"
+            id="email"
+            type="email"
+            placeholder="tu_correo@correo.com"
+            required
+            autoComplete="email"
+            value={dataForm.email}
+            onChange={(e) => {
+              setDataForm({ ...dataForm, email: e.target.value });
+            }}
+          />
+          <Field
+            label="Teléfono"
+            id="phone"
+            type="tel"
+            placeholder="55-52-98-99"
+            required
+            autoComplete="tel"
+            value={dataForm.phone}
+            format="+52 (##) ##-##-##-##"
+            mask=""
+            onChange={(e) => {
+              const { formattedValue, value, floatValue } = e;
+              setDataForm({ ...dataForm, phone: floatValue });
+            }}
+            CustomNumber={true}
+          />
+        </fieldset>
+        <fieldset className="FormGroup">
+          <CardField
+            onChange={(e) => {
+              setErrors(e.error);
+              setCardComplete(e.complete);
+            }}
+          />
+        </fieldset>
+        {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+        <SubmitButton processing={processing} error={errors} disabled={!stripe}>
+          Pagar
+        </SubmitButton>
+      </form>
+    </Spin>
   );
 };
 
-const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
-  return {
-    dataProfile: dataProfile.dataProfile,
-  };
-};
-
-const mapDispatchToProps = (dispatch) => ({
-  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(CustomPaymentModal);
+export default CustomCheckPayment;
