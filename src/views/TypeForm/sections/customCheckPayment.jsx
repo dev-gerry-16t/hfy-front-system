@@ -170,6 +170,7 @@ const CustomCheckPayment = ({
 
   const hanlderCallPostPaymentService = async (data) => {
     const { idSystemUser, idLoginHistory, idContract } = dataProfile;
+    console.log("data send api", data);
     try {
       const response = await callPostPaymentServices({
         ...data,
@@ -208,8 +209,10 @@ const CustomCheckPayment = ({
         billing_details: dataForm,
       });
       if (error) {
+        console.log("error", error);
         setErrors(error);
       } else {
+        console.log("seccess", paymentMethod);
         await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
         });
