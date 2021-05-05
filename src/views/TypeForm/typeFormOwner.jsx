@@ -494,7 +494,9 @@ const TypeFormOwner = (props) => {
       content: (
         <SectionPaymentPolicy
           callPostPaymentServices={callPostPaymentService}
+          dataProfile={dataProfile}
           dataFormSave={dataForm}
+          totalPolicy={dataForm.totalCustomerPolicyAmount}
           onRedirect={() => {
             history.push("/websystem/dashboard-owner");
           }}

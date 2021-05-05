@@ -22,6 +22,8 @@ const SectionPaymentPolicy = ({
   callPostPaymentServices,
   dataFormSave,
   onRedirect,
+  totalPolicy,
+  dataProfile,
 }) => {
   return (
     <div className="content-typeform-formulary">
@@ -36,8 +38,10 @@ const SectionPaymentPolicy = ({
             >
               <CustomCheckPayment
                 callPostPaymentServices={callPostPaymentServices}
-                totalPolicy={dataFormSave.totalCustomerPolicyAmount}
+                dataProfile={dataProfile}
+                totalPolicy={totalPolicy}
                 onRedirect={onRedirect}
+                idOrderPayment={dataFormSave.idOrderPayment}
               />
             </div>
           </Elements>

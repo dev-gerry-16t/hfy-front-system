@@ -181,7 +181,6 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
     try {
       const response = await callPostPaymentServices(data);
     } catch (error) {
-      console.log("error", error);
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -216,7 +215,6 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
       if (error) {
         setErrors(error);
       } else {
-        console.log("paymentMethod", paymentMethod);
         await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
           amount: 10000,

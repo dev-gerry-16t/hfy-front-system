@@ -124,6 +124,8 @@ const CustomCheckPayment = ({
   callPostPaymentServices,
   totalPolicy,
   onRedirect,
+  dataProfile,
+  idOrderPayment,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -167,10 +169,16 @@ const CustomCheckPayment = ({
   );
 
   const hanlderCallPostPaymentService = async (data) => {
+    const { idSystemUser, idLoginHistory, idContract } = dataProfile;
     try {
-      const response = await callPostPaymentServices(data);
+      const response = await callPostPaymentServices({
+        ...data,
+        idOrderPayment,
+        idSystemUser,
+        idLoginHistory,
+        idContract,
+      });
     } catch (error) {
-      console.log("error", error);
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -204,8 +212,6 @@ const CustomCheckPayment = ({
       } else {
         await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
-          amount: 10000,
-          description: "Pago de Póliza",
         });
         setPaymentMethods(paymentMethod);
         setProcessing(false);
