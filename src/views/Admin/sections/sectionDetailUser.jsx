@@ -99,6 +99,63 @@ const SectionDetailUser = (props) => {
     );
   };
 
+  const returnComponentPaymentPolicy = (data) => {
+    let component = <div />;
+    if (isEmpty(data) === false && isNil(data) === false) {
+      const arrayParseData = JSON.parse(data);
+      component = arrayParseData.map((row) => {
+        const arrayParseDataIcon =
+          isEmpty(row.gwTransactionStatusStyle) === false &&
+          isNil(row.gwTransactionStatusStyle) === false
+            ? JSON.parse(row.gwTransactionStatusStyle)
+            : {};
+        return (
+          <Row>
+            <Col span={24}>
+              <DescriptionItem
+                title="Nombre y porcentaje de pago asignado"
+                content={row.fullName}
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem title="Monto" content={row.amountFormat} />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Estatus del pago"
+                content={
+                  <div>
+                    <i
+                      className={arrayParseDataIcon.icon}
+                      style={{
+                        color: arrayParseDataIcon.color,
+                        marginRight: 10,
+                      }}
+                    />
+                    <span>{arrayParseDataIcon.text}</span>
+                  </div>
+                }
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Fecha de pago"
+                content={row.lastPaymentAt}
+              />
+            </Col>
+            <Col span={12}>
+              <DescriptionItem
+                title="Info de cargo"
+                content={row.serviceIdPC}
+              />
+            </Col>
+          </Row>
+        );
+      });
+    }
+    return component;
+  };
+
   useEffect(() => {
     if (isNil(dataDetailCustomer.typeFormProperties) === false) {
       const catalogProps = JSON.parse(dataDetailCustomer.typeFormProperties);
@@ -683,8 +740,16 @@ const SectionDetailUser = (props) => {
             </Row>
           </Panel>
           <Panel
-            header={<h3 role="title-section">Comentarios Contrato</h3>}
+            header={<h3 role="title-section">Información de pago</h3>}
             key="5"
+          >
+            {returnComponentPaymentPolicy(
+              dataDetailCustomer.infoPolicyPaymentAssignment
+            )}
+          </Panel>
+          <Panel
+            header={<h3 role="title-section">Comentarios Contrato</h3>}
+            key="6"
           >
             <div className="panel-comment-user">
               {isEmpty(dataMessages) === false ? (

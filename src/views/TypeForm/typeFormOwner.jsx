@@ -29,11 +29,13 @@ import {
   callGetPolicyPaymentMethod,
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
+  callPostPaymentService,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import "moment/locale/es";
+import SectionPaymentPolicy from "./sections/sectionPaymentPolicy";
 
 const { Content } = Layout;
 
@@ -56,6 +58,7 @@ const TypeFormOwner = (props) => {
     callGetPolicyPaymentMethod,
     callGetAllCommercialSocietyTypes,
     callGetAllStates,
+    callPostPaymentService,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
@@ -471,11 +474,32 @@ const TypeFormOwner = (props) => {
                   history.push("/websystem/dashboard-controldesk");
                 }
               } else {
-                history.push("/websystem/dashboard-owner");
+                if (dataForm.requiresPayment === true) {
+                  await handlerCallGetTypeFormTenant();
+                  next();
+                } else {
+                  history.push("/websystem/dashboard-owner");
+                }
               }
             } catch (error) {}
           }}
           onClickBack={() => prev()}
+        />
+      ),
+      iconActive: Wallet,
+      iconInactive: WalletInactive,
+    },
+    {
+      title: "Pago de Póliza",
+      content: (
+        <SectionPaymentPolicy
+          callPostPaymentServices={callPostPaymentService}
+          dataProfile={dataProfile}
+          dataFormSave={dataForm}
+          totalPolicy={dataForm.totalCustomerPolicyAmount}
+          onRedirect={() => {
+            history.push("/websystem/dashboard-owner");
+          }}
         />
       ),
       iconActive: Wallet,
@@ -721,6 +745,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllCommercialSocietyTypes: (data) =>
     dispatch(callGetAllCommercialSocietyTypes(data)),
   callGetAllStates: (data) => dispatch(callGetAllStates(data)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);
