@@ -646,6 +646,7 @@ const TypeFormUser = (props) => {
       content: (
         <SectionPaymentPolicy
           callPostPaymentServices={callPostPaymentService}
+          dataProfile={dataProfile}
           dataFormSave={dataForm}
           totalPolicy={dataForm.totalCustomerTenantPolicyAmount}
           onRedirect={() => {
