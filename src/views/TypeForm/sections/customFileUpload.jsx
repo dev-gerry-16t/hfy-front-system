@@ -306,9 +306,10 @@ const CustomFileUpload = (props) => {
                 dataDocument.extension === "docx" ||
                 dataDocument.extension === "pdf" ? (
                   <div style={{ textAlign: "center" }}>
-                    <FileUnknownOutlined
-                      style={{ fontSize: 100, color: "grey" }}
-                    />
+                    <iframe
+                      className="iframe-docx-hfy"
+                      src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}&embedded=true`}
+                    ></iframe>
                   </div>
                 ) : (
                   <Magnifier
