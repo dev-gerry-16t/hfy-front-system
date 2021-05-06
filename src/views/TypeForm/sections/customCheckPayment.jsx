@@ -131,6 +131,8 @@ const CustomCheckPayment = ({
   const elements = useElements();
   const [dataForm, setDataForm] = useState({ email: "", phone: "", name: "" });
   const [errors, setErrors] = useState(null);
+  const [labelErrors, setLabelErrors] = useState("");
+  const [paymentCancel, setPaymentCancel] = useState(false);
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
@@ -178,6 +180,8 @@ const CustomCheckPayment = ({
         idLoginHistory,
         idContract,
       });
+      const responseResult = response.response.result;
+      return responseResult;
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -185,6 +189,17 @@ const CustomCheckPayment = ({
       );
       throw error;
     }
+  };
+
+  const reset = () => {
+    setErrors(null);
+    setProcessing(false);
+    setPaymentMethods(null);
+    setDataForm({
+      email: "",
+      phone: "",
+      name: "",
+    });
   };
 
   const handleSubmit = async (event) => {
@@ -208,50 +223,66 @@ const CustomCheckPayment = ({
         billing_details: dataForm,
       });
       if (error) {
-        setErrors(error);
+        setPaymentCancel(true);
+        setLabelErrors(error.message);
+        setProcessing(false);
       } else {
-        await hanlderCallPostPaymentService({
+        const response = await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
         });
-        setPaymentMethods(paymentMethod);
         setProcessing(false);
-        setTimeout(() => {
-          onRedirect();
-        }, 5000);
+        if (response.status === "requires_action") {
+          reset();
+          elements.getElement(CardElement).clear();
+          setLabelErrors(
+            "Tu banco rechazo la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
+          );
+          setPaymentCancel(true);
+        } else {
+          setPaymentMethods(paymentMethod);
+          setTimeout(() => {
+            onRedirect();
+          }, 5000);
+        }
       }
-    } catch (error) {}
-  };
-
-  const reset = () => {
-    setErrors(null);
-    setProcessing(false);
-    setPaymentMethods(null);
-    setDataForm({
-      email: "",
-      phone: "",
-      name: "",
-    });
+    } catch (error) {
+      setProcessing(false);
+    }
   };
 
   return paymentMethods ? (
-    <div
-      style={{
-        display: "flex",
-        justifyContent: "center",
-        paddingTop: "15px",
-        flexDirection: "column",
-        alignItems: "center",
-      }}
-    >
+    <div className="position-result-transaction">
       <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
         ¡Gracias por tu pago!
       </h2>
-      <div className="circle-loader load-complete">
-        <div className="checkmark draw" style={{ display: "block" }}></div>
-      </div>
+      <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 130.2 130.2"
+      >
+        <circle
+          class="path circle"
+          fill="none"
+          stroke="#73AF55"
+          stroke-width="6"
+          stroke-miterlimit="10"
+          cx="65.1"
+          cy="65.1"
+          r="62.1"
+        />
+        <polyline
+          class="path check"
+          fill="none"
+          stroke="#73AF55"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          points="100.2,40.2 51.5,88.8 29.8,67.5 "
+        />
+      </svg>
       <span>Tu pago se realizó correctamente</span>
     </div>
-  ) : (
+  ) : paymentCancel === false ? (
     <Spin indicator={LoadingSpin} spinning={processing}>
       <div style={{ display: "flex", justifyContent: "center" }}>
         <img
@@ -336,6 +367,67 @@ const CustomCheckPayment = ({
         </SubmitButton>
       </form>
     </Spin>
+  ) : (
+    <div className="position-result-transaction">
+      <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
+        No fue posible realizar el pago
+      </h2>
+      <svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 130.2 130.2"
+      >
+        <circle
+          class="path circle"
+          fill="none"
+          stroke="#D06079"
+          stroke-width="6"
+          stroke-miterlimit="10"
+          cx="65.1"
+          cy="65.1"
+          r="62.1"
+        />
+        <line
+          class="path line"
+          fill="none"
+          stroke="#D06079"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          x1="34.4"
+          y1="37.9"
+          x2="95.8"
+          y2="92.3"
+        />
+        <line
+          class="path line"
+          fill="none"
+          stroke="#D06079"
+          stroke-width="6"
+          stroke-linecap="round"
+          stroke-miterlimit="10"
+          x1="95.8"
+          y1="38"
+          x2="34.4"
+          y2="92.2"
+        />
+      </svg>
+      <span style={{ textAlign: "center", marginBottom: 10 }}>
+        {labelErrors}
+      </span>
+      <div className="Form">
+        <button
+          className="SubmitButton"
+          style={{ width: "100%" }}
+          type="button"
+          onClick={() => {
+            setPaymentCancel(false);
+          }}
+        >
+          Intentar con nueva tarjeta
+        </button>
+      </div>
+    </div>
   );
 };
 
