@@ -31,20 +31,22 @@ const SectionPaymentPolicy = ({
       <Row>
         <Col span={9} xs={{ span: 24 }} md={{ span: 9 }} />
         <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
-          <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-            <div
-              className="checkout-payment-hfy"
-              style={{ background: "#fff" }}
-            >
-              <CustomCheckPayment
-                callPostPaymentServices={callPostPaymentServices}
-                dataProfile={dataProfile}
-                totalPolicy={totalPolicy}
-                onRedirect={onRedirect}
-                idOrderPayment={dataFormSave.idOrderPayment}
-              />
-            </div>
-          </Elements>
+          <div className="banner-move-tenant">
+            <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+              <div
+                className="checkout-payment-hfy"
+                style={{ background: "#fff", fontFamily: "Poppins" }}
+              >
+                <CustomCheckPayment
+                  callPostPaymentServices={callPostPaymentServices}
+                  dataProfile={dataProfile}
+                  totalPolicy={totalPolicy}
+                  onRedirect={onRedirect}
+                  idOrderPayment={dataFormSave.idOrderPayment}
+                />
+              </div>
+            </Elements>
+          </div>
         </Col>
         <Col span={9} xs={{ span: 24 }} md={{ span: 9 }} />
       </Row>
