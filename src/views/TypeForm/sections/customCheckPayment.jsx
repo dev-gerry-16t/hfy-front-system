@@ -235,7 +235,7 @@ const CustomCheckPayment = ({
           reset();
           elements.getElement(CardElement).clear();
           setLabelErrors(
-            "Tu banco rechazo la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
+            "Tu banco rechazó la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
           );
           setPaymentCancel(true);
         } else {
