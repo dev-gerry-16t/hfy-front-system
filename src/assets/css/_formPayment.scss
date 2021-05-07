@@ -352,3 +352,20 @@ $check-color: $brand-success;
     stroke-dashoffset: 900;
   }
 }
+
+@media screen and (max-width: 390px) {
+  .makeStyles-root-1 {
+    width: 100% !important;
+  }
+  .MuiBox-root {
+    padding: 20px 2px !important;
+  }
+  .banner-move-tenant {
+    span {
+      font-size: 13px;
+    }
+    h1 {
+      font-size: 15px;
+    }
+  }
+}

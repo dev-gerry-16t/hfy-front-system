@@ -1,4 +1,11 @@
 import React, { useState, useEffect } from "react";
+import SwipeableViews from "react-swipeable-views";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Typography from "@material-ui/core/Typography";
+import Box from "@material-ui/core/Box";
 import NumberFormat from "react-number-format";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { message, Spin } from "antd";
@@ -120,6 +127,40 @@ const ResetButton = ({ onClick }) => (
   </button>
 );
 
+const TabPanel = (props) => {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box p={3}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+};
+
+const a11yProps = (index) => {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
+  };
+};
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    backgroundColor: theme.palette.background.paper,
+    width: 500,
+  },
+}));
+
 const CustomCheckPayment = ({
   callPostPaymentServices,
   totalPolicy,
@@ -136,6 +177,18 @@ const CustomCheckPayment = ({
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
+  const [value, setValue] = useState(0);
+
+  const classes = useStyles();
+  const theme = useTheme();
+
+  const handleChangeIndex = (index) => {
+    setValue(index);
+  };
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -202,6 +255,42 @@ const CustomCheckPayment = ({
     });
   };
 
+  const handleSubmitOxxo = async (event) => {
+    setProcessing(true);
+    event.preventDefault();
+    if (!stripe || !elements) {
+      return;
+    }
+    try {
+      const response = await hanlderCallPostPaymentService({
+        payment_method: null,
+        payment_method_types: ["oxxo"],
+      });
+      const resultOxxo = await stripe.confirmOxxoPayment(
+        response.idClientSecret,
+        {
+          payment_method: {
+            billing_details: {
+              name: dataForm.name,
+              email: dataForm.email,
+            },
+          },
+        }
+      );
+      if (resultOxxo.error) {
+        setPaymentCancel(true);
+        setLabelErrors(resultOxxo.error.message);
+      }
+      setProcessing(false);
+      setPaymentMethods(true);
+      setTimeout(() => {
+        onRedirect();
+      }, 5000);
+    } catch (error) {
+      setProcessing(false);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) {
@@ -229,6 +318,7 @@ const CustomCheckPayment = ({
       } else {
         const response = await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
+          payment_method_types: null,
         });
         setProcessing(false);
         if (response.status === "requires_action") {
@@ -253,7 +343,7 @@ const CustomCheckPayment = ({
   return paymentMethods ? (
     <div className="position-result-transaction">
       <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
-        ¡Gracias por tu pago!
+        {value === 0 ? "¡Gracias por tu pago!" : "¡Esperamos pronto tu pago!"}
       </h2>
       <svg
         version="1.1"
@@ -280,92 +370,187 @@ const CustomCheckPayment = ({
           points="100.2,40.2 51.5,88.8 29.8,67.5 "
         />
       </svg>
-      <span>Tu pago se realizó correctamente</span>
+      <span>
+        {value === 0
+          ? "Tu pago se realizó correctamente"
+          : "Tu vale se genero correctamente"}
+      </span>
     </div>
   ) : paymentCancel === false ? (
     <Spin indicator={LoadingSpin} spinning={processing}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
-        <img
-          src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
-          alt="homify"
-          width="45"
-          style={{
-            borderRadius: "50%",
-            boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
-          }}
-        />
-      </div>
-      <div className="price-policy-amount">
-        <p
-          style={{
-            textAlign: "center",
-            fontSize: 16,
-            marginBottom: 5,
-            color: "#0a2540",
-          }}
+      <div className={classes.root}>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="fullWidth"
+            aria-label="full width tabs example"
+          >
+            <Tab label="Pago con Tarjeta" {...a11yProps(0)} />
+            <Tab label="Pago con OXXO" {...a11yProps(1)} />
+          </Tabs>
+        </AppBar>
+        <SwipeableViews
+          axis={theme.direction === "rtl" ? "x-reverse" : "x"}
+          index={value}
+          onChangeIndex={handleChangeIndex}
         >
-          Monto a pagar
-        </p>
-        <div>
-          <h2>{totalPolicy}</h2>
-        </div>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                alt="homify"
+                width="45"
+                style={{
+                  borderRadius: "50%",
+                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                }}
+              />
+            </div>
+            <div className="price-policy-amount">
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginBottom: 5,
+                  color: "#0a2540",
+                }}
+              >
+                Monto a pagar
+              </p>
+              <div>
+                <h2>{totalPolicy}</h2>
+              </div>
+            </div>
+            <form className="Form" onSubmit={handleSubmit}>
+              <fieldset className="FormGroup">
+                <Field
+                  label="Nombre"
+                  id="name"
+                  type="text"
+                  placeholder="Ingresa tu nombre"
+                  required
+                  autoComplete="name"
+                  value={dataForm.name}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, name: e.target.value });
+                  }}
+                />
+                <Field
+                  label="Correo"
+                  id="email"
+                  type="email"
+                  placeholder="tu_correo@correo.com"
+                  required
+                  autoComplete="email"
+                  value={dataForm.email}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, email: e.target.value });
+                  }}
+                />
+                <Field
+                  label="Teléfono"
+                  id="phone"
+                  type="tel"
+                  placeholder="55-52-98-99"
+                  required
+                  autoComplete="tel"
+                  value={dataForm.phone}
+                  format="+52 (##) ##-##-##-##"
+                  mask=""
+                  onChange={(e) => {
+                    const { formattedValue, value, floatValue } = e;
+                    setDataForm({ ...dataForm, phone: floatValue });
+                  }}
+                  CustomNumber={true}
+                />
+              </fieldset>
+              <fieldset className="FormGroup">
+                <CardField
+                  onChange={(e) => {
+                    setErrors(e.error);
+                    setCardComplete(e.complete);
+                  }}
+                />
+              </fieldset>
+              {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+              <SubmitButton
+                processing={processing}
+                error={errors}
+                disabled={!stripe}
+              >
+                Pagar
+              </SubmitButton>
+            </form>
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                alt="homify"
+                width="45"
+                style={{
+                  borderRadius: "50%",
+                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                }}
+              />
+            </div>
+            <div className="price-policy-amount">
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginBottom: 5,
+                  color: "#0a2540",
+                }}
+              >
+                Monto a pagar
+              </p>
+              <div>
+                <h2>{totalPolicy}</h2>
+              </div>
+            </div>
+            <form className="Form" onSubmit={handleSubmitOxxo}>
+              <fieldset className="FormGroup">
+                <Field
+                  label="Nombre"
+                  id="name"
+                  type="text"
+                  placeholder="Ingresa tu nombre"
+                  required
+                  autoComplete="name"
+                  value={dataForm.name}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, name: e.target.value });
+                  }}
+                />
+                <Field
+                  label="Correo"
+                  id="email"
+                  type="email"
+                  placeholder="tu_correo@correo.com"
+                  required
+                  autoComplete="email"
+                  value={dataForm.email}
+                  onChange={(e) => {
+                    setDataForm({ ...dataForm, email: e.target.value });
+                  }}
+                />
+              </fieldset>
+              {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+              <SubmitButton
+                processing={processing}
+                error={errors}
+                disabled={!stripe}
+              >
+                Pagar con OXXO
+              </SubmitButton>
+            </form>
+          </TabPanel>
+        </SwipeableViews>
       </div>
-      <form className="Form" onSubmit={handleSubmit}>
-        <fieldset className="FormGroup">
-          <Field
-            label="Nombre"
-            id="name"
-            type="text"
-            placeholder="Ingresa tu nombre"
-            required
-            autoComplete="name"
-            value={dataForm.name}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, name: e.target.value });
-            }}
-          />
-          <Field
-            label="Correo"
-            id="email"
-            type="email"
-            placeholder="tu_correo@correo.com"
-            required
-            autoComplete="email"
-            value={dataForm.email}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, email: e.target.value });
-            }}
-          />
-          <Field
-            label="Teléfono"
-            id="phone"
-            type="tel"
-            placeholder="55-52-98-99"
-            required
-            autoComplete="tel"
-            value={dataForm.phone}
-            format="+52 (##) ##-##-##-##"
-            mask=""
-            onChange={(e) => {
-              const { formattedValue, value, floatValue } = e;
-              setDataForm({ ...dataForm, phone: floatValue });
-            }}
-            CustomNumber={true}
-          />
-        </fieldset>
-        <fieldset className="FormGroup">
-          <CardField
-            onChange={(e) => {
-              setErrors(e.error);
-              setCardComplete(e.complete);
-            }}
-          />
-        </fieldset>
-        {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
-        <SubmitButton processing={processing} error={errors} disabled={!stripe}>
-          Pagar
-        </SubmitButton>
-      </form>
     </Spin>
   ) : (
     <div className="position-result-transaction">
