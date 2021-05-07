@@ -373,7 +373,7 @@ const CustomCheckPayment = ({
       <span>
         {value === 0
           ? "Tu pago se realizó correctamente"
-          : "Tu vale se genero correctamente"}
+          : "Tu vale se generó correctamente"}
       </span>
     </div>
   ) : paymentCancel === false ? (
