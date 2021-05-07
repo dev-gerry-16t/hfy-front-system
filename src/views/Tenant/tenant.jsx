@@ -455,6 +455,10 @@ const Tenant = (props) => {
         await handlerCallGetAllProviders(responseResult.idContract);
         await handlerCallGetAllIncidenceTypes(responseResult.idContract);
         await handlerCallGetAllIncidenceCoincidences(responseResult.idContract);
+        setDataUserProfile({
+          ...dataProfile,
+          idContract: responseResult.idContract,
+        });
       }
     } catch (error) {
       showMessageStatusApi(
