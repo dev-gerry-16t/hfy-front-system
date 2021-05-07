@@ -152,6 +152,8 @@ const SectionDetailUser = (props) => {
           </Row>
         );
       });
+    } else {
+      component = <strong>No existen pagos asignados</strong>;
     }
     return component;
   };

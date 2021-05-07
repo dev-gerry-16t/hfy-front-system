@@ -87,6 +87,63 @@ const SectionDetailRequest = (props) => {
     return domainPath;
   };
 
+  const returnComponentPaymentPolicy = (data) => {
+    let component = <div />;
+    if (isEmpty(data) === false && isNil(data) === false) {
+      const arrayParseData = JSON.parse(data);
+      component = arrayParseData.map((row) => {
+        const arrayParseDataIcon =
+          isEmpty(row.gwTransactionStatusStyle) === false &&
+          isNil(row.gwTransactionStatusStyle) === false
+            ? JSON.parse(row.gwTransactionStatusStyle)
+            : {};
+        return (
+          <>
+            <p>Información de Pago</p>
+            <Row>
+              <Col span={24}>
+                <DescriptionItem title="Nombre" content={row.fullName} />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem title="Monto" content={row.amountFormat} />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Estatus del pago"
+                  content={
+                    <div>
+                      <i
+                        className={arrayParseDataIcon.icon}
+                        style={{
+                          color: arrayParseDataIcon.color,
+                          marginRight: 10,
+                        }}
+                      />
+                      <span>{arrayParseDataIcon.text}</span>
+                    </div>
+                  }
+                />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Fecha de pago"
+                  content={row.lastPaymentAt}
+                />
+              </Col>
+              <Col span={12}>
+                <DescriptionItem
+                  title="Info de cargo"
+                  content={row.serviceIdPC}
+                />
+              </Col>
+            </Row>
+          </>
+        );
+      });
+    }
+    return component;
+  };
+
   useEffect(() => {
     if (
       isEmpty(dataProviderById) === false &&
@@ -165,6 +222,7 @@ const SectionDetailRequest = (props) => {
                 </Select>
               </Col>
             </Row>
+            {returnComponentPaymentPolicy(dataForm.inforPaymentAssignment)}
             <p>Información de Inquilino</p>
             <Row>
               <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
