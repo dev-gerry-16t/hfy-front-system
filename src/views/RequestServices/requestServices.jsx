@@ -127,13 +127,14 @@ const RequestServices = (props) => {
     }
   };
 
-  const handlerCallGetAllRequestProviderStatus = async () => {
+  const handlerCallGetAllRequestProviderStatus = async (id = null) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllRequestProviderStatus({
         idSystemUser,
         idLoginHistory,
         type: 1,
+        idRequestForProvider: id,
       });
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
@@ -289,7 +290,6 @@ const RequestServices = (props) => {
   useEffect(() => {
     handlerCallGetAllRequestProvidersCoincidences();
     handlerCallGetAllProviderPaymentForm();
-    handlerCallGetAllRequestProviderStatus();
   }, []);
 
   const columns = [
@@ -335,6 +335,9 @@ const RequestServices = (props) => {
           onClick={() => {
             if (text === true) {
               handlerCallGetProviderById(record.idRequestForProvider);
+              handlerCallGetAllRequestProviderStatus(
+                record.idRequestForProvider
+              );
               handlerCallGetAllProviders(
                 record.idContract,
                 record.idRequestForProvider
