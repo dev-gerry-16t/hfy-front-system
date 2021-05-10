@@ -318,7 +318,7 @@ const CustomCheckPayment = ({
       } else {
         const response = await hanlderCallPostPaymentService({
           payment_method: paymentMethod.id,
-          payment_method_types: null,
+          payment_method_types: ["card"],
         });
         setProcessing(false);
         if (response.status === "requires_action") {

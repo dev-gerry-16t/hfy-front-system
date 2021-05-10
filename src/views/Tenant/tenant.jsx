@@ -852,17 +852,54 @@ const Tenant = (props) => {
           handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
         }}
       >
-        <SectionDetailIncidence
-          dataIncidenceDetail={dataIncidenceDetail}
-          onSendAnnotations={async (data, id) => {
-            try {
-              await handlerCallUpdateIncidence(data, id);
-              handlerCallGetIncidenceById(id);
-            } catch (error) {
-              throw error;
-            }
-          }}
-        />
+        {isNil(dataIncidenceDetail) === false &&
+        isNil(dataIncidenceDetail.result1) === false &&
+        isNil(dataIncidenceDetail.result1.idOrderPayment) === false ? (
+          <div className="banner-move-tenant">
+            <h1>Pago de Incidencia</h1>
+            <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+              <div
+                className="checkout-payment-hfy"
+                style={{ background: "#fff" }}
+              >
+                <CustomCheckPayment
+                  callPostPaymentServices={callPostPaymentService}
+                  dataProfile={dataProfile}
+                  totalPolicy={dataIncidenceDetail.result1.amountFormat}
+                  onRedirect={() => {
+                    handlerCallGetAllCustomerTenantById();
+                  }}
+                  idOrderPayment={dataIncidenceDetail.result1.idOrderPayment}
+                />
+              </div>
+            </Elements>
+            <div
+              className="two-action-buttons-banner"
+              style={{ marginTop: 20 }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setIsVisibleOpenPayment(false);
+                }}
+              >
+                <span>Ahora no</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <SectionDetailIncidence
+            dataIncidenceDetail={dataIncidenceDetail}
+            onSendAnnotations={async (data, id) => {
+              try {
+                await handlerCallUpdateIncidence(data, id);
+                handlerCallGetIncidenceById(id);
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
+        )}
       </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleBannerMove}
