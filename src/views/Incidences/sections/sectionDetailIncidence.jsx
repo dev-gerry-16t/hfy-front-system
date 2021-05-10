@@ -730,7 +730,7 @@ const SectionDetailIncidence = (props) => {
                               )}
                             />
                           </Col>
-                          <Col span={12}>Estatus del pago</Col>
+                          <Col span={12}>Estatus del pago:</Col>
                           <Col span={12}>
                             <div>
                               {isEmpty(arrayParseData) === false ? (
@@ -749,6 +749,8 @@ const SectionDetailIncidence = (props) => {
                               )}
                             </div>
                           </Col>
+                          <Col span={12}>Referencia:</Col>
+                          <Col span={12}>{row.serviceIdPC}</Col>
                         </Row>
                       );
                     })}
