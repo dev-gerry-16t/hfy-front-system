@@ -26,6 +26,7 @@ import {
   callUpdateIncidence,
   callPostPaymentService,
 } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import CustomDialog from "../../components/CustomDialog";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
@@ -64,6 +65,7 @@ const TenantFromOwner = (props) => {
     callAddIncidence,
     callUpdateIncidence,
     callPostPaymentService,
+    setDataUserProfile,
   } = props;
   const { params } = match;
   const idCustomerTenant = params.idCustomerTenant;
@@ -313,6 +315,10 @@ const TenantFromOwner = (props) => {
       setDataTenant(responseResult);
       if (isEmpty(responseResult) === false) {
         setIdContractData(responseResult.idContract);
+        setDataUserProfile({
+          ...dataProfile,
+          idContract: responseResult.idContract,
+        });
         await handlerCallGetAllPaymentTypes({
           type: 1,
           idContract: responseResult.idContract,
@@ -481,7 +487,7 @@ const TenantFromOwner = (props) => {
                   setIsVisibleDetailIncidence(false);
                 }}
               >
-                <span>Ahora no</span>
+                <span>Salir</span>
               </button>
             </div>
           </div>
@@ -609,6 +615,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetAllCustomerTenantById: (data) =>
     dispatch(callGetAllCustomerTenantById(data)),
   callGetPaymentTypes: (data) => dispatch(callGetPaymentTypes(data)),
