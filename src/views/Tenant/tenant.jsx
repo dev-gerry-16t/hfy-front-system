@@ -835,7 +835,7 @@ const Tenant = (props) => {
                 setIsVisibleOpenPayment(false);
               }}
             >
-              <span>Ahora no</span>
+              <span>Salir</span>
             </button>
           </div>
         </div>
