@@ -111,9 +111,8 @@ const Tenant = (props) => {
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
-  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
-    false
-  );
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
+    useState(false);
   const [dataProviders, setDataProviders] = useState([]);
   const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
   const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
@@ -378,12 +377,8 @@ const Tenant = (props) => {
   };
 
   const handlerCallGetAllCustomerTenantById = async () => {
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenant,
-    } = dataProfile;
+    const { idCustomer, idSystemUser, idLoginHistory, idCustomerTenant } =
+      dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -880,7 +875,7 @@ const Tenant = (props) => {
               <button
                 type="button"
                 onClick={() => {
-                  setIsVisibleOpenPayment(false);
+                  setIsVisibleDetailIncidence(false);
                 }}
               >
                 <span>Ahora no</span>

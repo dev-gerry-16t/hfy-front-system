@@ -1,5 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import { Layout, Tabs, message } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -22,10 +24,24 @@ import {
   callGetIncidenceById,
   callAddIncidence,
   callUpdateIncidence,
+  callPostPaymentService,
 } from "../../utils/actions/actions";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import CustomDialog from "../../components/CustomDialog";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
+import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
+
+const stripePromise = loadStripe(
+  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
+);
+
+const ELEMENTS_OPTIONS = {
+  fonts: [
+    {
+      cssSrc: "https://fonts.googleapis.com/css?family=Poppins",
+    },
+  ],
+};
 
 const { Content } = Layout;
 const { TabPane } = Tabs;
@@ -47,6 +63,7 @@ const TenantFromOwner = (props) => {
     callGetIncidenceById,
     callAddIncidence,
     callUpdateIncidence,
+    callPostPaymentService,
   } = props;
   const { params } = match;
   const idCustomerTenant = params.idCustomerTenant;
@@ -62,9 +79,8 @@ const TenantFromOwner = (props) => {
   const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
   const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
   const [dataIncidenceDetail, setDataIncidenceDetail] = useState({});
-  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
-    false
-  );
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
+    useState(false);
 
   const dotChange = useRef(null);
   const contentStyle = {
@@ -434,17 +450,54 @@ const TenantFromOwner = (props) => {
           handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
         }}
       >
-        <SectionDetailIncidence
-          dataIncidenceDetail={dataIncidenceDetail}
-          onSendAnnotations={async (data, id) => {
-            try {
-              await handlerCallUpdateIncidence(data, id);
-              handlerCallGetIncidenceById(id);
-            } catch (error) {
-              throw error;
-            }
-          }}
-        />
+        {isNil(dataIncidenceDetail) === false &&
+        isNil(dataIncidenceDetail.result1) === false &&
+        isNil(dataIncidenceDetail.result1.idOrderPayment) === false ? (
+          <div className="banner-move-tenant">
+            <h1>Pago de Incidencia</h1>
+            <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+              <div
+                className="checkout-payment-hfy"
+                style={{ background: "#fff" }}
+              >
+                <CustomCheckPayment
+                  callPostPaymentServices={callPostPaymentService}
+                  dataProfile={dataProfile}
+                  totalPolicy={dataIncidenceDetail.result1.amountFormat}
+                  onRedirect={() => {
+                    handlerCallGetAllCustomerTenantById();
+                  }}
+                  idOrderPayment={dataIncidenceDetail.result1.idOrderPayment}
+                />
+              </div>
+            </Elements>
+            <div
+              className="two-action-buttons-banner"
+              style={{ marginTop: 20 }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setIsVisibleDetailIncidence(false);
+                }}
+              >
+                <span>Ahora no</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <SectionDetailIncidence
+            dataIncidenceDetail={dataIncidenceDetail}
+            onSendAnnotations={async (data, id) => {
+              try {
+                await handlerCallUpdateIncidence(data, id);
+                handlerCallGetIncidenceById(id);
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
+        )}
       </CustomDialog>
       <div className="margin-app-main">
         <SectionInfoTenant dataTenant={dataTenant} />
@@ -572,6 +625,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetIncidenceById: (data) => dispatch(callGetIncidenceById(data)),
   callAddIncidence: (data) => dispatch(callAddIncidence(data)),
   callUpdateIncidence: (data, id) => dispatch(callUpdateIncidence(data, id)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TenantFromOwner);
