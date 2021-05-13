@@ -108,12 +108,10 @@ const Administrator = (props) => {
   const [dataAdviserSearch, setDataAdviserSearch] = useState({
     idCustomerAgent: null,
   });
-  const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
-    false
-  );
-  const [isVisibleDetailUserAdviser, setIsVisibleDetailUserAdviser] = useState(
-    false
-  );
+  const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] =
+    useState(false);
+  const [isVisibleDetailUserAdviser, setIsVisibleDetailUserAdviser] =
+    useState(false);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -516,6 +514,10 @@ const Administrator = (props) => {
           idLoginHistory,
         },
         data.idContract
+      );
+      showMessageStatusApi(
+        "Tu solicitud se procesó exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
       showMessageStatusApi(
