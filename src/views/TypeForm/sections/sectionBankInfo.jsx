@@ -13,7 +13,9 @@ const SectionBankInfo = (props) => {
     dataBank,
     dataFormSave,
     dataProperties,
+    onSearchBank,
   } = props;
+
   const initialForm = {
     isInCash: null,
     idBank: null,
@@ -38,20 +40,43 @@ const SectionBankInfo = (props) => {
     </div>
   );
 
-  useEffect(() => {
-    if (isEmpty(dataFormSave) === false && isEmpty(dataBank) === false) {
-      const selectDefaultDataBank = dataBank.find((row) => {
-        return dataFormSave.idBank === row.idBank;
+  const parseDataClabe = (str, data) => {
+    const bank = str.slice(0, 3);
+    const office = str.slice(3, 6);
+    const accountNumber = str.slice(6, 17);
+    const control = str.slice(17);
+    if (bank.length === 3) {
+      onSearchBank(bank);
+    }
+    setDataForm({
+      ...data,
+      clabeNumber: str,
+      bankBranch: office,
+      accountNumber: accountNumber,
+    });
+  };
+  const setAsyncInformation = async (data) => {
+    if (isEmpty(data) === false) {
+      await setDataForm({
+        ...data,
       });
+      parseDataClabe(data.clabeNumber, data);
+    }
+  };
+
+  useEffect(() => {
+    setAsyncInformation(dataFormSave);
+  }, [dataFormSave]);
+
+  useEffect(() => {
+    if (isEmpty(dataBank) === false) {
       setDataForm({
-        ...dataFormSave,
-        idBankText:
-          isNil(selectDefaultDataBank) === false
-            ? selectDefaultDataBank.text
-            : "",
+        ...dataForm,
+        idBank: dataBank[0].idBank,
+        idBankText: dataBank[0].bankName,
       });
     }
-  }, [dataFormSave, dataBank]);
+  }, [dataBank]);
 
   return (
     <div className="content-typeform-formulary">
@@ -117,7 +142,25 @@ const SectionBankInfo = (props) => {
               <>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <Select
+                    <Input
+                      value={dataForm.clabeNumber}
+                      placeholder={"CLABE interbancaria"}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 18) {
+                          parseDataClabe(e.target.value, dataForm);
+                        }
+                      }}
+                      type="number"
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      value={dataForm.idBankText}
+                      placeholder={"Banco"}
+                      onChange={(e) => {}}
+                    />
+                    {/* <Select
                       placeholder="Banco"
                       showSearch
                       value={dataForm.idBank}
@@ -138,18 +181,38 @@ const SectionBankInfo = (props) => {
                         dataBank.map((row) => {
                           return <Option value={row.id}>{row.text}</Option>;
                         })}
-                    </Select>
+                    </Select> */}
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Input
+                      type="number"
+                      value={dataForm.bankBranch}
+                      placeholder={"Sucursal"}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 3) {
+                          setDataForm({
+                            ...dataForm,
+                            bankBranch: e.target.value,
+                          });
+                        }
+                      }}
+                    />
                   </Col>
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Input
-                      value={dataForm.bankBranch}
-                      placeholder={"Sucursal"}
+                      type="number"
+                      value={dataForm.accountNumber}
+                      placeholder={"Número de cuenta"}
                       onChange={(e) => {
-                        setDataForm({
-                          ...dataForm,
-                          bankBranch: e.target.value,
-                        });
+                        if (e.target.value.length <= 11) {
+                          setDataForm({
+                            ...dataForm,
+                            accountNumber: e.target.value,
+                          });
+                        }
                       }}
                     />
                   </Col>
@@ -163,33 +226,6 @@ const SectionBankInfo = (props) => {
                         setDataForm({
                           ...dataForm,
                           accountHolder: e.target.value,
-                        });
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                    <Input
-                      value={dataForm.accountNumber}
-                      placeholder={"Número de cuenta"}
-                      onChange={(e) => {
-                        setDataForm({
-                          ...dataForm,
-                          accountNumber: e.target.value,
-                        });
-                      }}
-                    />
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
-                    <Input
-                      value={dataForm.clabeNumber}
-                      placeholder={"Clave interbancaria"}
-                      onChange={(e) => {
-                        setDataForm({
-                          ...dataForm,
-                          clabeNumber: e.target.value,
                         });
                       }}
                     />
@@ -210,9 +246,8 @@ const SectionBankInfo = (props) => {
                   onChange={(momentFormat, date) => {
                     setDataForm({
                       ...dataForm,
-                      signingAvailabilityAt: moment(momentFormat).format(
-                        "YYYY-MM-DD"
-                      ),
+                      signingAvailabilityAt:
+                        moment(momentFormat).format("YYYY-MM-DD"),
                     });
                   }}
                   format="DD MMMM YYYY"
