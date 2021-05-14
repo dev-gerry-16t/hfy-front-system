@@ -136,12 +136,8 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallGetAllCommercialSocietyTypes = async () => {
-    const {
-      idCustomerTF,
-      idCustomerTenantTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTF, idCustomerTenantTF, idSystemUser, idLoginHistory } =
+      dataProfile;
     try {
       const response = await callGetAllCommercialSocietyTypes({
         idCustomer: idCustomerTF,
@@ -166,12 +162,8 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallGetAllStates = async () => {
-    const {
-      idCustomerTF,
-      idCustomerTenantTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTF, idCustomerTenantTF, idSystemUser, idLoginHistory } =
+      dataProfile;
     try {
       const response = await callGetAllStates({
         idCustomer: idCustomerTF,
@@ -196,12 +188,8 @@ const TypeFormOwner = (props) => {
   };
 
   const hanlderCallGetPolicyPaymentMethod = async (id, step) => {
-    const {
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenantTF,
-      idCustomerTF,
-    } = dataProfile;
+    const { idSystemUser, idLoginHistory, idCustomerTenantTF, idCustomerTF } =
+      dataProfile;
     try {
       const response = await callGetPolicyPaymentMethod({
         idCustomer: idCustomerTF,
@@ -225,12 +213,8 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallSetTypeFormTenant = async (data) => {
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idContract,
-    } = dataProfile;
+    const { idCustomer, idSystemUser, idLoginHistory, idContract } =
+      dataProfile;
     try {
       const response = await callSetTypeFormOwner({
         idCustomer,
@@ -366,6 +350,29 @@ const TypeFormOwner = (props) => {
     }
   };
 
+  const handlerCallBankCatalog = async (clabe = null) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllBankCatalog({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+        clabe,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataBank(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const stepsOwner = [
     {
       title: "Información personal",
@@ -460,6 +467,7 @@ const TypeFormOwner = (props) => {
           dataProperties={dataProperties}
           dataFormSave={dataForm}
           dataBank={dataBank}
+          onSearchBank={handlerCallBankCatalog}
           onClickFinish={async (data) => {
             const { params } = match;
             const idSection = params.idSection;
@@ -509,12 +517,8 @@ const TypeFormOwner = (props) => {
 
   const handlerCallGetTypeFormTenant = async () => {
     const { params } = match;
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idContract,
-    } = dataProfile;
+    const { idCustomer, idSystemUser, idLoginHistory, idContract } =
+      dataProfile;
     const idSection = params.idSection;
     try {
       const response = await callGetTypeFormOwner({
@@ -628,34 +632,11 @@ const TypeFormOwner = (props) => {
     }
   };
 
-  const handlerCallBankCatalog = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGetAllBankCatalog({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        type: 1,
-      });
-      const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
-          : [];
-      setDataBank(responseResult);
-    } catch (error) {
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
   const handlerCallAsyncApis = async () => {
     await handlerCallGetTypeFormTenant();
     await handlerCallGetMaritalStatus();
     await handlerCallGetPropertyTypes();
     await handlerCallGetPolicies();
-    await handlerCallBankCatalog();
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
   };

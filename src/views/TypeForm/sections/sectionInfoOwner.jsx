@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Input, Row, Col, Select, Tooltip, Alert, Radio } from "antd";
+import {
+  Input,
+  Row,
+  Col,
+  Select,
+  Tooltip,
+  Alert,
+  Radio,
+  DatePicker,
+} from "antd";
 import {
   CloseOutlined,
   AuditOutlined,
@@ -71,6 +81,8 @@ const SectionInfoOwner = (props) => {
     legalRepIdType: null,
     legalRepIdTypeText: null,
     legalRepIdTypeNumber: null,
+    dateOfBirth: null,
+    legalRepDateOfBirth: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
@@ -553,6 +565,24 @@ const SectionInfoOwner = (props) => {
             {visibleComponents.idMaritalStatus === true && (
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <DatePicker
+                    value={
+                      isNil(dataForm.dateOfBirth) === false
+                        ? moment(dataForm.dateOfBirth, "YYYY-MM-DD")
+                        : null
+                    }
+                    placeholder="Fecha de Nacimiento"
+                    onChange={(momentFormat, date) => {
+                      setDataForm({
+                        ...dataForm,
+                        dateOfBirth: moment(momentFormat).format("YYYY-MM-DD"),
+                      });
+                    }}
+                    format="DD MMMM YYYY"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <Select
                     placeholder="Estado Civil"
                     value={dataForm.idMaritalStatus}
@@ -951,6 +981,26 @@ const SectionInfoOwner = (props) => {
                           legalRepIdTypeNumber: value,
                         });
                       }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <DatePicker
+                      value={
+                        isNil(dataForm.legalRepDateOfBirth) === false
+                          ? moment(dataForm.legalRepDateOfBirth, "YYYY-MM-DD")
+                          : null
+                      }
+                      placeholder="Fecha de Nacimiento"
+                      onChange={(momentFormat, date) => {
+                        setDataForm({
+                          ...dataForm,
+                          legalRepDateOfBirth:
+                            moment(momentFormat).format("YYYY-MM-DD"),
+                        });
+                      }}
+                      format="DD MMMM YYYY"
                     />
                   </Col>
                 </Row>
