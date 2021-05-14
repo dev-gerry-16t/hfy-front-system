@@ -222,7 +222,6 @@ const SectionInfoUser = (props) => {
                       <p>Costo por cobertura de Póliza</p>
                       <div>
                         <h2>{dataForm.totalPolicyAmount}</h2>
-                        <span style={{ marginLeft: 5 }}> + IVA</span>
                       </div>
                     </div>
                   </Col>
@@ -231,7 +230,6 @@ const SectionInfoUser = (props) => {
                       <p>Se te asigno el pago de</p>
                       <div>
                         <h2>{dataForm.totalCustomerTenantPolicyAmount}</h2>
-                        <span style={{ marginLeft: 5 }}> + IVA</span>
                       </div>
                     </div>
                   </Col>

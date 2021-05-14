@@ -162,7 +162,7 @@ const Incidences = (props) => {
     }
   };
 
-  const handlerCallGetAllIncidenceStatus = async () => {
+  const handlerCallGetAllIncidenceStatus = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllIncidenceStatus({
@@ -170,6 +170,7 @@ const Incidences = (props) => {
         idSystemUser,
         idLoginHistory,
         type: 1,
+        idIncidence: id,
       });
       const responseResult =
         isNil(response) === false &&
@@ -361,6 +362,7 @@ const Incidences = (props) => {
             await handlerCallGetAllCustomerForIncidence(record.idIncidence);
             await handlerCallGetAllIncidencePaymentsMethods(record.idIncidence);
             await handlerCallGetIncidenceById(record.idIncidence);
+            await handlerCallGetAllIncidenceStatus(record.idIncidence);
             setIsVisibleDetailIncidence(true);
           }}
         >
@@ -373,7 +375,6 @@ const Incidences = (props) => {
   useEffect(() => {
     handlerCallGetAllIncidenceCoincidences();
     handlerCallGetAllIncidenceTypes();
-    handlerCallGetAllIncidenceStatus();
     handlerCallGetAllRequestProviderStatus();
     handlerCallGetAllProviderTypes();
   }, []);

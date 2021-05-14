@@ -644,6 +644,12 @@ const SectionDetailIncidence = (props) => {
                   </div>
                   {isEmpty(dataCustomerForIncidence) === false &&
                     dataCustomerForIncidence.map((row) => {
+                      const arrayParseData =
+                        isNil(row.gwTransactionStatusStyle) === false &&
+                        isEmpty(row.gwTransactionStatusStyle) === false
+                          ? JSON.parse(row.gwTransactionStatusStyle)
+                          : {};
+
                       return (
                         <Row>
                           <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
@@ -724,6 +730,27 @@ const SectionDetailIncidence = (props) => {
                               )}
                             />
                           </Col>
+                          <Col span={12}>Estatus del pago:</Col>
+                          <Col span={12}>
+                            <div>
+                              {isEmpty(arrayParseData) === false ? (
+                                <>
+                                  <i
+                                    className={arrayParseData.icon}
+                                    style={{
+                                      color: arrayParseData.color,
+                                      marginRight: 10,
+                                    }}
+                                  />
+                                  <span>{arrayParseData.text}</span>
+                                </>
+                              ) : (
+                                <span>No aplica</span>
+                              )}
+                            </div>
+                          </Col>
+                          <Col span={12}>Referencia:</Col>
+                          <Col span={12}>{row.serviceIdPC}</Col>
                         </Row>
                       );
                     })}

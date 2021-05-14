@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import moment from "moment";
 import { connect } from "react-redux";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Layout,
   Avatar,
@@ -51,6 +53,7 @@ import {
   callUpdateIncidence,
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
+  callPostPaymentService,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -62,6 +65,19 @@ import CustomContentActions from "../../components/CustomContentActions";
 import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
+import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
+
+const stripePromise = loadStripe(
+  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
+);
+
+const ELEMENTS_OPTIONS = {
+  fonts: [
+    {
+      cssSrc: "https://fonts.googleapis.com/css?family=Poppins",
+    },
+  ],
+};
 
 const { Content } = Layout;
 
@@ -91,12 +107,12 @@ const Tenant = (props) => {
     callUpdateIncidence,
     callGetRequestProviderPropierties,
     callSignRequestForProvider,
+    callPostPaymentService,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
-  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
-    false
-  );
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
+    useState(false);
   const [dataProviders, setDataProviders] = useState([]);
   const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
   const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
@@ -108,6 +124,7 @@ const Tenant = (props) => {
   const [isVisibleMessages, setIsVisibleMessages] = useState(false);
   const [isVisiblePaymentRent, setIsVisiblePaymentRent] = useState(false);
   const [isVisibleIncidence, setIsVisibleIncidence] = useState(false);
+  const [isVisibleOpenPayment, setIsVisibleOpenPayment] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [dataTenant, setDataTenant] = useState([]);
   const [dataMessages, setDataMessages] = useState([]);
@@ -360,12 +377,8 @@ const Tenant = (props) => {
   };
 
   const handlerCallGetAllCustomerTenantById = async () => {
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenant,
-    } = dataProfile;
+    const { idCustomer, idSystemUser, idLoginHistory, idCustomerTenant } =
+      dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -396,11 +409,19 @@ const Tenant = (props) => {
           ? true
           : false
       );
+      setIsVisibleOpenPayment(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.requiresPaymentToMove) == false &&
+          responseResult.requiresPaymentToMove === true
+          ? true
+          : false
+      );
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.requieresMoveSignature) === false &&
         (responseResult.requieresMoveSignature === true ||
-          responseResult.requieresMoveSignature === 1)
+          responseResult.requieresMoveSignature === 1) &&
+        responseResult.requiresPaymentToMove === false
       ) {
         await handlerCallGetRequestProviderPropierties(
           responseResult.idRequestForProvider
@@ -429,6 +450,10 @@ const Tenant = (props) => {
         await handlerCallGetAllProviders(responseResult.idContract);
         await handlerCallGetAllIncidenceTypes(responseResult.idContract);
         await handlerCallGetAllIncidenceCoincidences(responseResult.idContract);
+        setDataUserProfile({
+          ...dataProfile,
+          idContract: responseResult.idContract,
+        });
       }
     } catch (error) {
       showMessageStatusApi(
@@ -779,23 +804,97 @@ const Tenant = (props) => {
   return (
     <Content>
       <CustomDialog
+        isVisibleDialog={isVisibleOpenPayment}
+        onClose={() => {
+          setIsVisibleOpenPayment(false);
+        }}
+      >
+        <div className="banner-move-tenant">
+          <h1>Pago de servicio de mudanza</h1>
+          <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+            <div
+              className="checkout-payment-hfy"
+              style={{ background: "#fff" }}
+            >
+              <CustomCheckPayment
+                callPostPaymentServices={callPostPaymentService}
+                dataProfile={dataProfile}
+                totalPolicy={dataTenant.paymentForMovingAmount}
+                onRedirect={() => {
+                  handlerCallGetAllCustomerTenantById();
+                  setIsVisibleOpenPayment(false);
+                }}
+                idOrderPayment={dataTenant.idOrderPayment}
+              />
+            </div>
+          </Elements>
+          <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
+            <button
+              type="button"
+              onClick={() => {
+                setIsVisibleOpenPayment(false);
+              }}
+            >
+              <span>Salir</span>
+            </button>
+          </div>
+        </div>
+      </CustomDialog>
+      <CustomDialog
         isVisibleDialog={isVisibleDetailIncidence}
         onClose={() => {
           setIsVisibleDetailIncidence(!isVisibleDetailIncidence);
           handlerCallGetAllIncidenceCoincidences(dataTenant.idContract);
         }}
       >
-        <SectionDetailIncidence
-          dataIncidenceDetail={dataIncidenceDetail}
-          onSendAnnotations={async (data, id) => {
-            try {
-              await handlerCallUpdateIncidence(data, id);
-              handlerCallGetIncidenceById(id);
-            } catch (error) {
-              throw error;
-            }
-          }}
-        />
+        {isNil(dataIncidenceDetail) === false &&
+        isNil(dataIncidenceDetail.result1) === false &&
+        isNil(dataIncidenceDetail.result1.idOrderPayment) === false ? (
+          <div className="banner-move-tenant">
+            <h1>Pago de Incidencia</h1>
+            <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+              <div
+                className="checkout-payment-hfy"
+                style={{ background: "#fff" }}
+              >
+                <CustomCheckPayment
+                  callPostPaymentServices={callPostPaymentService}
+                  dataProfile={dataProfile}
+                  totalPolicy={dataIncidenceDetail.result1.amountFormat}
+                  onRedirect={() => {
+                    handlerCallGetAllCustomerTenantById();
+                  }}
+                  idOrderPayment={dataIncidenceDetail.result1.idOrderPayment}
+                />
+              </div>
+            </Elements>
+            <div
+              className="two-action-buttons-banner"
+              style={{ marginTop: 20 }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setIsVisibleDetailIncidence(false);
+                }}
+              >
+                <span>Ahora no</span>
+              </button>
+            </div>
+          </div>
+        ) : (
+          <SectionDetailIncidence
+            dataIncidenceDetail={dataIncidenceDetail}
+            onSendAnnotations={async (data, id) => {
+              try {
+                await handlerCallUpdateIncidence(data, id);
+                handlerCallGetIncidenceById(id);
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
+        )}
       </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleBannerMove}
@@ -1396,6 +1495,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestProviderPropierties(data)),
   callSignRequestForProvider: (data, id) =>
     dispatch(callSignRequestForProvider(data, id)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

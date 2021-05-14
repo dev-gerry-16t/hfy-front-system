@@ -8,6 +8,8 @@ import HomeActive from "../../assets/iconSteps/iconHome.svg";
 import HomeInactive from "../../assets/iconSteps/iconHomeInactive.svg";
 import IconProfile from "../../assets/iconSteps/Profile.svg";
 import IconProfileInactive from "../../assets/iconSteps/ProfileInactive.svg";
+import Wallet from "../../assets/iconSteps/wallet.svg";
+import WalletInactive from "../../assets/iconSteps/walletInactive.svg";
 import Work from "../../assets/iconSteps/Work.svg";
 import WorkInactive from "../../assets/iconSteps/WorkInactive.svg";
 import DocumentIcon from "../../assets/iconSteps/document.svg";
@@ -38,7 +40,9 @@ import {
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
   callGetTypeFormProperties,
+  callPostPaymentService,
 } from "../../utils/actions/actions";
+import SectionPaymentPolicy from "./sections/sectionPaymentPolicy";
 
 const { Content } = Layout;
 
@@ -58,6 +62,7 @@ const TypeFormUser = (props) => {
     callGetAllCommercialSocietyTypes,
     callGetAllStates,
     callGetTypeFormProperties,
+    callPostPaymentService,
     history,
     match,
   } = props;
@@ -609,7 +614,12 @@ const TypeFormUser = (props) => {
                   history.push("/websystem/dashboard-controldesk");
                 }
               } else {
-                history.push("/websystem/dashboard-tenant");
+                if (dataForm.requiresPayment === true) {
+                  await handlerCallGetTypeFormTenant();
+                  next();
+                } else {
+                  history.push("/websystem/dashboard-tenant");
+                }
               }
             } catch (error) {}
           }}
@@ -630,6 +640,22 @@ const TypeFormUser = (props) => {
       ),
       iconActive: Shield,
       iconInactive: ShieldInactive,
+    },
+    {
+      title: "Pago de Póliza",
+      content: (
+        <SectionPaymentPolicy
+          callPostPaymentServices={callPostPaymentService}
+          dataProfile={dataProfile}
+          dataFormSave={dataForm}
+          totalPolicy={dataForm.totalCustomerTenantPolicyAmount}
+          onRedirect={() => {
+            history.push("/websystem/dashboard-tenant");
+          }}
+        />
+      ),
+      iconActive: Wallet,
+      iconInactive: WalletInactive,
     },
   ];
 
@@ -789,6 +815,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllStates: (data) => dispatch(callGetAllStates(data)),
   callGetTypeFormProperties: (data) =>
     dispatch(callGetTypeFormProperties(data)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);
