@@ -45,6 +45,7 @@ const SectionDetailUserTenant = (props) => {
     dataReferenceStatus,
     onSaveDataScore,
     onCallHistoryData,
+    dataAllReasonRejection,
   } = props;
 
   const initialDataForm = {
@@ -519,11 +520,18 @@ const SectionDetailUserTenant = (props) => {
             />
 
             {isEmpty(dataDetailCustomerTenant) === false &&
-              dataDetailCustomerTenant.map((row) => {
+              dataDetailCustomerTenant.map((row, ix) => {
+                let isOpenDetail = null;
                 const catalogProperties =
                   isNil(row.typeFormProperties) === false
                     ? JSON.parse(row.typeFormProperties)
                     : [];
+                if (isNil(row.idRejectionReason) === false) {
+                  const arrayFind = dataAllReasonRejection.find((rowFind) => {
+                    return rowFind.idRejectionReason === row.idRejectionReason;
+                  });
+                  isOpenDetail = arrayFind.isOpen;
+                }
                 return (
                   <>
                     <h3>
@@ -583,6 +591,129 @@ const SectionDetailUserTenant = (props) => {
                                 role="separator"
                               />
                               <Row>
+                                <Col span={24}>
+                                  <p>Motivos (Sólo si es rechazado)</p>
+                                  <Select
+                                    placeholder="Motivos"
+                                    className="select-popover"
+                                    showSearch
+                                    value={
+                                      isNil(
+                                        valueCalification[
+                                          `${row.idCustomerTenant}-reason`
+                                        ]
+                                      ) === false
+                                        ? valueCalification[
+                                            `${row.idCustomerTenant}-reason`
+                                          ]
+                                        : row.idRejectionReason
+                                    }
+                                    onChange={(value, option) => {
+                                      const valueSelect = option.onClick();
+                                      setValueCalification({
+                                        ...valueCalification,
+                                        [`${row.idCustomerTenant}-reason`]:
+                                          value,
+                                        [`open-other-${ix}`]:
+                                          valueSelect.isOpen,
+                                      });
+                                    }}
+                                    filterOption={(input, option) =>
+                                      option.children
+                                        .toLowerCase()
+                                        .indexOf(input.toLowerCase()) >= 0
+                                    }
+                                  >
+                                    {isEmpty(dataAllReasonRejection) ===
+                                      false &&
+                                      dataAllReasonRejection.map((row) => {
+                                        return (
+                                          <Option
+                                            value={row.idRejectionReason}
+                                            onClick={() => row}
+                                          >
+                                            {row.text}
+                                          </Option>
+                                        );
+                                      })}
+                                  </Select>
+                                </Col>
+                                {isNil(
+                                  valueCalification[`open-other-${ix}`]
+                                ) === true &&
+                                  (isOpenDetail === 1 ||
+                                    isOpenDetail === true) && (
+                                    <Col span={24}>
+                                      <p style={{ marginTop: 10 }}>
+                                        Otros motivos
+                                      </p>
+                                      <textarea
+                                        className="textarea-form-modal ant-input"
+                                        placeholder="Otros motivos"
+                                        value={
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-other`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-other`
+                                              ]
+                                            : row.rejectionReason
+                                        }
+                                        maxlength="1000"
+                                        onChange={(e) => {
+                                          setValueCalification({
+                                            ...valueCalification,
+                                            [`${row.idCustomerTenant}-other`]:
+                                              e.target.value,
+                                          });
+                                        }}
+                                      />
+                                    </Col>
+                                  )}
+                                {isNil(
+                                  valueCalification[`open-other-${ix}`]
+                                ) === false &&
+                                  (valueCalification[`open-other-${ix}`] ===
+                                    true ||
+                                    valueCalification[`open-other-${ix}`] ===
+                                      1) && (
+                                    <Col span={24}>
+                                      <p style={{ marginTop: 10 }}>
+                                        Otros motivos
+                                      </p>
+                                      <textarea
+                                        className="textarea-form-modal ant-input"
+                                        placeholder="Otros motivos"
+                                        value={
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-other`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-other`
+                                              ]
+                                            : row.rejectionReason
+                                        }
+                                        maxlength="1000"
+                                        onChange={(e) => {
+                                          setValueCalification({
+                                            ...valueCalification,
+                                            [`${row.idCustomerTenant}-other`]:
+                                              e.target.value,
+                                          });
+                                        }}
+                                      />
+                                    </Col>
+                                  )}
+                              </Row>
+                              <div
+                                className="ant-divider ant-divider-horizontal"
+                                role="separator"
+                              />
+                              <Row>
                                 <Col span={11}>
                                   <Button
                                     type="primary"
@@ -607,6 +738,26 @@ const SectionDetailUserTenant = (props) => {
                                               ]
                                             : row.ratingNumber,
                                         isApproved: false,
+                                        idRejectionReason:
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-reason`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-reason`
+                                              ]
+                                            : row.idRejectionReason,
+                                        rejectionReason:
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-other`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-other`
+                                              ]
+                                            : row.rejectionReason,
                                       });
                                       setOpenPopover({
                                         [row.idCustomerTenant]:
@@ -646,6 +797,26 @@ const SectionDetailUserTenant = (props) => {
                                               ]
                                             : row.ratingNumber,
                                         isApproved: true,
+                                        idRejectionReason:
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-reason`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-reason`
+                                              ]
+                                            : row.idRejectionReason,
+                                        rejectionReason:
+                                          isNil(
+                                            valueCalification[
+                                              `${row.idCustomerTenant}-other`
+                                            ]
+                                          ) === false
+                                            ? valueCalification[
+                                                `${row.idCustomerTenant}-other`
+                                              ]
+                                            : row.rejectionReason,
                                       });
                                       setOpenPopover({
                                         [row.idCustomerTenant]:
@@ -784,26 +955,6 @@ const SectionDetailUserTenant = (props) => {
                           content={
                             isNil(row.currentSalary) === false
                               ? row.currentSalary
-                              : "N/A"
-                          }
-                        />
-                      </Col>
-                    </Row>
-                    <Row>
-                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                        <DescriptionItem
-                          title="Renta (Propiedad)"
-                          content={
-                            isNil(row.currentRent) === false ? row.currentRent : "N/A"
-                          }
-                        />
-                      </Col>
-                      <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-                        <DescriptionItem
-                          title="Renta (Dirección actual)"
-                          content={
-                            isNil(row.currentRentForCurrentAddress) === false
-                              ? row.currentRentForCurrentAddress
                               : "N/A"
                           }
                         />

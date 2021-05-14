@@ -28,6 +28,7 @@ import {
   callSetContract,
   callGetContract,
   callAddDocumentContractId,
+  callGetAllRejectionReasons,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -65,6 +66,7 @@ const Administrator = (props) => {
     callSetContract,
     callGetContract,
     callAddDocumentContractId,
+    callGetAllRejectionReasons,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
@@ -81,6 +83,7 @@ const Administrator = (props) => {
   const [dataChartBar, setDataChartBar] = useState([]);
   const [dataChartPie, setDataChartPie] = useState([]);
   const [dataAllPolicyStatus, setDataAllPolicyStatus] = useState([]);
+  const [dataAllReasonRejection, setDataAllReasonRejection] = useState([]);
   const [dataOwnerSearch, setDataOwnerSearch] = useState({
     idPersonType: 1,
     idCustomer: null,
@@ -468,6 +471,27 @@ const Administrator = (props) => {
     }
   };
 
+  const handlerCallGetAllRejectionReasons = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllRejectionReasons({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAllReasonRejection(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallSetContract = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -498,6 +522,7 @@ const Administrator = (props) => {
     await handlerCallGetContractStats();
     await handlerCallGetContractCoincidences();
     await handlerCallGetContractChart();
+    handlerCallGetAllRejectionReasons();
   };
 
   const handlerCallUpdateContract = async (data) => {
@@ -510,6 +535,12 @@ const Administrator = (props) => {
           idPolicyStatus: data.idPolicyStatus,
           rating: isNil(data.rating) === false ? data.rating : null,
           isApproved: isNil(data.isApproved) === false ? data.isApproved : null,
+          idRejectionReason:
+            isNil(data.idRejectionReason) === false
+              ? data.idRejectionReason
+              : null,
+          rejectionReason:
+            isNil(data.rejectionReason) === false ? data.rejectionReason : null,
           idSystemUser,
           idLoginHistory,
         },
@@ -817,6 +848,7 @@ const Administrator = (props) => {
             throw error;
           }
         }}
+        dataAllReasonRejection={dataAllReasonRejection}
       />
       <SectionDetailUserAdviser
         isDrawerVisible={isVisibleDetailUserAdviser}
@@ -992,6 +1024,8 @@ const mapDispatchToProps = (dispatch) => ({
   callSetContract: (data, id) => dispatch(callSetContract(data, id)),
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
+  callGetAllRejectionReasons: (data) =>
+    dispatch(callGetAllRejectionReasons(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);

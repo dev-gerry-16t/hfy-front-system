@@ -474,7 +474,7 @@ const RecoveryPassword = (props) => {
                 )}
                 {securePass.upperLowerword === false && (
                   <Alert
-                    message="Letras mayusculas y minusculas (AaBbCc)"
+                    message="Letras mayúsculas y minúsculas (AaBbCc)"
                     type="warning"
                     showIcon
                   />
