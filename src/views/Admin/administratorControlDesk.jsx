@@ -25,6 +25,7 @@ import {
   callGetContract,
   callAddDocumentContractId,
   callGetContractComment,
+  callGetAllRejectionReasons,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -55,6 +56,7 @@ const ControlDesk = (props) => {
     callGetContract,
     callAddDocumentContractId,
     callGetContractComment,
+    callGetAllRejectionReasons,
   } = props;
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -65,13 +67,14 @@ const ControlDesk = (props) => {
   const [dataRelatioshipTypes, setDataRelatioshipTypes] = useState([]);
   const [dataReferenceStatus, setDataReferenceStatus] = useState([]);
   const [dataHistory, setDataHistory] = useState([]);
-  const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] = useState(
-    false
-  );
+  const [isVisibleDetailUserTenant, setIsVisibleDetailUserTenant] =
+    useState(false);
+
   const [isVisibleDetailUser, setIsVisibleDetailUser] = useState(false);
   const [dataDetailCustomer, setDataDetailCustomer] = useState({});
   const [dataMessages, setDataMessages] = useState([]);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
+  const [dataAllReasonRejection, setDataAllReasonRejection] = useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -287,6 +290,12 @@ const ControlDesk = (props) => {
           idPolicyStatus: data.idPolicyStatus,
           rating: isNil(data.rating) === false ? data.rating : null,
           isApproved: isNil(data.isApproved) === false ? data.isApproved : null,
+          idRejectionReason:
+            isNil(data.idRejectionReason) === false
+              ? data.idRejectionReason
+              : null,
+          rejectionReason:
+            isNil(data.rejectionReason) === false ? data.rejectionReason : null,
           idSystemUser,
           idLoginHistory,
         },
@@ -477,6 +486,27 @@ const ControlDesk = (props) => {
     }
   };
 
+  const handlerCallGetAllRejectionReasons = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllRejectionReasons({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAllReasonRejection(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallSetContract = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -532,6 +562,7 @@ const ControlDesk = (props) => {
     callAsynApis();
     handlerCallGetAllRelationshipTypes();
     handlerCallGetAllPersonalReferencesStatus();
+    handlerCallGetAllRejectionReasons();
   }, []);
 
   return (
@@ -644,6 +675,7 @@ const ControlDesk = (props) => {
         onCallHistoryData={(data) => {
           handlerCallGetAuditReferences(data.idPersonalReference);
         }}
+        dataAllReasonRejection={dataAllReasonRejection}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -768,6 +800,8 @@ const mapDispatchToProps = (dispatch) => ({
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
+  callGetAllRejectionReasons: (data) =>
+    dispatch(callGetAllRejectionReasons(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ControlDesk);
