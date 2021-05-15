@@ -41,19 +41,16 @@ const SectionBankInfo = (props) => {
   );
 
   const parseDataClabe = (str, data) => {
-    const bank = str.slice(0, 3);
-    const office = str.slice(3, 6);
-    const accountNumber = str.slice(6, 17);
-    const control = str.slice(17);
-    if (bank.length === 3) {
-      onSearchBank(bank);
+    if (isNil(str) === false) {
+      const bank = str.slice(0, 3);
+      if (bank.length === 3) {
+        onSearchBank(bank);
+      }
+      setDataForm({
+        ...data,
+        clabeNumber: str,
+      });
     }
-    setDataForm({
-      ...data,
-      clabeNumber: str,
-      bankBranch: office,
-      accountNumber: accountNumber,
-    });
   };
   const setAsyncInformation = async (data) => {
     if (isEmpty(data) === false) {
@@ -150,7 +147,13 @@ const SectionBankInfo = (props) => {
                           parseDataClabe(e.target.value, dataForm);
                         }
                       }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
                       type="number"
+                      min="0"
                     />
                   </Col>
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -158,6 +161,7 @@ const SectionBankInfo = (props) => {
                     <Input
                       value={dataForm.idBankText}
                       placeholder={"Banco"}
+                      disabled
                       onChange={(e) => {}}
                     />
                     {/* <Select
@@ -191,11 +195,16 @@ const SectionBankInfo = (props) => {
                       value={dataForm.bankBranch}
                       placeholder={"Sucursal"}
                       onChange={(e) => {
-                        if (e.target.value.length <= 3) {
+                        if (e.target.value.length <= 30) {
                           setDataForm({
                             ...dataForm,
                             bankBranch: e.target.value,
                           });
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
                         }
                       }}
                     />
@@ -206,8 +215,13 @@ const SectionBankInfo = (props) => {
                       type="number"
                       value={dataForm.accountNumber}
                       placeholder={"Número de cuenta"}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
                       onChange={(e) => {
-                        if (e.target.value.length <= 11) {
+                        if (e.target.value.length <= 30) {
                           setDataForm({
                             ...dataForm,
                             accountNumber: e.target.value,
