@@ -27,7 +27,7 @@ const SectionPaymentPolicy = ({
 }) => {
   return (
     <div className="content-typeform-formulary">
-      <h3>Pago en linea de Póliza Jurídica</h3>
+      <h3>Pago en línea de Póliza Jurídica</h3>
       <Row>
         <Col span={9} xs={{ span: 24 }} md={{ span: 9 }} />
         <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
