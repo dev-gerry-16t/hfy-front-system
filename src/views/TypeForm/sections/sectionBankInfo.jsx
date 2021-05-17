@@ -3,6 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import { Input, Row, Col, Select, Radio, DatePicker, Alert } from "antd";
+import admiration from "../../../assets/icons/exclaim.svg";
 
 const { Option } = Select;
 
@@ -28,6 +29,7 @@ const SectionBankInfo = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
+  const [isCorrectClabe, setIsCorrectClabe] = useState(null);
 
   const DescriptionItem = ({ title, content }) => (
     <div
@@ -40,16 +42,14 @@ const SectionBankInfo = (props) => {
     </div>
   );
 
-  const parseDataClabe = (str, data) => {
+  const parseDataClabe = (str) => {
     if (isNil(str) === false) {
       const bank = str.slice(0, 3);
       if (bank.length === 3) {
         onSearchBank(bank);
+      } else if (bank.length < 3) {
+        onSearchBank("000");
       }
-      setDataForm({
-        ...data,
-        clabeNumber: str,
-      });
     }
   };
   const setAsyncInformation = async (data) => {
@@ -57,7 +57,7 @@ const SectionBankInfo = (props) => {
       await setDataForm({
         ...data,
       });
-      parseDataClabe(data.clabeNumber, data);
+      parseDataClabe(data.clabeNumber);
     }
   };
 
@@ -72,6 +72,13 @@ const SectionBankInfo = (props) => {
         idBank: dataBank[0].idBank,
         idBankText: dataBank[0].bankName,
       });
+    } else {
+      setDataForm({
+        ...dataForm,
+        idBank: null,
+        idBankText: null,
+      });
+      setIsCorrectClabe(false);
     }
   }, [dataBank]);
 
@@ -139,22 +146,54 @@ const SectionBankInfo = (props) => {
               <>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <Input
-                      value={dataForm.clabeNumber}
-                      placeholder={"CLABE interbancaria"}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 18) {
-                          parseDataClabe(e.target.value, dataForm);
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.keyCode === 109 || e.keyCode === 107) {
-                          e.preventDefault();
-                        }
-                      }}
-                      type="number"
-                      min="0"
-                    />
+                    <div>
+                      <Input
+                        value={dataForm.clabeNumber}
+                        placeholder={"CLABE interbancaria (18 dígitos)"}
+                        onChange={(e) => {
+                          if (e.target.value.length <= 18) {
+                            if (e.target.value.length < 18) {
+                              setIsCorrectClabe(false);
+                            } else {
+                              setIsCorrectClabe(true);
+                            }
+                            if (e.target.value.length === 18) {
+                              parseDataClabe(e.target.value);
+                            }
+                            setDataForm({
+                              ...dataForm,
+                              clabeNumber: e.target.value,
+                            });
+                          }
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.keyCode === 109 || e.keyCode === 107) {
+                            e.preventDefault();
+                          }
+                        }}
+                        onBlur={() => {
+                          parseDataClabe(dataForm.clabeNumber);
+                        }}
+                        type="number"
+                        min="0"
+                      />
+                      {isCorrectClabe === false && (
+                        <div
+                          style={{
+                            background: "#FFF4EC",
+                            borderRadius: "0px 0px 10px 10px",
+                            padding: "0px 10px",
+                          }}
+                        >
+                          <img src={admiration} alt="exclaim" />
+                          <span
+                            style={{ marginLeft: "10px", color: "#CF6E23" }}
+                          >
+                            CLABE no válida
+                          </span>
+                        </div>
+                      )}
+                    </div>
                   </Col>
                   <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
