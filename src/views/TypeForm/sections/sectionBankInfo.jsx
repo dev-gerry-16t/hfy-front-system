@@ -30,7 +30,6 @@ const SectionBankInfo = (props) => {
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
   const [isCorrectClabe, setIsCorrectClabe] = useState(null);
-
   const DescriptionItem = ({ title, content }) => (
     <div
       className="site-description-item-profile-wrapper"
@@ -72,6 +71,7 @@ const SectionBankInfo = (props) => {
         idBank: dataBank[0].idBank,
         idBankText: dataBank[0].bankName,
       });
+      setIsCorrectClabe(true);
     } else {
       setDataForm({
         ...dataForm,
@@ -189,7 +189,7 @@ const SectionBankInfo = (props) => {
                           <span
                             style={{ marginLeft: "10px", color: "#CF6E23" }}
                           >
-                            CLABE no válida
+                            CLABE no valida
                           </span>
                         </div>
                       )}
