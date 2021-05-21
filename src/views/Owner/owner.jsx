@@ -26,6 +26,7 @@ import {
   callGetContractComment,
   callAddDocumentContractId,
   callGetPropertyTypes,
+  callGetRequestAdvancePymtPlan,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -64,6 +65,7 @@ const Owner = (props) => {
     callGetContractComment,
     callAddDocumentContractId,
     callGetPropertyTypes,
+    callGetRequestAdvancePymtPlan,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -72,6 +74,7 @@ const Owner = (props) => {
   const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
   const [dataPersonType, setDataPersonType] = useState([]);
   const [dataDepartment, setDataDepartment] = useState([]);
+  const [dataAdvancePymtPlan, setDataAdvancePymtPlan] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataTenant, setDataTenant] = useState([]);
@@ -82,9 +85,8 @@ const Owner = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
   const [isVisibleContract, setIsVisibleContract] = useState(false);
-  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] = useState(
-    false
-  );
+  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] =
+    useState(false);
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
 
@@ -605,6 +607,30 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallGetRequestAdvancePymtPlan = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestAdvancePymtPlan({
+        ...data,
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataAdvancePymtPlan(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -708,6 +734,20 @@ const Owner = (props) => {
         spinVisible={spinVisible}
         dataTenant={dataTenant}
         dataBank={dataBank}
+        dataAdvancePymtInfo={
+          isEmpty(dataAdvancePymtPlan) === false &&
+          isNil(dataAdvancePymtPlan[0]) === false &&
+          isNil(dataAdvancePymtPlan[0][0]) === false
+            ? dataAdvancePymtPlan[0][0]
+            : {}
+        }
+        dataAdvancePymtTable={
+          isEmpty(dataAdvancePymtPlan) === false &&
+          isNil(dataAdvancePymtPlan[1]) === false
+            ? dataAdvancePymtPlan[1]
+            : []
+        }
+        onCallAdvancePymtPlan={handlerCallGetRequestAdvancePymtPlan}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -741,7 +781,6 @@ const Owner = (props) => {
                   onClick={async () => {
                     setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
                     await handlerCallTenantCatalog();
-                    await handlerCallBankCatalog();
                   }}
                 >
                   <span>Adelanto de renta</span>
@@ -846,6 +885,8 @@ const mapDispatchToProps = (dispatch) => ({
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
   callGetPropertyTypes: (data) => dispatch(callGetPropertyTypes(data)),
+  callGetRequestAdvancePymtPlan: (data) =>
+    dispatch(callGetRequestAdvancePymtPlan(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
