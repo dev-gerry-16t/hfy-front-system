@@ -767,19 +767,25 @@
 }
 
 .total-advancement-amount {
+  margin-top: 20px;
   display: flex !important;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   position: relative !important;
-  div {
+  .content-amount {
     display: flex;
+    flex-direction: column;
     position: relative;
     bottom: 15px;
     strong {
       position: relative;
       top: 8px;
       margin-left: 5px;
+    }
+    div {
+      display: flex;
+      justify-content: center;
     }
   }
 }
