@@ -312,13 +312,15 @@ const Owner = (props) => {
           ? response.response
           : {};
       setSpinVisible(false);
-      setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
     } catch (error) {
       setSpinVisible(false);
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -727,9 +729,13 @@ const Owner = (props) => {
         onClose={() => {
           setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
         }}
-        onClickAdvancement={(data) => {
-          setSpinVisible(true);
-          handlerCallRequestAdvancement(data);
+        onClickAdvancement={async (data) => {
+          try {
+            setSpinVisible(true);
+            await handlerCallRequestAdvancement(data);
+          } catch (error) {
+            throw error;
+          }
         }}
         spinVisible={spinVisible}
         dataTenant={dataTenant}
