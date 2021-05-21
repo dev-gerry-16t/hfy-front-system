@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import NumberFormat from "react-number-format";
 import { Input, Row, Col, Select, Tooltip, Radio, Alert } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -17,6 +17,7 @@ const CurrentAddressRenter = (props) => {
     dataZipCodeAdress,
     dataPropertyTypes,
     dataProperties,
+    dataCommercialActivity,
   } = props;
   const initialForm = {
     isOwner: null,
@@ -35,6 +36,7 @@ const CurrentAddressRenter = (props) => {
     maintenanceAmount: null,
     totalParkingSpots: null,
     hasInsurance: null,
+    idCommercialActivity: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
@@ -312,6 +314,49 @@ const CurrentAddressRenter = (props) => {
                       );
                     })}
                 </Select>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                <Select
+                  placeholder="Actividad comercial del inmueble"
+                  value={dataForm.idCommercialActivity}
+                  onChange={(value, option) => {
+                    setDataForm({
+                      ...dataForm,
+                      idCommercialActivity: value,
+                    });
+                  }}
+                >
+                  {isEmpty(dataCommercialActivity) === false &&
+                    dataCommercialActivity.map((row) => {
+                      return (
+                        <Option
+                          value={row.idCommercialActivity}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </Col>
+              <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
+                <Tooltip
+                  placement="top"
+                  title="Indica la actividad sólo si tu propiedad sera rentada con uso comercial."
+                >
+                  <div
+                    style={{
+                      padding: "5px 0px 0px 5px",
+                      textAlign: "center",
+                    }}
+                  >
+                    <QuestionCircleOutlined />
+                  </div>
+                </Tooltip>
               </Col>
             </Row>
             <Row>
