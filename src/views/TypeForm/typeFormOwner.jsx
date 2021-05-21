@@ -30,6 +30,7 @@ import {
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
   callPostPaymentService,
+  callGetAllCommercialActivities,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -59,6 +60,7 @@ const TypeFormOwner = (props) => {
     callGetAllCommercialSocietyTypes,
     callGetAllStates,
     callPostPaymentService,
+    callGetAllCommercialActivities,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
@@ -76,6 +78,7 @@ const TypeFormOwner = (props) => {
   const [dataPolicyMethods, setDataPolicyMethods] = useState([]);
   const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
   const [dataStates, setDataStates] = useState([]);
+  const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -409,6 +412,7 @@ const TypeFormOwner = (props) => {
       content: (
         <CurrentAddressRenter
           dataProperties={dataProperties}
+          dataCommercialActivity={dataCommercialActivity}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
           onClickNext={async (data) => {
@@ -632,6 +636,27 @@ const TypeFormOwner = (props) => {
     }
   };
 
+  const handlerCallGetAllCommercialActivities = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllCommercialActivities({
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataCommercialActivity(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallAsyncApis = async () => {
     await handlerCallGetTypeFormTenant();
     await handlerCallGetMaritalStatus();
@@ -639,6 +664,7 @@ const TypeFormOwner = (props) => {
     await handlerCallGetPolicies();
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
+    handlerCallGetAllCommercialActivities();
   };
 
   useEffect(() => {
@@ -727,6 +753,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAllCommercialSocietyTypes(data)),
   callGetAllStates: (data) => dispatch(callGetAllStates(data)),
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
+  callGetAllCommercialActivities: (data) =>
+    dispatch(callGetAllCommercialActivities(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);
