@@ -346,7 +346,7 @@ const CurrentAddressRenter = (props) => {
               <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
                 <Tooltip
                   placement="top"
-                  title="Indica la actividad sólo si tu propiedad sera rentada con uso comercial."
+                  title="Indica la actividad sólo si tu propiedad será rentada con uso comercial."
                 >
                   <div
                     style={{
