@@ -47,11 +47,12 @@ const SectionAdvancement = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialDataForm);
   const [property, setProperty] = useState(null);
-  const [inputValue, setInputValue] = useState(0);
+  const [inputValue, setInputValue] = useState(null);
   const [inputMinValue, setInputMinValue] = useState(0);
   const [inputMaxValue, setInputMaxValue] = useState(0);
   const [viewSummary, setViewSummary] = useState(false);
   const [viewSuccessAdvancement, setViewSuccessAdvancement] = useState(false);
+  const [dataCatalogRents, setDataCatalogRents] = useState(false);
 
   const LoadingSpin = <SyncOutlined spin />;
 
@@ -105,18 +106,9 @@ const SectionAdvancement = (props) => {
                           currentRentFormat: dataSelect.currentRentAmount,
                           idContract: dataSelect.idContract,
                         });
-                        setInputMinValue(
-                          isEmpty(valuesInput) === false &&
-                            isNil(valuesInput[0]) === false
-                            ? valuesInput[0].id
-                            : 0
-                        );
-                        setInputMaxValue(
-                          isEmpty(valuesInput) === false &&
-                            isNil(valuesInput[1]) === false
-                            ? valuesInput[1].id
-                            : 0
-                        );
+                        setInputMinValue(1);
+                        setInputMaxValue(dataSelect.maximunAdvanceRents);
+                        setDataCatalogRents(valuesInput);
                       }}
                     >
                       {isEmpty(dataTenant) === false &&
@@ -167,33 +159,34 @@ const SectionAdvancement = (props) => {
                   </Col>
                 </Row>
                 <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                     <Select
-                      placeholder="Rentas adelantadas"
-                      value={dataForm.advanceRents}
+                      placeholder="¿En que plazo quieres pagar el préstamo del adelanto de renta?"
+                      value={inputValue}
                       onChange={(value, option) => {
+                        setInputValue(value);
                         setDataForm({
                           ...dataForm,
-                          advanceRents: value,
-                          totalRentsRequested: value,
+                          advanceRents: 1,
+                          totalRentsRequested: 1,
                         });
-                        setInputValue(inputMinValue);
-                        onCallAdvancePymtPlan({
-                          idContract: dataForm.idContract,
-                          totalRentsRequested: value,
-                          totalPeriod: inputMinValue,
-                        });
+                        if (isNil(dataForm.advanceRents) === false) {
+                          onCallAdvancePymtPlan({
+                            idContract: dataForm.idContract,
+                            totalRentsRequested: 1,
+                            totalPeriod: value,
+                          });
+                        }
                       }}
                     >
-                      <Option value={1}>1</Option>
-                      <Option value={2}>2</Option>
-                      <Option value={3}>3</Option>
+                      {isEmpty(dataCatalogRents) === false &&
+                        dataCatalogRents.map((row, ix) => {
+                          return <Option value={row.id}>{row.text}</Option>;
+                        })}
                     </Select>
                   </Col>
                 </Row>
-                <p>
-                  ¿En que plazo quieres pagar el préstamo del adelanto de renta?
-                </p>
+                <p>¿Cuantos adelantos de renta solicitas?</p>
                 <Row>
                   <Col span={20}>
                     <Slider
@@ -202,19 +195,25 @@ const SectionAdvancement = (props) => {
                       disabled={
                         inputMinValue == 0 ||
                         inputMaxValue === 0 ||
-                        isNil(dataForm.advanceRents) === true
+                        isNil(inputValue) === true
                       }
                       onChange={(value) => {
-                        setInputValue(value);
-                        if (isNil(dataForm.advanceRents) === false) {
-                          onCallAdvancePymtPlan({
-                            idContract: dataForm.idContract,
-                            totalRentsRequested: dataForm.advanceRents,
-                            totalPeriod: value,
-                          });
-                        }
+                        setDataForm({
+                          ...dataForm,
+                          advanceRents: value,
+                          totalRentsRequested: value,
+                        });
+                        onCallAdvancePymtPlan({
+                          idContract: dataForm.idContract,
+                          totalRentsRequested: value,
+                          totalPeriod: inputValue,
+                        });
                       }}
-                      value={typeof inputValue === "number" ? inputValue : 0}
+                      value={
+                        typeof dataForm.advanceRents === "number"
+                          ? dataForm.advanceRents
+                          : 0
+                      }
                     />
                   </Col>
                   <Col span={4}>
@@ -227,16 +226,18 @@ const SectionAdvancement = (props) => {
                         isNil(dataForm.advanceRents) === true
                       }
                       style={{ margin: "0 16px" }}
-                      value={inputValue}
+                      value={dataForm.advanceRents}
                       onChange={(value) => {
-                        setInputValue(value);
-                        if (isNil(dataForm.advanceRents) === false) {
-                          onCallAdvancePymtPlan({
-                            idContract: dataForm.idContract,
-                            totalRentsRequested: dataForm.advanceRents,
-                            totalPeriod: value,
-                          });
-                        }
+                        setDataForm({
+                          ...dataForm,
+                          advanceRents: value,
+                          totalRentsRequested: value,
+                        });
+                        onCallAdvancePymtPlan({
+                          idContract: dataForm.idContract,
+                          totalRentsRequested: value,
+                          totalPeriod: inputValue,
+                        });
                       }}
                     />
                   </Col>
@@ -463,7 +464,7 @@ const SectionAdvancement = (props) => {
                       });
                       setViewSuccessAdvancement(true);
                       setDataForm(initialDataForm);
-                      setInputValue(0);
+                      setInputValue(null);
                       setInputMinValue(0);
                       setInputMaxValue(0);
                       setTimeout(() => {

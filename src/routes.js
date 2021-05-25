@@ -23,6 +23,9 @@ const RequestProviders = React.lazy(() =>
   import("./views/RequestServices/requestServices")
 );
 const Incidences = React.lazy(() => import("./views/Incidences/incidences"));
+const AdvancementRent = React.lazy(() =>
+  import("./views/AdvancementRent/advancementRent")
+);
 
 const routes = [
   {
@@ -159,6 +162,14 @@ const routes = [
     path: "/websystem/dashboard-incidences",
     name: "Incidencias Reportadas",
     component: Incidences,
+    exact: true,
+  },
+  {
+    key: "16",
+    id: "Adelantos de renta",
+    path: "/websystem/dashboard-advancement",
+    name: "Adelantos de renta",
+    component: AdvancementRent,
     exact: true,
   },
 ];
