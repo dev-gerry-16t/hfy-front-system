@@ -35,6 +35,7 @@ import IconWallet from "../../assets/icons/wallet.svg";
 import IconProvider from "../../assets/icons/IconProvider.svg";
 import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
+import IconTicket from "../../assets/icons/IconTicket.svg";
 import SD_ALERT_31 from "../../assets/files/SD_ALERT_31.mp3";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
@@ -86,6 +87,7 @@ const DefaultLayout = (props) => {
     IconProvider,
     IconRequest,
     IconDeal,
+    IconTicket,
   };
 
   const nameLocation = () => {
