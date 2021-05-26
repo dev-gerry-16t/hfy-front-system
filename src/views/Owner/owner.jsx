@@ -83,6 +83,7 @@ const Owner = (props) => {
   const [dataPersonType, setDataPersonType] = useState([]);
   const [dataDepartment, setDataDepartment] = useState([]);
   const [dataAdvancePymtPlan, setDataAdvancePymtPlan] = useState([]);
+  const [dataAdvancePymtPlanTable, setDataAdvancePymtPlanTable] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataTenant, setDataTenant] = useState([]);
@@ -318,7 +319,7 @@ const Owner = (props) => {
           } = dataDetail;
           const dataViewDocument =
             await handlerCallGetRequestAdvancePymtProperties(
-              dataDetail.idRequestAdvancePymt,
+              idRequestAdvancePymt,
               {
                 idDocument,
                 idDocumentType,
@@ -755,7 +756,21 @@ const Owner = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : [];
-      setDataAdvancePymtPlan(responseResult);
+
+      const responseResultData =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0][0]) === false
+          ? responseResult[0][0]
+          : {};
+
+      const responseResultTable =
+        isEmpty(responseResult) === false && isNil(responseResult[1]) === false
+          ? responseResult[1]
+          : [];
+
+      setDataAdvancePymtPlan(responseResultData);
+      setDataAdvancePymtPlanTable(responseResultTable);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -912,6 +927,8 @@ const Owner = (props) => {
         isModalVisible={isModalVisibleAdvancement}
         onClose={() => {
           setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
+          setDataAdvancePymtPlan({});
+          setDataAdvancePymtPlanTable([]);
         }}
         onClickAdvancement={async (data) => {
           try {
@@ -924,19 +941,8 @@ const Owner = (props) => {
         spinVisible={spinVisible}
         dataTenant={dataTenant}
         dataBank={dataBank}
-        dataAdvancePymtInfo={
-          isEmpty(dataAdvancePymtPlan) === false &&
-          isNil(dataAdvancePymtPlan[0]) === false &&
-          isNil(dataAdvancePymtPlan[0][0]) === false
-            ? dataAdvancePymtPlan[0][0]
-            : {}
-        }
-        dataAdvancePymtTable={
-          isEmpty(dataAdvancePymtPlan) === false &&
-          isNil(dataAdvancePymtPlan[1]) === false
-            ? dataAdvancePymtPlan[1]
-            : []
-        }
+        dataAdvancePymtInfo={dataAdvancePymtPlan}
+        dataAdvancePymtTable={dataAdvancePymtPlanTable}
         onCallAdvancePymtPlan={handlerCallGetRequestAdvancePymtPlan}
       />
       <div className="margin-app-main">

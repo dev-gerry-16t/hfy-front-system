@@ -36,6 +36,7 @@ const SectionAdvancementDetail = (props) => {
     dataDetailTableAdvancement,
     dataStatus,
     onSendInformation,
+    onGetDocument,
   } = props;
 
   const initialState = { idRequestAdvancePymtStatus: null };
@@ -160,11 +161,45 @@ const SectionAdvancementDetail = (props) => {
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <DescriptionItem
-                title="Interés por atraso"
+                title="Interés moratorio"
                 content={dataForm.interestArrearsBase}
               />
             </Col>
           </Row>
+          {isNil(dataForm.idDocument) === false && (
+            <Row>
+              <Col span={14} xs={{ span: 24 }} md={{ span: 14 }}>
+                <DescriptionItem
+                  title="Contrato de adelanto de renta"
+                  content={
+                    <Button
+                      type="link"
+                      size="small"
+                      onClick={async () => {
+                        try {
+                          const {
+                            idDocument,
+                            idDocumentType,
+                            idPreviousDocument,
+                            bucketSource,
+                            idRequestAdvancePymt,
+                          } = dataForm;
+                          await onGetDocument(idRequestAdvancePymt, {
+                            idDocument,
+                            idDocumentType,
+                            idPreviousDocument,
+                            bucketSource,
+                          });
+                        } catch (error) {}
+                      }}
+                    >
+                      Descargar
+                    </Button>
+                  }
+                />
+              </Col>
+            </Row>
+          )}
           <p style={{ fontSize: 15 }}>Información bancaria</p>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -218,7 +253,7 @@ const SectionAdvancementDetail = (props) => {
                   }}
                 >
                   <tr>
-                    <th>No. de pago</th>
+                    <th>Pago</th>
                     <th>Total del pago</th>
                     <th>Total a interés</th>
                     <th>Total a capital</th>

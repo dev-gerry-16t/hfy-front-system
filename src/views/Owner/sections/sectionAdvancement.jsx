@@ -72,7 +72,7 @@ const SectionAdvancement = (props) => {
               type="button"
               onClick={() => {
                 onClose();
-                setInputValue(0);
+                setInputValue(null);
                 setInputMinValue(0);
                 setInputMaxValue(0);
                 setDataForm(initialDataForm);
@@ -170,13 +170,11 @@ const SectionAdvancement = (props) => {
                           advanceRents: 1,
                           totalRentsRequested: 1,
                         });
-                        if (isNil(dataForm.advanceRents) === false) {
-                          onCallAdvancePymtPlan({
-                            idContract: dataForm.idContract,
-                            totalRentsRequested: 1,
-                            totalPeriod: value,
-                          });
-                        }
+                        onCallAdvancePymtPlan({
+                          idContract: dataForm.idContract,
+                          totalRentsRequested: 1,
+                          totalPeriod: value,
+                        });
                       }}
                     >
                       {isEmpty(dataCatalogRents) === false &&
@@ -198,16 +196,18 @@ const SectionAdvancement = (props) => {
                         isNil(inputValue) === true
                       }
                       onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          advanceRents: value,
-                          totalRentsRequested: value,
-                        });
-                        onCallAdvancePymtPlan({
-                          idContract: dataForm.idContract,
-                          totalRentsRequested: value,
-                          totalPeriod: inputValue,
-                        });
+                        if (isNil(inputValue) === false) {
+                          setDataForm({
+                            ...dataForm,
+                            advanceRents: value,
+                            totalRentsRequested: value,
+                          });
+                          onCallAdvancePymtPlan({
+                            idContract: dataForm.idContract,
+                            totalRentsRequested: value,
+                            totalPeriod: inputValue,
+                          });
+                        }
                       }}
                       value={
                         typeof dataForm.advanceRents === "number"
@@ -228,16 +228,18 @@ const SectionAdvancement = (props) => {
                       style={{ margin: "0 16px" }}
                       value={dataForm.advanceRents}
                       onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          advanceRents: value,
-                          totalRentsRequested: value,
-                        });
-                        onCallAdvancePymtPlan({
-                          idContract: dataForm.idContract,
-                          totalRentsRequested: value,
-                          totalPeriod: inputValue,
-                        });
+                        if (isNil(inputValue) === false) {
+                          setDataForm({
+                            ...dataForm,
+                            advanceRents: value,
+                            totalRentsRequested: value,
+                          });
+                          onCallAdvancePymtPlan({
+                            idContract: dataForm.idContract,
+                            totalRentsRequested: value,
+                            totalPeriod: inputValue,
+                          });
+                        }
                       }}
                     />
                   </Col>
@@ -512,7 +514,7 @@ const SectionAdvancement = (props) => {
                 </svg>
               </div>
               <span style={{ fontFamily: "Poppins" }}>
-                Se evaluara tu solicitud de adelanto de renta y te informaremos
+                Se evaluará tu solicitud de adelanto de renta y te informaremos
                 del siguiente paso para poder recibir tu préstamo.
               </span>
             </div>
