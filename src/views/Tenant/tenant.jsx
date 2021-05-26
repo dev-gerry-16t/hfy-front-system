@@ -909,6 +909,28 @@ const Tenant = (props) => {
               cancelButton={() => {
                 setIsVisibleBannerMove(false);
               }}
+              titleCustom="Contrato de servicio de mudanza"
+              titleSectionSignature="Firma de Contrato de servicio"
+              componentTerms={
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "black",
+                    marginBottom: 10,
+                  }}
+                >
+                  Acepto los términos publicados en la pagina{" "}
+                  <a
+                    href="https://www.homify.ai/aviso-de-privacidad"
+                    target="__blank"
+                  >
+                    https://www.homify.ai/aviso-de-privacidad
+                  </a>{" "}
+                  así como lo descrito en el contrato de servicio
+                </span>
+              }
               name={urlContract.fullNameTenant}
               onSignContract={async (data) => {
                 try {
