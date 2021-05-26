@@ -71,6 +71,7 @@ const API_CONSTANTS = {
   GET_AGENT_CONTRACT_COINCIDENCES: `${API.API_SECURE}/customer/getAgentContractCoincidences`,
   GET_AGENT_COMISSION_CHART: `${API.API_SECURE}/customer/getAgentCommissionChart`,
   GET_REQUEST_ADVANCE_PYMT_PLAN: `${API.API_SECURE}/customer/getRequestAdvancePymtPlan`,
+  GET_REQUEST_ADVANCE_PYMT_PROPERTIES: `${API.API_SECURE}/customer/getRequestAdvancePymtProperties`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
   SET_IMAGE_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/setUserProfile/`,
