@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Layout, Table, message } from "antd";
+import moment from "moment";
 import { EyeTwoTone, EyeInvisibleOutlined } from "@ant-design/icons";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -12,6 +13,7 @@ import {
   callGetRequestAdvancePymtById,
   callGetAllRequestAdvancePymtStatus,
   callUpdateRequestAdvancePym,
+  callGetRequestAdvancePymtProperties,
 } from "../../utils/actions/actions";
 import SectionAdvancementDetail from "./sections/sectionAdvancementDetail";
 
@@ -24,6 +26,7 @@ const AdvancementRent = (props) => {
     callGetRequestAdvancePymtById,
     callGetAllRequestAdvancePymtStatus,
     callUpdateRequestAdvancePym,
+    callGetRequestAdvancePymtProperties,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataDetailAdvancement, setDataDetailAdvancement] = useState({});
@@ -152,6 +155,54 @@ const AdvancementRent = (props) => {
     }
   };
 
+  const handlerCallGetRequestAdvancePymtProperties = async (id, data, name) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestAdvancePymtProperties({
+        ...data,
+        idRequestAdvancePymt: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      if (isEmpty(responseResult) === false) {
+        const { token } = dataProfile;
+        const response = await fetch(`${ENVIROMENT}${responseResult.url}`, {
+          method: "GET",
+        });
+        if (isNil(response.status) === false && response.status !== 200) {
+          const responseResult = await response.json();
+          const responseText =
+            isNil(responseResult) === false &&
+            isNil(responseResult.response) === false &&
+            isNil(responseResult.response.statusText) === false
+              ? responseResult.response.statusText
+              : "";
+          throw responseText;
+        }
+        const label = `${name}_${moment().format("YYYYMMDD-HHmm")}`;
+        const blob = await response.blob();
+        const link = document.createElement("a");
+        link.className = "download";
+        link.download = `${label}.${"docx"}`;
+        link.href = URL.createObjectURL(blob);
+        document.body.appendChild(link);
+        link.click();
+        link.parentElement.removeChild(link);
+      }
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetRequestAdvancePymtCoincidences();
   }, []);
@@ -225,10 +276,12 @@ const AdvancementRent = (props) => {
         isModalVisible={isVisibleDetail}
         onClose={() => {
           setIsVisibleDetail(!isVisibleDetail);
+          handlerCallGetRequestAdvancePymtCoincidences();
         }}
         onSendInformation={async (data, id) => {
           try {
             await handlerCallUpdateRequestAdvancePym(data, id);
+            handlerCallGetRequestAdvancePymtCoincidences();
           } catch (error) {
             throw error;
           }
@@ -236,6 +289,17 @@ const AdvancementRent = (props) => {
         dataDetailAdvancement={dataDetailAdvancement}
         dataDetailTableAdvancement={dataDetailTableAdvancement}
         dataStatus={dataStatus}
+        onGetDocument={async (id, data) => {
+          try {
+            await handlerCallGetRequestAdvancePymtProperties(
+              id,
+              data,
+              "Contrato_adelanto"
+            );
+          } catch (error) {
+            throw error;
+          }
+        }}
       />
       <div className="margin-app-main">
         <div className="main-information-user-admin">
@@ -275,6 +339,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAllRequestAdvancePymtStatus(data)),
   callUpdateRequestAdvancePym: (data, id) =>
     dispatch(callUpdateRequestAdvancePym(data, id)),
+  callGetRequestAdvancePymtProperties: (data) =>
+    dispatch(callGetRequestAdvancePymtProperties(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdvancementRent);
