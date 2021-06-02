@@ -60,6 +60,8 @@ const SectionInfoUser = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
+  const [dataImage, setDataImage] = useState(null);
+  const [dataImageLegal, setDataImageLegal] = useState(null);
   const [visibleComponents, setVisibleComponents] = useState({
     givenName: true,
     lastName: true,
@@ -361,6 +363,19 @@ const SectionInfoUser = (props) => {
               visibleComponents.idType === true &&
               visibleComponents.idTypeNumber === true && (
                 <>
+                  {isNil(dataImage) === false && (
+                    <Row>
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                      <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                        <img
+                          src={`data:image/jpeg;base64,${dataImage}`}
+                          alt="Referencia-imagen"
+                          width="350"
+                        />
+                      </Col>
+                      <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                    </Row>
+                  )}
                   <Row>
                     <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
                       <Select
@@ -406,6 +421,7 @@ const SectionInfoUser = (props) => {
                             isRequiresPlaceOfIssue:
                               valueSelect.requiresPlaceOfIssue,
                           });
+                          setDataImage(valueSelect.imageReference);
                         }}
                         filterOption={(input, option) =>
                           option.children
@@ -727,6 +743,19 @@ const SectionInfoUser = (props) => {
                     />
                   </Col>
                 </Row>
+                {isNil(dataImageLegal) === false && (
+                  <Row>
+                    <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                    <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                      <img
+                        src={`data:image/jpeg;base64,${dataImageLegal}`}
+                        alt="Referencia-imagen"
+                        width="350"
+                      />
+                    </Col>
+                    <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                  </Row>
+                )}
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <Select
@@ -742,6 +771,7 @@ const SectionInfoUser = (props) => {
                           legalRepFieldDescription:
                             valueSelect.fieldDescription,
                         });
+                        setDataImageLegal(valueSelect.imageReference);
                       }}
                       filterOption={(input, option) =>
                         option.children

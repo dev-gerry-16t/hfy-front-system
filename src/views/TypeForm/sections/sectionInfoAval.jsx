@@ -91,6 +91,7 @@ const SectionInfoAval = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isOpenInput, setIsOpenInput] = useState(false);
+  const [dataImage, setDataImage] = useState(null);
   const [isOpenInputEndorsement, setIsOpenInputEndorsement] = useState(false);
   const [isOpenSelectRegime, setIsOpenSelectRegime] = useState(false);
   const [confirmData, setConfirmData] = useState(false);
@@ -404,6 +405,19 @@ const SectionInfoAval = (props) => {
                         />
                       </Col>
                     </Row>
+                    {isNil(dataImage) === false && (
+                      <Row>
+                        <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                        <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                          <img
+                            src={`data:image/jpeg;base64,${dataImage}`}
+                            alt="Referencia-imagen"
+                            width="350"
+                          />
+                        </Col>
+                        <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
+                      </Row>
+                    )}
                     <Row>
                       <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
                         <Select
@@ -450,6 +464,7 @@ const SectionInfoAval = (props) => {
                               isRequiresPlaceOfIssue:
                                 valueSelect.requiresPlaceOfIssue,
                             });
+                            setDataImage(valueSelect.imageReference);
                           }}
                           filterOption={(input, option) =>
                             option.children
@@ -1075,9 +1090,8 @@ const SectionInfoAval = (props) => {
                               onChange={(momentFormat, date) => {
                                 setDataForm({
                                   ...dataForm,
-                                  assessmentDate: moment(momentFormat).format(
-                                    "YYYY-MM-DD"
-                                  ),
+                                  assessmentDate:
+                                    moment(momentFormat).format("YYYY-MM-DD"),
                                 });
                               }}
                               format="DD MMMM YYYY"
@@ -1123,11 +1137,8 @@ const SectionInfoAval = (props) => {
                               disable={false}
                               placeholder="Monto del Gravamen"
                               onValueChange={(values) => {
-                                const {
-                                  formattedValue,
-                                  value,
-                                  floatValue,
-                                } = values;
+                                const { formattedValue, value, floatValue } =
+                                  values;
                                 setDataForm({
                                   ...dataForm,
                                   endorsementAssessment: floatValue,
@@ -1217,9 +1228,8 @@ const SectionInfoAval = (props) => {
                           onChange={(momentFormat, date) => {
                             setDataForm({
                               ...dataForm,
-                              documentSignedAt: moment(momentFormat).format(
-                                "YYYY-MM-DD"
-                              ),
+                              documentSignedAt:
+                                moment(momentFormat).format("YYYY-MM-DD"),
                             });
                           }}
                           format="DD MMMM YYYY"
