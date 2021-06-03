@@ -68,6 +68,8 @@ const API_CONSTANTS = {
   GET_AGENT_INDICATORS: `${API.API_SECURE}/customer/getAgentIndicators`,
   GET_AGENT_CONTRACT_COINCIDENCES: `${API.API_SECURE}/customer/getAgentContractCoincidences`,
   GET_AGENT_COMISSION_CHART: `${API.API_SECURE}/customer/getAgentCommissionChart`,
+  UPDATE_INVITATION: `${API.API_SECURE}/customer/updateInvitation/`,
+  GET_PROPERTY_COINCIDENCES: `${API.API_SECURE}/customer/getPropertyCoincidences`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
   SET_IMAGE_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/setUserProfile/`,

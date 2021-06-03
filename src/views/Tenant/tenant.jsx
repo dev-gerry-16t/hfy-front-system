@@ -10,6 +10,7 @@ import {
   Dropdown,
   Menu,
   Button,
+  Alert,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -51,6 +52,7 @@ import {
   callUpdateIncidence,
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
+  callUpdateInvitation,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -91,12 +93,12 @@ const Tenant = (props) => {
     callUpdateIncidence,
     callGetRequestProviderPropierties,
     callSignRequestForProvider,
+    callUpdateInvitation,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
-  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
-    false
-  );
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
+    useState(false);
   const [dataProviders, setDataProviders] = useState([]);
   const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
   const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
@@ -360,12 +362,8 @@ const Tenant = (props) => {
   };
 
   const handlerCallGetAllCustomerTenantById = async () => {
-    const {
-      idCustomer,
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenant,
-    } = dataProfile;
+    const { idCustomer, idSystemUser, idLoginHistory, idCustomerTenant } =
+      dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -711,6 +709,33 @@ const Tenant = (props) => {
       );
       showMessageStatusApi(
         "¡Muy bien! has completado el proceso del servicio de mudanza, pronto estaremos contigo",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallUpdateInvitation = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          requestResend: true,
+          isActive: true,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
@@ -1109,9 +1134,9 @@ const Tenant = (props) => {
               <div className="title-cards flex-title-card">
                 <span>Propietario</span>
                 <div className="button_init_secondary">
-                  <button type="button" onClick={() => {}}>
+                  {/* <button type="button" onClick={() => {}}>
                     <span>Reportar Propietario</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="section-information-actions">
@@ -1254,6 +1279,33 @@ const Tenant = (props) => {
                   </div>
                 </div>
               </div>
+              {dataTenant.canRequestReminderToOwner === true && (
+                <div style={{ padding: 5, fontFamily: "Poppins" }}>
+                  <Alert
+                    message={
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>
+                          Tu propietario aún no se ha registrado, Si deseas
+                          enviarle un recordatorio haz clic en enviar
+                          recordatorio.
+                        </span>
+                        <Button
+                          type="link"
+                          onClick={async () => {
+                            await handlerCallUpdateInvitation(
+                              dataTenant.idInvitation
+                            );
+                            handlerCallGetAllCustomerTenantById();
+                          }}
+                        >
+                          Enviar recordatorio
+                        </Button>
+                      </div>
+                    }
+                    type="warning"
+                  />
+                </div>
+              )}
             </div>
           )}
         <CustomContentActions
@@ -1396,6 +1448,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestProviderPropierties(data)),
   callSignRequestForProvider: (data, id) =>
     dispatch(callSignRequestForProvider(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

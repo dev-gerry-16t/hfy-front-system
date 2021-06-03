@@ -82,9 +82,8 @@ const Owner = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
   const [isVisibleContract, setIsVisibleContract] = useState(false);
-  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] = useState(
-    false
-  );
+  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] =
+    useState(false);
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
 
@@ -268,6 +267,7 @@ const Owner = (props) => {
       );
     }
   };
+
   const handlerCallAddProperty = async (data) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -719,20 +719,6 @@ const Owner = (props) => {
             </span>
           </div>
           <div className="action-buttons-top">
-            {(dataCustomer.canRequestProperty === 1 ||
-              dataCustomer.canRequestProperty === true) && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlerCallGetPropertyTypes();
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>Registrar Propiedad</span>
-                </button>
-              </div>
-            )}
             {(dataCustomer.canRequestAdvanceRent === 1 ||
               dataCustomer.canRequestAdvanceRent === true) && (
               <div className="button_init_primary">

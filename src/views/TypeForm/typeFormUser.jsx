@@ -69,10 +69,8 @@ const TypeFormUser = (props) => {
   const [dataDocuments, setDataDocuments] = useState([]);
   const [dataDocumentsEndorsement, setDataDocumentsEndorsement] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
-  const [
-    dataZipCodeAdressEndorsement,
-    setDataZipCodeAdressEndorsement,
-  ] = useState({});
+  const [dataZipCodeAdressEndorsement, setDataZipCodeAdressEndorsement] =
+    useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataZipCatalogEndorsement, setDataZipCatalogEndorsement] = useState(
     []
@@ -115,12 +113,10 @@ const TypeFormUser = (props) => {
   };
 
   const handlerCallSetTypeFormTenant = async (data) => {
-    const {
-      idCustomerTenantTF,
-      idCustomerTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTenantTF, idCustomerTF, idSystemUser, idLoginHistory } =
+      dataProfile;
+    const { params } = match;
+    const idSection = params.idSection;
     try {
       const response = await callSetTypeFormTenant({
         idCustomer: idCustomerTF,
@@ -129,12 +125,32 @@ const TypeFormUser = (props) => {
         idLoginHistory,
         ...data,
       });
+
+      const responseComplete =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.isCompleted) === false
+          ? response.response.isCompleted
+          : "";
+      if (responseComplete === true) {
+        if (isNil(idSection) === false) {
+          if (dataProfile.idUserType === 1) {
+            history.push("/websystem/dashboard-admin");
+          } else if (dataProfile.idUserType === 5) {
+            history.push("/websystem/dashboard-attorney");
+          } else if (dataProfile.idUserType === 7) {
+            history.push("/websystem/dashboard-controldesk");
+          }
+        } else {
+          history.push("/websystem/dashboard-tenant");
+        }
+      }
+
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&
-        isNil(response.response[0]) === false &&
-        isNil(response.response[0].message) === false
-          ? response.response[0].message
+        isNil(response.response.message) === false
+          ? response.response.message
           : "";
       showMessageStatusApi(
         isEmpty(responseResult) === false
@@ -247,12 +263,8 @@ const TypeFormUser = (props) => {
   };
 
   const hanlderCallGetNationalities = async () => {
-    const {
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenantTF,
-      idCustomerTF,
-    } = dataProfile;
+    const { idSystemUser, idLoginHistory, idCustomerTenantTF, idCustomerTF } =
+      dataProfile;
     try {
       const response = await callGetNationalities({
         idCustomer: idCustomerTF,
@@ -275,12 +287,8 @@ const TypeFormUser = (props) => {
   };
 
   const hanlderCallGetIdTypes = async () => {
-    const {
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenantTF,
-      idCustomerTF,
-    } = dataProfile;
+    const { idSystemUser, idLoginHistory, idCustomerTenantTF, idCustomerTF } =
+      dataProfile;
     try {
       const response = await callGetIdTypes({
         idCustomer: idCustomerTF,
@@ -303,12 +311,8 @@ const TypeFormUser = (props) => {
   };
 
   const hanlderCallGetOccupations = async () => {
-    const {
-      idSystemUser,
-      idLoginHistory,
-      idCustomerTenantTF,
-      idCustomerTF,
-    } = dataProfile;
+    const { idSystemUser, idLoginHistory, idCustomerTenantTF, idCustomerTF } =
+      dataProfile;
     try {
       const response = await callGetOccupations({
         idCustomer: idCustomerTF,
@@ -379,12 +383,8 @@ const TypeFormUser = (props) => {
   };
 
   const handlerCallGetAllCommercialSocietyTypes = async () => {
-    const {
-      idCustomerTF,
-      idCustomerTenantTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTF, idCustomerTenantTF, idSystemUser, idLoginHistory } =
+      dataProfile;
     try {
       const response = await callGetAllCommercialSocietyTypes({
         idCustomer: idCustomerTF,
@@ -409,12 +409,8 @@ const TypeFormUser = (props) => {
   };
 
   const handlerCallGetAllStates = async () => {
-    const {
-      idCustomerTF,
-      idCustomerTenantTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTF, idCustomerTenantTF, idSystemUser, idLoginHistory } =
+      dataProfile;
     try {
       const response = await callGetAllStates({
         idCustomer: idCustomerTF,
@@ -439,12 +435,8 @@ const TypeFormUser = (props) => {
   };
 
   const handlerCallGetTypeFormDocumentTenant = async (data, type) => {
-    const {
-      idCustomerTenantTF,
-      idCustomerTF,
-      idSystemUser,
-      idLoginHistory,
-    } = dataProfile;
+    const { idCustomerTenantTF, idCustomerTF, idSystemUser, idLoginHistory } =
+      dataProfile;
     try {
       const response = await callGetTypeFormDocumentTenant({
         idCustomer: idCustomerTF,
