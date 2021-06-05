@@ -125,7 +125,7 @@ const SectionDocumentation = (props) => {
           </div>
           <div className="section-bottom-documentation">
             <CustomSubSectionCardDocument
-              title="últimos 3 comprobantes de ingreso"
+              title="últimos 3 estados bancarios"
               subtitle="N/A"
               visibleSubtitle={false}
             >
@@ -248,7 +248,7 @@ const SectionDocumentation = (props) => {
           </div>
           <div className="section-bottom-documentation">
             <CustomSubSectionCardDocument
-              title="últimos 3 comprobantes de ingreso"
+              title="últimos 3 estados bancarios"
               subtitle="N/A"
               visibleSubtitle={false}
             >

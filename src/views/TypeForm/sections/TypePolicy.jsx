@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Row, Col, Select, Alert } from "antd";
+import { Row, Col, Select, Alert, Modal } from "antd";
 import CustomFileUpload from "./customFileUpload";
 
 const { Option } = Select;
@@ -16,7 +16,31 @@ const TypePolicy = (props) => {
     frontFunctions,
     dataProperties,
     dataPolicyMethods,
+    onGetProperties,
+    dataPropertiesInfo,
   } = props;
+
+  const DescriptionItem = ({ title, content, isRequired }) => (
+    <div
+      className="site-description-item-profile-wrapper"
+      style={{ fontFamily: "Poppins" }}
+    >
+      <strong
+        className="site-description-item-profile-p-label"
+        style={{ marginRight: 10 }}
+      >
+        {title}:
+      </strong>
+      <span
+        style={{
+          color: isRequired === true ? "red" : "",
+          fontWeight: isRequired === true ? "bold" : "",
+        }}
+      >
+        {content}
+      </span>
+    </div>
+  );
 
   const initialForm = {
     idPolicy: null,
@@ -26,6 +50,7 @@ const TypePolicy = (props) => {
   const [minumunPolicy, setTaxMinumunPolicy] = useState(0);
   const [taxPolicy, setTaxPolicy] = useState(0);
   const [tax, setTax] = useState(0);
+  const [confirmData, setConfirmData] = useState(false);
   const [percentPayment, setPercentPayment] = useState(1);
 
   useEffect(() => {
@@ -285,27 +310,30 @@ const TypePolicy = (props) => {
                 )}
               </div>
             </div>
-            <div className="section-card-documentation">
-              <div className="section-title-card-doc">
-                <strong style={{ textAlign: "center" }}>
-                  Póliza seguro de responsabilidad <br />
-                  civíl para la propiedad
-                </strong>
-                <span></span>
+            {(dataForm.hasInsurance === 1 ||
+              dataForm.hasInsurance === true) && (
+              <div className="section-card-documentation">
+                <div className="section-title-card-doc">
+                  <strong style={{ textAlign: "center" }}>
+                    Póliza seguro de responsabilidad <br />
+                    civíl para la propiedad
+                  </strong>
+                  <span></span>
+                </div>
+                <div className="section-content-card-doc">
+                  <CustomFileUpload
+                    acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                    dataDocument={
+                      isEmpty(dataDocuments) === false &&
+                      isNil(dataDocuments[2]) === false
+                        ? dataDocuments[2]
+                        : {}
+                    }
+                    typeDocument={typeDocument}
+                  />
+                </div>
               </div>
-              <div className="section-content-card-doc">
-                <CustomFileUpload
-                  acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
-                  dataDocument={
-                    isEmpty(dataDocuments) === false &&
-                    isNil(dataDocuments[2]) === false
-                      ? dataDocuments[2]
-                      : {}
-                  }
-                  typeDocument={typeDocument}
-                />
-              </div>
-            </div>
+            )}
           </div>
           <div className="button_actions">
             {/* <button
@@ -317,8 +345,15 @@ const TypePolicy = (props) => {
             </button> */}
             <button
               type="button"
-              onClick={() => {
-                onClickNext(dataForm);
+              onClick={async () => {
+                try {
+                  await onGetProperties({
+                    idTypeForm: dataForm.idTypeForm,
+                    stepIn: 2,
+                    jsonProperties: JSON.stringify(dataForm),
+                  });
+                  setConfirmData(true);
+                } catch (error) {}
               }}
               className="button_primary"
             >
@@ -328,6 +363,70 @@ const TypePolicy = (props) => {
         </Col>
         <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
       </Row>
+      <Modal
+        style={{ top: 20 }}
+        visible={confirmData}
+        closable={false}
+        footer={false}
+      >
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <h1>Confirma tu información</h1>
+          </div>
+          <div className="main-form-information">
+            <p>
+              {isEmpty(dataPropertiesInfo) === false &&
+              isNil(dataPropertiesInfo[0].stepIn) === false
+                ? dataPropertiesInfo[0].stepIn
+                : ""}
+            </p>
+            <Row>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                {isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo.map((row) => {
+                    return (
+                      <DescriptionItem
+                        title={row.typeFormProperty}
+                        content={row.typeFormPropertyValue}
+                        isRequired={row.isRequired}
+                      />
+                    );
+                  })}
+              </Col>
+            </Row>
+          </div>
+          <div className="two-action-buttons">
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmData(false);
+              }}
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              className={
+                isEmpty(dataPropertiesInfo) === false &&
+                dataPropertiesInfo[0].canBeSkiped === false
+                  ? "disabled"
+                  : ""
+              }
+              onClick={async () => {
+                if (
+                  isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === true
+                ) {
+                  onClickNext(dataForm);
+                  setConfirmData(false);
+                }
+              }}
+            >
+              <span>Confirmar</span>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

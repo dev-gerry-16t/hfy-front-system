@@ -1645,7 +1645,7 @@ const SectionInfoAval = (props) => {
                 }}
                 className="button_secondary"
               >
-                <span>Cancelar</span>
+                <span>Regresar</span>
               </button>
               <button
                 type="button"

@@ -141,7 +141,7 @@ const Tenant = (props) => {
       <div style={{ fontFamily: "Poppins" }}>
         <span style={{ fontSize: "12px" }}>
           Antes de iniciar el formulario debes tener lista una identificación
-          oficial, tus últimos 3 comprobantes de ingresos y una carta de la
+          oficial, tus últimos 3 estados bancarios y una carta de la
           empresa donde trabajas que acredite desde cuando estás laborando en la
           empresa. Adicional, necesitaras la escritura del inmueble que quedara
           como garantía y los datos e identificación del Aval.
