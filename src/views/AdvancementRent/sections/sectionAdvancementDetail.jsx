@@ -254,13 +254,13 @@ const SectionAdvancementDetail = (props) => {
                 >
                   <tr>
                     <th>Pago</th>
-                    <th>Total del pago</th>
-                    <th>Total a interés</th>
-                    <th>Total a capital</th>
+                    <th>Fecha limite</th>
+                    <th>Monto a pagar</th>
+                    <th>Monto a interés</th>
                     {/* <th>Fecha del pago</th>
                       <th>Balance previo</th>
-                      <th>Total a IVA</th> */}
-                    <th>Balance</th>
+                      <th>Total a IVA</th> 
+                    <th>Balance</th>*/}
                   </tr>
                   {isEmpty(dataDetailTableAdvancement) === false &&
                     dataDetailTableAdvancement.map((row) => {
@@ -275,14 +275,14 @@ const SectionAdvancementDetail = (props) => {
                               fontWeight: 600,
                             }}
                           >
-                            {row.totalPaymentAmount}
+                            {row.paydayLimit}
                           </td>
+                          <td>{row.totalPaymentAmount}</td>
                           <td>{row.interestBaseAmount}</td>
-                          <td>{row.capitalAmount}</td>
                           {/* <td>{row.paydayLimit}</td>
                             <td>{row.previousBalance}</td>
-                            <td>{row.taxBaseAmount}</td> */}
-                          <td>{row.outstandingBalanceAmount}</td>
+                            <td>{row.taxBaseAmount}</td> 
+                          <td>{row.outstandingBalanceAmount}</td>*/}
                         </tr>
                       );
                     })}
