@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
-import { Input, Row, Col, Select, Radio, DatePicker, Alert, Modal } from "antd";
+import {
+  Input,
+  Row,
+  Col,
+  Select,
+  Radio,
+  DatePicker,
+  Alert,
+  Modal,
+  Checkbox,
+} from "antd";
 
 const { Option } = Select;
 
@@ -28,6 +38,7 @@ const SectionBankInfo = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
+  const [aceptTerms, setAceptTerms] = useState(false);
 
   const DescriptionItem = ({ title, content, isRequired }) => (
     <div
@@ -268,6 +279,14 @@ const SectionBankInfo = (props) => {
             <h1>Confirma tu información</h1>
           </div>
           <div className="main-form-information">
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <span>
+                Verifica tu información antes de continuar ya que se utilizará
+                para la generación del contrato.
+              </span>
+            </div>
             <p>
               {isEmpty(dataPropertiesInfo) === false &&
               isNil(dataPropertiesInfo[0].stepIn) === false
@@ -288,6 +307,26 @@ const SectionBankInfo = (props) => {
                   })}
               </Col>
             </Row>
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <Checkbox
+                checked={aceptTerms}
+                onChange={(e) => {
+                  setAceptTerms(e.target.checked);
+                }}
+              ></Checkbox>
+              <span
+                style={{
+                  marginLeft: 5,
+                  textAlign: "center",
+                  fontSize: 10,
+                  color: "black",
+                }}
+              >
+                He verificado la información y acepto que es correcta
+              </span>
+            </div>
           </div>
           <div className="two-action-buttons">
             <button
@@ -301,22 +340,24 @@ const SectionBankInfo = (props) => {
             <button
               type="button"
               className={
-                isEmpty(dataPropertiesInfo) === false &&
-                dataPropertiesInfo[0].canBeSkiped === false
+                (isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === false) ||
+                aceptTerms === false
                   ? "disabled"
                   : ""
               }
               onClick={async () => {
                 if (
                   isEmpty(dataPropertiesInfo) === false &&
-                  dataPropertiesInfo[0].canBeSkiped === true
+                  dataPropertiesInfo[0].canBeSkiped === true &&
+                  aceptTerms === true
                 ) {
                   onClickFinish(dataForm);
                   setConfirmData(false);
                 }
               }}
             >
-              <span>Confirmar</span>
+              <span>Continuar</span>
             </button>
           </div>
         </div>

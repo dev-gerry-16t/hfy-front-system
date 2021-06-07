@@ -38,6 +38,7 @@ import {
   callGetAllCommercialSocietyTypes,
   callGetAllStates,
   callGetTypeFormProperties,
+  callValidateTypeFormProperties,
 } from "../../utils/actions/actions";
 
 const { Content } = Layout;
@@ -60,6 +61,7 @@ const TypeFormUser = (props) => {
     callGetTypeFormProperties,
     history,
     match,
+    callValidateTypeFormProperties,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(null);
@@ -83,6 +85,7 @@ const TypeFormUser = (props) => {
   const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
   const [dataStates, setDataStates] = useState([]);
   const [finishCallApis, setFinishCallApis] = useState(false);
+  const [dataPropertiesInfo, setDataPropertiesInfo] = useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -166,6 +169,29 @@ const TypeFormUser = (props) => {
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
+    }
+  };
+
+  const handlerCallValidateTypeFormProperties = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callValidateTypeFormProperties({
+        ...data,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataPropertiesInfo(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -471,6 +497,14 @@ const TypeFormUser = (props) => {
       title: "Información general",
       content: (
         <SectionInfoUser
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataFormSave={dataForm}
           dataProperties={dataProperties}
           dataNationalities={dataNationalities}
@@ -493,6 +527,14 @@ const TypeFormUser = (props) => {
       title: "Dirección actual",
       content: (
         <SectionCurrentAddress
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataFormSave={dataForm}
           dataProperties={dataProperties}
           onClickNext={async (data) => {
@@ -525,6 +567,14 @@ const TypeFormUser = (props) => {
       title: "Información laboral",
       content: (
         <SectionCurrentWork
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataFormSave={dataForm}
           dataProperties={dataProperties}
           onClickNext={async (data) => {
@@ -546,6 +596,14 @@ const TypeFormUser = (props) => {
       title: "Referencias",
       content: (
         <SectionInfoReferences
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataFormSave={dataForm}
           dataReferences={dataReferences}
           onClickSendReferences={(data) => {
@@ -564,6 +622,14 @@ const TypeFormUser = (props) => {
       title: "Documentación",
       content: (
         <SectionDocumentation
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataForm={dataForm}
           onClickNext={() => {
             handlerCallGetTypeFormDocumentTenant(dataForm, 1);
@@ -581,6 +647,14 @@ const TypeFormUser = (props) => {
       title: "Información aval",
       content: (
         <SectionInfoAval
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           frontFunctions={frontFunctions}
           dataProperties={dataProperties}
           dataNationalities={dataNationalities}
@@ -781,6 +855,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllStates: (data) => dispatch(callGetAllStates(data)),
   callGetTypeFormProperties: (data) =>
     dispatch(callGetTypeFormProperties(data)),
+  callValidateTypeFormProperties: (data) =>
+    dispatch(callValidateTypeFormProperties(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormUser);
