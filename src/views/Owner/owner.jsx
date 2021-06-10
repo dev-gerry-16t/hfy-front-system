@@ -804,6 +804,9 @@ const Owner = (props) => {
             cancelButton={() => {
               setIsVisibleContractAdvancement(false);
             }}
+            finishButton={() => {
+              setIsVisibleContractAdvancement(false);
+            }}
             titleCustom="Contrato de adelanto de renta"
             titleSectionSignature="Firma de Contrato"
             componentTerms={

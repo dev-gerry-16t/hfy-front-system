@@ -2793,6 +2793,44 @@ const callUpdateContract = (data, id) => async (dispatch, getState) => {
   }
 };
 
+const callUpdateCustomerLoan = (data, id) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.put(
+      API_CONSTANTS.UPDATE_CUSTOMER_LOAN + id,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callSetProvider = (data, id) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -3872,6 +3910,44 @@ const callGetRequestAdvancePymtProperties =
     }
   };
 
+const callGetCustomerLoanProperties = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_CUSTOMER_LOAN_PROPERTIES,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetDetailCustomer = (data) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -4032,6 +4108,44 @@ const callGetAllProspectStatus = (data) => async (dispatch, getState) => {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
       API_CONSTANTS.GET_ALL_PROSPECT_STATUS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+const callGetCustomerLoan = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_CUSTOMER_LOAN,
       data,
       config
     );
@@ -4751,4 +4865,7 @@ export {
   callGetAllRequestAdvancePymtStatus,
   callUpdateRequestAdvancePym,
   callGetRequestAdvancePymtProperties,
+  callGetCustomerLoan,
+  callUpdateCustomerLoan,
+  callGetCustomerLoanProperties,
 };

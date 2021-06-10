@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import isNil from "lodash/isNil";
 import SignatureCanvas from "react-signature-canvas";
 import { Checkbox } from "antd";
 
@@ -10,6 +11,8 @@ const CustomSignatureContract = ({
   titleCustom,
   titleSectionSignature,
   componentTerms,
+  textSignature,
+  finishButton,
 }) => {
   const [viewSignatureMovement, setViewSignatureMovement] = useState(false);
   const [aceptTerms, setAceptTerms] = useState(false);
@@ -22,8 +25,10 @@ const CustomSignatureContract = ({
       <h1>{titleCustom}</h1>
       <iframe className="iframe-docx-hfy" src={srcIframe}></iframe>
       <span>
-        Antes de dar clic en "Firmar" te recomendamos leer detenidamente tu
-        contrato de servicio.
+        {isNil(textSignature) === false
+          ? textSignature
+          : `Antes de dar clic en "Firmar" te recomendamos leer detenidamente tu
+        contrato de servicio.`}
       </span>
       <div className="two-action-buttons-banner" style={{ marginTop: 25 }}>
         <button type="button" onClick={cancelButton}>
@@ -96,7 +101,7 @@ const CustomSignatureContract = ({
                       signatureRef.current.clear();
                       setAceptTerms(false);
                       setViewSignatureMovement(false);
-                      cancelButton();
+                      finishButton();
                     }
                   } catch (error) {}
                 }}
