@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import { Row, Col, Modal, Checkbox } from "antd";
 import CustomFileUpload from "./customFileUpload";
 
 const CustomSubSectionCardDocument = (props) => {
@@ -30,7 +31,34 @@ const SectionDocumentation = (props) => {
     typeDocument,
     dataForm,
     dataProperties,
+    onGetProperties,
+    dataPropertiesInfo,
   } = props;
+
+  const [confirmData, setConfirmData] = useState(false);
+  const [aceptTerms, setAceptTerms] = useState(false);
+
+  const DescriptionItem = ({ title, content, isRequired }) => (
+    <div
+      className="site-description-item-profile-wrapper"
+      style={{ fontFamily: "Poppins" }}
+    >
+      <strong
+        className="site-description-item-profile-p-label"
+        style={{ marginRight: 10 }}
+      >
+        {title}:
+      </strong>
+      <span
+        style={{
+          color: isRequired === true ? "red" : "",
+          fontWeight: isRequired === true ? "bold" : "",
+        }}
+      >
+        {content}
+      </span>
+    </div>
+  );
 
   const getTypeIdDocument = (type) => {
     let word = "";
@@ -125,7 +153,7 @@ const SectionDocumentation = (props) => {
           </div>
           <div className="section-bottom-documentation">
             <CustomSubSectionCardDocument
-              title="últimos 3 comprobantes de ingreso"
+              title="últimos 3 estados bancarios"
               subtitle="N/A"
               visibleSubtitle={false}
             >
@@ -248,7 +276,7 @@ const SectionDocumentation = (props) => {
           </div>
           <div className="section-bottom-documentation">
             <CustomSubSectionCardDocument
-              title="últimos 3 comprobantes de ingreso"
+              title="últimos 3 estados bancarios"
               subtitle="N/A"
               visibleSubtitle={false}
             >
@@ -305,17 +333,118 @@ const SectionDocumentation = (props) => {
         </>
       )}
       <div className="button_actions">
-        {/* <button
+        <button
           type="button"
-          onClick={onClickBack}
-          className="button_secondary"
+          onClick={async () => {
+            try {
+              await onGetProperties({
+                idTypeForm: dataForm.idTypeForm,
+                stepIn: 4,
+                jsonProperties: JSON.stringify({}),
+              });
+              setConfirmData(true);
+            } catch (error) {}
+          }}
+          className="button_primary"
         >
-          <span>Regresar</span>
-        </button> */}
-        <button type="button" onClick={onClickNext} className="button_primary">
           <span>Continuar</span>
         </button>
       </div>
+      <Modal
+        style={{ top: 20 }}
+        visible={confirmData}
+        closable={false}
+        footer={false}
+      >
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <h1>Confirma tu información</h1>
+          </div>
+          <div className="main-form-information">
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <span>
+                Verifica tu información antes de continuar ya que si se detectan
+                inconsistencias podrían afectar el proceso de investigación y
+                generación del contrato.
+              </span>
+            </div>
+            <p>
+              {isEmpty(dataPropertiesInfo) === false &&
+              isNil(dataPropertiesInfo[0].stepIn) === false
+                ? dataPropertiesInfo[0].stepIn
+                : ""}
+            </p>
+            <Row>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                {isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo.map((row) => {
+                    return (
+                      <DescriptionItem
+                        title={row.typeFormProperty}
+                        content={row.typeFormPropertyValue}
+                        isRequired={row.isRequired}
+                      />
+                    );
+                  })}
+              </Col>
+            </Row>
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <Checkbox
+                checked={aceptTerms}
+                onChange={(e) => {
+                  setAceptTerms(e.target.checked);
+                }}
+              ></Checkbox>
+              <span
+                style={{
+                  marginLeft: 5,
+                  textAlign: "center",
+                  fontSize: 10,
+                  color: "black",
+                }}
+              >
+                He verificado la información y acepto que es correcta
+              </span>
+            </div>
+          </div>
+          <div className="two-action-buttons">
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmData(false);
+              }}
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              className={
+                (isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === false) ||
+                aceptTerms === false
+                  ? "disabled"
+                  : ""
+              }
+              onClick={async () => {
+                if (
+                  isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === true &&
+                  aceptTerms === true
+                ) {
+                  onClickNext();
+                  setConfirmData(false);
+                }
+              }}
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -804,6 +804,9 @@ const Owner = (props) => {
             cancelButton={() => {
               setIsVisibleContractAdvancement(false);
             }}
+            finishButton={() => {
+              setIsVisibleContractAdvancement(false);
+            }}
             titleCustom="Contrato de adelanto de renta"
             titleSectionSignature="Firma de Contrato"
             componentTerms={
@@ -955,20 +958,6 @@ const Owner = (props) => {
             </span>
           </div>
           <div className="action-buttons-top">
-            {(dataCustomer.canRequestProperty === 1 ||
-              dataCustomer.canRequestProperty === true) && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlerCallGetPropertyTypes();
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>Registrar Propiedad</span>
-                </button>
-              </div>
-            )}
             {(dataCustomer.canRequestAdvanceRent === 1 ||
               dataCustomer.canRequestAdvanceRent === true) && (
               <div className="button_init_primary">

@@ -12,6 +12,7 @@ import {
   Dropdown,
   Menu,
   Button,
+  Alert,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -54,6 +55,11 @@ import {
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
   callPostPaymentService,
+  callUpdateInvitation,
+  callGetCustomerLoan,
+  callUpdateCustomerLoan,
+  callGetCustomerLoanProperties,
+  callGetAllBankCatalog,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -108,6 +114,10 @@ const Tenant = (props) => {
     callGetRequestProviderPropierties,
     callSignRequestForProvider,
     callPostPaymentService,
+    callGetCustomerLoan,
+    callUpdateCustomerLoan,
+    callGetCustomerLoanProperties,
+    callGetAllBankCatalog,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -132,7 +142,9 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const [isHowAreYou, setIsHowAreYou] = useState(false);
+  const [dataLoan, setDataLoan] = useState({});
   const [urlContract, setUrlContract] = useState({});
+  const [dataBank, setDataBank] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -156,8 +168,8 @@ const Tenant = (props) => {
       <div style={{ fontFamily: "Poppins" }}>
         <span style={{ fontSize: "12px" }}>
           Antes de iniciar el formulario debes tener lista una identificación
-          oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-          empresa donde trabajas que acredite desde cuando estás laborando en la
+          oficial, tus últimos 3 estados bancarios y una carta de la empresa
+          donde trabajas que acredite desde cuando estás laborando en la
           empresa. Adicional, necesitaras la escritura del inmueble que quedara
           como garantía y los datos e identificación del Aval.
         </span>
@@ -227,6 +239,52 @@ const Tenant = (props) => {
     style: { marginTop: "4vw" },
   };
 
+  const handlerCallGetCustomerLoanProperties = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerLoanProperties({
+        ...data,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      return responseResult;
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallBankCatalog = async (clabe = null) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllBankCatalog({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+        clabe,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataBank(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetRequestProviderPropierties = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -240,6 +298,29 @@ const Tenant = (props) => {
           ? response.response
           : [];
       await setUrlContract(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetCustomerLoan = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerLoan({
+        idSystemUser,
+        idLoginHistory,
+        idContract: id,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataLoan(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -289,7 +370,9 @@ const Tenant = (props) => {
       handlerCallGetCustomerMessage(data2);
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
@@ -416,6 +499,20 @@ const Tenant = (props) => {
           ? true
           : false
       );
+      setIsModalVisiblePolicy(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.canAcceptLoan) == false &&
+          responseResult.canAcceptLoan === true
+          ? true
+          : false
+      );
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.canAcceptLoan) == false &&
+        responseResult.canAcceptLoan === true
+      ) {
+        await handlerCallGetCustomerLoan(responseResult.idContract);
+      }
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.requieresMoveSignature) === false &&
@@ -749,6 +846,59 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallUpdateCustomerLoan = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateCustomerLoan(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "En breve realizaremos el deposito en garantía a tu propietario",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallUpdateInvitation = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          requestResend: true,
+          isActive: true,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetAllIncidenceTypes = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -907,6 +1057,9 @@ const Tenant = (props) => {
             <CustomSignatureContract
               srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract.url}&embedded=true`}
               cancelButton={() => {
+                setIsVisibleBannerMove(false);
+              }}
+              finishButton={() => {
                 setIsVisibleBannerMove(false);
               }}
               titleCustom="Contrato de servicio de mudanza"
@@ -1098,10 +1251,27 @@ const Tenant = (props) => {
       />
       <SectionDepositGuarantee
         isModalVisible={isModalVisiblePolicy}
+        dataLoan={dataLoan}
+        dataBank={dataBank}
+        onSearchBank={handlerCallBankCatalog}
         onClose={() => {
           setIsModalVisiblePolicy(!isModalVisiblePolicy);
         }}
         frontFunctions={frontFunctions}
+        handlerCallUpdateCustomerLoan={async (data, id) => {
+          try {
+            await handlerCallUpdateCustomerLoan(data, id);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        handlerCallGetCustomerLoanProperties={async (data) => {
+          try {
+            return await handlerCallGetCustomerLoanProperties(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -1230,9 +1400,9 @@ const Tenant = (props) => {
               <div className="title-cards flex-title-card">
                 <span>Propietario</span>
                 <div className="button_init_secondary">
-                  <button type="button" onClick={() => {}}>
+                  {/* <button type="button" onClick={() => {}}>
                     <span>Reportar Propietario</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="section-information-actions">
@@ -1375,6 +1545,33 @@ const Tenant = (props) => {
                   </div>
                 </div>
               </div>
+              {dataTenant.canRequestReminderToOwner === true && (
+                <div style={{ padding: 5, fontFamily: "Poppins" }}>
+                  <Alert
+                    message={
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>
+                          Tu propietario aún no se ha registrado, Si deseas
+                          enviarle un recordatorio haz clic en enviar
+                          recordatorio.
+                        </span>
+                        <Button
+                          type="link"
+                          onClick={async () => {
+                            await handlerCallUpdateInvitation(
+                              dataTenant.idInvitation
+                            );
+                            handlerCallGetAllCustomerTenantById();
+                          }}
+                        >
+                          Enviar recordatorio
+                        </Button>
+                      </div>
+                    }
+                    type="warning"
+                  />
+                </div>
+              )}
             </div>
           )}
         <CustomContentActions
@@ -1517,7 +1714,14 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestProviderPropierties(data)),
   callSignRequestForProvider: (data, id) =>
     dispatch(callSignRequestForProvider(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
+  callGetCustomerLoan: (data) => dispatch(callGetCustomerLoan(data)),
+  callUpdateCustomerLoan: (data, id) =>
+    dispatch(callUpdateCustomerLoan(data, id)),
+  callGetCustomerLoanProperties: (data, id) =>
+    dispatch(callGetCustomerLoanProperties(data, id)),
+  callGetAllBankCatalog: (data) => dispatch(callGetAllBankCatalog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

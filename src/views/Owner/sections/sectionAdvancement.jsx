@@ -251,12 +251,22 @@ const SectionAdvancement = (props) => {
                     md={{ span: 24 }}
                     className="total-advancement-amount"
                   >
-                    <div className="content-amount">
+                    {/* <div className="content-amount">
                       <p>Monto total de adelanto</p>
                       <div>
                         <h2>
                           {isEmpty(dataAdvancePymtInfo) === false
                             ? dataAdvancePymtInfo.totalRentAmount
+                            : "$ 0.00 MXN"}
+                        </h2>
+                      </div>
+                    </div> */}
+                    <div className="content-amount">
+                      <p>Monto total a pagar con intereses</p>
+                      <div>
+                        <h2>
+                          {isEmpty(dataAdvancePymtInfo) === false
+                            ? dataAdvancePymtInfo.totalToBePaid
                             : "$ 0.00 MXN"}
                         </h2>
                       </div>
@@ -274,7 +284,7 @@ const SectionAdvancement = (props) => {
                       {isEmpty(dataAdvancePymtInfo) === false
                         ? dataAdvancePymtInfo.paymentDescription
                         : "$ 0.00 MXN"}
-                      <img
+                      {/* <img
                         src={ArrowRightCircle}
                         alt="backTo"
                         width="25"
@@ -287,10 +297,23 @@ const SectionAdvancement = (props) => {
                         onClick={() => {
                           setViewSummary(!viewSummary);
                         }}
-                      />
+                      /> */}
                     </span>
                   </Col>
                 </Row>
+                <div
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    marginBottom: 10,
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      isNil(dataAdvancePymtInfo.catDescription) === false
+                        ? dataAdvancePymtInfo.catDescription
+                        : "",
+                  }}
+                />
                 {viewSummary === true && (
                   <Row>
                     <Col
