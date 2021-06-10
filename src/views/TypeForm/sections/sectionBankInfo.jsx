@@ -2,7 +2,17 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
-import { Input, Row, Col, Select, Radio, DatePicker, Alert } from "antd";
+import {
+  Input,
+  Row,
+  Col,
+  Select,
+  Radio,
+  DatePicker,
+  Alert,
+  Modal,
+  Checkbox,
+} from "antd";
 import admiration from "../../../assets/icons/exclaim.svg";
 
 const { Option } = Select;
@@ -14,6 +24,8 @@ const SectionBankInfo = (props) => {
     dataBank,
     dataFormSave,
     dataProperties,
+    onGetProperties,
+    dataPropertiesInfo,
     onSearchBank,
   } = props;
 
@@ -29,15 +41,28 @@ const SectionBankInfo = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
+  const [aceptTerms, setAceptTerms] = useState(false);
   const [isCorrectClabe, setIsCorrectClabe] = useState(null);
-  const DescriptionItem = ({ title, content }) => (
+
+  const DescriptionItem = ({ title, content, isRequired }) => (
     <div
       className="site-description-item-profile-wrapper"
-      style={{ textAlign: "center" }}
+      style={{ fontFamily: "Poppins" }}
     >
-      <strong className="site-description-item-profile-p-label">{title}</strong>
-      <br />
-      {content}
+      <strong
+        className="site-description-item-profile-p-label"
+        style={{ marginRight: 10 }}
+      >
+        {title}:
+      </strong>
+      <span
+        style={{
+          color: isRequired === true ? "red" : "",
+          fontWeight: isRequired === true ? "bold" : "",
+        }}
+      >
+        {content}
+      </span>
     </div>
   );
 
@@ -84,126 +109,118 @@ const SectionBankInfo = (props) => {
 
   return (
     <div className="content-typeform-formulary">
-      <h3>
-        {confirmData === false
-          ? "Información Bancaria"
-          : "Confirmar Información bancaria"}
-      </h3>
-      {confirmData === false && (
-        <Row>
-          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-            {isEmpty(dataProperties) === false &&
-              dataForm.isFirstTime === false && (
-                <div className="message-typeform-requires">
-                  <Alert
-                    message={
-                      <div style={{ width: "100%" }}>
-                        Los siguientes campos son requeridos:
-                        <br />
-                        <ul>
-                          {dataProperties.map((row) => {
-                            return <li>{row.label}</li>;
-                          })}
-                        </ul>
-                      </div>
-                    }
-                    type="error"
-                  />
-                </div>
-              )}
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <div className="option-select-radio">
-                  <span
-                    style={{
-                      color: "var(--color-primary)",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    ¿Cómo deseas tus pagos de renta?
-                  </span>
-                  <Radio.Group
-                    onChange={(e) => {
-                      const value = e.target.value;
-                      setDataForm({ ...dataForm, isInCash: value });
-                    }}
-                    value={
-                      dataForm.isInCash === true || dataForm.isInCash === 1
-                        ? 1
-                        : isNil(dataForm.isInCash) === false
-                        ? 0
-                        : null
-                    }
-                  >
-                    <Radio value={1}>Efectivo</Radio>
-                    <Radio value={0}>Cuenta Bancaria</Radio>
-                  </Radio.Group>
-                </div>
-              </Col>
-            </Row>
-            {(dataForm.isInCash === false || dataForm.isInCash === 0) && (
-              <>
-                <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <div>
-                      <Input
-                        value={dataForm.clabeNumber}
-                        placeholder={"CLABE interbancaria (18 dígitos)"}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 18) {
-                            if (e.target.value.length < 18) {
-                              setIsCorrectClabe(false);
-                            } else {
-                              setIsCorrectClabe(true);
-                            }
-                            if (e.target.value.length === 18) {
-                              parseDataClabe(e.target.value);
-                            }
-                            setDataForm({
-                              ...dataForm,
-                              clabeNumber: e.target.value,
-                            });
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.keyCode === 109 || e.keyCode === 107) {
-                            e.preventDefault();
-                          }
-                        }}
-                        onBlur={() => {
-                          parseDataClabe(dataForm.clabeNumber);
-                        }}
-                        type="number"
-                        min="0"
-                      />
-                      {isCorrectClabe === false && (
-                        <div
-                          style={{
-                            background: "#FFF4EC",
-                            borderRadius: "0px 0px 10px 10px",
-                            padding: "0px 10px",
-                          }}
-                        >
-                          <img src={admiration} alt="exclaim" />
-                          <span
-                            style={{ marginLeft: "10px", color: "#CF6E23" }}
-                          >
-                            CLABE no valida
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+      <h3>Información Bancaria</h3>
+      <Row>
+        <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+        <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
+          {isEmpty(dataProperties) === false && dataForm.isFirstTime === false && (
+            <div className="message-typeform-requires">
+              <Alert
+                message={
+                  <div style={{ width: "100%" }}>
+                    Los siguientes campos son requeridos:
+                    <br />
+                    <ul>
+                      {dataProperties.map((row) => {
+                        return <li>{row.label}</li>;
+                      })}
+                    </ul>
+                  </div>
+                }
+                type="error"
+              />
+            </div>
+          )}
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <div className="option-select-radio">
+                <span
+                  style={{
+                    color: "var(--color-primary)",
+                    fontWeight: "bold",
+                  }}
+                >
+                  ¿Cómo deseas tus pagos de renta?
+                </span>
+                <Radio.Group
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, isInCash: value });
+                  }}
+                  value={
+                    dataForm.isInCash === true || dataForm.isInCash === 1
+                      ? 1
+                      : isNil(dataForm.isInCash) === false
+                      ? 0
+                      : null
+                  }
+                >
+                  <Radio value={1}>Efectivo</Radio>
+                  <Radio value={0}>Cuenta Bancaria</Radio>
+                </Radio.Group>
+              </div>
+            </Col>
+          </Row>
+          {(dataForm.isInCash === false || dataForm.isInCash === 0) && (
+            <>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <div>
                     <Input
-                      value={dataForm.idBankText}
-                      placeholder={"Banco"}
-                      disabled
-                      onChange={(e) => {}}
+                      value={dataForm.clabeNumber}
+                      placeholder={"CLABE interbancaria (18 dígitos)"}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 18) {
+                          if (e.target.value.length < 18) {
+                            setIsCorrectClabe(false);
+                          } else {
+                            setIsCorrectClabe(true);
+                          }
+                          if (e.target.value.length === 18) {
+                            parseDataClabe(e.target.value);
+                          }
+                          setDataForm({
+                            ...dataForm,
+                            clabeNumber: e.target.value,
+                          });
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onBlur={() => {
+                        parseDataClabe(dataForm.clabeNumber);
+                      }}
+                      type="number"
+                      min="0"
                     />
-                    {/* <Select
+                    {isCorrectClabe === false && (
+                      <div
+                        style={{
+                          background: "#FFF4EC",
+                          borderRadius: "0px 0px 10px 10px",
+                          padding: "0px 10px",
+                        }}
+                      >
+                        <img src={admiration} alt="exclaim" />
+                        <span style={{ marginLeft: "10px", color: "#CF6E23" }}>
+                          CLABE no valida
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Input
+                    value={dataForm.idBankText}
+                    placeholder={"Banco"}
+                    disabled
+                    onChange={(e) => {}}
+                  />
+                  {/* <Select
                       placeholder="Banco"
                       showSearch
                       value={dataForm.idBank}
@@ -225,202 +242,210 @@ const SectionBankInfo = (props) => {
                           return <Option value={row.id}>{row.text}</Option>;
                         })}
                     </Select> */}
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <Input
-                      type="number"
-                      value={dataForm.bankBranch}
-                      placeholder={"Sucursal"}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 30) {
-                          setDataForm({
-                            ...dataForm,
-                            bankBranch: e.target.value,
-                          });
-                        }
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.keyCode === 109 || e.keyCode === 107) {
-                          e.preventDefault();
-                        }
-                      }}
-                    />
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <Input
-                      type="number"
-                      value={dataForm.accountNumber}
-                      placeholder={"Número de cuenta"}
-                      onKeyDown={(e) => {
-                        if (e.keyCode === 109 || e.keyCode === 107) {
-                          e.preventDefault();
-                        }
-                      }}
-                      onChange={(e) => {
-                        if (e.target.value.length <= 30) {
-                          setDataForm({
-                            ...dataForm,
-                            accountNumber: e.target.value,
-                          });
-                        }
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                    <Input
-                      value={dataForm.accountHolder}
-                      placeholder={"A nombre de"}
-                      onChange={(e) => {
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Input
+                    type="number"
+                    value={dataForm.bankBranch}
+                    placeholder={"Sucursal"}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 30) {
                         setDataForm({
                           ...dataForm,
-                          accountHolder: e.target.value,
+                          bankBranch: e.target.value,
                         });
-                      }}
-                    />
-                  </Col>
-                </Row>
-              </>
-            )}
-
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <DatePicker
-                  value={
-                    isNil(dataForm.signingAvailabilityAt) === false
-                      ? moment(dataForm.signingAvailabilityAt, "YYYY-MM-DD")
-                      : null
-                  }
-                  placeholder="Fecha de firma de contrato"
-                  onChange={(momentFormat, date) => {
-                    setDataForm({
-                      ...dataForm,
-                      signingAvailabilityAt:
-                        moment(momentFormat).format("YYYY-MM-DD"),
-                    });
-                  }}
-                  format="DD MMMM YYYY"
-                />
-              </Col>
-            </Row>
-            <div className="button_actions">
-              <button
-                type="button"
-                onClick={onClickBack}
-                className="button_secondary"
-              >
-                <span>Regresar</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmData(true);
-                }}
-                className="button_primary"
-              >
-                <span>Continuar</span>
-              </button>
-            </div>
-          </Col>
-          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-        </Row>
-      )}
-      {confirmData === true && (
-        <Row>
-          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-          <Col span={16} xs={{ span: 24 }} md={{ span: 16 }}>
-            <p>
-              Verifica que tu información sea correcta, de lo contrario no
-              podras hacer modificaciones.
-            </p>
-            {dataForm.isInCash === false || dataForm.isInCash === 0 ? (
-              <>
-                <Row>
-                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                    <DescriptionItem
-                      title="A nombre de"
-                      content={dataForm.accountHolder}
-                    />
-                  </Col>
-                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                    <DescriptionItem
-                      title="Banco"
-                      content={dataForm.idBankText}
-                    />
-                  </Col>
-                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                    <DescriptionItem
-                      title="Sucursal"
-                      content={dataForm.bankBranch}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                    <DescriptionItem
-                      title="Número de cuenta"
-                      content={dataForm.accountNumber}
-                    />
-                  </Col>
-                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                    <DescriptionItem
-                      title="Clave interbancaria"
-                      content={dataForm.clabeNumber}
-                    />
-                  </Col>
-                  <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                  <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                    <DescriptionItem
-                      title="Fecha de firma de contrato"
-                      content={moment(
-                        dataForm.signingAvailabilityAt,
-                        "YYYY-MM-DD"
-                      ).format("DD MMMM YYYY")}
-                    />
-                  </Col>
-                </Row>
-              </>
-            ) : (
-              <Row>
-                <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                  <DescriptionItem
-                    title="Información de Pago"
-                    content="Tu pago será en efectivo"
+                      }
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 109 || e.keyCode === 107) {
+                        e.preventDefault();
+                      }
+                    }}
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Input
+                    type="number"
+                    value={dataForm.accountNumber}
+                    placeholder={"Número de cuenta"}
+                    onKeyDown={(e) => {
+                      if (e.keyCode === 109 || e.keyCode === 107) {
+                        e.preventDefault();
+                      }
+                    }}
+                    onChange={(e) => {
+                      if (e.target.value.length <= 30) {
+                        setDataForm({
+                          ...dataForm,
+                          accountNumber: e.target.value,
+                        });
+                      }
+                    }}
                   />
                 </Col>
               </Row>
-            )}
-            <div className="button_actions">
-              <button
-                type="button"
-                onClick={() => {
-                  setConfirmData(false);
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <Input
+                    value={dataForm.accountHolder}
+                    placeholder={"A nombre de"}
+                    onChange={(e) => {
+                      setDataForm({
+                        ...dataForm,
+                        accountHolder: e.target.value,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
+            </>
+          )}
+
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <DatePicker
+                value={
+                  isNil(dataForm.signingAvailabilityAt) === false
+                    ? moment(dataForm.signingAvailabilityAt, "YYYY-MM-DD")
+                    : null
+                }
+                placeholder="Fecha de firma de contrato"
+                onChange={(momentFormat, date) => {
+                  setDataForm({
+                    ...dataForm,
+                    signingAvailabilityAt:
+                      moment(momentFormat).format("YYYY-MM-DD"),
+                  });
                 }}
-                className="button_secondary"
-              >
-                <span>Cancelar</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  onClickFinish(dataForm);
-                }}
-                className="button_primary"
-              >
-                <span>Confirmar</span>
-              </button>
+                format="DD MMMM YYYY"
+              />
+            </Col>
+          </Row>
+          <div className="button_actions">
+            <button
+              type="button"
+              onClick={onClickBack}
+              className="button_secondary"
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              onClick={async () => {
+                try {
+                  await onGetProperties({
+                    idTypeForm: dataForm.idTypeForm,
+                    stepIn: 3,
+                    jsonProperties: JSON.stringify(dataForm),
+                  });
+                  setConfirmData(true);
+                } catch (error) {}
+              }}
+              className="button_primary"
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
+        </Col>
+        <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
+      </Row>
+      <Modal
+        style={{ top: 20 }}
+        visible={confirmData}
+        closable={false}
+        footer={false}
+      >
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <h1>Confirma tu información</h1>
+          </div>
+          <div className="main-form-information">
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <span>
+                Verifica tu información antes de continuar ya que se utilizará
+                para la generación del contrato.
+              </span>
             </div>
-          </Col>
-          <Col span={4} xs={{ span: 24 }} md={{ span: 4 }} />
-        </Row>
-      )}
+            <p>
+              {isEmpty(dataPropertiesInfo) === false &&
+              isNil(dataPropertiesInfo[0].stepIn) === false
+                ? dataPropertiesInfo[0].stepIn
+                : ""}
+            </p>
+            <Row>
+              <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                {isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo.map((row) => {
+                    return (
+                      <DescriptionItem
+                        title={row.typeFormProperty}
+                        content={row.typeFormPropertyValue}
+                        isRequired={row.isRequired}
+                      />
+                    );
+                  })}
+              </Col>
+            </Row>
+            <div
+              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
+            >
+              <Checkbox
+                checked={aceptTerms}
+                onChange={(e) => {
+                  setAceptTerms(e.target.checked);
+                }}
+              ></Checkbox>
+              <span
+                style={{
+                  marginLeft: 5,
+                  textAlign: "center",
+                  fontSize: 10,
+                  color: "black",
+                }}
+              >
+                He verificado la información y acepto que es correcta
+              </span>
+            </div>
+          </div>
+          <div className="two-action-buttons">
+            <button
+              type="button"
+              onClick={() => {
+                setConfirmData(false);
+              }}
+            >
+              <span>Regresar</span>
+            </button>
+            <button
+              type="button"
+              className={
+                (isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === false) ||
+                aceptTerms === false
+                  ? "disabled"
+                  : ""
+              }
+              onClick={async () => {
+                if (
+                  isEmpty(dataPropertiesInfo) === false &&
+                  dataPropertiesInfo[0].canBeSkiped === true &&
+                  aceptTerms === true
+                ) {
+                  onClickFinish(dataForm);
+                  setConfirmData(false);
+                }
+              }}
+            >
+              <span>Continuar</span>
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 };

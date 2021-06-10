@@ -31,6 +31,7 @@ import {
   callGetAllStates,
   callPostPaymentService,
   callGetAllCommercialActivities,
+  callValidateTypeFormProperties,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -61,6 +62,7 @@ const TypeFormOwner = (props) => {
     callGetAllStates,
     callPostPaymentService,
     callGetAllCommercialActivities,
+    callValidateTypeFormProperties,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
@@ -79,6 +81,7 @@ const TypeFormOwner = (props) => {
   const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
   const [dataStates, setDataStates] = useState([]);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
+  const [dataPropertiesInfo, setDataPropertiesInfo] = useState([]);
 
   const next = () => {
     setCurrent(current + 1);
@@ -164,6 +167,29 @@ const TypeFormOwner = (props) => {
     }
   };
 
+  const handlerCallValidateTypeFormProperties = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callValidateTypeFormProperties({
+        ...data,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataPropertiesInfo(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetAllStates = async () => {
     const { idCustomerTF, idCustomerTenantTF, idSystemUser, idLoginHistory } =
       dataProfile;
@@ -216,8 +242,10 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallSetTypeFormTenant = async (data) => {
+    const { params } = match;
     const { idCustomer, idSystemUser, idLoginHistory, idContract } =
       dataProfile;
+    const idSection = params.idSection;
     try {
       const response = await callSetTypeFormOwner({
         idCustomer,
@@ -226,12 +254,30 @@ const TypeFormOwner = (props) => {
         idContract,
         ...data,
       });
+      const responseComplete =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.isCompleted) === false
+          ? response.response.isCompleted
+          : "";
+      if (responseComplete === true) {
+        if (isNil(idSection) === false) {
+          if (dataProfile.idUserType === 1) {
+            history.push("/websystem/dashboard-admin");
+          } else if (dataProfile.idUserType === 5) {
+            history.push("/websystem/dashboard-attorney");
+          } else if (dataProfile.idUserType === 7) {
+            history.push("/websystem/dashboard-controldesk");
+          }
+        } else {
+          history.push("/websystem/dashboard-owner");
+        }
+      }
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&
-        isNil(response.response[0]) === false &&
-        isNil(response.response[0].message) === false
-          ? response.response[0].message
+        isNil(response.response.message) === false
+          ? response.response.message
           : "";
       showMessageStatusApi(
         isEmpty(responseResult) === false
@@ -381,6 +427,7 @@ const TypeFormOwner = (props) => {
       title: "Información personal",
       content: (
         <SectionInfoOwner
+          dataPropertiesInfo={dataPropertiesInfo}
           dataCommerceSociality={dataCommerceSociality}
           dataStates={dataStates}
           dataProperties={dataProperties}
@@ -394,6 +441,13 @@ const TypeFormOwner = (props) => {
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
             } catch (error) {}
+          }}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
           }}
           onChangeZipCode={(zipCode) => {
             hanlderCallGetZipCodeAdress({ type: 1, zipCode });
@@ -411,6 +465,14 @@ const TypeFormOwner = (props) => {
       title: "Inmueble a rentar",
       content: (
         <CurrentAddressRenter
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataProperties={dataProperties}
           dataCommercialActivity={dataCommercialActivity}
           frontFunctions={frontFunctions}
@@ -444,6 +506,14 @@ const TypeFormOwner = (props) => {
       title: "Póliza",
       content: (
         <TypePolicy
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataProperties={dataProperties}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
@@ -468,6 +538,14 @@ const TypeFormOwner = (props) => {
       title: "Datos bancarios",
       content: (
         <SectionBankInfo
+          dataPropertiesInfo={dataPropertiesInfo}
+          onGetProperties={async (data) => {
+            try {
+              await handlerCallValidateTypeFormProperties(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
           dataProperties={dataProperties}
           dataFormSave={dataForm}
           dataBank={dataBank}
@@ -755,6 +833,8 @@ const mapDispatchToProps = (dispatch) => ({
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
   callGetAllCommercialActivities: (data) =>
     dispatch(callGetAllCommercialActivities(data)),
+  callValidateTypeFormProperties: (data) =>
+    dispatch(callValidateTypeFormProperties(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);

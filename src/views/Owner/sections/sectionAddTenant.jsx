@@ -21,6 +21,8 @@ const SectionAddTenant = (props) => {
     idApartment: null,
     idPersonType: null,
     givenName: null,
+    lastName: null,
+    mothersMaidenName: null,
     email: null,
   };
   const [dataForm, setDataForm] = useState(initialDataForm);
@@ -104,11 +106,43 @@ const SectionAddTenant = (props) => {
               <Col span={24}>
                 <Input
                   value={dataForm.givenName}
-                  placeholder={"Nombre del inquilino"}
+                  placeholder={"Nombre"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
                       givenName: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.lastName}
+                  placeholder={"Apellido paterno"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      lastName: e.target.value,
+                    });
+                  }}
+                />
+              </Col>
+              <Col
+                span={2}
+                xs={{ span: 24 }}
+                md={{ span: 2 }}
+                style={{ marginBottom: "15px" }}
+              />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Input
+                  value={dataForm.mothersMaidenName}
+                  placeholder={"Apellido materno"}
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      mothersMaidenName: e.target.value,
                     });
                   }}
                 />

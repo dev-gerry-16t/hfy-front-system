@@ -12,6 +12,7 @@ import {
   Dropdown,
   Menu,
   Button,
+  Alert,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -54,6 +55,7 @@ import {
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
   callPostPaymentService,
+  callUpdateInvitation,
   callGetCustomerLoan,
   callUpdateCustomerLoan,
   callGetCustomerLoanProperties,
@@ -166,8 +168,8 @@ const Tenant = (props) => {
       <div style={{ fontFamily: "Poppins" }}>
         <span style={{ fontSize: "12px" }}>
           Antes de iniciar el formulario debes tener lista una identificación
-          oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-          empresa donde trabajas que acredite desde cuando estás laborando en la
+          oficial, tus últimos 3 estados bancarios y una carta de la empresa
+          donde trabajas que acredite desde cuando estás laborando en la
           empresa. Adicional, necesitaras la escritura del inmueble que quedara
           como garantía y los datos e identificación del Aval.
         </span>
@@ -868,6 +870,33 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallUpdateInvitation = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          requestResend: true,
+          isActive: true,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetAllIncidenceTypes = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -1369,9 +1398,9 @@ const Tenant = (props) => {
               <div className="title-cards flex-title-card">
                 <span>Propietario</span>
                 <div className="button_init_secondary">
-                  <button type="button" onClick={() => {}}>
+                  {/* <button type="button" onClick={() => {}}>
                     <span>Reportar Propietario</span>
-                  </button>
+                  </button> */}
                 </div>
               </div>
               <div className="section-information-actions">
@@ -1514,6 +1543,33 @@ const Tenant = (props) => {
                   </div>
                 </div>
               </div>
+              {dataTenant.canRequestReminderToOwner === true && (
+                <div style={{ padding: 5, fontFamily: "Poppins" }}>
+                  <Alert
+                    message={
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>
+                          Tu propietario aún no se ha registrado, Si deseas
+                          enviarle un recordatorio haz clic en enviar
+                          recordatorio.
+                        </span>
+                        <Button
+                          type="link"
+                          onClick={async () => {
+                            await handlerCallUpdateInvitation(
+                              dataTenant.idInvitation
+                            );
+                            handlerCallGetAllCustomerTenantById();
+                          }}
+                        >
+                          Enviar recordatorio
+                        </Button>
+                      </div>
+                    }
+                    type="warning"
+                  />
+                </div>
+              )}
             </div>
           )}
         <CustomContentActions
@@ -1656,6 +1712,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestProviderPropierties(data)),
   callSignRequestForProvider: (data, id) =>
     dispatch(callSignRequestForProvider(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
   callGetCustomerLoan: (data) => dispatch(callGetCustomerLoan(data)),
   callUpdateCustomerLoan: (data, id) =>
