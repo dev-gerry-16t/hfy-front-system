@@ -33,14 +33,25 @@ const SectionCurrentWork = (props) => {
   const [confirmData, setConfirmData] = useState(false);
   const [aceptTerms, setAceptTerms] = useState(false);
 
-  const DescriptionItem = ({ title, content }) => (
+  const DescriptionItem = ({ title, content, isRequired }) => (
     <div
       className="site-description-item-profile-wrapper"
-      style={{ textAlign: "center" }}
+      style={{ fontFamily: "Poppins" }}
     >
-      <strong className="site-description-item-profile-p-label">{title}</strong>
-      <br />
-      {content}
+      <strong
+        className="site-description-item-profile-p-label"
+        style={{ marginRight: 10 }}
+      >
+        {title}:
+      </strong>
+      <span
+        style={{
+          color: isRequired === true ? "red" : "",
+          fontWeight: isRequired === true ? "bold" : "",
+        }}
+      >
+        {content}
+      </span>
     </div>
   );
 
