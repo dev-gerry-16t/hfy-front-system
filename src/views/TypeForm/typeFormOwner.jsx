@@ -168,12 +168,13 @@ const TypeFormOwner = (props) => {
   };
 
   const handlerCallValidateTypeFormProperties = async (data) => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
+    const { idSystemUser, idLoginHistory, idContract } = dataProfile;
     try {
       const response = await callValidateTypeFormProperties({
         ...data,
         idSystemUser,
         idLoginHistory,
+        idContract,
       });
       const responseResult =
         isNil(response) === false &&
