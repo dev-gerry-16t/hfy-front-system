@@ -118,6 +118,7 @@ const Tenant = (props) => {
     callUpdateCustomerLoan,
     callGetCustomerLoanProperties,
     callGetAllBankCatalog,
+    callUpdateInvitation,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -1551,21 +1552,21 @@ const Tenant = (props) => {
                     message={
                       <div>
                         <span style={{ fontWeight: "bold" }}>
-                          Tu propietario aún no se ha registrado, Si deseas
-                          enviarle un recordatorio haz clic en enviar
-                          recordatorio.
+                          Para continuar tu proceso es necesario que tu
+                          propietario se registre, si lo deseas haz clic
+                          <Button
+                            type="link"
+                            onClick={async () => {
+                              await handlerCallUpdateInvitation(
+                                dataTenant.idInvitation
+                              );
+                              handlerCallGetAllCustomerTenantById();
+                            }}
+                          >
+                            aquí
+                          </Button>
+                          para enviarle un recordatorio.
                         </span>
-                        <Button
-                          type="link"
-                          onClick={async () => {
-                            await handlerCallUpdateInvitation(
-                              dataTenant.idInvitation
-                            );
-                            handlerCallGetAllCustomerTenantById();
-                          }}
-                        >
-                          Enviar recordatorio
-                        </Button>
                       </div>
                     }
                     type="warning"
