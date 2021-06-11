@@ -37,6 +37,7 @@ const SectionCardOwner = (props) => {
     dataAllPolicyStatus,
     onClosePolicy,
     onOpenUploadDocument,
+    onSendActionInvitation,
   } = props;
 
   const [openPopover, setOpenPopover] = useState({});
@@ -492,6 +493,76 @@ const SectionCardOwner = (props) => {
           );
         }
         return component;
+      },
+    },
+    {
+      title: (
+        <div>
+          <span>Invitación</span>
+          <br />
+          <span>Eliminar/Reenviar</span>
+        </div>
+      ),
+      dataIndex: "actions",
+      key: "actions",
+      align: "center",
+      fixed: "right",
+      render: (documents, record) => {
+        return (
+          <div style={{ display: "flex", justifyContent: "space-around" }}>
+            {record.canBeDeleted === true && (
+              <button
+                type="button"
+                style={{ border: "none", background: "transparent" }}
+                onClick={async () => {
+                  try {
+                    await onSendActionInvitation(
+                      {
+                        isActive: false,
+                        requestResend: false,
+                      },
+                      record.idProspect
+                    );
+                  } catch (error) {}
+                }}
+              >
+                <i
+                  className="fa fa-trash-o"
+                  style={{ fontSize: 18, color: "red" }}
+                />
+              </button>
+            )}
+            {record.canRequestResend === true && (
+              <button
+                type="button"
+                style={{ border: "none", background: "transparent" }}
+                onClick={async () => {
+                  try {
+                    await onSendActionInvitation(
+                      {
+                        isActive: true,
+                        requestResend: true,
+                      },
+                      record.idProspect
+                    );
+                  } catch (error) {}
+                }}
+              >
+                <i
+                  className="fa fa-paper-plane-o"
+                  style={{ fontSize: 18, color: "#1890ff" }}
+                />
+              </button>
+            )}
+            {record.canBeDeleted === false &&
+              record.canRequestResend === false && (
+                <i
+                  className="fa fa-circle-o"
+                  style={{ fontSize: 18, color: "gray" }}
+                />
+              )}
+          </div>
+        );
       },
     },
     {

@@ -29,6 +29,7 @@ import {
   callGetContract,
   callAddDocumentContractId,
   callGetAllRejectionReasons,
+  callUpdateProspectInvitation,
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
@@ -67,6 +68,7 @@ const Administrator = (props) => {
     callGetContract,
     callAddDocumentContractId,
     callGetAllRejectionReasons,
+    callUpdateProspectInvitation,
   } = props;
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
@@ -582,6 +584,31 @@ const Administrator = (props) => {
     }
   };
 
+  const handlerCallUpdateProspectInvitation = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateProspectInvitation(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "Tu solicitud se procesó exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallAddDocumentContractId = async (data, id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -947,6 +974,14 @@ const Administrator = (props) => {
             onAddUser={() => {
               setIsVisibleAddUser(!isVisibleAddUser);
             }}
+            onSendActionInvitation={async (data, id) => {
+              try {
+                await handlerCallUpdateProspectInvitation(data, id);
+                callAsynApis();
+              } catch (error) {
+                throw error;
+              }
+            }}
             onOpenDetail={(type, id, data) => {
               if (data.canViewDatail === true) {
                 if (id === 1) {
@@ -1026,6 +1061,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callAddDocumentContractId(data, id)),
   callGetAllRejectionReasons: (data) =>
     dispatch(callGetAllRejectionReasons(data)),
+  callUpdateProspectInvitation: (data, id) =>
+    dispatch(callUpdateProspectInvitation(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Administrator);
