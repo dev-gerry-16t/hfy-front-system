@@ -433,7 +433,7 @@ const SectionInfoAval = (props) => {
                             ...dataForm,
                             idEndorsementType: value,
                             idEndorsementFieldDescription:
-                              value.fieldDescription,
+                              valueSelect.fieldDescription,
                             isRequiresPlaceOfIssue:
                               valueSelect.requiresPlaceOfIssue,
                           });
