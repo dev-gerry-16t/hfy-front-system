@@ -235,10 +235,8 @@ const SectionInfoUser = (props) => {
                     : "Razón social"
                 }
                 onChange={(e) => {
-                  if (visibleComponents.lastName === false) {
-                    const value = e.target.value;
-                    setDataForm({ ...dataForm, givenName: value });
-                  }
+                  const value = e.target.value;
+                  setDataForm({ ...dataForm, givenName: value });
                 }}
                 suffix={
                   visibleComponents.lastName === true ? (
