@@ -280,8 +280,8 @@ const SectionInfoOwner = (props) => {
                   value={dataForm.lastName}
                   placeholder={"Apellido paterno"}
                   onChange={(e) => {
-                    // const value = e.target.value;
-                    // setDataForm({ ...dataForm, lastName: value });
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, lastName: value });
                   }}
                   suffix={<img src={IconProfile} alt="profile" width="15" />}
                 />
@@ -294,8 +294,8 @@ const SectionInfoOwner = (props) => {
                   value={dataForm.mothersMaidenName}
                   placeholder={"Apellido materno"}
                   onChange={(e) => {
-                    // const value = e.target.value;
-                    // setDataForm({ ...dataForm, mothersMaidenName: value });
+                    const value = e.target.value;
+                    setDataForm({ ...dataForm, mothersMaidenName: value });
                   }}
                   suffix={<img src={IconProfile} alt="profile" width="15" />}
                 />

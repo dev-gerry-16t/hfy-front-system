@@ -30,6 +30,7 @@ import {
   callGetRequestAdvancePymtById,
   callGetRequestAdvancePymtProperties,
   callUpdateRequestAdvancePym,
+  callUpdateInvitation,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -74,6 +75,7 @@ const Owner = (props) => {
     callGetRequestAdvancePymtById,
     callGetRequestAdvancePymtProperties,
     callUpdateRequestAdvancePym,
+    callUpdateInvitation,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -779,6 +781,32 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallUpdateInvitation = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -1005,6 +1033,14 @@ const Owner = (props) => {
             finishCallApis={finishCallApis}
           />
           <SectionCardTenant
+            onUpdateInvitation={async (data, id) => {
+              try {
+                await handlerCallUpdateInvitation(data, id);
+                handlerCalllSyncApis();
+              } catch (error) {
+                throw error;
+              }
+            }}
             dataCustomer={dataCustomer}
             history={history}
             tenantCoincidences={tenantCoincidences}
@@ -1078,6 +1114,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestAdvancePymtProperties(data)),
   callUpdateRequestAdvancePym: (data, id) =>
     dispatch(callUpdateRequestAdvancePym(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
