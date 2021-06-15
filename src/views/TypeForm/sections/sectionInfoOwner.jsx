@@ -1076,26 +1076,63 @@ const SectionInfoOwner = (props) => {
                   })}
               </Col>
             </Row>
-            <div
-              style={{ fontFamily: "Poppins", fontSize: 12, marginBottom: 15 }}
-            >
-              <Checkbox
-                checked={aceptTerms}
-                onChange={(e) => {
-                  setAceptTerms(e.target.checked);
-                }}
-              ></Checkbox>
-              <span
+            {isEmpty(dataPropertiesInfo) === false &&
+            dataPropertiesInfo[0].canBeSkiped === true ? (
+              <div
                 style={{
-                  marginLeft: 5,
-                  textAlign: "center",
-                  fontSize: 10,
-                  color: "black",
+                  fontFamily: "Poppins",
+                  fontSize: 12,
+                  marginBottom: 15,
                 }}
               >
-                He verificado la información y acepto que es correcta
-              </span>
-            </div>
+                <Checkbox
+                  checked={aceptTerms}
+                  onChange={(e) => {
+                    setAceptTerms(e.target.checked);
+                  }}
+                ></Checkbox>
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "black",
+                  }}
+                >
+                  He verificado la información y acepto que es correcta.
+                </span>
+              </div>
+            ) : (
+              <div
+                style={{
+                  fontFamily: "Poppins",
+                  fontSize: 12,
+                  marginBottom: 15,
+                }}
+              >
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "black",
+                  }}
+                >
+                  Aún no has completado la información de este paso, para
+                  continuar es necesario ingresar la información que aparece
+                  como{" "}
+                  <span
+                    style={{
+                      color: "red",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    *Requerido*
+                  </span>
+                  .
+                </span>
+              </div>
+            )}
           </div>
           <div className="two-action-buttons">
             <button
