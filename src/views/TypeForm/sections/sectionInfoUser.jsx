@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import SignatureCanvas from "react-signature-canvas";
 import {
   Input,
   Row,
@@ -64,7 +65,10 @@ const SectionInfoUser = (props) => {
     legalRepFieldDescription: null,
     legalRepIdTypeNumber: null,
     NIV: null,
+    isCCAccepted: null,
+    ccDigitalSignature: null,
   };
+  const [signature, setSignature] = useState(null);
   const [dataForm, setDataForm] = useState(initialForm);
   const [confirmData, setConfirmData] = useState(false);
   const [dataImage, setDataImage] = useState(null);
@@ -77,6 +81,7 @@ const SectionInfoUser = (props) => {
   });
   const [aceptTerms, setAceptTerms] = useState(false);
 
+  const signatureRef = useRef(null);
   useEffect(() => {
     if (isEmpty(dataFormSave) === false && isEmpty(dataIdTypes) === false) {
       const visibleField =
@@ -864,6 +869,108 @@ const SectionInfoUser = (props) => {
                 </Col>
               </Row>
             </>
+          )}
+          <p>Aceptación de Términos y condiciones y Firma de autorización</p>
+          <span>
+            RENTAL PAYMENTS S.A. de C.V. (en adelante como Homify) podrá
+            utilizar su información cuya finalidad será realizar una
+            investigación consultando tu Reporte de Crédito Especial (RCE) a
+            través de Círculo de Crédito <a>leer más...</a>
+          </span>
+          <div style={{ marginTop: 10 }}>
+            <Checkbox
+              checked={dataForm.isCCAccepted}
+              onChange={(e) => {
+                setDataForm({
+                  ...dataForm,
+                  isCCAccepted: e.target.checked,
+                });
+              }}
+            >
+              Si, Acepto.
+            </Checkbox>
+          </div>
+          {(dataForm.isCCAccepted === true || dataForm.isCCAccepted === 1) && (
+            <Row>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }} />
+              <Col
+                span={8}
+                xs={{ span: 24 }}
+                md={{ span: 8 }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                }}
+              >
+                <div style={{ textAlign: "center" }}>
+                  <strong>Firma de autorización</strong>
+                </div>
+                <div
+                  style={{
+                    border: "1px solid #4E4B66",
+                    borderRadius: "10px",
+                    background: "#fff",
+                    width: 320,
+                    alignSelf: "center",
+                  }}
+                >
+                  <SignatureCanvas
+                    penColor="black"
+                    canvasProps={{
+                      width: 320,
+                      height: 150,
+                      className: "sigCanvas",
+                    }}
+                    onEnd={(a, e, i) => {
+                      const signatureCurrent = signatureRef.current;
+                      const signatureBase64 = signatureCurrent.toDataURL();
+                      setDataForm({
+                        ...dataForm,
+                        ccDigitalSignature: signatureBase64,
+                      });
+                    }}
+                    ref={(ref) => {
+                      signatureRef.current = ref;
+                      if (isNil(signatureRef.current) === false) {
+                        signatureRef.current.fromDataURL(
+                          dataForm.ccDigitalSignature
+                        );
+                      }
+                    }}
+                  />
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <span>
+                    Autoriza:{" "}
+                    <strong>
+                      {dataForm.givenName} {dataForm.lastName}{" "}
+                      {dataForm.mothersMaidenName}
+                    </strong>
+                  </span>
+                </div>
+                <div style={{ textAlign: "center", marginTop: 5 }}>
+                  <button
+                    style={{
+                      border: "1px solid var(--color-primary)",
+                      color: "var(--color-primary)",
+                      background: "#fff",
+                      borderRadius: 5,
+                    }}
+                    onClick={() => {
+                      signatureRef.current.clear();
+                      setDataForm({
+                        ...dataForm,
+                        ccDigitalSignature: null,
+                      });
+                    }}
+                  >
+                    Limpiar
+                  </button>
+                </div>
+              </Col>
+              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }} />
+            </Row>
           )}
           <div className="button_actions">
             <button
