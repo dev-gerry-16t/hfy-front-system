@@ -7,11 +7,11 @@ import "axios-progress-bar/dist/nprogress.css";
 import "./assets/css/_index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import * as serviceWorker from "./serviceWorker";
+// import * as serviceWorker from "./serviceWorker";
 
 const { store, persistor } = configureStore();
 
-serviceWorker.register();
+// serviceWorker.register();
 
 const loading = (
   <div className="animated fadeIn pt-3 text-center">
