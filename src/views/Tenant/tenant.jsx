@@ -858,10 +858,10 @@ const Tenant = (props) => {
         },
         id
       );
-      showMessageStatusApi(
-        "En breve realizaremos el deposito en garantía a tu propietario",
-        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-      );
+      // showMessageStatusApi(
+      //   "En breve realizaremos el deposito en garantía a tu propietario",
+      //   GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      // );
     } catch (error) {
       showMessageStatusApi(
         isNil(error) === false

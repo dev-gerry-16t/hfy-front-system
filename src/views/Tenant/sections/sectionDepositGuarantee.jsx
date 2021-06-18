@@ -72,26 +72,23 @@ const SectionDepositGuarantee = (props) => {
     >
       <div className="form-modal">
         <div className="title-head-modal">
-          {/* <button
+          <button
             className="arrow-back-to"
             type="button"
             onClick={() => {
-              if (openSection === 1) {
-                onClose();
-              } else {
-                setOpenSection(1);
-              }
+              onClose();
+              setOpenSection(1);
             }}
           >
             <img src={Arrow} alt="backTo" width="30" />
-          </button> */}
+          </button>
           <h1>
             {openSection === 1 && "Depósito en garantía"}
             {openSection === 2 && "Información bancaria"}
             {openSection === 3 && "Contrato de depósito en garantía"}
             {openSection === 4 && "¿Cómo funciona?"}
           </h1>
-          {openSection === 1 && (
+          {/* {openSection === 1 && (
             <button
               className="chat-contract-icon"
               type="button"
@@ -105,7 +102,7 @@ const SectionDepositGuarantee = (props) => {
             >
               <span style={{ fontSize: 15 }}>?</span>
             </button>
-          )}
+          )} */}
         </div>
         <div className="main-form-information-guarantee">
           {openSection === 1 && (
