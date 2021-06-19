@@ -146,6 +146,8 @@ const Tenant = (props) => {
   const [dataLoan, setDataLoan] = useState({});
   const [urlContract, setUrlContract] = useState({});
   const [dataBank, setDataBank] = useState([]);
+  const [howToPay, setHowToPay] = useState(false);
+  const [selectMethodPayment, setSelectMethodPayment] = useState(false);
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -948,12 +950,190 @@ const Tenant = (props) => {
     }
   };
 
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        showMessageStatusApi(
+          "CLABE copiada correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
+
+  const parseNumberClabe = (num) => {
+    const num1 = num.slice(0, 4);
+    const num2 = num.slice(4, 8);
+    const num3 = num.slice(8, 12);
+    const num4 = num.slice(12, 16);
+    const num5 = num.slice(16, 18);
+    return `${num1} ${num2} ${num3} ${num4} ${num5}`;
+  };
+
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
   }, []);
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={howToPay}
+        onClose={() => {
+          setHowToPay(false);
+        }}
+      >
+        {selectMethodPayment === false && (
+          <div className="banner-payment-rent">
+            <div className="title-banner">
+              <h1>Pago de renta</h1>
+            </div>
+            <div className="amount-to-pay">
+              <span>Monto a pagar</span>
+              <strong>{dataTenant.currentRent}</strong>
+            </div>
+            <div className="date-payment">
+              Fecha de próximo pago <strong>- {dataTenant.nextPaymentAt}</strong>
+            </div>
+            <div className="date-payment">
+              Fecha de limite de pago <strong>- 07 Jul.</strong>
+            </div>
+            <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
+              <p>Método de pago</p>
+            </div>
+            <div className="section-method-payment">
+              <div className="card-icon">
+                <i
+                  className="fa fa-clock-o"
+                  style={{ fontSize: 18, color: "#6E7191" }}
+                />
+              </div>
+              <div
+                className="card-info-method"
+                onClick={() => {
+                  setSelectMethodPayment(true);
+                }}
+              >
+                <strong>Pago por transferencia SPEI</strong>
+                <span>Normalmente se refleja en minutos</span>
+              </div>
+            </div>
+            <div
+              className="two-action-buttons-banner"
+              style={{ marginTop: 20 }}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  setHowToPay(false);
+                }}
+              >
+                <span>Salir</span>
+              </button>
+            </div>
+          </div>
+        )}
+        {selectMethodPayment === true && (
+          <div className="banner-payment-rent">
+            <button
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 10,
+                border: "none",
+                background: "transparent",
+              }}
+              type="button"
+              onClick={() => {
+                setSelectMethodPayment(false);
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <div className="title-banner">
+              <h1>Transferencia SPEI</h1>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                1. Inicia una transferencia desde tu banca en linea o app de tu
+                banco.
+              </span>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>2. Ingresa los siguientes datos:</span>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>Nombre del beneficiario</strong>
+                <span>{dataTenant.shortNameTenant}</span>
+              </div>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>CLABE Interbancaria</strong>
+                <span id="interbank-clabe">
+                  {parseNumberClabe(dataTenant.clabe)}
+                </span>
+              </div>
+              <div className="card-icon">
+                <i
+                  className="fa fa-clone"
+                  style={{ fontSize: 18, color: "#6E7191", cursor: "pointer" }}
+                  onClick={() => {
+                    copyTextToClipboard(dataTenant.clabe);
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              className="section-method-payment-v2"
+              style={{
+                borderBottom: "1px solid #d6d8e7",
+              }}
+            >
+              <div className="card-info-method">
+                <strong>Banco</strong>
+                <span>{dataTenant.bankName}</span>
+              </div>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                3. Ingresa el monto a pagar y finaliza la operación. Puedes
+                guardar tu comprobante de pago o una captura de pantalla en caso
+                de requerir alguna aclaración.
+              </span>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <strong>
+                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
+                un horario de 6 A.M. a 6 P.M.
+              </strong>
+            </div>
+            <div style={{ margin: "15px 0px", textAlign: "center" }}>
+              <strong style={{ color: "var(--color-primary)" }}>
+                ¡Listo! Finalmente recibirás una notificación por tu pago
+              </strong>
+            </div>
+          </div>
+        )}
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleOpenPayment}
         onClose={() => {
@@ -1311,12 +1491,13 @@ const Tenant = (props) => {
                 <button
                   type="button"
                   onClick={() => {
-                    setIsVisiblePaymentRent(!isVisiblePaymentRent);
+                    setIsVisiblePaymentRent(true);
                     setIsVisibleMessages(false);
                     setIsVisibleIncidence(false);
+                    window.location.href = "#section-register-action";
                   }}
                 >
-                  <span>Pagar renta</span>
+                  <span>Registrar pago</span>
                 </button>
               </div>
             )}
@@ -1334,6 +1515,16 @@ const Tenant = (props) => {
                   </button>
                 </div>
               )}
+            <div className="button_init_primary">
+              <button
+                type="button"
+                onClick={() => {
+                  setHowToPay(true);
+                }}
+              >
+                <span>¿Cómo pagar la renta?</span>
+              </button>
+            </div>
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -1394,17 +1585,16 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
+        <div id="section-register-action"></div>
         {isVisibleMessages === false &&
           isVisiblePaymentRent === false &&
           isVisibleIncidence === false && (
             <div className="main-information-owner">
-              <div className="title-cards flex-title-card">
+              <div
+                className="title-cards flex-title-card"
+                style={{ flexDirection: "row" }}
+              >
                 <span>Propietario</span>
-                <div className="button_init_secondary">
-                  {/* <button type="button" onClick={() => {}}>
-                    <span>Reportar Propietario</span>
-                  </button> */}
-                </div>
               </div>
               <div className="section-information-actions">
                 <div className="section-information-info">
@@ -1605,7 +1795,7 @@ const Tenant = (props) => {
           onClick={() => {
             setIsVisiblePaymentRent(!isVisiblePaymentRent);
           }}
-          titleSection="Pagar renta"
+          titleSection="Registrar pago"
           isVisible={isVisiblePaymentRent}
         >
           <SectionRegisterPayment
