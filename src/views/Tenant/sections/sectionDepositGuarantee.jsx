@@ -111,10 +111,10 @@ const SectionDepositGuarantee = (props) => {
                 <span>
                   <strong>¡Homify paga por ti!</strong>
                   <p style={{ marginTop: 10 }}>
-                    Fuiste aprobad@ para obtener el beneficio de ausentar el
-                    pago por concepto de <strong>Depósito en garantía</strong>,
-                    a continuación te presentamos la información para hacer
-                    valido tu beneficio.
+                    Eres candidat@ a obtener el beneficio de ausentar el pago
+                    por concepto de <strong>Depósito en garantía</strong>, a
+                    continuación te presentamos la información para hacer valido
+                    tu beneficio.
                   </p>
                 </span>
               </div>

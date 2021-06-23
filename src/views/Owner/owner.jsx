@@ -996,7 +996,7 @@ const Owner = (props) => {
                     await handlerCallTenantCatalog();
                   }}
                 >
-                  <span>Adelanto de renta</span>
+                  <span>¡Necesito un adelanto!</span>
                 </button>
               </div>
             )}

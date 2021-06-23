@@ -980,12 +980,16 @@ const Tenant = (props) => {
   };
 
   const parseNumberClabe = (num) => {
-    const num1 = num.slice(0, 4);
-    const num2 = num.slice(4, 8);
-    const num3 = num.slice(8, 12);
-    const num4 = num.slice(12, 16);
-    const num5 = num.slice(16, 18);
-    return `${num1} ${num2} ${num3} ${num4} ${num5}`;
+    let numClabe = "";
+    if (isNil(num) === false) {
+      const num1 = num.slice(0, 4);
+      const num2 = num.slice(4, 8);
+      const num3 = num.slice(8, 12);
+      const num4 = num.slice(12, 16);
+      const num5 = num.slice(16, 18);
+      numClabe = `${num1} ${num2} ${num3} ${num4} ${num5}`;
+    }
+    return numClabe;
   };
 
   useEffect(() => {
@@ -998,6 +1002,7 @@ const Tenant = (props) => {
         isVisibleDialog={howToPay}
         onClose={() => {
           setHowToPay(false);
+          setSelectMethodPayment(false);
         }}
       >
         {selectMethodPayment === false && (
@@ -1010,7 +1015,8 @@ const Tenant = (props) => {
               <strong>{dataTenant.currentRent}</strong>
             </div>
             <div className="date-payment">
-              Fecha de próximo pago <strong>- {dataTenant.nextPaymentAt}</strong>
+              Fecha de próximo pago{" "}
+              <strong>- {dataTenant.nextPaymentAt}</strong>
             </div>
             <div className="date-payment">
               Fecha de limite de pago <strong>- 07 Jul.</strong>
@@ -1515,16 +1521,18 @@ const Tenant = (props) => {
                   </button>
                 </div>
               )}
-            <div className="button_init_primary">
-              <button
-                type="button"
-                onClick={() => {
-                  setHowToPay(true);
-                }}
-              >
-                <span>¿Cómo pagar la renta?</span>
-              </button>
-            </div>
+            {dataTenant.canDeal === 1 && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHowToPay(true);
+                  }}
+                >
+                  <span>¿Cómo hacer mi pago de renta?</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -1657,7 +1665,7 @@ const Tenant = (props) => {
                       }}
                       className="button-action-primary"
                     >
-                      <span>Enviar mensaje</span>
+                      <span>Enviar mensaje al propietario</span>
                     </button>
                   </div>
                   <div className="section-information-button-3">
