@@ -53,22 +53,44 @@ const SectionCurrentAddress = (props) => {
   const DescriptionItem = ({ title, content, isRequired }) => (
     <div
       className="site-description-item-profile-wrapper"
-      style={{ fontFamily: "Poppins" }}
+      style={{
+        fontFamily: "Poppins",
+        display: "flex",
+        justifyContent: "space-around",
+        fontSize: 12,
+      }}
     >
-      <strong
-        className="site-description-item-profile-p-label"
-        style={{ marginRight: 10 }}
-      >
-        {title}:
-      </strong>
-      <span
+      <div
+        title={title}
         style={{
-          color: isRequired === true ? "red" : "",
-          fontWeight: isRequired === true ? "bold" : "",
+          width: "130px",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
         }}
       >
-        {content}
-      </span>
+        <strong className="site-description-item-profile-p-label">
+          {title}
+        </strong>
+      </div>
+      <div
+        title={content}
+        style={{
+          width: "170px",
+          whiteSpace: "nowrap",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
+        }}
+      >
+        <span
+          style={{
+            color: isRequired === true ? "red" : "",
+            fontWeight: isRequired === true ? "bold" : "",
+          }}
+        >
+          {content}
+        </span>
+      </div>
     </div>
   );
 
@@ -422,7 +444,7 @@ const SectionCurrentAddress = (props) => {
                 generación del contrato.
               </span>
             </div>
-            <p>
+            <p style={{ textAlign: "center" }}>
               {isEmpty(dataPropertiesInfo) === false &&
               isNil(dataPropertiesInfo[0].stepIn) === false
                 ? dataPropertiesInfo[0].stepIn
