@@ -1126,12 +1126,12 @@ const Tenant = (props) => {
                 de requerir alguna aclaración.
               </span>
             </div>
-            <div style={{ margin: "15px 0px" }}>
+            {/* <div style={{ margin: "15px 0px" }}>
               <strong>
                 Nota: Para que tu pago sea procesado el mismo dia, realizalo en
                 un horario de 6 A.M. a 6 P.M.
               </strong>
-            </div>
+            </div> */}
             <div style={{ margin: "15px 0px", textAlign: "center" }}>
               <strong style={{ color: "var(--color-primary)" }}>
                 ¡Listo! Finalmente recibirás una notificación por tu pago

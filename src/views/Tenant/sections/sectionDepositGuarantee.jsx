@@ -84,7 +84,6 @@ const SectionDepositGuarantee = (props) => {
           </button>
           <h1>
             {openSection === 1 && "Depósito en garantía"}
-            {openSection === 2 && "Información bancaria"}
             {openSection === 3 && "Contrato de depósito en garantía"}
             {openSection === 4 && "¿Cómo funciona?"}
           </h1>
@@ -148,116 +147,7 @@ const SectionDepositGuarantee = (props) => {
               </div>
             </>
           )}
-          {openSection === 2 && (
-            <>
-              <div className="main-form-information">
-                <div
-                  className="policy-information-modal"
-                  style={{ marginBottom: 15 }}
-                >
-                  <span>
-                    Para continuar con el proceso es indispensable ingresar tu
-                    información bancaria <a>leer mas...</a>
-                  </span>
-                </div>
 
-                <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                    <Input
-                      value={dataForm.accountHolder}
-                      placeholder={"Titular de la cuenta (Nombre completo)"}
-                      onChange={(e) => {
-                        setDataForm({
-                          ...dataForm,
-                          accountHolder: e.target.value,
-                        });
-                      }}
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                    <div>
-                      <Input
-                        value={dataForm.clabeNumber}
-                        placeholder={"CLABE interbancaria (18 dígitos)"}
-                        onChange={(e) => {
-                          if (e.target.value.length <= 18) {
-                            if (e.target.value.length === 18) {
-                              parseDataClabe(e.target.value);
-                            }
-                            setDataForm({
-                              ...dataForm,
-                              clabeNumber: e.target.value,
-                            });
-                          }
-                          if (isEmpty(e.target.value) === true) {
-                            setIsCorrectClabe(true);
-                            parseDataClabe(e.target.value);
-                          }
-                        }}
-                        onKeyDown={(e) => {
-                          if (e.keyCode === 109 || e.keyCode === 107) {
-                            e.preventDefault();
-                          }
-                        }}
-                        type="number"
-                        min="0"
-                      />
-                      {isCorrectClabe === false && (
-                        <div
-                          style={{
-                            background: "#FFF4EC",
-                            borderRadius: "0px 0px 10px 10px",
-                            padding: "0px 10px",
-                          }}
-                        >
-                          <img src={admiration} alt="exclaim" />
-                          <span
-                            style={{ marginLeft: "10px", color: "#CF6E23" }}
-                          >
-                            CLABE no valida
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                    <Input
-                      value={dataForm.idBankText}
-                      placeholder={"Banco"}
-                      disabled
-                      onChange={(e) => {}}
-                    />
-                    {/* <Select
-                      placeholder="Banco"
-                      showSearch
-                      value={dataForm.idBank}
-                      onChange={(value, option) => {
-                        setDataForm({
-                          ...dataForm,
-                          idBank: value,
-                          idBankText: option.children,
-                        });
-                      }}
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {isEmpty(dataBank) === false &&
-                        dataBank.map((row) => {
-                          return <Option value={row.id}>{row.text}</Option>;
-                        })}
-                    </Select> */}
-                  </Col>
-                </Row>
-              </div>
-            </>
-          )}
           {openSection === 3 && (
             <div className="value-calculator-policy">
               <CustomSignatureContract
@@ -386,26 +276,6 @@ const SectionDepositGuarantee = (props) => {
               }}
             >
               <span>Rechazar</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                setOpenSection(2);
-              }}
-            >
-              <span>Aceptar</span>
-            </button>
-          </div>
-        )}
-        {openSection === 2 && (
-          <div className="two-action-buttons">
-            <button
-              type="button"
-              onClick={() => {
-                setOpenSection(1);
-              }}
-            >
-              <span>Regresar</span>
             </button>
             <button
               type="button"
