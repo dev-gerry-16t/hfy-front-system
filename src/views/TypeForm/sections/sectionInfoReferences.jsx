@@ -183,7 +183,6 @@ const SectionInfoReferences = (props) => {
               dataReferenceProperties.map((row) => {
                 return (
                   <>
-
                     <p style={{ textAlign: "center" }}>{row.labelReference}</p>
                     <Row>
                       <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>

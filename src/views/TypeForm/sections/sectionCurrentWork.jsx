@@ -3,6 +3,8 @@ import NumberFormat from "react-number-format";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Input, Row, Col, Select, Alert, Modal, Checkbox } from "antd";
+import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
+import CustomSelectTypeForm from "../../../components/CustomSelectTypeForm";
 
 const { Option } = Select;
 
@@ -109,9 +111,10 @@ const SectionCurrentWork = (props) => {
           )}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Select
+              <CustomSelectTypeForm
+                id="idOccupationActivity"
                 placeholder="Puesto/Ocupación"
-                showSearch
+                data={dataOccupations}
                 value={dataForm.idOccupationActivity}
                 onChange={(value, option) => {
                   setDataForm({
@@ -119,125 +122,156 @@ const SectionCurrentWork = (props) => {
                     idOccupationActivity: value,
                   });
                 }}
-                filterOption={(input, option) =>
-                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
-                  0
-                }
-              >
-                {isEmpty(dataOccupations) === false &&
-                  dataOccupations.map((row) => {
-                    return (
-                      <Option value={row.idOccupationActivity}>
-                        {row.text}
-                      </Option>
-                    );
-                  })}
-              </Select>
+              />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix=""
-                suffix=""
-                value={dataForm.economicDependents}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Número de dependientes economicos"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    economicDependents: floatValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Número de dependientes económicos
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.economicDependents}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      economicDependents: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
           </Row>
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.companyName}
                 placeholder={"Nombre de la empresa"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, companyName: e.target.value });
+                onChange={(value) => {
+                  setDataForm({ ...dataForm, companyName: value });
                 }}
               />
             </Col>
           </Row>
           <Row>
             <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix="$"
-                suffix=""
-                value={dataForm.currentSalary}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Sueldo mensual"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    currentSalary: floatValue,
-                    currentSalaryFormat: formattedValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Sueldo mensual
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.currentSalary}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      currentSalary: floatValue,
+                      currentSalaryFormat: formattedValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix=""
-                suffix=""
-                value={dataForm.antiquity}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Antiguedad"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({ ...dataForm, antiquity: floatValue });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Antigüedad
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.antiquity}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({ ...dataForm, antiquity: floatValue });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Select
+              <CustomSelectTypeForm
+                id="idAntiquityTimeRange"
                 placeholder="Periodo"
+                data={[
+                  { idAntiquityTimeRange: "M", text: "Meses" },
+                  { idAntiquityTimeRange: "Y", text: "Años" },
+                ]}
                 onChange={(value, option) => {
                   setDataForm({
                     ...dataForm,
@@ -245,92 +279,111 @@ const SectionCurrentWork = (props) => {
                   });
                 }}
                 value={dataForm.antiquityTimeRange}
-              >
-                <Option value={"M"} onClick={() => {}}>
-                  Meses
-                </Option>
-                <Option value={"Y"} onClick={() => {}}>
-                  Años
-                </Option>
-              </Select>
+              />
             </Col>
           </Row>
           <Row>
             <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix="$"
-                suffix=""
-                value={dataForm.otherIncomes}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Otros ingresos"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    otherIncomes: floatValue,
-                    otherIncomesFormat: formattedValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Otros ingresos
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.otherIncomes}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomes: floatValue,
+                      otherIncomesFormat: formattedValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
-              <textarea
-                style={{
-                  background: "transparent",
-                  borderRadius: 10,
-                  fontWeight: "bold",
-                }}
-                className="ant-input inputLogin"
-                placeholder="Descripción de otros ingresos"
-                value={
-                  isNil(dataForm.otherIncomesDescription) === false
-                    ? dataForm.otherIncomesDescription
-                    : ""
-                }
-                maxlength="1000"
-                onChange={(e) => {
-                  setDataForm({
-                    ...dataForm,
-                    otherIncomesDescription: e.target.value,
-                  });
-                }}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    top: -16,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Descripción de otros ingresos
+                </label>
+                <textarea
+                  style={{
+                    background: "transparent",
+                    borderRadius: 10,
+                    fontWeight: "bold",
+                  }}
+                  className="ant-input inputLogin"
+                  placeholder=""
+                  value={
+                    isNil(dataForm.otherIncomesDescription) === false
+                      ? dataForm.otherIncomesDescription
+                      : ""
+                  }
+                  maxlength="1000"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomesDescription: e.target.value,
+                    });
+                  }}
+                />
+              </div>
             </Col>
           </Row>
-          <p>Información de tu jefe directo</p>
+          <p style={{ marginBottom: 25 }}>Información de tu jefe directo</p>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.bossName}
                 placeholder={"Nombre"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, bossName: e.target.value });
+                onChange={(value) => {
+                  setDataForm({ ...dataForm, bossName: value });
                 }}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.bossEmailAddress}
                 placeholder={"Correo"}
-                onChange={(e) => {
+                onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    bossEmailAddress: e.target.value,
+                    bossEmailAddress: value,
                   });
                 }}
               />
@@ -338,11 +391,10 @@ const SectionCurrentWork = (props) => {
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.bossPhoneNumber}
                 placeholder={"Teléfono"}
-                onChange={(e) => {
-                  const value = e.target.value;
+                onChange={(value) => {
                   setDataForm({ ...dataForm, bossPhoneNumber: value });
                 }}
               />

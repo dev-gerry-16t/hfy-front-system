@@ -155,7 +155,7 @@ const SectionBankInfo = (props) => {
           )}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <div className="option-select-radio">
+              <div className="option-select-radio" style={{ marginBottom: 15 }}>
                 <span
                   style={{
                     color: "var(--color-primary)",
@@ -187,10 +187,21 @@ const SectionBankInfo = (props) => {
             <>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <div>
+                  <div style={{ position: "relative", marginBottom: 15 }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        top: -16,
+                        left: 12,
+                        color: "#4E4B66",
+                        fontSize: 12,
+                      }}
+                    >
+                      CLABE interbancaria (18 dígitos)
+                    </label>
                     <Input
                       value={dataForm.clabeNumber}
-                      placeholder={"CLABE interbancaria (18 dígitos)"}
+                      placeholder=""
                       onChange={(e) => {
                         if (e.target.value.length <= 18) {
                           if (e.target.value.length < 18) {
@@ -236,12 +247,25 @@ const SectionBankInfo = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
-                    value={dataForm.idBankText}
-                    placeholder={"Banco"}
-                    disabled
-                    onChange={(e) => {}}
-                  />
+                  <div style={{ position: "relative", marginBottom: 15 }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        bottom: 32,
+                        left: 12,
+                        color: "#4E4B66",
+                        fontSize: 12,
+                      }}
+                    >
+                      Banco
+                    </label>
+                    <Input
+                      value={dataForm.idBankText}
+                      placeholder=""
+                      disabled
+                      onChange={(e) => {}}
+                    />
+                  </div>
                   {/* <Select
                       placeholder="Banco"
                       showSearch
@@ -268,59 +292,98 @@ const SectionBankInfo = (props) => {
               </Row>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
-                    type="number"
-                    value={dataForm.bankBranch}
-                    placeholder={"Sucursal"}
-                    onChange={(e) => {
-                      if (e.target.value.length <= 30) {
-                        setDataForm({
-                          ...dataForm,
-                          bankBranch: e.target.value,
-                        });
-                      }
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.keyCode === 109 || e.keyCode === 107) {
-                        e.preventDefault();
-                      }
-                    }}
-                  />
+                  <div style={{ position: "relative", marginBottom: 15 }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        bottom: 32,
+                        left: 12,
+                        color: "#4E4B66",
+                        fontSize: 12,
+                      }}
+                    >
+                      Sucursal
+                    </label>
+                    <Input
+                      type="number"
+                      value={dataForm.bankBranch}
+                      placeholder=""
+                      onChange={(e) => {
+                        if (e.target.value.length <= 30) {
+                          setDataForm({
+                            ...dataForm,
+                            bankBranch: e.target.value,
+                          });
+                        }
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
+                    />
+                  </div>
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
-                    type="number"
-                    value={dataForm.accountNumber}
-                    placeholder={"Número de cuenta"}
-                    onKeyDown={(e) => {
-                      if (e.keyCode === 109 || e.keyCode === 107) {
-                        e.preventDefault();
-                      }
-                    }}
-                    onChange={(e) => {
-                      if (e.target.value.length <= 30) {
-                        setDataForm({
-                          ...dataForm,
-                          accountNumber: e.target.value,
-                        });
-                      }
-                    }}
-                  />
+                  <div style={{ position: "relative", marginBottom: 15 }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        bottom: 32,
+                        left: 12,
+                        color: "#4E4B66",
+                        fontSize: 12,
+                      }}
+                    >
+                      Número de cuenta
+                    </label>
+                    <Input
+                      type="number"
+                      value={dataForm.accountNumber}
+                      placeholder=""
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onChange={(e) => {
+                        if (e.target.value.length <= 30) {
+                          setDataForm({
+                            ...dataForm,
+                            accountNumber: e.target.value,
+                          });
+                        }
+                      }}
+                    />
+                  </div>
                 </Col>
               </Row>
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                  <Input
-                    value={dataForm.accountHolder}
-                    placeholder={"A nombre de"}
-                    onChange={(e) => {
-                      setDataForm({
-                        ...dataForm,
-                        accountHolder: e.target.value,
-                      });
-                    }}
-                  />
+                  <div style={{ position: "relative", marginBottom: 15 }}>
+                    <label
+                      style={{
+                        position: "absolute",
+                        bottom: 32,
+                        left: 12,
+                        color: "#4E4B66",
+                        fontSize: 12,
+                      }}
+                    >
+                      A nombre de
+                    </label>
+                    <Input
+                      value={dataForm.accountHolder}
+                      placeholder=""
+                      onChange={(e) => {
+                        setDataForm({
+                          ...dataForm,
+                          accountHolder: e.target.value,
+                        });
+                      }}
+                    />
+                  </div>
                 </Col>
               </Row>
             </>
@@ -328,22 +391,35 @@ const SectionBankInfo = (props) => {
 
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <DatePicker
-                value={
-                  isNil(dataForm.signingAvailabilityAt) === false
-                    ? moment(dataForm.signingAvailabilityAt, "YYYY-MM-DD")
-                    : null
-                }
-                placeholder="Fecha de firma de contrato"
-                onChange={(momentFormat, date) => {
-                  setDataForm({
-                    ...dataForm,
-                    signingAvailabilityAt:
-                      moment(momentFormat).format("YYYY-MM-DD"),
-                  });
-                }}
-                format="DD MMMM YYYY"
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Fecha de firma de contrato
+                </label>
+                <DatePicker
+                  value={
+                    isNil(dataForm.signingAvailabilityAt) === false
+                      ? moment(dataForm.signingAvailabilityAt, "YYYY-MM-DD")
+                      : null
+                  }
+                  placeholder=""
+                  onChange={(momentFormat, date) => {
+                    setDataForm({
+                      ...dataForm,
+                      signingAvailabilityAt:
+                        moment(momentFormat).format("YYYY-MM-DD"),
+                    });
+                  }}
+                  format="DD MMMM YYYY"
+                />
+              </div>
             </Col>
           </Row>
           <div className="button_actions">

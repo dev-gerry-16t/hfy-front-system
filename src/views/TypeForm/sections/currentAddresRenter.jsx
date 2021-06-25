@@ -14,6 +14,8 @@ import {
   Checkbox,
 } from "antd";
 import { CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
+import CustomSelectTypeForm from "../../../components/CustomSelectTypeForm";
 
 const { Option } = Select;
 
@@ -144,7 +146,12 @@ const CurrentAddressRenter = (props) => {
           )}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <div className="option-select-radio">
+              <div
+                className="option-select-radio"
+                style={{
+                  marginBottom: 15,
+                }}
+              >
                 <span
                   style={{
                     color: "var(--color-primary)",
@@ -177,13 +184,13 @@ const CurrentAddressRenter = (props) => {
           </Row>
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.streetProperty}
-                placeholder={"Calle"}
-                onChange={(e) => {
+                placeholder="Calle"
+                onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    streetProperty: e.target.value,
+                    streetProperty: value,
                   });
                 }}
               />
@@ -191,37 +198,36 @@ const CurrentAddressRenter = (props) => {
           </Row>
           <Row>
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.suiteProperty}
-                placeholder={"Número interior"}
-                onChange={(e) => {
-                  setDataForm({ ...dataForm, suiteProperty: e.target.value });
+                placeholder="Número interior"
+                onChange={(value) => {
+                  setDataForm({ ...dataForm, suiteProperty: value });
                 }}
               />
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.streetNumberProperty}
-                placeholder={"Número exterior"}
-                onChange={(e) => {
+                placeholder="Número exterior"
+                onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    streetNumberProperty: e.target.value,
+                    streetNumberProperty: value,
                   });
                 }}
               />
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.zipCodeProperty}
-                placeholder={"Código postal"}
-                onChange={(e) => {
-                  const value = e.target.value;
+                placeholder="Código postal"
+                onChange={(value) => {
                   if (value.length >= 5) {
                     setDataForm({ ...dataForm, zipCodeProperty: value });
-                    onChangeZipCode(e.target.value);
+                    onChangeZipCode(value);
                   } else {
                     if (isEmpty(value) === true || isNil(value) === true) {
                       setDataForm({
@@ -248,17 +254,17 @@ const CurrentAddressRenter = (props) => {
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.state}
-                placeholder={"Estado"}
+                placeholder="Estado"
                 onChange={(e) => {}}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.city}
-                placeholder={"Municipio/Delegación"}
+                placeholder="Municipio/Delegación"
                 onChange={(e) => {}}
               />
             </Col>
@@ -266,45 +272,58 @@ const CurrentAddressRenter = (props) => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               {isOpenInput === false ? (
-                <Select
-                  placeholder="Colonia"
-                  value={dataForm.idZipCodeProperty}
-                  onChange={(value, option) => {
-                    const dataSelect = option.onClick();
-                    setIsOpenInput(dataSelect.isOpen);
-                    if (dataSelect.isOpen === true) {
-                      setDataForm({
-                        ...dataForm,
-                        neighborhoodProperty: null,
-                        idZipCodeProperty: value,
-                      });
-                    } else {
-                      setDataForm({
-                        ...dataForm,
-                        neighborhoodProperty: option.children,
-                        idZipCodeProperty: value,
-                      });
-                    }
-                  }}
-                >
-                  {isEmpty(dataZipCatalog) === false &&
-                    dataZipCatalog.map((row) => {
-                      return (
-                        <Option
-                          value={row.idZipCode}
-                          onClick={() => {
-                            return row;
-                          }}
-                        >
-                          {row.neighborhood}
-                        </Option>
-                      );
-                    })}
-                </Select>
+                <div style={{ position: "relative", marginBottom: 15 }}>
+                  <label
+                    style={{
+                      position: "absolute",
+                      bottom: 32,
+                      left: 12,
+                      color: "#4E4B66",
+                      fontSize: 12,
+                    }}
+                  >
+                    Colonia
+                  </label>
+                  <Select
+                    placeholder="Colonia"
+                    value={dataForm.idZipCodeProperty}
+                    onChange={(value, option) => {
+                      const dataSelect = option.onClick();
+                      setIsOpenInput(dataSelect.isOpen);
+                      if (dataSelect.isOpen === true) {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhoodProperty: null,
+                          idZipCodeProperty: value,
+                        });
+                      } else {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhoodProperty: option.children,
+                          idZipCodeProperty: value,
+                        });
+                      }
+                    }}
+                  >
+                    {isEmpty(dataZipCatalog) === false &&
+                      dataZipCatalog.map((row) => {
+                        return (
+                          <Option
+                            value={row.idZipCode}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.neighborhood}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </div>
               ) : (
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.neighborhoodProperty}
-                  placeholder={"Indicar Colonia"}
+                  placeholder="Indicar Colonia"
                   suffix={
                     <Tooltip title="Cerrar">
                       <CloseOutlined
@@ -320,10 +339,10 @@ const CurrentAddressRenter = (props) => {
                       />
                     </Tooltip>
                   }
-                  onChange={(e) => {
+                  onChange={(value) => {
                     setDataForm({
                       ...dataForm,
-                      neighborhoodProperty: e.target.value,
+                      neighborhoodProperty: value,
                     });
                   }}
                 />
@@ -331,9 +350,11 @@ const CurrentAddressRenter = (props) => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Select
+              <CustomSelectTypeForm
+                id="idPropertyType"
                 value={dataForm.idPropertyType}
                 placeholder="Tipo de inmueble"
+                data={dataPropertyTypes}
                 onChange={(value, option) => {
                   setDataForm({
                     ...dataForm,
@@ -341,29 +362,17 @@ const CurrentAddressRenter = (props) => {
                     idPropertyTypeText: option.children,
                   });
                 }}
-              >
-                {isEmpty(dataPropertyTypes) === false &&
-                  dataPropertyTypes.map((row) => {
-                    return (
-                      <Option
-                        value={row.idPropertyType}
-                        onClick={() => {
-                          return row;
-                        }}
-                      >
-                        {row.text}
-                      </Option>
-                    );
-                  })}
-              </Select>
+              />
             </Col>
           </Row>
           {isNil(dataForm.idPropertyType) === false &&
             dataForm.idPropertyType === 4 && (
               <Row>
                 <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
-                  <Select
+                  <CustomSelectTypeForm
+                    id="idCommercialActivity"
                     placeholder="Actividad comercial del inmueble"
+                    data={dataCommercialActivity}
                     value={dataForm.idCommercialActivity}
                     onChange={(value, option) => {
                       setDataForm({
@@ -371,21 +380,7 @@ const CurrentAddressRenter = (props) => {
                         idCommercialActivity: value,
                       });
                     }}
-                  >
-                    {isEmpty(dataCommercialActivity) === false &&
-                      dataCommercialActivity.map((row) => {
-                        return (
-                          <Option
-                            value={row.idCommercialActivity}
-                            onClick={() => {
-                              return row;
-                            }}
-                          >
-                            {row.text}
-                          </Option>
-                        );
-                      })}
-                  </Select>
+                  />
                 </Col>
                 <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
                   <Tooltip
@@ -406,7 +401,12 @@ const CurrentAddressRenter = (props) => {
             )}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <div className="option-select-radio">
+              <div
+                className="option-select-radio"
+                style={{
+                  marginBottom: 15,
+                }}
+              >
                 <span
                   style={{
                     color: "var(--color-primary)",
@@ -438,7 +438,12 @@ const CurrentAddressRenter = (props) => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <div className="option-select-radio">
+              <div
+                className="option-select-radio"
+                style={{
+                  marginBottom: 15,
+                }}
+              >
                 <span
                   style={{
                     color: "var(--color-primary)",
@@ -467,95 +472,140 @@ const CurrentAddressRenter = (props) => {
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix="$"
-                suffix=""
-                value={dataForm.currentRent}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder="Monto de renta"
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    currentRent: floatValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Monto de renta
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.currentRent}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      currentRent: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix=""
-                suffix=""
-                value={dataForm.totalParkingSpots}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder={"Lugares de estacionamiento"}
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    totalParkingSpots: floatValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Lugares de estacionamiento
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix=""
+                  suffix=""
+                  value={dataForm.totalParkingSpots}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      totalParkingSpots: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
           </Row>
-          <p>Si existe un pago de mantenimiento especificar el monto</p>
+          <p
+            style={{
+              marginBottom: 25,
+            }}
+          >
+            Si existe un pago de mantenimiento especificar el monto
+          </p>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <NumberFormat
-                id={null}
-                customInput={Input}
-                thousandSeparator=","
-                decimalSeparator="."
-                decimalPrecision={2}
-                allowNegative={false}
-                prefix="$"
-                suffix=""
-                value={dataForm.maintenanceAmount}
-                className="inputLogin"
-                floatingLabelText=""
-                isVisible
-                toBlock={false}
-                disable={false}
-                placeholder={"Monto de mandetimiento"}
-                onValueChange={(values) => {
-                  const { formattedValue, value, floatValue } = values;
-                  setDataForm({
-                    ...dataForm,
-                    maintenanceAmount: floatValue,
-                  });
-                }}
-                onClick={(event) => {}}
-                onFocus={(event) => {}}
-                onBlur={(event) => {}}
-              />
+              <div style={{ position: "relative", marginBottom: 15 }}>
+                <label
+                  style={{
+                    position: "absolute",
+                    bottom: 32,
+                    left: 12,
+                    color: "#4E4B66",
+                    fontSize: 12,
+                  }}
+                >
+                  Monto de mantenimiento
+                </label>
+                <NumberFormat
+                  id={null}
+                  customInput={Input}
+                  thousandSeparator=","
+                  decimalSeparator="."
+                  decimalPrecision={2}
+                  allowNegative={false}
+                  prefix="$"
+                  suffix=""
+                  value={dataForm.maintenanceAmount}
+                  className="inputLogin"
+                  floatingLabelText=""
+                  isVisible
+                  toBlock={false}
+                  disable={false}
+                  placeholder=""
+                  onValueChange={(values) => {
+                    const { formattedValue, value, floatValue } = values;
+                    setDataForm({
+                      ...dataForm,
+                      maintenanceAmount: floatValue,
+                    });
+                  }}
+                  onClick={(event) => {}}
+                  onFocus={(event) => {}}
+                  onBlur={(event) => {}}
+                />
+              </div>
             </Col>
           </Row>
           <div className="button_actions">

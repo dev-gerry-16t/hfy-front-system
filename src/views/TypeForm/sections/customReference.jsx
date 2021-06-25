@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import { Input, Row, Col } from "antd";
 import IconProfile from "../../../assets/icons/Profile.svg";
+import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 
 const CustomReferences = (props) => {
   const { title, onClickAdd, dataReferences } = props;
@@ -23,13 +24,13 @@ const CustomReferences = (props) => {
 
   return (
     <>
-      <p>{title}</p>
+      <p style={{ marginBottom: 25 }}>{title}</p>
       <Row>
         <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-          <Input
-            placeholder={"Nombres*"}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, givenName: e.target.value });
+          <CustomInputTypeForm
+            placeholder="Nombres*"
+            onChange={(value) => {
+              setDataForm({ ...dataForm, givenName: value });
             }}
             suffix={<img src={IconProfile} alt="profile" width="15" />}
             value={dataForm.givenName}
@@ -37,10 +38,10 @@ const CustomReferences = (props) => {
         </Col>
         <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
         <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-          <Input
-            placeholder={"Apellido paterno*"}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, lastName: e.target.value });
+          <CustomInputTypeForm
+            placeholder="Apellido paterno*"
+            onChange={(value) => {
+              setDataForm({ ...dataForm, lastName: value });
             }}
             suffix={<img src={IconProfile} alt="profile" width="15" />}
             value={dataForm.lastName}
@@ -48,10 +49,10 @@ const CustomReferences = (props) => {
         </Col>
         <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
         <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-          <Input
-            placeholder={"Apellido materno"}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, mothersMaidenName: e.target.value });
+          <CustomInputTypeForm
+            placeholder="Apellido materno"
+            onChange={(value) => {
+              setDataForm({ ...dataForm, mothersMaidenName: value });
             }}
             suffix={<img src={IconProfile} alt="profile" width="15" />}
             value={dataForm.mothersMaidenName}
@@ -60,26 +61,26 @@ const CustomReferences = (props) => {
       </Row>
       <Row>
         <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-          <Input
-            placeholder={"Teléfono*"}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, phoneNumber: e.target.value });
+          <CustomInputTypeForm
+            placeholder="Teléfono*"
+            onChange={(value) => {
+              setDataForm({ ...dataForm, phoneNumber: value });
             }}
             value={dataForm.phoneNumber}
           />
         </Col>
         <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
         <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-          <Input
-            placeholder={"Correo"}
-            onChange={(e) => {
-              setDataForm({ ...dataForm, emailAddress: e.target.value });
+          <CustomInputTypeForm
+            placeholder="Correo"
+            onChange={(value) => {
+              setDataForm({ ...dataForm, emailAddress: value });
             }}
             value={dataForm.emailAddress}
           />
         </Col>
         {isVisibleAdd === true && (
-          <div style={{ width: "100%" }}>
+          <div style={{ width: "100%", marginBottom: 30 }}>
             <div className="button_actions">
               <button
                 type="button"

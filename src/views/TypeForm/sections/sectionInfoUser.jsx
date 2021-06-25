@@ -2,21 +2,11 @@ import React, { useState, useEffect, useRef } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import SignatureCanvas from "react-signature-canvas";
-import {
-  Input,
-  Row,
-  Col,
-  Select,
-  Tooltip,
-  Radio,
-  Alert,
-  Modal,
-  Checkbox,
-} from "antd";
+import { Row, Col, Tooltip, Radio, Alert, Modal, Checkbox } from "antd";
 import { AuditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import IconProfile from "../../../assets/icons/Profile.svg";
-
-const { Option } = Select;
+import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
+import CustomSelectTypeForm from "../../../components/CustomSelectTypeForm";
 
 const SectionInfoUser = (props) => {
   const {
@@ -254,15 +244,14 @@ const SectionInfoUser = (props) => {
               xs={{ span: 24 }}
               md={{ span: visibleComponents.lastName === true ? 8 : 11 }}
             >
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.givenName}
                 placeholder={
                   visibleComponents.lastName === true
                     ? "Nombres"
                     : "Razón social"
                 }
-                onChange={(e) => {
-                  const value = e.target.value;
+                onChange={(value) => {
                   setDataForm({ ...dataForm, givenName: value });
                 }}
                 suffix={
@@ -282,9 +271,10 @@ const SectionInfoUser = (props) => {
             {dataForm.requiresCustomerTenantEntInfo === true && (
               <>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Select
+                  <CustomSelectTypeForm
+                    id="idCommercialSocietyType"
                     placeholder="Tipo de Sociedad Mercantil"
-                    showSearch
+                    data={dataCommerceSociality}
                     value={dataForm.enterpriseIdCommercialSocietyType}
                     onChange={(value, option) => {
                       setDataForm({
@@ -292,31 +282,16 @@ const SectionInfoUser = (props) => {
                         enterpriseIdCommercialSocietyType: value,
                       });
                     }}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {isEmpty(dataCommerceSociality) === false &&
-                      dataCommerceSociality.map((row) => {
-                        return (
-                          <Option value={row.idCommercialSocietyType}>
-                            {row.text}
-                          </Option>
-                        );
-                      })}
-                  </Select>
+                  />
                 </Col>
               </>
             )}
             {visibleComponents.lastName === true && (
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.lastName}
                   placeholder={"Apellido paterno"}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  onChange={(value) => {
                     setDataForm({ ...dataForm, lastName: value });
                   }}
                   suffix={<img src={IconProfile} alt="profile" width="15" />}
@@ -326,11 +301,10 @@ const SectionInfoUser = (props) => {
             <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
             {visibleComponents.mothersMaidenName === true && (
               <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.mothersMaidenName}
                   placeholder={"Apellido materno"}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  onChange={(value) => {
                     setDataForm({ ...dataForm, mothersMaidenName: value });
                   }}
                   suffix={<img src={IconProfile} alt="profile" width="15" />}
@@ -341,11 +315,11 @@ const SectionInfoUser = (props) => {
           <Row>
             {visibleComponents.phoneNumber === true && (
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.phoneNumber}
+                  type="number"
                   placeholder={"Teléfono"}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  onChange={(value) => {
                     setDataForm({ ...dataForm, phoneNumber: value });
                   }}
                 />
@@ -353,7 +327,7 @@ const SectionInfoUser = (props) => {
             )}
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.emailAddress}
                 placeholder={"Correo"}
                 onChange={(e) => {
@@ -382,9 +356,10 @@ const SectionInfoUser = (props) => {
                 )}
                 <Row>
                   <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
-                    <Select
+                    <CustomSelectTypeForm
+                      id="idCountryNationality"
                       placeholder="Nacionalidad"
-                      showSearch
+                      data={dataNationalities}
                       value={dataForm.idCountryNationality}
                       onChange={(value, option) => {
                         setDataForm({
@@ -392,27 +367,14 @@ const SectionInfoUser = (props) => {
                           idCountryNationality: value,
                         });
                       }}
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {isEmpty(dataNationalities) === false &&
-                        dataNationalities.map((row) => {
-                          return (
-                            <Option value={row.idCountryNationality}>
-                              {row.text}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    />
                   </Col>
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>
-                    <Select
+                    <CustomSelectTypeForm
+                      id="idType"
                       placeholder="Identificación oficial"
-                      showSearch
+                      data={dataIdTypes}
                       value={dataForm.idType}
                       onChange={(value, option) => {
                         const valueSelect = option.onClick();
@@ -425,30 +387,15 @@ const SectionInfoUser = (props) => {
                         });
                         setDataImage(valueSelect.imageReference);
                       }}
-                      filterOption={(input, option) =>
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      }
-                    >
-                      {isEmpty(dataIdTypes) === false &&
-                        dataIdTypes.map((row) => {
-                          return (
-                            <Option value={row.idType} onClick={() => row}>
-                              {row.text}
-                            </Option>
-                          );
-                        })}
-                    </Select>
+                    />
                   </Col>
                   <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                   {isNil(dataForm.idType) === false && (
                     <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
-                      <Input
+                      <CustomInputTypeForm
                         value={dataForm.idTypeNumber}
                         placeholder={dataForm.fieldDescription}
-                        onChange={(e) => {
-                          const value = e.target.value;
+                        onChange={(value) => {
                           setDataForm({ ...dataForm, idTypeNumber: value });
                         }}
                       />
@@ -461,11 +408,10 @@ const SectionInfoUser = (props) => {
             visibleComponents.idTypeNumber === true && (
               <Row>
                 <Col span={13} xs={{ span: 24 }} md={{ span: 13 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.placeOfIssue}
-                    placeholder={"Lugar de expedición de la identificación"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Lugar de expedición de la identificación"
+                    onChange={(value) => {
                       setDataForm({ ...dataForm, placeOfIssue: value });
                     }}
                   />
@@ -475,11 +421,10 @@ const SectionInfoUser = (props) => {
 
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Input
+              <CustomInputTypeForm
                 value={dataForm.taxId}
-                placeholder={"RFC con Homoclave"}
-                onChange={(e) => {
-                  const value = e.target.value;
+                placeholder="RFC con Homoclave"
+                onChange={(value) => {
                   setDataForm({ ...dataForm, taxId: value });
                 }}
               />
@@ -487,11 +432,10 @@ const SectionInfoUser = (props) => {
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             {visibleComponents.citizenId === true && (
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.citizenId}
                   placeholder={"CURP"}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  onChange={(value) => {
                     setDataForm({ ...dataForm, citizenId: value });
                   }}
                 />
@@ -532,11 +476,10 @@ const SectionInfoUser = (props) => {
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             {(dataForm.hasCar === 1 || dataForm.hasCar === true) && (
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Input
+                <CustomInputTypeForm
                   value={dataForm.carriagePlate}
-                  placeholder={"Ingresa las placas"}
-                  onChange={(e) => {
-                    const value = e.target.value;
+                  placeholder="Ingresa las placas"
+                  onChange={(value) => {
                     setDataForm({ ...dataForm, carriagePlate: value });
                   }}
                 />
@@ -548,9 +491,10 @@ const SectionInfoUser = (props) => {
               <p>Información Acta Constitutiva</p>
               <Row>
                 <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
-                  <Select
+                  <CustomSelectTypeForm
+                    id="idState"
                     placeholder="Estado de emisión"
-                    showSearch
+                    data={dataStates}
                     value={dataForm.enterpriseIdStatePublicProperty}
                     onChange={(value, option) => {
                       setDataForm({
@@ -558,17 +502,7 @@ const SectionInfoUser = (props) => {
                         enterpriseIdStatePublicProperty: value,
                       });
                     }}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {isEmpty(dataStates) === false &&
-                      dataStates.map((row) => {
-                        return <Option value={row.idState}>{row.text}</Option>;
-                      })}
-                  </Select>
+                  />
                 </Col>
                 <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
                   <Tooltip
@@ -586,11 +520,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterpriseCommercialInvoice}
                     placeholder="Folio Mercantil"
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterpriseCommercialInvoice: value,
@@ -602,11 +535,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterprisePublicWrtitingNo}
-                    placeholder={"Escritura pública No."}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Escritura pública No."
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterprisePublicWrtitingNo: value,
@@ -616,11 +548,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterprisePublicBookNo}
-                    placeholder={"Libro"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Libro"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterprisePublicBookNo: value,
@@ -631,11 +562,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterpriseNotaryName}
-                    placeholder={"Nombre del notario"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Nombre del notario"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterpriseNotaryName: value,
@@ -645,11 +575,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterpriseNotaryOfficeNo}
-                    placeholder={"Número de notaría"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Número de notaría"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterpriseNotaryOfficeNo: value,
@@ -660,11 +589,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.enterpriseSignedAtPlace}
-                    placeholder={"Lugar de firma de escritura"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Lugar de firma de escritura"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         enterpriseSignedAtPlace: value,
@@ -676,11 +604,10 @@ const SectionInfoUser = (props) => {
               <p>Representante Legal</p>
               <Row>
                 <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepGivenName}
-                    placeholder={"Nombres"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Nombres"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepGivenName: value,
@@ -691,11 +618,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                 <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepLastName}
-                    placeholder={"Apellido paterno"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Apellido paterno"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepLastName: value,
@@ -706,11 +632,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
                 <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepMothersMaidenName}
-                    placeholder={"Apellido materno"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Apellido materno"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepMothersMaidenName: value,
@@ -735,9 +660,10 @@ const SectionInfoUser = (props) => {
               )}
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Select
+                  <CustomSelectTypeForm
+                    id="idType"
                     placeholder="Identificación oficial"
-                    showSearch
+                    data={dataIdTypes}
                     value={dataForm.legalRepIdType}
                     onChange={(value, option) => {
                       const valueSelect = option.onClick();
@@ -748,29 +674,14 @@ const SectionInfoUser = (props) => {
                       });
                       setDataImageLegal(valueSelect.imageReference);
                     }}
-                    filterOption={(input, option) =>
-                      option.children
-                        .toLowerCase()
-                        .indexOf(input.toLowerCase()) >= 0
-                    }
-                  >
-                    {isEmpty(dataIdTypes) === false &&
-                      dataIdTypes.map((row) => {
-                        return (
-                          <Option value={row.idType} onClick={() => row}>
-                            {row.text}
-                          </Option>
-                        );
-                      })}
-                  </Select>
+                  />
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepIdTypeNumber}
                     placeholder={dataForm.legalRepFieldDescription}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepIdTypeNumber: value,
@@ -819,11 +730,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepPublicWritingNo}
                     placeholder="Escritura pública No."
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepPublicWritingNo: value,
@@ -833,11 +743,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepPublicBookNo}
                     placeholder="Libro"
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepPublicBookNo: value,
@@ -848,11 +757,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepNotaryName}
-                    placeholder={"Nombre del notario"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Nombre del notario"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepNotaryName: value,
@@ -862,11 +770,10 @@ const SectionInfoUser = (props) => {
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepNotaryOfficeNo}
-                    placeholder={"Número de notaría"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Número de notaría"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepNotaryOfficeNo: value,
@@ -877,11 +784,10 @@ const SectionInfoUser = (props) => {
               </Row>
               <Row>
                 <Col span={15} xs={{ span: 24 }} md={{ span: 15 }}>
-                  <Input
+                  <CustomInputTypeForm
                     value={dataForm.legalRepSignedAtPlace}
-                    placeholder={"Lugar de firma de escritura"}
-                    onChange={(e) => {
-                      const value = e.target.value;
+                    placeholder="Lugar de firma de escritura"
+                    onChange={(value) => {
                       setDataForm({
                         ...dataForm,
                         legalRepSignedAtPlace: value,
