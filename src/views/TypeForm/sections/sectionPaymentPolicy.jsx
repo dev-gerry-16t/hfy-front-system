@@ -5,10 +5,9 @@ import { Row, Col } from "antd";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import CustomCheckPayment from "./customCheckPayment";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 
-const stripePromise = loadStripe(
-  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
-);
+const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -27,7 +26,7 @@ const SectionPaymentPolicy = ({
 }) => {
   return (
     <div className="content-typeform-formulary">
-      <h3>Pago en linea de Póliza Jurídica</h3>
+      <h3>Pago en línea de Póliza Jurídica</h3>
       <Row>
         <Col span={9} xs={{ span: 24 }} md={{ span: 9 }} />
         <Col span={6} xs={{ span: 24 }} md={{ span: 6 }}>

@@ -133,17 +133,14 @@ html {
         position: relative;
         .login-label-placeholder {
           position: absolute;
-          bottom: 27px;
+          bottom: 35px;
           z-index: 2;
           background: #fff;
           left: 12px;
           padding: 0px 5px;
           font-family: Poppins;
           font-style: normal;
-          font-weight: normal;
           font-size: 10px;
-          line-height: 28px;
-          letter-spacing: 0.75px;
           color: #d6d8e7;
         }
         .ant-input-affix-wrapper {

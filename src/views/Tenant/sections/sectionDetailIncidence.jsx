@@ -15,12 +15,7 @@ const SectionDetailIncidence = (props) => {
     <div className="content-card-incidence-dialog">
       {isVisibleAllComments === false && (
         <>
-          <div className="top-background-dialog">
-            <img
-              src="https://homify-docs-users.s3.us-east-2.amazonaws.com/animation_300_knayris9.gif"
-              alt="repairs"
-            />
-          </div>
+          <div className="top-background-dialog"></div>
           <div className="content-cards-dialog">
             <WidgetPaymentAccept
               isVisiblePayment={dataIncidenceDetail.result1.requieresPayment}

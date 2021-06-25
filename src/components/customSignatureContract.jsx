@@ -1,4 +1,5 @@
 import React, { useState, useRef } from "react";
+import isNil from "lodash/isNil";
 import SignatureCanvas from "react-signature-canvas";
 import { Checkbox } from "antd";
 
@@ -7,6 +8,11 @@ const CustomSignatureContract = ({
   cancelButton,
   name,
   onSignContract,
+  titleCustom,
+  titleSectionSignature,
+  componentTerms,
+  textSignature,
+  finishButton,
 }) => {
   const [viewSignatureMovement, setViewSignatureMovement] = useState(false);
   const [aceptTerms, setAceptTerms] = useState(false);
@@ -16,11 +22,13 @@ const CustomSignatureContract = ({
 
   return viewSignatureMovement === false ? (
     <>
-      <h1>Contrato de servicio de mudanza</h1>
+      <h1>{titleCustom}</h1>
       <iframe className="iframe-docx-hfy" src={srcIframe}></iframe>
       <span>
-        Antes de dar clic en "Firmar" te recomendamos leer detenidamente tu
-        contrato de servicio.
+        {isNil(textSignature) === false
+          ? textSignature
+          : `Antes de dar clic en "Firmar" te recomendamos leer detenidamente tu
+        contrato de servicio.`}
       </span>
       <div className="two-action-buttons-banner" style={{ marginTop: 25 }}>
         <button type="button" onClick={cancelButton}>
@@ -44,7 +52,7 @@ const CustomSignatureContract = ({
             id="step_5_contract_signature"
             className="contract-section-signature"
           >
-            <p style={{ fontSize: "18px" }}>Firma de Contrato de servicio</p>
+            <p style={{ fontSize: "18px" }}>{titleSectionSignature}</p>
             <div className="signature">
               <SignatureCanvas
                 penColor="black"
@@ -70,24 +78,7 @@ const CustomSignatureContract = ({
                 }
               }}
             ></Checkbox>
-            <span
-              style={{
-                marginLeft: 5,
-                textAlign: "center",
-                fontSize: 10,
-                color: "black",
-                marginBottom: 10,
-              }}
-            >
-              Acepto los términos publicados en la pagina{" "}
-              <a
-                href="https://www.homify.ai/aviso-de-privacidad"
-                target="__blank"
-              >
-                https://www.homify.ai/aviso-de-privacidad
-              </a>{" "}
-              así como lo descrito en el contrato de servicio
-            </span>
+            {componentTerms}
             <div className="two-action-buttons" style={{ marginTop: 10 }}>
               <button
                 type="button"
@@ -110,7 +101,7 @@ const CustomSignatureContract = ({
                       signatureRef.current.clear();
                       setAceptTerms(false);
                       setViewSignatureMovement(false);
-                      cancelButton();
+                      finishButton();
                     }
                   } catch (error) {}
                 }}

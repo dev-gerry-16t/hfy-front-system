@@ -1000,6 +1000,45 @@ const SectionDetailUserTenant = (props) => {
                   </a>
                 </Col>
               </Row>
+              {dataIsMainTenant.hasLoan === true && (
+                <>
+                  <div
+                    className="ant-divider ant-divider-horizontal"
+                    role="separator"
+                  />
+                  <p>
+                    <h3>Depósito en garantía</h3>
+                  </p>
+                  <Row>
+                    <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                      <a
+                        onClick={async () => {
+                          try {
+                            setSpinVisible(true);
+                            if (isEmpty(dataIsMainTenant) === false) {
+                              await onDownloadDocumentById(
+                                {
+                                  idContract: dataIsMainTenant.idContract,
+                                  idCustomer: dataIsMainTenant.idCustomer,
+                                  idCustomerTenant:
+                                    dataIsMainTenant.idCustomerTenant,
+                                  type: 16,
+                                },
+                                `Contrato_deposito_garantia_${dataIsMainTenant.idContract}`
+                              );
+                            }
+                            setSpinVisible(false);
+                          } catch (error) {
+                            setSpinVisible(false);
+                          }
+                        }}
+                      >
+                        Descargar Contrato
+                      </a>
+                    </Col>
+                  </Row>
+                </>
+              )}
             </Spin>
           </Panel>
           <Panel

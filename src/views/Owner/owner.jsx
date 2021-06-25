@@ -26,6 +26,11 @@ import {
   callGetContractComment,
   callAddDocumentContractId,
   callGetPropertyTypes,
+  callGetRequestAdvancePymtPlan,
+  callGetRequestAdvancePymtById,
+  callGetRequestAdvancePymtProperties,
+  callUpdateRequestAdvancePym,
+  callUpdateInvitation,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -38,6 +43,8 @@ import SectionAddTenant from "./sections/sectionAddTenant";
 import SectionAdvancement from "./sections/sectionAdvancement";
 import SectionContractAvailable from "../Tenant/sections/sectionContractAvailableOwner";
 import CustomViewDocument from "../../components/CustomViewDocument";
+import CustomDialog from "../../components/CustomDialog";
+import CustomSignatureContract from "../../components/customSignatureContract";
 
 const { Content } = Layout;
 
@@ -64,6 +71,11 @@ const Owner = (props) => {
     callGetContractComment,
     callAddDocumentContractId,
     callGetPropertyTypes,
+    callGetRequestAdvancePymtPlan,
+    callGetRequestAdvancePymtById,
+    callGetRequestAdvancePymtProperties,
+    callUpdateRequestAdvancePym,
+    callUpdateInvitation,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -72,6 +84,8 @@ const Owner = (props) => {
   const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
   const [dataPersonType, setDataPersonType] = useState([]);
   const [dataDepartment, setDataDepartment] = useState([]);
+  const [dataAdvancePymtPlan, setDataAdvancePymtPlan] = useState([]);
+  const [dataAdvancePymtPlanTable, setDataAdvancePymtPlanTable] = useState([]);
   const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataTenant, setDataTenant] = useState([]);
@@ -82,11 +96,13 @@ const Owner = (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isModalVisibleTenant, setIsModalVisibleTenant] = useState(false);
   const [isVisibleContract, setIsVisibleContract] = useState(false);
-  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] = useState(
-    false
-  );
+  const [isVisibleContractAdvancement, setIsVisibleContractAdvancement] =
+    useState(false);
+  const [isModalVisibleAdvancement, setIsModalVisibleAdvancement] =
+    useState(false);
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [urlContract, setUrlContract] = useState({});
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -137,6 +153,32 @@ const Owner = (props) => {
     ),
     duration: 0,
     style: { marginTop: "4vw" },
+  };
+
+  const handlerCallUpdateRequestAdvancePym = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateRequestAdvancePym(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "Tu solicitud se procesó exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
   };
 
   const handlerCallApiPersonTypes = async (data) => {
@@ -191,6 +233,55 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallGetRequestAdvancePymtProperties = async (id, data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestAdvancePymtProperties({
+        ...data,
+        idRequestAdvancePymt: id,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      return responseResult;
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetRequestAdvancePymtById = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestAdvancePymtById({
+        idRequestAdvancePymt: id,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: 0,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response[0]) === false &&
+        isNil(response.response[0]) === false &&
+        isEmpty(response.response[0][0]) === false
+          ? response.response[0][0]
+          : {};
+      return responseResult;
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetTenantCoincidences = async () => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -204,8 +295,53 @@ const Owner = (props) => {
         isNil(response.response) === false &&
         isNil(response.response) === false
           ? response.response
-          : {};
+          : [];
       setTenantCoincidences(responseResult);
+      const findRequieresSignature = responseResult.find((row) => {
+        return row.requiresSignatureForAdvancePymt === true;
+      });
+      if (
+        isNil(findRequieresSignature) === false &&
+        isEmpty(findRequieresSignature) === false &&
+        isNil(findRequieresSignature.requiresSignatureForAdvancePymt) ===
+          false &&
+        findRequieresSignature.requiresSignatureForAdvancePymt === true
+      ) {
+        const dataDetail = await handlerCallGetRequestAdvancePymtById(
+          findRequieresSignature.idRequestAdvancePymt
+        );
+        if (dataDetail.canContractBeGenerated === true) {
+          const {
+            idDocument,
+            idDocumentType,
+            idPreviousDocument,
+            bucketSource,
+            idRequestAdvancePymt,
+            idRequestAdvancePymtStatus,
+          } = dataDetail;
+          const dataViewDocument =
+            await handlerCallGetRequestAdvancePymtProperties(
+              idRequestAdvancePymt,
+              {
+                idDocument,
+                idDocumentType,
+                idPreviousDocument,
+                bucketSource,
+              }
+            );
+          if (
+            isNil(dataViewDocument) === false &&
+            isEmpty(dataViewDocument) === false
+          ) {
+            setUrlContract({
+              ...dataViewDocument,
+              idRequestAdvancePymt: idRequestAdvancePymt,
+              idRequestAdvancePymtStatus: idRequestAdvancePymtStatus,
+            });
+            setIsVisibleContractAdvancement(true);
+          }
+        }
+      }
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -310,13 +446,15 @@ const Owner = (props) => {
           ? response.response
           : {};
       setSpinVisible(false);
-      setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
     } catch (error) {
       setSpinVisible(false);
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -605,6 +743,70 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallGetRequestAdvancePymtPlan = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetRequestAdvancePymtPlan({
+        ...data,
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+
+      const responseResultData =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0][0]) === false
+          ? responseResult[0][0]
+          : {};
+
+      const responseResultTable =
+        isEmpty(responseResult) === false && isNil(responseResult[1]) === false
+          ? responseResult[1]
+          : [];
+
+      setDataAdvancePymtPlan(responseResultData);
+      setDataAdvancePymtPlanTable(responseResultTable);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallUpdateInvitation = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -618,6 +820,62 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={isVisibleContractAdvancement}
+        onClose={() => {
+          setIsVisibleContractAdvancement(!isVisibleContractAdvancement);
+        }}
+      >
+        <div className="banner-move-tenant">
+          <CustomSignatureContract
+            srcIframe={`https://docs.google.com/gview?url=${ENVIROMENT}${urlContract.url}&embedded=true`}
+            cancelButton={() => {
+              setIsVisibleContractAdvancement(false);
+            }}
+            finishButton={() => {
+              setIsVisibleContractAdvancement(false);
+            }}
+            titleCustom="Contrato de adelanto de renta"
+            titleSectionSignature="Firma de Contrato"
+            componentTerms={
+              <span
+                style={{
+                  marginLeft: 5,
+                  textAlign: "center",
+                  fontSize: 10,
+                  color: "black",
+                  marginBottom: 10,
+                }}
+              >
+                Acepto los términos publicados en la pagina{" "}
+                <a
+                  href="https://www.homify.ai/aviso-de-privacidad"
+                  target="__blank"
+                >
+                  https://www.homify.ai/aviso-de-privacidad
+                </a>{" "}
+                así como lo descrito en el contrato
+              </span>
+            }
+            name={urlContract.fullNameTenant}
+            onSignContract={async (data) => {
+              try {
+                await handlerCallUpdateRequestAdvancePym(
+                  {
+                    ...data,
+                    idRequestAdvancePymtStatus:
+                      urlContract.idRequestAdvancePymtStatus,
+                  },
+                  urlContract.idRequestAdvancePymt
+                );
+                handlerCallGetTenantCoincidences();
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
+        </div>
+      </CustomDialog>
       <CustomViewDocument
         isVisibleModal={isVisibleModal}
         dataDocument={dataDocument}
@@ -700,14 +958,23 @@ const Owner = (props) => {
         isModalVisible={isModalVisibleAdvancement}
         onClose={() => {
           setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
+          setDataAdvancePymtPlan({});
+          setDataAdvancePymtPlanTable([]);
         }}
-        onClickAdvancement={(data) => {
-          setSpinVisible(true);
-          handlerCallRequestAdvancement(data);
+        onClickAdvancement={async (data) => {
+          try {
+            setSpinVisible(true);
+            await handlerCallRequestAdvancement(data);
+          } catch (error) {
+            throw error;
+          }
         }}
         spinVisible={spinVisible}
         dataTenant={dataTenant}
         dataBank={dataBank}
+        dataAdvancePymtInfo={dataAdvancePymtPlan}
+        dataAdvancePymtTable={dataAdvancePymtPlanTable}
+        onCallAdvancePymtPlan={handlerCallGetRequestAdvancePymtPlan}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -719,20 +986,6 @@ const Owner = (props) => {
             </span>
           </div>
           <div className="action-buttons-top">
-            {(dataCustomer.canRequestProperty === 1 ||
-              dataCustomer.canRequestProperty === true) && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlerCallGetPropertyTypes();
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>Registrar Propiedad</span>
-                </button>
-              </div>
-            )}
             {(dataCustomer.canRequestAdvanceRent === 1 ||
               dataCustomer.canRequestAdvanceRent === true) && (
               <div className="button_init_primary">
@@ -741,10 +994,9 @@ const Owner = (props) => {
                   onClick={async () => {
                     setIsModalVisibleAdvancement(!isModalVisibleAdvancement);
                     await handlerCallTenantCatalog();
-                    await handlerCallBankCatalog();
                   }}
                 >
-                  <span>Adelanto de renta</span>
+                  <span>¡Necesito un adelanto de mi renta!</span>
                 </button>
               </div>
             )}
@@ -781,6 +1033,14 @@ const Owner = (props) => {
             finishCallApis={finishCallApis}
           />
           <SectionCardTenant
+            onUpdateInvitation={async (data, id) => {
+              try {
+                await handlerCallUpdateInvitation(data, id);
+                handlerCalllSyncApis();
+              } catch (error) {
+                throw error;
+              }
+            }}
             dataCustomer={dataCustomer}
             history={history}
             tenantCoincidences={tenantCoincidences}
@@ -846,6 +1106,15 @@ const mapDispatchToProps = (dispatch) => ({
   callAddDocumentContractId: (data, id) =>
     dispatch(callAddDocumentContractId(data, id)),
   callGetPropertyTypes: (data) => dispatch(callGetPropertyTypes(data)),
+  callGetRequestAdvancePymtPlan: (data) =>
+    dispatch(callGetRequestAdvancePymtPlan(data)),
+  callGetRequestAdvancePymtById: (data) =>
+    dispatch(callGetRequestAdvancePymtById(data)),
+  callGetRequestAdvancePymtProperties: (data) =>
+    dispatch(callGetRequestAdvancePymtProperties(data)),
+  callUpdateRequestAdvancePym: (data, id) =>
+    dispatch(callUpdateRequestAdvancePym(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);

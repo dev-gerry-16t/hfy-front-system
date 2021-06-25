@@ -19,6 +19,7 @@ const SectionCardTenant = (props) => {
     onOpenContract,
     dataCustomer,
     onViewDocument,
+    onUpdateInvitation,
   } = props;
 
   const formatDate = (date) => {
@@ -99,6 +100,67 @@ const SectionCardTenant = (props) => {
                     )}
                   </div>
                   <div className="info-user-payment">
+                    {isNil(row.canRequestResend) === false &&
+                      row.canRequestResend === true && (
+                        <div style={{ marginBottom: 10 }}>
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={
+                              <span className="anticon">
+                                <i className="fa fa-paper-plane-o" />
+                              </span>
+                            }
+                            size="small"
+                            style={{
+                              background: "rgb(28, 227, 255)",
+                              border: "none",
+                            }}
+                            onClick={async () => {
+                              try {
+                                await onUpdateInvitation(
+                                  {
+                                    requestResend: true,
+                                    isActive: true,
+                                  },
+                                  row.idInvitation
+                                );
+                              } catch (error) {}
+                            }}
+                          >
+                            Enviar recordatorio
+                          </Button>
+                        </div>
+                      )}
+                    {isNil(row.canDeleteInvitation) === false &&
+                      row.canDeleteInvitation === true && (
+                        <div style={{ marginBottom: 10 }}>
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={
+                              <span className="anticon">
+                                <i className="fa fa-trash" />
+                              </span>
+                            }
+                            size="small"
+                            style={{ background: "red", border: "none" }}
+                            onClick={async () => {
+                              try {
+                                await onUpdateInvitation(
+                                  {
+                                    requestResend: false,
+                                    isActive: false,
+                                  },
+                                  row.idInvitation
+                                );
+                              } catch (error) {}
+                            }}
+                          >
+                            Eliminar invitación
+                          </Button>
+                        </div>
+                      )}
                     <div>
                       Próximo Pago:{" "}
                       <strong>{formatDate(row.nextPayment)}</strong>
@@ -106,6 +168,7 @@ const SectionCardTenant = (props) => {
                     <div>
                       Monto de Renta: <strong>{row.rentAmount}</strong>
                     </div>
+
                     {isNil(row.infoContractDocument) === false &&
                       isEmpty(row.infoContractDocument) === false && (
                         <Dropdown

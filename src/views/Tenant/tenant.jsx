@@ -12,6 +12,7 @@ import {
   Dropdown,
   Menu,
   Button,
+  Alert,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -54,6 +55,11 @@ import {
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
   callPostPaymentService,
+  callUpdateInvitation,
+  callGetCustomerLoan,
+  callUpdateCustomerLoan,
+  callGetCustomerLoanProperties,
+  callGetAllBankCatalog,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -67,9 +73,7 @@ import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 
-const stripePromise = loadStripe(
-  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
-);
+const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -108,6 +112,11 @@ const Tenant = (props) => {
     callGetRequestProviderPropierties,
     callSignRequestForProvider,
     callPostPaymentService,
+    callGetCustomerLoan,
+    callUpdateCustomerLoan,
+    callGetCustomerLoanProperties,
+    callGetAllBankCatalog,
+    callUpdateInvitation,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -132,7 +141,12 @@ const Tenant = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [isModalVisiblePolicy, setIsModalVisiblePolicy] = useState(false);
   const [isHowAreYou, setIsHowAreYou] = useState(false);
+  const [dataLoan, setDataLoan] = useState({});
   const [urlContract, setUrlContract] = useState({});
+  const [dataBank, setDataBank] = useState([]);
+  const [dataPaymentDescription, setDataPaymentDescription] = useState({});
+  const [howToPay, setHowToPay] = useState(false);
+  const [selectMethodPayment, setSelectMethodPayment] = useState(false);
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -156,8 +170,8 @@ const Tenant = (props) => {
       <div style={{ fontFamily: "Poppins" }}>
         <span style={{ fontSize: "12px" }}>
           Antes de iniciar el formulario debes tener lista una identificación
-          oficial, tus últimos 3 comprobantes de ingresos y una carta de la
-          empresa donde trabajas que acredite desde cuando estás laborando en la
+          oficial, tus últimos 3 estados bancarios y una carta de la empresa
+          donde trabajas que acredite desde cuando estás laborando en la
           empresa. Adicional, necesitaras la escritura del inmueble que quedara
           como garantía y los datos e identificación del Aval.
         </span>
@@ -227,6 +241,52 @@ const Tenant = (props) => {
     style: { marginTop: "4vw" },
   };
 
+  const handlerCallGetCustomerLoanProperties = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerLoanProperties({
+        ...data,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      return responseResult;
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallBankCatalog = async (clabe = null) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllBankCatalog({
+        idCustomer,
+        idSystemUser,
+        idLoginHistory,
+        type: 1,
+        clabe,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataBank(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetRequestProviderPropierties = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -240,6 +300,29 @@ const Tenant = (props) => {
           ? response.response
           : [];
       await setUrlContract(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetCustomerLoan = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetCustomerLoan({
+        idSystemUser,
+        idLoginHistory,
+        idContract: id,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataLoan(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -289,7 +372,9 @@ const Tenant = (props) => {
       handlerCallGetCustomerMessage(data2);
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
@@ -392,6 +477,11 @@ const Tenant = (props) => {
           ? response.response[0]
           : {};
       setDataTenant(responseResult);
+      setDataPaymentDescription(
+        isNil(responseResult.paymentDescription) === false
+          ? JSON.parse(responseResult.paymentDescription)
+          : {}
+      );
       handlerCallGetCustomerMessage({
         idContract: responseResult.idContract,
         idCustomerTenant: responseResult.idCustomerTenant,
@@ -416,6 +506,20 @@ const Tenant = (props) => {
           ? true
           : false
       );
+      setIsModalVisiblePolicy(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.canAcceptLoan) == false &&
+          responseResult.canAcceptLoan === true
+          ? true
+          : false
+      );
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.canAcceptLoan) == false &&
+        responseResult.canAcceptLoan === true
+      ) {
+        await handlerCallGetCustomerLoan(responseResult.idContract);
+      }
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.requieresMoveSignature) === false &&
@@ -749,6 +853,59 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallUpdateCustomerLoan = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateCustomerLoan(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      // showMessageStatusApi(
+      //   "En breve realizaremos el deposito en garantía a tu propietario",
+      //   GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      // );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallUpdateInvitation = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callUpdateInvitation(
+        {
+          requestResend: true,
+          isActive: true,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se envió el recordatorio con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallGetAllIncidenceTypes = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -797,12 +954,229 @@ const Tenant = (props) => {
     }
   };
 
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        showMessageStatusApi(
+          "CLABE copiada correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
+
+  const parseNumberClabe = (num) => {
+    let numClabe = "";
+    if (isNil(num) === false) {
+      const num1 = num.slice(0, 4);
+      const num2 = num.slice(4, 8);
+      const num3 = num.slice(8, 12);
+      const num4 = num.slice(12, 16);
+      const num5 = num.slice(16, 18);
+      numClabe = `${num1} ${num2} ${num3} ${num4} ${num5}`;
+    }
+    return numClabe;
+  };
+
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
   }, []);
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={howToPay}
+        onClose={() => {
+          setHowToPay(false);
+          setSelectMethodPayment(false);
+        }}
+      >
+        {selectMethodPayment === false &&
+          isEmpty(dataPaymentDescription) === false && (
+            <div className="banner-payment-rent">
+              <div className="title-banner">
+                <h1>Pago de renta</h1>
+              </div>
+              <div className="amount-to-pay">
+                <span>Monto a pagar</span>
+                <strong>
+                  {dataPaymentDescription.totalPendingAmountFormat}
+                </strong>
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  flexDirection: "column",
+                  margin: "5px 0px 20px 0px",
+                }}
+              >
+                <div>
+                  <span>Monto renta: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.totalAmountFormat}
+                  </strong>
+                </div>
+                {dataPaymentDescription.hasSubscription === true && (
+                  <div>
+                    <span>Monto préstamo: </span>
+                    <strong>
+                      {
+                        dataPaymentDescription.subscriptionInfo
+                          .totalAmountFormat
+                      }
+                    </strong>
+                  </div>
+                )}
+              </div>
+              <div className="date-payment">
+                Fecha de próximo pago{" "}
+                <strong>
+                  - {dataPaymentDescription.rentInfo.scheduleDate}
+                </strong>
+              </div>
+              <div className="date-payment">
+                Fecha de limite de pago{" "}
+                <strong>- {dataPaymentDescription.rentInfo.paydayLimit}</strong>
+              </div>
+              <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
+                <p>Método de pago</p>
+              </div>
+              <div className="section-method-payment">
+                <div className="card-icon">
+                  <i
+                    className="fa fa-clock-o"
+                    style={{ fontSize: 18, color: "#6E7191" }}
+                  />
+                </div>
+                <div
+                  className="card-info-method"
+                  onClick={() => {
+                    setSelectMethodPayment(true);
+                  }}
+                >
+                  <strong>Pago por transferencia SPEI</strong>
+                  <span>Normalmente se refleja en minutos</span>
+                </div>
+              </div>
+              <div
+                className="two-action-buttons-banner"
+                style={{ marginTop: 20 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHowToPay(false);
+                  }}
+                >
+                  <span>Salir</span>
+                </button>
+              </div>
+            </div>
+          )}
+        {selectMethodPayment === true && (
+          <div className="banner-payment-rent">
+            <button
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 10,
+                border: "none",
+                background: "transparent",
+              }}
+              type="button"
+              onClick={() => {
+                setSelectMethodPayment(false);
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <div className="title-banner">
+              <h1>Transferencia SPEI</h1>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                1. Inicia una transferencia desde tu banca en linea o app de tu
+                banco.
+              </span>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>2. Ingresa los siguientes datos:</span>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>Nombre del beneficiario</strong>
+                <span>{dataTenant.shortNameTenant}</span>
+              </div>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>CLABE Interbancaria</strong>
+                <span id="interbank-clabe">
+                  {parseNumberClabe(dataTenant.clabe)}
+                </span>
+              </div>
+              <div className="card-icon">
+                <i
+                  className="fa fa-clone"
+                  style={{ fontSize: 18, color: "#6E7191", cursor: "pointer" }}
+                  onClick={() => {
+                    copyTextToClipboard(dataTenant.clabe);
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              className="section-method-payment-v2"
+              style={{
+                borderBottom: "1px solid #d6d8e7",
+              }}
+            >
+              <div className="card-info-method">
+                <strong>Banco</strong>
+                <span>{dataTenant.bankName}</span>
+              </div>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                3. Ingresa el monto a pagar y finaliza la operación. Puedes
+                guardar tu comprobante de pago o una captura de pantalla en caso
+                de requerir alguna aclaración.
+              </span>
+            </div>
+            {/* <div style={{ margin: "15px 0px" }}>
+              <strong>
+                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
+                un horario de 6 A.M. a 6 P.M.
+              </strong>
+            </div> */}
+            <div style={{ margin: "15px 0px", textAlign: "center" }}>
+              <strong style={{ color: "var(--color-primary)" }}>
+                ¡Listo! Finalmente recibirás una notificación por tu pago
+              </strong>
+            </div>
+          </div>
+        )}
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleOpenPayment}
         onClose={() => {
@@ -909,6 +1283,31 @@ const Tenant = (props) => {
               cancelButton={() => {
                 setIsVisibleBannerMove(false);
               }}
+              finishButton={() => {
+                setIsVisibleBannerMove(false);
+              }}
+              titleCustom="Contrato de servicio de mudanza"
+              titleSectionSignature="Firma de Contrato de servicio"
+              componentTerms={
+                <span
+                  style={{
+                    marginLeft: 5,
+                    textAlign: "center",
+                    fontSize: 10,
+                    color: "black",
+                    marginBottom: 10,
+                  }}
+                >
+                  Acepto los términos publicados en la pagina{" "}
+                  <a
+                    href="https://www.homify.ai/aviso-de-privacidad"
+                    target="__blank"
+                  >
+                    https://www.homify.ai/aviso-de-privacidad
+                  </a>{" "}
+                  así como lo descrito en el contrato de servicio
+                </span>
+              }
               name={urlContract.fullNameTenant}
               onSignContract={async (data) => {
                 try {
@@ -1076,10 +1475,27 @@ const Tenant = (props) => {
       />
       <SectionDepositGuarantee
         isModalVisible={isModalVisiblePolicy}
+        dataLoan={dataLoan}
+        dataBank={dataBank}
+        onSearchBank={handlerCallBankCatalog}
         onClose={() => {
           setIsModalVisiblePolicy(!isModalVisiblePolicy);
         }}
         frontFunctions={frontFunctions}
+        handlerCallUpdateCustomerLoan={async (data, id) => {
+          try {
+            await handlerCallUpdateCustomerLoan(data, id);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        handlerCallGetCustomerLoanProperties={async (data) => {
+          try {
+            return await handlerCallGetCustomerLoanProperties(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
       />
       <div className="margin-app-main">
         <div className="top-main-user">
@@ -1118,12 +1534,13 @@ const Tenant = (props) => {
                 <button
                   type="button"
                   onClick={() => {
-                    setIsVisiblePaymentRent(!isVisiblePaymentRent);
+                    setIsVisiblePaymentRent(true);
                     setIsVisibleMessages(false);
                     setIsVisibleIncidence(false);
+                    window.location.href = "#section-register-action";
                   }}
                 >
-                  <span>Pagar renta</span>
+                  <span>Registrar pago</span>
                 </button>
               </div>
             )}
@@ -1141,6 +1558,18 @@ const Tenant = (props) => {
                   </button>
                 </div>
               )}
+            {dataTenant.canDeal === 1 && (
+              <div className="button_init_primary">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHowToPay(true);
+                  }}
+                >
+                  <span>¿Cómo hacer mi pago de renta?</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
         <div className="indicators-amount-renter">
@@ -1201,17 +1630,16 @@ const Tenant = (props) => {
             </div>
           </div>
         )}
+        <div id="section-register-action"></div>
         {isVisibleMessages === false &&
           isVisiblePaymentRent === false &&
           isVisibleIncidence === false && (
             <div className="main-information-owner">
-              <div className="title-cards flex-title-card">
+              <div
+                className="title-cards flex-title-card"
+                style={{ flexDirection: "row" }}
+              >
                 <span>Propietario</span>
-                <div className="button_init_secondary">
-                  <button type="button" onClick={() => {}}>
-                    <span>Reportar Propietario</span>
-                  </button>
-                </div>
               </div>
               <div className="section-information-actions">
                 <div className="section-information-info">
@@ -1274,7 +1702,7 @@ const Tenant = (props) => {
                       }}
                       className="button-action-primary"
                     >
-                      <span>Enviar mensaje</span>
+                      <span>Enviar mensaje al propietario</span>
                     </button>
                   </div>
                   <div className="section-information-button-3">
@@ -1353,6 +1781,33 @@ const Tenant = (props) => {
                   </div>
                 </div>
               </div>
+              {dataTenant.canRequestReminderToOwner === true && (
+                <div style={{ padding: 5, fontFamily: "Poppins" }}>
+                  <Alert
+                    message={
+                      <div>
+                        <span style={{ fontWeight: "bold" }}>
+                          Para continuar tu proceso es necesario que tu
+                          propietario se registre, si lo deseas haz clic
+                          <Button
+                            type="link"
+                            onClick={async () => {
+                              await handlerCallUpdateInvitation(
+                                dataTenant.idInvitation
+                              );
+                              handlerCallGetAllCustomerTenantById();
+                            }}
+                          >
+                            aquí
+                          </Button>
+                          para enviarle un recordatorio.
+                        </span>
+                      </div>
+                    }
+                    type="warning"
+                  />
+                </div>
+              )}
             </div>
           )}
         <CustomContentActions
@@ -1385,7 +1840,7 @@ const Tenant = (props) => {
           onClick={() => {
             setIsVisiblePaymentRent(!isVisiblePaymentRent);
           }}
-          titleSection="Pagar renta"
+          titleSection="Registrar pago"
           isVisible={isVisiblePaymentRent}
         >
           <SectionRegisterPayment
@@ -1495,7 +1950,14 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetRequestProviderPropierties(data)),
   callSignRequestForProvider: (data, id) =>
     dispatch(callSignRequestForProvider(data, id)),
+  callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
+  callGetCustomerLoan: (data) => dispatch(callGetCustomerLoan(data)),
+  callUpdateCustomerLoan: (data, id) =>
+    dispatch(callUpdateCustomerLoan(data, id)),
+  callGetCustomerLoanProperties: (data, id) =>
+    dispatch(callGetCustomerLoanProperties(data, id)),
+  callGetAllBankCatalog: (data) => dispatch(callGetAllBankCatalog(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);
