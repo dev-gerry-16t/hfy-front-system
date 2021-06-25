@@ -32,9 +32,7 @@ import CustomDialog from "../../components/CustomDialog";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 
-const stripePromise = loadStripe(
-  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
-);
+const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
 
 const ELEMENTS_OPTIONS = {
   fonts: [

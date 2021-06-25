@@ -73,9 +73,7 @@ import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 
-const stripePromise = loadStripe(
-  "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
-);
+const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -146,6 +144,7 @@ const Tenant = (props) => {
   const [dataLoan, setDataLoan] = useState({});
   const [urlContract, setUrlContract] = useState({});
   const [dataBank, setDataBank] = useState([]);
+  const [dataPaymentDescription, setDataPaymentDescription] = useState({});
   const [howToPay, setHowToPay] = useState(false);
   const [selectMethodPayment, setSelectMethodPayment] = useState(false);
   const frontFunctions = new FrontFunctions();
@@ -478,6 +477,11 @@ const Tenant = (props) => {
           ? response.response[0]
           : {};
       setDataTenant(responseResult);
+      setDataPaymentDescription(
+        isNil(responseResult.paymentDescription) === false
+          ? JSON.parse(responseResult.paymentDescription)
+          : {}
+      );
       handlerCallGetCustomerMessage({
         idContract: responseResult.idContract,
         idCustomerTenant: responseResult.idCustomerTenant,
@@ -1005,57 +1009,90 @@ const Tenant = (props) => {
           setSelectMethodPayment(false);
         }}
       >
-        {selectMethodPayment === false && (
-          <div className="banner-payment-rent">
-            <div className="title-banner">
-              <h1>Pago de renta</h1>
-            </div>
-            <div className="amount-to-pay">
-              <span>Monto a pagar</span>
-              <strong>{dataTenant.currentRent}</strong>
-            </div>
-            <div className="date-payment">
-              Fecha de próximo pago{" "}
-              <strong>- {dataTenant.nextPaymentAt}</strong>
-            </div>
-            <div className="date-payment">
-              Fecha de limite de pago <strong>- 07 Jul.</strong>
-            </div>
-            <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
-              <p>Método de pago</p>
-            </div>
-            <div className="section-method-payment">
-              <div className="card-icon">
-                <i
-                  className="fa fa-clock-o"
-                  style={{ fontSize: 18, color: "#6E7191" }}
-                />
+        {selectMethodPayment === false &&
+          isEmpty(dataPaymentDescription) === false && (
+            <div className="banner-payment-rent">
+              <div className="title-banner">
+                <h1>Pago de renta</h1>
+              </div>
+              <div className="amount-to-pay">
+                <span>Monto a pagar</span>
+                <strong>
+                  {dataPaymentDescription.totalPendingAmountFormat}
+                </strong>
               </div>
               <div
-                className="card-info-method"
-                onClick={() => {
-                  setSelectMethodPayment(true);
+                style={{
+                  fontSize: 12,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  flexDirection: "column",
+                  margin: "5px 0px 20px 0px",
                 }}
               >
-                <strong>Pago por transferencia SPEI</strong>
-                <span>Normalmente se refleja en minutos</span>
+                <div>
+                  <span>Monto renta: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.totalAmountFormat}
+                  </strong>
+                </div>
+                {dataPaymentDescription.hasSubscription === true && (
+                  <div>
+                    <span>Monto préstamo: </span>
+                    <strong>
+                      {
+                        dataPaymentDescription.subscriptionInfo
+                          .totalAmountFormat
+                      }
+                    </strong>
+                  </div>
+                )}
+              </div>
+              <div className="date-payment">
+                Fecha de próximo pago{" "}
+                <strong>
+                  - {dataPaymentDescription.rentInfo.scheduleDate}
+                </strong>
+              </div>
+              <div className="date-payment">
+                Fecha de limite de pago{" "}
+                <strong>- {dataPaymentDescription.rentInfo.paydayLimit}</strong>
+              </div>
+              <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
+                <p>Método de pago</p>
+              </div>
+              <div className="section-method-payment">
+                <div className="card-icon">
+                  <i
+                    className="fa fa-clock-o"
+                    style={{ fontSize: 18, color: "#6E7191" }}
+                  />
+                </div>
+                <div
+                  className="card-info-method"
+                  onClick={() => {
+                    setSelectMethodPayment(true);
+                  }}
+                >
+                  <strong>Pago por transferencia SPEI</strong>
+                  <span>Normalmente se refleja en minutos</span>
+                </div>
+              </div>
+              <div
+                className="two-action-buttons-banner"
+                style={{ marginTop: 20 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHowToPay(false);
+                  }}
+                >
+                  <span>Salir</span>
+                </button>
               </div>
             </div>
-            <div
-              className="two-action-buttons-banner"
-              style={{ marginTop: 20 }}
-            >
-              <button
-                type="button"
-                onClick={() => {
-                  setHowToPay(false);
-                }}
-              >
-                <span>Salir</span>
-              </button>
-            </div>
-          </div>
-        )}
+          )}
         {selectMethodPayment === true && (
           <div className="banner-payment-rent">
             <button
