@@ -1,5 +1,5 @@
-import React from "react";
-import { Avatar, Rate, Skeleton, Button, Menu, Dropdown } from "antd";
+import React, { useState } from "react";
+import { Avatar, Rate, Skeleton, Button, Menu, Dropdown, Popover } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
@@ -20,7 +20,9 @@ const SectionCardTenant = (props) => {
     dataCustomer,
     onViewDocument,
     onUpdateInvitation,
+    onForgiveInterest,
   } = props;
+  const [visiblePopover, setVisiblePopover] = useState(false);
 
   const formatDate = (date) => {
     let dateFormat = "";
@@ -168,6 +170,79 @@ const SectionCardTenant = (props) => {
                     <div>
                       Monto de Renta: <strong>{row.rentAmount}</strong>
                     </div>
+                    <div>
+                      Interés Acumulado:{" "}
+                      <strong>{row.totalInterestAmountFormat}</strong>
+                    </div>
+                    {row.canForgiveInterest === true && (
+                      <div>
+                        <Popover
+                          content={
+                            <div
+                              style={{
+                                fontFamily: "Poppins",
+                                width: 300,
+                              }}
+                            >
+                              ¿Estás seguro que deseas condonar los intereses a
+                              tu inquilino <strong>{row.shortName}</strong> por
+                              un monto de{" "}
+                              <strong>{row.totalInterestAmountFormat}</strong>?
+                              <div
+                                style={{ textAlign: "center", marginTop: 15 }}
+                              >
+                                <Button
+                                  type="primary"
+                                  shape="round"
+                                  size="small"
+                                  style={{
+                                    background: "var(--color-primary)",
+                                    border: "none",
+                                  }}
+                                  onClick={async () => {
+                                    try {
+                                      await onForgiveInterest(
+                                        {
+                                          idCustomer: row.idCustomer,
+                                          idCustomerTenant:
+                                            row.idCustomerTenant,
+                                        },
+                                        row.idContract
+                                      );
+                                    } catch (error) {}
+                                  }}
+                                >
+                                  Aceptar
+                                </Button>
+                              </div>
+                            </div>
+                          }
+                          title="Condonar interés"
+                          trigger="click"
+                          // visible={visiblePopover}
+                          // onVisibleChange={() => {
+                          //   setVisiblePopover(!visiblePopover);
+                          // }}
+                        >
+                          <Button
+                            type="primary"
+                            shape="round"
+                            icon={
+                              <span className="anticon">
+                                <i className="fa fa-usd" />
+                              </span>
+                            }
+                            size="small"
+                            style={{ background: "#1CE3FF", border: "none" }}
+                            onClick={async () => {
+                              // setVisiblePopover(true);
+                            }}
+                          >
+                            Condonar interés
+                          </Button>
+                        </Popover>
+                      </div>
+                    )}
 
                     {isNil(row.infoContractDocument) === false &&
                       isEmpty(row.infoContractDocument) === false && (

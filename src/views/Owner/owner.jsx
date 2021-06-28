@@ -31,6 +31,7 @@ import {
   callGetRequestAdvancePymtProperties,
   callUpdateRequestAdvancePym,
   callUpdateInvitation,
+  callForgiveInterest,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -76,6 +77,7 @@ const Owner = (props) => {
     callGetRequestAdvancePymtProperties,
     callUpdateRequestAdvancePym,
     callUpdateInvitation,
+    callForgiveInterest,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -807,6 +809,32 @@ const Owner = (props) => {
     }
   };
 
+  const handlerCallForgiveInterest = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callForgiveInterest(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+      showMessageStatusApi(
+        "¡Muy bien! se han condonado los intereses",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCalllSyncApis = async () => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
@@ -1041,6 +1069,11 @@ const Owner = (props) => {
                 throw error;
               }
             }}
+            onForgiveInterest={async (data, id) => {
+              try {
+                await handlerCallForgiveInterest(data, id);
+              } catch (error) {}
+            }}
             dataCustomer={dataCustomer}
             history={history}
             tenantCoincidences={tenantCoincidences}
@@ -1115,6 +1148,7 @@ const mapDispatchToProps = (dispatch) => ({
   callUpdateRequestAdvancePym: (data, id) =>
     dispatch(callUpdateRequestAdvancePym(data, id)),
   callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
+  callForgiveInterest: (data, id) => dispatch(callForgiveInterest(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
