@@ -75,6 +75,7 @@ const API_CONSTANTS = {
   GET_REQUEST_ADVANCE_PYMT_PLAN: `${API.API_SECURE}/customer/getRequestAdvancePymtPlan`,
   GET_CUSTOMER_LOAN: `${API.API_SECURE}/customer/getCustomerLoan`,
   UPDATE_CUSTOMER_LOAN: `${API.API_SECURE}/customer/updateCustomerLoan/`,
+  FORGIVE_INTEREST: `${API.API_SECURE}/customer/forgiveInterest/`,
   GET_REQUEST_ADVANCE_PYMT_PROPERTIES: `${API.API_SECURE}/customer/getRequestAdvancePymtProperties`,
   GET_CUSTOMER_LOAN_PROPERTIES: `${API.API_SECURE}/customer/getCustomerLoanProperties`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
