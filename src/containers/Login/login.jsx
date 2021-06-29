@@ -49,9 +49,16 @@ const Login = (props) => {
           isNil(response.response.token) === false
             ? response.response.token
             : null;
+        const publicKeyStripe =
+          isNil(response) === false &&
+          isNil(response.response) === false &&
+          isNil(response.response.publicKeyStripe) === false
+            ? response.response.publicKeyStripe
+            : null;
         await setDataUserProfile({
           idSystemUser,
           token,
+          publicKeyStripe,
           email: data.email.trim(),
         });
         setSpinVisible(false);
@@ -75,7 +82,11 @@ const Login = (props) => {
   return (
     <div className="App">
       <div className="login_head_logo">
-        <img src={logo} alt="Homify-Pólizas de arrendamiento" className="login_logo" />
+        <img
+          src={logo}
+          alt="Homify-Pólizas de arrendamiento"
+          className="login_logo"
+        />
       </div>
       <div className="login_main">
         <div className="login_card_form">
@@ -94,7 +105,9 @@ const Login = (props) => {
               </div>
               <div className="login_inputs_form">
                 <div className="login-ant-input">
-                  <label className="login-label-placeholder">Correo electrónico</label>
+                  <label className="login-label-placeholder">
+                    Correo electrónico
+                  </label>
                   <Input
                     value={dataLogin.email}
                     onChange={(e) => {
