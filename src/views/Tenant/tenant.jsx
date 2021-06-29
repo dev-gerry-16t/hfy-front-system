@@ -73,8 +73,6 @@ import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 
-const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
-
 const ELEMENTS_OPTIONS = {
   fonts: [
     {
@@ -148,6 +146,7 @@ const Tenant = (props) => {
   const [howToPay, setHowToPay] = useState(false);
   const [selectMethodPayment, setSelectMethodPayment] = useState(false);
   const frontFunctions = new FrontFunctions();
+  const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {

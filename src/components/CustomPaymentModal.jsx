@@ -29,8 +29,6 @@ import Arrow from "../assets/icons/Arrow.svg";
 
 const { Option } = Select;
 
-const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
-
 const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
@@ -321,10 +319,16 @@ const ELEMENTS_OPTIONS = {
 };
 
 const CustomPaymentModal = (props) => {
-  const { isModalVisible, onClose, spinVisible, callPostPaymentService } =
-    props;
+  const {
+    isModalVisible,
+    onClose,
+    spinVisible,
+    callPostPaymentService,
+    dataProfile,
+  } = props;
   const [visiblePayment, setVisiblePayment] = useState(true);
   const LoadingSpin = <SyncOutlined spin />;
+  const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
   useEffect(() => {
     if (isModalVisible === true) {

@@ -7,8 +7,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import CustomCheckPayment from "./customCheckPayment";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 
-const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
-
 const ELEMENTS_OPTIONS = {
   fonts: [
     {
@@ -24,6 +22,8 @@ const SectionPaymentPolicy = ({
   totalPolicy,
   dataProfile,
 }) => {
+  const stripePromise = loadStripe(dataProfile.publicKeyStripe);
+
   return (
     <div className="content-typeform-formulary">
       <h3>Pago en línea de Póliza Jurídica</h3>

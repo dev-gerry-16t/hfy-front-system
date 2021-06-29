@@ -32,8 +32,6 @@ import CustomDialog from "../../components/CustomDialog";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 
-const stripePromise = loadStripe(GLOBAL_CONSTANTS.PUBLIC_STRIPE_KEY);
-
 const ELEMENTS_OPTIONS = {
   fonts: [
     {
@@ -81,6 +79,7 @@ const TenantFromOwner = (props) => {
   const [dataIncidenceDetail, setDataIncidenceDetail] = useState({});
   const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
     useState(false);
+  const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
   const dotChange = useRef(null);
   const contentStyle = {
