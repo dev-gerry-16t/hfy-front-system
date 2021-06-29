@@ -4,7 +4,9 @@ const GLOBAL_CONSTANTS = {
   ROOT_NAME: "system",
   VERSION: "v0.0.122",
   PUBLIC_STRIPE_KEY:
-    "pk_live_51IiP07KoHiI0GYNajGdcK23v8qIYLTDodZ8Brc43TUfH15N9NUt34FjiBMxiIePvD8kDroDK5U4oXQlGI364RPKg00Q2Tr9deq",
+    window.location.hostname === "localhost"
+      ? "pk_test_51IiP07KoHiI0GYNakthTieQzxatON67UI2LJ6UNdw8TM2ljs9lHMXuw5a6E2gWoHARTMdH9X4KiMZPdosbPyqscq00dAVe9bPd"
+      : "pk_live_51IiP07KoHiI0GYNajGdcK23v8qIYLTDodZ8Brc43TUfH15N9NUt34FjiBMxiIePvD8kDroDK5U4oXQlGI364RPKg00Q2Tr9deq",
   STATUS_API: {
     WARNING: "WARNING",
     SUCCESS: "SUCCESS",
