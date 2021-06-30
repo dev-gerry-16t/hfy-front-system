@@ -31,7 +31,7 @@ import IconCloseLogout from "../../assets/icons/Logout.svg";
 import IconLead from "../../assets/icons/IconLead.svg";
 import IconLetter from "../../assets/icons/IconLetter.svg";
 import IconCheck from "../../assets/icons/IconCheck.svg";
-import IconWallet from "../../assets/icons/wallet.svg";
+import IconWallet from "../../assets/iconSteps/wallet.svg";
 import IconProvider from "../../assets/icons/IconProvider.svg";
 import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
