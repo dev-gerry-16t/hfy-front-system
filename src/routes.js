@@ -29,6 +29,7 @@ const AdvancementRent = React.lazy(() =>
 const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
+const Transactions = React.lazy(() => import("./views/Payments/payments"));
 
 const routes = [
   {
@@ -181,6 +182,14 @@ const routes = [
     path: "/websystem/dashboard-properties",
     name: "Propiedades",
     component: Properties,
+    exact: true,
+  },
+  {
+    key: "18",
+    id: "Transacciones",
+    path: "/websystem/dashboard-transactions",
+    name: "Transacciones",
+    component: Transactions,
     exact: true,
   },
 ];
