@@ -13,11 +13,10 @@ import {
   Menu,
   Button,
   Alert,
-  Tooltip,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { UserOutlined, QuestionCircleOutlined } from "@ant-design/icons";
+import { UserOutlined } from "@ant-design/icons";
 import IconCalendar from "../../assets/icons/Calendar.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
