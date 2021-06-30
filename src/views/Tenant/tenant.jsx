@@ -13,10 +13,11 @@ import {
   Menu,
   Button,
   Alert,
+  Tooltip,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { UserOutlined } from "@ant-design/icons";
+import { UserOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import IconCalendar from "../../assets/icons/Calendar.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
@@ -1032,29 +1033,34 @@ const Tenant = (props) => {
                 <div>
                   <span>Monto renta: </span>
                   <strong>
-                    {dataPaymentDescription.rentInfo.totalAmountFormat}
+                    {dataPaymentDescription.rentInfo.currentRentFormat}
                   </strong>
                 </div>
                 {dataPaymentDescription.hasSubscription === true && (
-                  <div>
-                    <span>Monto préstamo: </span>
-                    <strong>
-                      {
-                        dataPaymentDescription.subscriptionInfo
-                          .totalAmountFormat
-                      }
-                    </strong>
-                  </div>
+                  <>
+                    <div>
+                      <span>Comisión: </span>
+                      <strong>
+                        {dataPaymentDescription.subscriptionInfo.currentAmount}
+                      </strong>
+                    </div>
+                    <div>
+                      <span style={{ fontSize: 10 }}>
+                        Comisión cobrada por
+                        <br /> Depósito en Garantía
+                      </span>
+                    </div>
+                  </>
                 )}
               </div>
               <div className="date-payment">
-                Fecha de próximo pago{" "}
+                Fecha próximo pago{" "}
                 <strong>
                   - {dataPaymentDescription.rentInfo.scheduleDate}
                 </strong>
               </div>
               <div className="date-payment">
-                Fecha de limite de pago{" "}
+                Fecha límite de pago{" "}
                 <strong>- {dataPaymentDescription.rentInfo.paydayLimit}</strong>
               </div>
               <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
@@ -1114,7 +1120,7 @@ const Tenant = (props) => {
             </div>
             <div style={{ margin: "15px 0px" }}>
               <span>
-                1. Inicia una transferencia desde tu banca en linea o app de tu
+                1. Inicia una transferencia desde tu banca en línea o app de tu
                 banco.
               </span>
             </div>
