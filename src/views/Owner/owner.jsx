@@ -930,6 +930,10 @@ const Owner = (props) => {
                     {dataPaymentDescription.interestArrearsAmountFormat}
                   </strong>
                 </div>
+                <div>
+                  <span>Pagos realizados: </span>
+                  <strong>{dataPaymentDescription.paymentsMade}</strong>
+                </div>
               </div>
 
               <div className="date-payment">

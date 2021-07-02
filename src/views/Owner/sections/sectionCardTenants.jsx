@@ -315,7 +315,7 @@ const SectionCardTenant = (props) => {
                         onClick={async () => {
                           const parseObject =
                             isNil(row.infoRequestAdvancePymt) === false
-                              ? row.infoRequestAdvancePymt
+                              ? JSON.parse(row.infoRequestAdvancePymt)
                               : {};
                           onOpenDetailPayment(parseObject);
                         }}
