@@ -1053,12 +1053,6 @@ const Tenant = (props) => {
                     {dataPaymentDescription.rentInfo.interestAmountFormat}
                   </strong>
                 </div>
-                <div>
-                  <span>Total: </span>
-                  <strong>
-                    {dataPaymentDescription.rentInfo.totalAmountFormat}
-                  </strong>
-                </div>
                 {dataPaymentDescription.hasSubscription === true && (
                   <>
                     <div>
@@ -1075,6 +1069,12 @@ const Tenant = (props) => {
                     </div>
                   </>
                 )}
+                <div>
+                  <span>Total: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.totalAmountFormat}
+                  </strong>
+                </div>
               </div>
               <div className="date-payment">
                 Periodo actual{" "}
