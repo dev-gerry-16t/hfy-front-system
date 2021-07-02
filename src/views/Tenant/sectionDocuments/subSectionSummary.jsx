@@ -27,6 +27,10 @@ const SubSectionSummary = (props) => {
             <td>{dataSummary.currentRentFormat}</td>
           </tr>
           <tr>
+            <td>Costo mantenimiento</td>
+            <td>{dataSummary.maintenanceAmountFormat}</td>
+          </tr>
+          <tr>
             <td>Mes correspondiente</td>
             <td>{dataSummary.dateDescription}</td>
           </tr>
@@ -37,6 +41,10 @@ const SubSectionSummary = (props) => {
           <tr>
             <td>Monto de interes</td>
             <td>{dataSummary.amountInterestFormat}</td>
+          </tr>
+          <tr>
+            <td>Pagos recibidos</td>
+            <td>{dataSummary.paymentsMade}</td>
           </tr>
           <tr
             style={{
