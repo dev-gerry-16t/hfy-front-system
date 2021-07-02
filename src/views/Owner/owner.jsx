@@ -7,6 +7,7 @@ import isNil from "lodash/isNil";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
+import Arrow from "../../assets/icons/Arrow.svg";
 import {
   callGetAllCustomerById,
   callGetAllCustomerCoincidences,
@@ -105,6 +106,9 @@ const Owner = (props) => {
   const [finishCallApis, setFinishCallApis] = useState(false);
   const [spinVisible, setSpinVisible] = useState(false);
   const [urlContract, setUrlContract] = useState({});
+  const [dataPaymentDescription, setDataPaymentDescription] = useState({});
+  const [howToPay, setHowToPay] = useState(false);
+  const [selectMethodPayment, setSelectMethodPayment] = useState(false);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -842,12 +846,219 @@ const Owner = (props) => {
     setFinishCallApis(true);
   };
 
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        showMessageStatusApi(
+          "CLABE copiada correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
+
+  const parseNumberClabe = (num) => {
+    let numClabe = "";
+    if (isNil(num) === false) {
+      const num1 = num.slice(0, 4);
+      const num2 = num.slice(4, 8);
+      const num3 = num.slice(8, 12);
+      const num4 = num.slice(12, 16);
+      const num5 = num.slice(16, 18);
+      numClabe = `${num1} ${num2} ${num3} ${num4} ${num5}`;
+    }
+    return numClabe;
+  };
+
   useEffect(() => {
     handlerCalllSyncApis();
   }, []);
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={howToPay}
+        onClose={() => {
+          setHowToPay(false);
+          setSelectMethodPayment(false);
+        }}
+      >
+        {selectMethodPayment === false &&
+          isEmpty(dataPaymentDescription) === false && (
+            <div className="banner-payment-rent">
+              <div className="title-banner">
+                <h1>Pago de adelanto de renta</h1>
+              </div>
+              <div className="amount-to-pay">
+                <span>Monto a pagar</span>
+                <strong>{dataPaymentDescription.totalAmountFormat}</strong>
+              </div>
+              <div
+                style={{
+                  fontSize: 12,
+                  display: "flex",
+                  alignItems: "flex-end",
+                  flexDirection: "column",
+                  margin: "5px 0px 20px 0px",
+                }}
+              >
+                <div>
+                  <span>Próximo pago: </span>
+                  <strong>{dataPaymentDescription.paymentAmountFormat}</strong>
+                </div>
+                <div>
+                  <span>Interés: </span>
+                  <strong>
+                    {dataPaymentDescription.interestArrearsAmountFormat}
+                  </strong>
+                </div>
+              </div>
+
+              <div className="date-payment">
+                Fecha límite de pago{" "}
+                <strong>- {dataPaymentDescription.paydayLimit}</strong>
+              </div>
+              <div className="date-payment">
+                Pago{" "}
+                <strong>- {dataPaymentDescription.paymentNoDescription}</strong>
+              </div>
+              <div style={{ textAlign: "center", margin: "4em 0px 15px 0px" }}>
+                <p>Método de pago</p>
+              </div>
+              <div className="section-method-payment">
+                <div className="card-icon">
+                  <i
+                    className="fa fa-clock-o"
+                    style={{ fontSize: 18, color: "#6E7191" }}
+                  />
+                </div>
+                <div
+                  className="card-info-method"
+                  onClick={() => {
+                    setSelectMethodPayment(true);
+                  }}
+                >
+                  <strong>Pago por transferencia SPEI</strong>
+                  <span>Normalmente se refleja en minutos</span>
+                </div>
+              </div>
+              <div
+                className="two-action-buttons-banner"
+                style={{ marginTop: 20 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setHowToPay(false);
+                  }}
+                >
+                  <span>Salir</span>
+                </button>
+              </div>
+            </div>
+          )}
+        {selectMethodPayment === true && (
+          <div className="banner-payment-rent">
+            <button
+              style={{
+                position: "absolute",
+                left: 0,
+                top: 10,
+                border: "none",
+                background: "transparent",
+              }}
+              type="button"
+              onClick={() => {
+                setSelectMethodPayment(false);
+              }}
+            >
+              <img src={Arrow} alt="backTo" width="30" />
+            </button>
+            <div className="title-banner">
+              <h1>Transferencia SPEI</h1>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                1. Inicia una transferencia desde tu banca en línea o app de tu
+                banco.
+              </span>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>2. Ingresa los siguientes datos:</span>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>Nombre del beneficiario</strong>
+                <span>{dataPaymentDescription.accountHolder}</span>
+              </div>
+            </div>
+            <div className="section-method-payment-v2">
+              <div className="card-info-method">
+                <strong>CLABE Interbancaria</strong>
+                <span id="interbank-clabe">
+                  {parseNumberClabe(dataPaymentDescription.clabe)}
+                </span>
+              </div>
+              <div className="card-icon">
+                <i
+                  className="fa fa-clone"
+                  style={{ fontSize: 18, color: "#6E7191", cursor: "pointer" }}
+                  onClick={() => {
+                    copyTextToClipboard(dataPaymentDescription.clabe);
+                  }}
+                />
+              </div>
+            </div>
+            <div
+              className="section-method-payment-v2"
+              style={{
+                borderBottom: "1px solid #d6d8e7",
+              }}
+            >
+              <div className="card-info-method">
+                <strong>Banco</strong>
+                <span>{dataPaymentDescription.bankName}</span>
+              </div>
+            </div>
+            <div style={{ margin: "15px 0px" }}>
+              <span>
+                3. Ingresa el monto a pagar y finaliza la operación. Puedes
+                guardar tu comprobante de pago o una captura de pantalla en caso
+                de requerir alguna aclaración.
+              </span>
+            </div>
+            {/* <div style={{ margin: "15px 0px" }}>
+              <strong>
+                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
+                un horario de 6 A.M. a 6 P.M.
+              </strong>
+            </div> */}
+            <div style={{ margin: "15px 0px", textAlign: "center" }}>
+              <strong style={{ color: "var(--color-primary)" }}>
+                ¡Listo! Finalmente recibirás una notificación por tu pago
+              </strong>
+            </div>
+          </div>
+        )}
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isVisibleContractAdvancement}
         onClose={() => {
@@ -1051,8 +1262,11 @@ const Owner = (props) => {
             <div className="elipse-icon" style={{ backgroundColor: "#BE0FFF" }}>
               <img src={IconActivity} alt="icon" width="20px"></img>
             </div>
-            <h2>{dataCustomer.totalCumulativeBalance}</h2>
-            <span>Balance Acumulado</span>
+            <h2>{dataCustomer.totalRentAmountFormat}</h2>
+            <span>
+              Total de pagos Adelanto de renta ({dataCustomer.totalPendingRents}
+              )
+            </span>
           </div>
         </div>
         <div className="main-information-user">
@@ -1101,6 +1315,10 @@ const Owner = (props) => {
             onViewDocument={(data) => {
               setDataDocument(data);
               setIsVisibleModal(true);
+            }}
+            onOpenDetailPayment={(data) => {
+              setDataPaymentDescription(data);
+              setHowToPay(true);
             }}
           />
         </div>

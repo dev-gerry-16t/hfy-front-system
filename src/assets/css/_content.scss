@@ -278,6 +278,11 @@
           .info-user-payment {
             align-self: center;
           }
+          .info-action-payment-rent {
+            padding: 5px 25px;
+            display: flex;
+            align-items: center;
+          }
         }
         .button-collapse {
           button {
@@ -1052,6 +1057,11 @@
       .icon-header-1 {
       }
     }
+  }
+  .info-action-payment-rent {
+    padding: 5px 0px !important;
+    display: flex;
+    align-items: center;
   }
   .renter-card-information {
     .title-cards {

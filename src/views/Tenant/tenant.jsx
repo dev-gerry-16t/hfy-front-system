@@ -1035,6 +1035,30 @@ const Tenant = (props) => {
                     {dataPaymentDescription.rentInfo.currentRentFormat}
                   </strong>
                 </div>
+                <div>
+                  <span>Costo mantenimiento: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.maintenanceAmountFormat}
+                  </strong>
+                </div>
+                <div>
+                  <span>Pagos recibidos: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.paymentsMade}
+                  </strong>
+                </div>
+                <div>
+                  <span>Iterés: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.interestAmountFormat}
+                  </strong>
+                </div>
+                <div>
+                  <span>Total: </span>
+                  <strong>
+                    {dataPaymentDescription.rentInfo.totalAmountFormat}
+                  </strong>
+                </div>
                 {dataPaymentDescription.hasSubscription === true && (
                   <>
                     <div>
@@ -1051,6 +1075,12 @@ const Tenant = (props) => {
                     </div>
                   </>
                 )}
+              </div>
+              <div className="date-payment">
+                Periodo actual{" "}
+                <strong>
+                  - {dataPaymentDescription.rentInfo.currentPeriod}
+                </strong>
               </div>
               <div className="date-payment">
                 Fecha próximo pago{" "}
