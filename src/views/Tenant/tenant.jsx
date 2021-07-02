@@ -1075,6 +1075,19 @@ const Tenant = (props) => {
                     {dataPaymentDescription.rentInfo.totalAmountFormat}
                   </strong>
                 </div>
+                <div>
+                  <span>Pago vencido: </span>
+                  <strong
+                    style={{
+                      color:
+                        dataPaymentDescription.isOnTime === true
+                          ? "color: rgb(28, 227, 255)"
+                          : "red",
+                    }}
+                  >
+                    {dataPaymentDescription.rentInfo.overduePayment}
+                  </strong>
+                </div>
               </div>
               <div className="date-payment">
                 Periodo actual{" "}
