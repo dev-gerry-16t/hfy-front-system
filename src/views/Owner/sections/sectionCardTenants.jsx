@@ -297,31 +297,33 @@ const SectionCardTenant = (props) => {
                         </Dropdown>
                       )}
                   </div>
-                  <div className="info-action-payment-rent">
-                    <Button
-                      type="primary"
-                      shape="round"
-                      icon={
-                        <span className="anticon">
-                          <i className="fa fa-credit-card" />
-                        </span>
-                      }
-                      size="small"
-                      style={{
-                        background: "var(--color-primary)",
-                        border: "none",
-                      }}
-                      onClick={async () => {
-                        const parseObject =
-                          isNil(row.infoRequestAdvancePymt) === false
-                            ? row.infoRequestAdvancePymt
-                            : {};
-                        onOpenDetailPayment(parseObject);
-                      }}
-                    >
-                      Pagar préstamo
-                    </Button>
-                  </div>
+                  {row.hasAdvancePymt === true && (
+                    <div className="info-action-payment-rent">
+                      <Button
+                        type="primary"
+                        shape="round"
+                        icon={
+                          <span className="anticon">
+                            <i className="fa fa-credit-card" />
+                          </span>
+                        }
+                        size="small"
+                        style={{
+                          background: "var(--color-primary)",
+                          border: "none",
+                        }}
+                        onClick={async () => {
+                          const parseObject =
+                            isNil(row.infoRequestAdvancePymt) === false
+                              ? row.infoRequestAdvancePymt
+                              : {};
+                          onOpenDetailPayment(parseObject);
+                        }}
+                      >
+                        Pagar préstamo
+                      </Button>
+                    </div>
+                  )}
                 </div>
                 <div className="button-collapse">
                   {isNil(row.canSeeTenantDetail) === false &&
