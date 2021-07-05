@@ -118,6 +118,12 @@ const Login = (props) => {
                         errorEmail: false,
                       });
                     }}
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13) {
+                        setSpinVisible(true);
+                        handlerCallApiLogin(dataLogin);
+                      }
+                    }}
                     suffix={<UserOutlined className="site-form-item-icon" />}
                   />
                 </div>
@@ -144,6 +150,12 @@ const Login = (props) => {
                     iconRender={(visible) =>
                       visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                     }
+                    onKeyPress={(e) => {
+                      if (e.charCode === 13) {
+                        setSpinVisible(true);
+                        handlerCallApiLogin(dataLogin);
+                      }
+                    }}
                   />
                 </div>
                 <div
