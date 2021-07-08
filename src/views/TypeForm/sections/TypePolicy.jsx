@@ -19,6 +19,7 @@ const TypePolicy = (props) => {
     dataPolicyMethods,
     onGetProperties,
     dataPropertiesInfo,
+    getDocuments,
   } = props;
 
   const DescriptionItem = ({ title, content, isRequired }) => (
@@ -107,6 +108,10 @@ const TypePolicy = (props) => {
       }
     }
   }, [dataFormSave, dataPolicies, dataPolicyMethods]);
+
+  useEffect(() => {
+    getDocuments(dataFormSave, 3);
+  }, []);
 
   const getTypeIdDocument = (type) => {
     let word = "";

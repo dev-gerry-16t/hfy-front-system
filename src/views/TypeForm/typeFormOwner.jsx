@@ -515,6 +515,9 @@ const TypeFormOwner = (props) => {
               throw error;
             }
           }}
+          getDocuments={(data, type) => {
+            handlerCallGetTypeFormDocument(data, type);
+          }}
           dataProperties={dataProperties}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
@@ -633,7 +636,6 @@ const TypeFormOwner = (props) => {
         handlerCallGetAllStates();
       }
       setDataForm(responseResult);
-      handlerCallGetTypeFormDocument(responseResult, 3);
       hanlderCallGetPolicyPaymentMethod(responseResult.idTypeForm);
     } catch (error) {
       showMessageStatusApi(

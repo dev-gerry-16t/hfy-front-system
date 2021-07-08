@@ -636,9 +636,11 @@ const TypeFormUser = (props) => {
               throw error;
             }
           }}
+          onGetDocument={() => {
+            handlerCallGetTypeFormDocumentTenant(dataForm, 1);
+          }}
           dataForm={dataForm}
           onClickNext={() => {
-            handlerCallGetTypeFormDocumentTenant(dataForm, 1);
             next();
           }}
           onClickBack={() => prev()}
@@ -660,6 +662,9 @@ const TypeFormUser = (props) => {
             } catch (error) {
               throw error;
             }
+          }}
+          getDocument={() => {
+            handlerCallGetTypeFormDocumentTenant(dataForm, 2);
           }}
           frontFunctions={frontFunctions}
           dataProperties={dataProperties}
@@ -774,8 +779,6 @@ const TypeFormUser = (props) => {
       }
       setDataForm(responseResult1);
       setDataReferences(responseResult2);
-      await handlerCallGetTypeFormDocumentTenant(responseResult1, 1);
-      await handlerCallGetTypeFormDocumentTenant(responseResult1, 2);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
