@@ -44,6 +44,7 @@ const SectionInfoAval = (props) => {
     dataProperties,
     onGetProperties,
     dataPropertiesInfo,
+    getDocument,
   } = props;
   const initialForm = {
     hasEndorsement: null,
@@ -243,6 +244,10 @@ const SectionInfoAval = (props) => {
       });
     }
   };
+
+  useEffect(() => {
+    getDocument();
+  }, []);
 
   return (
     <div className="content-typeform-formulary">

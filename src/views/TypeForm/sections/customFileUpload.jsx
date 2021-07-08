@@ -107,13 +107,9 @@ const CustomFileUpload = (props) => {
       idLoginHistory,
     };
     try {
-      const response = await callAddDocument(
-        data.originFileObj,
-        dataDocument,
-        (percent) => {
-          setTimeUpload(percent);
-        }
-      );
+      const response = await callAddDocument(data, dataDocument, (percent) => {
+        setTimeUpload(percent);
+      });
       const documentId =
         isNil(response) === false &&
         isNil(response.response) === false &&
@@ -172,33 +168,62 @@ const CustomFileUpload = (props) => {
         {isNil(preview) === true &&
           isEmpty(dataDocument) === false &&
           isNil(dataDocument.idDocument) === true && (
-            <Dragger
+            <>
+              {/* <Dragger
               action="/"
               onChange={({ file }) => {
-                if (isNil(file.originFileObj) === false) {
-                  const reader = new FileReader();
-                  reader.readAsDataURL(file.originFileObj);
-                  reader.onload = (event) => {
-                    if (file.type !== "application/pdf" && file.type !== "") {
-                      setPreview(event.target.result);
-                    } else {
-                      setPreview("");
-                    }
-                  };
-                  setFileList(file);
-                  setFileName(file.name);
-                }
+                // if (isNil(file.originFileObj) === false) {
+                //   const reader = new FileReader();
+                //   reader.readAsDataURL(file.originFileObj);
+                //   reader.onload = (event) => {
+                //     if (file.type !== "application/pdf" && file.type !== "") {
+                //       setPreview(event.target.result);
+                //     } else {
+                //       setPreview("");
+                //     }
+                //   };
+                //   // setFileList(file);
+                //   //setFileName(file.name);
+                //   // handlerAddDocument(file, dataDocument);
+                // }
+                console.log('hola',file);
               }}
               method="get"
               showUploadList={false}
               accept={acceptFile}
               beforeUpload={beforeUpload}
-            >
-              <span>
-                Arrastra tu documento
-                <br /> aqui o haz Clic
-              </span>
-            </Dragger>
+            > */}
+              <label for={`id-file-${dataDocument.idDocumentType}`}>
+                Haz Clic aquí para subir tu documento
+              </label>
+              {isNil(preview) === false && (
+                <img id="blah" src={preview} alt="your image" />
+              )}
+
+              <input
+                id={`id-file-${dataDocument.idDocumentType}`}
+                style={{ display: "none" }}
+                type="file"
+                onChange={(e) => {
+                  const fileIndex = e.target.files[0];
+                  const reader = new FileReader();
+                  reader.readAsDataURL(fileIndex);
+                  reader.onload = (event) => {
+                    if (
+                      fileIndex.type !== "application/pdf" &&
+                      fileIndex.type !== ""
+                    ) {
+                      setPreview(event.target.result);
+                    } else {
+                      setPreview("");
+                    }
+                  };
+                  setSpinVisible(true);
+                  setFileName(fileIndex.name);
+                  handlerAddDocument(fileIndex, dataDocument);
+                }}
+              />
+            </>
           )}
         {isNil(preview) === false &&
           isEmpty(dataDocument) === false &&
@@ -320,7 +345,7 @@ const CustomFileUpload = (props) => {
             )}
         </Modal>
       </div>
-      {isNil(preview) === false &&
+      {/* {isNil(preview) === false &&
         isEmpty(dataDocument) === false &&
         isNil(dataDocument.idDocument) === true &&
         spinVisibleUpload === true && (
@@ -329,10 +354,10 @@ const CustomFileUpload = (props) => {
               className="button_primary"
               type="button"
               onClick={() => {
-                if (
-                  isEmpty(dataDocument) === false &&
-                  isEmpty(fileList) === false
-                ) {
+                console.log("entro", isEmpty(dataDocument) === false);
+                console.log("entro1", isEmpty(fileList));
+                if (isEmpty(dataDocument) === false) {
+                  console.log("entro al if");
                   setSpinVisible(true);
                   handlerAddDocument(fileList, dataDocument);
                 }
@@ -343,7 +368,7 @@ const CustomFileUpload = (props) => {
               </span>
             </button>
           </div>
-        )}
+        )} */}
     </Spin>
   );
 };

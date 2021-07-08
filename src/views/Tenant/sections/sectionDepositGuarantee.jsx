@@ -143,7 +143,7 @@ const SectionDepositGuarantee = (props) => {
                 </Col>
               </Row>
               <div style={{ marginBottom: 10 }}>
-                <span>Si estas de acuerdo haz clic en Aceptar.</span>
+                <span>Si estás de acuerdo haz clic en Aceptar.</span>
               </div>
             </>
           )}

@@ -33,6 +33,7 @@ const SectionDocumentation = (props) => {
     dataProperties,
     onGetProperties,
     dataPropertiesInfo,
+    onGetDocument,
   } = props;
 
   const [confirmData, setConfirmData] = useState(false);
@@ -101,6 +102,10 @@ const SectionDocumentation = (props) => {
     }
     return word;
   };
+
+  useEffect(() => {
+    onGetDocument();
+  }, []);
 
   return (
     <div className="content-typeform-formulary">
