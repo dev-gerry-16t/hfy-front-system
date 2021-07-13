@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "antd/dist/antd.css";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import ReCAPTCHA from "react-google-recaptcha";
 import { connect } from "react-redux";
 import { Input, Spin } from "antd";
 import {
@@ -27,15 +28,18 @@ const Login = (props) => {
     errorEmail: false,
     errorPass: false,
   });
+  const recaptchaV3 = useRef(null);
 
   const LoadingSpin = <SyncOutlined spin />;
 
   const handlerCallApiLogin = async (data) => {
     try {
       if (isEmpty(data.password) === false && isEmpty(data.email) === false) {
+        const getCaptchaToken = await recaptchaV3.current.executeAsync();
         const response = await callApiLogin({
           email: data.email.trim(),
           password: data.password.trim(),
+          captchaToken: getCaptchaToken,
         });
         const idSystemUser =
           isNil(response) === false &&
@@ -187,6 +191,15 @@ const Login = (props) => {
                 >
                   <span>Iniciar sesión</span>
                 </button>
+              </div>
+              <div>
+                <ReCAPTCHA
+                  sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
+                  onChange={(e) => {}}
+                  style={{ display: "inline-block" }}
+                  size="invisible"
+                  ref={recaptchaV3}
+                />
               </div>
             </div>
           </Spin>

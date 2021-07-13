@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
+import ReCAPTCHA from "react-google-recaptcha";
 import "antd/dist/antd.css";
 import {
   Radio,
@@ -61,6 +62,7 @@ const Register = (props) => {
   const [configComponents, setConfigComponents] = useState({});
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState(null);
   const [dataForm, setDataForm] = useState({
     idPersonType: null,
     idEndorsement: null,
@@ -72,6 +74,7 @@ const Register = (props) => {
     password: null,
     idInvitation: null,
   });
+  const recaptchaV3 = useRef(null);
 
   const LoadingSpin = <SyncOutlined spin />;
 
@@ -227,7 +230,8 @@ const Register = (props) => {
   };
 
   const handlerVerifyInformation = async (data) => {
-    const emailRegex = /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
+    const emailRegex =
+      /^[-\w.%+]{1,64}@(?:[A-Z0-9-]{1,63}\.){1,125}[A-Z]{2,63}$/i;
     let objectErrors = errorsRegister;
     let validatePass = true;
     let validatePassSecure = true;
@@ -337,7 +341,7 @@ const Register = (props) => {
       lengthCharacter = true;
       lengthCharacterPercent = 25;
     }
-    
+
     if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
       upperLowerword = true;
       upperLowerwordPercent = 25;
@@ -724,6 +728,7 @@ const Register = (props) => {
                   checked={aceptTerms}
                   onChange={(e) => {
                     setAceptTerms(e.target.checked);
+                    recaptchaV3.current.execute();
                   }}
                 ></Checkbox>
                 <span
@@ -762,6 +767,7 @@ const Register = (props) => {
                         await handlerCallApiRegister({
                           ...dataForm,
                           idCustomerType: selectuserCustomer,
+                          captchaToken,
                         });
                         setUserType(3);
                         setSpinVisible(false);
@@ -1010,9 +1016,12 @@ const Register = (props) => {
                     });
                     setErrorFormulary(!verifyData);
                     if (verifyData === true) {
+                      const getCaptchaToken =
+                        await recaptchaV3.current.executeAsync();
                       await handlerCallApiRegister({
                         ...dataForm,
                         idCustomerType: selectuserCustomer,
+                        captchaToken: getCaptchaToken,
                       });
                     }
                   } catch (error) {
@@ -1101,6 +1110,17 @@ const Register = (props) => {
     <div className="App">
       <div className="login_head_logo">
         <img src={logo} alt="Homify Logo" className="login_logo" />
+      </div>
+      <div>
+        <ReCAPTCHA
+          sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
+          onChange={(e) => {
+            setCaptchaToken(e);
+          }}
+          style={{ display: "inline-block" }}
+          size="invisible"
+          ref={recaptchaV3}
+        />
       </div>
       {renderTypeComponent(userType)}
     </div>
