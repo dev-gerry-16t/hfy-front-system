@@ -164,6 +164,7 @@ const useStyles = makeStyles((theme) => ({
 const CustomCheckPayment = ({
   callPostPaymentServices,
   totalPolicy,
+  totalPolicyFormat,
   onRedirect,
   dataProfile,
   idOrderPayment,
@@ -389,7 +390,9 @@ const CustomCheckPayment = ({
             aria-label="full width tabs example"
           >
             <Tab label="Pago con Tarjeta" {...a11yProps(0)} />
-            <Tab label="Pago con OXXO" {...a11yProps(1)} />
+            {totalPolicy <= 10000 && (
+              <Tab label="Pago con OXXO" {...a11yProps(1)} />
+            )}
           </Tabs>
         </AppBar>
         <SwipeableViews
@@ -421,7 +424,7 @@ const CustomCheckPayment = ({
                 Monto a pagar
               </p>
               <div>
-                <h2>{totalPolicy}</h2>
+                <h2>{totalPolicyFormat}</h2>
               </div>
             </div>
             <form className="Form" onSubmit={handleSubmit}>
@@ -509,7 +512,7 @@ const CustomCheckPayment = ({
                 Monto a pagar
               </p>
               <div>
-                <h2>{totalPolicy}</h2>
+                <h2>{totalPolicyFormat}</h2>
               </div>
             </div>
             <form className="Form" onSubmit={handleSubmitOxxo}>

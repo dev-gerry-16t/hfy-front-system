@@ -20,6 +20,7 @@ const SectionPaymentPolicy = ({
   dataFormSave,
   onRedirect,
   totalPolicy,
+  totalPolicyFormat,
   dataProfile,
 }) => {
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
@@ -40,6 +41,7 @@ const SectionPaymentPolicy = ({
                   callPostPaymentServices={callPostPaymentServices}
                   dataProfile={dataProfile}
                   totalPolicy={totalPolicy}
+                  totalPolicyFormat={totalPolicyFormat}
                   onRedirect={onRedirect}
                   idOrderPayment={dataFormSave.idOrderPayment}
                 />

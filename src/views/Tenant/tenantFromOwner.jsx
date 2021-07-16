@@ -466,7 +466,8 @@ const TenantFromOwner = (props) => {
                 <CustomCheckPayment
                   callPostPaymentServices={callPostPaymentService}
                   dataProfile={dataProfile}
-                  totalPolicy={dataIncidenceDetail.result1.amountFormat}
+                  totalPolicy={dataIncidenceDetail.result1.amount}
+                  totalPolicyFormat={dataIncidenceDetail.result1.amountFormat}
                   onRedirect={() => {
                     handlerCallGetAllCustomerTenantById();
                   }}
