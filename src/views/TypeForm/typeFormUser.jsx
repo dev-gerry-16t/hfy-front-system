@@ -721,6 +721,7 @@ const TypeFormUser = (props) => {
           dataProfile={dataProfile}
           dataFormSave={dataForm}
           totalPolicy={dataForm.totalCustomerTenantPolicyAmount}
+          totalPolicyFormat={dataForm.totalCustomerTenantPolicyAmountFormat}
           onRedirect={() => {
             history.push("/websystem/dashboard-tenant");
           }}

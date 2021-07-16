@@ -62,7 +62,6 @@ const Register = (props) => {
   const [configComponents, setConfigComponents] = useState({});
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [spinVisible, setSpinVisible] = useState(false);
-  const [captchaToken, setCaptchaToken] = useState(null);
   const [dataForm, setDataForm] = useState({
     idPersonType: null,
     idEndorsement: null,
@@ -764,10 +763,12 @@ const Register = (props) => {
                       setErrorFormulary(!verifyData);
                       if (verifyData === true) {
                         setSpinVisible(true);
+                        const getCaptchaToken =
+                          await recaptchaV3.current.executeAsync();
                         await handlerCallApiRegister({
                           ...dataForm,
                           idCustomerType: selectuserCustomer,
-                          captchaToken,
+                          captchaToken: getCaptchaToken,
                         });
                         setUserType(3);
                         setSpinVisible(false);
@@ -1114,9 +1115,7 @@ const Register = (props) => {
       <div>
         <ReCAPTCHA
           sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
-          onChange={(e) => {
-            setCaptchaToken(e);
-          }}
+          onChange={(e) => {}}
           style={{ display: "inline-block" }}
           size="invisible"
           ref={recaptchaV3}

@@ -591,6 +591,7 @@ const TypeFormOwner = (props) => {
           dataProfile={dataProfile}
           dataFormSave={dataForm}
           totalPolicy={dataForm.totalCustomerPolicyAmount}
+          totalPolicyFormat={dataForm.totalCustomerPolicyAmountFormat}
           onRedirect={() => {
             history.push("/websystem/dashboard-owner");
           }}

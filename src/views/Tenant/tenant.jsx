@@ -1241,6 +1241,7 @@ const Tenant = (props) => {
                 callPostPaymentServices={callPostPaymentService}
                 dataProfile={dataProfile}
                 totalPolicy={dataTenant.paymentForMovingAmount}
+                totalPolicyFormat={dataTenant.paymentForMovingAmountFormat}
                 onRedirect={() => {
                   handlerCallGetAllCustomerTenantById();
                   setIsVisibleOpenPayment(false);
@@ -1281,7 +1282,8 @@ const Tenant = (props) => {
                 <CustomCheckPayment
                   callPostPaymentServices={callPostPaymentService}
                   dataProfile={dataProfile}
-                  totalPolicy={dataIncidenceDetail.result1.amountFormat}
+                  totalPolicy={dataIncidenceDetail.result1.amount}
+                  totalPolicyFormat={dataIncidenceDetail.result1.amountFormat}
                   onRedirect={() => {
                     handlerCallGetAllCustomerTenantById();
                   }}
