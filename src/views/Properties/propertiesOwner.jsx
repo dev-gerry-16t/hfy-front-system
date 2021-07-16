@@ -187,11 +187,13 @@ const PropertiesOwner = (props) => {
         isModalVisible={isModalVisible}
         onClose={() => {
           setIsModalVisible(!isModalVisible);
+          handlerCallGetPropertyCoincidences();
         }}
         onClickAddProperty={async (data) => {
           setSpinVisible(true);
           await handlerCallAddProperty(data);
           await handlerCallGetAllCustomerById();
+          handlerCallGetPropertyCoincidences();
         }}
         dataZipCodeAdress={dataZipCodeAdress}
         dataZipCatalog={dataZipCatalog}
