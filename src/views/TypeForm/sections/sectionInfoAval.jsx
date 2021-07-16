@@ -224,7 +224,7 @@ const SectionInfoAval = (props) => {
       callback({
         collateralPropertyStreet: data.endorsementStreet,
         collateralPropertyStreetNumber: data.endorsementStreetNumber,
-        collateralPropertySuite: data.collateralPropertySuite,
+        collateralPropertySuite: data.endorsementSuite,
         collateralPropertyIdZipCoode: data.endorsementIdZipCode,
         collateralPropertyZipCode: data.endorsementZipCode,
         collateralPropertyNeighborhood: data.endorsementNeighborhood,
