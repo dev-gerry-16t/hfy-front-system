@@ -250,7 +250,7 @@ const SectionAddUsers = (props) => {
                 <Input
                   value={dataForm.nameTenant}
                   placeholder={
-                    dataForm.personType !== 2 ? "Nombre" : "Razon social"
+                    dataForm.personType !== 2 ? "Nombre" : "Razón social"
                   }
                   onChange={(e) => {
                     setDataForm({
@@ -329,7 +329,7 @@ const SectionAddUsers = (props) => {
                 <Input
                   value={dataForm.nameTenant2}
                   placeholder={
-                    dataForm.personType !== 2 ? "Nombre" : "Razon social"
+                    dataForm.personType !== 2 ? "Nombre" : "Razón social"
                   }
                   onChange={(e) => {
                     setDataForm({
