@@ -224,6 +224,7 @@ const SectionInfoAval = (props) => {
       callback({
         collateralPropertyStreet: data.endorsementStreet,
         collateralPropertyStreetNumber: data.endorsementStreetNumber,
+        collateralPropertySuite: data.endorsementSuite,
         collateralPropertyIdZipCoode: data.endorsementIdZipCode,
         collateralPropertyZipCode: data.endorsementZipCode,
         collateralPropertyNeighborhood: data.endorsementNeighborhood,
@@ -235,6 +236,7 @@ const SectionInfoAval = (props) => {
       callback({
         collateralPropertyStreet: null,
         collateralPropertyStreetNumber: null,
+        collateralPropertySuite: null,
         collateralPropertyIdZipCoode: null,
         collateralPropertyZipCode: null,
         collateralPropertyNeighborhood: null,
@@ -576,10 +578,23 @@ const SectionInfoAval = (props) => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
+                      <CustomInputTypeForm
+                        value={dataForm.endorsementSuite}
+                        placeholder={"Número interior"}
+                        onChange={(value) => {
+                          setDataForm({
+                            ...dataForm,
+                            endorsementSuite: value,
+                          });
+                        }}
+                      />
+                    </Col>
+                    <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                    <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
                       <CustomInputTypeForm
                         value={dataForm.endorsementStreetNumber}
-                        placeholder={"Número"}
+                        placeholder={"Número exterior"}
                         onChange={(value) => {
                           setDataForm({
                             ...dataForm,
@@ -790,10 +805,23 @@ const SectionInfoAval = (props) => {
                     </Col>
                   </Row>
                   <Row>
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
+                      <CustomInputTypeForm
+                        value={dataForm.collateralPropertySuite}
+                        placeholder={"Número interior"}
+                        onChange={(value) => {
+                          setDataForm({
+                            ...dataForm,
+                            collateralPropertySuite: value,
+                          });
+                        }}
+                      />
+                    </Col>
+                    <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+                    <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
                       <CustomInputTypeForm
                         value={dataForm.collateralPropertyStreetNumber}
-                        placeholder={"Número"}
+                        placeholder={"Número exterior"}
                         onChange={(value) => {
                           setDataForm({
                             ...dataForm,

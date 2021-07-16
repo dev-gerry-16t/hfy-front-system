@@ -149,10 +149,20 @@ const SectionCurrentAddress = (props) => {
             </Col>
           </Row>
           <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
+              <CustomInputTypeForm
+                value={dataForm.suite}
+                placeholder="Número Interior"
+                onChange={(value) => {
+                  setDataForm({ ...dataForm, suite: value });
+                }}
+              />
+            </Col>
+            <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
+            <Col span={5} xs={{ span: 24 }} md={{ span: 5 }}>
               <CustomInputTypeForm
                 value={dataForm.streetNumber}
-                placeholder="Número"
+                placeholder="Número Exterior"
                 onChange={(value) => {
                   setDataForm({ ...dataForm, streetNumber: value });
                 }}

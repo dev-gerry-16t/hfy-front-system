@@ -267,7 +267,20 @@ const SectionInfoUser = (props) => {
               span={visibleComponents.lastName === true ? 1 : 2}
               xs={{ span: 24 }}
               md={{ span: visibleComponents.lastName === true ? 1 : 2 }}
-            />
+            >
+              <Tooltip
+                placement="top"
+                title='La razón no debe incluir su tipo de sociedad mercantil, por ejemplo "Empresa SA de CV " capturar  "Empresa".'
+              >
+                <div
+                  style={{
+                    padding: "5px 0px 0px 5px",
+                  }}
+                >
+                  <QuestionCircleOutlined />
+                </div>
+              </Tooltip>
+            </Col>
             {dataForm.requiresCustomerTenantEntInfo === true && (
               <>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
