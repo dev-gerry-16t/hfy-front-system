@@ -1109,6 +1109,7 @@ const Register = (props) => {
 
   return (
     <div className="App">
+      hola
       <div className="login_head_logo">
         <img src={logo} alt="Homify Logo" className="login_logo" />
       </div>
