@@ -43,6 +43,7 @@ import {
   callSetImageProfile,
   callUpdateNotifications,
   callGetNotifications,
+  callSetThemeProfile,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
@@ -62,6 +63,7 @@ const DefaultLayout = (props) => {
     dataProfileMenu,
     dataProfile,
     callSetImageProfile,
+    callSetThemeProfile,
     setDataUserProfile,
     callUpdateNotifications,
     callGetNotifications,
@@ -121,6 +123,23 @@ const DefaultLayout = (props) => {
       await setDataUserProfile({
         ...dataProfile,
         thumbnail: data,
+      });
+    } catch (error) {}
+  };
+
+  const handlerCallSetThemeProfile = async (theme) => {
+    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callSetThemeProfile(
+        {
+          idLoginHistory,
+          themeConfig: theme,
+        },
+        idSystemUser
+      );
+      await setDataUserProfile({
+        ...dataProfile,
+        themeConfig: theme,
       });
     } catch (error) {}
   };
@@ -192,7 +211,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-light";
-            localStorage.setItem("theme-app", "theme-light");
+            handlerCallSetThemeProfile("theme-light");
           }}
         >
           <div
@@ -210,7 +229,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-dark";
-            localStorage.setItem("theme-app", "theme-dark");
+            handlerCallSetThemeProfile("theme-dark");
           }}
         >
           <div
@@ -228,7 +247,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-purple";
-            localStorage.setItem("theme-app", "theme-purple");
+            handlerCallSetThemeProfile("theme-purple");
           }}
         >
           <div
@@ -246,7 +265,7 @@ const DefaultLayout = (props) => {
           onClick={() => {
             const theme = document.getElementsByTagName("body")[0];
             theme.className = "theme-dark-blue";
-            localStorage.setItem("theme-app", "theme-dark-blue");
+            handlerCallSetThemeProfile("theme-dark-blue");
           }}
         >
           <div
@@ -287,17 +306,11 @@ const DefaultLayout = (props) => {
     if (isNil(dataProfile) === true) {
       history.push("/");
     }
-    const getThemeApplication = localStorage.getItem("theme-app");
+    const { themeConfig } = dataProfile;
 
-    if (isNil(getThemeApplication) === false) {
-      const theme = document.getElementsByTagName("body")[0];
-      theme.className = getThemeApplication;
-      localStorage.setItem("theme-app", getThemeApplication);
-    } else {
-      const theme = document.getElementsByTagName("body")[0];
-      theme.className = "theme-light";
-      localStorage.setItem("theme-app", "theme-light");
-    }
+    const theme = document.getElementsByTagName("body")[0];
+    theme.className = themeConfig;
+
     if (dataProfile.idUserType === 3 || dataProfile.idUserType === 2) {
       const scriptCreate = document.createElement("script");
       scriptCreate.id = "script-make-smartsupp-hfy";
@@ -733,6 +746,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callUpdateNotifications(data, id)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetNotifications: (data) => dispatch(callGetNotifications(data)),
+  callSetThemeProfile: (data, id) => dispatch(callSetThemeProfile(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(DefaultLayout);
