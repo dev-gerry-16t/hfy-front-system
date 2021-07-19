@@ -503,6 +503,44 @@ const callSetImageProfile = (data, id) => async (dispatch, getState) => {
   }
 };
 
+const callSetThemeProfile = (data, id) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.put(
+      API_CONSTANTS.SET_THEME_PROFILE + id,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callUpdateInvitation = (data, id) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -5106,4 +5144,5 @@ export {
   callUpdateProspectInvitation,
   callForgiveInterest,
   callGetTransactions,
+  callSetThemeProfile,
 };
