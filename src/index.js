@@ -7,7 +7,8 @@ import "axios-progress-bar/dist/nprogress.css";
 import "./assets/css/_index.scss";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-// import * as serviceWorker from "./serviceWorker";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import swConfig from './swConfig'
 
 const { store, persistor } = configureStore();
 
@@ -29,6 +30,8 @@ ReactDOM.render(
   </Provider>,
   document.getElementById("root")
 );
+
+serviceWorkerRegistration.register(swConfig);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
