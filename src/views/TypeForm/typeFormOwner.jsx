@@ -82,6 +82,7 @@ const TypeFormOwner = (props) => {
   const [dataStates, setDataStates] = useState([]);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataPropertiesInfo, setDataPropertiesInfo] = useState([]);
+  const [finishCallApis, setFinishCallApis] = useState(false);
 
   const next = () => {
     setCurrent(current + 1);
@@ -747,6 +748,7 @@ const TypeFormOwner = (props) => {
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
     handlerCallGetAllCommercialActivities();
+    setFinishCallApis(true);
   };
 
   useEffect(() => {
@@ -800,8 +802,13 @@ const TypeFormOwner = (props) => {
               );
             })}
         </div>
-        {isEmpty(stepsOwner) === false && (
+        {isEmpty(stepsOwner) === false &&
+        finishCallApis === true &&
+        isNil(stepsOwner[current]) === false &&
+        isNil(stepsOwner[current].content) === false ? (
           <div className="steps-content">{stepsOwner[current].content}</div>
+        ) : (
+          <div className="loader-auth-spiner" />
         )}
       </div>
     </Content>

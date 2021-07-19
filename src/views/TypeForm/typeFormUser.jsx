@@ -851,11 +851,13 @@ const TypeFormUser = (props) => {
             })}
         </div>
         {isEmpty(steps) === false &&
-          finishCallApis === true &&
-          isNil(steps[current]) === false &&
-          isNil(steps[current].content) === false && (
-            <div className="steps-content">{steps[current].content}</div>
-          )}
+        finishCallApis === true &&
+        isNil(steps[current]) === false &&
+        isNil(steps[current].content) === false ? (
+          <div className="steps-content">{steps[current].content}</div>
+        ) : (
+          <div className="loader-auth-spiner" />
+        )}
       </div>
     </Content>
   );
