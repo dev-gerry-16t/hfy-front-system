@@ -811,7 +811,7 @@ const SectionInfoUser = (props) => {
               </Row>
             </>
           )}
-          <p>Aceptación de Términos y condiciones y Firma de autorización</p>
+          {/* <p>Aceptación de Términos y condiciones y Firma de autorización</p>
           <span>
             RENTAL PAYMENTS S.A. de C.V. (en adelante como Homify) podrá
             utilizar su información cuya finalidad será realizar una
@@ -912,7 +912,7 @@ const SectionInfoUser = (props) => {
               </Col>
               <Col span={8} xs={{ span: 24 }} md={{ span: 8 }} />
             </Row>
-          )}
+          )} */}
           <div className="button_actions">
             <button
               type="button"
