@@ -15,7 +15,7 @@ const INSTANCE_TEST = {
 };
 
 const INSTANCE_PRODUCTION = {
-  DNS_API: "api.homify.ai", //hfy-back-system.herokuapp.com
+  DNS_API: "hfy-back-system-prod-v2.herokuapp.com", //hfy-back-system.herokuapp.com
   API_PROTOCOL: "https://",
   PORT: "",
 };
