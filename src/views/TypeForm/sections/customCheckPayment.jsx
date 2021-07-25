@@ -7,6 +7,7 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import NumberFormat from "react-number-format";
+import isNil from "lodash/isNil";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { message, Spin } from "antd";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -238,7 +239,9 @@ const CustomCheckPayment = ({
       return responseResult;
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
