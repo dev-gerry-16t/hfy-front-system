@@ -10,6 +10,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
+import isNil from "lodash/isNil";
 import { loadStripe } from "@stripe/stripe-js";
 import {
   Modal,
@@ -178,7 +179,9 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
       const response = await callPostPaymentServices(data);
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
