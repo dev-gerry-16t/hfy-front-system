@@ -44,6 +44,22 @@ const SectionPaymentPolicy = ({
                   totalPolicyFormat={totalPolicyFormat}
                   onRedirect={onRedirect}
                   idOrderPayment={dataFormSave.idOrderPayment}
+                  stpPayment={true}
+                  clabe={
+                    isNil(dataFormSave.clabeOP) === false
+                      ? dataFormSave.clabeOP
+                      : null
+                  }
+                  bankName={
+                    isNil(dataFormSave.bankNameOP) === false
+                      ? dataFormSave.bankNameOP
+                      : null
+                  }
+                  accountHolder={
+                    isNil(dataFormSave.accountHolderOP) === false
+                      ? dataFormSave.accountHolderOP
+                      : null
+                  }
                 />
               </div>
             </Elements>
