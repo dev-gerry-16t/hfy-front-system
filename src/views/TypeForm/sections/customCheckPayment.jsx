@@ -11,6 +11,7 @@ import isNil from "lodash/isNil";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { message, Spin } from "antd";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import Stripe from "../../../assets/icons/Stripe.svg";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -155,12 +156,15 @@ const a11yProps = (index) => {
   };
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    backgroundColor: theme.palette.background.paper,
-    width: 500,
-  },
-}));
+const useStyles = makeStyles((theme, e, i, o) => {
+  const widthScreen = window.screen.width;
+  return {
+    root: {
+      backgroundColor: theme.palette.background.paper,
+      width: widthScreen < 450 ? 360 : 500,
+    },
+  };
+});
 
 const CustomCheckPayment = ({
   callPostPaymentServices,
@@ -169,6 +173,10 @@ const CustomCheckPayment = ({
   onRedirect,
   dataProfile,
   idOrderPayment,
+  stpPayment = null,
+  clabe = null,
+  bankName = null,
+  accountHolder = null,
 }) => {
   const stripe = useStripe();
   const elements = useElements();
@@ -344,6 +352,48 @@ const CustomCheckPayment = ({
     }
   };
 
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        showMessageStatusApi(
+          "CLABE copiada correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
+
+  const parseNumberClabe = (num) => {
+    let numClabe = "";
+    if (isNil(num) === false) {
+      const num1 = num.slice(0, 4);
+      const num2 = num.slice(4, 8);
+      const num3 = num.slice(8, 12);
+      const num4 = num.slice(12, 16);
+      const num5 = num.slice(16, 18);
+      numClabe = `${num1} ${num2} ${num3} ${num4} ${num5}`;
+    }
+    return numClabe;
+  };
+
   return paymentMethods ? (
     <div className="position-result-transaction">
       <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
@@ -395,6 +445,9 @@ const CustomCheckPayment = ({
             <Tab label="Pago con Tarjeta" {...a11yProps(0)} />
             {totalPolicy <= 10000 && (
               <Tab label="Pago con OXXO" {...a11yProps(1)} />
+            )}
+            {isNil(stpPayment) === false && stpPayment === true && (
+              <Tab label="Transferencia SPEI" {...a11yProps(2)} />
             )}
           </Tabs>
         </AppBar>
@@ -490,6 +543,52 @@ const CustomCheckPayment = ({
                 Pagar
               </SubmitButton>
             </form>
+            <footer
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "20px 0px",
+              }}
+            >
+              <div style={{ borderRight: "1px solid #a0a3bd", marginRight: 5 }}>
+                <a
+                  href="https://stripe.com/es-mx"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                  }}
+                >
+                  Powered by <img src={Stripe} width="33" height="15" />
+                </a>
+              </div>
+              <div>
+                <a
+                  href="https://stripe.com/es-mx/checkout/legal"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                    marginRight: 5,
+                  }}
+                >
+                  Condiciones
+                </a>
+                <a
+                  href="https://stripe.com/es-mx/privacy"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                  }}
+                >
+                  Privacidad
+                </a>
+              </div>
+            </footer>
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -554,6 +653,149 @@ const CustomCheckPayment = ({
                 Pagar con OXXO
               </SubmitButton>
             </form>
+            <footer
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                padding: "20px 0px",
+              }}
+            >
+              <div style={{ borderRight: "1px solid #a0a3bd", marginRight: 5 }}>
+                <a
+                  href="https://stripe.com/es-mx"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                  }}
+                >
+                  Powered by <img src={Stripe} width="33" height="15" />
+                </a>
+              </div>
+              <div>
+                <a
+                  href="https://stripe.com/es-mx/checkout/legal"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                    marginRight: 5,
+                  }}
+                >
+                  Condiciones
+                </a>
+                <a
+                  href="https://stripe.com/es-mx/privacy"
+                  target="_blank"
+                  style={{
+                    fontFamily: "Poppins",
+                    fontSize: 10,
+                    color: "#a0a3bd",
+                  }}
+                >
+                  Privacidad
+                </a>
+              </div>
+            </footer>
+          </TabPanel>
+          <TabPanel value={value} index={2} dir={theme.direction}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                alt="homify"
+                width="45"
+                style={{
+                  borderRadius: "50%",
+                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                }}
+              />
+            </div>
+            <div className="price-policy-amount">
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginBottom: 5,
+                  color: "#0a2540",
+                }}
+              >
+                Monto a pagar
+              </p>
+              <div>
+                <h2>{totalPolicyFormat}</h2>
+              </div>
+            </div>
+            <div className="banner-payment-rent">
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  1. Inicia una transferencia desde tu banca en línea o app de
+                  tu banco.
+                </span>
+              </div>
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  2. Ingresa los siguientes datos:
+                </span>
+              </div>
+              <div className="section-method-payment-v2">
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>
+                    Nombre del beneficiario
+                  </strong>
+                  <span>{accountHolder}</span>
+                </div>
+              </div>
+              <div className="section-method-payment-v2">
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>CLABE Interbancaria</strong>
+                  <span id="interbank-clabe">{parseNumberClabe(clabe)}</span>
+                </div>
+                <div className="card-icon">
+                  <i
+                    className="fa fa-clone"
+                    style={{
+                      fontSize: 18,
+                      color: "#6E7191",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      copyTextToClipboard(clabe);
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                className="section-method-payment-v2"
+                style={{
+                  borderBottom: "1px solid #d6d8e7",
+                }}
+              >
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>Banco</strong>
+                  <span>{bankName}</span>
+                </div>
+              </div>
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  3. Ingresa el monto a pagar y finaliza la operación. Puedes
+                  guardar tu comprobante de pago o una captura de pantalla en
+                  caso de requerir alguna aclaración.
+                </span>
+              </div>
+              {/* <div style={{ margin: "15px 0px" }}>
+              <strong>
+                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
+                un horario de 6 A.M. a 6 P.M.
+              </strong>
+            </div> */}
+              <div style={{ margin: "15px 0px", textAlign: "center" }}>
+                <strong style={{ color: "#000" }}>
+                  ¡Listo! Finalmente recibirás una notificación por tu pago
+                </strong>
+              </div>
+            </div>
           </TabPanel>
         </SwipeableViews>
       </div>
