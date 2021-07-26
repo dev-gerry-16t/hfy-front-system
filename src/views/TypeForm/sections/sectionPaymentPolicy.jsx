@@ -46,18 +46,18 @@ const SectionPaymentPolicy = ({
                   idOrderPayment={dataFormSave.idOrderPayment}
                   stpPayment={true}
                   clabe={
-                    isNil(dataFormSave.clabe) === false
-                      ? dataFormSave.clabe
+                    isNil(dataFormSave.clabeOP) === false
+                      ? dataFormSave.clabeOP
                       : null
                   }
                   bankName={
-                    isNil(dataFormSave.bankName) === false
-                      ? dataFormSave.bankName
+                    isNil(dataFormSave.bankNameOP) === false
+                      ? dataFormSave.bankNameOP
                       : null
                   }
                   accountHolder={
-                    isNil(dataFormSave.accountHolder) === false
-                      ? dataFormSave.accountHolder
+                    isNil(dataFormSave.accountHolderOP) === false
+                      ? dataFormSave.accountHolderOP
                       : null
                   }
                 />
