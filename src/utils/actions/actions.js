@@ -868,7 +868,7 @@ const callGetAllCollaborators = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_COLLABORATORS,
+      API_CONSTANTS.CATALOGS.GET_ALL_COLLABORATORS,
       data,
       config
     );
@@ -906,7 +906,7 @@ const callGetAllCustomerForIncidence = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_CUSTOMER_FOR_INCIDENCE,
+      API_CONSTANTS.CATALOGS.GET_ALL_CUSTOMER_FOR_INCIDENCE,
       data,
       config
     );
@@ -945,7 +945,7 @@ const callGetAllIncidencePaymentsMethods =
     try {
       const config = { headers: { ...HEADER } };
       const response = await RequesterAxios.post(
-        API_CONSTANTS.GET_ALL_INCIDENCE_PAYMENTS_METHODS,
+        API_CONSTANTS.CATALOGS.GET_ALL_INCIDENCE_PAYMENTS_METHODS,
         data,
         config
       );
@@ -986,7 +986,7 @@ const callGetAllIncidenceStatus = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_INCIDENCE_STATUS,
+      API_CONSTANTS.CATALOGS.GET_ALL_INCIDENCE_STATUS,
       data,
       config
     );
@@ -1024,7 +1024,7 @@ const callGetAllIncidenceTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_INCIDENCE_TYPES,
+      API_CONSTANTS.CATALOGS.GET_ALL_INCIDENCE_TYPES,
       data,
       config
     );
@@ -1063,7 +1063,7 @@ const callGetAllRequestProviderStatus =
     try {
       const config = { headers: { ...HEADER } };
       const response = await RequesterAxios.post(
-        API_CONSTANTS.GET_ALL_REQUEST_PROVIDER_STATUS,
+        API_CONSTANTS.CATALOGS.GET_ALL_REQUEST_PROVIDER_STATUS,
         data,
         config
       );
@@ -1104,7 +1104,7 @@ const callGetAllProviderTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_PROVIDER_TYPES,
+      API_CONSTANTS.CATALOGS.GET_ALL_PROVIDER_TYPES,
       data,
       config
     );
@@ -1142,7 +1142,7 @@ const callGetAllCollaboratorTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_COLLABORATOR_TYPES,
+      API_CONSTANTS.CATALOGS.GET_ALL_COLLABORATOR_TYPES,
       data,
       config
     );
@@ -1180,7 +1180,7 @@ const callGetAllProviders = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_PROVIDERS,
+      API_CONSTANTS.CATALOGS.GET_ALL_PROVIDERS,
       data,
       config
     );
@@ -1218,7 +1218,7 @@ const callGetAllProviderPaymentForm = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_PROVIDER_PAYMENT_FORM,
+      API_CONSTANTS.CATALOGS.GET_ALL_PROVIDER_PAYMENT_FORM,
       data,
       config
     );
@@ -1257,7 +1257,7 @@ const callGetAllRequestAdvancePymtStatus =
     try {
       const config = { headers: { ...HEADER } };
       const response = await RequesterAxios.post(
-        API_CONSTANTS.GET_ALL_REQUEST_ADVANCE_PYMT_STATUS,
+        API_CONSTANTS.CATALOGS.GET_ALL_REQUEST_ADVANCE_PYMT_STATUS,
         data,
         config
       );
@@ -1290,6 +1290,44 @@ const callGetAllRequestAdvancePymtStatus =
       throw error;
     }
   };
+
+const callGetAllInvPymtMethods = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.CATALOGS.GET_ALL_INV_PYMT_METHODS,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
 
 const callGetContractCoincidences = (data) => async (dispatch, getState) => {
   const state = getState();
@@ -1564,7 +1602,7 @@ const callGetMaritalStatus = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_MARITAL_STATUS,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_MARITAL_STATUS,
       data,
       config
     );
@@ -1602,7 +1640,7 @@ const callGetPolicyPaymentMethod = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_POLICY_PAYMENT_METHOD,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_POLICY_PAYMENT_METHOD,
       data,
       config
     );
@@ -1640,7 +1678,7 @@ const callGetAllRejectionReasons = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_REJECTION_REASONS,
+      API_CONSTANTS.CATALOGS.GET_ALL_REJECTION_REASONS,
       data,
       config
     );
@@ -1678,7 +1716,7 @@ const callGetAllCommercialActivities = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_COMMERCIAL_ACTIVITIES,
+      API_CONSTANTS.CATALOGS.GET_ALL_COMMERCIAL_ACTIVITIES,
       data,
       config
     );
@@ -1716,7 +1754,7 @@ const callGetMaritalRegime = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_MARITAL_REGIME,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_MARITAL_REGIME,
       data,
       config
     );
@@ -1754,7 +1792,7 @@ const callGetPropertyTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_PROPERTY_TYPES,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_PROPERTY_TYPES,
       data,
       config
     );
@@ -1792,7 +1830,7 @@ const callGetPolicies = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_POLICIES,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_POLICIES,
       data,
       config
     );
@@ -1830,7 +1868,7 @@ const callGetNationalities = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_NATIONALITIES,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_NATIONALITIES,
       data,
       config
     );
@@ -1868,7 +1906,7 @@ const callGetIdTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_ID_TYPES,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_ID_TYPES,
       data,
       config
     );
@@ -1906,7 +1944,7 @@ const callGetOccupations = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_OCCUPATIONS,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_OCCUPATIONS,
       data,
       config
     );
@@ -3753,7 +3791,7 @@ const callGetAllPolicyStatus = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_POLICY_STATUS,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_POLICY_STATUS,
       data,
       config
     );
@@ -3792,7 +3830,7 @@ const callGetAllCommercialSocietyTypes =
     try {
       const config = { headers: { ...HEADER } };
       const response = await RequesterAxios.post(
-        API_CONSTANTS.GET_CATALOG_COMMERCIAL_SOCIETY_TYPES,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_COMMERCIAL_SOCIETY_TYPES,
         data,
         config
       );
@@ -3871,7 +3909,7 @@ const callGetAllStates = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_CATALOG_ALL_STATES,
+      API_CONSTANTS.CATALOGS.GET_CATALOG_ALL_STATES,
       data,
       config
     );
@@ -4297,7 +4335,7 @@ const callGetAllProspectStatus = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_PROSPECT_STATUS,
+      API_CONSTANTS.CATALOGS.GET_ALL_PROSPECT_STATUS,
       data,
       config
     );
@@ -4373,7 +4411,7 @@ const callGetAllRelationshipTypes = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
     const response = await RequesterAxios.post(
-      API_CONSTANTS.GET_ALL_RELATIONSHIP_TYPES,
+      API_CONSTANTS.CATALOGS.GET_ALL_RELATIONSHIP_TYPES,
       data,
       config
     );
@@ -4412,7 +4450,7 @@ const callGetAllPersonalReferencesStatus =
     try {
       const config = { headers: { ...HEADER } };
       const response = await RequesterAxios.post(
-        API_CONSTANTS.GET_ALL_PERSONAL_REFERENCE_STATUS,
+        API_CONSTANTS.CATALOGS.GET_ALL_PERSONAL_REFERENCE_STATUS,
         data,
         config
       );
@@ -5145,4 +5183,5 @@ export {
   callForgiveInterest,
   callGetTransactions,
   callSetThemeProfile,
+  callGetAllInvPymtMethods,
 };
