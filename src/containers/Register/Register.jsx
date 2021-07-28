@@ -739,8 +739,18 @@ const Register = (props) => {
                   }}
                 >
                   Acepto el{" "}
-                  <a href="https://www.homify.ai/aviso-de-privacidad">
+                  <a
+                    href="https://www.homify.ai/aviso-de-privacidad"
+                    target="_blank"
+                  >
                     Aviso de privacidad
+                  </a>{" "}
+                  y los{" "}
+                  <a
+                    href="https://www.homify.ai/terminos-y-condiciones"
+                    target="_blank"
+                  >
+                    Términos y Condiciones
                   </a>
                 </span>
               </div>
