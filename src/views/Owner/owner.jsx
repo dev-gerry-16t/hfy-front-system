@@ -1085,7 +1085,7 @@ const Owner = (props) => {
             <div style={{ display: "flex", justifyContent: "center" }}>
               <div style={{ width: 320, textAlign: "justify" }}>
                 Para continuar con tu proceso ingresa tu información personal,
-                la cual sera utilizada para la elaboración del contrato y
+                la cual será utilizada para la elaboración del contrato y
                 póliza.
               </div>
             </div>
