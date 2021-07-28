@@ -20,6 +20,8 @@ const TypePolicy = (props) => {
     onGetProperties,
     dataPropertiesInfo,
     getDocuments,
+    getInvPaymentMethod,
+    dataInvPaymentMethod,
   } = props;
 
   const DescriptionItem = ({ title, content, isRequired }) => (
@@ -69,6 +71,7 @@ const TypePolicy = (props) => {
   const initialForm = {
     idPolicy: null,
     idPolicyPaymentMethod: null,
+    idInvPymtMethod: null,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [minumunPolicy, setTaxMinumunPolicy] = useState(0);
@@ -76,6 +79,7 @@ const TypePolicy = (props) => {
   const [tax, setTax] = useState(0);
   const [confirmData, setConfirmData] = useState(false);
   const [percentPayment, setPercentPayment] = useState(1);
+  const [percentInvPayment, setPercentInvPayment] = useState(1);
   const [aceptTerms, setAceptTerms] = useState(false);
   const [isModalVisible, setIsVisibleModal] = useState(false);
 
@@ -83,13 +87,17 @@ const TypePolicy = (props) => {
     if (
       isEmpty(dataFormSave) === false &&
       isEmpty(dataPolicies) === false &&
-      isEmpty(dataPolicyMethods) === false
+      isEmpty(dataPolicyMethods) === false &&
+      isEmpty(dataInvPaymentMethod) === false
     ) {
       const selectDefaultPolicy = dataPolicies.find((row) => {
         return row.id === dataFormSave.idPolicy;
       });
       const selectDefaultPolicyMethods = dataPolicyMethods.find((row) => {
         return row.idPolicyPaymentMethod === dataFormSave.idPolicyPaymentMethod;
+      });
+      const selectDefaultInvPymtMethod = dataInvPaymentMethod.find((row) => {
+        return row.idInvPymtMethod === dataFormSave.idInvPymtMethod;
       });
       setDataForm(dataFormSave);
       if (
@@ -106,11 +114,18 @@ const TypePolicy = (props) => {
       ) {
         setPercentPayment(selectDefaultPolicyMethods.percentCustomer);
       }
+      if (
+        isNil(selectDefaultInvPymtMethod) === false &&
+        isNil(selectDefaultInvPymtMethod.percentCustomer) === false
+      ) {
+        setPercentInvPayment(selectDefaultInvPymtMethod.percentCustomer);
+      }
     }
-  }, [dataFormSave, dataPolicies, dataPolicyMethods]);
+  }, [dataFormSave, dataPolicies, dataPolicyMethods, dataInvPaymentMethod]);
 
   useEffect(() => {
     getDocuments(dataFormSave, 3);
+    getInvPaymentMethod({ idTypeForm: dataFormSave.idTypeForm, type: 1 });
   }, []);
 
   const getTypeIdDocument = (type) => {
@@ -235,36 +250,36 @@ const TypePolicy = (props) => {
           </Row>
           {isEmpty(dataPolicyMethods) === false && (
             <>
-              <p>Selecciona el porcentaje acordado a pagar</p>
+              <p>Selecciona el porcentaje acordado para el pago de póliza</p>
               <Row>
-                {dataPolicyMethods.map((row) => {
-                  return (
-                    <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                      <div className="buttons-typeform-payment">
-                        <button
-                          className={`${
-                            row.idPolicyPaymentMethod ===
-                            dataForm.idPolicyPaymentMethod
-                              ? "select-button"
-                              : "not-select-button"
-                          }`}
-                          onClick={() => {
-                            setDataForm({
-                              ...dataForm,
-                              idPolicyPaymentMethod: row.idPolicyPaymentMethod,
-                            });
-                            setPercentPayment(row.percentCustomer);
-                          }}
-                        >
-                          {row.text}
-                        </button>
-                      </div>
-                    </Col>
-                  );
-                })}
-              </Row>
-              <Row>
-                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
+                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                  <Select
+                    value={dataForm.idPolicyPaymentMethod}
+                    placeholder="Porcentaje acordado"
+                    onChange={(value, option) => {
+                      const clickOption = option.onClick();
+                      setDataForm({
+                        ...dataForm,
+                        idPolicyPaymentMethod: value,
+                      });
+                      setPercentPayment(clickOption.percentCustomer);
+                    }}
+                  >
+                    {isEmpty(dataPolicyMethods) === false &&
+                      dataPolicyMethods.map((row) => {
+                        return (
+                          <Option
+                            value={row.idPolicyPaymentMethod}
+                            onClick={() => {
+                              return row;
+                            }}
+                          >
+                            {row.text}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                </Col>
                 <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
                   <div className="price-policy-amount">
                     <p>Total a pagar (IVA incluido)</p>
@@ -321,10 +336,55 @@ const TypePolicy = (props) => {
                     )}
                   </div>
                 </Col>
-                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
               </Row>
             </>
           )}
+          <p>Selecciona el porcentaje acordado para el pago de investigación</p>
+          <Row>
+            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+              <Select
+                value={dataForm.idInvPymtMethod}
+                placeholder="Porcentaje acordado"
+                onChange={(value, option) => {
+                  const clickOption = option.onClick();
+                  setDataForm({
+                    ...dataForm,
+                    idInvPymtMethod: value,
+                  });
+                  setPercentInvPayment(clickOption.percentCustomer);
+                }}
+              >
+                {isEmpty(dataInvPaymentMethod) === false &&
+                  dataInvPaymentMethod.map((row) => {
+                    return (
+                      <Option
+                        value={row.idInvPymtMethod}
+                        onClick={() => {
+                          return row;
+                        }}
+                      >
+                        {row.text}
+                      </Option>
+                    );
+                  })}
+              </Select>
+            </Col>
+            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+              <div className="price-policy-amount">
+                <p>Total a pagar (IVA incluido)</p>
+                <div>
+                  <h2>
+                    {frontFunctions.parseFormatCurrency(
+                      dataForm.invAmount * percentInvPayment,
+                      2,
+                      2
+                    )}
+                  </h2>
+                  <strong>MXN</strong>
+                </div>
+              </div>
+            </Col>
+          </Row>
 
           <p>Documentos</p>
           <div className="section-top-documentation">

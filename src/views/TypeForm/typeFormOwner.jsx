@@ -32,6 +32,7 @@ import {
   callPostPaymentService,
   callGetAllCommercialActivities,
   callValidateTypeFormProperties,
+  callGetAllInvPymtMethods,
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -63,6 +64,7 @@ const TypeFormOwner = (props) => {
     callPostPaymentService,
     callGetAllCommercialActivities,
     callValidateTypeFormProperties,
+    callGetAllInvPymtMethods,
   } = props;
   const frontFunctions = new FrontFunctions();
   const [current, setCurrent] = useState(0);
@@ -82,6 +84,7 @@ const TypeFormOwner = (props) => {
   const [dataStates, setDataStates] = useState([]);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataPropertiesInfo, setDataPropertiesInfo] = useState([]);
+  const [dataInvPaymentMethod, setDataInvPaymentMethod] = useState([]);
   const [finishCallApis, setFinishCallApis] = useState(false);
 
   const next = () => {
@@ -424,6 +427,29 @@ const TypeFormOwner = (props) => {
     }
   };
 
+  const hanlderCallGetAllInvPymtMethods = async (data) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAllInvPymtMethods({
+        ...data,
+        idCustomer,
+        idCustomerTenant: null,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataInvPaymentMethod(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const stepsOwner = [
     {
       title: "Información personal",
@@ -519,6 +545,10 @@ const TypeFormOwner = (props) => {
           getDocuments={(data, type) => {
             handlerCallGetTypeFormDocument(data, type);
           }}
+          getInvPaymentMethod={(data) => {
+            hanlderCallGetAllInvPymtMethods(data);
+          }}
+          dataInvPaymentMethod={dataInvPaymentMethod}
           dataProperties={dataProperties}
           frontFunctions={frontFunctions}
           dataFormSave={dataForm}
@@ -846,6 +876,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAllCommercialActivities(data)),
   callValidateTypeFormProperties: (data) =>
     dispatch(callValidateTypeFormProperties(data)),
+  callGetAllInvPymtMethods: (data) => dispatch(callGetAllInvPymtMethods(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(TypeFormOwner);
