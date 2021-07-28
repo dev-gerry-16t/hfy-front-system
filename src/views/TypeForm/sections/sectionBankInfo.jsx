@@ -114,14 +114,14 @@ const SectionBankInfo = (props) => {
   useEffect(() => {
     if (isEmpty(dataBank) === false) {
       setDataForm({
-        ...dataForm,
+        ...dataFormSave,
         idBank: dataBank[0].idBank,
         idBankText: dataBank[0].bankName,
       });
       setIsCorrectClabe(true);
     } else {
       setDataForm({
-        ...dataForm,
+        ...dataFormSave,
         idBank: null,
         idBankText: null,
       });
