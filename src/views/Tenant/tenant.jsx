@@ -508,7 +508,6 @@ const Tenant = (props) => {
         });
       }
     } catch (error) {
-      console.log("error", error);
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
