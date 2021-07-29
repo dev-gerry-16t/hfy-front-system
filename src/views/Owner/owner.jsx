@@ -294,12 +294,12 @@ const Owner = (props) => {
         return row.requiresSignatureForAdvancePymt === true;
       });
       const findRequieresInvPayment = responseResult.find((row) => {
-        return row.requiresInvPayment === true;
+        return row.requiresInvPayment == true;
       });
       if (
         isNil(findRequieresInvPayment) === false &&
         isEmpty(findRequieresInvPayment) === false &&
-        findRequieresInvPayment.requiresInvPayment === true
+        findRequieresInvPayment.requiresInvPayment == true
       ) {
         setDataInvPayment({
           openModal: true,
