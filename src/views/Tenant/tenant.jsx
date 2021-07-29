@@ -149,6 +149,7 @@ const Tenant = (props) => {
     openModal: false,
     openPayment: false,
   });
+  const [dataInvPayment, setDataInvPayment] = useState({ openModal: false });
   const frontFunctions = new FrontFunctions();
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
@@ -409,6 +410,24 @@ const Tenant = (props) => {
           ? JSON.parse(responseResult.paymentDescription)
           : {}
       );
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.requiresInvPayment) === false &&
+        responseResult.requiresInvPayment == 1
+      ) {
+        setDataInvPayment({
+          openModal: true,
+          invTransferInfo:
+            isNil(responseResult.invTransferInfo) === false &&
+            isEmpty(responseResult.invTransferInfo) === false
+              ? JSON.parse(responseResult.invTransferInfo)
+              : {},
+          invAmount: responseResult.invAmount,
+          invAmountFormat: responseResult.invAmountFormat,
+          shortName: responseResult.shortNameTenant,
+          idOrderPayment: responseResult.idOrderPaymentForInv,
+        });
+      }
       handlerCallGetCustomerMessage({
         idContract: responseResult.idContract,
         idCustomerTenant: responseResult.idCustomerTenant,
@@ -489,6 +508,7 @@ const Tenant = (props) => {
         });
       }
     } catch (error) {
+      console.log("error", error);
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -931,6 +951,57 @@ const Tenant = (props) => {
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={dataInvPayment.openModal}
+        onClose={() => {
+          setDataInvPayment({ ...dataInvPayment, openModal: false });
+        }}
+      >
+        {isEmpty(dataInvPayment) === false &&
+          isNil(dataInvPayment.invTransferInfo) === false && (
+            <div className="banner-move-tenant">
+              <h1>Pago de investigación</h1>
+              <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                <div
+                  className="checkout-payment-hfy"
+                  style={{ background: "#fff" }}
+                >
+                  <CustomCheckPayment
+                    callPostPaymentServices={callPostPaymentService}
+                    dataProfile={dataProfile}
+                    totalPolicy={dataInvPayment.invAmount}
+                    totalPolicyFormat={dataInvPayment.invAmountFormat}
+                    onRedirect={() => {
+                      handlerCallGetAllCustomerTenantById();
+                      setDataInvPayment({
+                        ...dataInvPayment,
+                        openModal: false,
+                      });
+                    }}
+                    idOrderPayment={dataInvPayment.idOrderPayment}
+                    stpPayment={true}
+                    clabe={dataInvPayment.invTransferInfo.clabe}
+                    bankName={dataInvPayment.invTransferInfo.bankName}
+                    accountHolder={dataInvPayment.invTransferInfo.accountHolder}
+                  />
+                </div>
+              </Elements>
+              <div
+                className="two-action-buttons-banner"
+                style={{ marginTop: 20 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDataInvPayment({ ...dataInvPayment, openModal: false });
+                  }}
+                >
+                  <span>Salir</span>
+                </button>
+              </div>
+            </div>
+          )}
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isOpenTypeForm.openModal}
         onClose={() => {
