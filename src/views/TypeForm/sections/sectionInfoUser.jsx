@@ -207,8 +207,7 @@ const SectionInfoUser = (props) => {
             <>
               <p>Información de pago de póliza</p>
               <Row>
-                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
-                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                   <div className="price-policy-amount">
                     <p>Método de pago por póliza</p>
                     <div>
@@ -216,10 +215,7 @@ const SectionInfoUser = (props) => {
                     </div>
                   </div>
                 </Col>
-                <Col span={6} xs={{ span: 24 }} md={{ span: 6 }} />
-              </Row>
-              <Row>
-                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                   <div className="price-policy-amount">
                     <p>Costo por cobertura de Póliza</p>
                     <div>
@@ -227,11 +223,42 @@ const SectionInfoUser = (props) => {
                     </div>
                   </div>
                 </Col>
-                <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
                   <div className="price-policy-amount">
                     <p>Se te asigno el pago de</p>
                     <div>
-                      <h2>{dataForm.totalCustomerTenantPolicyAmount}</h2>
+                      <h2>{dataForm.totalCustomerTenantPolicyAmountFormat}</h2>
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+            </>
+          )}
+          {dataForm.hasInvTenant === true && (
+            <>
+              <p>Información de pago de investigación</p>
+              <Row>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                  <div className="price-policy-amount">
+                    <p>Método de pago por investigación</p>
+                    <div>
+                      <h2>{dataForm.invPymtMethod}</h2>
+                    </div>
+                  </div>
+                </Col>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                  <div className="price-policy-amount">
+                    <p>Costo por cobertura de investigación</p>
+                    <div>
+                      <h2>{dataForm.invAmountFormat}</h2>
+                    </div>
+                  </div>
+                </Col>
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                  <div className="price-policy-amount">
+                    <p>Se te asigno el pago de</p>
+                    <div>
+                      <h2>{dataForm.totalCustomerTenantInvAmountFormat}</h2>
                     </div>
                   </div>
                 </Col>
@@ -359,7 +386,7 @@ const SectionInfoUser = (props) => {
                     <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
                     <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                       <img
-                        src={`data:image/jpeg;base64,${dataImage}`}
+                        src={dataImage}
                         alt="Referencia-imagen"
                         width="350"
                       />
@@ -663,7 +690,7 @@ const SectionInfoUser = (props) => {
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
                   <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                     <img
-                      src={`data:image/jpeg;base64,${dataImageLegal}`}
+                      src={dataImageLegal}
                       alt="Referencia-imagen"
                       width="350"
                     />

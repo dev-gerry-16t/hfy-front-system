@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 import moment from "moment";
 import { Layout, notification, message } from "antd";
 import isEmpty from "lodash/isEmpty";
@@ -33,6 +35,7 @@ import {
   callUpdateRequestAdvancePym,
   callUpdateInvitation,
   callForgiveInterest,
+  callPostPaymentService,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -47,6 +50,15 @@ import SectionContractAvailable from "../Tenant/sections/sectionContractAvailabl
 import CustomViewDocument from "../../components/CustomViewDocument";
 import CustomDialog from "../../components/CustomDialog";
 import CustomSignatureContract from "../../components/customSignatureContract";
+import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
+
+const ELEMENTS_OPTIONS = {
+  fonts: [
+    {
+      cssSrc: "https://fonts.googleapis.com/css?family=Poppins",
+    },
+  ],
+};
 
 const { Content } = Layout;
 
@@ -79,6 +91,7 @@ const Owner = (props) => {
     callUpdateRequestAdvancePym,
     callUpdateInvitation,
     callForgiveInterest,
+    callPostPaymentService,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -113,6 +126,8 @@ const Owner = (props) => {
     openModal: false,
     openPayment: false,
   });
+  const [dataInvPayment, setDataInvPayment] = useState({ openModal: false });
+  const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -278,6 +293,27 @@ const Owner = (props) => {
       const findRequieresSignature = responseResult.find((row) => {
         return row.requiresSignatureForAdvancePymt === true;
       });
+      const findRequieresInvPayment = responseResult.find((row) => {
+        return row.requiresInvPayment == true;
+      });
+      if (
+        isNil(findRequieresInvPayment) === false &&
+        isEmpty(findRequieresInvPayment) === false &&
+        findRequieresInvPayment.requiresInvPayment == true
+      ) {
+        setDataInvPayment({
+          openModal: true,
+          invTransferInfo:
+            isNil(findRequieresInvPayment.invTransferInfo) === false &&
+            isEmpty(findRequieresInvPayment.invTransferInfo) === false
+              ? JSON.parse(findRequieresInvPayment.invTransferInfo)
+              : {},
+          invAmount: findRequieresInvPayment.invAmount,
+          invAmountFormat: findRequieresInvPayment.invAmountFormat,
+          shortName: findRequieresInvPayment.shortName,
+          idOrderPayment: findRequieresInvPayment.idOrderPaymentForInv,
+        });
+      }
       if (
         isNil(findRequieresSignature) === false &&
         isEmpty(findRequieresSignature) === false &&
@@ -866,6 +902,60 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <CustomDialog
+        isVisibleDialog={dataInvPayment.openModal}
+        onClose={() => {
+          setDataInvPayment({ ...dataInvPayment, openModal: false });
+        }}
+      >
+        {isEmpty(dataInvPayment) === false &&
+          isNil(dataInvPayment.invTransferInfo) === false && (
+            <div className="banner-move-tenant">
+              <h1>
+                Pago de investigación <br />
+                inquilino {dataInvPayment.shortName}
+              </h1>
+              <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                <div
+                  className="checkout-payment-hfy"
+                  style={{ background: "#fff" }}
+                >
+                  <CustomCheckPayment
+                    callPostPaymentServices={callPostPaymentService}
+                    dataProfile={dataProfile}
+                    totalPolicy={dataInvPayment.invAmount}
+                    totalPolicyFormat={dataInvPayment.invAmountFormat}
+                    onRedirect={() => {
+                      handlerCallGetTenantCoincidences();
+                      setDataInvPayment({
+                        ...dataInvPayment,
+                        openModal: false,
+                      });
+                    }}
+                    idOrderPayment={dataInvPayment.idOrderPayment}
+                    stpPayment={true}
+                    clabe={dataInvPayment.invTransferInfo.clabe}
+                    bankName={dataInvPayment.invTransferInfo.bankName}
+                    accountHolder={dataInvPayment.invTransferInfo.accountHolder}
+                  />
+                </div>
+              </Elements>
+              <div
+                className="two-action-buttons-banner"
+                style={{ marginTop: 20 }}
+              >
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDataInvPayment({ ...dataInvPayment, openModal: false });
+                  }}
+                >
+                  <span>Salir</span>
+                </button>
+              </div>
+            </div>
+          )}
+      </CustomDialog>
       <CustomDialog
         isVisibleDialog={isOpenTypeForm.openModal}
         onClose={() => {
@@ -1582,6 +1672,7 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callUpdateRequestAdvancePym(data, id)),
   callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
   callForgiveInterest: (data, id) => dispatch(callForgiveInterest(data, id)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
