@@ -114,7 +114,7 @@ const SectionBankInfo = (props) => {
   useEffect(() => {
     if (isEmpty(dataBank) === false) {
       setDataForm({
-        ...dataFormSave,
+        ...dataForm,
         idBank: dataBank[0].idBank,
         idBankText: dataBank[0].bankName,
       });
