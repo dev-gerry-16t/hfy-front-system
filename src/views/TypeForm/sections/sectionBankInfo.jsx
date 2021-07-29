@@ -119,13 +119,6 @@ const SectionBankInfo = (props) => {
         idBankText: dataBank[0].bankName,
       });
       setIsCorrectClabe(true);
-    } else {
-      setDataForm({
-        ...dataFormSave,
-        idBank: null,
-        idBankText: null,
-      });
-      setIsCorrectClabe(false);
     }
   }, [dataBank]);
 
@@ -209,9 +202,9 @@ const SectionBankInfo = (props) => {
                           } else {
                             setIsCorrectClabe(true);
                           }
-                          if (e.target.value.length === 18) {
-                            parseDataClabe(e.target.value);
-                          }
+                          // if (e.target.value.length === 18) {
+                          //   parseDataClabe(e.target.value);
+                          // }
                           setDataForm({
                             ...dataForm,
                             clabeNumber: e.target.value,
