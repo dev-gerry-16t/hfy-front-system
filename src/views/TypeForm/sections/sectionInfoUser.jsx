@@ -386,7 +386,7 @@ const SectionInfoUser = (props) => {
                     <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
                     <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                       <img
-                        src={`data:image/jpeg;base64,${dataImage}`}
+                        src={dataImage}
                         alt="Referencia-imagen"
                         width="350"
                       />
@@ -690,7 +690,7 @@ const SectionInfoUser = (props) => {
                   <Col span={7} xs={{ span: 24 }} md={{ span: 7 }} />
                   <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
                     <img
-                      src={`data:image/jpeg;base64,${dataImageLegal}`}
+                      src={dataImageLegal}
                       alt="Referencia-imagen"
                       width="350"
                     />
