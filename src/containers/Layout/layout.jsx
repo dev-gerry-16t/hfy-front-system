@@ -36,6 +36,7 @@ import IconProvider from "../../assets/icons/IconProvider.svg";
 import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
 import IconTicket from "../../assets/icons/IconTicket.svg";
+import IconAgents from "../../assets/icons/agent.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -89,6 +90,7 @@ const DefaultLayout = (props) => {
     IconRequest,
     IconDeal,
     IconTicket,
+    IconAgents,
   };
 
   const [nameSection, setNameSection] = useState("");
