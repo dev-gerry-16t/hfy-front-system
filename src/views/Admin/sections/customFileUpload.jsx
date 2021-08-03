@@ -343,7 +343,7 @@ const CustomFileUpload = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile } = state;
   return {
     dataProfile: dataProfile.dataProfile,
   };

@@ -10,7 +10,7 @@ const appReducers = combineReducers({
   dataProfileMenu,
 });
 
-export default (state, action, persistConfig) => {
+const rootReducer = (state, action, persistConfig) => {
   // Reset to initialState
   if (action.type === "PURGE") {
     purgeStoredState(persistConfig);
@@ -20,3 +20,5 @@ export default (state, action, persistConfig) => {
 
   return appReducers(state, action);
 };
+
+export default rootReducer;

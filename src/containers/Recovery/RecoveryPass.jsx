@@ -1,16 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Radio, Select, Input, Spin, Skeleton, Alert, Progress } from "antd";
-import {
-  UserOutlined,
-  PhoneOutlined,
-  MailOutlined,
-  LockOutlined,
-  SyncOutlined,
-} from "@ant-design/icons";
+import { Input, Spin, Alert, Progress } from "antd";
+import { MailOutlined, LockOutlined, SyncOutlined } from "@ant-design/icons";
 import {
   callGetAllRequestRecoveryPass,
   callGetAllVerifyCodeRecoveryPass,
@@ -19,8 +13,6 @@ import {
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
-
-const { Option } = Select;
 
 const RecoveryPassword = (props) => {
   const {

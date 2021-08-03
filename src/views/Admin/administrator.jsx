@@ -62,7 +62,6 @@ const Administrator = (props) => {
     callSwitchCustomerContract,
     setDataUserProfile,
     callGetContractComment,
-    callAddDocumentContract,
     callGetContractDocument,
     callSetContract,
     callGetContract,
@@ -228,7 +227,6 @@ const Administrator = (props) => {
 
   const handlerCallGetDetailCustomerTenant = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
-    const arrayResult = [];
     try {
       const response = await callGetDetailCustomerTenant({
         idContract: id,
@@ -400,7 +398,7 @@ const Administrator = (props) => {
   const handlerCallGetAddProspect = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callGetAddProspect({
+      await callGetAddProspect({
         idSystemUser,
         idLoginHistory,
         ...data,
@@ -530,7 +528,7 @@ const Administrator = (props) => {
   const handlerCallUpdateContract = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callUpdateContract(
+      await callUpdateContract(
         {
           idCustomer: data.idCustomer,
           idCustomerTenant: data.idCustomerTenant,
@@ -1026,7 +1024,7 @@ const Administrator = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile } = state;
   return {
     dataProfile: dataProfile.dataProfile,
   };

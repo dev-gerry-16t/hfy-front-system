@@ -1,5 +1,4 @@
 import React from "react";
-import isNil from "lodash/isNil";
 import Arrow from "../assets/icons/Arrow.svg";
 import Magnifier from "react-magnifier";
 import { Modal } from "antd";
@@ -27,6 +26,7 @@ const CustomViewDocument = (props) => {
           {dataDocument.extension === "docx" ||
           dataDocument.extension === "pdf" ? (
             <iframe
+              title="Vista documento"
               className="iframe-docx-hfy"
               src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFilesDocx/${dataDocument.idDocument}/${dataDocument.bucketSource}&embedded=true`}
             />

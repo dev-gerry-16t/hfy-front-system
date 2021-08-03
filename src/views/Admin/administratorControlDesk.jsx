@@ -165,7 +165,6 @@ const ControlDesk = (props) => {
 
   const handlerCallGetDetailCustomerTenant = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
-    const arrayResult = [];
     try {
       const response = await callGetDetailCustomerTenant({
         idContract: id,
@@ -283,7 +282,7 @@ const ControlDesk = (props) => {
   const handlerCallUpdateContract = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callUpdateContract(
+      await callUpdateContract(
         {
           idCustomer: data.idCustomer,
           idCustomerTenant: data.idCustomerTenant,
@@ -767,7 +766,7 @@ const ControlDesk = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile } = state;
   return {
     dataProfile: dataProfile.dataProfile,
   };

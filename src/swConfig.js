@@ -1,4 +1,4 @@
-export default {
+const swConfig = {
   onUpdate: (registration) => {
     registration.unregister().then(() => {
       window.location.reload();
@@ -9,3 +9,5 @@ export default {
     console.log(registration);
   },
 };
+
+export default swConfig;

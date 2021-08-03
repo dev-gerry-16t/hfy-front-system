@@ -36,7 +36,6 @@ import IconProvider from "../../assets/icons/IconProvider.svg";
 import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
 import IconTicket from "../../assets/icons/IconTicket.svg";
-import SD_ALERT_31 from "../../assets/files/SD_ALERT_31.mp3";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -128,7 +127,7 @@ const DefaultLayout = (props) => {
   };
 
   const handlerCallSetThemeProfile = async (theme) => {
-    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+    const { idLoginHistory, idSystemUser } = dataProfile;
     try {
       await callSetThemeProfile(
         {
@@ -178,7 +177,7 @@ const DefaultLayout = (props) => {
   };
 
   const handlerCallUpdateNotifications = async (id) => {
-    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+    const { idLoginHistory, idSystemUser } = dataProfile;
     try {
       await callUpdateNotifications(
         {
