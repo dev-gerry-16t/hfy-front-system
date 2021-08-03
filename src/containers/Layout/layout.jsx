@@ -464,6 +464,11 @@ const DefaultLayout = (props) => {
                         setNameSection(row.menuName);
                         setCollapsedButton(!collapsedButton);
                       }}
+                      className={
+                        props.location.pathname === row.path
+                          ? "ant-menu-item-selected"
+                          : ""
+                      }
                     >
                       <img
                         className="ant-menu-item-icon"
