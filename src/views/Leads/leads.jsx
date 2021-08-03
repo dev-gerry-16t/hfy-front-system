@@ -214,9 +214,15 @@ const LeadsLandingPage = (props) => {
       key: "emailAddress",
     },
     {
-      title: "Fecha de pre-registro",
+      title: "Recibido el",
       dataIndex: "requestedAt",
       key: "requestedAt",
+      width: 200,
+    },
+    {
+      title: "Registrado",
+      dataIndex: "registeredAt",
+      key: "registeredAt",
       width: 200,
     },
     {

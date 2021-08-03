@@ -1,28 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import Avatar from "react-avatar-edit";
 import isNil from "lodash/isNil";
-import isEmpty from "lodash/isEmpty";
-import NumberFormat from "react-number-format";
-import {
-  Layout,
-  Rate,
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-} from "antd";
-import {
-  InfoCircleOutlined,
-  UserOutlined,
-  SyncOutlined,
-  CloseOutlined,
-} from "@ant-design/icons";
+import { Modal } from "antd";
 import Arrow from "../../../assets/icons/Arrow.svg";
-
-const { Option } = Select;
 
 const SectionChangeImage = (props) => {
   const { isModalVisible, onClose, onSelectImage } = props;

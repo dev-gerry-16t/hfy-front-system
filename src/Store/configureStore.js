@@ -1,13 +1,13 @@
-import { applyMiddleware, compose, createStore } from 'redux';
-import storageSession from 'redux-persist/lib/storage/session';
-import thunk from 'redux-thunk';
-import { persistStore, persistReducer, PURGE } from 'redux-persist';
-import createSagaMiddleware from 'redux-saga';
-import { createBrowserHistory } from 'history';
-import { routerMiddleware } from 'react-router-redux';
+import { applyMiddleware, compose, createStore } from "redux";
+import storageSession from "redux-persist/lib/storage/session";
+import thunk from "redux-thunk";
+import { persistStore, persistReducer } from "redux-persist";
+import createSagaMiddleware from "redux-saga";
+import { createBrowserHistory } from "history";
+import { routerMiddleware } from "react-router-redux";
 // TO DO: import immutableTransform from 'redux-persist-transform-immutable';
-import rootReducer from './reducers';
-import rootSaga from './RootSaga';
+import rootReducer from "./reducers";
+import rootSaga from "./RootSaga";
 
 export const history = createBrowserHistory();
 export const sagaMiddleware = createSagaMiddleware();
@@ -15,8 +15,8 @@ export const sagaMiddleware = createSagaMiddleware();
 export default function configureStore(preloadedState) {
   /* eslint-disable no-underscore-dangle */
   const composeEnhancers =
-    process.env.NODE_ENV !== 'production' &&
-    typeof window === 'object' &&
+    process.env.NODE_ENV !== "production" &&
+    typeof window === "object" &&
     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
       : compose;
@@ -25,7 +25,7 @@ export default function configureStore(preloadedState) {
   const persistConfig = {
     // TO DO:
     // transforms: [immutableTransform()],
-    key: 'root',
+    key: "root",
     storage: storageSession,
     blacklist: [],
   };
@@ -39,8 +39,8 @@ export default function configureStore(preloadedState) {
     persistedReducer,
     preloadedState,
     composeEnhancers(
-      applyMiddleware(sagaMiddleware, routerMiddleware(history), thunk),
-    ),
+      applyMiddleware(sagaMiddleware, routerMiddleware(history), thunk)
+    )
   );
 
   store.runSaga = sagaMiddleware.run(rootSaga);

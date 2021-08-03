@@ -23,7 +23,11 @@ const CustomSignatureContract = ({
   return viewSignatureMovement === false ? (
     <>
       <h1>{titleCustom}</h1>
-      <iframe className="iframe-docx-hfy" src={srcIframe}></iframe>
+      <iframe
+        title="Vista Documento Contrato"
+        className="iframe-docx-hfy"
+        src={srcIframe}
+      ></iframe>
       <span>
         {isNil(textSignature) === false
           ? textSignature
