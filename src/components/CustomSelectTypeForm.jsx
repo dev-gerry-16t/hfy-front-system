@@ -1,22 +1,11 @@
 import React from "react";
-import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import { Select } from "antd";
 
 const { Option } = Select;
 
 const CustomSelectTypeForm = (props) => {
-  const {
-    value,
-    id,
-    suffix,
-    placeholder,
-    onChange,
-    type,
-    maxLength,
-    minLength,
-    data,
-  } = props;
+  const { value, id, placeholder, onChange, data } = props;
   return (
     <div style={{ position: "relative", marginBottom: 15 }}>
       <label

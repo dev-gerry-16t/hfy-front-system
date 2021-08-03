@@ -4,31 +4,16 @@ import NumberFormat from "react-number-format";
 import {
   Elements,
   CardElement,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCvcElement,
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
 import isNil from "lodash/isNil";
 import { loadStripe } from "@stripe/stripe-js";
-import {
-  Modal,
-  Input,
-  Row,
-  Col,
-  Select,
-  Spin,
-  Tooltip,
-  Radio,
-  message,
-} from "antd";
-import { SyncOutlined, CloseOutlined } from "@ant-design/icons";
+import { Modal, Spin, message } from "antd";
+import { SyncOutlined } from "@ant-design/icons";
 import GLOBAL_CONSTANTS from "../utils/constants/globalConstants";
 import { callPostPaymentService } from "../utils/actions/actions";
 import Arrow from "../assets/icons/Arrow.svg";
-
-const { Option } = Select;
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -176,7 +161,7 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
 
   const hanlderCallPostPaymentService = async (data) => {
     try {
-      const response = await callPostPaymentServices(data);
+      await callPostPaymentServices(data);
     } catch (error) {
       showMessageStatusApi(
         isNil(error) === false
@@ -291,7 +276,7 @@ const MyCustomCheck = ({ isModalVisible, callPostPaymentServices }) => {
           format="+52 (##) ##-##-##-##"
           mask=""
           onChange={(e) => {
-            const { formattedValue, value, floatValue } = e;
+            const { floatValue } = e;
             setDataForm({ ...dataForm, phone: floatValue });
           }}
           CustomNumber={true}
@@ -405,7 +390,7 @@ const CustomPaymentModal = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile } = state;
   return {
     dataProfile: dataProfile.dataProfile,
   };

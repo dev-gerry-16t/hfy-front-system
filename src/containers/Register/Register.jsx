@@ -4,16 +4,7 @@ import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import ReCAPTCHA from "react-google-recaptcha";
 import "antd/dist/antd.css";
-import {
-  Radio,
-  Select,
-  Input,
-  Spin,
-  Skeleton,
-  Alert,
-  Progress,
-  Checkbox,
-} from "antd";
+import { Radio, Select, Spin, Skeleton, Alert, Progress, Checkbox } from "antd";
 import {
   UserOutlined,
   PhoneOutlined,

@@ -8,7 +8,6 @@ import { ConfigProvider } from "antd";
 import { Route, Switch } from "react-router-dom";
 import es_ES from "antd/lib/locale-provider/es_ES";
 import "./App.css";
-import RecoveryPass from "./containers/Recovery/RecoveryPass";
 
 const loading = () => (
   <div className="animated fadeIn pt-3 text-center">
@@ -42,7 +41,7 @@ const DefaultLayout = Loadable({
 });
 
 const App = (props) => {
-  const { history, token, dataProfile } = props;
+  const { history, dataProfile } = props;
   const accessDev = false; //window.location.hostname === "localhost";
   return (
     <Router history={history}>
