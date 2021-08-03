@@ -9,6 +9,7 @@ import CallMissed from "../../assets/icons/CallMissed.svg";
 import Register from "../../assets/icons/Register.svg";
 import UserAccept from "../../assets/icons/UserAccept.svg";
 import IconDanger from "../../assets/icons/Danger.svg";
+import IconAgents from "../../assets/icons/agent.svg";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetLandingProspectStats,
@@ -43,6 +44,7 @@ const LeadsLandingPage = (props) => {
     Register,
     UserAccept,
     IconDanger,
+    IconAgents,
   };
 
   const showMessageStatusApi = (text, status) => {
