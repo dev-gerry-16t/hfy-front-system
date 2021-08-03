@@ -91,16 +91,7 @@ const DefaultLayout = (props) => {
     IconTicket,
   };
 
-  const nameLocation = () => {
-    const name = routes.find((row) => {
-      return row.path === props.location.pathname;
-    });
-    return isNil(name) === false && isNil(name.name) === false
-      ? name.name
-      : "Dashboard";
-  };
-
-  const [nameSection, setNameSection] = useState(nameLocation());
+  const [nameSection, setNameSection] = useState("");
   const toggle = () => {
     setCollapsed(!collapsed);
   };
@@ -429,16 +420,17 @@ const DefaultLayout = (props) => {
   }, []);
 
   useEffect(() => {
-    const name = routes.find((row) => {
-      return row.path === props.location.pathname;
-    });
-
-    setNameSection(
-      isNil(name) === false && isNil(name.name) === false
-        ? name.name
-        : "Dashboard"
-    );
-  }, [props.location.pathname]);
+    if (isEmpty(dataProfileMenu) === false) {
+      const name = dataProfileMenu.find((row) => {
+        return row.path === props.location.pathname;
+      });
+      setNameSection(
+        isNil(name.menuName) === false && isNil(name.menuName) === false
+          ? name.menuName
+          : "Dashboard"
+      );
+    }
+  }, [props.location.pathname, dataProfileMenu]);
 
   return (
     <div className="App">
@@ -461,7 +453,7 @@ const DefaultLayout = (props) => {
             <div className="logo">
               <img src={IconLongtLogo} alt="Logo short" />
             </div>
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu theme="dark" mode="inline">
               {isEmpty(dataProfileMenu) === false &&
                 dataProfileMenu.map((row) => {
                   return (
@@ -518,7 +510,7 @@ const DefaultLayout = (props) => {
                 style={{ display: collapsed === true ? "block" : "none" }}
               />
             </div>
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu theme="dark" mode="inline">
               {isEmpty(dataProfileMenu) === false &&
                 dataProfileMenu.map((row) => {
                   return (
@@ -528,6 +520,11 @@ const DefaultLayout = (props) => {
                         setNameSection(row.menuName);
                         history.push(row.path);
                       }}
+                      className={
+                        props.location.pathname === row.path
+                          ? "ant-menu-item-selected"
+                          : ""
+                      }
                     >
                       <img
                         className="ant-menu-item-icon"
