@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Skeleton,
   Table,
@@ -41,6 +41,12 @@ const SectionCardOwner = (props) => {
 
   const [openPopover, setOpenPopover] = useState({});
   const [selectPolicy, setSelectPolicy] = useState(null);
+  const [pagination, setPagination] = useState({
+    size: "medium",
+    current: 1,
+    defaultPageSize: 10,
+    showSizeChanger: true,
+  });
 
   const columns = [
     {
@@ -66,6 +72,13 @@ const SectionCardOwner = (props) => {
           dataIndex: "customerFullName",
           key: "customerFullName",
           width: 230,
+          sorter: {
+            compare: (a, b) => {
+              if (a.customerFullName < b.customerFullName) return -1;
+              if (b.customerFullName < a.customerFullName) return 1;
+              return 0;
+            },
+          },
           render: (text, record) => (
             <div style={{ display: "flex", alignItems: "center" }}>
               <a
@@ -114,6 +127,14 @@ const SectionCardOwner = (props) => {
           width: 230,
           dataIndex: "customerTenantFullName",
           key: "customerTenantFullName",
+          sorter: {
+            compare: (a, b) => {
+              if (a.customerTenantFullName < b.customerTenantFullName)
+                return -1;
+              if (b.customerTenantFullName < a.customerTenantFullName) return 1;
+              return 0;
+            },
+          },
           render: (text, record) => (
             <div style={{ display: "flex", alignItems: "center" }}>
               <a
@@ -463,6 +484,12 @@ const SectionCardOwner = (props) => {
     },
   ];
 
+  useEffect(() => {
+    if (isEmpty(dataCoincidences) === false) {
+      setPagination({ ...pagination, total: dataCoincidences.length });
+    }
+  }, [dataCoincidences]);
+
   return (
     <div className="renter-card-information total-width">
       <div className="title-cards flex-title-card">
@@ -482,11 +509,16 @@ const SectionCardOwner = (props) => {
         {isEmpty(dataCoincidences) === false && finishCallApis === true && (
           <Table
             columns={columns}
+            rowKey={(record) => record.idContract}
             dataSource={dataCoincidences}
             className="table-users-hfy"
             size="small"
+            pagination={pagination}
             bordered
             scroll={{ x: 3000 }}
+            onChange={(pag) => {
+              setPagination({ ...pagination, ...pag });
+            }}
           />
         )}
         {finishCallApis === false && <Skeleton loading active />}
