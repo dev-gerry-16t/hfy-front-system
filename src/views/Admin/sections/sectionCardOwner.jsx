@@ -72,13 +72,13 @@ const SectionCardOwner = (props) => {
           dataIndex: "customerFullName",
           key: "customerFullName",
           width: 230,
-          sorter: {
-            compare: (a, b) => {
-              if (a.customerFullName < b.customerFullName) return -1;
-              if (b.customerFullName < a.customerFullName) return 1;
-              return 0;
-            },
-          },
+          // sorter: {
+          //   compare: (a, b) => {
+          //     if (a.customerFullName < b.customerFullName) return -1;
+          //     if (b.customerFullName < a.customerFullName) return 1;
+          //     return 0;
+          //   },
+          // },
           render: (text, record) => (
             <div style={{ display: "flex", alignItems: "center" }}>
               <a
@@ -127,14 +127,14 @@ const SectionCardOwner = (props) => {
           width: 230,
           dataIndex: "customerTenantFullName",
           key: "customerTenantFullName",
-          sorter: {
-            compare: (a, b) => {
-              if (a.customerTenantFullName < b.customerTenantFullName)
-                return -1;
-              if (b.customerTenantFullName < a.customerTenantFullName) return 1;
-              return 0;
-            },
-          },
+          // sorter: {
+          //   compare: (a, b) => {
+          //     if (a.customerTenantFullName < b.customerTenantFullName)
+          //       return -1;
+          //     if (b.customerTenantFullName < a.customerTenantFullName) return 1;
+          //     return 0;
+          //   },
+          // },
           render: (text, record) => (
             <div style={{ display: "flex", alignItems: "center" }}>
               <a
