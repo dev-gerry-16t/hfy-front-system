@@ -426,13 +426,24 @@ const DefaultLayout = (props) => {
       const name = dataProfileMenu.find((row) => {
         return row.path === props.location.pathname;
       });
-      setNameSection(
-        isNil(name) === false &&
-          isNil(name.menuName) === false &&
-          isNil(name.menuName) === false
-          ? name.menuName
-          : "Dashboard"
-      );
+      if (isNil(name) === false) {
+        setNameSection(
+          isNil(name.menuName) === false && isNil(name.menuName) === false
+            ? name.menuName
+            : "Dashboard"
+        );
+      } else {
+        const nameRoutes = routes.find((row) => {
+          return props.location.pathname.indexOf(row.path) !== -1;
+        });
+        setNameSection(
+          isNil(nameRoutes) === false &&
+            isNil(nameRoutes.name) === false &&
+            isNil(nameRoutes.name) === false
+            ? nameRoutes.name
+            : "Dashboard"
+        );
+      }
     }
   }, [props.location.pathname, dataProfileMenu]);
 
