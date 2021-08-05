@@ -427,7 +427,9 @@ const DefaultLayout = (props) => {
         return row.path === props.location.pathname;
       });
       setNameSection(
-        isNil(name.menuName) === false && isNil(name.menuName) === false
+        isNil(name) === false &&
+          isNil(name.menuName) === false &&
+          isNil(name.menuName) === false
           ? name.menuName
           : "Dashboard"
       );
