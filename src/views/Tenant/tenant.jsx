@@ -145,6 +145,7 @@ const Tenant = (props) => {
   const [dataPaymentDescription, setDataPaymentDescription] = useState({});
   const [howToPay, setHowToPay] = useState(false);
   const [selectMethodPayment, setSelectMethodPayment] = useState(false);
+  const [viewDetailPayRent, setViewDetailPayRent] = useState(false);
   const [isOpenTypeForm, setIsOpenTypeForm] = useState({
     openModal: false,
     openPayment: false,
@@ -1256,79 +1257,99 @@ const Tenant = (props) => {
               </div>
               <div className="amount-to-pay">
                 <span>Monto a pagar</span>
-                <strong>
-                  {dataPaymentDescription.totalPendingAmountFormat}
-                </strong>
-              </div>
-              <div
-                style={{
-                  fontSize: 12,
-                  display: "flex",
-                  alignItems: "flex-end",
-                  flexDirection: "column",
-                  margin: "5px 0px 20px 0px",
-                }}
-              >
-                <div>
-                  <span>Monto renta: </span>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
                   <strong>
-                    {dataPaymentDescription.rentInfo.currentRentFormat}
+                    {dataPaymentDescription.totalPendingAmountFormat}
                   </strong>
-                </div>
-                <div>
-                  <span>Costo mantenimiento: </span>
-                  <strong>
-                    {dataPaymentDescription.rentInfo.maintenanceAmountFormat}
-                  </strong>
-                </div>
-                <div>
-                  <span>Pagos recibidos: </span>
-                  <strong>
-                    {dataPaymentDescription.rentInfo.paymentsMade}
-                  </strong>
-                </div>
-                <div>
-                  <span>Iterés: </span>
-                  <strong>
-                    {dataPaymentDescription.rentInfo.interestAmountFormat}
-                  </strong>
-                </div>
-                {dataPaymentDescription.hasSubscription === true && (
-                  <>
-                    <div>
-                      <span>Comisión: </span>
-                      <strong>
-                        {dataPaymentDescription.subscriptionInfo.currentAmount}
-                      </strong>
-                    </div>
-                    <div>
-                      <span style={{ fontSize: 10 }}>
-                        Comisión cobrada por
-                        <br /> Depósito en Garantía
-                      </span>
-                    </div>
-                  </>
-                )}
-                <div>
-                  <span>Total: </span>
-                  <strong>
-                    {dataPaymentDescription.rentInfo.totalAmountFormat}
-                  </strong>
-                </div>
-                <div>
-                  <span>Pago vencido: </span>
-                  <strong
+                  <i
+                    className="fa fa-chevron-right"
                     style={{
-                      color:
-                        dataPaymentDescription.isOnTime === true
-                          ? "color: rgb(28, 227, 255)"
-                          : "red",
+                      alignSelf: "center",
+                      color: "#a0a3bd",
+                      cursor: "pointer",
                     }}
-                  >
-                    {dataPaymentDescription.rentInfo.overduePayment}
-                  </strong>
+                    onClick={() => {
+                      setViewDetailPayRent(!viewDetailPayRent);
+                    }}
+                  />
                 </div>
               </div>
+              {viewDetailPayRent === true && (
+                <div
+                  style={{
+                    fontSize: 12,
+                    display: "flex",
+                    alignItems: "flex-end",
+                    flexDirection: "column",
+                    margin: "5px 0px 20px 0px",
+                  }}
+                >
+                  <div>
+                    <span>Monto renta: </span>
+                    <strong>
+                      {dataPaymentDescription.rentInfo.currentRentFormat}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Costo mantenimiento: </span>
+                    <strong>
+                      {dataPaymentDescription.rentInfo.maintenanceAmountFormat}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Pagos recibidos: </span>
+                    <strong>
+                      {dataPaymentDescription.rentInfo.paymentsMade}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Iterés: </span>
+                    <strong>
+                      {dataPaymentDescription.rentInfo.interestAmountFormat}
+                    </strong>
+                  </div>
+                  {dataPaymentDescription.hasSubscription === true && (
+                    <>
+                      <div>
+                        <span>Comisión: </span>
+                        <strong>
+                          {
+                            dataPaymentDescription.subscriptionInfo
+                              .currentAmount
+                          }
+                        </strong>
+                      </div>
+                      <div>
+                        <span style={{ fontSize: 10 }}>
+                          Comisión cobrada por
+                          <br /> Depósito en Garantía
+                        </span>
+                      </div>
+                    </>
+                  )}
+                  <div>
+                    <span>Total: </span>
+                    <strong>
+                      {dataPaymentDescription.rentInfo.totalAmountFormat}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Pago vencido: </span>
+                    <strong
+                      style={{
+                        color:
+                          dataPaymentDescription.isOnTime === true
+                            ? "color: rgb(28, 227, 255)"
+                            : "red",
+                      }}
+                    >
+                      {dataPaymentDescription.rentInfo.overduePayment}
+                    </strong>
+                  </div>
+                </div>
+              )}
               <div className="date-payment">
                 Periodo actual{" "}
                 <strong>
