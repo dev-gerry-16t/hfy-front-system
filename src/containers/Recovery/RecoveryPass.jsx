@@ -3,8 +3,9 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import "antd/dist/antd.css";
-import { Input, Spin, Alert, Progress } from "antd";
+import { Input, Spin, Alert, Progress, message } from "antd";
 import { MailOutlined, LockOutlined, SyncOutlined } from "@ant-design/icons";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import {
   callGetAllRequestRecoveryPass,
   callGetAllVerifyCodeRecoveryPass,
@@ -53,8 +54,42 @@ const RecoveryPassword = (props) => {
 
   const LoadingSpin = <SyncOutlined spin />;
 
+  const showMessageStatusApi = (text, status) => {
+    switch (status) {
+      case "SUCCESS":
+        message.success(text);
+        break;
+      case "ERROR":
+        message.error(text);
+        break;
+      case "WARNING":
+        message.warning(text);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const testMailFunction = (email) => {
+    try {
+      const regExp =
+        /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+      const validateEmail = regExp.test(email);
+      if (validateEmail === true) {
+        return true;
+      } else if (isEmpty(email) === false && validateEmail === false) {
+        throw new Error("Formato de correo no válido.");
+      } else if (isEmpty(email) === true) {
+        throw new Error("El correo electrónico es un campo requerido.");
+      }
+    } catch (error) {
+      throw error.message;
+    }
+  };
+
   const handlerCallApiRegister = async (data) => {
     try {
+      await testMailFunction(data);
       const response = await callGetAllRequestRecoveryPass({
         userName: data,
       });
@@ -66,7 +101,13 @@ const RecoveryPassword = (props) => {
       setSpinVisible(false);
       setUserType(2);
     } catch (error) {
-      throw error;
+      setSpinVisible(false);
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -149,6 +190,7 @@ const RecoveryPassword = (props) => {
               <Input
                 value={dataForm.username}
                 suffix={<MailOutlined className="site-form-item-icon" />}
+                placeholder="Correo electrónico"
                 onChange={(e) => {
                   const value = e.target.value;
                   setDataForm({
