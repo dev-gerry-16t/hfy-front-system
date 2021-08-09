@@ -215,19 +215,22 @@ const SectionContractAvailable = (props) => {
                       <button
                         type="button"
                         onClick={async () => {
-                          await onAcceptContract({
-                            idCustomer: dataGetContract.idCustomer,
-                            idCustomerTenant: dataGetContract.idCustomerTenant,
-                            idPolicy: dataGetContract.idPolicy,
-                            idContract: dataGetContract.idContract,
-                            digitalSignature: signature,
-                            anex2: null,
-                            startedAt: startedAt,
-                            scheduleSignatureDate: scheduleSignatureDate,
-                            collectionDays: null,
-                          });
-                          onClose();
-                          setSignaturePrecencial(false);
+                          try {
+                            await onAcceptContract({
+                              idCustomer: dataGetContract.idCustomer,
+                              idCustomerTenant:
+                                dataGetContract.idCustomerTenant,
+                              idPolicy: dataGetContract.idPolicy,
+                              idContract: dataGetContract.idContract,
+                              digitalSignature: signature,
+                              anex2: null,
+                              startedAt: startedAt,
+                              scheduleSignatureDate: scheduleSignatureDate,
+                              collectionDays: null,
+                            });
+                            onClose();
+                            setSignaturePrecencial(false);
+                          } catch (error) {}
                         }}
                       >
                         <span>Aceptar</span>
@@ -374,19 +377,21 @@ const SectionContractAvailable = (props) => {
             <button
               type="button"
               onClick={async () => {
-                await onAcceptContract({
-                  idCustomer: dataGetContract.idCustomer,
-                  idCustomerTenant: dataGetContract.idCustomerTenant,
-                  idPolicy: dataGetContract.idPolicy,
-                  idContract: dataGetContract.idContract,
-                  digitalSignature: signature,
-                  anex2: null,
-                  startedAt: startedAt,
-                  scheduleSignatureDate: moment().format("YYYY-MM-DD"),
-                  collectionDays: null,
-                });
-                onClose();
-                setSignaturePrecencial(false);
+                try {
+                  await onAcceptContract({
+                    idCustomer: dataGetContract.idCustomer,
+                    idCustomerTenant: dataGetContract.idCustomerTenant,
+                    idPolicy: dataGetContract.idPolicy,
+                    idContract: dataGetContract.idContract,
+                    digitalSignature: signature,
+                    anex2: null,
+                    startedAt: startedAt,
+                    scheduleSignatureDate: moment().format("YYYY-MM-DD"),
+                    collectionDays: null,
+                  });
+                  onClose();
+                  setSignaturePrecencial(false);
+                } catch (error) {}
               }}
               className={aceptTerms === true ? "" : "disabled-button"}
             >
