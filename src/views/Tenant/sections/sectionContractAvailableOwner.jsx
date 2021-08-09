@@ -39,9 +39,8 @@ const SectionContractAvailable = (props) => {
     contractTenant: true,
     payments: true,
   };
-  const [reconstructionSection, setReconstructionSection] = useState(
-    reconstructOriginal
-  );
+  const [reconstructionSection, setReconstructionSection] =
+    useState(reconstructOriginal);
   const [startedAt, setStartedAt] = useState(null);
   const [scheduleSignatureDate, setScheduleSignatureDate] = useState(null);
   const [valueText, setValueText] = useState(null);
@@ -313,20 +312,22 @@ const SectionContractAvailable = (props) => {
                   <button
                     type="button"
                     onClick={async () => {
-                      await onAcceptContract({
-                        idCustomer: dataGetContract.idCustomer,
-                        idCustomerTenant: dataGetContract.idCustomerTenant,
-                        idPolicy: dataGetContract.idPolicy,
-                        idContract: dataGetContract.idContract,
-                        digitalSignature: signature,
-                        anex2: null,
-                        startedAt: startedAt,
-                        scheduleSignatureDate: scheduleSignatureDate,
-                        collectionDays: null,
-                        type: 1,
-                        isFaceToFace: true,
-                      });
-                      setOpenSection(4);
+                      try {
+                        await onAcceptContract({
+                          idCustomer: dataGetContract.idCustomer,
+                          idCustomerTenant: dataGetContract.idCustomerTenant,
+                          idPolicy: dataGetContract.idPolicy,
+                          idContract: dataGetContract.idContract,
+                          digitalSignature: signature,
+                          anex2: null,
+                          startedAt: startedAt,
+                          scheduleSignatureDate: scheduleSignatureDate,
+                          collectionDays: null,
+                          type: 1,
+                          isFaceToFace: true,
+                        });
+                        setOpenSection(4);
+                      } catch (error) {}
                     }}
                   >
                     <span>Aceptar</span>
@@ -378,23 +379,25 @@ const SectionContractAvailable = (props) => {
                   <button
                     type="button"
                     onClick={async () => {
-                      await onAcceptContract({
-                        idCustomer: dataGetContract.idCustomer,
-                        idCustomerTenant: dataGetContract.idCustomerTenant,
-                        idPolicy: dataGetContract.idPolicy,
-                        idContract: dataGetContract.idContract,
-                        digitalSignature: null,
-                        anex2: null,
-                        startedAt: startedAt,
-                        scheduleSignatureDate:
-                          dataProfile.idUserType === 3
-                            ? moment().format("YYYY-MM-DD HH:mm:ss")
-                            : null,
-                        collectionDays: null,
-                        type: 1,
-                        isFaceToFace: false,
-                      });
-                      setOpenSection(4);
+                      try {
+                        await onAcceptContract({
+                          idCustomer: dataGetContract.idCustomer,
+                          idCustomerTenant: dataGetContract.idCustomerTenant,
+                          idPolicy: dataGetContract.idPolicy,
+                          idContract: dataGetContract.idContract,
+                          digitalSignature: null,
+                          anex2: null,
+                          startedAt: startedAt,
+                          scheduleSignatureDate:
+                            dataProfile.idUserType === 3
+                              ? moment().format("YYYY-MM-DD HH:mm:ss")
+                              : null,
+                          collectionDays: null,
+                          type: 1,
+                          isFaceToFace: false,
+                        });
+                        setOpenSection(4);
+                      } catch (error) {}
                     }}
                   >
                     <span>Aceptar</span>
@@ -839,47 +842,55 @@ const SectionContractAvailable = (props) => {
                   <button
                     type="button"
                     onClick={async () => {
-                      signatureRef.current.clear();
-                      setAceptTerms(false);
-                      await onAcceptContract({
-                        idCustomer: dataGetContract.idCustomer,
-                        idCustomerTenant: dataGetContract.idCustomerTenant,
-                        idPolicy: dataGetContract.idPolicy,
-                        idContract: dataGetContract.idContract,
-                        digitalSignature: signature,
-                        anex2: null,
-                        startedAt: startedAt,
-                        scheduleSignatureDate:
-                          dataProfile.idUserType === 3
-                            ? moment().format("YYYY-MM-DD")
-                            : null,
-                        collectionDays: null,
-                        type: typeSignatureDigital,
-                        isFaceToFace: null,
-                      });
-                      if (typeSignatureDigital === 1) {
-                        setDocumentSigned({
-                          ...documentSigned,
-                          contract: true,
+                      try {
+                        signatureRef.current.clear();
+                        setAceptTerms(false);
+                        await onAcceptContract({
+                          idCustomer: dataGetContract.idCustomer,
+                          idCustomerTenant: dataGetContract.idCustomerTenant,
+                          idPolicy: dataGetContract.idPolicy,
+                          idContract: dataGetContract.idContract,
+                          digitalSignature: signature,
+                          anex2: null,
+                          startedAt: startedAt,
+                          scheduleSignatureDate:
+                            dataProfile.idUserType === 3
+                              ? moment().format("YYYY-MM-DD")
+                              : null,
+                          collectionDays: null,
+                          type: typeSignatureDigital,
+                          isFaceToFace: null,
                         });
-                        setReconstructionSection({
-                          ...reconstructionSection,
-                          contract: true,
-                        });
-                      } else if (typeSignatureDigital === 2) {
-                        setDocumentSigned({ ...documentSigned, policy: true });
-                        setReconstructionSection({
-                          ...reconstructionSection,
-                          policy: true,
-                        });
-                      } else if (typeSignatureDigital === 4) {
-                        setDocumentSigned({ ...documentSigned, payment: true });
-                        setReconstructionSection({
-                          ...reconstructionSection,
-                          payments: true,
-                        });
-                      }
-                      setOpenSection(4);
+                        if (typeSignatureDigital === 1) {
+                          setDocumentSigned({
+                            ...documentSigned,
+                            contract: true,
+                          });
+                          setReconstructionSection({
+                            ...reconstructionSection,
+                            contract: true,
+                          });
+                        } else if (typeSignatureDigital === 2) {
+                          setDocumentSigned({
+                            ...documentSigned,
+                            policy: true,
+                          });
+                          setReconstructionSection({
+                            ...reconstructionSection,
+                            policy: true,
+                          });
+                        } else if (typeSignatureDigital === 4) {
+                          setDocumentSigned({
+                            ...documentSigned,
+                            payment: true,
+                          });
+                          setReconstructionSection({
+                            ...reconstructionSection,
+                            payments: true,
+                          });
+                        }
+                        setOpenSection(4);
+                      } catch (error) {}
                     }}
                     className={aceptTerms === true ? "" : "disabled-button"}
                   >

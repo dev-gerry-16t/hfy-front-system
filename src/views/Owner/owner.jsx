@@ -1454,7 +1454,9 @@ const Owner = (props) => {
         onAcceptContract={async (data) => {
           try {
             await handlerCallSetContract(data);
-          } catch (error) {}
+          } catch (error) {
+            throw error;
+          }
         }}
         onFinishContractFlow={() => {
           handlerCalllSyncApis();
