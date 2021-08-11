@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import NumberFormat from "react-number-format";
-import { CloseOutlined } from "@ant-design/icons";
+import { CloseOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import {
   Input,
   Row,
@@ -392,7 +392,7 @@ const SectionInfoAval = (props) => {
                       />
                     </Col>
                     <Col span={1} xs={{ span: 24 }} md={{ span: 1 }} />
-                    <Col span={7} xs={{ span: 24 }} md={{ span: 7 }}>
+                    <Col span={6} xs={{ span: 23 }} md={{ span: 6 }}>
                       <CustomInputTypeForm
                         value={dataForm.endorsementEmailAddress}
                         placeholder={"Correo"}
@@ -403,6 +403,20 @@ const SectionInfoAval = (props) => {
                           });
                         }}
                       />
+                    </Col>
+                    <Col span={1} xs={{ span: 1 }} md={{ span: 1 }}>
+                      <Tooltip
+                        placement="top"
+                        title="Proporcione un correo electrónico válido donde podamos notificar a su aval sobre la captura de su información así como solicitar su firma electrónica en caso de ser necesario."
+                      >
+                        <div
+                          style={{
+                            padding: "5px 0px 0px 5px",
+                          }}
+                        >
+                          <QuestionCircleOutlined />
+                        </div>
+                      </Tooltip>
                     </Col>
                   </Row>
                   {isNil(dataImage) === false && (
