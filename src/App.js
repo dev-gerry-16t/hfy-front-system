@@ -40,6 +40,11 @@ const DefaultLayout = Loadable({
   loading,
 });
 
+const Signature = Loadable({
+  loader: () => import("./containers/Signature/SignatureDocument"),
+  loading,
+});
+
 const App = (props) => {
   const { history, dataProfile } = props;
   const accessDev = false; //window.location.hostname === "localhost";
@@ -63,6 +68,12 @@ const App = (props) => {
             path="/registro/:idInvitation/:idCustomerType"
             name="Registro"
             component={Registro}
+          />
+          <Route
+            exact
+            path="/signature/document/:idExternalUserInDC"
+            name="Firma de documento"
+            component={Signature}
           />
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route path="/logout" name="Clean App and Close" component={Auth} />
