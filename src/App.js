@@ -71,7 +71,7 @@ const App = (props) => {
           />
           <Route
             exact
-            path="/signature/document/:idRequestSignature"
+            path="/signature/document/:idExternalUserInDC"
             name="Firma de documento"
             component={Signature}
           />
