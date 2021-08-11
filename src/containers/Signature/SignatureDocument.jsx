@@ -243,7 +243,7 @@ const SignatureDocument = (props) => {
                           />
                         </svg>
                         <span style={{ textAlign: "center", marginBottom: 10 }}>
-                          Notificaremos que haz rechazado la firma del
+                          Notificaremos que has rechazado la firma del
                           documento, agradecemos tu tiempo.
                         </span>
                       </div>
