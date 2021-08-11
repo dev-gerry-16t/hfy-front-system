@@ -239,7 +239,7 @@ const SectionInfoOwner = (props) => {
           <Row>
             <Col
               span={visibleComponents.lastName === true ? 8 : 11}
-              xs={{ span: 24 }}
+              xs={{ span: 23 }}
               md={{ span: visibleComponents.lastName === true ? 8 : 11 }}
             >
               <CustomInputTypeForm
@@ -263,7 +263,7 @@ const SectionInfoOwner = (props) => {
             </Col>
             <Col
               span={visibleComponents.lastName === true ? 1 : 2}
-              xs={{ span: 24 }}
+              xs={{ span: 1 }}
               md={{ span: visibleComponents.lastName === true ? 1 : 2 }}
             >
               <Tooltip
