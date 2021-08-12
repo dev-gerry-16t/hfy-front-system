@@ -954,6 +954,7 @@ const Owner = (props) => {
                     totalPolicyFormat={dataInvPayment.invAmountFormat}
                     onRedirect={() => {
                       handlerCallGetTenantCoincidences();
+                      handlerCallGetTransactionsByUser();
                       setDataInvPayment({
                         ...dataInvPayment,
                         openModal: false,

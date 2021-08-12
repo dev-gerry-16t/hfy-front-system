@@ -999,6 +999,7 @@ const Tenant = (props) => {
                     totalPolicyFormat={dataInvPayment.invAmountFormat}
                     onRedirect={() => {
                       handlerCallGetAllCustomerTenantById();
+                      handlerCallGetTransactionsByUser();
                       setDataInvPayment({
                         ...dataInvPayment,
                         openModal: false,
@@ -1531,6 +1532,7 @@ const Tenant = (props) => {
                 totalPolicyFormat={dataTenant.paymentForMovingAmountFormat}
                 onRedirect={() => {
                   handlerCallGetAllCustomerTenantById();
+                  handlerCallGetTransactionsByUser();
                   setIsVisibleOpenPayment(false);
                 }}
                 idOrderPayment={dataTenant.idOrderPayment}
@@ -1573,6 +1575,7 @@ const Tenant = (props) => {
                   totalPolicyFormat={dataIncidenceDetail.result1.amountFormat}
                   onRedirect={() => {
                     handlerCallGetAllCustomerTenantById();
+                    handlerCallGetTransactionsByUser();
                   }}
                   idOrderPayment={dataIncidenceDetail.result1.idOrderPayment}
                 />
