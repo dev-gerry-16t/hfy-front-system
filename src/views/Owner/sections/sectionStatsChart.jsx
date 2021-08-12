@@ -67,22 +67,32 @@ const SectionStatsChart = (props) => {
   }, [dataStatsChart]);
 
   return (
-    <div className="card-chart-information">
+    <div className="card-chart-information-v2">
       <div className="title-cards">Ganancias</div>
-      <div style={{height:'100%'}}>
-        {finishCallApis === true && isEmpty(dataOptions) === false && (
+
+      {finishCallApis === true && isEmpty(dataOptions) === false && (
+        <div style={{ height: "100%" }}>
           <HighchartsReact highcharts={Highcharts} options={dataOptions} />
-        )}
-        {finishCallApis === false && <Skeleton loading active />}
-        {finishCallApis === true && isEmpty(dataOptions) === true && (
+        </div>
+      )}
+      {finishCallApis === false && <Skeleton loading active />}
+      {finishCallApis === true && isEmpty(dataOptions) === true && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: 230,
+          }}
+        >
           <div className="empty-screen-make">
             <div className="info-screen-make" style={{ marginTop: 10 }}>
               <img src={EmptyGraph} alt="sin_datos" />
               <label>Aún no hay información</label>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -51,6 +51,7 @@ import CustomViewDocument from "../../components/CustomViewDocument";
 import CustomDialog from "../../components/CustomDialog";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
+import SectionStatsMovements from "./sections/sectionStatsMovements";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -1577,10 +1578,35 @@ const Owner = (props) => {
           </div>
         </div>
         <div className="main-information-user">
-          <SectionStatsChart
-            dataStatsChart={dataStatsChart}
-            finishCallApis={finishCallApis}
-          />
+          <div className="content-cards-payments">
+            <SectionStatsChart
+              dataStatsChart={dataStatsChart}
+              finishCallApis={finishCallApis}
+            />
+            <SectionStatsMovements
+              dataInformation={[
+                {
+                  payment: 1,
+                  label: "Depósito recibido",
+                  icon: "IconIn",
+                  fromTo: "SPEI de STP ...2585",
+                  concept: "Pago de investigación",
+                  date: "10 agosto",
+                  amount: "$ 500",
+                },
+                {
+                  payment: 2,
+                  label: "Transferencia",
+                  icon: "IconOut",
+                  fromTo: "SPEI a Banamex ...2548",
+                  concept: "Pago de renta",
+                  date: "hoy",
+                  amount: "$ 12,500",
+                },
+              ]}
+              finishCallApis={finishCallApis}
+            />
+          </div>
           <SectionCardTenant
             onUpdateInvitation={async (data, id) => {
               try {
@@ -1629,6 +1655,31 @@ const Owner = (props) => {
             }}
           />
         </div>
+        {/* <div className="main-information-user" style={{ marginTop: 15 }}>
+          <SectionStatsMovements
+            dataInformation={[
+              {
+                payment: 1,
+                label: "Depósito recibido",
+                icon: "IconIn",
+                fromTo: "SPEI de STP ...2585",
+                concept: "Pago de investigación",
+                date: "10 agosto",
+                amount: "$ 500",
+              },
+              {
+                payment: 2,
+                label: "Transferencia",
+                icon: "IconOut",
+                fromTo: "SPEI a Banamex ...2548",
+                concept: "Pago de renta",
+                date: "hoy",
+                amount: "$ 12,500",
+              },
+            ]}
+            finishCallApis={finishCallApis}
+          />
+        </div> */}
       </div>
     </Content>
   );
