@@ -19,14 +19,15 @@ const DisplayFlex = styled.div`
   display: flex;
   border-bottom: 1px solid #f7f7fc;
   padding: 10px 0px;
-  @media screen and (max-width: 420px) {
-    font-size: 12px;
+  font-size: 12px;
+  @media screen and (max-width: 1000px) {
+    font-size: 10px;
   }
 `;
 
 const IconImage = styled.div`
   display: flex;
-  flex: 1 1 25px;
+  flex: 1 1 auto;
   justify-content: center;
   align-items: center;
   @media screen and (max-width: 420px) {
@@ -38,14 +39,14 @@ const IconImage = styled.div`
 const Information = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 2 1 auto;
+  flex: 2 1 150px;
   color: #4e4b66;
 `;
 
 const Payment = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1 1 90px;
   align-items: flex-end;
   justify-content: center;
   margin-right: 10px;
@@ -77,19 +78,20 @@ const SectionStatsMovements = (props) => {
                     <CircleIcon>
                       <img
                         width="25"
-                        src={icons[row.icon]}
+                        src={icons[row.style]}
                         alt="icon-payment"
                       />
                     </CircleIcon>
                   </IconImage>
                   <Information>
-                    <strong>{row.label}</strong>
-                    <span>{row.fromTo}</span>
-                    <span>{row.concept}</span>
+                    <strong>{row.transactionTitle}</strong>
+                    <span>{row.transactionDetail}</span>
+                    <span>{row.transactionConcept}</span>
                   </Information>
                   <Payment>
-                    <strong>{row.amount}</strong>
-                    <span>{row.date}</span>
+                    <strong>{row.amountFormat}</strong>
+                    <span>{row.transactionDateDescription}</span>
+                    <strong>{row.transactionStatus}</strong>
                   </Payment>
                 </DisplayFlex>
               );

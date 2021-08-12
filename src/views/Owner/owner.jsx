@@ -36,6 +36,7 @@ import {
   callUpdateInvitation,
   callForgiveInterest,
   callPostPaymentService,
+  callGetTransactionsByUser,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -93,6 +94,7 @@ const Owner = (props) => {
     callUpdateInvitation,
     callForgiveInterest,
     callPostPaymentService,
+    callGetTransactionsByUser,
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
@@ -128,6 +130,8 @@ const Owner = (props) => {
     openPayment: false,
   });
   const [dataInvPayment, setDataInvPayment] = useState({ openModal: false });
+  const [dataTransactions, setDataTransactions] = useState([]);
+
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
   const showMessageStatusApi = (text, status) => {
@@ -180,6 +184,27 @@ const Owner = (props) => {
           ? response.result
           : [];
       setDataPersonType(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetTransactionsByUser = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetTransactionsByUser({
+        idSystemUser,
+        idLoginHistory,
+      });
+
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataTransactions(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -852,6 +877,7 @@ const Owner = (props) => {
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
     await handlerCallGetCallGetStatsChart();
+    await handlerCallGetTransactionsByUser();
     setFinishCallApis(true);
   };
 
@@ -1584,26 +1610,7 @@ const Owner = (props) => {
               finishCallApis={finishCallApis}
             />
             <SectionStatsMovements
-              dataInformation={[
-                {
-                  payment: 1,
-                  label: "Depósito recibido",
-                  icon: "IconIn",
-                  fromTo: "SPEI de STP ...2585",
-                  concept: "Pago de investigación",
-                  date: "10 agosto",
-                  amount: "$ 500",
-                },
-                {
-                  payment: 2,
-                  label: "Transferencia",
-                  icon: "IconOut",
-                  fromTo: "SPEI a Banamex ...2548",
-                  concept: "Pago de renta",
-                  date: "hoy",
-                  amount: "$ 12,500",
-                },
-              ]}
+              dataInformation={dataTransactions}
               finishCallApis={finishCallApis}
             />
           </div>
@@ -1726,6 +1733,8 @@ const mapDispatchToProps = (dispatch) => ({
   callUpdateInvitation: (data, id) => dispatch(callUpdateInvitation(data, id)),
   callForgiveInterest: (data, id) => dispatch(callForgiveInterest(data, id)),
   callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
+  callGetTransactionsByUser: (data) =>
+    dispatch(callGetTransactionsByUser(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Owner);
