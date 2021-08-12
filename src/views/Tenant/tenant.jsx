@@ -60,6 +60,7 @@ import {
   callUpdateCustomerLoan,
   callGetCustomerLoanProperties,
   callGetAllBankCatalog,
+  callGetTransactionsByUser,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import SectionMessages from "./sectionDocuments/sectionMessages";
@@ -72,6 +73,7 @@ import SectionIncidenceReport from "./sections/sectionIncidenceReport";
 import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
+import SectionStatsMovements from "../Owner/sections/sectionStatsMovements";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -115,6 +117,7 @@ const Tenant = (props) => {
     callGetCustomerLoanProperties,
     callGetAllBankCatalog,
     callUpdateInvitation,
+    callGetTransactionsByUser,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
@@ -151,6 +154,7 @@ const Tenant = (props) => {
     openPayment: false,
   });
   const [dataInvPayment, setDataInvPayment] = useState({ openModal: false });
+  const [dataTransactions, setDataTransactions] = useState([]);
   const frontFunctions = new FrontFunctions();
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
 
@@ -903,6 +907,27 @@ const Tenant = (props) => {
     }
   };
 
+  const handlerCallGetTransactionsByUser = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetTransactionsByUser({
+        idSystemUser,
+        idLoginHistory,
+      });
+
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataTransactions(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const copiarAlPortapapeles = (text) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -947,6 +972,7 @@ const Tenant = (props) => {
 
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
+    handlerCallGetTransactionsByUser();
   }, []);
 
   return (
@@ -2219,6 +2245,14 @@ const Tenant = (props) => {
             }}
           />
         </CustomContentActions>
+        <div className="main-information-user">
+          <div className="content-cards-payments">
+            <SectionStatsMovements
+              dataInformation={dataTransactions}
+              finishCallApis={true}
+            />
+          </div>
+        </div>
       </div>
     </Content>
   );
@@ -2270,6 +2304,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetCustomerLoanProperties: (data, id) =>
     dispatch(callGetCustomerLoanProperties(data, id)),
   callGetAllBankCatalog: (data) => dispatch(callGetAllBankCatalog(data)),
+  callGetTransactionsByUser: (data) =>
+    dispatch(callGetTransactionsByUser(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Tenant);

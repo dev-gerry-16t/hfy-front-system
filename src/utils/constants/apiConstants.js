@@ -97,6 +97,7 @@ const API_CONSTANTS = {
   FORGIVE_INTEREST: `${API.API_SECURE}/customer/forgiveInterest/`,
   GET_REQUEST_ADVANCE_PYMT_PROPERTIES: `${API.API_SECURE}/customer/getRequestAdvancePymtProperties`,
   GET_CUSTOMER_LOAN_PROPERTIES: `${API.API_SECURE}/customer/getCustomerLoanProperties`,
+  GET_TRANSACTIONS_BY_USER: `${API.API_SECURE}/customer/getTransactionsByUser`,
   GET_USER_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/userProfile`,
   GET_MENU_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/menuProfile`,
   SET_IMAGE_PROFILE: `${API.API_SECURE}${API.SYSTEM_USER}/setUserProfile/`,
