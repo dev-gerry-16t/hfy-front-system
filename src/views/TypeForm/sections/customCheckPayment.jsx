@@ -300,6 +300,11 @@ const CustomCheckPayment = ({
       }, 5000);
     } catch (error) {
       setProcessing(false);
+      elements.getElement(CardElement).clear();
+      setLabelErrors(
+        "Tu banco rechazó la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
+      );
+      setPaymentCancel(true);
     }
   };
 
@@ -348,6 +353,11 @@ const CustomCheckPayment = ({
         }
       }
     } catch (error) {
+      elements.getElement(CardElement).clear();
+      setLabelErrors(
+        "Tu banco rechazó la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
+      );
+      setPaymentCancel(true);
       setProcessing(false);
     }
   };
