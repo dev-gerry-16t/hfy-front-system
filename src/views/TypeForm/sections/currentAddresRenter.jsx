@@ -368,7 +368,7 @@ const CurrentAddressRenter = (props) => {
           {isNil(dataForm.idPropertyType) === false &&
             dataForm.idPropertyType === 4 && (
               <Row>
-                <Col span={10} xs={{ span: 24 }} md={{ span: 10 }}>
+                <Col span={10} xs={{ span: 23 }} md={{ span: 10 }}>
                   <CustomSelectTypeForm
                     id="idCommercialActivity"
                     placeholder="Actividad comercial del inmueble"

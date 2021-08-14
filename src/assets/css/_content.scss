@@ -216,11 +216,21 @@
     color: black;
     letter-spacing: 0.75px;
   }
+  .content-cards-payments {
+    width: 35%;
+  }
   .card-chart-information {
     background: #ffffff;
     width: 35%;
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 16px;
+  }
+  .card-chart-information-v2 {
+    background: #ffffff;
+    width: 100%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    min-height: 300px;
   }
   .renter-card-information {
     background: #ffffff;
@@ -816,6 +826,9 @@
 @media screen and (max-width: 970px) {
   .main-information-user {
     flex-direction: column;
+    .content-cards-payments {
+      width: 100%;
+    }
     .card-chart-information {
       width: 100% !important;
       margin-bottom: 20px;
