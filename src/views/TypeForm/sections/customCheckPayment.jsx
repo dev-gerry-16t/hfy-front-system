@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import SwipeableViews from "react-swipeable-views";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
@@ -8,10 +11,13 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import NumberFormat from "react-number-format";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { message, Spin } from "antd";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import Stripe from "../../../assets/icons/Stripe.svg";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 
 const CARD_OPTIONS = {
   iconStyle: "solid",
@@ -188,6 +194,13 @@ const CustomCheckPayment = ({
   const [processing, setProcessing] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
   const [value, setValue] = useState(0);
+  const [amountTaxes, setAmountTaxes] = useState("$ 0.00 MXN");
+  const [catalogPlansAvailable, setCatalogPlansAvailable] = useState({
+    available: false,
+    catalog: [],
+    selectOption: {},
+    showConfirm: false,
+  });
 
   const classes = useStyles();
   const theme = useTheme();
@@ -346,10 +359,21 @@ const CustomCheckPayment = ({
           );
           setPaymentCancel(true);
         } else {
-          setPaymentMethods(paymentMethod);
-          setTimeout(() => {
-            onRedirect();
-          }, 5000);
+          if (
+            isNil(response.catalog) === false &&
+            isEmpty(response.catalog) === false
+          ) {
+            setCatalogPlansAvailable({
+              available: true,
+              catalog: response.catalog,
+              paymentIntent: response.paymentIntent,
+            });
+          } else {
+            setPaymentMethods(paymentMethod);
+            setTimeout(() => {
+              onRedirect();
+            }, 5000);
+          }
         }
       }
     } catch (error) {
@@ -403,6 +427,97 @@ const CustomCheckPayment = ({
     }
     return numClabe;
   };
+
+  const handlerConfirmPayment = async (data) => {
+    const { idSystemUser, idLoginHistory, token, idContract } = dataProfile;
+    try {
+      const responseInfo = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CONFIRM_PAYMENT_INTENT}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            idOrderPayment,
+            idSystemUser,
+            idLoginHistory,
+            idContract,
+            paymentIntent: data.paymentIntent,
+            amount: data.amount,
+            currency: data.currency,
+            description: data.description,
+            count: data.count,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (isNil(responseInfo.status) === false && responseInfo.status !== 200) {
+        throw isNil(responseInfo.statusText) === false
+          ? responseInfo.statusText
+          : "";
+      }
+      const resultInfo = await responseInfo.json();
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerGetCatalogGWtransaction = async (data) => {
+    const { idSystemUser, idLoginHistory, token, idContract } = dataProfile;
+    try {
+      const responseInfo = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            idOrderPayment,
+            idSystemUser,
+            idLoginHistory,
+            idContract,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (isNil(responseInfo.status) === false && responseInfo.status !== 200) {
+        throw isNil(responseInfo.statusText) === false
+          ? responseInfo.statusText
+          : "";
+      }
+      const resultInfo = await responseInfo.json();
+      setAmountTaxes(
+        isEmpty(resultInfo) === false &&
+          isEmpty(resultInfo.response) === false &&
+          isEmpty(resultInfo.response.result) === false &&
+          isNil(resultInfo.response.result.amountFormat) === false
+          ? resultInfo.response.result.amountFormat
+          : "$ 0.00 MXN"
+      );
+    } catch (error) {
+      showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  useEffect(() => {
+    handlerGetCatalogGWtransaction();
+  }, []);
 
   return paymentMethods ? (
     <div className="position-result-transaction">
@@ -467,138 +582,252 @@ const CustomCheckPayment = ({
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <img
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
-                alt="homify"
-                width="45"
-                style={{
-                  borderRadius: "50%",
-                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
-                }}
-              />
-            </div>
-            <div className="price-policy-amount">
-              <p
-                style={{
-                  textAlign: "center",
-                  fontSize: 16,
-                  marginBottom: 5,
-                  color: "#0a2540",
-                }}
-              >
-                Monto a pagar
-              </p>
-              <div>
-                <h2>{totalPolicyFormat}</h2>
-              </div>
-            </div>
-            <form className="Form" onSubmit={handleSubmit}>
-              <fieldset className="FormGroup">
-                <Field
-                  label="Nombre"
-                  id="name"
-                  type="text"
-                  placeholder="Ingresa tu nombre"
-                  required
-                  autoComplete="name"
-                  value={dataForm.name}
-                  onChange={(e) => {
-                    setDataForm({ ...dataForm, name: e.target.value });
-                  }}
-                />
-                <Field
-                  label="Correo"
-                  id="email"
-                  type="email"
-                  placeholder="tu_correo@correo.com"
-                  required
-                  autoComplete="email"
-                  value={dataForm.email}
-                  onChange={(e) => {
-                    setDataForm({ ...dataForm, email: e.target.value });
-                  }}
-                />
-                <Field
-                  label="Teléfono"
-                  id="phone"
-                  type="tel"
-                  placeholder="55-52-98-99"
-                  required
-                  autoComplete="tel"
-                  value={dataForm.phone}
-                  format="+52 (##) ##-##-##-##"
-                  mask=""
-                  onChange={(e) => {
-                    const { formattedValue, value, floatValue } = e;
-                    setDataForm({ ...dataForm, phone: floatValue });
-                  }}
-                  CustomNumber={true}
-                />
-              </fieldset>
-              <fieldset className="FormGroup">
-                <CardField
-                  onChange={(e) => {
-                    setErrors(e.error);
-                    setCardComplete(e.complete);
-                  }}
-                />
-              </fieldset>
-              {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
-              <SubmitButton
-                processing={processing}
-                error={errors}
-                disabled={!stripe}
-              >
-                Pagar
-              </SubmitButton>
-            </form>
-            <footer
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                padding: "20px 0px",
-              }}
-            >
-              <div style={{ borderRight: "1px solid #a0a3bd", marginRight: 5 }}>
-                <a
-                  href="https://stripe.com/es-mx"
-                  target="_blank"
+            {catalogPlansAvailable.available === false ? (
+              <>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <img
+                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                    alt="homify"
+                    width="45"
+                    style={{
+                      borderRadius: "50%",
+                      boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                    }}
+                  />
+                </div>
+                <div
+                  className="price-policy-amount"
                   style={{
                     fontFamily: "Poppins",
-                    fontSize: 10,
-                    color: "#a0a3bd",
                   }}
                 >
-                  Powered by <img src={Stripe} width="33" height="15" />
-                </a>
-              </div>
-              <div>
-                <a
-                  href="https://stripe.com/es-mx/checkout/legal"
-                  target="_blank"
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: 16,
+                      marginBottom: 5,
+                      color: "#0a2540",
+                    }}
+                  >
+                    Monto a pagar
+                  </p>
+                  <div>
+                    <h2>{amountTaxes}</h2>
+                  </div>
+                </div>
+                <form className="Form" onSubmit={handleSubmit}>
+                  <fieldset className="FormGroup">
+                    <Field
+                      label="Nombre"
+                      id="name"
+                      type="text"
+                      placeholder="Ingresa tu nombre"
+                      required
+                      autoComplete="name"
+                      value={dataForm.name}
+                      onChange={(e) => {
+                        setDataForm({ ...dataForm, name: e.target.value });
+                      }}
+                    />
+                    <Field
+                      label="Correo"
+                      id="email"
+                      type="email"
+                      placeholder="tu_correo@correo.com"
+                      required
+                      autoComplete="email"
+                      value={dataForm.email}
+                      onChange={(e) => {
+                        setDataForm({ ...dataForm, email: e.target.value });
+                      }}
+                    />
+                    <Field
+                      label="Teléfono"
+                      id="phone"
+                      type="tel"
+                      placeholder="55-52-98-99"
+                      required
+                      autoComplete="tel"
+                      value={dataForm.phone}
+                      format="+52 (##) ##-##-##-##"
+                      mask=""
+                      onChange={(e) => {
+                        const { formattedValue, value, floatValue } = e;
+                        setDataForm({ ...dataForm, phone: floatValue });
+                      }}
+                      CustomNumber={true}
+                    />
+                  </fieldset>
+                  <fieldset className="FormGroup">
+                    <CardField
+                      onChange={(e) => {
+                        setErrors(e.error);
+                        setCardComplete(e.complete);
+                      }}
+                    />
+                  </fieldset>
+                  {errors && <ErrorMessage>{errors.message}</ErrorMessage>}
+                  <SubmitButton
+                    processing={processing}
+                    error={errors}
+                    disabled={!stripe}
+                  >
+                    Pagar
+                  </SubmitButton>
+                </form>
+                <footer
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    padding: "20px 0px",
+                  }}
+                >
+                  <div
+                    style={{ borderRight: "1px solid #a0a3bd", marginRight: 5 }}
+                  >
+                    <a
+                      href="https://stripe.com/es-mx"
+                      target="_blank"
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 10,
+                        color: "#a0a3bd",
+                      }}
+                    >
+                      Powered by <img src={Stripe} width="33" height="15" />
+                    </a>
+                  </div>
+                  <div>
+                    <a
+                      href="https://stripe.com/es-mx/checkout/legal"
+                      target="_blank"
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 10,
+                        color: "#a0a3bd",
+                        marginRight: 5,
+                      }}
+                    >
+                      Condiciones
+                    </a>
+                    <a
+                      href="https://stripe.com/es-mx/privacy"
+                      target="_blank"
+                      style={{
+                        fontFamily: "Poppins",
+                        fontSize: 10,
+                        color: "#a0a3bd",
+                      }}
+                    >
+                      Privacidad
+                    </a>
+                  </div>
+                </footer>
+              </>
+            ) : (
+              <>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <img
+                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                    alt="homify"
+                    width="45"
+                    style={{
+                      borderRadius: "50%",
+                      boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                    }}
+                  />
+                </div>
+                <div
+                  className="price-policy-amount"
                   style={{
                     fontFamily: "Poppins",
-                    fontSize: 10,
-                    color: "#a0a3bd",
-                    marginRight: 5,
                   }}
                 >
-                  Condiciones
-                </a>
-                <a
-                  href="https://stripe.com/es-mx/privacy"
-                  target="_blank"
-                  style={{
-                    fontFamily: "Poppins",
-                    fontSize: 10,
-                    color: "#a0a3bd",
-                  }}
-                >
-                  Privacidad
-                </a>
-              </div>
-            </footer>
+                  <p
+                    style={{
+                      textAlign: "center",
+                      fontSize: 16,
+                      marginBottom: 5,
+                      color: "#0a2540",
+                    }}
+                  >
+                    ¿A cuantos plazos deseas realizar tu pago?
+                  </p>
+                  <div>
+                    <h2>Selecciona una opción</h2>
+                  </div>
+                </div>
+                <div>
+                  <List component="nav" aria-label="mailbox folders">
+                    {isEmpty(catalogPlansAvailable.catalog) === false &&
+                      catalogPlansAvailable.catalog.map((rowMap) => {
+                        return (
+                          <ListItem
+                            button
+                            divider
+                            onClick={() => {
+                              setCatalogPlansAvailable({
+                                ...catalogPlansAvailable,
+                                selectOption: rowMap,
+                                showConfirm: true,
+                              });
+                            }}
+                          >
+                            <ListItemText
+                              primary={
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                  }}
+                                >
+                                  <strong>{rowMap.label}</strong>
+                                  <span>pagarías {rowMap.amountFormat}</span>
+                                </div>
+                              }
+                            />
+                          </ListItem>
+                        );
+                      })}
+                  </List>
+                </div>
+                {catalogPlansAvailable.showConfirm === true && (
+                  <div className="Form" style={{ marginTop: 10 }}>
+                    <button
+                      className="SubmitButton"
+                      type="button"
+                      disabled={false}
+                      onClick={async () => {
+                        try {
+                          setProcessing(true);
+
+                          await handlerConfirmPayment({
+                            paymentIntent: catalogPlansAvailable.paymentIntent,
+                            amount: catalogPlansAvailable.selectOption.amount,
+                            currency:
+                              catalogPlansAvailable.selectOption.currency,
+                            description:
+                              catalogPlansAvailable.selectOption.description,
+                            count: catalogPlansAvailable.selectOption.count,
+                          });
+                          setProcessing(false);
+
+                          setPaymentMethods(true);
+                          setTimeout(() => {
+                            onRedirect();
+                          }, 5000);
+                        } catch (error) {
+                          setProcessing(false);
+                        }
+                      }}
+                    >
+                      Confirmar pago por{" "}
+                      {catalogPlansAvailable.selectOption.label}
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
             <div style={{ display: "flex", justifyContent: "center" }}>
@@ -612,7 +841,12 @@ const CustomCheckPayment = ({
                 }}
               />
             </div>
-            <div className="price-policy-amount">
+            <div
+              className="price-policy-amount"
+              style={{
+                fontFamily: "Poppins",
+              }}
+            >
               <p
                 style={{
                   textAlign: "center",
@@ -624,7 +858,7 @@ const CustomCheckPayment = ({
                 Monto a pagar
               </p>
               <div>
-                <h2>{totalPolicyFormat}</h2>
+                <h2>{amountTaxes}</h2>
               </div>
             </div>
             <form className="Form" onSubmit={handleSubmitOxxo}>
@@ -722,7 +956,12 @@ const CustomCheckPayment = ({
                 }}
               />
             </div>
-            <div className="price-policy-amount">
+            <div
+              className="price-policy-amount"
+              style={{
+                fontFamily: "Poppins",
+              }}
+            >
               <p
                 style={{
                   textAlign: "center",
