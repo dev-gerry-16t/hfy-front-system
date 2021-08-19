@@ -40,18 +40,15 @@ const Incidences = (props) => {
   const [dataProviders, setDataProviders] = useState([]);
   const [dataProviderType, setDataProviderType] = useState([]);
   const [dataIncideCoincidence, setDataIncideCoincidence] = useState([]);
-  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] = useState(
-    false
-  );
+  const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
+    useState(false);
   const [dataIncidenceDetail, setDataIncidenceDetail] = useState({});
   const [dataIncidenceTypes, setDataIncidenceTypes] = useState([]);
   const [dataIncidenceStatus, setDataIncidenceStatus] = useState([]);
   const [dataCustomerForIncidence, setDataCustomerForIncidence] = useState([]);
   const [dataRequestStatus, setDataRequestStatus] = useState([]);
-  const [
-    dataIncidencePaymentMethods,
-    setDataIncidencePaymentMethods,
-  ] = useState([]);
+  const [dataIncidencePaymentMethods, setDataIncidencePaymentMethods] =
+    useState([]);
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -223,6 +220,13 @@ const Incidences = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : {};
+      handlerCallGetAllRequestProviderStatus(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.result1) === false &&
+          isNil(responseResult.result1.idRequestForProvider) === false
+          ? responseResult.result1.idRequestForProvider
+          : ""
+      );
       setDataIncidenceDetail(responseResult);
     } catch (error) {
       showMessageStatusApi(
@@ -255,12 +259,13 @@ const Incidences = (props) => {
     }
   };
 
-  const handlerCallGetAllRequestProviderStatus = async () => {
+  const handlerCallGetAllRequestProviderStatus = async (id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetAllRequestProviderStatus({
         idSystemUser,
         idLoginHistory,
+        idRequestForProvider: id,
         type: 2,
       });
       const responseResult =
@@ -375,7 +380,6 @@ const Incidences = (props) => {
   useEffect(() => {
     handlerCallGetAllIncidenceCoincidences();
     handlerCallGetAllIncidenceTypes();
-    handlerCallGetAllRequestProviderStatus();
     handlerCallGetAllProviderTypes();
   }, []);
 
