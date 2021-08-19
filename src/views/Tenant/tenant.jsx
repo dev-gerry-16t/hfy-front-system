@@ -1263,7 +1263,7 @@ const Tenant = (props) => {
                   history.push("/websystem/typeform-user");
                 }}
               >
-                <span>Responder formulario</span>
+                <span>Responder TypeForm</span>
               </button>
             </div>
           </div>
