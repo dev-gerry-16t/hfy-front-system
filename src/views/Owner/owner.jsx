@@ -1217,7 +1217,7 @@ const Owner = (props) => {
                   history.push("/websystem/typeform-owner");
                 }}
               >
-                <span>Ir al formulario</span>
+                <span>Responder TypeForm</span>
               </button>
             </div>
           </div>
