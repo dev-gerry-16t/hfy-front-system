@@ -26,7 +26,7 @@ const SectionStatsChart = (props) => {
         type: "column",
       },
       title: {
-        text: "Estadistica Mensual",
+        text: "Estadística Mensual",
       },
       yAxis: {
         title: {
