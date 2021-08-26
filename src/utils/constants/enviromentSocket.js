@@ -9,7 +9,7 @@ const INSTANCE_LOCAL = {
 };
 
 const INSTANCE_TEST = {
-  DNS_API: "hfy-back-system.herokuapp.com",
+  DNS_API: "socket.homify.ai",
   API_PROTOCOL: "https://",
   PORT: "",
 };
