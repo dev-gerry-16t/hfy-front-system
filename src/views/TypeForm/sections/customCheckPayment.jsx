@@ -574,7 +574,7 @@ const CustomCheckPayment = ({
                     Transferencia SPEI
                     <strong
                       style={{
-                        color: "red",
+                        color: "#39b54a",
                         position: "absolute",
                         top: 12,
                         left: 62,
