@@ -71,16 +71,23 @@ const SectionCardTenant = (props) => {
                   </div>
                   <div className="info-user">
                     <strong>{row.shortName}</strong>
-                    <Rate
-                      style={{
-                        fontSize: "15px",
-                        position: "relative",
-                        bottom: "5px",
-                      }}
-                      tooltips={[]}
-                      onChange={() => {}}
-                      value={row.ratingRate}
-                    />
+                    <div style={{ display: "flex" }}>
+                      <Rate
+                        style={{
+                          fontSize: "15px",
+                          position: "relative",
+                          bottom: "5px",
+                        }}
+                        tooltips={[]}
+                        onChange={() => {}}
+                        value={row.ratingRate}
+                      />
+                      <div style={{ position: "relative", marginLeft: 2 }}>
+                        <strong style={{ fontSize: 12, position: "absolute" }}>
+                          {row.ratingRate}
+                        </strong>
+                      </div>
+                    </div>
                     {row.canSignContract === true ? (
                       <div
                         className="status-payment-contract"
