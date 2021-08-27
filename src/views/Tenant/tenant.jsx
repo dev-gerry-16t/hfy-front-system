@@ -1344,7 +1344,7 @@ const Tenant = (props) => {
                         <strong>
                           {
                             dataPaymentDescription.subscriptionInfo
-                              .currentAmount
+                              .totalAmountFormat
                           }
                         </strong>
                       </div>
