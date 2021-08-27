@@ -40,10 +40,15 @@ const SectionInfoTenant = (props) => {
             Email: {dataTenant.emailAddress}
           </div>
           <div className="status-tenant">
-            <div className="status-payment">
-              <span style={{ textTransform: "uppercase" }}>
-                {dataTenant.customerStatus}
-              </span>
+            <div
+              className="status-payment"
+              style={{
+                background: dataTenant.customerStatusStyle,
+                opacity: "0.5",
+                color: "black",
+              }}
+            >
+              <span>{dataTenant.customerStatus}</span>
             </div>
           </div>
         </div>
