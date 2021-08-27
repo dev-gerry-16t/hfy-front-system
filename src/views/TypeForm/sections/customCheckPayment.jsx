@@ -522,7 +522,7 @@ const CustomCheckPayment = ({
   return paymentMethods ? (
     <div className="position-result-transaction">
       <h2 style={{ marginBottom: "25px", color: "var(--color-primary)" }}>
-        {value === 0 ? "¡Gracias por tu pago!" : "¡Esperamos pronto tu pago!"}
+        {value === 1 ? "¡Gracias por tu pago!" : "¡Esperamos pronto tu pago!"}
       </h2>
       <svg
         version="1.1"
@@ -550,7 +550,7 @@ const CustomCheckPayment = ({
         />
       </svg>
       <span>
-        {value === 0
+        {value === 1
           ? "Tu pago se realizó correctamente"
           : "Tu vale se generó correctamente"}
       </span>
