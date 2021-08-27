@@ -1332,7 +1332,7 @@ const Tenant = (props) => {
                     </strong>
                   </div>
                   <div>
-                    <span>Iterés: </span>
+                    <span>Interés: </span>
                     <strong>
                       {dataPaymentDescription.rentInfo.interestAmountFormat}
                     </strong>
