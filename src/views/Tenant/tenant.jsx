@@ -1332,7 +1332,7 @@ const Tenant = (props) => {
                     </strong>
                   </div>
                   <div>
-                    <span>Iterés: </span>
+                    <span>Interés: </span>
                     <strong>
                       {dataPaymentDescription.rentInfo.interestAmountFormat}
                     </strong>
@@ -1936,7 +1936,7 @@ const Tenant = (props) => {
             <span>Moratorios</span>
           </div>
         </div>
-        {dataTenant.canDeal === 1 && (
+        {/* {dataTenant.canDeal === 1 && (
           <div className="main-information-owner">
             <div className="title-cards">
               <span>Acciones</span>
@@ -1970,7 +1970,7 @@ const Tenant = (props) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div id="section-register-action"></div>
         {isVisibleMessages === false &&
           isVisiblePaymentRent === false &&

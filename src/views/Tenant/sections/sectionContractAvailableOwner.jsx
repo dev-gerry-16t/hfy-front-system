@@ -862,6 +862,15 @@ const SectionContractAvailable = (props) => {
                           isFaceToFace: null,
                         });
                         if (typeSignatureDigital === 1) {
+                          onVisualiceDocument({
+                            download: false,
+                            process: true,
+                            url: dataGetContract.url,
+                            idCustomer: dataGetContract.idCustomer,
+                            idCustomerTenant: dataGetContract.idCustomerTenant,
+                            idContract: dataGetContract.idContract,
+                            type: 1,
+                          });
                           setDocumentSigned({
                             ...documentSigned,
                             contract: true,
@@ -871,6 +880,15 @@ const SectionContractAvailable = (props) => {
                             contract: true,
                           });
                         } else if (typeSignatureDigital === 2) {
+                          onVisualiceDocument({
+                            download: false,
+                            process: true,
+                            url: dataGetContract.url,
+                            idCustomer: dataGetContract.idCustomer,
+                            idCustomerTenant: dataGetContract.idCustomerTenant,
+                            idContract: dataGetContract.idContract,
+                            type: 2,
+                          });
                           setDocumentSigned({
                             ...documentSigned,
                             policy: true,
@@ -880,6 +898,15 @@ const SectionContractAvailable = (props) => {
                             policy: true,
                           });
                         } else if (typeSignatureDigital === 4) {
+                          onVisualiceDocument({
+                            download: false,
+                            process: true,
+                            url: dataGetContract.url,
+                            idCustomer: dataGetContract.idCustomer,
+                            idCustomerTenant: dataGetContract.idCustomerTenant,
+                            idContract: dataGetContract.idContract,
+                            type: 4,
+                          });
                           setDocumentSigned({
                             ...documentSigned,
                             payment: true,

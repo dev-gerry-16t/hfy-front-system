@@ -745,6 +745,7 @@ const Administrator = (props) => {
         isModalVisible={isVisibleAddDocs}
         onClose={() => {
           setIsVisibleAddDocs(!isVisibleAddDocs);
+          callAsynApis();
         }}
       />
       <SectionAddUsers
@@ -755,6 +756,7 @@ const Administrator = (props) => {
         dataSecondTenant={dataSecondTenant}
         onClose={() => {
           setIsVisibleAddUser(!isVisibleAddUser);
+          callAsynApis();
         }}
         spinVisible={false}
         onSearchOwner={(data) => {
@@ -782,6 +784,7 @@ const Administrator = (props) => {
         isDrawerVisible={isVisibleDetailUser}
         onClose={() => {
           setIsVisibleDetailUser(!isVisibleDetailUser);
+          callAsynApis();
         }}
         dataDetailCustomer={dataDetailCustomer}
         onRedirectTo={async (key, idCustomer, idContract) => {
@@ -879,6 +882,7 @@ const Administrator = (props) => {
         isDrawerVisible={isVisibleDetailUserAdviser}
         onClose={() => {
           setIsVisibleDetailUserAdviser(!isVisibleDetailUserAdviser);
+          callAsynApis();
         }}
         dataDetailAgent={dataDetailAgent}
       />

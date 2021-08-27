@@ -567,12 +567,31 @@ const CustomCheckPayment = ({
             variant="fullWidth"
             aria-label="full width tabs example"
           >
-            <Tab label="Pago con Tarjeta" {...a11yProps(0)} />
-            {totalPolicy <= 10000 && (
-              <Tab label="Pago con OXXO" {...a11yProps(1)} />
-            )}
             {isNil(stpPayment) === false && stpPayment === true && (
-              <Tab label="Transferencia SPEI" {...a11yProps(2)} />
+              <Tab
+                label={
+                  <div style={{ position: "relative" }}>
+                    Transferencia SPEI
+                    <strong
+                      style={{
+                        color: "red",
+                        position: "absolute",
+                        top: 12,
+                        left: 62,
+                        fontSize: 10,
+                        fontStyle: "oblique",
+                      }}
+                    >
+                      Sin comisión
+                    </strong>
+                  </div>
+                }
+                {...a11yProps(0)}
+              />
+            )}
+            <Tab label="Pago con Tarjeta" {...a11yProps(1)} />
+            {totalPolicy <= 10000 && (
+              <Tab label="Pago con OXXO" {...a11yProps(2)} />
             )}
           </Tabs>
         </AppBar>
@@ -582,6 +601,108 @@ const CustomCheckPayment = ({
           onChangeIndex={handleChangeIndex}
         >
           <TabPanel value={value} index={0} dir={theme.direction}>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <img
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
+                alt="homify"
+                width="45"
+                style={{
+                  borderRadius: "50%",
+                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
+                }}
+              />
+            </div>
+            <div
+              className="price-policy-amount"
+              style={{
+                fontFamily: "Poppins",
+              }}
+            >
+              <p
+                style={{
+                  textAlign: "center",
+                  fontSize: 16,
+                  marginBottom: 5,
+                  color: "#0a2540",
+                }}
+              >
+                Monto a pagar
+              </p>
+              <div>
+                <h2>{totalPolicyFormat}</h2>
+              </div>
+            </div>
+            <div className="banner-payment-rent">
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  1. Inicia una transferencia desde tu banca en línea o app de
+                  tu banco.
+                </span>
+              </div>
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  2. Ingresa los siguientes datos:
+                </span>
+              </div>
+              <div className="section-method-payment-v2">
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>
+                    Nombre del beneficiario
+                  </strong>
+                  <span>{accountHolder}</span>
+                </div>
+              </div>
+              <div className="section-method-payment-v2">
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>CLABE Interbancaria</strong>
+                  <span id="interbank-clabe">{parseNumberClabe(clabe)}</span>
+                </div>
+                <div className="card-icon">
+                  <i
+                    className="fa fa-clone"
+                    style={{
+                      fontSize: 18,
+                      color: "#6E7191",
+                      cursor: "pointer",
+                    }}
+                    onClick={() => {
+                      copyTextToClipboard(clabe);
+                    }}
+                  />
+                </div>
+              </div>
+              <div
+                className="section-method-payment-v2"
+                style={{
+                  borderBottom: "1px solid #d6d8e7",
+                }}
+              >
+                <div className="card-info-method">
+                  <strong style={{ color: "#000" }}>Banco</strong>
+                  <span>{bankName}</span>
+                </div>
+              </div>
+              <div style={{ margin: "15px 0px" }}>
+                <span style={{ color: "#000" }}>
+                  3. Ingresa el monto a pagar y finaliza la operación. Puedes
+                  guardar tu comprobante de pago o una captura de pantalla en
+                  caso de requerir alguna aclaración.
+                </span>
+              </div>
+              {/* <div style={{ margin: "15px 0px" }}>
+              <strong>
+                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
+                un horario de 6 A.M. a 6 P.M.
+              </strong>
+            </div> */}
+              <div style={{ margin: "15px 0px", textAlign: "center" }}>
+                <strong style={{ color: "#000" }}>
+                  ¡Listo! Finalmente recibirás una notificación por tu pago
+                </strong>
+              </div>
+            </div>
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
             {catalogPlansAvailable.available === false ? (
               <>
                 <div style={{ display: "flex", justifyContent: "center" }}>
@@ -829,7 +950,7 @@ const CustomCheckPayment = ({
               </>
             )}
           </TabPanel>
-          <TabPanel value={value} index={1} dir={theme.direction}>
+          <TabPanel value={value} index={2} dir={theme.direction}>
             <div style={{ display: "flex", justifyContent: "center" }}>
               <img
                 src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
@@ -943,108 +1064,6 @@ const CustomCheckPayment = ({
                 </a>
               </div>
             </footer>
-          </TabPanel>
-          <TabPanel value={value} index={2} dir={theme.direction}>
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <img
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/favicon-64.png"
-                alt="homify"
-                width="45"
-                style={{
-                  borderRadius: "50%",
-                  boxShadow: "0px 2px 5px 3px rgba(0, 0, 0, 0.2)",
-                }}
-              />
-            </div>
-            <div
-              className="price-policy-amount"
-              style={{
-                fontFamily: "Poppins",
-              }}
-            >
-              <p
-                style={{
-                  textAlign: "center",
-                  fontSize: 16,
-                  marginBottom: 5,
-                  color: "#0a2540",
-                }}
-              >
-                Monto a pagar
-              </p>
-              <div>
-                <h2>{totalPolicyFormat}</h2>
-              </div>
-            </div>
-            <div className="banner-payment-rent">
-              <div style={{ margin: "15px 0px" }}>
-                <span style={{ color: "#000" }}>
-                  1. Inicia una transferencia desde tu banca en línea o app de
-                  tu banco.
-                </span>
-              </div>
-              <div style={{ margin: "15px 0px" }}>
-                <span style={{ color: "#000" }}>
-                  2. Ingresa los siguientes datos:
-                </span>
-              </div>
-              <div className="section-method-payment-v2">
-                <div className="card-info-method">
-                  <strong style={{ color: "#000" }}>
-                    Nombre del beneficiario
-                  </strong>
-                  <span>{accountHolder}</span>
-                </div>
-              </div>
-              <div className="section-method-payment-v2">
-                <div className="card-info-method">
-                  <strong style={{ color: "#000" }}>CLABE Interbancaria</strong>
-                  <span id="interbank-clabe">{parseNumberClabe(clabe)}</span>
-                </div>
-                <div className="card-icon">
-                  <i
-                    className="fa fa-clone"
-                    style={{
-                      fontSize: 18,
-                      color: "#6E7191",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => {
-                      copyTextToClipboard(clabe);
-                    }}
-                  />
-                </div>
-              </div>
-              <div
-                className="section-method-payment-v2"
-                style={{
-                  borderBottom: "1px solid #d6d8e7",
-                }}
-              >
-                <div className="card-info-method">
-                  <strong style={{ color: "#000" }}>Banco</strong>
-                  <span>{bankName}</span>
-                </div>
-              </div>
-              <div style={{ margin: "15px 0px" }}>
-                <span style={{ color: "#000" }}>
-                  3. Ingresa el monto a pagar y finaliza la operación. Puedes
-                  guardar tu comprobante de pago o una captura de pantalla en
-                  caso de requerir alguna aclaración.
-                </span>
-              </div>
-              {/* <div style={{ margin: "15px 0px" }}>
-              <strong>
-                Nota: Para que tu pago sea procesado el mismo dia, realizalo en
-                un horario de 6 A.M. a 6 P.M.
-              </strong>
-            </div> */}
-              <div style={{ margin: "15px 0px", textAlign: "center" }}>
-                <strong style={{ color: "#000" }}>
-                  ¡Listo! Finalmente recibirás una notificación por tu pago
-                </strong>
-              </div>
-            </div>
           </TabPanel>
         </SwipeableViews>
       </div>

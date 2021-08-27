@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar, Rate, Skeleton, Button, Menu, Dropdown, Popover } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -24,6 +24,7 @@ const SectionCardTenant = (props) => {
     onOpenDetailPayment,
   } = props;
   const [visiblePopover, setVisiblePopover] = useState(false);
+  const popUp = useRef(null);
 
   const formatDate = (date) => {
     let dateFormat = "";
@@ -210,6 +211,7 @@ const SectionCardTenant = (props) => {
                                         },
                                         row.idContract
                                       );
+                                      popUp.current.onClick();
                                     } catch (error) {}
                                   }}
                                 >
@@ -220,6 +222,7 @@ const SectionCardTenant = (props) => {
                           }
                           title="Condonar interés"
                           trigger="click"
+                          ref={popUp}
                           // visible={visiblePopover}
                           // onVisibleChange={() => {
                           //   setVisiblePopover(!visiblePopover);
