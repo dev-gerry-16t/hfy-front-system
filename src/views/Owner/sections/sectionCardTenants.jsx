@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Avatar, Rate, Skeleton, Button, Menu, Dropdown, Popover } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -24,6 +24,7 @@ const SectionCardTenant = (props) => {
     onOpenDetailPayment,
   } = props;
   const [visiblePopover, setVisiblePopover] = useState(false);
+  const popUp = useRef(null);
 
   const formatDate = (date) => {
     let dateFormat = "";
@@ -70,16 +71,23 @@ const SectionCardTenant = (props) => {
                   </div>
                   <div className="info-user">
                     <strong>{row.shortName}</strong>
-                    <Rate
-                      style={{
-                        fontSize: "15px",
-                        position: "relative",
-                        bottom: "5px",
-                      }}
-                      tooltips={[]}
-                      onChange={() => {}}
-                      value={row.ratingRate}
-                    />
+                    <div style={{ display: "flex" }}>
+                      <Rate
+                        style={{
+                          fontSize: "15px",
+                          position: "relative",
+                          bottom: "5px",
+                        }}
+                        tooltips={[]}
+                        onChange={() => {}}
+                        value={row.ratingRate}
+                      />
+                      <div style={{ position: "relative", marginLeft: 2 }}>
+                        <strong style={{ fontSize: 12, position: "absolute" }}>
+                          {row.ratingRate}
+                        </strong>
+                      </div>
+                    </div>
                     {row.canSignContract === true ? (
                       <div
                         className="status-payment-contract"
@@ -210,6 +218,7 @@ const SectionCardTenant = (props) => {
                                         },
                                         row.idContract
                                       );
+                                      popUp.current.onClick();
                                     } catch (error) {}
                                   }}
                                 >
@@ -220,6 +229,7 @@ const SectionCardTenant = (props) => {
                           }
                           title="Condonar interés"
                           trigger="click"
+                          ref={popUp}
                           // visible={visiblePopover}
                           // onVisibleChange={() => {
                           //   setVisiblePopover(!visiblePopover);

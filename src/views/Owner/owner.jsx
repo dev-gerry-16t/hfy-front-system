@@ -1217,7 +1217,7 @@ const Owner = (props) => {
                   history.push("/websystem/typeform-owner");
                 }}
               >
-                <span>Ir al formulario</span>
+                <span>Responder TypeForm</span>
               </button>
             </div>
           </div>
@@ -1627,6 +1627,7 @@ const Owner = (props) => {
             onForgiveInterest={async (data, id) => {
               try {
                 await handlerCallForgiveInterest(data, id);
+                handlerCalllSyncApis();
               } catch (error) {}
             }}
             dataCustomer={dataCustomer}

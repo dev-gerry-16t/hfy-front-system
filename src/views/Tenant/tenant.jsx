@@ -1263,7 +1263,7 @@ const Tenant = (props) => {
                   history.push("/websystem/typeform-user");
                 }}
               >
-                <span>Responder formulario</span>
+                <span>Responder TypeForm</span>
               </button>
             </div>
           </div>
@@ -1344,7 +1344,7 @@ const Tenant = (props) => {
                         <strong>
                           {
                             dataPaymentDescription.subscriptionInfo
-                              .currentAmount
+                              .totalAmountFormat
                           }
                         </strong>
                       </div>
@@ -1936,7 +1936,7 @@ const Tenant = (props) => {
             <span>Moratorios</span>
           </div>
         </div>
-        {dataTenant.canDeal === 1 && (
+        {/* {dataTenant.canDeal === 1 && (
           <div className="main-information-owner">
             <div className="title-cards">
               <span>Acciones</span>
@@ -1970,7 +1970,7 @@ const Tenant = (props) => {
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div id="section-register-action"></div>
         {isVisibleMessages === false &&
           isVisiblePaymentRent === false &&

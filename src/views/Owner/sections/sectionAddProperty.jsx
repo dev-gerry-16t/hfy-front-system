@@ -91,7 +91,7 @@ const SectionAddProperty = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.streetNumber}
-                  placeholder={"Número"}
+                  placeholder={"Número exterior"}
                   onChange={(e) => {
                     setDataForm({ ...dataForm, streetNumber: e.target.value });
                   }}
@@ -224,7 +224,7 @@ const SectionAddProperty = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.firstStreetReference}
-                  placeholder={"Calle"}
+                  placeholder={"Calle 1"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
@@ -242,7 +242,7 @@ const SectionAddProperty = (props) => {
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <Input
                   value={dataForm.secondStreetReference}
-                  placeholder={"Calle"}
+                  placeholder={"Calle 2"}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
@@ -253,6 +253,12 @@ const SectionAddProperty = (props) => {
               </Col>
             </Row>
             <p>Agrega departamentos</p>
+            <div style={{ marginBottom: 12 }}>
+              <span>
+                Esta información es obligatoria, si tienes duda envianos
+                mensaje.
+              </span>
+            </div>
             <Row>
               <Col span={24}>
                 <Select
@@ -324,11 +330,8 @@ const SectionAddProperty = (props) => {
                           disable={false}
                           placeholder="Monto de renta"
                           onValueChange={(values) => {
-                            const {
-                              formattedValue,
-                              value,
-                              floatValue,
-                            } = values;
+                            const { formattedValue, value, floatValue } =
+                              values;
                             setStateDynamic({
                               ...statesDynamic,
                               [row.id]: {
@@ -487,11 +490,8 @@ const SectionAddProperty = (props) => {
                           disable={false}
                           placeholder="Monto de mantenimiento"
                           onValueChange={(values) => {
-                            const {
-                              formattedValue,
-                              value,
-                              floatValue,
-                            } = values;
+                            const { formattedValue, value, floatValue } =
+                              values;
                             setStateDynamic({
                               ...statesDynamic,
                               [row.id]: {
@@ -524,11 +524,8 @@ const SectionAddProperty = (props) => {
                           disable={false}
                           placeholder="Número de estacionamientos"
                           onValueChange={(values) => {
-                            const {
-                              formattedValue,
-                              value,
-                              floatValue,
-                            } = values;
+                            const { formattedValue, value, floatValue } =
+                              values;
                             setStateDynamic({
                               ...statesDynamic,
                               [row.id]: {
