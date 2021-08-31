@@ -84,9 +84,11 @@ const CustomReferences = (props) => {
             <div className="button_actions">
               <button
                 type="button"
-                onClick={() => {
-                  setIsVisibleAdd(false);
-                  onClickAdd(dataForm);
+                onClick={async () => {
+                  try {
+                    await onClickAdd(dataForm);
+                    setIsVisibleAdd(false);
+                  } catch (error) {}
                 }}
                 className="button_primary"
               >

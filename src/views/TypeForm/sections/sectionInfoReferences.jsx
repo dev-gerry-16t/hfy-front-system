@@ -101,11 +101,15 @@ const SectionInfoReferences = (props) => {
                 : []
             }
             title="Referencia 1"
-            onClickAdd={(data) => {
-              onClickSendReferences({
-                ...data,
-                idTypeForm: dataFormSave.idTypeForm,
-              });
+            onClickAdd={async (data) => {
+              try {
+                await onClickSendReferences({
+                  ...data,
+                  idTypeForm: dataFormSave.idTypeForm,
+                });
+              } catch (error) {
+                throw error;
+              }
             }}
           />
           <CustomReferences
@@ -116,11 +120,15 @@ const SectionInfoReferences = (props) => {
                 : []
             }
             title="Referencia 2"
-            onClickAdd={(data) => {
-              onClickSendReferences({
-                ...data,
-                idTypeForm: dataFormSave.idTypeForm,
-              });
+            onClickAdd={async (data) => {
+              try {
+                await onClickSendReferences({
+                  ...data,
+                  idTypeForm: dataFormSave.idTypeForm,
+                });
+              } catch (error) {
+                throw error;
+              }
             }}
           />
           <CustomReferences
@@ -131,11 +139,15 @@ const SectionInfoReferences = (props) => {
                 : []
             }
             title="Referencia 3"
-            onClickAdd={(data) => {
-              onClickSendReferences({
-                ...data,
-                idTypeForm: dataFormSave.idTypeForm,
-              });
+            onClickAdd={async (data) => {
+              try {
+                await onClickSendReferences({
+                  ...data,
+                  idTypeForm: dataFormSave.idTypeForm,
+                });
+              } catch (error) {
+                throw error;
+              }
             }}
           />
           <div className="button_actions">
