@@ -634,6 +634,8 @@ const SectionInfoAval = (props) => {
                               ...dataForm,
                               endorsementNeighborhood: null,
                               endorsementIdZipCode: null,
+                              endorsementState: null,
+                              endorsementCity: null,
                               endorsementZipCode: value,
                             });
                           }
@@ -861,6 +863,8 @@ const SectionInfoAval = (props) => {
                               ...dataForm,
                               collateralPropertyNeighborhood: null,
                               collateralPropertyIdZipCoode: null,
+                              collateralPropertyState: null,
+                              collateralPropertyCity: null,
                               collateralPropertyZipCode: value,
                             });
                           }

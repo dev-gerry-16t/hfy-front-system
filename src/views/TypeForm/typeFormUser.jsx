@@ -220,9 +220,12 @@ const TypeFormUser = (props) => {
       });
     } catch (error) {
       showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -612,8 +615,12 @@ const TypeFormUser = (props) => {
           }}
           dataFormSave={dataForm}
           dataReferences={dataReferences}
-          onClickSendReferences={(data) => {
-            handlerCallSetTypeFormReferences(data);
+          onClickSendReferences={async (data) => {
+            try {
+              await handlerCallSetTypeFormReferences(data);
+            } catch (error) {
+              throw error;
+            }
           }}
           onClickNext={() => {
             next();

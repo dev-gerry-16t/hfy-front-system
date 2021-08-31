@@ -113,6 +113,8 @@ const SectionAddProperty = (props) => {
                         ...dataForm,
                         neighborhood: null,
                         idZipCode: null,
+                        state: null,
+                        city: null,
                         zipCode: value,
                       });
                     }
