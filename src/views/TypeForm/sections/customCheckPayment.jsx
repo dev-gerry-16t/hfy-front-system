@@ -568,26 +568,27 @@ const CustomCheckPayment = ({
             aria-label="full width tabs example"
           >
             {isNil(stpPayment) === false && stpPayment === true && (
-              <Tab
-                label={
-                  <div style={{ position: "relative" }}>
-                    Transferencia SPEI
-                    <strong
-                      style={{
-                        color: "#39b54a",
-                        position: "absolute",
-                        top: 12,
-                        left: 62,
-                        fontSize: 10,
-                        fontStyle: "oblique",
-                      }}
-                    >
-                      Sin comisión
-                    </strong>
-                  </div>
-                }
-                {...a11yProps(0)}
-              />
+              <>
+                <div
+                  style={{
+                    position: "relative",
+                  }}
+                >
+                  <strong
+                    style={{
+                      color: "#39b54a",
+                      position: "absolute",
+                      bottom: 0,
+                      left: 45,
+                      fontSize: 10,
+                      fontStyle: "oblique",
+                    }}
+                  >
+                    Sin comisión
+                  </strong>
+                </div>
+                <Tab label="Transferencia SPEI" {...a11yProps(0)} />
+              </>
             )}
             <Tab label="Pago con Tarjeta" {...a11yProps(1)} />
             {totalPolicy <= 10000 && (

@@ -631,7 +631,7 @@ const SectionInfoAval = (props) => {
                         value={dataForm.endorsementZipCode}
                         placeholder={"Código postal"}
                         onChange={(value) => {
-                          if (value.length >= 5) {
+                          if (value.length === 5) {
                             setDataForm({
                               ...dataForm,
                               endorsementZipCode: value,
@@ -646,6 +646,7 @@ const SectionInfoAval = (props) => {
                               endorsementCity: null,
                               endorsementZipCode: value,
                             });
+                            onChangeZipCode(null, true);
                           }
                         }}
                       />
@@ -860,7 +861,7 @@ const SectionInfoAval = (props) => {
                         value={dataForm.collateralPropertyZipCode}
                         placeholder={"Código postal"}
                         onChange={(value) => {
-                          if (value.length >= 5) {
+                          if (value.length === 5) {
                             setDataForm({
                               ...dataForm,
                               collateralPropertyZipCode: value,
@@ -875,6 +876,7 @@ const SectionInfoAval = (props) => {
                               collateralPropertyCity: null,
                               collateralPropertyZipCode: value,
                             });
+                            onChangeZipCode(null);
                           }
                         }}
                       />

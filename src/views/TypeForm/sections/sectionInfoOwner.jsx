@@ -541,7 +541,7 @@ const SectionInfoOwner = (props) => {
                 value={dataForm.zipCode}
                 placeholder={"Código postal"}
                 onChange={(value) => {
-                  if (value.length >= 5) {
+                  if (value.length === 5) {
                     setDataForm({ ...dataForm, zipCode: value });
                     onChangeZipCode(value);
                   } else {
@@ -553,6 +553,7 @@ const SectionInfoOwner = (props) => {
                       city: null,
                       zipCode: value,
                     });
+                    onChangeZipCode(null);
                   }
                 }}
               />
