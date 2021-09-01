@@ -111,41 +111,49 @@ const SectionInfoAval = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
-      <div
-        title={content}
-        style={{
-          width: "170px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <span
+      <Tooltip placement="right" title={title}>
+        <div
           style={{
-            color: isRequired === true ? "red" : "",
-            fontWeight: isRequired === true ? "bold" : "",
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
           }}
         >
-          {content}
-        </span>
-      </div>
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
+      <Tooltip placement="left" title={content}>
+        <div
+          title={content}
+          style={{
+            width: "170px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <span
+            style={{
+              color: isRequired === true ? "red" : "",
+              fontWeight: isRequired === true ? "bold" : "",
+            }}
+          >
+            {content}
+          </span>
+        </div>
+      </Tooltip>
     </div>
   );
 
   useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
     if (
       isEmpty(dataIdTypes) === false &&
       isEmpty(dataMaritalStatus) === false
@@ -623,7 +631,7 @@ const SectionInfoAval = (props) => {
                         value={dataForm.endorsementZipCode}
                         placeholder={"Código postal"}
                         onChange={(value) => {
-                          if (value.length >= 5) {
+                          if (value.length === 5) {
                             setDataForm({
                               ...dataForm,
                               endorsementZipCode: value,
@@ -638,6 +646,7 @@ const SectionInfoAval = (props) => {
                               endorsementCity: null,
                               endorsementZipCode: value,
                             });
+                            onChangeZipCode(null, true);
                           }
                         }}
                       />
@@ -852,7 +861,7 @@ const SectionInfoAval = (props) => {
                         value={dataForm.collateralPropertyZipCode}
                         placeholder={"Código postal"}
                         onChange={(value) => {
-                          if (value.length >= 5) {
+                          if (value.length === 5) {
                             setDataForm({
                               ...dataForm,
                               collateralPropertyZipCode: value,
@@ -867,6 +876,7 @@ const SectionInfoAval = (props) => {
                               collateralPropertyCity: null,
                               collateralPropertyZipCode: value,
                             });
+                            onChangeZipCode(null);
                           }
                         }}
                       />

@@ -107,41 +107,44 @@ const SectionInfoOwner = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
-      <div
-        title={content}
-        style={{
-          width: "170px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <span
+      <Tooltip placement="right" title={title}>
+        <div
           style={{
-            color: isRequired === true ? "red" : "",
-            fontWeight: isRequired === true ? "bold" : "",
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
           }}
         >
-          {content}
-        </span>
-      </div>
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
+      <Tooltip placement="left" title={content}>
+        <div
+          style={{
+            width: "170px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <span
+            style={{
+              color: isRequired === true ? "red" : "",
+              fontWeight: isRequired === true ? "bold" : "",
+            }}
+          >
+            {content}
+          </span>
+        </div>
+      </Tooltip>
     </div>
   );
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (isEmpty(dataFormSave) === false && isEmpty(dataIdTypes) === false) {
       const visibleField =
         isNil(dataFormSave.jsonProperties) === false
@@ -538,7 +541,7 @@ const SectionInfoOwner = (props) => {
                 value={dataForm.zipCode}
                 placeholder={"Código postal"}
                 onChange={(value) => {
-                  if (value.length >= 5) {
+                  if (value.length === 5) {
                     setDataForm({ ...dataForm, zipCode: value });
                     onChangeZipCode(value);
                   } else {
@@ -550,6 +553,7 @@ const SectionInfoOwner = (props) => {
                       city: null,
                       zipCode: value,
                     });
+                    onChangeZipCode(null);
                   }
                 }}
               />
@@ -1134,14 +1138,16 @@ const SectionInfoOwner = (props) => {
                   : ""
               }
               onClick={async () => {
-                if (
-                  isEmpty(dataPropertiesInfo) === false &&
-                  dataPropertiesInfo[0].canBeSkiped === true &&
-                  aceptTerms === true
-                ) {
-                  onClickNext(dataForm);
-                  setConfirmData(false);
-                }
+                try {
+                  if (
+                    isEmpty(dataPropertiesInfo) === false &&
+                    dataPropertiesInfo[0].canBeSkiped === true &&
+                    aceptTerms === true
+                  ) {
+                    await onClickNext(dataForm);
+                    setConfirmData(false);
+                  }
+                } catch (error) {}
               }}
             >
               <span>Confirmar</span>
