@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Row, Col, Select, Alert, Modal, Checkbox } from "antd";
+import { Row, Col, Select, Alert, Modal, Checkbox, Tooltip } from "antd";
 import CustomFileUpload from "./customFileUpload";
 import CustomPaymentModal from "../../../components/CustomPaymentModal";
 
@@ -34,19 +34,20 @@ const TypePolicy = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{
@@ -84,6 +85,11 @@ const TypePolicy = (props) => {
   const [isModalVisible, setIsVisibleModal] = useState(false);
 
   useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
     if (
       isEmpty(dataFormSave) === false &&
       isEmpty(dataPolicies) === false &&

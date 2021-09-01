@@ -40,8 +40,8 @@ const CurrentAddressRenter = (props) => {
     streetNumberProperty: null,
     idZipCodeProperty: null,
     zipCodeProperty: null,
-    city: null,
-    state: null,
+    cityProperty: null,
+    stateProperty: null,
     neighborhoodProperty: null,
     idPropertyType: null,
     isFurnished: null,
@@ -66,19 +66,20 @@ const CurrentAddressRenter = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{
@@ -101,6 +102,11 @@ const CurrentAddressRenter = (props) => {
   );
 
   useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
     if (
       isEmpty(dataFormSave) === false &&
       isEmpty(dataPropertyTypes) === false
@@ -114,8 +120,8 @@ const CurrentAddressRenter = (props) => {
     if (isEmpty(dataZipCodeAdress) === false) {
       setDataForm({
         ...dataForm,
-        state: dataZipCodeAdress.state,
-        city: dataZipCodeAdress.municipality,
+        stateProperty: dataZipCodeAdress.state,
+        cityProperty: dataZipCodeAdress.municipality,
       });
     }
   }, [dataZipCodeAdress]);
@@ -235,8 +241,8 @@ const CurrentAddressRenter = (props) => {
                         neighborhoodProperty: null,
                         idZipCodeProperty: null,
                         zipCodeProperty: value,
-                        state: "",
-                        city: "",
+                        stateProperty: "",
+                        cityProperty: "",
                         idZipCodeProperty: null,
                       });
                     } else {
@@ -255,7 +261,7 @@ const CurrentAddressRenter = (props) => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
-                value={dataForm.state}
+                value={dataForm.stateProperty}
                 placeholder="Estado"
                 onChange={(e) => {}}
               />
@@ -263,7 +269,7 @@ const CurrentAddressRenter = (props) => {
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
-                value={dataForm.city}
+                value={dataForm.cityProperty}
                 placeholder="Municipio/Delegación"
                 onChange={(e) => {}}
               />

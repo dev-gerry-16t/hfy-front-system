@@ -93,7 +93,7 @@ const SectionContractAvailable = (props) => {
           object = { ...object, contract: true };
         } else if (element.type === 2) {
           object = { ...object, policy: true };
-        } else if (element.type === 3) {
+        } else if (element.type === 4) {
           object = { ...object, payment: true };
         }
       });
@@ -133,8 +133,9 @@ const SectionContractAvailable = (props) => {
             {isNil(dataGetContract) === false &&
             isNil(dataGetContract.url) === false ? (
               <iframe
+                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
                 className="iframe-docx-hfy"
-                src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataGetContract.url}&embedded=true`}
+                src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataGetContract.url}&efh=false&embedded=true`}
               ></iframe>
             ) : (
               <div className="empty-data-document">
@@ -460,7 +461,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
                       </button>
-                      <button
+                      {/* <button
                         type="button"
                         onClick={async () => {
                           try {
@@ -486,7 +487,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
-                      </button>
+                      </button> */}
                       {signaturePrecencial === true &&
                         isEditableContract === true &&
                         (isNil(dataGetContract.isFaceToFace) === true ||
@@ -561,7 +562,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
                       </button>
-                      <button
+                      {/* <button
                         type="button"
                         onClick={async () => {
                           try {
@@ -587,7 +588,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
-                      </button>
+                      </button> */}
                       {signaturePrecencial === true &&
                         isEditableContract === true &&
                         (isNil(dataGetContract.isFaceToFace) === true ||
@@ -662,7 +663,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <FolderOpenOutlined style={{ fontSize: 15 }} /> Ver
                       </button>
-                      <button
+                      {/* <button
                         type="button"
                         onClick={async () => {
                           try {
@@ -688,7 +689,7 @@ const SectionContractAvailable = (props) => {
                       >
                         <CloudDownloadOutlined style={{ fontSize: 15 }} />{" "}
                         Descargar
-                      </button>
+                      </button> */}
                       {signaturePrecencial === true &&
                         dataProfile.idUserType !== 3 &&
                         isEditableContract === true &&
@@ -787,12 +788,24 @@ const SectionContractAvailable = (props) => {
                 id="step_5_contract_signature"
                 className="contract-section-signature"
               >
-                <p style={{ fontSize: "18px" }}>
-                  {typeSignatureDigital === 1 &&
-                    "Firma de Contrato de arrendamiento"}
-                  {typeSignatureDigital === 2 && "Firma de Póliza"}
-                  {typeSignatureDigital === 4 && "Firma de Pagarés"}
-                </p>
+                <div className="title-head-modal">
+                  <button
+                    className="arrow-back-to"
+                    type="button"
+                    onClick={() => {
+                      setOpenSection(4);
+                    }}
+                  >
+                    <img src={Arrow} alt="backTo" width="30" />
+                  </button>
+
+                  <h1 style={{ fontSize: "18px" }}>
+                    {typeSignatureDigital === 1 &&
+                      "Firma de Contrato de arrendamiento"}
+                    {typeSignatureDigital === 2 && "Firma de Póliza"}
+                    {typeSignatureDigital === 4 && "Firma de Pagarés"}
+                  </h1>
+                </div>
                 <div className="signature">
                   <SignatureCanvas
                     penColor="black"

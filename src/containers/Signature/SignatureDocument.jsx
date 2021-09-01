@@ -427,6 +427,7 @@ const SignatureDocument = (props) => {
                         : ""}
                     </h2>
                     <iframe
+                      sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
                       title="Vista Documento Contrato"
                       className="iframe-docx-hfy"
                       src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataForm.url}&embedded=true`}
