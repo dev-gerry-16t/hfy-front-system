@@ -59,24 +59,26 @@ const SectionCurrentWork = (props) => {
           </strong>
         </div>
       </Tooltip>
-      <div
-        title={content}
-        style={{
-          width: "170px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <span
+      <Tooltip placement="left" title={content}>
+        <div
+          title={content}
           style={{
-            color: isRequired === true ? "red" : "",
-            fontWeight: isRequired === true ? "bold" : "",
+            width: "170px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
           }}
         >
-          {content}
-        </span>
-      </div>
+          <span
+            style={{
+              color: isRequired === true ? "red" : "",
+              fontWeight: isRequired === true ? "bold" : "",
+            }}
+          >
+            {content}
+          </span>
+        </div>
+      </Tooltip>
     </div>
   );
 
