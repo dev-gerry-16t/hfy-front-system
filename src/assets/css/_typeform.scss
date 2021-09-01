@@ -332,6 +332,15 @@
   }
 }
 
+.card-tab-mui-label {
+  color: #39b54a;
+  position: absolute;
+  bottom: 15px;
+  left: 0px;
+  font-size: 10px;
+  font-style: oblique;
+}
+
 @supports (object-fit: cover) {
   .section-drop-document .content-preview-document img {
     height: 100%;
@@ -378,6 +387,11 @@
   }
 }
 @media screen and (max-width: 520px) {
+  .card-tab-mui-label {
+    bottom: 27px;
+    left: 0px;
+    font-size: 9px;
+  }
   .title-steps-typeform {
     display: none;
   }
