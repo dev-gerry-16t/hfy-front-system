@@ -12,6 +12,7 @@ import {
   Alert,
   Modal,
   Checkbox,
+  Tooltip,
 } from "antd";
 import admiration from "../../../assets/icons/exclaim.svg";
 
@@ -54,19 +55,20 @@ const SectionBankInfo = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{
@@ -108,6 +110,11 @@ const SectionBankInfo = (props) => {
   };
 
   useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
     setAsyncInformation(dataFormSave);
   }, [dataFormSave]);
 

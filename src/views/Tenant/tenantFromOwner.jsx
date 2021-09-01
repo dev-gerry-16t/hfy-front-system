@@ -546,7 +546,7 @@ const TenantFromOwner = (props) => {
                   }}
                 />
               </TabPane>
-              <TabPane tab="Mensajes" key="3">
+              <TabPane tab="Mensajes a Inquilino" key="3">
                 <SectionMessages
                   dataMessages={dataMessages}
                   getMoreCoincidences={() => {

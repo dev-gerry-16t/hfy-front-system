@@ -332,6 +332,7 @@ const CustomFileUpload = (props) => {
                 dataDocument.extension === "pdf" ? (
                   <div style={{ textAlign: "center" }}>
                     <iframe
+                      sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
                       className="iframe-docx-hfy"
                       src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}&embedded=true`}
                     ></iframe>

@@ -107,19 +107,20 @@ const SectionInfoOwner = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{
@@ -142,6 +143,7 @@ const SectionInfoOwner = (props) => {
   );
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     if (isEmpty(dataFormSave) === false && isEmpty(dataIdTypes) === false) {
       const visibleField =
         isNil(dataFormSave.jsonProperties) === false
@@ -1134,14 +1136,16 @@ const SectionInfoOwner = (props) => {
                   : ""
               }
               onClick={async () => {
-                if (
-                  isEmpty(dataPropertiesInfo) === false &&
-                  dataPropertiesInfo[0].canBeSkiped === true &&
-                  aceptTerms === true
-                ) {
-                  onClickNext(dataForm);
-                  setConfirmData(false);
-                }
+                try {
+                  if (
+                    isEmpty(dataPropertiesInfo) === false &&
+                    dataPropertiesInfo[0].canBeSkiped === true &&
+                    aceptTerms === true
+                  ) {
+                    await onClickNext(dataForm);
+                    setConfirmData(false);
+                  }
+                } catch (error) {}
               }}
             >
               <span>Confirmar</span>

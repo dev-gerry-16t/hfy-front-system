@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Row, Col } from "antd";
@@ -24,6 +24,14 @@ const SectionPaymentPolicy = ({
   dataProfile,
 }) => {
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
+
+  useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
+  }, []);
 
   return (
     <div className="content-typeform-formulary">
