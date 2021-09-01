@@ -232,28 +232,19 @@ const CurrentAddressRenter = (props) => {
                 value={dataForm.zipCodeProperty}
                 placeholder="Código postal"
                 onChange={(value) => {
-                  if (value.length >= 5) {
+                  if (value.length === 5) {
                     setDataForm({ ...dataForm, zipCodeProperty: value });
                     onChangeZipCode(value);
                   } else {
-                    if (isEmpty(value) === true || isNil(value) === true) {
-                      setDataForm({
-                        ...dataForm,
-                        neighborhoodProperty: null,
-                        idZipCodeProperty: null,
-                        zipCodeProperty: value,
-                        stateProperty: "",
-                        cityProperty: "",
-                        idZipCodeProperty: null,
-                      });
-                    } else {
-                      setDataForm({
-                        ...dataForm,
-                        neighborhoodProperty: null,
-                        idZipCodeProperty: null,
-                        zipCodeProperty: value,
-                      });
-                    }
+                    setDataForm({
+                      ...dataForm,
+                      neighborhoodProperty: null,
+                      idZipCodeProperty: null,
+                      stateProperty: null,
+                      cityProperty: null,
+                      zipCodeProperty: value,
+                    });
+                    onChangeZipCode(null);
                   }
                 }}
               />
