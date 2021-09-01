@@ -468,7 +468,9 @@ const TypeFormOwner = (props) => {
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
-            } catch (error) {}
+            } catch (error) {
+              throw error;
+            }
           }}
           onGetProperties={async (data) => {
             try {
@@ -512,7 +514,9 @@ const TypeFormOwner = (props) => {
               setDataForm({ ...dataForm, ...data });
               setDataZipCodeAdress({});
               setDataZipCatalog([]);
-            } catch (error) {}
+            } catch (error) {
+              throw error;
+            }
           }}
           dataPropertyTypes={dataPropertyTypes}
           onChangeZipCode={(zipCode) => {
@@ -561,7 +565,9 @@ const TypeFormOwner = (props) => {
               await handlerCallSetTypeFormTenant({ ...data, stepIn: 3 });
               next();
               setDataForm({ ...dataForm, ...data });
-            } catch (error) {}
+            } catch (error) {
+              throw error;
+            }
           }}
           onClickBack={() => prev()}
         />

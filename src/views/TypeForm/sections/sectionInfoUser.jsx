@@ -119,19 +119,20 @@ const SectionInfoUser = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{

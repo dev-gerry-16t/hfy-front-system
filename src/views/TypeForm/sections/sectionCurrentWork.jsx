@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import NumberFormat from "react-number-format";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Input, Row, Col, Select, Alert, Modal, Checkbox } from "antd";
+import { Input, Row, Col, Select, Alert, Modal, Checkbox, Tooltip } from "antd";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomSelectTypeForm from "../../../components/CustomSelectTypeForm";
 
@@ -45,19 +45,20 @@ const SectionCurrentWork = (props) => {
         fontSize: 12,
       }}
     >
-      <div
-        title={title}
-        style={{
-          width: "130px",
-          whiteSpace: "nowrap",
-          textOverflow: "ellipsis",
-          overflow: "hidden",
-        }}
-      >
-        <strong className="site-description-item-profile-p-label">
-          {title}
-        </strong>
-      </div>
+      <Tooltip placement="right" title={title}>
+        <div
+          style={{
+            width: "130px",
+            whiteSpace: "nowrap",
+            textOverflow: "ellipsis",
+            overflow: "hidden",
+          }}
+        >
+          <strong className="site-description-item-profile-p-label">
+            {title}
+          </strong>
+        </div>
+      </Tooltip>
       <div
         title={content}
         style={{
@@ -80,6 +81,11 @@ const SectionCurrentWork = (props) => {
   );
 
   useEffect(() => {
+    const elementContent =
+      document.getElementsByClassName("ant-layout-content");
+    if (isNil(elementContent) === false && isNil(elementContent[0]) === false) {
+      elementContent[0].scrollTop = 0;
+    }
     if (isEmpty(dataFormSave) === false) {
       setDataForm(dataFormSave);
     }
