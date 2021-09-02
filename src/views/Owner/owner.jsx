@@ -53,6 +53,7 @@ import CustomDialog from "../../components/CustomDialog";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 import SectionStatsMovements from "./sections/sectionStatsMovements";
+import CustomValidationUser from "../../components/CustomValidationUser";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -929,6 +930,14 @@ const Owner = (props) => {
 
   return (
     <Content>
+      <CustomValidationUser
+        isVisible={true}
+        onClose={() => {}}
+        finished={() => {}}
+        metadata={{
+          idCustomer: dataProfile.idCustomer,
+        }}
+      />
       <CustomDialog
         isVisibleDialog={dataInvPayment.openModal}
         onClose={() => {
