@@ -12,7 +12,7 @@ const CustomValidationUser = (props) => {
     flowId,
     finishedProcess,
   } = props;
-  const [stepsValidation, setStepsValidation] = useState(4);
+  const [stepsValidation, setStepsValidation] = useState(1);
   const [geolocation, setGeolocation] = useState({ latitud: 0, longitud: 0 });
 
   const geoSuccess = (position) => {
