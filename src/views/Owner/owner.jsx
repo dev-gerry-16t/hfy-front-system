@@ -986,6 +986,7 @@ const Owner = (props) => {
         isVisible={isVisibleVerification}
         onClose={() => {
           setIsVisibleVerification(false);
+          handlerCallGetAllUserProfile();
         }}
         finished={() => {
           handlerCallGetAllUserProfile();
@@ -997,6 +998,7 @@ const Owner = (props) => {
         flowId={dataProfile.flowId}
         finishedProcess={() => {
           handlerCalllSyncApis();
+          handlerCallGetAllUserProfile();
           setIsVisibleVerification(false);
         }}
       />

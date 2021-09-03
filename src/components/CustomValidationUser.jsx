@@ -98,7 +98,7 @@ const CustomValidationUser = (props) => {
               <li>Deberás de permitir el acceso a tu ubicación.</li>
               <li>
                 En caso de no aprobar el proceso de verificación o de no
-                realizarlo no podremos ofrecerte nuestros servicios.
+                realizarlo, no podremos ofrecerte nuestros servicios.
               </li>
               <li>
                 Te informaremos sobre el resultado a través de un correo
@@ -169,7 +169,7 @@ const CustomValidationUser = (props) => {
         <div className="banner-move-tenant">
           <h1>Verificación de identidad</h1>
           <div style={{ fontSize: 16, marginBottom: 20 }}>
-            <span>¿Queremos asegurarnos de que eres tu?</span>
+            <span>Queremos asegurarnos de que eres tu</span>
           </div>
           <div
             style={{
@@ -249,7 +249,7 @@ const CustomValidationUser = (props) => {
               siguientes documentos:
             </span>
             <ul style={{ fontSize: 12, marginTop: 10 }}>
-              <li>Identificación oficial (INE/IFE, Pasaporte o DNI).</li>
+              <li>Identificación oficial (INE/IFE o Pasaporte).</li>
               <li>Comprobante de domicilio.</li>
             </ul>
           </div>
@@ -260,6 +260,7 @@ const CustomValidationUser = (props) => {
               country="mx"
               loaded={() => {}}
               product="kyc"
+              color={document.getElementsByTagName("body")[0].className}
               metadata={{
                 ...geolocation,
                 ...metadata,

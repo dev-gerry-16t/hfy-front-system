@@ -1,24 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
-import { Layout, message } from "antd";
+import { Layout, message, Tooltip } from "antd";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import "moment/locale/es";
 import IconPolicy from "../../assets/icons/Policy.svg";
 import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import {
+  callGetAllUserProfile,
   callGetAgentIndicators,
   callGetAgentContractCoincidences,
   callGetAgentCommissionChart,
 } from "../../utils/actions/actions";
+import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionCardOwner from "./sections/sectionCardOwner";
+import CustomValidationUser from "../../components/CustomValidationUser";
+import IconsProfile from "../Owner/icons/icons";
 
 const { Content } = Layout;
 
 const Adviser = (props) => {
   const {
+    callGetAllUserProfile,
+    setDataUserProfile,
     dataProfile,
     history,
     callGetAgentIndicators,
@@ -29,6 +36,11 @@ const Adviser = (props) => {
   const [dataStats, setDataStats] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataChartBar, setDataChartBar] = useState([]);
+  const [isVisibleVerification, setIsVisibleVerification] = useState(false);
+  const [iconVerification, setIconVerification] = useState({
+    icon: "",
+    label: "",
+  });
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -69,7 +81,13 @@ const Adviser = (props) => {
   };
 
   const handlerCallGetAgentContractCoincidences = async () => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idSystemUser,
+      idLoginHistory,
+      verificationStatusStyle,
+      verificationStatus,
+      shouldCustomerBeVerified,
+    } = dataProfile;
     try {
       const response = await callGetAgentContractCoincidences({
         idSystemUser,
@@ -81,6 +99,11 @@ const Adviser = (props) => {
           ? response.response
           : [];
       setDataCoincidences(responseResult);
+      setIconVerification({
+        icon: verificationStatusStyle,
+        label: verificationStatus,
+      });
+      setIsVisibleVerification(shouldCustomerBeVerified);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -118,16 +141,75 @@ const Adviser = (props) => {
     await handlerCallGetAgentCommissionChart();
   };
 
+  const handlerCallGetAllUserProfile = async () => {
+    try {
+      const response = await callGetAllUserProfile({
+        idSystemUser: dataProfile.idSystemUser,
+        token: dataProfile.token,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      await setDataUserProfile({
+        ...dataProfile,
+        ...responseResult,
+      });
+      const {
+        shouldCustomerBeVerified,
+        verificationStatusStyle,
+        verificationStatus,
+      } = responseResult;
+      setIconVerification({
+        icon: verificationStatusStyle,
+        label: verificationStatus,
+      });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     callAsynApis();
   }, []);
 
   return (
     <Content>
+      <CustomValidationUser
+        isVisible={isVisibleVerification}
+        onClose={() => {
+          setIsVisibleVerification(false);
+          handlerCallGetAllUserProfile();
+        }}
+        finished={() => {
+          handlerCallGetAllUserProfile();
+        }}
+        metadata={{
+          idCustomer: dataProfile.idCustomer,
+        }}
+        clientId={dataProfile.clientId}
+        flowId={dataProfile.flowId}
+        finishedProcess={() => {
+          callAsynApis();
+          setIsVisibleVerification(false);
+          handlerCallGetAllUserProfile();
+        }}
+      />
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, {dataProfile.showName}</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h2 style={{ marginRight: 5 }}>Hola, {dataProfile.showName}</h2>
+              {isEmpty(iconVerification) === false &&
+                isNil(iconVerification) === false && (
+                  <Tooltip
+                    placement="right"
+                    title={`Verificación ${iconVerification.label}`}
+                  >
+                    {IconsProfile[iconVerification.icon]}
+                  </Tooltip>
+                )}
+            </div>
             <span>
               Último inicio de sesión:{" "}
               <strong>{dataProfile.lastSessionStarted}</strong>
@@ -182,6 +264,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callGetAllUserProfile: (data) => dispatch(callGetAllUserProfile(data)),
+  setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetAgentIndicators: (data) => dispatch(callGetAgentIndicators(data)),
   callGetAgentContractCoincidences: (data) =>
     dispatch(callGetAgentContractCoincidences(data)),
