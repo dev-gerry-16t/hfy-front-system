@@ -26,9 +26,7 @@ const CustomValidationUser = (props) => {
     });
   };
 
-  const getError = (error) => {
-    setStepsValidation(3);
-  };
+  const getError = (error) => {};
 
   const handlerGetGeolocation = () => {
     navigator.geolocation.getCurrentPosition(geoSuccess, getError);
@@ -88,10 +86,25 @@ const CustomValidationUser = (props) => {
             </svg>
           </div>
           <div style={{ width: 350, fontSize: 16 }}>
-            <span>
-              Este proceso se realiza con el fin de brindarte seguridad contra
-              suplantación de identidad y detección de fraudes
-            </span>
+            <ul style={{ fontSize: 12, marginTop: 10 }}>
+              <li>
+                Este proceso se realiza con el fin de brindarte seguridad contra
+                suplantación de identidad y detección de fraudes.
+              </li>
+              <li>
+                Si por alguna razón no terminas tu proceso deberás de esperar 30
+                minutos antes de realizar una nueva verificación.
+              </li>
+              <li>Deberás de permitir el acceso a tu ubicación.</li>
+              <li>
+                En caso de no aprobar el proceso de verificación o de no
+                realizarlo no podremos ofrecerte nuestros servicios.
+              </li>
+              <li>
+                Te informaremos sobre el resultado a través de un correo
+                electrónico.
+              </li>
+            </ul>
           </div>
           <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
             <button
@@ -143,11 +156,11 @@ const CustomValidationUser = (props) => {
               />
             </svg>
           </div>
-          <div style={{ width: 350, fontSize: 16 }}>
+          <div style={{ width: 350, fontSize: 16, marginBottom: 10 }}>
             <span>
               Para evitar que otros usuarios accedan a tu información personal
               desde lugares desconocidos te recomendamos permitir el acceso a tu
-              ubicación, este requerimiento es opcional.
+              ubicación.
             </span>
           </div>
         </div>
