@@ -13,6 +13,7 @@ import {
   Menu,
   Button,
   Alert,
+  Tooltip,
 } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -33,6 +34,7 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import { API_CONSTANTS, HEADER } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 import {
+  callGetAllUserProfile,
   callGetAllCustomerTenantDashboardById,
   callSetContract,
   callAddDocument,
@@ -74,6 +76,8 @@ import SectionDetailIncidence from "./sections/sectionDetailIncidence";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 import SectionStatsMovements from "../Owner/sections/sectionStatsMovements";
+import CustomValidationUser from "../../components/CustomValidationUser";
+import IconsProfile from "../Owner/icons/icons";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -87,6 +91,7 @@ const { Content } = Layout;
 
 const Tenant = (props) => {
   const {
+    callGetAllUserProfile,
     history,
     callGetAllCustomerTenantById,
     dataProfile,
@@ -120,6 +125,11 @@ const Tenant = (props) => {
     callGetTransactionsByUser,
   } = props;
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isVisibleVerification, setIsVisibleVerification] = useState(false);
+  const [iconVerification, setIconVerification] = useState({
+    icon: "",
+    label: "",
+  });
   const [isVisibleBannerMove, setIsVisibleBannerMove] = useState(false);
   const [isVisibleDetailIncidence, setIsVisibleDetailIncidence] =
     useState(false);
@@ -395,8 +405,15 @@ const Tenant = (props) => {
   };
 
   const handlerCallGetAllCustomerTenantById = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory, idCustomerTenant } =
-      dataProfile;
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      idCustomerTenant,
+      verificationStatusStyle,
+      verificationStatus,
+      shouldCustomerBeVerified,
+    } = dataProfile;
     try {
       const response = await callGetAllCustomerTenantById({
         idCustomer,
@@ -491,7 +508,8 @@ const Tenant = (props) => {
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
-        responseResult.isTypeFormCompleted === false
+        responseResult.isTypeFormCompleted === false &&
+        shouldCustomerBeVerified === false
       ) {
         setDataUserProfile({
           ...dataProfile,
@@ -512,6 +530,11 @@ const Tenant = (props) => {
           idContract: responseResult.idContract,
         });
       }
+      setIconVerification({
+        icon: verificationStatusStyle,
+        label: verificationStatus,
+      });
+      setIsVisibleVerification(shouldCustomerBeVerified);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -970,6 +993,34 @@ const Tenant = (props) => {
     return numClabe;
   };
 
+  const handlerCallGetAllUserProfile = async () => {
+    try {
+      const response = await callGetAllUserProfile({
+        idSystemUser: dataProfile.idSystemUser,
+        token: dataProfile.token,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      await setDataUserProfile({
+        ...dataProfile,
+        ...responseResult,
+      });
+      const {
+        shouldCustomerBeVerified,
+        verificationStatusStyle,
+        verificationStatus,
+      } = responseResult;
+      setIconVerification({
+        icon: verificationStatusStyle,
+        label: verificationStatus,
+      });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     handlerCallGetAllCustomerTenantById();
     handlerCallGetTransactionsByUser();
@@ -977,6 +1028,27 @@ const Tenant = (props) => {
 
   return (
     <Content>
+      <CustomValidationUser
+        isVisible={isVisibleVerification}
+        onClose={() => {
+          setIsVisibleVerification(false);
+          handlerCallGetAllUserProfile();
+        }}
+        finished={() => {
+          handlerCallGetAllUserProfile();
+        }}
+        metadata={{
+          idCustomer: dataProfile.idCustomer,
+        }}
+        clientId={dataProfile.clientId}
+        flowId={dataProfile.flowId}
+        finishedProcess={() => {
+          handlerCallGetAllCustomerTenantById();
+          handlerCallGetTransactionsByUser();
+          handlerCallGetAllUserProfile();
+          setIsVisibleVerification(false);
+        }}
+      />
       <CustomDialog
         isVisibleDialog={dataInvPayment.openModal}
         onClose={() => {
@@ -1841,7 +1913,20 @@ const Tenant = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, {dataTenant.shortNameTenant}</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h2 style={{ marginRight: 5 }}>
+                Hola, {dataTenant.shortNameTenant}
+              </h2>
+              {isEmpty(iconVerification) === false &&
+                isNil(iconVerification) === false && (
+                  <Tooltip
+                    placement="right"
+                    title={`Verificación ${iconVerification.label}`}
+                  >
+                    {IconsProfile[iconVerification.icon]}
+                  </Tooltip>
+                )}
+            </div>
             <span>
               Último inicio de sesión:{" "}
               <strong>{dataTenant.lastSessionStarted}</strong>
@@ -2269,6 +2354,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callGetAllUserProfile: (data) => dispatch(callGetAllUserProfile(data)),
   callUpdateIncidence: (data, id) => dispatch(callUpdateIncidence(data, id)),
   callGetAllIncidenceCoincidences: (data) =>
     dispatch(callGetAllIncidenceCoincidences(data)),

@@ -9,8 +9,15 @@ const MatiButton = ({
   exited,
   finished,
   flowId,
+  color,
 }) => {
   const button = React.createRef(null);
+  const colorsTheme = {
+    "theme-light": "#ff0282",
+    "theme-dark": "#0c101d",
+    "theme-purple": "#9a78b0",
+    "theme-dark-blue": "#072146",
+  };
 
   const handleLoaded = useCallback(() => {
     loaded();
@@ -44,7 +51,7 @@ const MatiButton = ({
 
   return (
     <mati-button
-      color="#ff0282"
+      color={colorsTheme[color]}
       ref={button}
       clientid={clientid}
       country={country}
@@ -64,6 +71,7 @@ const CustomReactMati = ({
   exited,
   finished,
   flowId,
+  color,
 }) => {
   return (
     <MatiButton
@@ -75,6 +83,7 @@ const CustomReactMati = ({
       exited={exited}
       finished={finished}
       flowId={flowId}
+      color={color}
     />
   );
 };
