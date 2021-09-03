@@ -3,8 +3,16 @@ import CustomDialog from "./CustomDialog";
 import CustomReactMati from "./customReactMati";
 
 const CustomValidationUser = (props) => {
-  const { isVisible, onClose, metadata, finished, clientId, flowId } = props;
-  const [stepsValidation, setStepsValidation] = useState(1);
+  const {
+    isVisible,
+    onClose,
+    metadata,
+    finished,
+    clientId,
+    flowId,
+    finishedProcess,
+  } = props;
+  const [stepsValidation, setStepsValidation] = useState(4);
   const [geolocation, setGeolocation] = useState({ latitud: 0, longitud: 0 });
 
   const geoSuccess = (position) => {
@@ -44,6 +52,9 @@ const CustomValidationUser = (props) => {
       {stepsValidation === 1 && (
         <div className="banner-move-tenant">
           <h1>Verificación de cuenta</h1>
+          <div style={{ fontSize: 16, marginBottom: 20 }}>
+            <span>Bienvenido al proceso de verificación de tu cuenta</span>
+          </div>
           <div
             style={{
               display: "flex",
@@ -75,6 +86,12 @@ const CustomValidationUser = (props) => {
                 stroke-linejoin="round"
               />
             </svg>
+          </div>
+          <div style={{ width: 350, fontSize: 16 }}>
+            <span>
+              Este proceso se realiza con el fin de brindarte seguridad contra
+              suplantación de identidad y detección de fraudes
+            </span>
           </div>
           <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
             <button
@@ -126,11 +143,21 @@ const CustomValidationUser = (props) => {
               />
             </svg>
           </div>
+          <div style={{ width: 350, fontSize: 16 }}>
+            <span>
+              Para evitar que otros usuarios accedan a tu información personal
+              desde lugares desconocidos te recomendamos permitir el acceso a tu
+              ubicación, este requerimiento es opcional.
+            </span>
+          </div>
         </div>
       )}
       {stepsValidation === 3 && (
         <div className="banner-move-tenant">
           <h1>Verificación de identidad</h1>
+          <div style={{ fontSize: 16, marginBottom: 20 }}>
+            <span>¿Queremos asegurarnos de que eres tu?</span>
+          </div>
           <div
             style={{
               display: "flex",
@@ -203,6 +230,16 @@ const CustomValidationUser = (props) => {
               />
             </svg>
           </div>
+          <div style={{ width: 350, fontSize: 16 }}>
+            <span>
+              Para continuar con el proceso es necesario tener a la mano los
+              siguientes documentos:
+            </span>
+            <ul style={{ fontSize: 12, marginTop: 10 }}>
+              <li>Identificación oficial (INE/IFE, Pasaporte o DNI).</li>
+              <li>Comprobante de domicilio.</li>
+            </ul>
+          </div>
           <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
             <CustomReactMati
               clientId={clientId}
@@ -230,6 +267,9 @@ const CustomValidationUser = (props) => {
       {stepsValidation === 4 && (
         <div className="banner-move-tenant">
           <h1>Verificación completa</h1>
+          <div style={{ fontSize: 16, marginBottom: 20 }}>
+            <span>¡Felicidades!</span>
+          </div>
           <div
             style={{
               display: "flex",
@@ -286,13 +326,20 @@ const CustomValidationUser = (props) => {
               />
             </svg>
           </div>
+          <div style={{ width: 350, fontSize: 16 }}>
+            <span>
+              Concluiste tu verificación de cuenta, ahora eres un usuario de
+              confianza dentro de nuestro sistema. Es momento de llenar tu
+              TypeForm, haz clic en finalizar para continuar con tu proceso.
+            </span>
+          </div>
           <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
             <button
               type="button"
               onClick={() => {
                 setGeolocation({ latitud: 0, longitud: 0 });
                 setStepsValidation(1);
-                onClose();
+                finishedProcess();
               }}
             >
               <span>Finalizar</span>

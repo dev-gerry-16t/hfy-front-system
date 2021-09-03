@@ -223,7 +223,12 @@ const Owner = (props) => {
   };
 
   const handlerCallGetAllCustomerById = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+    const {
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+      shouldCustomerBeVerified,
+    } = dataProfile;
     try {
       const response = await callGetAllCustomerById({
         idCustomer,
@@ -240,7 +245,8 @@ const Owner = (props) => {
       if (
         isEmpty(responseResult) === false &&
         isNil(responseResult.isTypeFormCompleted) === false &&
-        responseResult.isTypeFormCompleted === false
+        responseResult.isTypeFormCompleted === false &&
+        shouldCustomerBeVerified === false
       ) {
         setDataUserProfile({
           ...dataProfile,
@@ -989,6 +995,9 @@ const Owner = (props) => {
         }}
         clientId={dataProfile.clientId}
         flowId={dataProfile.flowId}
+        finishedProcess={() => {
+          handlerCalllSyncApis();
+        }}
       />
       <CustomDialog
         isVisibleDialog={dataInvPayment.openModal}
