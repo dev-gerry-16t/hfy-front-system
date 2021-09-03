@@ -236,14 +236,6 @@ const SectionInfoUser = (props) => {
               </Row>
             </>
           )}
-          {/* <iframe
-            width="600"
-            height="450"
-            style={{ border: 0 }}
-            loading="lazy"
-            allowfullscreen
-            src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ&q=19.4159572,-99.0336733&zoom=18`}
-          ></iframe> */}
           {dataForm.hasInvTenant === true && (
             <>
               <p>Información de pago de investigación</p>
@@ -951,7 +943,6 @@ const SectionInfoUser = (props) => {
             </Row>
           )} */}
           <div className="button_actions">
-            
             <button
               type="button"
               onClick={async () => {
