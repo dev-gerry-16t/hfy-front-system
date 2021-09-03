@@ -997,6 +997,7 @@ const Owner = (props) => {
         flowId={dataProfile.flowId}
         finishedProcess={() => {
           handlerCalllSyncApis();
+          setIsVisibleVerification(false);
         }}
       />
       <CustomDialog
