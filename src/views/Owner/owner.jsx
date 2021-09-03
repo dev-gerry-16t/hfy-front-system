@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import moment from "moment";
-import { Layout, notification, message } from "antd";
+import { Layout, notification, message, Tooltip } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import IconOwner from "../../assets/icons/iconHomeIndicator.svg";
@@ -11,6 +11,7 @@ import IconWallet from "../../assets/icons/wallet.svg";
 import IconActivity from "../../assets/icons/activity.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
 import {
+  callGetAllUserProfile,
   callGetAllCustomerById,
   callGetAllCustomerCoincidences,
   callGetStatsChart,
@@ -53,6 +54,8 @@ import CustomDialog from "../../components/CustomDialog";
 import CustomSignatureContract from "../../components/customSignatureContract";
 import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 import SectionStatsMovements from "./sections/sectionStatsMovements";
+import CustomValidationUser from "../../components/CustomValidationUser";
+import IconsProfile from "./icons/icons";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -66,6 +69,7 @@ const { Content } = Layout;
 
 const Owner = (props) => {
   const {
+    callGetAllUserProfile,
     dataProfile,
     setDataUserProfile,
     callGetAllCustomerById,
@@ -98,6 +102,11 @@ const Owner = (props) => {
   } = props;
   const [dataDocument, setDataDocument] = useState({});
   const [isVisibleModal, setIsVisibleModal] = useState(false);
+  const [isVisibleVerification, setIsVisibleVerification] = useState(false);
+  const [iconVerification, setIconVerification] = useState({
+    icon: "",
+    label: "",
+  });
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataStatsChart, setDataStatsChart] = useState([]);
   const [dataCatalogProperty, setDataCatalogProperty] = useState([]);
@@ -874,11 +883,21 @@ const Owner = (props) => {
   };
 
   const handlerCalllSyncApis = async () => {
+    const {
+      shouldCustomerBeVerified,
+      verificationStatusStyle,
+      verificationStatus,
+    } = dataProfile;
     await handlerCallGetAllCustomerById();
     await handlerCallGetTenantCoincidences();
     await handlerCallGetCallGetStatsChart();
     await handlerCallGetTransactionsByUser();
     setFinishCallApis(true);
+    setIsVisibleVerification(shouldCustomerBeVerified);
+    setIconVerification({
+      icon: verificationStatusStyle,
+      label: verificationStatus,
+    });
   };
 
   const copiarAlPortapapeles = (text) => {
@@ -923,12 +942,54 @@ const Owner = (props) => {
     return numClabe;
   };
 
+  const handlerCallGetAllUserProfile = async () => {
+    try {
+      const response = await callGetAllUserProfile({
+        idSystemUser: dataProfile.idSystemUser,
+        token: dataProfile.token,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : {};
+      await setDataUserProfile({
+        ...dataProfile,
+        ...responseResult,
+      });
+      const {
+        shouldCustomerBeVerified,
+        verificationStatusStyle,
+        verificationStatus,
+      } = responseResult;
+      setIconVerification({
+        icon: verificationStatusStyle,
+        label: verificationStatus,
+      });
+    } catch (error) {}
+  };
+
   useEffect(() => {
     handlerCalllSyncApis();
   }, []);
 
   return (
     <Content>
+      <CustomValidationUser
+        isVisible={isVisibleVerification}
+        onClose={() => {
+          setIsVisibleVerification(false);
+        }}
+        finished={() => {
+          handlerCallGetAllUserProfile();
+        }}
+        metadata={{
+          idCustomer: dataProfile.idCustomer,
+        }}
+        clientId={dataProfile.clientId}
+        flowId={dataProfile.flowId}
+      />
       <CustomDialog
         isVisibleDialog={dataInvPayment.openModal}
         onClose={() => {
@@ -1553,7 +1614,18 @@ const Owner = (props) => {
       <div className="margin-app-main">
         <div className="top-main-user">
           <div className="welcome-user-main">
-            <h2>Hola, {dataCustomer.shortName}</h2>
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <h2 style={{ marginRight: 5 }}>Hola, {dataCustomer.shortName}</h2>
+              {isEmpty(iconVerification) === false &&
+                isNil(iconVerification) === false && (
+                  <Tooltip
+                    placement="right"
+                    title={`Verificación ${iconVerification.label}`}
+                  >
+                    {IconsProfile[iconVerification.icon]}
+                  </Tooltip>
+                )}
+            </div>
             <span>
               Último inicio de sesión:{" "}
               <strong>{dataCustomer.lastSessionStarted}</strong>
@@ -1702,6 +1774,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callGetAllUserProfile: (data) => dispatch(callGetAllUserProfile(data)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),
   callGetAllCustomerById: (data) => dispatch(callGetAllCustomerById(data)),
   callGetStatsChart: (data) => dispatch(callGetStatsChart(data)),

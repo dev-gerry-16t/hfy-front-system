@@ -7,7 +7,6 @@ import { AuditOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 import IconProfile from "../../../assets/icons/Profile.svg";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomSelectTypeForm from "../../../components/CustomSelectTypeForm";
-import CustomReactMati from "../../../components/customReactMati";
 
 const SectionInfoUser = (props) => {
   const {
@@ -944,22 +943,6 @@ const SectionInfoUser = (props) => {
             </Row>
           )} */}
           <div className="button_actions">
-            <CustomReactMati
-              clientId="612d17a8ebca36001b36d7ab"
-              flowId="612d1d48ebca36001b376f6c"
-              country="mx"
-              loaded={() => {}}
-              product="kyc"
-              metadata={{
-                idTypeForm: dataForm.idTypeForm,
-              }}
-              exited={() => {
-                console.log("exit");
-              }}
-              finished={(detailFinish) => {
-                console.log("finish");
-              }}
-            />
             <button
               type="button"
               onClick={async () => {
