@@ -112,14 +112,27 @@ const SectionCurrentAddress = (props) => {
   }, [dataFormSave]);
 
   useEffect(() => {
-    if (isEmpty(dataZipCodeAdress) === false) {
+    if (
+      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataZipCatalog) === false
+    ) {
+      const neighborhood = dataZipCatalog.find((row) => {
+        return row.idZipCode === dataForm.idZipCode;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setIsOpenInput(true);
+      }
       setDataForm({
         ...dataForm,
         state: dataZipCodeAdress.state,
         city: dataZipCodeAdress.municipality,
       });
     }
-  }, [dataZipCodeAdress]);
+  }, [dataZipCodeAdress, dataZipCatalog]);
 
   return (
     <div className="content-typeform-formulary">
