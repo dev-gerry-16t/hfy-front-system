@@ -187,24 +187,50 @@ const SectionInfoAval = (props) => {
   }, [dataIdTypes, dataFormSave, dataMaritalStatus]);
 
   useEffect(() => {
-    if (isEmpty(dataZipCodeAdress) === false) {
+    if (
+      isEmpty(dataZipCodeAdress) === false &&
+      isEmpty(dataZipCatalog) === false
+    ) {
+      const neighborhood = dataZipCatalog.find((row) => {
+        return row.idZipCode === dataForm.collateralPropertyIdZipCoode;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setIsOpenInput(true);
+      }
       setDataForm({
         ...dataForm,
         collateralPropertyState: dataZipCodeAdress.state,
         collateralPropertyCity: dataZipCodeAdress.municipality,
       });
     }
-  }, [dataZipCodeAdress]);
+  }, [dataZipCodeAdress, dataZipCatalog]);
 
   useEffect(() => {
-    if (isEmpty(dataZipCodeAdressEndorsement) === false) {
+    if (
+      isEmpty(dataZipCodeAdressEndorsement) === false &&
+      isEmpty(dataZipCatalogEndorsement) === false
+    ) {
+      const neighborhood = dataZipCatalogEndorsement.find((row) => {
+        return row.idZipCode === dataForm.endorsementIdZipCode;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setIsOpenInputEndorsement(true);
+      }
       setDataForm({
         ...dataForm,
         endorsementState: dataZipCodeAdressEndorsement.state,
         endorsementCity: dataZipCodeAdressEndorsement.municipality,
       });
     }
-  }, [dataZipCodeAdressEndorsement]);
+  }, [dataZipCodeAdressEndorsement, dataZipCatalogEndorsement]);
 
   const getTypeIdDocument = (type) => {
     let word = "";
