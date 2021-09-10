@@ -257,6 +257,7 @@ const LeadsLandingPage = (props) => {
       dataIndex: "prospectStatus",
       key: "prospectStatus",
       fixed: "right",
+      width: 200,
       render: (status, record) => {
         const style = record.prospectStatusStyle;
         const parseStyle =
