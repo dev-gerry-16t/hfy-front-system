@@ -204,7 +204,7 @@ const Adviser = (props) => {
                 isNil(iconVerification) === false && (
                   <Tooltip
                     placement="right"
-                    title={`Verificación ${iconVerification.label}`}
+                    title={`${iconVerification.label}`}
                   >
                     {IconsProfile[iconVerification.icon]}
                   </Tooltip>
