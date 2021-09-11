@@ -18,7 +18,10 @@ import {
   callUpdateLandingProspectStatus,
   callBulkPotentialAgent,
   callGetPotentialAgentCoincidences,
+  callGetLandingProspectById,
 } from "../../utils/actions/actions";
+import { callGetUsersForAssignment } from "../../utils/actions/catalogActions";
+import SectionDetailLead from "./sections/sectionDetailLead";
 
 const { Content } = Layout;
 
@@ -31,11 +34,16 @@ const LeadsLandingPage = (props) => {
     callUpdateLandingProspectStatus,
     callBulkPotentialAgent,
     callGetPotentialAgentCoincidences,
+    callGetUsersForAssignment,
+    callGetLandingProspectById,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataCoincidencesAdvisor, setDataCoincidencesAdvisor] = useState([]);
   const [dataStats, setDataStats] = useState({});
   const [dataProspectStatus, setDataProspectStatus] = useState([]);
+  const [dataUserAssignStatus, setDataUserAssignStatus] = useState([]);
+  const [openSectionDetail, setOpenSectionDetail] = useState(false);
+  const [dataDetalLead, setDataDetalLead] = useState([]);
 
   const arrayIconst = {
     Tickets,
@@ -97,6 +105,27 @@ const LeadsLandingPage = (props) => {
           ? response.response
           : [];
       setDataCoincidencesAdvisor(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetLandingProspectById = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetLandingProspectById({
+        idSystemUser,
+        idLoginHistory,
+        idLandingProspect: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDetalLead(responseResult);
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",
@@ -170,12 +199,36 @@ const LeadsLandingPage = (props) => {
     }
   };
 
-  const handlerCallUpdateLandingProspectStatus = async (idStatus, id) => {
+  const handlerCallGetUsersForAssignment = async (id = null) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetUsersForAssignment({
+        idSystemUser,
+        idLoginHistory,
+        idLandingProspect: id,
+        type: 1,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataUserAssignStatus(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallUpdateLandingProspectStatus = async (data, id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       await callUpdateLandingProspectStatus(
         {
-          idProspectStatus: idStatus,
+          ...data,
           idSystemUser,
           idLoginHistory,
         },
@@ -200,57 +253,126 @@ const LeadsLandingPage = (props) => {
 
   const columns = [
     {
+      title: "Asignar lead",
+      dataIndex: "idLandingProspect",
+      key: "idLandingProspect",
+      fixed: "right",
+      width: 100,
+      render: (asign, record) => {
+        return (
+          <Dropdown
+            overlay={
+              <Menu onClick={(value, option) => {}}>
+                {isEmpty(dataUserAssignStatus) === false &&
+                  dataUserAssignStatus.map((row) => {
+                    return (
+                      <Menu.Item
+                        key={row.id}
+                        onClick={() => {
+                          handlerCallUpdateLandingProspectStatus(
+                            { assignedToUser: row.id },
+                            record.idLandingProspect
+                          );
+                        }}
+                      >
+                        <a>{row.text}</a>
+                      </Menu.Item>
+                    );
+                  })}
+              </Menu>
+            }
+            trigger={["click"]}
+          >
+            <Button
+              type="primary"
+              shape="round"
+              size="small"
+              onClick={() => {}}
+            >
+              Asignar
+            </Button>
+          </Dropdown>
+        );
+      },
+    },
+    {
+      title: "Atiende",
+      dataIndex: "assignedToUser",
+      key: "assignedToUser",
+      width: 150,
+    },
+    {
       title: "Nombre",
       dataIndex: "fullName",
       key: "fullName",
       width: 200,
+      render: (text, record) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <a
+            onClick={() => {
+              handlerCallGetLandingProspectById(record.idLandingProspect);
+              setOpenSectionDetail(true);
+            }}
+            style={{ marginRight: "5PX" }}
+          >
+            {text}
+          </a>
+        </div>
+      ),
     },
     {
       title: "Teléfono",
       dataIndex: "phoneNumber",
       key: "phoneNumber",
+      width: 100,
     },
     {
       title: "Correo",
       dataIndex: "emailAddress",
       key: "emailAddress",
+      width: 200,
     },
     {
       title: "Recibido el",
       dataIndex: "requestedAt",
       key: "requestedAt",
-      width: 200,
+      width: 150,
     },
     {
       title: "Registrado",
       dataIndex: "registeredAt",
       key: "registeredAt",
-      width: 200,
+      width: 150,
     },
     {
       title: "Prospecto a",
       dataIndex: "prospectType",
       key: "prospectType",
+      width: 100,
     },
     {
       title: "Póliza",
       dataIndex: "policy",
       key: "policy",
+      width: 150,
     },
     {
       title: "Renta",
       dataIndex: "budgeAmount",
       key: "budgeAmount",
+      width: 150,
     },
     {
       title: "Cotización",
       dataIndex: "policyAmount",
       key: "policyAmount",
+      width: 150,
     },
     {
       title: "Atendido por",
       dataIndex: "lastUpdatedBy",
       key: "lastUpdatedBy",
+      width: 200,
     },
     {
       title: "Estatus",
@@ -281,10 +403,11 @@ const LeadsLandingPage = (props) => {
       },
     },
     {
-      title: "Asignar",
+      title: "Estatus de lead",
       dataIndex: "idLandingProspect",
       key: "idLandingProspect",
       fixed: "right",
+      width: 100,
       render: (asign, record) => {
         return (
           <Dropdown
@@ -297,7 +420,7 @@ const LeadsLandingPage = (props) => {
                         key={row.idProspectStatus}
                         onClick={() => {
                           handlerCallUpdateLandingProspectStatus(
-                            row.idProspectStatus,
+                            { idProspectStatus: row.idProspectStatus },
                             record.idLandingProspect
                           );
                         }}
@@ -316,7 +439,7 @@ const LeadsLandingPage = (props) => {
               size="small"
               onClick={() => {}}
             >
-              Asignar
+              Cambiar
             </Button>
           </Dropdown>
         );
@@ -391,6 +514,7 @@ const LeadsLandingPage = (props) => {
     handlerCallGetLandingProspectCoincidences();
     handlerCallGetLandingProspectStats();
     handlerCallGetAllProspectStatus();
+    handlerCallGetUsersForAssignment();
     handlerCallGetPotentialAgentCoincidences();
   }, []);
 
@@ -404,6 +528,14 @@ const LeadsLandingPage = (props) => {
             flexWrap: "wrap",
           }}
         >
+          <SectionDetailLead
+            isDrawerVisible={openSectionDetail}
+            onClose={() => {
+              setOpenSectionDetail(false);
+            }}
+            dataDetalLead={dataDetalLead}
+            dataUserAssignStatus={dataUserAssignStatus}
+          />
           {isEmpty(dataStats) === false &&
             dataStats.map((row) => {
               const style = row.style;
@@ -459,7 +591,7 @@ const LeadsLandingPage = (props) => {
                 className="table-users-hfy"
                 size="small"
                 bordered
-                scroll={{ x: 2000 }}
+                scroll={{ x: 2500 }}
               />
             </div>
           </div>
@@ -526,6 +658,10 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callBulkPotentialAgent(file, data)),
   callGetPotentialAgentCoincidences: (data) =>
     dispatch(callGetPotentialAgentCoincidences(data)),
+  callGetUsersForAssignment: (data) =>
+    dispatch(callGetUsersForAssignment(data)),
+  callGetLandingProspectById: (data) =>
+    dispatch(callGetLandingProspectById(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeadsLandingPage);
