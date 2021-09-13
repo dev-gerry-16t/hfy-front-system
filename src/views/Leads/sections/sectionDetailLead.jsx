@@ -2,17 +2,37 @@ import React, { useState, useEffect } from "react";
 import isNil from "lodash/isNil";
 import moment from "moment";
 import isEmpty from "lodash/isEmpty";
-import { Row, Col, Drawer, Collapse, Menu, Dropdown, Button } from "antd";
+import {
+  Row,
+  Col,
+  Drawer,
+  Collapse,
+  Menu,
+  Dropdown,
+  Button,
+  DatePicker,
+  Timeline,
+} from "antd";
 import { CloseCircleFilled, CheckCircleFilled } from "@ant-design/icons";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const { Panel } = Collapse;
 
 const SectionDetailLead = (props) => {
-  const { isDrawerVisible, onClose, dataDetalLead, dataUserAssignStatus } =
-    props;
+  const {
+    isDrawerVisible,
+    onClose,
+    dataDetalLead,
+    dataUserAssignStatus,
+    onUpdateInformation,
+    dataHistory,
+  } = props;
   const [dataDetailInfoUser, setDataDetailInfoUser] = useState({});
   const [dataDetailCommentUser, setDataDetailCommentUser] = useState([]);
+  const [dataForm, setDataForm] = useState({
+    scheduleAt: null,
+    comment: null,
+  });
 
   const DescriptionItem = ({ title, content }) => (
     <div className="site-description-item-profile-wrapper">
@@ -93,7 +113,18 @@ const SectionDetailLead = (props) => {
                   {isEmpty(dataUserAssignStatus) === false &&
                     dataUserAssignStatus.map((row) => {
                       return (
-                        <Menu.Item key={row.id} onClick={() => {}}>
+                        <Menu.Item
+                          key={row.id}
+                          onClick={async () => {
+                            try {
+                              await onUpdateInformation({
+                                assignedToUser: row.id,
+                                idLandingProspect:
+                                  dataDetailInfoUser.idLandingProspect,
+                              });
+                            } catch (error) {}
+                          }}
+                        >
                           <a>{row.text}</a>
                         </Menu.Item>
                       );
@@ -149,6 +180,14 @@ const SectionDetailLead = (props) => {
             <Row>
               <Col span={12}>
                 <DescriptionItem
+                  title="Fecha de cita"
+                  content={dataDetailInfoUser.scheduleAt}
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <DescriptionItem
                   title="Prospecto a"
                   content={dataDetailInfoUser.prospectType}
                 />
@@ -164,7 +203,7 @@ const SectionDetailLead = (props) => {
               <Col span={12}>
                 <DescriptionItem
                   title="Monto de renta"
-                  content={dataDetailInfoUser.budgeAmount}
+                  content={dataDetailInfoUser.budgeAmountFormat}
                 />
               </Col>
               <Col span={12}>
@@ -177,9 +216,77 @@ const SectionDetailLead = (props) => {
             <Row>
               <Col span={24}>
                 <DescriptionItem
-                  title="Comentario agregado"
+                  title="Comentario del cliente"
                   content={dataDetailInfoUser.additionalComment}
                 />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={12}>
+                <strong>Re-agendar cita</strong>
+                <DatePicker
+                  value={
+                    isNil(dataForm.scheduleAt) === false
+                      ? moment(dataForm.scheduleAt, "YYYY-MM-DDTHH:mm:ss")
+                      : null
+                  }
+                  placeholder="Programar para"
+                  onChange={async (momentFormat, date) => {
+                    const scheduleAtParse = moment(momentFormat).format(
+                      "YYYY-MM-DD HH:mm:ss"
+                    );
+                    setDataForm({
+                      ...dataForm,
+                      scheduleAt: scheduleAtParse,
+                    });
+                    try {
+                      await onUpdateInformation({
+                        scheduleAt: scheduleAtParse,
+                        idLandingProspect: dataDetailInfoUser.idLandingProspect,
+                      });
+                    } catch (error) {}
+                  }}
+                  showTime={{
+                    defaultValue: moment("00:00:00", "HH:mm:ss"),
+                  }}
+                  format="DD MMMM YYYY HH:mm"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={24}>
+                <strong>Agrega un comentario</strong>
+                <textarea
+                  className="textarea-form-modal ant-input"
+                  placeholder="Comentarios"
+                  value={dataForm.comment}
+                  maxlength="1000"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      comment: e.target.value,
+                    });
+                  }}
+                />
+                <Button
+                  type="primary"
+                  shape=""
+                  size="small"
+                  onClick={async () => {
+                    try {
+                      await onUpdateInformation({
+                        comment: dataForm.comment,
+                        idLandingProspect: dataDetailInfoUser.idLandingProspect,
+                      });
+                      setDataForm({
+                        ...dataForm,
+                        comment: "",
+                      });
+                    } catch (error) {}
+                  }}
+                >
+                  Agregar
+                </Button>
               </Col>
             </Row>
             <div
@@ -199,6 +306,68 @@ const SectionDetailLead = (props) => {
                 marginwidth="0"
               />
             </Row>
+          </Panel>
+          <Panel
+            header={<h3 role="title-section">Comentarios Administrador</h3>}
+            key="2"
+          >
+            <div className="panel-comment-user">
+              {isEmpty(dataDetailCommentUser) === false ? (
+                <Timeline>
+                  {dataDetailCommentUser.map((row) => {
+                    return (
+                      <Timeline.Item>
+                        <div>
+                          <p>
+                            <strong>
+                              {row.commentedByUser} | {row.commentedAt}
+                            </strong>
+                          </p>
+                          {row.comment}
+                        </div>
+                      </Timeline.Item>
+                    );
+                  })}
+                </Timeline>
+              ) : (
+                <strong>No has agregado comentarios</strong>
+              )}
+            </div>
+          </Panel>
+          <Panel
+            header={<h3 role="title-section">Historial de cambios</h3>}
+            key="3"
+          >
+            <div className="panel-comment-user">
+              {isEmpty(dataHistory) === false ? (
+                <Timeline>
+                  {dataHistory.map((row) => {
+                    return (
+                      <Timeline.Item>
+                        <div>
+                          <p>
+                            <strong>
+                              {row.createdByUser} | {row.createdAt}
+                            </strong>
+                          </p>
+                          <div
+                            style={{ color: "black !important" }}
+                            dangerouslySetInnerHTML={{
+                              __html:
+                                isNil(row.description) === false
+                                  ? row.description
+                                  : "",
+                            }}
+                          />
+                        </div>
+                      </Timeline.Item>
+                    );
+                  })}
+                </Timeline>
+              ) : (
+                <strong>No has agregado comentarios</strong>
+              )}
+            </div>
           </Panel>
         </Collapse>
       </div>

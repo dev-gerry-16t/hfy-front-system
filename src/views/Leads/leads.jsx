@@ -19,6 +19,7 @@ import {
   callBulkPotentialAgent,
   callGetPotentialAgentCoincidences,
   callGetLandingProspectById,
+  callGetAuditReferences,
 } from "../../utils/actions/actions";
 import { callGetUsersForAssignment } from "../../utils/actions/catalogActions";
 import SectionDetailLead from "./sections/sectionDetailLead";
@@ -36,6 +37,7 @@ const LeadsLandingPage = (props) => {
     callGetPotentialAgentCoincidences,
     callGetUsersForAssignment,
     callGetLandingProspectById,
+    callGetAuditReferences,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataCoincidencesAdvisor, setDataCoincidencesAdvisor] = useState([]);
@@ -44,6 +46,7 @@ const LeadsLandingPage = (props) => {
   const [dataUserAssignStatus, setDataUserAssignStatus] = useState([]);
   const [openSectionDetail, setOpenSectionDetail] = useState(false);
   const [dataDetalLead, setDataDetalLead] = useState([]);
+  const [dataHistory, setDataHistory] = useState([]);
 
   const arrayIconst = {
     Tickets,
@@ -68,6 +71,33 @@ const LeadsLandingPage = (props) => {
         break;
       default:
         break;
+    }
+  };
+
+  const handlerCallGetAuditReferences = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetAuditReferences({
+        idCustomer: null,
+        idCustomerTenant: null,
+        idContract: null,
+        idPersonalReference: null,
+        idSystemUser,
+        idLoginHistory,
+        topIndex: -1,
+        type: 2,
+        idLandingProspect: id,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataHistory(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -237,7 +267,7 @@ const LeadsLandingPage = (props) => {
       await handlerCallGetLandingProspectCoincidences();
       handlerCallGetLandingProspectStats();
       showMessageStatusApi(
-        "Se actualizó correctamente el estatus",
+        "Se actualizó correctamente la información",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
@@ -311,6 +341,7 @@ const LeadsLandingPage = (props) => {
           <a
             onClick={() => {
               handlerCallGetLandingProspectById(record.idLandingProspect);
+              handlerCallGetAuditReferences(record.idLandingProspect);
               setOpenSectionDetail(true);
             }}
             style={{ marginRight: "5PX" }}
@@ -535,6 +566,19 @@ const LeadsLandingPage = (props) => {
             }}
             dataDetalLead={dataDetalLead}
             dataUserAssignStatus={dataUserAssignStatus}
+            dataHistory={dataHistory}
+            onUpdateInformation={async (data) => {
+              try {
+                await handlerCallUpdateLandingProspectStatus(
+                  { ...data },
+                  data.idLandingProspect
+                );
+                await handlerCallGetLandingProspectById(data.idLandingProspect);
+                await handlerCallGetAuditReferences(data.idLandingProspect);
+              } catch (error) {
+                throw error;
+              }
+            }}
           />
           {isEmpty(dataStats) === false &&
             dataStats.map((row) => {
@@ -662,6 +706,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetUsersForAssignment(data)),
   callGetLandingProspectById: (data) =>
     dispatch(callGetLandingProspectById(data)),
+  callGetAuditReferences: (data, id) =>
+    dispatch(callGetAuditReferences(data, id)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LeadsLandingPage);
