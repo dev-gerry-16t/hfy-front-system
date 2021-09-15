@@ -93,10 +93,10 @@ const SectionDetailLead = (props) => {
             }}
           >
             <div>
-              Recibido el dia <strong>{dataDetailInfoUser.receivedAt}</strong>
+              Recibido el dia: <strong>{dataDetailInfoUser.receivedAt}</strong>
             </div>
             <div>
-              Asignado a <strong>{dataDetailInfoUser.assignedTo}</strong>
+              Asignado a: <strong>{dataDetailInfoUser.assignedTo}</strong>
             </div>
           </div>
           <div
@@ -154,7 +154,13 @@ const SectionDetailLead = (props) => {
               <Col span={12}>
                 <DescriptionItem
                   title="Nombre"
-                  content={`${dataDetailInfoUser.givenName} ${dataDetailInfoUser.lastName} ${dataDetailInfoUser.mothersMaidenName}`}
+                  content={
+                    <span>
+                      {dataDetailInfoUser.givenName}{" "}
+                      {dataDetailInfoUser.lastName}{" "}
+                      {dataDetailInfoUser.mothersMaidenName}
+                    </span>
+                  }
                 />
               </Col>
             </Row>
@@ -180,7 +186,7 @@ const SectionDetailLead = (props) => {
             <Row>
               <Col span={12}>
                 <DescriptionItem
-                  title="Fecha de cita"
+                  title="Fecha programada de llamada"
                   content={dataDetailInfoUser.scheduleAt}
                 />
               </Col>
@@ -223,7 +229,7 @@ const SectionDetailLead = (props) => {
             </Row>
             <Row>
               <Col span={12}>
-                <strong>Re-agendar cita</strong>
+                <strong>Re-agendar llamada</strong>
                 <DatePicker
                   value={
                     isNil(dataForm.scheduleAt) === false
