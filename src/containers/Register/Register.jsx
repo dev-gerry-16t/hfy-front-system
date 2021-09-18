@@ -20,6 +20,7 @@ import {
   callGetAllVerifyCode,
   callGetInvitationUser,
 } from "../../utils/actions/actions";
+import { callGetAllCountries } from "../../utils/actions/catalogActions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
@@ -36,6 +37,7 @@ const Register = (props) => {
     callGetAllRegisterUser,
     callGetAllVerifyCode,
     callGetInvitationUser,
+    callGetAllCountries,
   } = props;
   const [userType, setUserType] = useState(null);
   const [aceptTerms, setAceptTerms] = useState(false);
@@ -53,6 +55,7 @@ const Register = (props) => {
   const [configComponents, setConfigComponents] = useState({});
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [dataCountries, setDataCountries] = useState([]);
   const [dataForm, setDataForm] = useState({
     idPersonType: null,
     idEndorsement: null,
@@ -63,6 +66,7 @@ const Register = (props) => {
     username: null,
     password: null,
     idInvitation: null,
+    idCountryNationality: null,
   });
   const recaptchaV3 = useRef(null);
 
@@ -94,6 +98,10 @@ const Register = (props) => {
     errorPersonType: {
       error: false,
       message: "El tipo de persona es requerido",
+    },
+    errorNationality: {
+      error: false,
+      message: "La nacionalidad es requerida",
     },
     errorCodeVerify: {
       error: false,
@@ -145,6 +153,19 @@ const Register = (props) => {
         setConfigComponents(parseResult);
       }
       setUserPerson(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetAllCountries = async () => {
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
+    try {
+      const response = await callGetAllCountries({ type: 2 });
+      const responseResult =
+        isNil(response) === false && isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataCountries(responseResult);
     } catch (error) {}
   };
 
@@ -265,6 +286,16 @@ const Register = (props) => {
       objectErrors = {
         ...objectErrors,
         errorPersonType: { ...objectErrors.errorPersonType, error: true },
+      };
+      validateIdPerson = false;
+    }
+
+    if (isNil(data.idCountryNationality) === false) {
+      validateIdPerson = true;
+    } else {
+      objectErrors = {
+        ...objectErrors,
+        errorNationality: { ...objectErrors.errorNationality, error: true },
       };
       validateIdPerson = false;
     }
@@ -487,6 +518,12 @@ const Register = (props) => {
                     <span>{errorsRegister.errorPersonType.message}</span>
                   </div>
                 )}
+                {errorsRegister.errorNationality.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorNationality.message}</span>
+                  </div>
+                )}
                 {errorsRegister.errorUserName.error && (
                   <div>
                     <img src={admiration} alt="exclaim" />
@@ -616,6 +653,43 @@ const Register = (props) => {
                     }}
                   />
                 )}
+              </div>
+              <div className="register_row">
+                <Select
+                  showSearch
+                  placeholder={`Nacionalidad ${
+                    isNil(dataForm.idPersonType) === false &&
+                    configComponents.lastName === false
+                      ? "del Representante legal"
+                      : ""
+                  }`}
+                  value={dataForm.idCountryNationality}
+                  onChange={(value, option) => {
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                    setDataForm({ ...dataForm, idCountryNationality: value });
+                  }}
+                  style={{ width: "100%" }}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataCountries) === false &&
+                    dataCountries.map((row) => {
+                      return (
+                        <Option
+                          value={row.idCountry}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </div>
               <label className="fieldset_title">
                 {" "}
@@ -757,22 +831,24 @@ const Register = (props) => {
                   type="button"
                   onClick={async () => {
                     try {
-                      const verifyData = await handlerVerifyInformation({
-                        ...dataForm,
-                        verifyPassword,
-                      });
-                      setErrorFormulary(!verifyData);
-                      if (verifyData === true) {
-                        setSpinVisible(true);
-                        const getCaptchaToken =
-                          await recaptchaV3.current.executeAsync();
-                        await handlerCallApiRegister({
+                      if (aceptTerms === true) {
+                        const verifyData = await handlerVerifyInformation({
                           ...dataForm,
-                          idCustomerType: selectuserCustomer,
-                          captchaToken: getCaptchaToken,
+                          verifyPassword,
                         });
-                        setUserType(3);
-                        setSpinVisible(false);
+                        setErrorFormulary(!verifyData);
+                        if (verifyData === true) {
+                          setSpinVisible(true);
+                          const getCaptchaToken =
+                            await recaptchaV3.current.executeAsync();
+                          await handlerCallApiRegister({
+                            ...dataForm,
+                            idCustomerType: selectuserCustomer,
+                            captchaToken: getCaptchaToken,
+                          });
+                          setUserType(3);
+                          setSpinVisible(false);
+                        }
                       }
                     } catch (error) {
                       setSpinVisible(false);
@@ -1106,6 +1182,7 @@ const Register = (props) => {
       setUserType(1);
       handlerAsyncCallAppis();
     }
+    handlerCallGetAllCountries();
   }, []);
 
   return (
@@ -1136,6 +1213,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
   callGetInvitationUser: (paramId) => dispatch(callGetInvitationUser(paramId)),
+  callGetAllCountries: (data) => dispatch(callGetAllCountries(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);
