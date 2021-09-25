@@ -4147,6 +4147,52 @@ const callGetRequestExternalDS = (data) => async (dispatch, getState) => {
   }
 };
 
+const callGlobalActionApi =
+  (data, id, CONSTANT, method = "POST", token = true) =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const { dataProfile } = state;
+    let response;
+    if (token === true) {
+      HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+    }
+    try {
+      const config = { headers: { ...HEADER } };
+      if (method === "POST") {
+        response = await RequesterAxios.post(CONSTANT, data, config);
+      } else if (method === "PUT") {
+        response = await RequesterAxios.put(CONSTANT + id, data, config);
+      }
+      const responseResultStatus =
+        isNil(response) === false && isNil(response.status) === false
+          ? response.status
+          : null;
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.data) === false &&
+        isNil(response.data.response) === false &&
+        isNil(response.data.response.message) === false
+          ? response.data.response.message
+          : null;
+      const responseResultData =
+        isNil(response) === false && isNil(response.data) === false
+          ? response.data
+          : null;
+      if (
+        isNil(responseResultStatus) === false &&
+        responseResultStatus === 200
+      ) {
+        return responseResultData;
+      } else {
+        throw isNil(responseResultMessage) === false
+          ? responseResultMessage
+          : null;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
 export {
   callApiLogin,
   callGetAllCustomers,
@@ -4283,4 +4329,5 @@ export {
   callGetRequestExternalDS,
   callGetTransactionsByUser,
   callGetLandingProspectById,
+  callGlobalActionApi,
 };
