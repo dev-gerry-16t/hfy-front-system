@@ -4147,6 +4147,17 @@ const callGetRequestExternalDS = (data) => async (dispatch, getState) => {
   }
 };
 
+const getTimeZone = () => {
+  var offset = new Date().getTimezoneOffset(),
+    o = Math.abs(offset);
+  return (
+    (offset < 0 ? "+" : "-") +
+    ("00" + Math.floor(o / 60)).slice(-2) +
+    ":" +
+    ("00" + (o % 60)).slice(-2)
+  );
+};
+
 const callGlobalActionApi =
   (data, id, CONSTANT, method = "POST", token = true) =>
   async (dispatch, getState) => {
@@ -4159,7 +4170,11 @@ const callGlobalActionApi =
     try {
       const config = { headers: { ...HEADER } };
       if (method === "POST") {
-        response = await RequesterAxios.post(CONSTANT, data, config);
+        response = await RequesterAxios.post(
+          CONSTANT,
+          { ...data, offset: getTimeZone() },
+          config
+        );
       } else if (method === "PUT") {
         response = await RequesterAxios.put(CONSTANT + id, data, config);
       }

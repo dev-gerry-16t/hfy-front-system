@@ -1,8 +1,7 @@
 import React from "react";
+import NumberFormat from "react-number-format";
 import styled from "styled-components";
 import isNil from "lodash/isNil";
-import { Tooltip } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
 import saqareX from "../assets/icons/saqareX.svg";
 
 const Label = styled.label`
@@ -58,68 +57,50 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const PositionTooltip = styled.div`
-  position: absolute;
-  right: 5px;
-  top: 0;
-`;
-
-const CustomInputTypeForm = (props) => {
+const CustomInputCurrency = (props) => {
   const {
     value,
     id,
-    suffix,
     label,
     placeholder,
     onChange,
-    type,
-    maxLength,
-    minLength,
     error = false,
     errorMessage,
-    info,
   } = props;
   return (
     <ContainerInput>
       <Label error={error}>{label}</Label>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <Input
+      <div>
+        <NumberFormat
           id={isNil(id) === false ? id : null}
           value={value}
-          type={isNil(type) === false ? type : "text"}
-          suffix={isNil(suffix) === false ? suffix : null}
+          error={error}
+          customInput={Input}
+          thousandSeparator=","
+          decimalSeparator="."
+          decimalPrecision={2}
+          allowNegative={false}
+          prefix="$"
+          suffix=""
+          className="inputLogin"
+          floatingLabelText=""
+          isVisible
+          toBlock={false}
+          disable={false}
           placeholder={placeholder}
-          onChange={(e) => {
-            onChange(e.target.value);
+          onValueChange={(values) => {
+            const { formattedValue, valueString, floatValue } = values;
+            onChange(floatValue, valueString, formattedValue);
           }}
+          onClick={(event) => {}}
+          onFocus={(event) => {}}
+          onBlur={(event) => {}}
           onKeyDown={(e) => {
-            if (type === "number") {
-              if (e.keyCode === 109 || e.keyCode === 107) {
-                e.preventDefault();
-              }
+            if (e.keyCode === 109 || e.keyCode === 107) {
+              e.preventDefault();
             }
           }}
-          maxLength={isNil(maxLength) === false ? maxLength : null}
-          minLength={isNil(minLength) === false ? minLength : null}
-          error={error}
         />
-        {isNil(info) === false && (
-          <PositionTooltip>
-            <Tooltip placement="top" title={info}>
-              <div
-                style={{
-                  padding: "5px 0px 0px 5px",
-                }}
-              >
-                <QuestionCircleOutlined />
-              </div>
-            </Tooltip>
-          </PositionTooltip>
-        )}
         <ErrorMessage error={error}>
           <img src={saqareX} alt="exclaim" />
           <span>{errorMessage}</span>
@@ -129,4 +110,4 @@ const CustomInputTypeForm = (props) => {
   );
 };
 
-export default CustomInputTypeForm;
+export default CustomInputCurrency;

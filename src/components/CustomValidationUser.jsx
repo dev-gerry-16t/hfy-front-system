@@ -248,9 +248,20 @@ const CustomValidationUser = (props) => {
               Para continuar con el proceso es necesario tener a la mano los
               siguientes documentos:
             </span>
+
             <ul style={{ fontSize: 12, marginTop: 10 }}>
-              <li>Identificación oficial (INE/IFE o Pasaporte).</li>
-              <li>Comprobante de domicilio.</li>
+              <li>
+                Identificación Oficial (IFE, INE, FM3 o Pasaporte en el caso de
+                extranjeros).
+              </li>
+              <li>
+                Comprobante de Domicilio (Recibo de Luz, Agua, Teléfono,
+                Internet o TV).
+              </li>
+              <li>
+                No se acepta como comprobante de domicilio estados de cuenta
+                bancarios.
+              </li>
             </ul>
           </div>
           <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>

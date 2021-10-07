@@ -30,6 +30,10 @@ const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
 const Transactions = React.lazy(() => import("./views/Payments/payments"));
+const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
+const EditProfileUsers = React.lazy(() =>
+  import("./views/Profile/editProfileUsers")
+);
 
 const routes = [
   {
@@ -190,6 +194,22 @@ const routes = [
     path: "/websystem/dashboard-transactions",
     name: "Transacciones",
     component: Transactions,
+    exact: true,
+  },
+  {
+    key: "19",
+    id: "Transacciones",
+    path: "/websystem/profile",
+    name: "ProfileUsers",
+    component: ProfileUsers,
+    exact: true,
+  },
+  {
+    key: "20",
+    id: "Transacciones",
+    path: "/websystem/edit-profile",
+    name: "ProfileUsers",
+    component: EditProfileUsers,
     exact: true,
   },
 ];

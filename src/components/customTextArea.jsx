@@ -1,8 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import isNil from "lodash/isNil";
-import { Tooltip } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
 import saqareX from "../assets/icons/saqareX.svg";
 
 const Label = styled.label`
@@ -16,7 +14,7 @@ const ContainerInput = styled.div`
   font-family: Poppins;
 `;
 
-const Input = styled.input`
+const TextArea = styled.textarea`
   padding: 5px 6px;
   border-radius: 5px;
   background: transparent;
@@ -58,13 +56,7 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const PositionTooltip = styled.div`
-  position: absolute;
-  right: 5px;
-  top: 0;
-`;
-
-const CustomInputTypeForm = (props) => {
+const CustomTextArea = (props) => {
   const {
     value,
     id,
@@ -77,17 +69,12 @@ const CustomInputTypeForm = (props) => {
     minLength,
     error = false,
     errorMessage,
-    info,
   } = props;
   return (
     <ContainerInput>
       <Label error={error}>{label}</Label>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <Input
+      <div>
+        <TextArea
           id={isNil(id) === false ? id : null}
           value={value}
           type={isNil(type) === false ? type : "text"}
@@ -107,19 +94,6 @@ const CustomInputTypeForm = (props) => {
           minLength={isNil(minLength) === false ? minLength : null}
           error={error}
         />
-        {isNil(info) === false && (
-          <PositionTooltip>
-            <Tooltip placement="top" title={info}>
-              <div
-                style={{
-                  padding: "5px 0px 0px 5px",
-                }}
-              >
-                <QuestionCircleOutlined />
-              </div>
-            </Tooltip>
-          </PositionTooltip>
-        )}
         <ErrorMessage error={error}>
           <img src={saqareX} alt="exclaim" />
           <span>{errorMessage}</span>
@@ -129,4 +103,4 @@ const CustomInputTypeForm = (props) => {
   );
 };
 
-export default CustomInputTypeForm;
+export default CustomTextArea;

@@ -1,8 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import isNil from "lodash/isNil";
-import { Tooltip } from "antd";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import isEmpty from "lodash/isEmpty";
 import saqareX from "../assets/icons/saqareX.svg";
 
 const Label = styled.label`
@@ -10,13 +9,13 @@ const Label = styled.label`
   margin-left: 10px;
 `;
 
-const ContainerInput = styled.div`
+const ContainerSelect = styled.div`
   display: flex;
   flex-direction: column;
   font-family: Poppins;
 `;
 
-const Input = styled.input`
+const Select = styled.select`
   padding: 5px 6px;
   border-radius: 5px;
   background: transparent;
@@ -58,75 +57,49 @@ const ErrorMessage = styled.div`
   }
 `;
 
-const PositionTooltip = styled.div`
-  position: absolute;
-  right: 5px;
-  top: 0;
-`;
-
-const CustomInputTypeForm = (props) => {
+const CustomSelect = (props) => {
   const {
     value,
     id,
-    suffix,
+    data,
     label,
     placeholder,
     onChange,
-    type,
-    maxLength,
-    minLength,
     error = false,
     errorMessage,
-    info,
   } = props;
   return (
-    <ContainerInput>
+    <ContainerSelect>
       <Label error={error}>{label}</Label>
-      <div
-        style={{
-          position: "relative",
-        }}
-      >
-        <Input
+      <div>
+        <Select
           id={isNil(id) === false ? id : null}
           value={value}
-          type={isNil(type) === false ? type : "text"}
-          suffix={isNil(suffix) === false ? suffix : null}
           placeholder={placeholder}
-          onChange={(e) => {
-            onChange(e.target.value);
+          onChange={(e, a) => {
+            const dataOption = data.find((row) => {
+              return row.id === e.target.value;
+            });
+            onChange(e.target.value, dataOption);
           }}
-          onKeyDown={(e) => {
-            if (type === "number") {
-              if (e.keyCode === 109 || e.keyCode === 107) {
-                e.preventDefault();
-              }
-            }
-          }}
-          maxLength={isNil(maxLength) === false ? maxLength : null}
-          minLength={isNil(minLength) === false ? minLength : null}
           error={error}
-        />
-        {isNil(info) === false && (
-          <PositionTooltip>
-            <Tooltip placement="top" title={info}>
-              <div
-                style={{
-                  padding: "5px 0px 0px 5px",
-                }}
-              >
-                <QuestionCircleOutlined />
-              </div>
-            </Tooltip>
-          </PositionTooltip>
-        )}
+        >
+          <option disabled selected value="">
+            -- Selecciona una opción --
+          </option>
+          {isNil(data) === false &&
+            isEmpty(data) === false &&
+            data.map((row) => {
+              return <option value={row.id}>{row.text}</option>;
+            })}
+        </Select>
         <ErrorMessage error={error}>
           <img src={saqareX} alt="exclaim" />
           <span>{errorMessage}</span>
         </ErrorMessage>
       </div>
-    </ContainerInput>
+    </ContainerSelect>
   );
 };
 
-export default CustomInputTypeForm;
+export default CustomSelect;
