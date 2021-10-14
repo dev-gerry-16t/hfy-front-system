@@ -16,7 +16,7 @@ const CustomStepsHomify = (props) => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                onClick(index);
+                onClick(index, row);
               }}
             >
               <div
@@ -28,7 +28,7 @@ const CustomStepsHomify = (props) => {
                 style={{ alignItems: "center" }}
               >
                 <i
-                  className={row.icon}
+                  className={row.style}
                   style={{
                     color: current === index ? "#fff" : "#A0A3BD",
                   }}
@@ -36,12 +36,11 @@ const CustomStepsHomify = (props) => {
               </div>
               <span
                 style={{
-                  visibility: current !== index ? "visible" : "hidden",
-                  color: "#d6d8e7",
+                  color: current !== index ? "#d6d8e7" : "var(--color-primary)",
                 }}
                 className="title-steps-typeform"
               >
-                {row.title}
+                {row.tab}
               </span>
             </div>
           );

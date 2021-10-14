@@ -1,6 +1,7 @@
 import React from "react";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 
 const CardInformation = styled.div`
   display: grid;
@@ -85,6 +86,9 @@ const WidgetInformation = (props) => {
     occupationActivity,
     citizenId,
     taxId,
+    bucketSource,
+    idDocument,
+    thumbnail,
   } = props;
 
   const handlerSplitElement = (toSplit) => {
@@ -120,10 +124,23 @@ const WidgetInformation = (props) => {
   return (
     <CardInformation>
       <TopCardInformation>
-        <img
-          src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg"
-          alt="Perfil"
-        />
+        <div
+          style={{
+            width: 120,
+            height: 120,
+            overflow: "hidden",
+          }}
+        >
+          <img
+            src={
+              isNil(idDocument) === false && isNil(bucketSource) === false
+                ? `${ENVIROMENT}/api/viewFile/${idDocument}/${bucketSource}`
+                : thumbnail
+            }
+            alt="Perfil"
+            width="120"
+          />
+        </div>
         <h1>{fullName}</h1>
         <span>{labelTenant}</span>
         <div>

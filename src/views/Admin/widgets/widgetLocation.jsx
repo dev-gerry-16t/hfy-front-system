@@ -30,7 +30,7 @@ const WidgetLocation = ({ matiURLGMaps }) => {
       <div className="map-location">
         <iframe
           id="gmap_canvas"
-          src={matiURLGMaps+"om=18"}
+          src={matiURLGMaps}
           frameborder="0"
           scrolling="no"
           marginheight="0"

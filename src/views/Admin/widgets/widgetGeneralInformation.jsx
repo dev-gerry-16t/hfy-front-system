@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
-import Fade from "react-reveal/Fade";
 import CustomStepsHomify from "../../../components/customStepsHomify";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
 
 const CardGeneralInformation = styled.div`
   background: #fff;
@@ -18,6 +24,7 @@ const CardGeneralInformation = styled.div`
 `;
 
 const CardInformation = styled.div`
+  margin-top: 1.5em;
   font-size: 0.8em;
   display: flex;
   justify-content: center;
@@ -26,6 +33,7 @@ const CardInformation = styled.div`
     .data-information {
       display: flex;
       justify-content: space-between;
+      border-bottom: 1px solid #D6D7E8;
     }
   }
 `;
@@ -39,40 +47,128 @@ const Info = ({ field, value }) => {
   );
 };
 
-const WidgetGeneralInformation = () => {
+const WidgetGeneralInformation = (props) => {
+  const {
+    callGlobalActionApi,
+    idCustomer,
+    idInvestigationProcess,
+    dataProfile,
+  } = props;
   const [current, setCurrent] = useState(0);
-  const [viewAvailable, setViewAvailable] = useState(true);
+  const [dataInfo, setDataInfo] = useState([]);
+  const [dataTabs, setDataTabs] = useState([]);
+  const frontFunctions = new FrontFunctions();
 
-  const steps = [
-    { title: "Información personal", icon: "fa fa-user-o" },
-    { title: "Domicilio", icon: "fa fa-home" },
-  ];
+  const handlerCallGetCustomerTabById = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TAB_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      const firstTab =
+        isEmpty(responseResult) === false && isNil(responseResult[0]) === false
+          ? responseResult[0]
+          : 1;
+      // const filterData =
+      //   isEmpty(responseResult) === false
+      //     ? responseResult.filter((row) => {
+      //         return row.includesRepository === false;
+      //       })
+      //     : [];
+      handlerCallGetCustomerDataByTab(firstTab.identifier);
+      setDataTabs(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetCustomerDataByTab = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idInvestigationProcess,
+          identifier: id,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_DATA_BY_TAB
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataInfo(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    handlerCallGetCustomerTabById();
+  }, []);
   return (
     <CardGeneralInformation>
       <h1>Información general</h1>
       <CustomStepsHomify
-        steps={steps}
-        onClick={(index) => {
+        steps={dataTabs}
+        onClick={(index, record) => {
           setCurrent(index);
-          setViewAvailable(false);
-          setTimeout(() => {
-            setViewAvailable(true);
-          }, 800);
+          handlerCallGetCustomerDataByTab(record.identifier);
         }}
         current={current}
       />
-      <Fade when={viewAvailable}>
-        <CardInformation>
-          <div className="content-info">
-            <Info field="Nombre" value="Gerardo" />
-            <Info field="Apellido paterno" value="Gonzalez" />
-            <Info field="Apellido materno" value="Jimenez" />
-            <Info field="Genero" value="Masculino" />
-          </div>
-        </CardInformation>
-      </Fade>
+      <CardInformation>
+        <div className="content-info">
+          {isEmpty(dataInfo) === false &&
+            dataInfo.map((row) => {
+              return (
+                <Info
+                  field={row.typeFormProperty}
+                  value={row.typeFormPropertyValue}
+                />
+              );
+            })}
+        </div>
+      </CardInformation>
     </CardGeneralInformation>
   );
 };
 
-export default WidgetGeneralInformation;
+const mapStateToProps = (state) => {
+  const { dataProfile } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant) =>
+    dispatch(callGlobalActionApi(data, id, constant)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(WidgetGeneralInformation);

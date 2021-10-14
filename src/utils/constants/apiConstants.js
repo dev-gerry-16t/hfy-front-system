@@ -62,6 +62,7 @@ const API_CONSTANTS = {
     GET_CUSTOMER_TAB_BY_ID: `${API.CUSTOMER}/customer/getCustomerTabById`,
     GET_INVESTIGATION_PROCESS_COINCIDENCES: `${API.CUSTOMER}/investigation/getInvestigationProcessCoincidences`,
     GET_INVESTIGATION_PROCESS_BY_ID: `${API.CUSTOMER}/investigation/getInvestigationProcessById`,
+    GET_CUSTOMER_DATA_BY_TAB: `${API.CUSTOMER}/investigation/getCustomerDataByTab`,
   },
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
   GET_CONFIRM_PAYMENT_INTENT: `${API.API_SECURE}${API.PROVIDERS}/getConfirmPaymentIntent`,

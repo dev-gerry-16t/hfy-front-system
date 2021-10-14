@@ -25,7 +25,7 @@ const Content = styled.div`
 `;
 
 const ContentsTop = styled.div`
-  height: 50vh;
+  height: 53vh;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   column-gap: 0.5em;
@@ -78,7 +78,11 @@ const ContentLocation = styled.div`
 
 const UserDetailInformation = (props) => {
   const { callGlobalActionApi, dataProfile, match } = props;
+  const { params } = match;
+
   const [dataDetail, setDataDetail] = useState([]);
+  const [dataRelatioshipTypes, setDataRelatioshipTypes] = useState([]);
+  const [dataReferenceStatus, setDataReferenceStatus] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetInvestigationProcessById = async (id) => {
@@ -109,9 +113,60 @@ const UserDetailInformation = (props) => {
     }
   };
 
+  const handlerCallGetAllRelationshipTypes = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_RELATIONSHIP_TYPES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataRelatioshipTypes(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPersonalReferencesStatus = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_PERSONAL_REFERENCE_STATUS
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataReferenceStatus(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
-    const { params } = match;
     handlerCallGetInvestigationProcessById(params.idInvestigationProcess);
+    handlerCallGetAllRelationshipTypes();
+    handlerCallGetAllPersonalReferencesStatus();
   }, []);
 
   return (
@@ -131,10 +186,25 @@ const UserDetailInformation = (props) => {
             taxId,
             score,
             matiURLGMaps,
+            idCustomer,
+            customerDocument,
+            matiDashboardUrl,
+            matiFinichedAt,
+            matiStartedAt,
+            matiVerificationNo,
+            matiVerificationStatus,
+            matiVerificationStatusStyle,
+            bucketSource,
+            idDocument,
+            thumbnail,
           } = row;
           const dataReferences =
             isEmpty(personalReferences) === false
               ? JSON.parse(personalReferences)
+              : [];
+          const dataDocument =
+            isEmpty(customerDocument) === false
+              ? JSON.parse(customerDocument)
               : [];
           return (
             <div>
@@ -150,16 +220,36 @@ const UserDetailInformation = (props) => {
                     occupationActivity={occupationActivity}
                     citizenId={citizenId}
                     taxId={taxId}
+                    bucketSource={bucketSource}
+                    idDocument={idDocument}
+                    thumbnail={thumbnail}
                   />
                 </ContentInformation>
                 <ContentVerification>
-                  <WidgetVerification />
+                  <WidgetVerification
+                    matiDashboardUrl={matiDashboardUrl}
+                    matiFinichedAt={matiFinichedAt}
+                    matiStartedAt={matiStartedAt}
+                    matiVerificationNo={matiVerificationNo}
+                    matiVerificationStatus={matiVerificationStatus}
+                    matiVerificationStatusStyle={matiVerificationStatusStyle}
+                  />
                 </ContentVerification>
                 <ContentReferences>
-                  <WidgetReferences dataReferences={dataReferences} />
+                  <WidgetReferences
+                    dataReferences={dataReferences}
+                    dataRelatioshipTypes={dataRelatioshipTypes}
+                    dataReferenceStatus={dataReferenceStatus}
+                    idInvestigationProcess={params.idInvestigationProcess}
+                    updateDetailUser={() => {
+                      handlerCallGetInvestigationProcessById(
+                        params.idInvestigationProcess
+                      );
+                    }}
+                  />
                 </ContentReferences>
                 <ContentDocument>
-                  <WidgetDocuments />
+                  <WidgetDocuments dataDocument={dataDocument} />
                 </ContentDocument>
               </ContentsTop>
               <ContentsBottom>
@@ -167,7 +257,10 @@ const UserDetailInformation = (props) => {
                   <WidgetInvestigation score={score} />
                 </ContentInvestigation>
                 <ContentGeneralInformation>
-                  <WidgetGeneralInformation />
+                  <WidgetGeneralInformation
+                    idCustomer={idCustomer}
+                    idInvestigationProcess={params.idInvestigationProcess}
+                  />
                 </ContentGeneralInformation>
                 <ContentLocation>
                   <WidgetLocation matiURLGMaps={matiURLGMaps} />

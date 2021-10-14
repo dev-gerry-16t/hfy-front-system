@@ -1,5 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
+import WidgetReferenceModal from "./widgetReferenceModal";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
 
 const CardReferences = styled.div`
   display: grid;
@@ -83,18 +91,38 @@ const Card = (props) => {
     fullName,
     emailAddress,
     phoneNumber,
-    relationshipType,
     canBeEvaluated,
+    score,
+    referenceType,
+    onClick,
   } = props;
+
+  const number_format = (amount, decimals) => {
+    amount = parseFloat(amount.replace(/[^0-9\.]/g, ""));
+    decimals = decimals || 0;
+    if (isNaN(amount) || amount === 0) return parseFloat(0).toFixed(decimals);
+    amount = "" + amount.toFixed(decimals);
+
+    let amount_parts = amount.split("."),
+      regexp = /(\d+)(\d{2})/;
+
+    while (regexp.test(amount_parts[0]))
+      amount_parts[0] = amount_parts[0].replace(regexp, "$1" + "-" + "$2");
+
+    return amount_parts.join(".");
+  };
+
   return (
     <CardInformation>
       <div className="top-card-info">
         <div className="score-reference">
-          <div>
-            <span>4.3</span>
-          </div>
+          {isNil(score) === false && (
+            <div>
+              <span>{score}</span>
+            </div>
+          )}
         </div>
-        <div className="type-user-reference">{relationshipType}</div>
+        <div className="type-user-reference">{referenceType}</div>
         <div></div>
       </div>
       <div className="middle-card-info">
@@ -108,29 +136,137 @@ const Card = (props) => {
         </div>
         <div>
           <i className="fa fa-phone" />
-          <span>{phoneNumber}</span>
+          <span>{number_format(phoneNumber)}</span>
         </div>
       </div>
       {canBeEvaluated === true && (
         <div className="bottom-card-info">
-          <button>Calificar</button>
+          <button onClick={onClick}>Ver</button>
         </div>
       )}
     </CardInformation>
   );
 };
 
-const WidgetReferences = ({ dataReferences }) => {
+const WidgetReferences = ({
+  dataReferences,
+  dataProfile,
+  callGlobalActionApi,
+  dataRelatioshipTypes,
+  dataReferenceStatus,
+  idInvestigationProcess,
+  updateDetailUser,
+}) => {
+  const [dataForm, setDataForm] = useState({});
+  const [dataHistory, setDataHistory] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetAuditReferences = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer: null,
+          idCustomerTenant: null,
+          idContract: null,
+          idPersonalReference: id,
+          idSystemUser,
+          idLoginHistory,
+          topIndex: -1,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.GET_AUDIT_REFERENCES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataHistory(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallUpdatePersonalReferences = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          ...data,
+          idSystemUser,
+          idLoginHistory,
+          idInvestigationProcess,
+        },
+        data.idPersonalReference,
+        API_CONSTANTS.SET_PERSONAL_REFERENCE_FORM,
+        "PUT"
+      );
+      updateDetailUser();
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   return (
     <CardReferences>
       <h1>Referencias</h1>
+      <WidgetReferenceModal
+        isModalVisible={isModalVisible}
+        dataForm={dataForm}
+        setDataForm={(data) => {
+          setDataForm(data);
+        }}
+        dataRelatioshipTypes={dataRelatioshipTypes}
+        dataHistory={dataHistory}
+        dataReferenceStatus={dataReferenceStatus}
+        onSaveDataScore={async (data) => {
+          try {
+            await handlerCallUpdatePersonalReferences(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        setIsModalVisible={(status) => {
+          setIsModalVisible(status);
+        }}
+      />
       <SectionCardInfoReference>
         {dataReferences.map((row) => {
-          return <Card {...row} />;
+          return (
+            <Card
+              {...row}
+              onClick={() => {
+                handlerCallGetAuditReferences(row.idPersonalReference);
+                setDataForm({ ...row });
+                setIsModalVisible(true);
+              }}
+            />
+          );
         })}
       </SectionCardInfoReference>
     </CardReferences>
   );
 };
 
-export default WidgetReferences;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(WidgetReferences);
