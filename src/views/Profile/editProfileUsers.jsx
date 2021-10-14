@@ -6,19 +6,23 @@ import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../utils/actions/actions";
-import CustomSelect from "../../components/CustomSelect";
 import ContextProfile from "./context/contextProfile";
-import SectionBankInformation from "./sections/sectionBankInformation";
-import SectionCurrentAddress from "./sections/sectionCurrentAddress";
-import SectionCurrentWork from "./sections/sectionCurrentWork";
-import SectionPersonalInformation from "./sections/sectionPersonalInformation";
-import SectionReferences from "./sections/sectionReferencies";
+import SectionPersonalInformationTenant from "./sections/PersonalInformation/sectionPersonalInformationTenant";
+import SectionPersonalInformationTenantMoral from "./sections/PersonalInformation/sectionPersonalInformationTenantMoral";
+import SectionPersonalInformationOwner from "./sections/PersonalInformation/sectionPersonalInformationOwner";
+import SectionPersonalInformationOwnerMoral from "./sections/PersonalInformation/sectionPersonalInformationOwnerMoral";
+import SectionCurrentAddressTenant from "./sections/CurrentAddress/sectionCurrentAddressTenant";
+import SectionCurrentAddress from "./sections/CurrentAddress/sectionCurrentAddress";
+import SectionReferences from "./sections/References/sectionReferencies";
+import SectionCurrentWorkTenant from "./sections/CurrentWork/sectionCurrentWorkTenant";
+import SectionCurrentWorkTenantMoral from "./sections/CurrentWork/sectionCurrentWorkTenantMoral";
+import SectionBankInformation from "./sections/BankInformation/sectionBankInformation";
 
 const EditProfileUsers = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
-  const [dataUserType, setDataUserType] = useState(null);
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
-
+  const [dataTabs, setDataTabs] = useState([]);
+  const [dataConfigForm, setDataConfigForm] = useState({});
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetCustomerData = async () => {
@@ -50,8 +54,36 @@ const EditProfileUsers = (props) => {
     }
   };
 
+  const handlerCallGetCustomerTabById = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TAB_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataTabs(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     handlerCallGetCustomerData();
+    handlerCallGetCustomerTabById();
   }, []);
 
   return (
@@ -61,53 +93,118 @@ const EditProfileUsers = (props) => {
         overflowY: "scroll",
       }}
     >
-      <CustomSelect
-        value={dataUserType}
-        placeholder=""
-        label="Tipo de Usuario"
-        data={[
-          {
-            id: 1,
-            text: "Inquilino persona fisica",
-          },
-          {
-            id: 2,
-            text: "Inquilino persona moral",
-          },
-          {
-            id: 3,
-            text: "Propietario persona fisica",
-          },
-          {
-            id: 4,
-            text: "Propietario persona moral",
-          },
-        ]}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataUserType(value);
-        }}
-      />
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(6,1fr)",
+      <ContextProfile.Provider
+        value={{
+          dataCustomerDetail,
         }}
       >
-        <ContextProfile.Provider
-          value={{
-            dataCustomerDetail,
-            dataUserType,
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(6,1fr)",
+            columnGap: 2,
+            padding: "15px",
           }}
         >
-          <SectionPersonalInformation />
-          <SectionCurrentAddress />
-          <SectionCurrentWork />
-          <SectionBankInformation />
-          <SectionReferences />
-        </ContextProfile.Provider>
-      </div>
+          <div>
+            {isEmpty(dataTabs) === false &&
+              dataTabs.map((row) => {
+                return (
+                  <div>
+                    <button
+                      onClick={() => {
+                        setDataConfigForm(row);
+                      }}
+                    >
+                      {row.tab}
+                    </button>
+                  </div>
+                );
+              })}
+          </div>
+          <div
+            style={{
+              background: "white",
+              borderRadius: 5,
+              gridColumn: "2/5",
+            }}
+          >
+            {/*Inquilino Persona fisica */}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 1 && (
+                <SectionPersonalInformationTenant />
+              )}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 3 && <SectionCurrentWorkTenant />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 4 && <SectionReferences />}
+            {/*Inquilino Persona fisica */}
+
+            {/*Inquilino Persona moral */}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 1 && (
+                <SectionPersonalInformationTenantMoral />
+              )}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 3 && <SectionCurrentWorkTenantMoral />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 1 &&
+              dataConfigForm.idTab === 4 && <SectionReferences />}
+            {/*Inquilino Persona moral */}
+
+            {/*Propietario Persona fisica */}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 1 && <SectionPersonalInformationOwner />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === false &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 2 && <SectionBankInformation />}
+            {/*Propietario Persona fisica */}
+
+            {/*Propietario Persona moral */}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 1 && (
+                <SectionPersonalInformationOwnerMoral />
+              )}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+            {isEmpty(dataConfigForm) === false &&
+              dataConfigForm.requiresEntInfo === true &&
+              dataConfigForm.idCustomerType === 2 &&
+              dataConfigForm.idTab === 2 && <SectionBankInformation />}
+            {/*Propietario Persona moral */}
+          </div>
+        </div>
+      </ContextProfile.Provider>
     </div>
   );
 };

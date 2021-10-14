@@ -2,12 +2,12 @@ import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
-import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
-import { callGlobalActionApi } from "../../../utils/actions/actions";
-import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
-import ContextProfile from "../context/contextProfile";
+import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../../utils/actions/actions";
+import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
+import ContextProfile from "../../context/contextProfile";
 
 const SectionBankInformation = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
@@ -23,7 +23,7 @@ const SectionBankInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataUserType } = dataContexProfile;
+  const { dataCustomerDetail } = dataContexProfile;
 
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -89,8 +89,33 @@ const SectionBankInformation = (props) => {
     }
   };
 
-  const formTenantUser = (
-    <>
+  const handlerSetStateDataDetail = (data) => {
+    const { idBank, bankBranch, accountHolder, accountNumber, clabeNumber } =
+      data;
+    setDataForm({
+      idBank,
+      bankBranch,
+      accountHolder,
+      accountNumber,
+      clabeNumber,
+    });
+    handlerCallBankCatalog(clabeNumber);
+  };
+
+  useEffect(() => {
+    if (isEmpty(dataCustomerDetail) === false) {
+      handlerSetStateDataDetail(dataCustomerDetail);
+    }
+  }, [dataCustomerDetail]);
+
+  return (
+    <div
+      style={{
+        width: 200,
+        fontSize: 12,
+      }}
+    >
+      <h1>Información bancaria</h1>
       <CustomInputTypeForm
         value={dataForm.clabeNumber}
         placeholder=""
@@ -163,57 +188,6 @@ const SectionBankInformation = (props) => {
         }}
         type="number"
       />
-    </>
-  );
-
-  const typeFormUser = (userType) => {
-    let component = <div />;
-    switch (userType) {
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-        component = formTenantUser;
-        break;
-      default:
-        component = <div />;
-
-        break;
-    }
-    return component;
-  };
-
-  const handlerSetStateDataDetail = (data) => {
-    const { idBank, bankBranch, accountHolder, accountNumber, clabeNumber } =
-      data;
-    setDataForm({
-      idBank,
-      bankBranch,
-      accountHolder,
-      accountNumber,
-      clabeNumber,
-    });
-    handlerCallBankCatalog(clabeNumber);
-  };
-
-  useEffect(() => {
-    if (
-      isEmpty(dataContexProfile) === false &&
-      isEmpty(dataContexProfile.dataCustomerDetail) === false
-    ) {
-      handlerSetStateDataDetail(dataContexProfile.dataCustomerDetail);
-    }
-  }, [dataContexProfile]);
-
-  return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Información bancaria</h1>
-      {typeFormUser(dataUserType)}
       <button
         onClick={() => {
           handlerCallUpdateCustomerAccount({ ...dataForm, idBank });

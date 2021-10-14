@@ -2,15 +2,15 @@ import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
-import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
-import FrontFunctions from "../../../utils/actions/frontFunctions";
-import { callGlobalActionApi } from "../../../utils/actions/actions";
-import CustomInputCurrency from "../../../components/customInputCurrency";
-import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
-import CustomSelect from "../../../components/CustomSelect";
-import CustomTextArea from "../../../components/customTextArea";
-import ContextProfile from "../context/contextProfile";
+import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../../utils/actions/actions";
+import CustomInputCurrency from "../../../../components/customInputCurrency";
+import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
+import CustomSelect from "../../../../components/CustomSelect";
+import CustomTextArea from "../../../../components/customTextArea";
+import ContextProfile from "../../context/contextProfile";
 
 const SectionCurrentWork = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
@@ -35,7 +35,7 @@ const SectionCurrentWork = (props) => {
   const [dataOccupations, setDataOccupations] = useState([]);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataUserType } = dataContexProfile;
+  const { dataCustomerDetail } = dataContexProfile;
 
   const hanlderCallGetOccupations = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -67,8 +67,63 @@ const SectionCurrentWork = (props) => {
     hanlderCallGetOccupations();
   };
 
-  const formTenantUser = (
-    <>
+  const handlerSetStateDataDetail = (data) => {
+    const {
+      idOccupationActivity,
+      economicDependents,
+      companyName,
+      currentSalary,
+      antiquityTimeRange,
+      antiquity,
+      bossName,
+      bossEmailAddress,
+      bossPhoneNumber,
+      otherIncomes,
+      otherIncomesDescription,
+      hasCar,
+      carriagePlate,
+      nIV,
+      isCCAccepted,
+      cCDigitalSignature,
+    } = data;
+    setDataForm({
+      idOccupationActivity,
+      economicDependents,
+      companyName,
+      currentSalary,
+      antiquityTimeRange,
+      antiquity,
+      bossName,
+      bossEmailAddress,
+      bossPhoneNumber,
+      otherIncomes,
+      otherIncomesDescription,
+      hasCar,
+      carriagePlate,
+      nIV,
+      isCCAccepted,
+      cCDigitalSignature,
+    });
+  };
+
+  useEffect(() => {
+    if (isEmpty(dataCustomerDetail) === false) {
+      handlerSetStateDataDetail(dataCustomerDetail);
+    }
+  }, [dataContexProfile]);
+
+  useEffect(() => {
+    handlerCallInitApis();
+  }, []);
+
+  return (
+    <div
+      style={{
+        width: 200,
+        fontSize: 12,
+      }}
+    >
+      <h1>Información económica y laboral</h1>
       <CustomSelect
         value={dataForm.idOccupationActivity}
         placeholder=""
@@ -193,84 +248,6 @@ const SectionCurrentWork = (props) => {
       <h1>Documentos</h1>
       <div>3 estados de cuenta</div>
       <div>Carta laboral</div>
-    </>
-  );
-
-  const typeFormUser = (userType) => {
-    let component = <div />;
-    switch (userType) {
-      case "1":
-        component = formTenantUser;
-        break;
-      default:
-        component = <div />;
-
-        break;
-    }
-    return component;
-  };
-
-  const handlerSetStateDataDetail = (data) => {
-    const {
-      idOccupationActivity,
-      economicDependents,
-      companyName,
-      currentSalary,
-      antiquityTimeRange,
-      antiquity,
-      bossName,
-      bossEmailAddress,
-      bossPhoneNumber,
-      otherIncomes,
-      otherIncomesDescription,
-      hasCar,
-      carriagePlate,
-      nIV,
-      isCCAccepted,
-      cCDigitalSignature,
-    } = data;
-    setDataForm({
-      idOccupationActivity,
-      economicDependents,
-      companyName,
-      currentSalary,
-      antiquityTimeRange,
-      antiquity,
-      bossName,
-      bossEmailAddress,
-      bossPhoneNumber,
-      otherIncomes,
-      otherIncomesDescription,
-      hasCar,
-      carriagePlate,
-      nIV,
-      isCCAccepted,
-      cCDigitalSignature,
-    });
-  };
-
-  useEffect(() => {
-    if (
-      isEmpty(dataContexProfile) === false &&
-      isEmpty(dataContexProfile.dataCustomerDetail) === false
-    ) {
-      handlerSetStateDataDetail(dataContexProfile.dataCustomerDetail);
-    }
-  }, [dataContexProfile]);
-
-  useEffect(() => {
-    handlerCallInitApis();
-  }, []);
-
-  return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Información económica y laboral</h1>
-      {typeFormUser(dataUserType)}
       <button onClick={() => {}}>Guardar</button>
     </div>
   );

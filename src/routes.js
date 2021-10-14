@@ -34,6 +34,13 @@ const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
 const EditProfileUsers = React.lazy(() =>
   import("./views/Profile/editProfileUsers")
 );
+const UserDetailInformation = React.lazy(() =>
+  import("./views/Admin/userDetailInformation")
+);
+const Investigations = React.lazy(() =>
+  import("./views/Admin/investigations")
+);
+
 
 const routes = [
   {
@@ -210,6 +217,22 @@ const routes = [
     path: "/websystem/edit-profile",
     name: "ProfileUsers",
     component: EditProfileUsers,
+    exact: true,
+  },
+  {
+    key: "21",
+    id: "UserDetail",
+    path: "/websystem/user-detail/:idInvestigationProcess",
+    name: "Detalle de usuario",
+    component: UserDetailInformation,
+    exact: true,
+  },
+  {
+    key: "22",
+    id: "Investigations",
+    path: "/websystem/investigation",
+    name: "Investigación de inquilinos",
+    component: Investigations,
     exact: true,
   },
 ];
