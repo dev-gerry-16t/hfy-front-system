@@ -130,7 +130,7 @@ const WidgetGeneralInformation = (props) => {
   }, []);
   return (
     <CardGeneralInformation>
-      <h1>Información general</h1>
+      <h1>Información de Perfil</h1>
       <CustomStepsHomify
         steps={dataTabs}
         onClick={(index, record) => {

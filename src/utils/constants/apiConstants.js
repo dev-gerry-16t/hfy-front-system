@@ -51,6 +51,7 @@ const API_CONSTANTS = {
     GET_ALL_COMMERCIAL_ACTIVITIES: `${API.API_SECURE}${API.CATALOGS}/getAllCommercialActivities`,
     GET_USERS_FOR_ASSIGNMENT: `${API.API_SECURE}${API.CATALOGS}/getUsersForAssignment`,
     GET_ALL_PROPERTY_STATES: `${API.API_SECURE}${API.CATALOGS}/getAllPropertyStates`,
+    GET_ALL_INVESTIGATION_STATUS: `${API.API_SECURE}${API.CATALOGS}/getAllInvestigationStatus`,
   },
   CUSTOMER: {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,
@@ -63,6 +64,7 @@ const API_CONSTANTS = {
     GET_INVESTIGATION_PROCESS_COINCIDENCES: `${API.CUSTOMER}/investigation/getInvestigationProcessCoincidences`,
     GET_INVESTIGATION_PROCESS_BY_ID: `${API.CUSTOMER}/investigation/getInvestigationProcessById`,
     GET_CUSTOMER_DATA_BY_TAB: `${API.CUSTOMER}/investigation/getCustomerDataByTab`,
+    UPDATE_INVESTIGATION_PROCESS: `${API.CUSTOMER}/customer/updateInvestigationProcess/`,
   },
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
   GET_CONFIRM_PAYMENT_INTENT: `${API.API_SECURE}${API.PROVIDERS}/getConfirmPaymentIntent`,

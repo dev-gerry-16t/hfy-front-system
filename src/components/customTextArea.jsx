@@ -36,7 +36,7 @@ const TextArea = styled.textarea`
     border: 1px solid #b9bbc7;
   }
   &::placeholder {
-    font-weight: 100;
+    font-weight: 200;
   }
 `;
 

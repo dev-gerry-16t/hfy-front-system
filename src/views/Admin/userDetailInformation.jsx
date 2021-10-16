@@ -14,18 +14,19 @@ import WidgetInvestigation from "./widgets/widgetInvestigation";
 import WidgetLocation from "./widgets/widgetLocation";
 import WidgetReferences from "./widgets/widgetReferences";
 import WidgetVerification from "./widgets/widgetVerification";
+import WidgetCalification from "./widgets/widgetCalification";
 
 const Content = styled.div`
   display: grid;
   grid-template-rows: 1fr 1fr;
-  row-gap: 8em;
+  row-gap: 4em;
   overflow-y: scroll;
   font-size: 14px;
   font-family: Poppins;
 `;
 
 const ContentsTop = styled.div`
-  height: 53vh;
+  height: 50vh;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   column-gap: 0.5em;
@@ -76,6 +77,14 @@ const ContentLocation = styled.div`
   padding: 1em;
 `;
 
+const StickyInvestigation = styled.div`
+  position: fixed;
+  right: 45vw;
+  bottom: 2vh;
+  display: flex;
+  flex-direction: column;
+`;
+
 const UserDetailInformation = (props) => {
   const { callGlobalActionApi, dataProfile, match } = props;
   const { params } = match;
@@ -83,6 +92,10 @@ const UserDetailInformation = (props) => {
   const [dataDetail, setDataDetail] = useState([]);
   const [dataRelatioshipTypes, setDataRelatioshipTypes] = useState([]);
   const [dataReferenceStatus, setDataReferenceStatus] = useState([]);
+  const [dataAllReasonRejection, setDataAllReasonRejection] = useState([]);
+  const [dataInvStatus, setDataInvStatus] = useState([]);
+  const [dataPolicies, setDataPolicies] = useState([]);
+
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetInvestigationProcessById = async (id) => {
@@ -113,7 +126,7 @@ const UserDetailInformation = (props) => {
     }
   };
 
-  const handlerCallGetAllRelationshipTypes = async (id) => {
+  const handlerCallGetAllRelationshipTypes = async () => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -138,7 +151,7 @@ const UserDetailInformation = (props) => {
     }
   };
 
-  const handlerCallGetAllPersonalReferencesStatus = async (id) => {
+  const handlerCallGetAllPersonalReferencesStatus = async () => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -163,10 +176,89 @@ const UserDetailInformation = (props) => {
     }
   };
 
+  const handlerCallGetAllRejectionReasons = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_REJECTION_REASONS
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAllReasonRejection(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllInvestigationStatus = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idInvestigationProcess: id,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_INVESTIGATION_STATUS
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataInvStatus(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPolicies = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_POLICIES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataPolicies(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     handlerCallGetInvestigationProcessById(params.idInvestigationProcess);
+    handlerCallGetAllInvestigationStatus(params.idInvestigationProcess);
     handlerCallGetAllRelationshipTypes();
     handlerCallGetAllPersonalReferencesStatus();
+    handlerCallGetAllRejectionReasons();
+    handlerCallGetAllPolicies();
   }, []);
 
   return (
@@ -197,6 +289,12 @@ const UserDetailInformation = (props) => {
             bucketSource,
             idDocument,
             thumbnail,
+            isBS,
+            idInvestigationStatus,
+            idRejectionReason,
+            paymentCapacity,
+            rejectionReason,
+            isApproved,
           } = row;
           const dataReferences =
             isEmpty(personalReferences) === false
@@ -209,6 +307,23 @@ const UserDetailInformation = (props) => {
           return (
             <div>
               <ContentsTop>
+                {isBS === false && (
+                  <StickyInvestigation>
+                    <WidgetInvestigation
+                      idInvestigationStatus={idInvestigationStatus}
+                      paymentCapacity={paymentCapacity}
+                      dataInvStatus={dataInvStatus}
+                      dataPolicies={dataPolicies}
+                      idInvestigationProcess={params.idInvestigationProcess}
+                      idCustomer={idCustomer}
+                      updateDetailUser={() => {
+                        handlerCallGetInvestigationProcessById(
+                          params.idInvestigationProcess
+                        );
+                      }}
+                    />
+                  </StickyInvestigation>
+                )}
                 <ContentInformation>
                   <WidgetInformation
                     fullName={fullName}
@@ -254,7 +369,20 @@ const UserDetailInformation = (props) => {
               </ContentsTop>
               <ContentsBottom>
                 <ContentInvestigation>
-                  <WidgetInvestigation score={score} />
+                  <WidgetCalification
+                    score={score}
+                    idRejectionReason={idRejectionReason}
+                    dataAllReasonRejection={dataAllReasonRejection}
+                    idInvestigationProcess={params.idInvestigationProcess}
+                    idCustomer={idCustomer}
+                    rejectionReason={rejectionReason}
+                    isApproved={isApproved}
+                    updateDetailUser={() => {
+                      handlerCallGetInvestigationProcessById(
+                        params.idInvestigationProcess
+                      );
+                    }}
+                  />
                 </ContentInvestigation>
                 <ContentGeneralInformation>
                   <WidgetGeneralInformation

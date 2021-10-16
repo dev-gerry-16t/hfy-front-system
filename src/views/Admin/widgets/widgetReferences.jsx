@@ -131,12 +131,12 @@ const Card = (props) => {
           <span>{fullName}</span>
         </div>
         <div>
-          <i className="fa fa-envelope-o" />
-          <span>{emailAddress}</span>
-        </div>
-        <div>
           <i className="fa fa-phone" />
           <span>{number_format(phoneNumber)}</span>
+        </div>
+        <div>
+          <i className="fa fa-envelope-o" />
+          <span>{emailAddress}</span>
         </div>
       </div>
       {canBeEvaluated === true && (

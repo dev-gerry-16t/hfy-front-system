@@ -113,22 +113,20 @@ const WidgetDocuments = (props) => {
         footer={null}
         style={{ top: "20px" }}
       >
-        {/* {isNil(preview) === false &&
-          isEmpty(dataDocument) === false &&
-          isNil(dataDocument.idDocument) === true && (
-            <>
-              {isEmpty(preview) === true ? (
-                <div style={{ textAlign: "center" }}>
-                  <FileUnknownOutlined
-                    style={{ fontSize: 100, color: "grey" }}
-                  />
-                </div>
-              ) : (
-                <Magnifier src={preview} />
-              )}
-            </>
-          )} */}
-
+        <div
+          style={{
+            textAlign: "center",
+            marginBottom: 10,
+          }}
+        >
+          <a
+            href={`${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}
+            download
+            target="_blank"
+          >
+            Descargar
+          </a>
+        </div>
         {isEmpty(dataFile) === false && isNil(dataFile.idDocument) === false && (
           <>
             {isNil(dataFile.extension) === true ||
@@ -143,7 +141,7 @@ const WidgetDocuments = (props) => {
               </div>
             ) : (
               <Magnifier
-                src={`${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}`}
+                src={`${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}
               />
             )}
           </>
