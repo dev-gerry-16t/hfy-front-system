@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { connect } from "react-redux";
-import { Layout, message, Card, Row, Col } from "antd";
+import { Layout, message, Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -12,9 +13,46 @@ import {
 } from "../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import SectionAddProperty from "../Owner/sections/sectionAddProperty";
+import { IconWhatsapp } from "../../assets/iconSvg";
+import CustomCardProperty from "../../components/customCardProperty";
 
 const { Content } = Layout;
-const { Meta } = Card;
+
+const Container = styled.div`
+  padding: 1em 2em;
+  font-size: 16px;
+`;
+
+const ContentCards = styled.div`
+  font-family: Poppins;
+  letter-spacing: 0.75px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 2%;
+  padding: 1em 0;
+`;
+
+const ContentAddFilter = styled.div`
+  font-family: Poppins;
+  padding: 1em 2em;
+  background: #fff;
+  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+  border-radius: 1em;
+  .button-actions-header {
+    display: flex;
+    justify-content: flex-end;
+    button {
+      border-radius: 0.8em;
+      border: none;
+      background: ${(props) => props.background};
+      color: #fff;
+      padding: 0.125em 2em;
+      font-weight: 600;
+      letter-spacing: 0.75px;
+    }
+  }
+`;
 
 const PropertiesOwner = (props) => {
   const {
@@ -24,6 +62,7 @@ const PropertiesOwner = (props) => {
     callAddProperty,
     callGetZipCodeAdress,
     callGetPropertyCoincidences,
+    history,
   } = props;
   const [dataCustomer, setDataCustomer] = useState({});
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
@@ -175,131 +214,79 @@ const PropertiesOwner = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetAllCustomerById();
-    handlerCallGetPropertyCoincidences();
+    // handlerCallGetAllCustomerById();
+    // handlerCallGetPropertyCoincidences();
   }, []);
 
   return (
     <Content>
-      <SectionAddProperty
-        dataPropertyTypes={dataPropertyTypes}
-        spinVisible={spinVisible}
-        isModalVisible={isModalVisible}
-        onClose={() => {
-          setIsModalVisible(!isModalVisible);
-          handlerCallGetPropertyCoincidences();
-        }}
-        onClickAddProperty={async (data) => {
-          setSpinVisible(true);
-          await handlerCallAddProperty(data);
-          await handlerCallGetAllCustomerById();
-          handlerCallGetPropertyCoincidences();
-        }}
-        dataZipCodeAdress={dataZipCodeAdress}
-        dataZipCatalog={dataZipCatalog}
-        onChangeZipCode={(zipCode) => {
-          hanlderCallGetZipCodeAdress({ type: 1, zipCode });
-        }}
-      />
-      <div className="margin-app-main">
-        <div className="top-main-user">
-          <div className="welcome-user-main">
-            <h2>Hola, {dataCustomer.shortName}</h2>
-            <span>
-              Último inicio de sesión:{" "}
-              <strong>{dataCustomer.lastSessionStarted}</strong>
-            </span>
+      <Container>
+        <ContentAddFilter background="var(--color-primary)">
+          <div className="button-actions-header">
+            <button
+              onClick={() => {
+                history.push("/websystem/add-property");
+              }}
+            >
+              Agregar propiedad
+            </button>
           </div>
-          <div className="action-buttons-top">
-            {(dataCustomer.canRequestProperty === 1 ||
-              dataCustomer.canRequestProperty === true) && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlerCallGetPropertyTypes();
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>Registrar Propiedad</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
-        <div className="main-information-user">
-          <div
-            style={{
-              marginTop: "4em",
-              width: "100%",
+        </ContentAddFilter>
+        <ContentCards>
+          <CustomCardProperty
+            src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            alt=""
+            onClickDetail={() => {
+              history.push("/websystem/detail-property-users/1");
             }}
-          >
-            <Row>
-              {isEmpty(dataCoincidences) === false &&
-                dataCoincidences.map((row) => {
-                  return (
-                    <Col
-                      span={8}
-                      xs={{ span: 24 }}
-                      sm={{ span: 12 }}
-                      md={{ span: 8 }}
-                      style={{ display: "flex", justifyContent: "center" }}
-                    >
-                      <Card
-                        hoverable
-                        style={{
-                          borderRadius: 16,
-                          marginTop: 20,
-                          width: 340,
-                          fontSize: 12,
-                          boxShadow:
-                            " rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
-                        }}
-                        cover={
-                          <img
-                            alt="example"
-                            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
-                          />
-                        }
-                      >
-                        <Meta
-                          title="Estatus"
-                          description={row.propertyStatus}
-                        />
-
-                        <Meta
-                          title="Dirección"
-                          description={row.fullAddress}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Monto de renta"
-                          description={row.currentRent}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Monto de mantenimiento"
-                          description={row.maintenanceAmount}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Tipo de propiedad"
-                          description={row.propertyType}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Cajones de estacionamiento"
-                          description={row.totalParkingSpots}
-                          style={{ marginTop: 15 }}
-                        />
-                      </Card>
-                    </Col>
-                  );
-                })}
-            </Row>
-          </div>
-        </div>
-      </div>
+          />
+          <CustomCardProperty
+            src="https://images.pexels.com/photos/323780/pexels-photo-323780.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://images.pexels.com/photos/2102587/pexels-photo-2102587.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://images.pexels.com/photos/2635038/pexels-photo-2635038.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+          <CustomCardProperty
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+            alt=""
+            onClickDetail={() => {}}
+          />
+        </ContentCards>
+      </Container>
     </Content>
   );
 };

@@ -37,10 +37,13 @@ const EditProfileUsers = React.lazy(() =>
 const UserDetailInformation = React.lazy(() =>
   import("./views/Admin/userDetailInformation")
 );
-const Investigations = React.lazy(() =>
-  import("./views/Admin/investigations")
-);
+const Investigations = React.lazy(() => import("./views/Admin/investigations"));
 
+const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
+
+const DetailPropertyUsers = React.lazy(() =>
+  import("./views/Properties/detailPropertyUsers")
+);
 
 const routes = [
   {
@@ -233,6 +236,22 @@ const routes = [
     path: "/websystem/investigation",
     name: "Investigación de inquilinos",
     component: Investigations,
+    exact: true,
+  },
+  {
+    key: "23",
+    id: "addProperty",
+    path: "/websystem/add-property",
+    name: "Agregar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
+    key: "24",
+    id: "detailPropertyUsers",
+    path: "/websystem/detail-property-users/:idProperty",
+    name: "Agregar propiedad",
+    component: DetailPropertyUsers,
     exact: true,
   },
 ];

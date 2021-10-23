@@ -456,7 +456,7 @@ const DefaultLayout = (props) => {
         });
       }
     });
-    handlerCallGetCustomerTimeLine();
+    //handlerCallGetCustomerTimeLine();
     return () => {
       socket.disconnect();
       clearInterval(interval);
