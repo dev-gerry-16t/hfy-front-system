@@ -1,12 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import {
+  ButtonIcon,
   ContentForm,
   LineSeparator,
   FormProperty,
   ButtonNextBackPage,
   Container,
 } from "./constants/styleConstants";
+import { IconHeart } from "../../assets/iconSvg";
 import SectionAmenities from "./sectionsDetail/sectionAmenities";
 import SectionCarouselInfo from "./sectionsDetail/sectionCarouselInfo";
 import SectionFeatures from "./sectionsDetail/sectionFeatures";
@@ -47,13 +49,27 @@ const Tab = styled.div`
   }
 `;
 
+const ButtonAction = styled.button`
+  background: ${(props) => (props.primary ? "var(--color-primary)" : "#FFF")};
+  border: ${(props) =>
+    props.primary ? "none" : "1px solid var(--color-primary)"};
+  color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
+  padding: 0.2em 2em;
+  border-radius: 1em;
+`;
+
 const DetailPropertyUsers = () => {
   return (
     <Content>
       <ContentForm>
         <div className="header-title">
           <h1>Detalle de inmueble</h1>
-          <button>Hearth</button>
+          <ButtonIcon>
+            <IconHeart
+              backGround="var(--color-primary)"
+              color="var(--color-primary)"
+            />
+          </ButtonIcon>
         </div>
         <div>
           <SectionCarouselInfo />
@@ -75,9 +91,9 @@ const DetailPropertyUsers = () => {
             <SectionAmenities />
           </ContainerDown>
         </div>
-        <div>
-          <button>Postularme</button>
-          <button>Contactar</button>
+        <div className="button-actions">
+          <ButtonAction primary>Postularme</ButtonAction>
+          <ButtonAction primary={false}>Contactar</ButtonAction>
         </div>
       </ContentForm>
     </Content>

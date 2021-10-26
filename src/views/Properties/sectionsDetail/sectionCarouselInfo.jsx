@@ -7,13 +7,18 @@ import {
   ButtonNextBackPage,
   Container,
 } from "../constants/styleConstants";
-import { IconChevronUp, IconChevronDown } from "../../../assets/iconSvg";
+import {
+  IconChevronUp,
+  IconChevronDown,
+  IconBid,
+} from "../../../assets/iconSvg";
 
 const ContainerUp = styled.div`
   margin-top: 3em;
   display: flex;
   justify-content: center;
   gap: 2em;
+  position: relative;
   .contain-carousel {
     display: flex;
     justify-content: center;
@@ -75,9 +80,37 @@ const ShortDetail = styled.div`
   }
 `;
 
+const ButtonBid = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: 0;
+  top: 5em;
+  background: var(--color-primary);
+  border-radius: 0.5em 0 0 0.5em;
+  cursor: pointer;
+  padding: 0.5em;
+  span {
+    margin-left: 10px;
+    display: none;
+    color: #fff;
+    text-decoration-line: underline;
+  }
+  &:hover {
+    span {
+      display: block;
+    }
+  }
+`;
+
 const SectionCarouselInfo = () => {
   return (
     <ContainerUp>
+      <ButtonBid>
+        <IconBid color="#fff" backGround="#fff" size="36px" />
+        <span>Ofertar</span>
+      </ButtonBid>
       <div className="contain-carousel">
         <div className="slide-carousel">
           <ButtonCarousel>
@@ -124,19 +157,33 @@ const SectionCarouselInfo = () => {
             <IconChevronDown color="#4E4B66" />
           </ButtonCarousel>
         </div>
-        <div>
+        <div
+          style={{
+            position: "relative",
+          }}
+        >
           <img
             className="preview-carousel"
             src="https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
             alt="imagen"
           />
+          <div
+            style={{
+              position: "absolute",
+              right: 0,
+              color: "#9295AD",
+              fontSize: "1em",
+            }}
+          >
+            ID: MX17-CO86
+          </div>
         </div>
       </div>
       <ShortDetail>
         <div className="header-title-short">
           <h1>Zona El Mirador El Marques Querétaro</h1>
         </div>
-        <LineSeparator opacity="0.3"/>
+        <LineSeparator opacity="0.3" />
         <div className="info-data-property">
           <div className="item-description">
             <span>Tipo de propiedad</span>

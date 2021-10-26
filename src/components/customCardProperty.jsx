@@ -1,6 +1,22 @@
 import React from "react";
 import styled from "styled-components";
-import { IconProfile, IconWhatsapp } from "../assets/iconSvg";
+import {
+  IconProfile,
+  IconWhatsapp,
+  IconBathroom,
+  IconBed,
+  IconCar,
+  IconHouseMeasure,
+  IconShare,
+} from "../assets/iconSvg";
+
+const ButtonIcon = styled.button`
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Card = styled.div`
   display: flex;
@@ -66,6 +82,15 @@ const Card = styled.div`
   .icon-property {
     display: flex;
     justify-content: space-between;
+    .info {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        font-size: 0.7em;
+        margin-left: 5px;
+      }
+    }
   }
   .content-button {
     display: flex;
@@ -146,7 +171,13 @@ const CustomCardProperty = (props) => {
       </div>
       <div className="price-item">
         <span>$29,900.00 MXN</span>
-        <i className="fa fa-file"></i>
+        <ButtonIcon>
+          <IconShare
+            color="var(--color-primary)"
+            backGround="var(--color-primary)"
+            size="16px"
+          />
+        </ButtonIcon>
       </div>
       <div className="address-item">
         <span className="text-bold">Zona El Mirador El Marquez Querétaro</span>
@@ -155,16 +186,20 @@ const CustomCardProperty = (props) => {
         Mantenimiento: <span>$3,500.00 MXN</span>
       </div>
       <div className="icon-property">
-        <div>
+        <div className="info">
+          <IconBed color="#6E7191" backGround="#6E7191" />
           <span>3</span>
         </div>
-        <div>
+        <div className="info">
+          <IconBathroom color="#6E7191" backGround="#6E7191" />
           <span>3</span>
         </div>
-        <div>
+        <div className="info">
+          <IconCar color="#6E7191" backGround="#6E7191" />
           <span>3</span>
         </div>
-        <div>
+        <div className="info">
+          <IconHouseMeasure color="#6E7191" backGround="#6E7191" />
           <span>600m²</span>
         </div>
       </div>
@@ -172,7 +207,11 @@ const CustomCardProperty = (props) => {
         <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
         <ButtonPrimary>Contactar</ButtonPrimary>
         <ButtonWhatsapp>
-          <IconWhatsapp size="15" color="var(--color-primary)" />
+          <IconWhatsapp
+            size="15"
+            color="var(--color-primary)"
+            backGround="var(--color-primary)"
+          />
         </ButtonWhatsapp>
       </div>
     </Card>

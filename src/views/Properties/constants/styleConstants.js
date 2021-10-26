@@ -4,6 +4,7 @@ const ContentForm = styled.div`
   background: #fff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 0.5em;
+  padding-bottom: 0.3em;
   .header-title {
     padding: 1em 6em;
     border-bottom: 0.5px solid #4e4b66;
@@ -14,6 +15,12 @@ const ContentForm = styled.div`
       color: var(--color-primary);
       font-weight: 700;
     }
+  }
+  .button-actions {
+    display: flex;
+    justify-content: center;
+    gap: 2em;
+    margin: 2em 0px;
   }
 `;
 
@@ -70,10 +77,19 @@ const Container = styled.div`
   border-radius: 0.5em;
 `;
 
+const ButtonIcon = styled.button`
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 export {
   ContentForm,
   ButtonNextBackPage,
   LineSeparator,
   FormProperty,
   Container,
+  ButtonIcon,
 };
