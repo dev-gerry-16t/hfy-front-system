@@ -11,6 +11,15 @@ import IconBathroom from "./iconBathroom";
 import IconCar from "./iconCar";
 import IconHouseMeasure from "./iconHouseMeasure";
 import IconShare from "./iconShare";
+import IconChevronLeft from "./iconChevronLeft";
+import IconChevronRight from "./iconChevronRight";
+import IconAgreement from "./iconAgreement";
+import IconSpeakChat from "./iconSpeakChat";
+import IconMoneyPolicy from "./iconMoneyPolicy";
+import IconTenant from "./iconTenant";
+import IconPolicy from "./iconPolicy";
+import IconContract from "./iconContract";
+import IconPayments from "./iconPayments";
 
 export {
   IconWhatsapp,
@@ -26,4 +35,13 @@ export {
   IconCar,
   IconHouseMeasure,
   IconShare,
+  IconChevronLeft,
+  IconChevronRight,
+  IconAgreement,
+  IconSpeakChat,
+  IconMoneyPolicy,
+  IconTenant,
+  IconPolicy,
+  IconContract,
+  IconPayments,
 };

@@ -41,8 +41,16 @@ const Investigations = React.lazy(() => import("./views/Admin/investigations"));
 
 const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
 
+const DetailProperty = React.lazy(() =>
+  import("./views/Properties/detailProperty")
+);
+
 const DetailPropertyUsers = React.lazy(() =>
   import("./views/Properties/detailPropertyUsers")
+);
+
+const SelectPolicy = React.lazy(() =>
+  import("./views/Properties/selectPolicy")
 );
 
 const routes = [
@@ -248,10 +256,26 @@ const routes = [
   },
   {
     key: "24",
+    id: "detailProperty",
+    path: "/websystem/detail-property/:idProperty",
+    name: "Detalle propiedad",
+    component: DetailProperty,
+    exact: true,
+  },
+  {
+    key: "25",
     id: "detailPropertyUsers",
     path: "/websystem/detail-property-users/:idProperty",
-    name: "Agregar propiedad",
+    name: "Detalle propiedad",
     component: DetailPropertyUsers,
+    exact: true,
+  },
+  {
+    key: "26",
+    id: "selectPolicyUser",
+    path: "/websystem/select-policy/:idProperty",
+    name: "Agregar Póliza",
+    component: SelectPolicy,
     exact: true,
   },
 ];

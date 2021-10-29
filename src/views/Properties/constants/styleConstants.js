@@ -6,7 +6,7 @@ const ContentForm = styled.div`
   border-radius: 0.5em;
   padding-bottom: 0.3em;
   .header-title {
-    padding: 1em 6em;
+    padding: ${(props) => (props.owner ? "1em 1em" : "1em 6em")};
     border-bottom: 0.5px solid #4e4b66;
     display: flex;
     justify-content: space-between;
