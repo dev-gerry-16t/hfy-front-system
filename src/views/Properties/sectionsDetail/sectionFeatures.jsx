@@ -1,6 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { IconBed } from "../../../assets/iconSvg";
+import {
+  IconBathroom,
+  IconBed,
+  IconCar,
+  IconHalfBathroom,
+} from "../../../assets/iconSvg";
 import {
   ContentForm,
   LineSeparator,
@@ -20,7 +25,7 @@ const ContentFeatures = styled(Container)`
     border: 0.5px solid #e5e5e5;
     opacity: 0.3;
     width: 100%;
-    margin: 0.7em 0px;
+    margin: 2em 0px;
   }
   .container-cards {
     display: flex;
@@ -89,12 +94,57 @@ const SectionFeatures = () => {
             <span>Recámaras</span>
           </div>
         </CardAmenity>
+        <CardAmenity>
+          <div className="circle-content">
+            <div>
+              <IconBathroom size="35" color="#fff" backGround="#fff" />
+            </div>
+          </div>
+          <div className="info-amenity">
+            <h1>3</h1>
+            <span>Baños</span>
+          </div>
+        </CardAmenity>
+        <CardAmenity>
+          <div className="circle-content">
+            <div>
+              <IconHalfBathroom size="35" color="#fff" backGround="#fff" />
+            </div>
+          </div>
+          <div className="info-amenity">
+            <h1>3</h1>
+            <span>Medios Baños</span>
+          </div>
+        </CardAmenity>
+        <CardAmenity>
+          <div className="circle-content">
+            <div>
+              <IconCar size="35" color="#fff" backGround="#fff" />
+            </div>
+          </div>
+          <div className="info-amenity">
+            <h1>3</h1>
+            <span>Estacionamiento</span>
+          </div>
+        </CardAmenity>
       </div>
       <hr />
       <div className="container-cards">
         <div className="card-content">
           <span>600 m²</span>
           <label htmlFor="">De construcción</label>
+        </div>
+        <div className="card-content">
+          <span>600 m²</span>
+          <label htmlFor="">De Terreno</label>
+        </div>
+        <div className="card-content">
+          <span>600 m²</span>
+          <label htmlFor="">Piso en el que se encuentra</label>
+        </div>
+        <div className="card-content">
+          <span>600 m²</span>
+          <label htmlFor="">Cantidad de pisos</label>
         </div>
       </div>
     </ContentFeatures>

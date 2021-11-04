@@ -1,6 +1,13 @@
 import React, { useState } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { Row, Col } from "antd";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callAddDocument } from "../../../utils/actions/actions";
 import {
   ContentForm,
   ButtonNextBackPage,
@@ -88,9 +95,11 @@ const ButtonFilesLabel = styled.label`
   cursor: pointer;
 `;
 
-const SectionDataImages = () => {
+const SectionDataImages = (props) => {
+  const { onClickBack, onClickFinish, callAddDocument, dataProfile } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
+  const frontFunctions = new FrontFunctions();
 
   const onChangeFile = (e) => {
     const fileIndex = e.target.files[0];
@@ -106,14 +115,42 @@ const SectionDataImages = () => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        canvas.width = width;
-        canvas.height = height;
+        const MAX_WIDTH = 578;
+        const scaleSize = MAX_WIDTH / width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = height * scaleSize;
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.6);
-        setArrayImages([...arrayImages, { id: count, src: srcEncoded }]);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.7);
+        setArrayImages([
+          ...arrayImages,
+          {
+            id: count,
+            src: srcEncoded,
+            contentType: "image/jpeg",
+            name: `homify-image-${count}`,
+          },
+        ]);
         setCount(count + 1);
+        // const srcEncodedBlob = ctx.canvas.toBlob(
+        //   (e1) => {
+        //     console.log("e1", e1);
+        //     // const formData = new FormData();
+        //     // formData.append("file", e1);
+        //     // formData.append(
+        //     //   "fileProperties",
+        //     //   JSON.stringify({ name: "test.jpeg", filetType: "image/jpeg" })
+        //     // );
+        //     // const response = fetch("http://localhost:3002/api/test", {
+        //     //   method: "POST",
+        //     //   body: formData,
+        //     // });
+        //   },
+        //   "image/jpeg",
+        //   0.7
+        // );
       };
     };
   };
@@ -146,15 +183,72 @@ const SectionDataImages = () => {
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
         const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.6);
         const replaceArrayImage = arrayImages.map((row) => {
-          let objectImage = { id: row.id, src: row.src };
+          let objectImage = row;
           if (row.id === id) {
-            objectImage = { id: id, src: srcEncoded };
+            objectImage = {
+              id: id,
+              src: srcEncoded,
+              contentType: "image/jpeg",
+              name: `homify-image-${id}`,
+            };
           }
           return objectImage;
         });
         setArrayImages(replaceArrayImage);
       };
     };
+  };
+
+  const handlerAddDocument = async (data, name) => {
+    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+
+    const dataDocument = {
+      documentName: name,
+      extension: "jpeg",
+      preview: null,
+      thumbnail: null,
+      idDocumentType: 39,
+      idCustomer,
+      idSystemUser,
+      idLoginHistory,
+    };
+
+    try {
+      const response = await callAddDocument(
+        data,
+        dataDocument,
+        (percent) => {}
+      );
+      const documentId =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.idDocument) === false
+          ? response.response.idDocument
+          : null;
+      return documentId;
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerOnSendFiles = async (dataImages) => {
+    try {
+      const arrayDataDocument = [];
+      for (let index = 0; index < dataImages.length; index++) {
+        const element = dataImages[index];
+        const urlObject = await fetch(element.src);
+        const blobFile = await urlObject.blob();
+        const idDocument = await handlerAddDocument(blobFile, element.name);
+        arrayDataDocument.push({
+          idDocument,
+          isMain: index === 0 ? true : false,
+        });
+      }
+      return arrayDataDocument;
+    } catch (error) {}
   };
 
   return (
@@ -222,12 +316,22 @@ const SectionDataImages = () => {
           )}
         </ContentImages>
         <div className="next-back-buttons">
-          <ButtonNextBackPage block>
+          <ButtonNextBackPage block={false} onClick={onClickBack}>
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          <ButtonNextBackPage block={false}>
-            <u>{"Siguiente"}</u>
+          <ButtonNextBackPage
+            block={false}
+            onClick={async () => {
+              try {
+                const responseDocument = await handlerOnSendFiles(arrayImages);
+                onClickFinish({
+                  jsonDocument: JSON.stringify(responseDocument),
+                });
+              } catch (error) {}
+            }}
+          >
+            <u>{"Finalizar"}</u>
             {" >>"}
           </ButtonNextBackPage>
         </div>
@@ -236,4 +340,16 @@ const SectionDataImages = () => {
   );
 };
 
-export default SectionDataImages;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callAddDocument: (file, data, callback) =>
+    dispatch(callAddDocument(file, data, callback)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionDataImages);

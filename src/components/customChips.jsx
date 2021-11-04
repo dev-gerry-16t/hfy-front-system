@@ -64,7 +64,7 @@ const CustomChips = ({ data, onChange, selected }) => {
   const [newArray, setNewArray] = useState([]);
   const [arrayData, setArrayData] = useState([]);
   useEffect(() => {
-    if (isEmpty(data) === false) {
+    if (isEmpty(data) === false && isNil(selected) === false) {
       const newSelect = data.map((row) => {
         let returnRow = { ...row, select: false };
         const filterId = selected.find((idFind) => {
@@ -103,7 +103,7 @@ const CustomChips = ({ data, onChange, selected }) => {
                 const arrayOnChange = arrayChips.map((rowMap) => {
                   return rowMap.id;
                 });
-                onChange(arrayOnChange);
+                onChange(arrayOnChange, arrayOnChange.join());
                 setNewArray(arrayChips);
                 setArrayData(arraySelect);
               }}
@@ -129,7 +129,7 @@ const CustomChips = ({ data, onChange, selected }) => {
                 const arrayOnChange = arrayChips.map((rowMap) => {
                   return rowMap.id;
                 });
-                onChange(arrayOnChange);
+                onChange(arrayOnChange, arrayOnChange.join());
                 setNewArray(arrayChips);
                 setArrayData(arraySelect);
               }}

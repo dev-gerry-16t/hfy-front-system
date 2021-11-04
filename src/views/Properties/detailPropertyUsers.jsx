@@ -1,4 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import {
   ButtonIcon,
@@ -15,6 +18,10 @@ import {
   IconPayments,
   IconTenant,
 } from "../../assets/iconSvg";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import FrontFunctions from "../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../utils/actions/actions";
 import SectionAmenities from "./sectionsDetail/sectionAmenities";
 import SectionCarouselInfo from "./sectionsDetail/sectionCarouselHz";
 import SectionFeatures from "./sectionsDetail/sectionFeatures";
@@ -45,6 +52,7 @@ const TabsProperty = styled.div`
 
 const Tab = styled.div`
   line-height: 5px;
+  cursor: pointer;
   h1 {
     font-weight: bold;
     color: ${(props) =>
@@ -198,7 +206,64 @@ const ButtonDocument = styled.button`
   padding: 0px 1em;
 `;
 
-const DetailPropertyUsers = () => {
+const dataTabsProperty = [
+  {
+    id: "1",
+    text: "Caracteristicas",
+  },
+  {
+    id: "2",
+    text: "Ubicación",
+  },
+  {
+    id: "3",
+    text: "Amenidades",
+  },
+];
+
+const DetailPropertyUsers = (props) => {
+  const { match, callGlobalActionApi, dataProfile } = props;
+  const { params } = match;
+  const idProperty = params.idProperty;
+  const [dataDetail, setDataDetail] = useState({});
+  const [tabSelect, setTabSelect] = useState("1");
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetPropertyById = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false
+          ? response.response[0][0]
+          : {};
+      setDataDetail(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    handlerCallGetPropertyById();
+  }, []);
+
   return (
     <Content>
       <ContentForm owner>
@@ -212,23 +277,26 @@ const DetailPropertyUsers = () => {
           </ButtonIcon>
         </div>
         <div>
-          <SectionCarouselInfo />
+          <SectionCarouselInfo dataDetail={dataDetail} />
           <ContainerDown>
             <TabsProperty>
-              <Tab selected={false}>
-                <h1>Caracteristicas</h1>
-                <hr />
-              </Tab>
-              <Tab selected={false}>
-                <h1>Ubicación</h1>
-                <hr />
-              </Tab>
-              <Tab selected={true}>
-                <h1>Amenidades</h1>
-                <hr />
-              </Tab>
+              {dataTabsProperty.map((row) => {
+                return (
+                  <Tab
+                    selected={tabSelect === row.id}
+                    onClick={() => {
+                      setTabSelect(row.id);
+                    }}
+                  >
+                    <h1>{row.text}</h1>
+                    <hr />
+                  </Tab>
+                );
+              })}
             </TabsProperty>
-            <SectionAmenities />
+            {tabSelect === "1" && <SectionFeatures />}
+            {tabSelect === "2" && <SectionLocation />}
+            {tabSelect === "3" && <SectionAmenities />}
             <SectionPolicy />
             <SectionPublicProperty />
           </ContainerDown>
@@ -362,4 +430,19 @@ const DetailPropertyUsers = () => {
   );
 };
 
-export default DetailPropertyUsers;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant) =>
+    dispatch(callGlobalActionApi(data, id, constant)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(DetailPropertyUsers);

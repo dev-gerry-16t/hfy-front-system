@@ -66,6 +66,8 @@ const CustomInputCurrency = (props) => {
     onChange,
     error = false,
     errorMessage,
+    prefix = "$",
+    suffix = "",
   } = props;
   return (
     <ContainerInput>
@@ -80,8 +82,8 @@ const CustomInputCurrency = (props) => {
           decimalSeparator="."
           decimalPrecision={2}
           allowNegative={false}
-          prefix="$"
-          suffix=""
+          prefix={prefix}
+          suffix={suffix}
           className="inputLogin"
           floatingLabelText=""
           isVisible

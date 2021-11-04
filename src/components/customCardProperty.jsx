@@ -1,4 +1,5 @@
 import React from "react";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import {
   IconProfile,
@@ -8,7 +9,9 @@ import {
   IconCar,
   IconHouseMeasure,
   IconShare,
+  IconDownloadDetail,
 } from "../assets/iconSvg";
+import { findLastIndex } from "lodash";
 
 const ButtonIcon = styled.button`
   background: transparent;
@@ -24,7 +27,8 @@ const Card = styled.div`
   justify-content: space-between;
   position: relative;
   width: 15.43em;
-  height: 22.7em;
+  min-height: 22.7em;
+  height: auto;
   padding: 0.687em 0.625em;
   border-radius: 0.5em;
   background: #fff;
@@ -68,6 +72,7 @@ const Card = styled.div`
   }
   .price-maintenance {
     margin-top: 0.5em;
+    margin-bottom: 0.5em;
     font-size: 0.68em;
     span {
       font-weight: bold;
@@ -82,6 +87,8 @@ const Card = styled.div`
   .icon-property {
     display: flex;
     justify-content: space-between;
+    margin-bottom: 0.5em;
+
     .info {
       display: flex;
       justify-content: center;
@@ -95,6 +102,11 @@ const Card = styled.div`
   .content-button {
     display: flex;
     justify-content: flex-end;
+    gap: 0.3em;
+  }
+  .content-button-space {
+    display: flex;
+    justify-content: space-between;
     gap: 0.3em;
   }
 `;
@@ -149,28 +161,45 @@ const ProcessProperty = styled.div`
 `;
 
 const CustomCardProperty = (props) => {
-  const { src, alt, onClickDetail } = props;
+  const { src, alt, onClickDetail, data, idUserType, owner } = props;
+  const {
+    maintenanceAmount,
+    shortAddress,
+    propertyType,
+    currentRent,
+    identifier,
+    totalBathrooms,
+    totalParkingSpots,
+    totalRooms,
+    totalConstructionArea,
+    documentMainPic,
+    currentTimeLine,
+    canInviteTenant,
+  } = data;
   return (
     <Card>
-      <ProcessProperty>
-        <IconProfile color="#fff" size="1em" />
-        <span>En proceso de:</span>
-        <div className="current-process">
-          <h1>Verificación de identidad</h1>
-        </div>
-      </ProcessProperty>
+      {isNil(currentTimeLine) === false && (
+        <ProcessProperty>
+          <IconProfile color="#fff" size="1em" />
+          <span>En proceso de:</span>
+          <div className="current-process">
+            <h1>Verificación de identidad</h1>
+          </div>
+        </ProcessProperty>
+      )}
       <img
         className="image-content"
-        src={src}
+        src={isNil(documentMainPic) === false ? documentMainPic : src}
         alt={alt}
         onClick={onClickDetail}
+        loading="lazy"
       />
       <div className="type-id">
-        <span>Casa</span>
-        <span>ID: MX17-CO86</span>
+        <span>{propertyType}</span>
+        <span>{identifier}</span>
       </div>
       <div className="price-item">
-        <span>$29,900.00 MXN</span>
+        <span>{currentRent} MXN</span>
         <ButtonIcon>
           <IconShare
             color="var(--color-primary)"
@@ -180,40 +209,54 @@ const CustomCardProperty = (props) => {
         </ButtonIcon>
       </div>
       <div className="address-item">
-        <span className="text-bold">Zona El Mirador El Marquez Querétaro</span>
+        <span className="text-bold">{shortAddress}</span>
       </div>
       <div className="price-maintenance">
-        Mantenimiento: <span>$3,500.00 MXN</span>
+        Mantenimiento: <span>{maintenanceAmount} MXN</span>
       </div>
       <div className="icon-property">
         <div className="info">
           <IconBed color="#6E7191" backGround="#6E7191" />
-          <span>3</span>
+          <span>{totalRooms}</span>
         </div>
         <div className="info">
           <IconBathroom color="#6E7191" backGround="#6E7191" />
-          <span>3</span>
+          <span>{totalBathrooms}</span>
         </div>
         <div className="info">
           <IconCar color="#6E7191" backGround="#6E7191" />
-          <span>3</span>
+          <span>{totalParkingSpots}</span>
         </div>
         <div className="info">
           <IconHouseMeasure color="#6E7191" backGround="#6E7191" />
-          <span>600m²</span>
+          <span>{totalConstructionArea}m²</span>
         </div>
       </div>
-      <div className="content-button">
-        <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
-        <ButtonPrimary>Contactar</ButtonPrimary>
-        <ButtonWhatsapp>
-          <IconWhatsapp
-            size="15"
-            color="var(--color-primary)"
-            backGround="var(--color-primary)"
-          />
-        </ButtonWhatsapp>
-      </div>
+      {owner === findLastIndex && (
+        <div className="content-button">
+          <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
+          <ButtonPrimary>Contactar</ButtonPrimary>
+          <ButtonWhatsapp>
+            <IconWhatsapp
+              size="15"
+              color="var(--color-primary)"
+              backGround="var(--color-primary)"
+            />
+          </ButtonWhatsapp>
+        </div>
+      )}
+      {owner === true && (
+        <div className="content-button-space">
+          {idUserType === 4 && (
+            <ButtonIcon>
+              <IconDownloadDetail color="var(--color-primary)" size="20px" />
+            </ButtonIcon>
+          )}
+          {canInviteTenant === true && (
+            <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
+          )}
+        </div>
+      )}
     </Card>
   );
 };

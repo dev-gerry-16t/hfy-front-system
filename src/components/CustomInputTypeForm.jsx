@@ -78,6 +78,7 @@ const CustomInputTypeForm = (props) => {
     error = false,
     errorMessage,
     info,
+    onBlur = () => {},
   } = props;
   return (
     <ContainerInput>
@@ -103,6 +104,7 @@ const CustomInputTypeForm = (props) => {
               }
             }
           }}
+          onBlur={onBlur}
           maxLength={isNil(maxLength) === false ? maxLength : null}
           minLength={isNil(minLength) === false ? minLength : null}
           error={error}

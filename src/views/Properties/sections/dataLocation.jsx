@@ -1,8 +1,13 @@
-import React, { useState } from "react";
-import isNil from "lodash/isNil";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { Row, Col } from "antd";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
 import CustomSelect from "../../../components/CustomSelect";
 import CustomInputCurrency from "../../../components/customInputCurrency";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
@@ -13,6 +18,30 @@ import {
 } from "../constants/styleConstants";
 import CustomTextArea from "../../../components/customTextArea";
 import CustomMapContainer from "../../../components/customGoogleMaps";
+
+const MultiSelect = styled.div`
+  display: flex;
+  height: 100%;
+  justify-content: space-between;
+  align-items: center;
+  .button-actions-select {
+    display: flex;
+    gap: 1em;
+  }
+`;
+
+const ButtonCheck = styled.button`
+  border: ${(props) =>
+    props.select === true ? "1px solid #FF0083" : "1px solid #d6d8e7"};
+  border-radius: 0.5em;
+  background: ${(props) =>
+    props.select === true ? "rgba(255, 0, 131, 0.2)" : "transparent"};
+  color: #000;
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  box-shadow: ${(props) =>
+    props.select ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
+`;
 
 const Location = styled.div`
   border: 1px solid #d6d8e7;
@@ -34,12 +63,187 @@ const Location = styled.div`
   }
 `;
 
-const SectionDataLocation = () => {
-  const [dataForm, setDataForm] = useState({
-    code: null,
-    location: null,
-    street: null,
+const SectionDataLocation = (props) => {
+  const {
+    onClickBack,
+    onclickNext,
+    callGlobalActionApi,
+    dataProfile,
+    dataFormSave,
+  } = props;
+  const [idZipCode, setIdZipCode] = useState(null);
+  const [positionCoordenates, setPositionCoordenates] = useState(null);
+  const [zipCode, setZipCode] = useState(null);
+  const [zipCodeStateCity, setZipCodeStateCity] = useState({
+    state: null,
+    city: null,
   });
+  const [openOtherNeighborhood, setOpenOtherNeighborhood] = useState(false);
+  const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataForm, setDataForm] = useState({
+    street: null,
+    streetNumber: null,
+    suite: null,
+    idZipCode: null,
+    neighborhood: null,
+    isExactLocation: true,
+    jsonCoordinates: null,
+  });
+  const frontFunctions = new FrontFunctions();
+
+  const hanlderCallGetZipCodeAdress = async (code, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+          zipCode: code,
+        },
+        null,
+        API_CONSTANTS.GET_ZIP_CODE_ADRESS
+      );
+
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      const state =
+        isEmpty(responseResult1) === false ? responseResult1.state : "";
+      const city =
+        isEmpty(responseResult1) === false ? responseResult1.municipality : "";
+      const responseMaps = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?&address=${code}+${state}+${city}&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`,
+        {
+          method: "GET",
+        }
+      );
+      const responseResultMaps = await responseMaps.json();
+      const geolocation =
+        isEmpty(responseResultMaps) === false &&
+        isNil(responseResultMaps.results) === false &&
+        isNil(responseResultMaps.results[0]) === false
+          ? responseResultMaps.results[0].geometry.location
+          : {};
+      const neighborhood = responseResult2.find((row) => {
+        return row.idZipCode === id;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setOpenOtherNeighborhood(true);
+      }
+
+      setIdZipCode(isEmpty(responseResult2) ? "" : id);
+      setDataZipCatalog(responseResult2);
+      setZipCodeStateCity({
+        state,
+        city,
+      });
+      setPositionCoordenates(geolocation);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const hanlderCallGetZipCodeAdressFill = async (code, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+          zipCode: code,
+        },
+        null,
+        API_CONSTANTS.GET_ZIP_CODE_ADRESS
+      );
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      const neighborhood = responseResult2.find((row) => {
+        return row.idZipCode == id;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setOpenOtherNeighborhood(true);
+      }
+
+      setIdZipCode(isEmpty(responseResult2) ? "" : id);
+      setDataZipCatalog(responseResult2);
+      setZipCodeStateCity({
+        state: isEmpty(responseResult1) === false ? responseResult1.state : "",
+        city:
+          isEmpty(responseResult1) === false
+            ? responseResult1.municipality
+            : "",
+      });
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      const {
+        street,
+        streetNumber,
+        suite,
+        idZipCode,
+        neighborhood,
+        isExactLocation = true,
+        jsonCoordinates,
+        zipCode,
+      } = dataFormSave;
+      setDataForm({
+        street,
+        streetNumber,
+        suite,
+        idZipCode,
+        neighborhood,
+        isExactLocation,
+        jsonCoordinates,
+        zipCode,
+      });
+      if (
+        isNil(jsonCoordinates) === false &&
+        isNil(zipCode) === false &&
+        isNil(idZipCode) === false
+      ) {
+        setZipCode(zipCode, idZipCode);
+        setPositionCoordenates(JSON.parse(jsonCoordinates));
+        hanlderCallGetZipCodeAdressFill(zipCode, idZipCode);
+      }
+    }
+  }, [dataFormSave]);
 
   return (
     <ContentForm>
@@ -66,7 +270,7 @@ const SectionDataLocation = () => {
                   <CustomInputTypeForm
                     value={dataForm.street}
                     placeholder=""
-                    label="Calle"
+                    label="Calle *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
@@ -82,24 +286,34 @@ const SectionDataLocation = () => {
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomInputTypeForm
-                    value={""}
+                    value={dataForm.streetNumber}
                     placeholder=""
-                    label="Número exterior"
+                    label="Número exterior *"
                     error={false}
                     errorMessage="Este campo es requerido"
-                    onChange={(value) => {}}
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        streetNumber: value,
+                      });
+                    }}
                     type="number"
                   />
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomInputTypeForm
-                    value={""}
+                    value={dataForm.suite}
                     placeholder=""
                     label="Número interior"
                     error={false}
                     errorMessage="Este campo es requerido"
-                    onChange={(value) => {}}
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        suite: value,
+                      });
+                    }}
                     type="number"
                   />
                 </Col>
@@ -107,37 +321,23 @@ const SectionDataLocation = () => {
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomInputTypeForm
-                    value={dataForm.code}
+                    value={zipCode}
                     placeholder=""
                     label="Código postal *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={async (value) => {
                       if (value.length === 5) {
-                        const response = await fetch(
-                          `https://maps.googleapis.com/maps/api/geocode/json?&address=${value}&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`,
-                          {
-                            method: "GET",
-                          }
-                        );
-                        const responseResult = await response.json();
-                        const geolocation =
-                          isEmpty(responseResult) === false &&
-                          isNil(responseResult.results) === false &&
-                          isNil(responseResult.results[0]) === false
-                            ? responseResult.results[0].geometry.location
-                            : {};
-                        setDataForm({
-                          ...dataForm,
-                          code: value,
-                          location: geolocation,
-                        });
+                        setZipCode(value);
+                        hanlderCallGetZipCodeAdress(value, "");
                       } else {
                         setDataForm({
                           ...dataForm,
-                          code: value,
-                          location: null,
+                          jsonCoordinates: null,
+                          zipCode: value,
                         });
+                        setZipCode(null);
+                        setPositionCoordenates(null);
                       }
                     }}
                     type="number"
@@ -146,9 +346,9 @@ const SectionDataLocation = () => {
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomInputTypeForm
-                    value={""}
+                    value={zipCodeStateCity.state}
                     placeholder=""
-                    label="Estado"
+                    label="Estado *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {}}
@@ -159,9 +359,9 @@ const SectionDataLocation = () => {
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomInputTypeForm
-                    value={""}
+                    value={zipCodeStateCity.city}
                     placeholder=""
-                    label="Municipio/Delegación"
+                    label="Municipio/Delegación *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {}}
@@ -171,33 +371,49 @@ const SectionDataLocation = () => {
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <CustomSelect
-                    value={""}
+                    value={idZipCode}
                     placeholder=""
-                    label="Colonia"
-                    data={[]}
+                    label="Colonia *"
+                    data={dataZipCatalog}
                     error={false}
                     errorMessage="Este campo es requerido"
-                    onChange={(value) => {}}
+                    onChange={(value, option) => {
+                      setDataForm({
+                        ...dataForm,
+                        idZipCode: value,
+                      });
+                      setIdZipCode(value);
+                      setOpenOtherNeighborhood(option.isOpen);
+                    }}
                   />
                 </Col>
               </Row>
-              <Row>
-                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                  <CustomTextArea
-                    value={""}
-                    label="Referencias"
-                    placeholder=""
-                    onChange={(value) => {}}
-                    type="text"
-                    error={false}
-                  />
-                </Col>
-              </Row>
+              {openOtherNeighborhood === true && (
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.neighborhood}
+                      placeholder="Indica la colonia"
+                      label="Otra colonia"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhood: value,
+                        });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+              )}
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <Location>
-                {isNil(dataForm.location) === true ? (
+                {isNil(positionCoordenates) === true &&
+                isEmpty(positionCoordenates) === true ? (
                   <div className="no-location">
                     <img
                       src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296P.png"
@@ -207,20 +423,65 @@ const SectionDataLocation = () => {
                   </div>
                 ) : (
                   <CustomMapContainer
-                    location={dataForm.location}
-                    onDragPosition={(position) => {}}
+                    location={positionCoordenates}
+                    onDragPosition={(position) => {
+                      setPositionCoordenates(position);
+                    }}
+                    exact={dataForm.isExactLocation}
                   />
                 )}
               </Location>
             </Col>
           </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <MultiSelect>
+                <span>¿Compartir ubicación precisa?</span>
+                <div className="button-actions-select">
+                  {[
+                    { id: true, text: "Si" },
+                    { id: false, text: "No" },
+                  ].map((row) => {
+                    return (
+                      <ButtonCheck
+                        select={row.id === dataForm.isExactLocation}
+                        onClick={() => {
+                          setDataForm({ ...dataForm, isExactLocation: row.id });
+                        }}
+                      >
+                        {row.text}
+                      </ButtonCheck>
+                    );
+                  })}
+                </div>
+              </MultiSelect>
+            </Col>
+          </Row>
         </div>
         <div className="next-back-buttons">
-          <ButtonNextBackPage block>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onClickBack({
+                ...dataForm,
+                jsonCoordinates: JSON.stringify(positionCoordenates),
+                zipCode,
+              });
+            }}
+          >
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          <ButtonNextBackPage block={false}>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickNext({
+                ...dataForm,
+                jsonCoordinates: JSON.stringify(positionCoordenates),
+                zipCode,
+              });
+            }}
+          >
             <u>{"Siguiente"}</u>
             {" >>"}
           </ButtonNextBackPage>
@@ -230,4 +491,19 @@ const SectionDataLocation = () => {
   );
 };
 
-export default SectionDataLocation;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionDataLocation);

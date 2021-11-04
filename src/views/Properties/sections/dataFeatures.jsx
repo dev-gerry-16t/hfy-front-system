@@ -1,6 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { Row, Col } from "antd";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
 import {
   ContentForm,
   LineSeparator,
@@ -9,7 +16,109 @@ import {
 } from "../constants/styleConstants";
 import CustomChips from "../../../components/customChips";
 
-const SectionDataFeatures = () => {
+const SectionDataFeatures = (props) => {
+  const {
+    onClickBack,
+    onclickNext,
+    callGlobalActionApi,
+    dataProfile,
+    dataFormSave,
+  } = props;
+  const [dataAmenities, setDataAmenities] = useState([]);
+  const [dataCharacteristics, setDataCharacteristics] = useState([]);
+
+  const [dataForm, setDataForm] = useState({
+    propertyAmenities: null,
+    propertyGeneralCharacteristics: null,
+  });
+  const [dataFormJoin, setDataFormJoin] = useState({
+    propertyAmenities: null,
+    propertyGeneralCharacteristics: null,
+  });
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetAllPropertyAmenities = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_PROPERTY_AMENITIES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAmenities(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPropertyGeneralCharacteristics = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_PROPERTY_GENERAL_CHARACTERISTICS
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataCharacteristics(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    handlerCallGetAllPropertyAmenities();
+    handlerCallGetAllPropertyGeneralCharacteristics();
+  }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      const { propertyAmenities, propertyGeneralCharacteristics } =
+        dataFormSave;
+      const amenities =
+        isNil(propertyAmenities) === false &&
+        isEmpty(propertyAmenities) === false
+          ? propertyAmenities.split(",")
+          : [];
+      const characteristics =
+        isNil(propertyGeneralCharacteristics) === false &&
+        isEmpty(propertyGeneralCharacteristics) === false
+          ? propertyGeneralCharacteristics.split(",")
+          : [];
+      setDataForm({
+        propertyAmenities: amenities,
+        propertyGeneralCharacteristics: characteristics,
+      });
+      setDataFormJoin({
+        propertyAmenities,
+        propertyGeneralCharacteristics,
+      });
+    }
+  }, [dataFormSave]);
+
   return (
     <ContentForm>
       <div className="header-title">
@@ -30,14 +139,12 @@ const SectionDataFeatures = () => {
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
               <CustomChips
-                selected={[]}
-                data={[
-                  { id: 1, text: "Acceso a la playa" },
-                  { id: 2, text: "Balcon" },
-                  { id: 3, text: "Cisterna" },
-                  { id: 4, text: "Estacionamiento techado" },
-                ]}
-                onChange={(data) => {}}
+                selected={dataForm.propertyAmenities}
+                data={dataAmenities}
+                onChange={(data, join) => {
+                  setDataForm({ ...dataForm, propertyAmenities: data });
+                  setDataFormJoin({ ...dataFormJoin, propertyAmenities: join });
+                }}
               />
             </Col>
           </Row>
@@ -48,28 +155,49 @@ const SectionDataFeatures = () => {
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
               <CustomChips
-                selected={[]}
-                data={[
-                  {
-                    id: 1,
-                    text: "accesibilidad para adultos mayores",
-                  },
-                  { id: 2, text: "Balcon" },
-                  { id: 3, text: "Cisterna" },
-                  { id: 4, text: "Estacionamiento techado" },
-                ]}
-                onChange={(data) => {}}
+                selected={dataForm.propertyGeneralCharacteristics}
+                data={dataCharacteristics}
+                onChange={(data, join) => {
+                  setDataForm({
+                    ...dataForm,
+                    propertyGeneralCharacteristics: data,
+                  });
+                  setDataFormJoin({
+                    ...dataFormJoin,
+                    propertyGeneralCharacteristics: join,
+                  });
+                }}
               />
             </Col>
           </Row>
         </div>
         <LineSeparator />
         <div className="next-back-buttons">
-          <ButtonNextBackPage block>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onClickBack({
+                ...dataForm,
+                propertyAmenities: dataFormJoin.propertyAmenities,
+                propertyGeneralCharacteristics:
+                  dataFormJoin.propertyGeneralCharacteristics,
+              });
+            }}
+          >
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          <ButtonNextBackPage block={false}>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickNext({
+                ...dataForm,
+                propertyAmenities: dataFormJoin.propertyAmenities,
+                propertyGeneralCharacteristics:
+                  dataFormJoin.propertyGeneralCharacteristics,
+              });
+            }}
+          >
             <u>{"Siguiente"}</u>
             {" >>"}
           </ButtonNextBackPage>
@@ -79,4 +207,19 @@ const SectionDataFeatures = () => {
   );
 };
 
-export default SectionDataFeatures;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionDataFeatures);

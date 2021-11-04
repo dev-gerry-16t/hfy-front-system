@@ -1,5 +1,8 @@
 import React from "react";
+import { Row, Col } from "antd";
 import styled from "styled-components";
+import CustomInputCurrency from "../../components/customInputCurrency";
+import CustomInputTypeForm from "../../components/CustomInputTypeForm";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -122,6 +125,98 @@ const ButtonPolicy = styled.button`
   margin-bottom: 5px;
 `;
 
+const ContentMethod = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 2em 0px;
+  .section-method {
+    display: flex;
+    flex-direction: column;
+    h3 {
+      color: var(--color-primary);
+      margin-bottom: 2em;
+    }
+    .input-radio {
+      margin-bottom: 1.5em;
+      input[type="radio"] {
+        appearance: none;
+        background-color: #fff;
+        margin-right: 5px;
+        font: inherit;
+        color: var(--color-primary);
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 50%;
+        display: inline-grid;
+        place-content: center;
+      }
+      input[type="radio"]::before {
+        content: "";
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+      }
+      input[type="radio"]:checked::before {
+        transform: scale(1);
+      }
+    }
+  }
+`;
+
+const SectionComision = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: 3em 0px;
+  .section-comision {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .comision {
+      margin-bottom: 2.5em;
+      span {
+        border: 1px solid var(--color-primary);
+        padding: 0.5em;
+        border-radius: 7px;
+        font-weight: 600;
+        color: var(--color-primary);
+      }
+    }
+    .input-checkbox {
+      input[type="checkbox"] {
+        appearance: none;
+        background-color: #fff;
+        font: inherit;
+        color: #fff;
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 5px;
+        display: inline-grid;
+        place-content: center;
+      }
+      input[type="checkbox"]::before {
+        content: "\\2713";
+        transform: scale(0);
+        width: 1.05em;
+        height: 1.05em;
+        border-radius: 5px;
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      input[type="checkbox"]:checked::before {
+        transform: scale(1);
+      }
+    }
+  }
+`;
+
 const SelectPolicy = () => {
   return (
     <Content>
@@ -144,7 +239,6 @@ const SelectPolicy = () => {
           <span className="label-indicator">
             Estas a un paso de tomar la mejor decisión
           </span>
-
           <div className="comision">
             <strong>Monto de renta</strong> <span>$10,000.00 MXN</span>
           </div>
@@ -239,13 +333,99 @@ const SelectPolicy = () => {
             Monto de póliza <span>$3,500.00 MXN</span>
           </div>
         </div>
+        <ContentMethod>
+          <div className="section-method">
+            <h3>Elige cómo se pagara la póliza</h3>
+            <label className="input-radio">
+              <input type="radio" id="huey" name="drone" value="huey" />
+              100% propietario
+            </label>
+            <label className="input-radio">
+              <input type="radio" id="dewey" name="drone" value="dewey" />
+              50% propietario / 50% inquilino
+            </label>
+            <label className="input-radio">
+              <input type="radio" id="louie" name="drone" value="louie" />
+              100% inquilino
+            </label>
+          </div>
+        </ContentMethod>
       </ContentForm>
       <ContentForm>
         <div className="header-title">
-          <h1>3.- Compartir comisión</h1>
+          <h1>3.- Compartir comisión con asesor</h1>
           <div className="comision">
             Monto de póliza <span>$3,500.00 MXN</span>
           </div>
+        </div>
+        <SectionComision>
+          <div className="section-comision">
+            <div className="comision">
+              <strong>Comisión para el asesor</strong> <span>$1,800.00</span>
+            </div>
+            <label className="input-checkbox">
+              <input type="checkbox" id="cbox1" value="first_checkbox" />{" "}
+              Compartir comisión
+            </label>
+          </div>
+        </SectionComision>
+        <div
+          style={{
+            padding: "0px 4em",
+          }}
+        >
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputCurrency
+                value={""}
+                placeholder=""
+                label="Porcentaje de comisión"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="number"
+                prefix=""
+                suffix="%"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={""}
+                placeholder=""
+                label="Nombre del asesor"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={""}
+                placeholder=""
+                label="Apellido paterno"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={""}
+                placeholder=""
+                label="id de asesor / correo electrónico"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="text"
+              />
+            </Col>
+          </Row>
         </div>
       </ContentForm>
     </Content>

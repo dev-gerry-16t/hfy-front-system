@@ -106,7 +106,8 @@ const ButtonBid = styled.div`
   }
 `;
 
-const SectionCarouselInfo = () => {
+const SectionCarouselInfo = (props) => {
+  const { dataDetail } = props;
   return (
     <ContainerUp>
       <div className="contain-carousel">
