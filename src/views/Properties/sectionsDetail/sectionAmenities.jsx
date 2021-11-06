@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { IconBed } from "../../../assets/iconSvg";
 import {
@@ -8,11 +10,12 @@ import {
   ButtonNextBackPage,
   Container,
 } from "../constants/styleConstants";
+import ContextProperty from "../context/contextProperty";
 
 const ContentAmenities = styled(Container)`
   .container-chips {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
     .border-1 {
       border-bottom: 0.5px solid #e5e5e5;
       border-right: 0.5px solid #e5e5e5;
@@ -57,35 +60,56 @@ const Title = styled.h2`
 `;
 
 const SectionAmenities = () => {
+  const dataContexProperty = useContext(ContextProperty);
+  const { dataDetail={} } = dataContexProperty;
+  const {
+    propertyAminitiesDescription,
+    propertyGeneralCharacteristicsDescription,
+  } = dataDetail;
+
+  const amenities =
+    isNil(propertyAminitiesDescription) === false &&
+    isEmpty(propertyAminitiesDescription) === false
+      ? propertyAminitiesDescription.split(",")
+      : [];
+
+  const general =
+    isNil(propertyGeneralCharacteristicsDescription) === false &&
+    isEmpty(propertyGeneralCharacteristicsDescription) === false
+      ? propertyGeneralCharacteristicsDescription.split(",")
+      : [];
+
   return (
     <ContentAmenities>
       <div className="container-chips">
         <div className="section-chips border-1">
-          <Title>EXTERIOR</Title>
+          <Title>AMENIDADES</Title>
           <div className="chips">
-            <Chip>Acceso a la playa</Chip>
-            <Chip>Frente a la playa</Chip>
-            <Chip>Estacionamiento techado</Chip>
-          </div>
-        </div>
-        <div className="section-chips border-1">
-          <Title>GENERAL</Title>
-          <div className="chips">
-            <Chip>Acceso a la playa</Chip>
-            <Chip>Frente a la playa</Chip>
-            <Chip>Estacionamiento techado</Chip>
+            {isEmpty(amenities) === false &&
+              amenities.map((row) => {
+                return <Chip>{row}</Chip>;
+              })}
           </div>
         </div>
         <div className="section-chips border-2">
+          <Title>GENERAL</Title>
+          <div className="chips">
+            {isEmpty(general) === false &&
+              general.map((row) => {
+                return <Chip>{row}</Chip>;
+              })}
+          </div>
+        </div>
+        {/* <div className="section-chips border-2">
           <Title>RECREACIÓN</Title>
           <div className="chips">
             <Chip>Acceso a la playa</Chip>
             <Chip>Frente a la playa</Chip>
             <Chip>Estacionamiento techado</Chip>
           </div>
-        </div>
+        </div> */}
       </div>
-      <div className="bottom-chips">
+      {/* <div className="bottom-chips">
         <div
           style={{
             marginRight: 5,
@@ -98,7 +122,7 @@ const SectionAmenities = () => {
           <Chip>Frente a la playa</Chip>
           <Chip>Estacionamiento techado</Chip>
         </div>
-      </div>
+      </div> */}
     </ContentAmenities>
   );
 };

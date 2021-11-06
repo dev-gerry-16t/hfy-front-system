@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import {
   IconBed,
@@ -13,6 +15,7 @@ import {
   ButtonNextBackPage,
   Container,
 } from "../constants/styleConstants";
+import ContextProperty from "../context/contextProperty";
 
 const ContentPublicProperty = styled(Container)`
   margin-top: 1em;
@@ -85,7 +88,7 @@ const SectionCandidate = styled.div`
       align-items: center;
       font-size: 0.8em;
       color: #fff;
-      span{
+      span {
         font-weight: 300;
       }
     }
@@ -108,75 +111,90 @@ const SectionCandidate = styled.div`
 `;
 
 const SectionPublicProperty = () => {
+  const dataContexProperty = useContext(ContextProperty);
+  const { dataDetail } = dataContexProperty;
+  const { applicants, isPublished, infoTenant } = dataDetail;
   return (
-    <ContentPublicProperty>
-      {/* <NoticeProperty>
-        <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
-        <div className="section-select-option">
-          <div className="option-select">
-            <span>Ya tengo un candidato</span>
-            <ButtonAction>
-              <IconAgreement size="51px" color="##4E4B66" />
-            </ButtonAction>
-          </div>
-          <div className="option-select">
-            <span>Quiero publicar el inmueble</span>
-            <ButtonAction>
-              <IconSpeakChat size="51px" color="##4E4B66" />
-            </ButtonAction>
-          </div>
-        </div>
-      </NoticeProperty> */}
-      <SectionCandidate>
-        <h1>Datos de candidato</h1>
-        <div className="info-user-select">
-          <div
-            style={{
-              position: "relative",
-            }}
-          >
-            <div className="image-user">
-              <IconTenant size="100%" color="#4E4B66" />
+    <ContentPublicProperty id="public-property">
+      {isNil(applicants) === true && (
+        <NoticeProperty>
+          <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
+          <div className="section-select-option">
+            <div className="option-select">
+              <span>Ya tengo un candidato</span>
+              <ButtonAction>
+                <IconAgreement size="51px" color="##4E4B66" />
+              </ButtonAction>
             </div>
-            <div className="score-user">
-              <span>Score</span>
-              <strong>4.3</strong>
+            <div className="option-select">
+              <span>Quiero publicar el inmueble</span>
+              <ButtonAction>
+                <IconSpeakChat size="51px" color="##4E4B66" />
+              </ButtonAction>
             </div>
           </div>
-          <div>
-            <div className="info">
-              <strong>Nombre:</strong>{" "}
-              <span>Juan Ignacio Covarruvias Ruiz</span>
+        </NoticeProperty>
+      )}
+      {isNil(infoTenant) === false && (
+        <SectionCandidate>
+          <h1>Datos de candidato</h1>
+          <div className="info-user-select">
+            <div
+              style={{
+                position: "relative",
+              }}
+            >
+              <div className="image-user">
+                <IconTenant size="100%" color="#4E4B66" />
+              </div>
+              <div className="score-user">
+                <span>Score</span>
+                <strong>4.3</strong>
+              </div>
             </div>
-            <div className="info">
-              <strong>Correo:</strong> <span>juan@correo.com</span>
+            <div>
+              <div className="info">
+                <strong>Nombre:</strong>{" "}
+                <span>Juan Ignacio Covarruvias Ruiz</span>
+              </div>
+              <div className="info">
+                <strong>Correo:</strong> <span>juan@correo.com</span>
+              </div>
+              <div className="info">
+                <strong>Teléfono:</strong> <span>5562100512</span>
+              </div>
+              <div className="info">
+                <strong>Ocupación:</strong> <span>Arquitecto</span>
+              </div>
+              <div className="status-user">
+                Solicitud pendiente de aceptación
+              </div>
             </div>
-            <div className="info">
-              <strong>Teléfono:</strong> <span>5562100512</span>
-            </div>
-            <div className="info">
-              <strong>Ocupación:</strong> <span>Arquitecto</span>
-            </div>
-            <div className="status-user">Solicitud pendiente de aceptación</div>
           </div>
-        </div>
-      </SectionCandidate>
-      {/* <SectionCandidate>
-        <h1>Inmueble publicado en:</h1>
-        <div className="info-user-select">
-          <div className="app-list">
-            <img width="100px" src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296D.png" alt="homify" />
-          </div>
-          <div>
-            <div className="info">
-              <strong>Titulo:</strong> <span>Zona el Mirador</span>
+        </SectionCandidate>
+      )}
+      {isPublished === true && (
+        <SectionCandidate>
+          <h1>Inmueble publicado en:</h1>
+          <div className="info-user-select">
+            <div className="app-list">
+              <img
+                width="100px"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296D.png"
+                alt="homify"
+              />
             </div>
-            <div className="info">
-              <strong>Descripcion:</strong> <span>El Marquez Queretaro</span>
+            <div>
+              <div className="info">
+                <strong>Titulo:</strong> <span>Zona el Mirador</span>
+              </div>
+              <div className="info">
+                <strong>Descripcion:</strong> <span>El Marquez Queretaro</span>
+              </div>
             </div>
           </div>
-        </div>
-      </SectionCandidate> */}
+        </SectionCandidate>
+      )}
     </ContentPublicProperty>
   );
 };

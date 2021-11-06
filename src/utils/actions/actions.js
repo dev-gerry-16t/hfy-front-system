@@ -4176,7 +4176,11 @@ const callGlobalActionApi =
           config
         );
       } else if (method === "PUT") {
-        response = await RequesterAxios.put(CONSTANT + id, data, config);
+        response = await RequesterAxios.put(
+          CONSTANT + id,
+          { ...data, offset: getTimeZone() },
+          config
+        );
       }
       const responseResultStatus =
         isNil(response) === false && isNil(response.status) === false

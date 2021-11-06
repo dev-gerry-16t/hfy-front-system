@@ -28,28 +28,6 @@ const AddProperty = (props) => {
   const [dataForm, setDataForm] = useState({});
   const frontFunctions = new FrontFunctions();
 
-  const handlerCallSetPropertyDocument = async (data, id) => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
-    try {
-      await callGlobalActionApi(
-        {
-          idCustomer,
-          idSystemUser,
-          idLoginHistory,
-          ...data,
-        },
-        id,
-        API_CONSTANTS.CUSTOMER.SET_PROPERTY_DOCUMENT,
-        "PUT"
-      );
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
   const handlerCallAddPropertyV2 = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -129,19 +107,16 @@ const AddProperty = (props) => {
           onClickBack={() => {
             setCurrent(2);
           }}
-          onClickFinish={async (data) => {
+          onClickFinish={async () => {
             try {
               const response = await handlerCallAddPropertyV2(dataForm);
-              await handlerCallSetPropertyDocument(
-                {
-                  ...data,
-                  idApartment: response.idApartment,
-                  isActive: true,
-                },
-                response.idProperty
-              );
-              history.push("/websystem/dashboard-properties");
-            } catch (error) {}
+              return response;
+            } catch (error) {
+              throw error;
+            }
+          }}
+          redirect={() => {
+            history.push("/websystem/dashboard-properties");
           }}
         />
       )}

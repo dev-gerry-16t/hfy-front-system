@@ -28,6 +28,8 @@ import SectionFeatures from "./sectionsDetail/sectionFeatures";
 import SectionLocation from "./sectionsDetail/sectionLocation";
 import SectionPolicy from "./sectionsDetail/sectionPolicy";
 import SectionPublicProperty from "./sectionsDetail/sectionPublicProperty";
+import SectionServiceAgent from "./sectionsDetail/sectionServiceAgent";
+import ContextProperty from "./context/contextProperty";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -222,10 +224,11 @@ const dataTabsProperty = [
 ];
 
 const DetailPropertyUsers = (props) => {
-  const { match, callGlobalActionApi, dataProfile } = props;
+  const { match, callGlobalActionApi, dataProfile, history } = props;
   const { params } = match;
   const idProperty = params.idProperty;
   const [dataDetail, setDataDetail] = useState({});
+  const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
   const frontFunctions = new FrontFunctions();
 
@@ -260,172 +263,258 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallGetAllApplicationMethods = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          type: 1,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_APPLICATION_METHODS
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataApplicationMethod(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallUpdateProperty = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idProperty,
+        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetPropertyById();
+    handlerCallGetAllApplicationMethods();
   }, []);
 
   return (
     <Content>
-      <ContentForm owner>
-        <div className="header-title">
-          <h1>Detalle de inmueble</h1>
-          <ButtonIcon>
-            <IconHeart
-              backGround="var(--color-primary)"
-              color="var(--color-primary)"
+      <ContextProperty.Provider
+        value={{
+          dataDetail,
+          updateProperty: (data) => {
+            handlerCallUpdateProperty(data);
+          },
+        }}
+      >
+        <ContentForm owner>
+          <div className="header-title">
+            <h1>Detalle de inmueble</h1>
+            <ButtonIcon>
+              <IconHeart
+                backGround="var(--color-primary)"
+                color="var(--color-primary)"
+              />
+            </ButtonIcon>
+          </div>
+          <div>
+            <SectionCarouselInfo
+              apartmentImages={
+                isNil(dataDetail) === false &&
+                isNil(dataDetail.apartmentDocuments) === false
+                  ? JSON.parse(dataDetail.apartmentDocuments)
+                  : []
+              }
             />
-          </ButtonIcon>
-        </div>
-        <div>
-          <SectionCarouselInfo dataDetail={dataDetail} />
-          <ContainerDown>
-            <TabsProperty>
-              {dataTabsProperty.map((row) => {
-                return (
-                  <Tab
-                    selected={tabSelect === row.id}
-                    onClick={() => {
-                      setTabSelect(row.id);
-                    }}
-                  >
-                    <h1>{row.text}</h1>
-                    <hr />
-                  </Tab>
-                );
-              })}
-            </TabsProperty>
-            {tabSelect === "1" && <SectionFeatures />}
-            {tabSelect === "2" && <SectionLocation />}
-            {tabSelect === "3" && <SectionAmenities />}
-            <SectionPolicy />
-            <SectionPublicProperty />
-          </ContainerDown>
-        </div>
-      </ContentForm>
-      <ContentRight>
-        <GeneralCard>
-          <div className="header-title">
-            <h1>Documentos</h1>
+            <ContainerDown>
+              <TabsProperty>
+                {dataTabsProperty.map((row) => {
+                  return (
+                    <Tab
+                      selected={tabSelect === row.id}
+                      onClick={() => {
+                        setTabSelect(row.id);
+                      }}
+                    >
+                      <h1>{row.text}</h1>
+                      <hr />
+                    </Tab>
+                  );
+                })}
+              </TabsProperty>
+              {tabSelect === "1" && <SectionFeatures />}
+              {tabSelect === "2" && <SectionLocation />}
+              {tabSelect === "3" && <SectionAmenities />}
+              {isNil(dataDetail.idApplicationMethod) === true && (
+                <SectionPolicy
+                  onClickViewPolicy={() => {
+                    history.push(`/websystem/select-policy/${idProperty}`);
+                  }}
+                />
+              )}
+              {isNil(dataDetail.idPolicy) === true && (
+                <SectionServiceAgent dataApplication={dataApplicationMethod} />
+              )}
+              <SectionPublicProperty />
+            </ContainerDown>
           </div>
-          <div className="content-cards">
-            <Card>
-              <div className="card-document">
-                <div className="top-info">
-                  <div className="icon-info">
-                    <IconPolicy
-                      backGround="#A0A3BD"
-                      color="#A0A3BD"
-                      size="34px"
-                    />
-                  </div>
-                  <div className="name-info">
-                    <h3>Póliza jurídica</h3>
-                    <span>Archivo listo para firmar</span>
-                  </div>
-                </div>
-                <div className="button-action">
-                  <ButtonDocument primary>Firmar</ButtonDocument>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <div className="card-document">
-                <div className="top-info">
-                  <div className="icon-info">
-                    <IconContract
-                      backGround="#A0A3BD"
-                      color="#A0A3BD"
-                      size="34px"
-                    />
-                  </div>
-                  <div className="name-info">
-                    <h3>Contrato de arrendamiento</h3>
-                    <span>Archivo listo para firmar</span>
-                  </div>
-                </div>
-                <div className="button-action">
-                  <ButtonDocument primary>Firmar</ButtonDocument>
-                </div>
-              </div>
-            </Card>
-            <Card>
-              <div className="card-document">
-                <div className="top-info">
-                  <div className="icon-info">
-                    <IconPayments
-                      backGround="#A0A3BD"
-                      color="#A0A3BD"
-                      size="34px"
-                    />
-                  </div>
-                  <div className="name-info">
-                    <h3>Pagares</h3>
-                    <span>Archivo listo para firmar</span>
-                  </div>
-                </div>
-                <div className="button-action">
-                  <ButtonDocument primary>Firmar</ButtonDocument>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </GeneralCard>
-        <GeneralCard>
-          <div className="header-title">
-            <h1>Prospectos</h1>
-          </div>
-          <div className="content-cards">
-            <Card>
-              <div className="card-user">
-                <div className="top-info">
-                  <div className="icon-info">
-                    <IconTenant size="100%" color="#4E4B66" />
-                    <div className="score">
-                      <span>Score</span>
-                      <strong>4.85</strong>
+        </ContentForm>
+        <ContentRight>
+          <GeneralCard>
+            <div className="header-title">
+              <h1>Documentos</h1>
+            </div>
+            <div className="content-cards">
+              <Card>
+                <div className="card-document">
+                  <div className="top-info">
+                    <div className="icon-info">
+                      <IconPolicy
+                        backGround="#A0A3BD"
+                        color="#A0A3BD"
+                        size="34px"
+                      />
+                    </div>
+                    <div className="name-info">
+                      <h3>Póliza jurídica</h3>
+                      <span>Archivo listo para firmar</span>
                     </div>
                   </div>
-                  <div className="name-info">
-                    <h3>Juan Valdez</h3>
-                    <span>Invitación enviada</span>
+                  <div className="button-action">
+                    <ButtonDocument primary>Firmar</ButtonDocument>
                   </div>
                 </div>
-                <div className="button-action">
-                  <ButtonDocument>Rechazar</ButtonDocument>
-                  <ButtonDocument>Aceptar</ButtonDocument>
-                </div>
-              </div>
-            </Card>
-            <Card></Card>
-            <Card></Card>
-          </div>
-        </GeneralCard>
-        <GeneralCard>
-          <div className="header-title">
-            <h1>Agentes</h1>
-          </div>
-          <div className="content-cards">
-            <Card>
-              <div className="card-user">
-                <div className="top-info">
-                  <div className="icon-info">
-                    <IconTenant size="100%" color="#4E4B66" />
+              </Card>
+              <Card>
+                <div className="card-document">
+                  <div className="top-info">
+                    <div className="icon-info">
+                      <IconContract
+                        backGround="#A0A3BD"
+                        color="#A0A3BD"
+                        size="34px"
+                      />
+                    </div>
+                    <div className="name-info">
+                      <h3>Contrato de arrendamiento</h3>
+                      <span>Archivo listo para firmar</span>
+                    </div>
                   </div>
-                  <div className="name-info">
-                    <h3>Juan Valdez</h3>
-                    <span>Invitación enviada</span>
+                  <div className="button-action">
+                    <ButtonDocument primary>Firmar</ButtonDocument>
                   </div>
                 </div>
-                <div className="button-action">
-                  <ButtonDocument>Deshacer</ButtonDocument>
+              </Card>
+              <Card>
+                <div className="card-document">
+                  <div className="top-info">
+                    <div className="icon-info">
+                      <IconPayments
+                        backGround="#A0A3BD"
+                        color="#A0A3BD"
+                        size="34px"
+                      />
+                    </div>
+                    <div className="name-info">
+                      <h3>Pagares</h3>
+                      <span>Archivo listo para firmar</span>
+                    </div>
+                  </div>
+                  <div className="button-action">
+                    <ButtonDocument primary>Firmar</ButtonDocument>
+                  </div>
                 </div>
-              </div>
-            </Card>
-            <Card></Card>
-            <Card></Card>
-          </div>
-        </GeneralCard>
-      </ContentRight>
+              </Card>
+            </div>
+          </GeneralCard>
+          <GeneralCard>
+            <div className="header-title">
+              <h1>Prospectos</h1>
+            </div>
+            <div className="content-cards">
+              <Card>
+                <div className="card-user">
+                  <div className="top-info">
+                    <div className="icon-info">
+                      <IconTenant size="100%" color="#4E4B66" />
+                      <div className="score">
+                        <span>Score</span>
+                        <strong>4.85</strong>
+                      </div>
+                    </div>
+                    <div className="name-info">
+                      <h3>Juan Valdez</h3>
+                      <span>Invitación enviada</span>
+                    </div>
+                  </div>
+                  <div className="button-action">
+                    <ButtonDocument>Rechazar</ButtonDocument>
+                    <ButtonDocument>Aceptar</ButtonDocument>
+                  </div>
+                </div>
+              </Card>
+              <Card></Card>
+              <Card></Card>
+            </div>
+          </GeneralCard>
+          <GeneralCard>
+            <div className="header-title">
+              <h1>Agentes</h1>
+            </div>
+            <div className="content-cards">
+              <Card>
+                <div className="card-user">
+                  <div className="top-info">
+                    <div className="icon-info">
+                      <IconTenant size="100%" color="#4E4B66" />
+                    </div>
+                    <div className="name-info">
+                      <h3>Juan Valdez</h3>
+                      <span>Invitación enviada</span>
+                    </div>
+                  </div>
+                  <div className="button-action">
+                    <ButtonDocument>Deshacer</ButtonDocument>
+                  </div>
+                </div>
+              </Card>
+              <Card></Card>
+              <Card></Card>
+            </div>
+          </GeneralCard>
+        </ContentRight>
+      </ContextProperty.Provider>
     </Content>
   );
 };
@@ -438,8 +527,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant) =>
-    dispatch(callGlobalActionApi(data, id, constant)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(

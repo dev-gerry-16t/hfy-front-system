@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { IconBed, IconMoneyPolicy } from "../../../assets/iconSvg";
 import {
@@ -8,6 +10,7 @@ import {
   ButtonNextBackPage,
   Container,
 } from "../constants/styleConstants";
+import ContextProperty from "../context/contextProperty";
 
 const ContentPolicy = styled(Container)`
   margin-top: 1em;
@@ -49,7 +52,7 @@ const PolicySelected = styled.div`
     align-items: center;
     gap: 2em;
   }
-  
+
   .right-policy {
     display: flex;
     justify-content: center;
@@ -93,50 +96,59 @@ const PolicySelected = styled.div`
   }
 `;
 
-const SectionPolicy = () => {
+const SectionPolicy = (props) => {
+  const { onClickViewPolicy } = props;
+  const dataContexProperty = useContext(ContextProperty);
+  const { dataDetail } = dataContexProperty;
+  const { idPolicy, } = dataDetail;
+
   return (
-    <ContentPolicy selected>
-      {/* <NoticePolicy>
-        <h1>
-          ¡
-          <span
-            style={{
-              color: "#FF0282",
-            }}
-          >
-            Protege
-          </span>{" "}
-          tu propiedad!
-        </h1>
-        <span className="label-indicator">
-          Eligiendo alguna de nuestras pólizas de arrendamiento
-        </span>
-        <Button>Ver pólizas</Button>
-      </NoticePolicy> */}
-      <PolicySelected>
-        <div className="left-policy">
-          <div>
-            <IconMoneyPolicy size="132px" />
+    <ContentPolicy selected={isNil(idPolicy) === false}>
+      {isNil(idPolicy) === true && (
+        <NoticePolicy>
+          <h1>
+            ¡
+            <span
+              style={{
+                color: "#FF0282",
+              }}
+            >
+              Protege
+            </span>{" "}
+            tu propiedad!
+          </h1>
+          <span className="label-indicator">
+            Eligiendo alguna de nuestras pólizas de arrendamiento
+          </span>
+          <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
+        </NoticePolicy>
+      )}
+      {isNil(idPolicy) === false && (
+        <PolicySelected>
+          <div className="left-policy">
+            <div>
+              <IconMoneyPolicy size="132px" />
+            </div>
           </div>
-        </div>
-        <div className="right-policy">
-          <div className="info-payment">
-            <div className="info-policy">
-              <h1>Póliza Pro</h1>
-              <div className="price">
-                <h2>$3,000 MXN</h2> <span>35%</span>
+          <div className="right-policy">
+            <div className="info-payment">
+              <div className="info-policy">
+                <h1>Póliza Pro</h1>
+                <div className="price">
+                  <h2>$3,000 MXN</h2> <span>35%</span>
+                </div>
+              </div>
+              <div className="comision">
+                <strong>Comisión para el asesor</strong> <span>$1,800.00</span>
+              </div>
+              <div>
+                <strong>Tipo de pago:</strong>{" "}
+                <span>50% propietario / 50% inquilino</span>
               </div>
             </div>
-            <div className="comision">
-              <strong>Comisión para el asesor</strong> <span>$1,800.00</span>
-            </div>
-            <div>
-              <strong>Tipo de pago:</strong>{" "}
-              <span>50% propietario / 50% inquilino</span>
-            </div>
           </div>
-        </div>
-      </PolicySelected>
+        </PolicySelected>
+      )}
     </ContentPolicy>
   );
 };

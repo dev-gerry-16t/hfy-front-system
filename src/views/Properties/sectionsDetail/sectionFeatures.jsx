@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import {
   IconBathroom,
@@ -13,6 +13,7 @@ import {
   ButtonNextBackPage,
   Container,
 } from "../constants/styleConstants";
+import ContextProperty from "../context/contextProperty";
 
 const ContentFeatures = styled(Container)`
   display: flex;
@@ -80,6 +81,18 @@ const CardAmenity = styled.div`
 `;
 
 const SectionFeatures = () => {
+  const dataContexProperty = useContext(ContextProperty);
+  const { dataDetail } = dataContexProperty;
+  const {
+    totalBathrooms,
+    totalBedrooms,
+    totalParkingSpots,
+    totalHalfBathrooms,
+    totalSquareMetersBuilt,
+    totalSquareMetersLand,
+    floorDescription,
+    totalFloors,
+  } = dataDetail;
   return (
     <ContentFeatures>
       <div className="container-features">
@@ -90,7 +103,7 @@ const SectionFeatures = () => {
             </div>
           </div>
           <div className="info-amenity">
-            <h1>3</h1>
+            <h1>{totalBedrooms}</h1>
             <span>Recámaras</span>
           </div>
         </CardAmenity>
@@ -101,7 +114,7 @@ const SectionFeatures = () => {
             </div>
           </div>
           <div className="info-amenity">
-            <h1>3</h1>
+            <h1>{totalBathrooms}</h1>
             <span>Baños</span>
           </div>
         </CardAmenity>
@@ -112,7 +125,7 @@ const SectionFeatures = () => {
             </div>
           </div>
           <div className="info-amenity">
-            <h1>3</h1>
+            <h1>{totalHalfBathrooms}</h1>
             <span>Medios Baños</span>
           </div>
         </CardAmenity>
@@ -123,7 +136,7 @@ const SectionFeatures = () => {
             </div>
           </div>
           <div className="info-amenity">
-            <h1>3</h1>
+            <h1>{totalParkingSpots}</h1>
             <span>Estacionamiento</span>
           </div>
         </CardAmenity>
@@ -131,20 +144,20 @@ const SectionFeatures = () => {
       <hr />
       <div className="container-cards">
         <div className="card-content">
-          <span>600 m²</span>
+          <span>{totalSquareMetersBuilt} m²</span>
           <label htmlFor="">De construcción</label>
         </div>
         <div className="card-content">
-          <span>600 m²</span>
+          <span>{totalSquareMetersLand} m²</span>
           <label htmlFor="">De Terreno</label>
         </div>
         <div className="card-content">
-          <span>600 m²</span>
-          <label htmlFor="">Piso en el que se encuentra</label>
+          <span>{totalFloors}</span>
+          <label htmlFor="">Cantidad de pisos</label>
         </div>
         <div className="card-content">
-          <span>600 m²</span>
-          <label htmlFor="">Cantidad de pisos</label>
+          <span>{floorDescription}</span>
+          <label htmlFor="">Piso en el que se encuentra</label>
         </div>
       </div>
     </ContentFeatures>

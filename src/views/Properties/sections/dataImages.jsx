@@ -7,7 +7,10 @@ import { Row, Col } from "antd";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
-import { callAddDocument } from "../../../utils/actions/actions";
+import {
+  callAddDocument,
+  callGlobalActionApi,
+} from "../../../utils/actions/actions";
 import {
   ContentForm,
   ButtonNextBackPage,
@@ -96,7 +99,14 @@ const ButtonFilesLabel = styled.label`
 `;
 
 const SectionDataImages = (props) => {
-  const { onClickBack, onClickFinish, callAddDocument, dataProfile } = props;
+  const {
+    onClickBack,
+    onClickFinish,
+    callAddDocument,
+    dataProfile,
+    redirect,
+    callGlobalActionApi,
+  } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
   const frontFunctions = new FrontFunctions();
@@ -197,6 +207,28 @@ const SectionDataImages = (props) => {
         setArrayImages(replaceArrayImage);
       };
     };
+  };
+
+  const handlerCallSetPropertyDocument = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SET_PROPERTY_DOCUMENT,
+        "PUT"
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerAddDocument = async (data, name) => {
@@ -324,10 +356,17 @@ const SectionDataImages = (props) => {
             block={false}
             onClick={async () => {
               try {
+                const response = await onClickFinish();
                 const responseDocument = await handlerOnSendFiles(arrayImages);
-                onClickFinish({
-                  jsonDocument: JSON.stringify(responseDocument),
-                });
+                await handlerCallSetPropertyDocument(
+                  {
+                    jsonDocument: JSON.stringify(responseDocument),
+                    idApartment: response.idApartment,
+                    isActive: true,
+                  },
+                  response.idProperty
+                );
+                redirect();
               } catch (error) {}
             }}
           >
@@ -350,6 +389,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callAddDocument: (file, data, callback) =>
     dispatch(callAddDocument(file, data, callback)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionDataImages);

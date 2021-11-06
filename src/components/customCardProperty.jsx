@@ -1,5 +1,7 @@
 import React from "react";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
+import { Tooltip } from "antd";
 import styled from "styled-components";
 import {
   IconProfile,
@@ -11,7 +13,6 @@ import {
   IconShare,
   IconDownloadDetail,
 } from "../assets/iconSvg";
-import { findLastIndex } from "lodash";
 
 const ButtonIcon = styled.button`
   background: transparent;
@@ -176,16 +177,23 @@ const CustomCardProperty = (props) => {
     currentTimeLine,
     canInviteTenant,
   } = data;
+  const dataTimeLine =
+    isNil(currentTimeLine) === false && isEmpty(currentTimeLine) === false
+      ? JSON.parse(currentTimeLine)
+      : {};
   return (
     <Card>
       {isNil(currentTimeLine) === false && (
-        <ProcessProperty>
-          <IconProfile color="#fff" size="1em" />
-          <span>En proceso de:</span>
-          <div className="current-process">
-            <h1>Verificación de identidad</h1>
-          </div>
-        </ProcessProperty>
+        <Tooltip placement="topLeft" title={dataTimeLine.description}>
+          <ProcessProperty>
+            {/* <IconProfile color="#fff" size="1em" /> */}
+            <i className={dataTimeLine.style} />
+            <span>En proceso de:</span>
+            <div className="current-process">
+              <h1>{dataTimeLine.title}</h1>
+            </div>
+          </ProcessProperty>
+        </Tooltip>
       )}
       <img
         className="image-content"
@@ -232,7 +240,7 @@ const CustomCardProperty = (props) => {
           <span>{totalConstructionArea}m²</span>
         </div>
       </div>
-      {owner === findLastIndex && (
+      {owner === false && (
         <div className="content-button">
           <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
           <ButtonPrimary>Contactar</ButtonPrimary>

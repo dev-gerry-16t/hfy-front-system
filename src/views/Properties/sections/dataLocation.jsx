@@ -297,7 +297,7 @@ const SectionDataLocation = (props) => {
                         streetNumber: value,
                       });
                     }}
-                    type="number"
+                    type="text"
                   />
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -314,7 +314,7 @@ const SectionDataLocation = (props) => {
                         suite: value,
                       });
                     }}
-                    type="number"
+                    type="text"
                   />
                 </Col>
               </Row>
