@@ -85,6 +85,87 @@ const ButtonIcon = styled.button`
   align-items: center;
 `;
 
+const FormModal = styled.div`
+  font-family: Poppins;
+  padding: 1em 2em;
+  h1 {
+    text-align: center;
+    color: var(--color-primary);
+  }
+  h2{
+    color: #4E4B66;
+    font-weight: 700;
+    text-align: center;
+  }
+  .icon-image-send{
+    text-align: center;
+    margin: 4em 0px;
+  }
+  p {
+    text-align: center;
+    color: #4e4b66;
+    font-size: 1em;
+    margin: 2em 0px;
+  }
+  .image-platforms {
+    margin: 2em 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .input-checkbox {
+      input[type="checkbox"] {
+        appearance: none;
+        background-color: #fff;
+        font: inherit;
+        color: #fff;
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 5px;
+        display: inline-grid;
+        place-content: center;
+        margin-right: 10px;
+      }
+      input[type="checkbox"]::before {
+        content: "\\2713";
+        transform: scale(0);
+        width: 1.05em;
+        height: 1.05em;
+        border-radius: 5px;
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      input[type="checkbox"]:checked::before {
+        transform: scale(1);
+      }
+    }
+  }
+  .button-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+`;
+
+const ButtonsModal = styled.button`
+  border: none;
+  background: ${(props) =>
+    props.primary ? "var(--color-primary)" : "transparent"};
+  color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
+  border-radius: 1em;
+  padding: 5px 2em;
+  margin-bottom: 5px;
+  font-size: 1em;
+  text-decoration: ${(props) => (props.primary ? "none" : "underline")};
+  font-weight: 700;
+`;
+
 export {
   ContentForm,
   ButtonNextBackPage,
@@ -92,4 +173,6 @@ export {
   FormProperty,
   Container,
   ButtonIcon,
+  FormModal,
+  ButtonsModal,
 };

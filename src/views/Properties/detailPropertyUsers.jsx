@@ -333,8 +333,12 @@ const DetailPropertyUsers = (props) => {
       <ContextProperty.Provider
         value={{
           dataDetail,
-          updateProperty: (data) => {
-            handlerCallUpdateProperty(data);
+          updateProperty: async (data) => {
+            try {
+              await handlerCallUpdateProperty(data);
+            } catch (error) {
+              throw error;
+            }
           },
         }}
       >

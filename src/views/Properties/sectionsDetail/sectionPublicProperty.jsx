@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -16,6 +16,8 @@ import {
   Container,
 } from "../constants/styleConstants";
 import ContextProperty from "../context/contextProperty";
+import ComponentAddCandidate from "../component/componentAddCandidate";
+import ComponentPublicProperty from "../component/componentPublicProperty";
 
 const ContentPublicProperty = styled(Container)`
   margin-top: 1em;
@@ -112,23 +114,61 @@ const SectionCandidate = styled.div`
 
 const SectionPublicProperty = () => {
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail } = dataContexProperty;
-  const { applicants, isPublished, infoTenant } = dataDetail;
+  const { dataDetail, updateProperty } = dataContexProperty;
+  const { applicants, isPublished, infoTenant, idApartment } = dataDetail;
+  const [visibleAddUser, setVisibleAddUser] = useState(false);
+  const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
+
   return (
     <ContentPublicProperty id="public-property">
+      <ComponentAddCandidate
+        isModalVisible={visibleAddUser}
+        sendInvitation={async (data) => {
+          try {
+            await updateProperty({ ...data, idApartment });
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onClose={() => {
+          setVisibleAddUser(false);
+        }}
+      />
+      <ComponentPublicProperty
+        isModalVisible={visiblePublicProperty}
+        onPublicProperty={async (data) => {
+          try {
+            await updateProperty({ ...data, idApartment });
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onClose={() => {
+          setVisiblePublicProperty(false);
+        }}
+      />
+
       {isNil(applicants) === true && (
         <NoticeProperty>
           <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
           <div className="section-select-option">
             <div className="option-select">
               <span>Ya tengo un candidato</span>
-              <ButtonAction>
+              <ButtonAction
+                onClick={() => {
+                  setVisibleAddUser(true);
+                }}
+              >
                 <IconAgreement size="51px" color="##4E4B66" />
               </ButtonAction>
             </div>
             <div className="option-select">
               <span>Quiero publicar el inmueble</span>
-              <ButtonAction>
+              <ButtonAction
+                onClick={() => {
+                  setVisiblePublicProperty(true);
+                }}
+              >
                 <IconSpeakChat size="51px" color="##4E4B66" />
               </ButtonAction>
             </div>
