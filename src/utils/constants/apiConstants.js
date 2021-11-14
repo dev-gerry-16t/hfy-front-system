@@ -55,6 +55,7 @@ const API_CONSTANTS = {
     GET_ALL_PROPERTY_AMENITIES: `${API.API_SECURE}${API.CATALOGS}/getAllPropertyAmenities`,
     GET_ALL_PROPERTY_GENERAL_CHARACTERISTICS: `${API.API_SECURE}${API.CATALOGS}/getAllPropertyGeneralCharacteristics`,
     GET_ALL_APPLICATION_METHODS: `${API.API_SECURE}${API.CATALOGS}/getAllApplicationMethods`,
+    GET_ALL_PROPERTIES: `${API.API_SECURE}${API.CATALOGS}/getAllProperties`,
   },
   CUSTOMER: {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,
@@ -73,6 +74,7 @@ const API_CONSTANTS = {
     SET_PROPERTY_DOCUMENT: `${API.CUSTOMER}/property/setPropertyDocument/`,
     GET_PROPERTY_BY_ID: `${API.CUSTOMER}/property/getPropertyById`,
     UPDATE_PROPERTY: `${API.CUSTOMER}/property/updateProperty/`,
+    SET_PROPERTY_ASSOCIATION: `${API.CUSTOMER}/property/setPropertyAssociation/`,
   },
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
   GET_CONFIRM_PAYMENT_INTENT: `${API.API_SECURE}${API.PROVIDERS}/getConfirmPaymentIntent`,

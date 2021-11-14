@@ -28,12 +28,8 @@ const SectionDataFeatures = (props) => {
   const [dataCharacteristics, setDataCharacteristics] = useState([]);
 
   const [dataForm, setDataForm] = useState({
-    propertyAmenities: null,
-    propertyGeneralCharacteristics: null,
-  });
-  const [dataFormJoin, setDataFormJoin] = useState({
-    propertyAmenities: null,
-    propertyGeneralCharacteristics: null,
+    propertyAmenities: [],
+    propertyGeneralCharacteristics: [],
   });
   const frontFunctions = new FrontFunctions();
 
@@ -101,20 +97,16 @@ const SectionDataFeatures = (props) => {
       const amenities =
         isNil(propertyAmenities) === false &&
         isEmpty(propertyAmenities) === false
-          ? propertyAmenities.split(",")
+          ? JSON.parse(propertyAmenities)
           : [];
       const characteristics =
         isNil(propertyGeneralCharacteristics) === false &&
         isEmpty(propertyGeneralCharacteristics) === false
-          ? propertyGeneralCharacteristics.split(",")
+          ? JSON.parse(propertyGeneralCharacteristics)
           : [];
       setDataForm({
         propertyAmenities: amenities,
         propertyGeneralCharacteristics: characteristics,
-      });
-      setDataFormJoin({
-        propertyAmenities,
-        propertyGeneralCharacteristics,
       });
     }
   }, [dataFormSave]);
@@ -143,7 +135,6 @@ const SectionDataFeatures = (props) => {
                 data={dataAmenities}
                 onChange={(data, join) => {
                   setDataForm({ ...dataForm, propertyAmenities: data });
-                  setDataFormJoin({ ...dataFormJoin, propertyAmenities: join });
                 }}
               />
             </Col>
@@ -162,10 +153,6 @@ const SectionDataFeatures = (props) => {
                     ...dataForm,
                     propertyGeneralCharacteristics: data,
                   });
-                  setDataFormJoin({
-                    ...dataFormJoin,
-                    propertyGeneralCharacteristics: join,
-                  });
                 }}
               />
             </Col>
@@ -178,9 +165,10 @@ const SectionDataFeatures = (props) => {
             onClick={() => {
               onClickBack({
                 ...dataForm,
-                propertyAmenities: dataFormJoin.propertyAmenities,
-                propertyGeneralCharacteristics:
-                  dataFormJoin.propertyGeneralCharacteristics,
+                propertyAmenities: JSON.stringify(dataForm.propertyAmenities),
+                propertyGeneralCharacteristics: JSON.stringify(
+                  dataForm.propertyGeneralCharacteristics
+                ),
               });
             }}
           >
@@ -192,9 +180,10 @@ const SectionDataFeatures = (props) => {
             onClick={() => {
               onclickNext({
                 ...dataForm,
-                propertyAmenities: dataFormJoin.propertyAmenities,
-                propertyGeneralCharacteristics:
-                  dataFormJoin.propertyGeneralCharacteristics,
+                propertyAmenities: JSON.stringify(dataForm.propertyAmenities),
+                propertyGeneralCharacteristics: JSON.stringify(
+                  dataForm.propertyGeneralCharacteristics
+                ),
               });
             }}
           >

@@ -4,13 +4,15 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { Row, Col } from "antd";
+import { Row, Col, Select } from "antd";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../utils/actions/actions";
 import CustomInputCurrency from "../../components/customInputCurrency";
 import CustomInputTypeForm from "../../components/CustomInputTypeForm";
+
+const { Option } = Select;
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -265,6 +267,7 @@ const SelectPolicy = (props) => {
   const [selectMethodPolicy, setSelectMethodPolicy] = useState(null);
   const [shareCommission, setShareCommission] = useState(false);
   const [amountTotalPolicy, setAmountTotalPolicy] = useState({});
+  const [dataAgents, setDataAgents] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyById = async () => {
@@ -380,6 +383,34 @@ const SelectPolicy = (props) => {
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
       throw error;
+    }
+  };
+
+  const handlerCallSearchCustomer = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 4,
+          dataFiltered: data,
+        },
+        null,
+        API_CONSTANTS.GET_SEARCH_CUSTOMER
+      );
+
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataAgents(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -538,7 +569,7 @@ const SelectPolicy = (props) => {
                   <label className="input-radio">
                     <input
                       type="radio"
-                      id={`method-policy-"{row.id}`}
+                      id={`method-policy-${row.id}`}
                       name="method"
                       value={row.idPolicyPaymentMethod}
                       onClick={() => {
@@ -618,6 +649,137 @@ const SelectPolicy = (props) => {
                 />
               </Col>
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <div style={{ display: "flex", flexDirection: "column" }}>
+                  <label
+                    style={{
+                      color: "#4e4b66",
+                    }}
+                  >
+                    Correo electrónico *
+                  </label>
+                  <Select
+                    mode="tags"
+                    style={{ width: "100%" }}
+                    onChange={(e, a) => {
+                      if (isEmpty(a) === false) {
+                        const response = a[0].onClick();
+                        setCommissionAgent({
+                          ...commissionAgent,
+                          givenName: response.givenName,
+                          lastName: response.lastName,
+                          emailAddress: response.username,
+                        });
+                      } else {
+                        setCommissionAgent({
+                          ...commissionAgent,
+                          givenName: null,
+                          lastName: null,
+                          emailAddress: null,
+                        });
+                      }
+                    }}
+                    onSearch={(e) => {
+                      if (e.length >= 3) {
+                        handlerCallSearchCustomer(e);
+                      }
+                    }}
+                    tokenSeparators={[","]}
+                    filterOption={(input, option) => {
+                      if (isNil(option.children) === false) {
+                        return (
+                          option.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        );
+                      }
+                    }}
+                  >
+                    {isEmpty(dataAgents) === false &&
+                      dataAgents.map((row) => {
+                        return (
+                          <Option value={row.idCustomer} onClick={() => row}>
+                            {row.username}
+                          </Option>
+                        );
+                      })}
+                  </Select>
+                  {/* <Select
+                  value={commissionAgent.emailAddress}
+                    showSearch
+                    style={{ width: "100%" }}
+                    placeholder="Busca o agrega un usuario"
+                    optionFilterProp="children"
+                    onChange={(e, a) => {
+                      const response = a.onClick();
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        givenName: response.givenName,
+                        lastName: response.lastName,
+                        emailAddress: response.username,
+                      });
+                    }}
+                    onFocus={() => {}}
+                    onBlur={() => {}}
+                    onSearch={(e) => {
+                      console.log('e',e);
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        emailAddress: e,
+                      });
+                      if (e.length >= 3) {
+                        handlerCallSearchCustomer(e);
+                      }
+                    }}
+                    filterOption={(input, option) => {
+                      if (isNil(option.children) === false) {
+                        return (
+                          option.children
+                            .toLowerCase()
+                            .indexOf(input.toLowerCase()) >= 0
+                        );
+                      }
+                    }}
+                  >
+                    {isEmpty(dataAgents) === false &&
+                      dataAgents.map((row) => {
+                        return (
+                          <Option value={row.idCustomer} onClick={() => row}>
+                            {row.username}
+                          </Option>
+                        );
+                      })}
+                  </Select> */}
+                </div>
+                {/* <CustomInputTypeForm
+                    value={dataForm.ownerEmailAddress}
+                    placeholder=""
+                    label="Correo electrónico *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, ownerEmailAddress: value });
+                    }}
+                    type="email"
+                    onBlur={async () => {
+                      try {
+                        const response = await handlerCallSearchCustomer(
+                          dataForm.ownerEmailAddress
+                        );
+                        if (isEmpty(response) === false) {
+                          setDataForm({
+                            ...dataForm,
+                            ownerGivenName: response.givenName,
+                            ownerLastName: response.lastName,
+                          });
+                        }
+                      } catch (error) {}
+                    }}
+                  /> */}
+              </Col>
+            </Row>
+            <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <CustomInputTypeForm
                   value={commissionAgent.givenName}
@@ -634,8 +796,7 @@ const SelectPolicy = (props) => {
                   type="text"
                 />
               </Col>
-            </Row>
-            <Row>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <CustomInputTypeForm
                   value={commissionAgent.lastName}
@@ -647,23 +808,6 @@ const SelectPolicy = (props) => {
                     setCommissionAgent({
                       ...commissionAgent,
                       lastName: value,
-                    });
-                  }}
-                  type="text"
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputTypeForm
-                  value={commissionAgent.emailAddress}
-                  placeholder=""
-                  label="id de asesor / correo electrónico *"
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      emailAddress: value,
                     });
                   }}
                   type="text"

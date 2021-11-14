@@ -133,7 +133,7 @@ const SectionDataImages = (props) => {
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.7);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
         setArrayImages([
           ...arrayImages,
           {
@@ -191,7 +191,7 @@ const SectionDataImages = (props) => {
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.6);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
         const replaceArrayImage = arrayImages.map((row) => {
           let objectImage = row;
           if (row.id === id) {

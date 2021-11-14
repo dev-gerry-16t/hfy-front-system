@@ -67,8 +67,8 @@ const CustomChips = ({ data, onChange, selected }) => {
     if (isEmpty(data) === false && isNil(selected) === false) {
       const newSelect = data.map((row) => {
         let returnRow = { ...row, select: false };
-        const filterId = selected.find((idFind) => {
-          return idFind === row.id;
+        const filterId = selected.find((rowMap) => {
+          return rowMap.id === row.id;
         });
         if (isNil(filterId) === false) {
           returnRow = { ...row, select: true };
@@ -82,7 +82,6 @@ const CustomChips = ({ data, onChange, selected }) => {
       setArrayData(newSelect);
     }
   }, [data]);
-
   return (
     <div>
       <PseudoSelect>
@@ -101,7 +100,7 @@ const CustomChips = ({ data, onChange, selected }) => {
                   return rowFilter.select === true;
                 });
                 const arrayOnChange = arrayChips.map((rowMap) => {
-                  return rowMap.id;
+                  return { id: rowMap.id, text: rowMap.text };
                 });
                 onChange(arrayOnChange, arrayOnChange.join());
                 setNewArray(arrayChips);
@@ -127,7 +126,7 @@ const CustomChips = ({ data, onChange, selected }) => {
                   return rowFilter.select === true;
                 });
                 const arrayOnChange = arrayChips.map((rowMap) => {
-                  return rowMap.id;
+                  return { id: rowMap.id, text: rowMap.text };
                 });
                 onChange(arrayOnChange, arrayOnChange.join());
                 setNewArray(arrayChips);

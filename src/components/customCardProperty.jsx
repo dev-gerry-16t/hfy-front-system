@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import { Tooltip } from "antd";
@@ -12,7 +12,9 @@ import {
   IconHouseMeasure,
   IconShare,
   IconDownloadDetail,
+  IconHeart,
 } from "../assets/iconSvg";
+import ComponentAddCandidate from "../views/Properties/component/componentAddCandidate";
 
 const ButtonIcon = styled.button`
   background: transparent;
@@ -162,7 +164,15 @@ const ProcessProperty = styled.div`
 `;
 
 const CustomCardProperty = (props) => {
-  const { src, alt, onClickDetail, data, idUserType, owner } = props;
+  const {
+    src,
+    alt,
+    onClickDetail,
+    data,
+    idUserType,
+    owner,
+    updateProperty = () => {},
+  } = props;
   const {
     maintenanceAmount,
     shortAddress,
@@ -176,13 +186,30 @@ const CustomCardProperty = (props) => {
     documentMainPic,
     currentTimeLine,
     canInviteTenant,
+    idApartment,
+    idProperty,
   } = data;
   const dataTimeLine =
     isNil(currentTimeLine) === false && isEmpty(currentTimeLine) === false
       ? JSON.parse(currentTimeLine)
       : {};
+  const [visibleAddUser, setVisibleAddUser] = useState(false);
+
   return (
     <Card>
+      <ComponentAddCandidate
+        isModalVisible={visibleAddUser}
+        sendInvitation={async (data) => {
+          try {
+            await updateProperty({ ...data, idApartment }, idProperty);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onClose={() => {
+          setVisibleAddUser(false);
+        }}
+      />
       {isNil(currentTimeLine) === false && (
         <Tooltip placement="topLeft" title={dataTimeLine.description}>
           <ProcessProperty>
@@ -209,11 +236,15 @@ const CustomCardProperty = (props) => {
       <div className="price-item">
         <span>{currentRent} MXN</span>
         <ButtonIcon>
-          <IconShare
-            color="var(--color-primary)"
-            backGround="var(--color-primary)"
-            size="16px"
-          />
+          {owner === true ? (
+            <IconShare
+              color="var(--color-primary)"
+              backGround="var(--color-primary)"
+              size="16px"
+            />
+          ) : (
+            <IconHeart backGround="transparent" color="var(--color-primary)" />
+          )}
         </ButtonIcon>
       </div>
       <div className="address-item">
@@ -240,10 +271,22 @@ const CustomCardProperty = (props) => {
           <span>{totalConstructionArea}m²</span>
         </div>
       </div>
-      {owner === false && (
+      {/* {owner === false && (
         <div className="content-button">
           <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
           <ButtonPrimary>Contactar</ButtonPrimary>
+          <ButtonWhatsapp>
+            <IconWhatsapp
+              size="15"
+              color="var(--color-primary)"
+              backGround="var(--color-primary)"
+            />
+          </ButtonWhatsapp>
+        </div>
+      )} */}
+      {owner === false && (
+        <div className="content-button">
+          <ButtonPrimary>Postularme</ButtonPrimary>
           <ButtonWhatsapp>
             <IconWhatsapp
               size="15"
@@ -261,7 +304,13 @@ const CustomCardProperty = (props) => {
             </ButtonIcon>
           )}
           {canInviteTenant === true && (
-            <ButtonPrimary>Invitar a inquilino</ButtonPrimary>
+            <ButtonPrimary
+              onClick={() => {
+                setVisibleAddUser(true);
+              }}
+            >
+              Invitar a inquilino
+            </ButtonPrimary>
           )}
         </div>
       )}

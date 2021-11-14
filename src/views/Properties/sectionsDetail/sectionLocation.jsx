@@ -41,6 +41,7 @@ const SectionLocation = () => {
   const { dataDetail } = dataContexProperty;
   const { jsonCoordinates, shortAddress, fullAddress, isGMapsExact } =
     dataDetail;
+
   const location =
     isNil(jsonCoordinates) === false && isEmpty(jsonCoordinates) === false
       ? JSON.parse(jsonCoordinates)
@@ -61,12 +62,14 @@ const SectionLocation = () => {
       <Row>
         <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
           <Location>
-            <CustomMapContainer
-              location={location}
-              draggable={false}
-              onDragPosition={(position) => {}}
-              exact={isGMapsExact}
-            />
+            {isNil(location) === false && (
+              <CustomMapContainer
+                location={location}
+                draggable={false}
+                onDragPosition={(position) => {}}
+                exact={isGMapsExact}
+              />
+            )}
           </Location>
         </Col>
         <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />

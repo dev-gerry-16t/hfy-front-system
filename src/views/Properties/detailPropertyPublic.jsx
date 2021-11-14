@@ -3,15 +3,8 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import {
-  ButtonIcon,
-  ContentForm,
-  LineSeparator,
-  FormProperty,
-  ButtonNextBackPage,
-  Container,
-} from "./constants/styleConstants";
-import { IconTenant, IconShare } from "../../assets/iconSvg";
+import { ButtonIcon, ContentForm } from "./constants/styleConstants";
+import { IconHeart } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -20,12 +13,7 @@ import SectionAmenities from "./sectionsDetail/sectionAmenities";
 import SectionCarouselInfo from "./sectionsDetail/sectionCarouselHz";
 import SectionFeatures from "./sectionsDetail/sectionFeatures";
 import SectionLocation from "./sectionsDetail/sectionLocation";
-import SectionPolicy from "./sectionsDetail/sectionPolicy";
-import SectionPublicProperty from "./sectionsDetail/sectionPublicProperty";
-import SectionServiceAgent from "./sectionsDetail/sectionServiceAgent";
 import ContextProperty from "./context/contextProperty";
-import SectionDocuments from "./sectionsDetail/sectionDocuments";
-import SectionApplicants from "./sectionsDetail/sectionApplicants";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 
 const Content = styled.div`
@@ -66,145 +54,6 @@ const Tab = styled.div`
   }
 `;
 
-const ButtonAction = styled.button`
-  background: ${(props) => (props.primary ? "var(--color-primary)" : "#FFF")};
-  border: ${(props) =>
-    props.primary ? "none" : "1px solid var(--color-primary)"};
-  color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
-  padding: 0.2em 2em;
-  border-radius: 1em;
-`;
-
-const GeneralCard = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 0.5em;
-  .header-title {
-    border-bottom: 0.5px solid #4e4b66;
-    display: flex;
-    justify-content: space-between;
-    padding: 1em;
-    h1 {
-      margin: 0;
-      color: var(--color-primary);
-      font-weight: 700;
-    }
-  }
-  .content-cards {
-    min-height: 30em;
-    padding: 2em 2em;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-  }
-`;
-
-const Card = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 4px;
-  min-height: 6em;
-  .card-document {
-    padding: 1em;
-    .top-info {
-      display: flex;
-      .icon-info {
-        width: 43px;
-        height: 42px;
-        background: #eff0f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 10px;
-      }
-      .name-info {
-        font-size: 0.9em;
-        line-height: 1.4em;
-        max-width: 192px;
-        h3 {
-          margin: 0px;
-        }
-        span {
-          color: var(--color-primary);
-        }
-      }
-    }
-    .button-action {
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
-
-  .card-user {
-    padding: 1em;
-    .top-info {
-      display: flex;
-      .icon-info {
-        width: 60px;
-        height: 60px;
-        background: #eff0f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 10px;
-        border-radius: 5px;
-        position: relative;
-        .score {
-          position: absolute;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: var(--color-primary);
-          top: 4em;
-          left: 4em;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          font-size: 0.6em;
-          color: #fff;
-          span {
-            font-weight: 300;
-          }
-        }
-      }
-      .name-info {
-        font-size: 0.9em;
-        line-height: 1.4em;
-        max-width: 192px;
-        h3 {
-          margin: 0px;
-        }
-        span {
-          color: var(--color-primary);
-        }
-      }
-    }
-    .button-action {
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
-`;
-
-const ContentRight = styled.div`
-  padding: 0 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-`;
-
-const ButtonDocument = styled.button`
-  border: none;
-  background: ${(props) =>
-    props.primary ? "var(--color-primary)" : "transparent"};
-  color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
-  text-decoration: ${(props) => (props.primary ? "" : "underline")};
-  font-weight: 600;
-  border-radius: 1em;
-  padding: 0px 1em;
-`;
-
 const dataTabsProperty = [
   {
     id: "1",
@@ -225,7 +74,6 @@ const DetailPropertyUsers = (props) => {
   const { params } = match;
   const idProperty = params.idProperty;
   const [dataDetail, setDataDetail] = useState({});
-  const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
   const frontFunctions = new FrontFunctions();
 
@@ -252,33 +100,6 @@ const DetailPropertyUsers = (props) => {
           ? response.response[0][0]
           : {};
       setDataDetail(responseResult);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallGetAllApplicationMethods = async () => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idProperty,
-          idApartment: null,
-          type: 1,
-          idSystemUser,
-          idLoginHistory,
-        },
-        null,
-        API_CONSTANTS.CATALOGS.GET_ALL_APPLICATION_METHODS
-      );
-      const responseResult =
-        isEmpty(response) === false && isNil(response.response) === false
-          ? response.response
-          : [];
-      setDataApplicationMethod(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -322,7 +143,6 @@ const DetailPropertyUsers = (props) => {
 
   useEffect(() => {
     handlerCallGetPropertyById();
-    handlerCallGetAllApplicationMethods();
   }, []);
 
   return (
@@ -344,14 +164,14 @@ const DetailPropertyUsers = (props) => {
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
             <ButtonIcon>
-              {/* <IconHeart
+              <IconHeart
                 backGround="var(--color-primary)"
                 color="var(--color-primary)"
-              /> */}
-              <IconShare
-                color="var(--color-primary)"
-                backGround="var(--color-primary)"
               />
+              {/* <IconShare
+                color="var(--color-primary)"
+                backGround="var(--color-primary)"
+              /> */}
             </ButtonIcon>
           </div>
           <div>
@@ -382,45 +202,9 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              <SectionPolicy
-                onClickViewPolicy={() => {
-                  history.push(`/websystem/select-policy/${idProperty}`);
-                }}
-              />
-              <SectionServiceAgent dataApplication={dataApplicationMethod} />
-              <SectionPublicProperty />
             </ContainerDown>
           </div>
         </ContentForm>
-        <ContentRight>
-          <SectionDocuments />
-          <SectionApplicants />
-          <GeneralCard>
-            <div className="header-title">
-              <h1>Agentes</h1>
-            </div>
-            <div className="content-cards">
-              <Card>
-                <div className="card-user">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      <IconTenant size="100%" color="#4E4B66" />
-                    </div>
-                    <div className="name-info">
-                      <h3>Juan Valdez</h3>
-                      <span>Invitación enviada</span>
-                    </div>
-                  </div>
-                  <div className="button-action">
-                    <ButtonDocument>Deshacer</ButtonDocument>
-                  </div>
-                </div>
-              </Card>
-              <Card></Card>
-              <Card></Card>
-            </div>
-          </GeneralCard>
-        </ContentRight>
       </ContextProperty.Provider>
     </Content>
   );

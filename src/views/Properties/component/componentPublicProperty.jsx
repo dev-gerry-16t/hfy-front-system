@@ -11,7 +11,7 @@ const ComponentPublicProperty = (props) => {
   const initialForm = {
     isPublished: null,
     title: null,
-    propertyDescription: null,
+    description: null,
   };
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [dataForm, setDataForm] = useState(initialForm);
@@ -54,7 +54,7 @@ const ComponentPublicProperty = (props) => {
               <Row>
                 <Col span={24}>
                   <CustomTextArea
-                    value={dataForm.propertyDescription}
+                    value={dataForm.description}
                     placeholder=""
                     label="Descripción"
                     error={false}
@@ -62,7 +62,7 @@ const ComponentPublicProperty = (props) => {
                     onChange={(value) => {
                       setDataForm({
                         ...dataForm,
-                        propertyDescription: value,
+                        description: value,
                       });
                     }}
                     type="text"

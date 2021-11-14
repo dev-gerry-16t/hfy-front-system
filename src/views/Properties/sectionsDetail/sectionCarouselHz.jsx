@@ -112,6 +112,12 @@ const ButtonBid = styled.div`
   }
 `;
 
+const catalogPrice = [
+  { id: "1", text: "Valor total" },
+  { id: "2", text: "por m²" },
+  { id: "3", text: "por ha" },
+];
+
 const SectionCarouselInfo = (props) => {
   const { apartmentImages } = props;
   const [currentImage, setCurrentImage] = useState(
@@ -140,6 +146,17 @@ const SectionCarouselInfo = (props) => {
       }
     }
     return textTransform;
+  };
+
+  const handlerSelectCatalog = (id) => {
+    let result = null;
+    const find = catalogPrice.find((row) => {
+      return row.id == id;
+    });
+    if (isNil(find) === false) {
+      result = find.text;
+    }
+    return result;
   };
 
   useEffect(() => {
@@ -247,7 +264,7 @@ const SectionCarouselInfo = (props) => {
           </div>
           <div className="item-description">
             <span>Precio Basado en</span>
-            <strong>{priceBasedBy}</strong>
+            <strong>{handlerSelectCatalog(priceBasedBy)}</strong>
           </div>
         </div>
       </ShortDetail>

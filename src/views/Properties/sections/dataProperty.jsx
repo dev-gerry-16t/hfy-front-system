@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { Row, Col } from "antd";
+import { Row, Col, Select } from "antd";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
@@ -17,6 +17,8 @@ import {
   LineSeparator,
   FormProperty,
 } from "../constants/styleConstants";
+
+const { Option } = Select;
 
 const MultiSelect = styled.div`
   display: flex;
@@ -57,6 +59,7 @@ const SectionDataProperty = (props) => {
     idUserType,
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
+  const [dataOwners, setDataOwners] = useState([]);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
     idPropertyType: null,
@@ -149,11 +152,12 @@ const SectionDataProperty = (props) => {
         null,
         API_CONSTANTS.GET_SEARCH_CUSTOMER
       );
+
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      console.log("responseResult", responseResult);
+      setDataOwners(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -438,7 +442,57 @@ const SectionDataProperty = (props) => {
               </div>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
+                  <div style={{ display: "flex", flexDirection: "column" }}>
+                    <label
+                      style={{
+                        color: "#4e4b66",
+                      }}
+                    >
+                      Correo electrónico *
+                    </label>
+                    <Select
+                      showSearch
+                      style={{ width: "100%" }}
+                      placeholder="Busca o agrega un usuario"
+                      optionFilterProp="children"
+                      onChange={(e, a) => {
+                        const response = a.onClick();
+                        setDataForm({
+                          ...dataForm,
+                          ownerGivenName: response.givenName,
+                          ownerLastName: response.lastName,
+                          ownerEmailAddress: response.username,
+                        });
+                      }}
+                      onFocus={() => {}}
+                      onBlur={() => {}}
+                      onSearch={(e) => {
+                        if (e.length >= 3) {
+                          handlerCallSearchCustomer(e);
+                        }
+                      }}
+                      filterOption={(input, option) => {
+                        if (isNil(option.children) === false) {
+                          return (
+                            option.children
+                              .toLowerCase()
+                              .indexOf(input.toLowerCase()) >= 0
+                          );
+                        }
+                      }}
+                    >
+                      {isEmpty(dataOwners) === false &&
+                        dataOwners.map((row) => {
+                          return (
+                            <Option value={row.idCustomer} onClick={() => row}>
+                              {row.username}
+                            </Option>
+                          );
+                        })}
+                    </Select>
+                  </div>
+                  ,
+                  {/* <CustomInputTypeForm
                     value={dataForm.ownerEmailAddress}
                     placeholder=""
                     label="Correo electrónico *"
@@ -448,10 +502,21 @@ const SectionDataProperty = (props) => {
                       setDataForm({ ...dataForm, ownerEmailAddress: value });
                     }}
                     type="email"
-                    onBlur={() => {
-                      handlerCallSearchCustomer(dataForm.ownerEmailAddress);
+                    onBlur={async () => {
+                      try {
+                        const response = await handlerCallSearchCustomer(
+                          dataForm.ownerEmailAddress
+                        );
+                        if (isEmpty(response) === false) {
+                          setDataForm({
+                            ...dataForm,
+                            ownerGivenName: response.givenName,
+                            ownerLastName: response.lastName,
+                          });
+                        }
+                      } catch (error) {}
                     }}
-                  />
+                  /> */}
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>

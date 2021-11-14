@@ -82,7 +82,7 @@ const SectionCandidate = styled.div`
       height: 58px;
       border-radius: 50%;
       background: var(--color-primary);
-      bottom: 15px;
+      bottom: 40px;
       right: 5px;
       display: flex;
       flex-direction: column;
@@ -118,6 +118,10 @@ const SectionPublicProperty = () => {
   const { applicants, isPublished, infoTenant, idApartment } = dataDetail;
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
+  const applicantsParse =
+    isNil(infoTenant) === false && isEmpty(infoTenant) === false
+      ? JSON.parse(infoTenant)
+      : {};
 
   return (
     <ContentPublicProperty id="public-property">
@@ -148,7 +152,7 @@ const SectionPublicProperty = () => {
         }}
       />
 
-      {isNil(applicants) === true && (
+      {isNil(applicants) === true && isNil(infoTenant) === true && (
         <NoticeProperty>
           <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
           <div className="section-select-option">
@@ -194,21 +198,25 @@ const SectionPublicProperty = () => {
             </div>
             <div>
               <div className="info">
-                <strong>Nombre:</strong>{" "}
-                <span>Juan Ignacio Covarruvias Ruiz</span>
+                <strong>Nombre:</strong> <span>{applicantsParse.fullName}</span>
               </div>
               <div className="info">
-                <strong>Correo:</strong> <span>juan@correo.com</span>
+                <strong>Correo:</strong>{" "}
+                <span>{applicantsParse.emailAddress}</span>
               </div>
               <div className="info">
-                <strong>Teléfono:</strong> <span>5562100512</span>
+                <strong>Teléfono:</strong>{" "}
+                <span>{applicantsParse.phoneNumber}</span>
+              </div>
+              <div className="info">
+                <strong>Dirección:</strong> <span>Nezahualcoyotl, MX</span>
               </div>
               <div className="info">
                 <strong>Ocupación:</strong> <span>Arquitecto</span>
               </div>
-              <div className="status-user">
+              {/* <div className="status-user">
                 Solicitud pendiente de aceptación
-              </div>
+              </div> */}
             </div>
           </div>
         </SectionCandidate>

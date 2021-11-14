@@ -58,6 +58,7 @@ const ContentAddFilter = styled.div`
 const PropertiesOwner = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async () => {
@@ -80,45 +81,19 @@ const PropertiesOwner = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : [];
-      setDataCoincidences(responseResult);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallUpdateProperty = async (data, id) => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idCustomer,
-          idSystemUser,
-          idLoginHistory,
-          ...data,
-        },
-        id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
-        "PUT"
-      );
-      const responseResult =
-        isNil(response) === false &&
+      const responseResultPublic =
+        isEmpty(response) === false &&
         isNil(response.response) === false &&
-        isNil(response.response.message) === false
-          ? response.response.message
-          : {};
-      frontFunctions.showMessageStatusApi(
-        responseResult,
-        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-      );
+        isNil(response.response[1]) === false
+          ? response.response[1]
+          : [];
+      setDataCoincidences(responseResult);
+      setDataCoincidencesPublic(responseResultPublic);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
-      throw error;
     }
   };
 
@@ -128,18 +103,8 @@ const PropertiesOwner = (props) => {
 
   return (
     <Content>
+      <h1>Propiedades de tu interés</h1>
       <Container>
-        <ContentAddFilter background="var(--color-primary)">
-          <div className="button-actions-header">
-            <button
-              onClick={() => {
-                history.push("/websystem/add-property");
-              }}
-            >
-              Agregar propiedad
-            </button>
-          </div>
-        </ContentAddFilter>
         <ContentCards>
           {isEmpty(dataCoincidences) === false &&
             dataCoincidences.map((row) => {
@@ -154,14 +119,29 @@ const PropertiesOwner = (props) => {
                   }}
                   data={row}
                   idUserType={dataProfile.idUserType}
-                  owner={true}
-                  updateProperty={async (data, id) => {
-                    try {
-                      await handlerCallUpdateProperty(data, id);
-                    } catch (error) {
-                      throw error;
-                    }
+                  owner={false}
+                />
+              );
+            })}
+        </ContentCards>
+      </Container>
+      <h1>Propiedades que puedes aplicar</h1>
+      <Container>
+        <ContentCards>
+          {isEmpty(dataCoincidencesPublic) === false &&
+            dataCoincidencesPublic.map((row) => {
+              return (
+                <CustomCardProperty
+                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+                  alt={row.identifier}
+                  onClickDetail={() => {
+                    history.push(
+                      `/websystem/detail-property/${row.idProperty}`
+                    );
                   }}
+                  data={row}
+                  idUserType={dataProfile.idUserType}
+                  owner={false}
                 />
               );
             })}
@@ -179,8 +159,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant, method) =>
-    dispatch(callGlobalActionApi(data, id, constant, method)),
+  callGlobalActionApi: (data, id, constant) =>
+    dispatch(callGlobalActionApi(data, id, constant)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertiesOwner);

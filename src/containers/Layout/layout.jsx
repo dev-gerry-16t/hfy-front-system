@@ -221,7 +221,7 @@ const DefaultLayout = (props) => {
         },
         id
       );
-      handlerCallGetNotifications(notificationTopIndex);
+      await handlerCallGetNotifications(notificationTopIndex);
     } catch (error) {}
   };
 
@@ -630,7 +630,11 @@ const DefaultLayout = (props) => {
                       return (
                         <Step
                           title={row.title}
-                          description={<span style={{fontSize:10}}>{row.description}</span>}
+                          description={
+                            <span style={{ fontSize: 10 }}>
+                              {row.description}
+                            </span>
+                          }
                           status={row.hasError === true ? "error" : ""}
                           onClick={() => {
                             console.log(`Click in ${row.idTimeLineStep}`);
@@ -677,10 +681,15 @@ const DefaultLayout = (props) => {
                         renderItem={(item) => (
                           <List.Item
                             style={{ padding: "0px 0px !important" }}
-                            onClick={() => {
-                              handlerCallUpdateNotifications(
-                                item.idNotification
-                              );
+                            onClick={async () => {
+                              try {
+                                await handlerCallUpdateNotifications(
+                                  item.idNotification
+                                );
+                                if (isNil(item.path) === false) {
+                                  history.push(item.path);
+                                }
+                              } catch (error) {}
                             }}
                           >
                             <div

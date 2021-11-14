@@ -61,23 +61,21 @@ const Title = styled.h2`
 
 const SectionAmenities = () => {
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail={} } = dataContexProperty;
-  const {
-    propertyAminitiesDescription,
-    propertyGeneralCharacteristicsDescription,
-  } = dataDetail;
+  const { dataDetail = {} } = dataContexProperty;
+  const { propertyAmenities, propertyGeneralCharacteristics } = dataDetail;
 
   const amenities =
-    isNil(propertyAminitiesDescription) === false &&
-    isEmpty(propertyAminitiesDescription) === false
-      ? propertyAminitiesDescription.split(",")
+  isNil(propertyAmenities) === false && isEmpty(propertyAmenities) === false
+  ? JSON.parse(propertyAmenities)
+  : [];
+  console.log("amenities", amenities);
+  const general =
+    isNil(propertyGeneralCharacteristics) === false &&
+    isEmpty(propertyGeneralCharacteristics) === false
+      ? JSON.parse(propertyGeneralCharacteristics)
       : [];
 
-  const general =
-    isNil(propertyGeneralCharacteristicsDescription) === false &&
-    isEmpty(propertyGeneralCharacteristicsDescription) === false
-      ? propertyGeneralCharacteristicsDescription.split(",")
-      : [];
+      console.log('general',general);
 
   return (
     <ContentAmenities>
@@ -87,7 +85,7 @@ const SectionAmenities = () => {
           <div className="chips">
             {isEmpty(amenities) === false &&
               amenities.map((row) => {
-                return <Chip>{row}</Chip>;
+                return <Chip>{row.text}</Chip>;
               })}
           </div>
         </div>
@@ -96,7 +94,7 @@ const SectionAmenities = () => {
           <div className="chips">
             {isEmpty(general) === false &&
               general.map((row) => {
-                return <Chip>{row}</Chip>;
+                return <Chip>{row.text}</Chip>;
               })}
           </div>
         </div>

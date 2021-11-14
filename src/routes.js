@@ -29,6 +29,9 @@ const AdvancementRent = React.lazy(() =>
 const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
+const PublicProperties = React.lazy(() =>
+  import("./views/Properties/publicProperties")
+);
 const Transactions = React.lazy(() => import("./views/Payments/payments"));
 const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
 const EditProfileUsers = React.lazy(() =>
@@ -42,7 +45,7 @@ const Investigations = React.lazy(() => import("./views/Admin/investigations"));
 const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
 
 const DetailProperty = React.lazy(() =>
-  import("./views/Properties/detailProperty")
+  import("./views/Properties/detailPropertyPublic")
 );
 
 const DetailPropertyUsers = React.lazy(() =>
@@ -276,6 +279,14 @@ const routes = [
     path: "/websystem/select-policy/:idProperty",
     name: "Agregar Póliza",
     component: SelectPolicy,
+    exact: true,
+  },
+  {
+    key: "27",
+    id: "publicProperties",
+    path: "/websystem/properties",
+    name: "Propiedades",
+    component: PublicProperties,
     exact: true,
   },
 ];

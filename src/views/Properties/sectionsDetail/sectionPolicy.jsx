@@ -100,11 +100,17 @@ const SectionPolicy = (props) => {
   const { onClickViewPolicy } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail } = dataContexProperty;
-  const { idPolicy, } = dataDetail;
+  const {
+    idPolicy,
+    requiresPolicy,
+    policyDescription,
+    policyAmountFormat,
+    policyPaymentMethod,
+  } = dataDetail;
 
   return (
     <ContentPolicy selected={isNil(idPolicy) === false}>
-      {isNil(idPolicy) === true && (
+      {isNil(idPolicy) === true && requiresPolicy === false && (
         <NoticePolicy>
           <h1>
             ¡
@@ -123,7 +129,7 @@ const SectionPolicy = (props) => {
           <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
         </NoticePolicy>
       )}
-      {isNil(idPolicy) === false && (
+      {isNil(idPolicy) === false && requiresPolicy === false && (
         <PolicySelected>
           <div className="left-policy">
             <div>
@@ -133,9 +139,9 @@ const SectionPolicy = (props) => {
           <div className="right-policy">
             <div className="info-payment">
               <div className="info-policy">
-                <h1>Póliza Pro</h1>
+                <h1>{policyDescription}</h1>
                 <div className="price">
-                  <h2>$3,000 MXN</h2> <span>35%</span>
+                  <h2>{policyAmountFormat}</h2> {/*<span>35%</span>*/}
                 </div>
               </div>
               <div className="comision">
@@ -143,7 +149,7 @@ const SectionPolicy = (props) => {
               </div>
               <div>
                 <strong>Tipo de pago:</strong>{" "}
-                <span>50% propietario / 50% inquilino</span>
+                <span>{policyPaymentMethod}</span>
               </div>
             </div>
           </div>
