@@ -183,6 +183,7 @@ const SectionPublicProperty = (props) => {
         onPublicProperty={async (data) => {
           try {
             await updateProperty({ ...data, idApartment });
+            getById();
           } catch (error) {
             throw error;
           }
@@ -192,33 +193,35 @@ const SectionPublicProperty = (props) => {
         }}
       />
 
-      {isNil(applicants) === true && isNil(infoTenant) === true && (
-        <NoticeProperty>
-          <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
-          <div className="section-select-option">
-            <div className="option-select">
-              <span>Ya tengo un candidato</span>
-              <ButtonAction
-                onClick={() => {
-                  setVisibleAddUser(true);
-                }}
-              >
-                <IconAgreement size="51px" color="##4E4B66" />
-              </ButtonAction>
+      {isNil(applicants) === true &&
+        isNil(infoTenant) === true &&
+        isPublished === false && (
+          <NoticeProperty>
+            <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
+            <div className="section-select-option">
+              <div className="option-select">
+                <span>Ya tengo un candidato</span>
+                <ButtonAction
+                  onClick={() => {
+                    setVisibleAddUser(true);
+                  }}
+                >
+                  <IconAgreement size="51px" color="##4E4B66" />
+                </ButtonAction>
+              </div>
+              <div className="option-select">
+                <span>Quiero publicar el inmueble</span>
+                <ButtonAction
+                  onClick={() => {
+                    setVisiblePublicProperty(true);
+                  }}
+                >
+                  <IconSpeakChat size="51px" color="##4E4B66" />
+                </ButtonAction>
+              </div>
             </div>
-            <div className="option-select">
-              <span>Quiero publicar el inmueble</span>
-              <ButtonAction
-                onClick={() => {
-                  setVisiblePublicProperty(true);
-                }}
-              >
-                <IconSpeakChat size="51px" color="##4E4B66" />
-              </ButtonAction>
-            </div>
-          </div>
-        </NoticeProperty>
-      )}
+          </NoticeProperty>
+        )}
       {isNil(infoTenant) === false && (
         <SectionCandidate>
           <h1>Datos de candidato</h1>
