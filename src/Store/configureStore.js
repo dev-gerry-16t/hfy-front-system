@@ -1,5 +1,5 @@
 import { applyMiddleware, compose, createStore } from "redux";
-import storageSession from "redux-persist/lib/storage/session";
+import storageSession from "redux-persist/lib/storage";
 import thunk from "redux-thunk";
 import { persistStore, persistReducer } from "redux-persist";
 import createSagaMiddleware from "redux-saga";

@@ -45,6 +45,11 @@ const Signature = Loadable({
   loading,
 });
 
+const Property = Loadable({
+  loader: () => import("./views/Properties/propertyPublicNotSession"),
+  loading,
+});
+
 const App = (props) => {
   const { history, dataProfile } = props;
   const accessDev = false; //window.location.hostname === "localhost";
@@ -74,6 +79,12 @@ const App = (props) => {
             path="/signature/document/:idExternalUserInDC"
             name="Firma de documento"
             component={Signature}
+          />
+          <Route
+            exact
+            path="/property/:idProperty"
+            name="Firma de documento"
+            component={Property}
           />
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route path="/logout" name="Clean App and Close" component={Auth} />

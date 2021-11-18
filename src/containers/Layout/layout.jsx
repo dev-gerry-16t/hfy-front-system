@@ -12,6 +12,7 @@ import {
   notification,
   List,
   Popover,
+  Steps,
 } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
@@ -44,11 +45,16 @@ import {
   callUpdateNotifications,
   callGetNotifications,
   callSetThemeProfile,
+  callGlobalActionApi,
 } from "../../utils/actions/actions";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 
 const { Header, Sider } = Layout;
+const { Step } = Steps;
 
 const Loading = () => (
   <div className="loader-auth-spiner">
@@ -67,6 +73,7 @@ const DefaultLayout = (props) => {
     setDataUserProfile,
     callUpdateNotifications,
     callGetNotifications,
+    callGlobalActionApi,
   } = props;
   const [collapsed, setCollapsed] = useState(true);
   const [dataNotifications, setDataNotifications] = useState([]);
@@ -94,8 +101,43 @@ const DefaultLayout = (props) => {
   };
 
   const [nameSection, setNameSection] = useState("");
+  const [dataTimeLine, setDataTimeLine] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const frontFunctions = new FrontFunctions();
   const toggle = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handlerCallGetCustomerTimeLine = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TIME_LINE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      const stepCurrent = responseResult.find((row) => {
+        return row.isCurrent === true;
+      });
+      setDataTimeLine(responseResult);
+      setCurrentStep(stepCurrent.idTimeLineStep - 1);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallSetImageProfile = async (data) => {
@@ -179,7 +221,7 @@ const DefaultLayout = (props) => {
         },
         id
       );
-      handlerCallGetNotifications(notificationTopIndex);
+      await handlerCallGetNotifications(notificationTopIndex);
     } catch (error) {}
   };
 
@@ -287,6 +329,9 @@ const DefaultLayout = (props) => {
   );
 
   useEffect(() => {
+    if (isNil(dataProfile) === true) {
+      return history.push("/");
+    }
     handlerCallGetNotifications();
     const documentHead = document.getElementsByTagName("head");
     const headExtractNode =
@@ -295,9 +340,6 @@ const DefaultLayout = (props) => {
       isNil(documentHead[0]) === false
         ? documentHead[0]
         : [];
-    if (isNil(dataProfile) === true) {
-      history.push("/");
-    }
     const { themeConfig } = dataProfile;
 
     const theme = document.getElementsByTagName("body")[0];
@@ -414,7 +456,7 @@ const DefaultLayout = (props) => {
         });
       }
     });
-
+    //handlerCallGetCustomerTimeLine();
     return () => {
       socket.disconnect();
       clearInterval(interval);
@@ -581,6 +623,37 @@ const DefaultLayout = (props) => {
                 </button>
                 <h2>{nameSection}</h2>
               </div>
+              <div>
+                <Steps size="small" current={currentStep}>
+                  {isEmpty(dataTimeLine) === false &&
+                    dataTimeLine.map((row) => {
+                      return (
+                        <Step
+                          title={row.title}
+                          description={
+                            <span style={{ fontSize: 10 }}>
+                              {row.description}
+                            </span>
+                          }
+                          status={row.hasError === true ? "error" : ""}
+                          onClick={() => {
+                            console.log(`Click in ${row.idTimeLineStep}`);
+                          }}
+                          icon={
+                            <span
+                              className="ant-step-icon"
+                              style={{
+                                cursor: "pointer",
+                              }}
+                            >
+                              <i className={row.style}></i>
+                            </span>
+                          }
+                        />
+                      );
+                    })}
+                </Steps>
+              </div>
               <div className="header-info-user">
                 <div className="hi-user-name-type">
                   <strong>{dataProfile.showName}</strong>
@@ -608,10 +681,15 @@ const DefaultLayout = (props) => {
                         renderItem={(item) => (
                           <List.Item
                             style={{ padding: "0px 0px !important" }}
-                            onClick={() => {
-                              handlerCallUpdateNotifications(
-                                item.idNotification
-                              );
+                            onClick={async () => {
+                              try {
+                                await handlerCallUpdateNotifications(
+                                  item.idNotification
+                                );
+                                if (isNil(item.path) === false) {
+                                  history.push(item.path);
+                                }
+                              } catch (error) {}
                             }}
                           >
                             <div
@@ -757,6 +835,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant) =>
+    dispatch(callGlobalActionApi(data, id, constant)),
   callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
   callUpdateNotifications: (data, id) =>
     dispatch(callUpdateNotifications(data, id)),

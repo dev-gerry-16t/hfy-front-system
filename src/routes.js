@@ -29,7 +29,32 @@ const AdvancementRent = React.lazy(() =>
 const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
+const PublicProperties = React.lazy(() =>
+  import("./views/Properties/publicProperties")
+);
 const Transactions = React.lazy(() => import("./views/Payments/payments"));
+const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
+const EditProfileUsers = React.lazy(() =>
+  import("./views/Profile/editProfileUsers")
+);
+const UserDetailInformation = React.lazy(() =>
+  import("./views/Admin/userDetailInformation")
+);
+const Investigations = React.lazy(() => import("./views/Admin/investigations"));
+
+const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
+
+const DetailProperty = React.lazy(() =>
+  import("./views/Properties/detailPropertyPublic")
+);
+
+const DetailPropertyUsers = React.lazy(() =>
+  import("./views/Properties/detailPropertyUsers")
+);
+
+const SelectPolicy = React.lazy(() =>
+  import("./views/Properties/selectPolicy")
+);
 
 const routes = [
   {
@@ -190,6 +215,78 @@ const routes = [
     path: "/websystem/dashboard-transactions",
     name: "Transacciones",
     component: Transactions,
+    exact: true,
+  },
+  {
+    key: "19",
+    id: "Transacciones",
+    path: "/websystem/profile",
+    name: "ProfileUsers",
+    component: ProfileUsers,
+    exact: true,
+  },
+  {
+    key: "20",
+    id: "Transacciones",
+    path: "/websystem/edit-profile",
+    name: "ProfileUsers",
+    component: EditProfileUsers,
+    exact: true,
+  },
+  {
+    key: "21",
+    id: "UserDetail",
+    path: "/websystem/user-detail/:idInvestigationProcess",
+    name: "Detalle de usuario",
+    component: UserDetailInformation,
+    exact: true,
+  },
+  {
+    key: "22",
+    id: "Investigations",
+    path: "/websystem/investigation",
+    name: "Investigación de inquilinos",
+    component: Investigations,
+    exact: true,
+  },
+  {
+    key: "23",
+    id: "addProperty",
+    path: "/websystem/add-property",
+    name: "Agregar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
+    key: "24",
+    id: "detailProperty",
+    path: "/websystem/detail-property/:idProperty",
+    name: "Detalle propiedad",
+    component: DetailProperty,
+    exact: true,
+  },
+  {
+    key: "25",
+    id: "detailPropertyUsers",
+    path: "/websystem/detail-property-users/:idProperty",
+    name: "Detalle propiedad",
+    component: DetailPropertyUsers,
+    exact: true,
+  },
+  {
+    key: "26",
+    id: "selectPolicyUser",
+    path: "/websystem/select-policy/:idProperty",
+    name: "Agregar Póliza",
+    component: SelectPolicy,
+    exact: true,
+  },
+  {
+    key: "27",
+    id: "publicProperties",
+    path: "/websystem/properties",
+    name: "Propiedades",
+    component: PublicProperties,
     exact: true,
   },
 ];
