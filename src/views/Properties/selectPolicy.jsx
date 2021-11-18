@@ -256,6 +256,7 @@ const SelectPolicy = (props) => {
   const [dataPolicies, setDataPolicies] = useState([]);
   const [dataPolicyMethods, setDataPolicyMethods] = useState([]);
   const [selectPolicy, setSelectPolicy] = useState(null);
+  const [idApartment, setIdApartment] = useState(null);
   const [commissionAgent, setCommissionAgent] = useState({
     idCustomer: null,
     idInvitation: null,
@@ -292,6 +293,7 @@ const SelectPolicy = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
+      setIdApartment(responseResult.idApartment);
       setDataDetail(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -394,7 +396,7 @@ const SelectPolicy = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          type: 4,
+          type: 5,
           dataFiltered: data,
         },
         null,
@@ -411,6 +413,39 @@ const SelectPolicy = (props) => {
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallSetAdviserInProperty = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          idApartment,
+          ...data,
+        },
+        idProperty,
+        API_CONSTANTS.CUSTOMER.SET_ADVISER_IN_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -622,7 +657,6 @@ const SelectPolicy = (props) => {
             </label>
           </div>
         </SectionComision>
-
         <Slide left collapse when={shareCommission === true}>
           <div
             style={{
@@ -663,25 +697,28 @@ const SelectPolicy = (props) => {
                     mode="tags"
                     style={{ width: "100%" }}
                     onChange={(e, a) => {
-                      if (isEmpty(a) === false) {
+                      console.log("a", e, a);
+                      if (isEmpty(a) === false && isEmpty(a[0]) === false) {
                         const response = a[0].onClick();
                         setCommissionAgent({
                           ...commissionAgent,
                           givenName: response.givenName,
                           lastName: response.lastName,
                           emailAddress: response.username,
+                          idCustomer: response.idCustomer,
                         });
                       } else {
                         setCommissionAgent({
                           ...commissionAgent,
                           givenName: null,
                           lastName: null,
-                          emailAddress: null,
+                          emailAddress: isNil(e[0]) === false ? e[0] : null,
+                          idCustomer: null,
                         });
                       }
                     }}
                     onSearch={(e) => {
-                      if (e.length >= 3) {
+                      if (e.length >= 5) {
                         handlerCallSearchCustomer(e);
                       }
                     }}
@@ -705,78 +742,7 @@ const SelectPolicy = (props) => {
                         );
                       })}
                   </Select>
-                  {/* <Select
-                  value={commissionAgent.emailAddress}
-                    showSearch
-                    style={{ width: "100%" }}
-                    placeholder="Busca o agrega un usuario"
-                    optionFilterProp="children"
-                    onChange={(e, a) => {
-                      const response = a.onClick();
-                      setCommissionAgent({
-                        ...commissionAgent,
-                        givenName: response.givenName,
-                        lastName: response.lastName,
-                        emailAddress: response.username,
-                      });
-                    }}
-                    onFocus={() => {}}
-                    onBlur={() => {}}
-                    onSearch={(e) => {
-                      console.log('e',e);
-                      setCommissionAgent({
-                        ...commissionAgent,
-                        emailAddress: e,
-                      });
-                      if (e.length >= 3) {
-                        handlerCallSearchCustomer(e);
-                      }
-                    }}
-                    filterOption={(input, option) => {
-                      if (isNil(option.children) === false) {
-                        return (
-                          option.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                        );
-                      }
-                    }}
-                  >
-                    {isEmpty(dataAgents) === false &&
-                      dataAgents.map((row) => {
-                        return (
-                          <Option value={row.idCustomer} onClick={() => row}>
-                            {row.username}
-                          </Option>
-                        );
-                      })}
-                  </Select> */}
                 </div>
-                {/* <CustomInputTypeForm
-                    value={dataForm.ownerEmailAddress}
-                    placeholder=""
-                    label="Correo electrónico *"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, ownerEmailAddress: value });
-                    }}
-                    type="email"
-                    onBlur={async () => {
-                      try {
-                        const response = await handlerCallSearchCustomer(
-                          dataForm.ownerEmailAddress
-                        );
-                        if (isEmpty(response) === false) {
-                          setDataForm({
-                            ...dataForm,
-                            ownerGivenName: response.givenName,
-                            ownerLastName: response.lastName,
-                          });
-                        }
-                      } catch (error) {}
-                    }}
-                  /> */}
               </Col>
             </Row>
             <Row>
@@ -828,7 +794,19 @@ const SelectPolicy = (props) => {
           select
           onClick={async () => {
             try {
-              handlerCallUpdateProperty({
+              if (shareCommission === true) {
+                await handlerCallSetAdviserInProperty({
+                  givenName: commissionAgent.givenName,
+                  lastName: commissionAgent.lastName,
+                  emailAddress: commissionAgent.emailAddress,
+                  idCustomer: commissionAgent.idCustomer,
+                  idInvitation: commissionAgent.idInvitation,
+                  mothersMaidenName: null,
+                  commissionAmount: commissionAgent.commissionAmount,
+                  isActive: true,
+                });
+              }
+              await handlerCallUpdateProperty({
                 idApartment: dataDetail.idApartment,
                 idPolicy: selectPolicy,
                 idPolicyPaymentMethod: selectMethodPolicy,

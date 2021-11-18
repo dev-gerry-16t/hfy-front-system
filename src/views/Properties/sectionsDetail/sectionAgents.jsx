@@ -5,7 +5,7 @@ import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { IconTenant } from "../../../assets/iconSvg";
 import ContextProperty from "../context/contextProperty";
-import ComponentAddCandidate from "../component/componentAddCandidate";
+import ComponentAddAgent from "../component/componentAddAgent";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
@@ -155,53 +155,19 @@ const EmptyData = styled.div`
   }
 `;
 
-const SectionApplicants = (props) => {
+const SectionAgents = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail = {}, getById } = dataContexProperty;
-  const { applicants, idApartment, idProperty } = dataDetail;
-
-  const applicantsArray =
-    isNil(applicants) === false && isEmpty(applicants) === false
-      ? JSON.parse(applicants)
-      : [];
-  const [visibleAddUser, setVisibleAddUser] = useState(false);
+  const { propertySharedWith, idProperty, idApartment } = dataDetail;
+  const [isVisibleShare, setIsVisibleShare] = useState(false);
   const frontFunctions = new FrontFunctions();
+  const agentsArray =
+    isNil(propertySharedWith) === false && isEmpty(propertySharedWith) === false
+      ? JSON.parse(propertySharedWith)
+      : [];
 
-  const handlerCallSendTenantInvitation = async (data) => {
-    const { idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idSystemUser,
-          idLoginHistory,
-          ...data,
-        },
-        idApartment,
-        API_CONSTANTS.CUSTOMER.SEND_TENANT_INVITATION,
-        "PUT"
-      );
-      const responseResult =
-        isNil(response) === false &&
-        isNil(response.response) === false &&
-        isNil(response.response.message) === false
-          ? response.response.message
-          : {};
-      frontFunctions.showMessageStatusApi(
-        responseResult,
-        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-      );
-      getById();
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-      throw error;
-    }
-  };
-
-  const handlerCallSetApplicant = async (data) => {
+  const handlerCallSetAdviserInProperty = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -212,7 +178,7 @@ const SectionApplicants = (props) => {
           ...data,
         },
         idProperty,
-        API_CONSTANTS.CUSTOMER.SET_APPLICANT,
+        API_CONSTANTS.CUSTOMER.SET_ADVISER_IN_PROPERTY,
         "PUT"
       );
       const responseResult =
@@ -237,130 +203,82 @@ const SectionApplicants = (props) => {
 
   return (
     <GeneralCard>
-      <ComponentAddCandidate
-        isModalVisible={visibleAddUser}
+      <ComponentAddAgent
+        isModalVisible={isVisibleShare}
+        onClose={() => {
+          setIsVisibleShare(false);
+        }}
         sendInvitation={async (data) => {
           try {
-            await handlerCallSendTenantInvitation(data);
+            await handlerCallSetAdviserInProperty(data);
           } catch (error) {
             throw error;
           }
         }}
-        onClose={() => {
-          setVisibleAddUser(false);
-        }}
       />
       <div className="header-title">
-        <h1>Prospectos</h1>
-        <button
-          onClick={() => {
-            setVisibleAddUser(true);
-          }}
-        >
-          Agregar
-        </button>
+        <h1>Agentes</h1>
+        {idUserType === 4 && (
+          <button
+            onClick={() => {
+              setIsVisibleShare(true);
+            }}
+          >
+            Compartir
+          </button>
+        )}
       </div>
       <div className="content-cards">
-        {isEmpty(applicantsArray) === false &&
-          applicantsArray.map((row) => {
+        {isEmpty(agentsArray) === false &&
+          agentsArray.map((row) => {
             return (
               <Card>
                 <div className="card-user">
                   <div className="top-info">
                     <div className="icon-info">
                       <IconTenant size="100%" color="#4E4B66" />
-                      {isNil(row.score) === false && (
-                        <div className="score">
-                          <span>Score</span>
-                          <strong>{row.score}</strong>
-                        </div>
-                      )}
                     </div>
                     <div className="name-info">
-                      <h3>{row.fullName}</h3>
-                      <span>{row.applicantStatus}</span>
+                      <h3>
+                        {row.givenName} {row.lastName}
+                      </h3>
+                      <span>Comisión: {row.commissionAmountFormat}</span>
                     </div>
                   </div>
-                  {row.canProcessInvitation === false && (
-                    <div className="button-action">
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              isAcepted: false,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Rechazar
-                      </ButtonDocument>
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              isAccepted: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Aceptar
-                      </ButtonDocument>
-                    </div>
-                  )}
-                  {row.canProcessInvitation === true && (
-                    <div className="button-action">
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              deleteInvitation: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Eliminar
-                      </ButtonDocument>
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              resendInvitation: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Reenviar
-                      </ButtonDocument>
-                    </div>
-                  )}
+                  <div className="button-action">
+                    <ButtonDocument
+                      onClick={async () => {
+                        try {
+                          await handlerCallSetAdviserInProperty({
+                            givenName: row.givenName,
+                            lastName: row.lastName,
+                            emailAddress: row.emailAddress,
+                            idCustomer: row.idCustomer,
+                            idInvitation: row.idInvitation,
+                            mothersMaidenName: null,
+                            commissionAmount: row.commissionAmount,
+                            isActive: false,
+                          });
+                        } catch (error) {
+                          throw error;
+                        }
+                      }}
+                    >
+                      Deshacer
+                    </ButtonDocument>
+                  </div>
                 </div>
               </Card>
             );
           })}
-        {isEmpty(applicantsArray) === true && (
+        {isEmpty(agentsArray) === true && (
           <EmptyData>
             <img
               width="150"
               src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
               alt=""
             />
-            <p>No has invitado a algún inquilino</p>
+            <p>No has compartido con un agente esta propiedad</p>
           </EmptyData>
         )}
       </div>
@@ -380,4 +298,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SectionApplicants);
+export default connect(mapStateToProps, mapDispatchToProps)(SectionAgents);

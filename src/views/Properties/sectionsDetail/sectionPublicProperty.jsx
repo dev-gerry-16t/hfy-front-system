@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -18,6 +19,10 @@ import {
 import ContextProperty from "../context/contextProperty";
 import ComponentAddCandidate from "../component/componentAddCandidate";
 import ComponentPublicProperty from "../component/componentPublicProperty";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
 
 const ContentPublicProperty = styled(Container)`
   margin-top: 1em;
@@ -112,9 +117,10 @@ const SectionCandidate = styled.div`
   }
 `;
 
-const SectionPublicProperty = () => {
+const SectionPublicProperty = (props) => {
+  const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty } = dataContexProperty;
+  const { dataDetail, updateProperty, getById } = dataContexProperty;
   const { applicants, isPublished, infoTenant, idApartment } = dataDetail;
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
@@ -122,6 +128,40 @@ const SectionPublicProperty = () => {
     isNil(infoTenant) === false && isEmpty(infoTenant) === false
       ? JSON.parse(infoTenant)
       : {};
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallSendTenantInvitation = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idApartment,
+        API_CONSTANTS.CUSTOMER.SEND_TENANT_INVITATION,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+      getById();
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   return (
     <ContentPublicProperty id="public-property">
@@ -129,7 +169,7 @@ const SectionPublicProperty = () => {
         isModalVisible={visibleAddUser}
         sendInvitation={async (data) => {
           try {
-            await updateProperty({ ...data, idApartment });
+            await handlerCallSendTenantInvitation(data);
           } catch (error) {
             throw error;
           }
@@ -247,4 +287,19 @@ const SectionPublicProperty = () => {
   );
 };
 
-export default SectionPublicProperty;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(SectionPublicProperty);

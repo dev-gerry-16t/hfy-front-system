@@ -11,7 +11,7 @@ import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import styled from "styled-components";
 import ContextProperty from "../context/contextProperty";
 import CustomSelect from "../../../components/CustomSelect";
-import { ReactComponent as IconAgentFile } from "../../../assets/iconSvg/svgFile/iconAgentFile.svg";
+import { ReactComponent as IconMailLetter } from "../../../assets/iconSvg/svgFile/iconMailLetter.svg";
 import { ReactComponent as IconAssociate } from "../../../assets/iconSvg/svgFile/iconAssociate.svg";
 import { ReactComponent as IconRejected } from "../../../assets/iconSvg/svgFile/iconRejected.svg";
 
@@ -40,12 +40,11 @@ const ButtonCheck = styled.button`
 `;
 
 const catalogAssociation = [
-  { id: "1", text: "Vincular con existente" },
-  { id: "2", text: "Aceptar y crear" },
-  { id: "3", text: "Rechazar" },
+  { id: "1", text: "Aceptar" },
+  { id: "2", text: "Rechazar" },
 ];
 
-const SectionAssociationProperty = (props) => {
+const SectionAssociationApplicant = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail, updateProperty } = dataContexProperty;
@@ -53,8 +52,8 @@ const SectionAssociationProperty = (props) => {
     fullAddress,
     idProperty,
     idApartment,
-    canBeAssociated,
-    canBeAssociatedWith,
+    canAcceptInvitation,
+    identifier,
   } = dataDetail;
   const [visibleModal, setVisibleModal] = useState(false);
   const [finishProcess, setFinishProcess] = useState(false);
@@ -67,32 +66,7 @@ const SectionAssociationProperty = (props) => {
   const [dataProperty, setDataProperty] = useState([]);
   const frontFunctions = new FrontFunctions();
 
-  const handlerCallGetAllProperties = async () => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idCustomer,
-          idSystemUser,
-          idLoginHistory,
-        },
-        null,
-        API_CONSTANTS.CATALOGS.GET_ALL_PROPERTIES
-      );
-      const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
-          : [];
-      setDataProperty(responseResult);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallSetPropertyAssociation = async (data, id) => {
+  const handlerCallApplyToProperty = async (data, id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -102,7 +76,7 @@ const SectionAssociationProperty = (props) => {
           ...data,
         },
         id,
-        API_CONSTANTS.CUSTOMER.SET_PROPERTY_ASSOCIATION,
+        API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
         "PUT"
       );
       return response.response;
@@ -116,11 +90,10 @@ const SectionAssociationProperty = (props) => {
   };
 
   useEffect(() => {
-    if (canBeAssociated === true) {
-      handlerCallGetAllProperties();
+    if (canAcceptInvitation === true) {
       setVisibleModal(true);
     }
-  }, [canBeAssociated]);
+  }, [canAcceptInvitation]);
 
   return (
     <Modal
@@ -137,35 +110,30 @@ const SectionAssociationProperty = (props) => {
     >
       {finishProcess === false && (
         <FormModal>
-          <h1>Vincula o crea la propiedad</h1>
+          <h1>Invitación a propiedad</h1>
           <p>
-            Tu Asesor {canBeAssociatedWith} ha indicado que esta propiedad te
-            pertenece:
+            Has recibido una invitación para ser inquilino en esta propiedad
           </p>
           <div className="icon-image-send">
-            <IconAgentFile />
+            <IconMailLetter />
           </div>
 
           <div>
             <Row>
               <Col span={24}>
                 <MultiSelect>
-                  <span>¿Qué deseas hacer con esta propiedad?</span>
+                  <span>¿Quue deseas hacer con la invitación?</span>
                   <div className="button-actions-select">
                     {catalogAssociation.map((row) => {
                       return (
                         <ButtonCheck
                           select={row.id === selectAssociation}
                           onClick={() => {
-                            if (row.id !== "1") {
-                              setSelectProperty(null);
-                              setDataPropertyParent({});
-                              setMethodAssociation(null);
-                            }
-                            if (row.id === "3") {
-                              setAcceptProperty(false);
-                            } else {
+                            if (row.id === "1") {
                               setAcceptProperty(true);
+                            }
+                            if (row.id === "2") {
+                              setAcceptProperty(false);
                             }
                             setSelectAssociation(row.id);
                           }}
@@ -178,60 +146,8 @@ const SectionAssociationProperty = (props) => {
                 </MultiSelect>
               </Col>
             </Row>
-            {selectAssociation === "1" && (
-              <Row>
-                <Col span={24}>
-                  <CustomSelect
-                    value={selectProperty}
-                    placeholder=""
-                    label="Propiedad a vincular"
-                    data={dataProperty}
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value, row) => {
-                      setSelectProperty(value);
-                      setDataPropertyParent(row);
-                    }}
-                  />
-                </Col>
-              </Row>
-            )}
-            {selectAssociation === "1" && isNil(selectProperty) === false && (
-              <Row>
-                <Col span={24}>
-                  <label className="input-radio">
-                    <input
-                      type="radio"
-                      id={`type-association-1`}
-                      name="associate"
-                      value={""}
-                      onClick={() => {
-                        setMethodAssociation(1);
-                      }}
-                    />
-                    Vincular y actualizar con la ficha técnica de mi agente.
-                  </label>
-                </Col>
-                <label className="input-radio">
-                  <input
-                    type="radio"
-                    id={`type-association-2`}
-                    name="associate"
-                    value={""}
-                    onClick={() => {
-                      setMethodAssociation(2);
-                    }}
-                  />
-                  Vincular y actualizar con la ficha técnica de mi propiedad
-                </label>
-                <Col span={24}></Col>
-              </Row>
-            )}
           </div>
-          {(selectAssociation === "2" ||
-            selectAssociation === "3" ||
-            (selectAssociation === "1" &&
-              isNil(methodAssociation) === false)) && (
+          {isNil(selectAssociation) === false && (
             <div
               className="button-action"
               style={{
@@ -242,25 +158,15 @@ const SectionAssociationProperty = (props) => {
                 primary
                 onClick={async () => {
                   try {
-                    const response = await handlerCallSetPropertyAssociation(
+                    const response = await handlerCallApplyToProperty(
                       {
-                        idPropertyParent:
-                          isEmpty(dataPropertyParent) === false
-                            ? dataPropertyParent.idProperty
-                            : null,
-                        idApartmentParent:
-                          isEmpty(dataPropertyParent) === false
-                            ? dataPropertyParent.idApartment
-                            : null,
                         isAccepted: acceptProperty,
-                        method: methodAssociation,
                         idApartment,
-                        idProperty,
+                        identifier,
                       },
                       idProperty
                     );
                     console.log("response", response);
-                    setNewInfoProperty(response);
                     setFinishProcess(true);
                   } catch (error) {}
                 }}
@@ -275,12 +181,12 @@ const SectionAssociationProperty = (props) => {
         <FormModal>
           <h1>Se procesó con éxito tu solicitud</h1>
           <p>
-            {selectAssociation === "3"
-              ? "Haz rechazado la vinculación con esta propiedad"
-              : "Tu propiedad ha sido vinculada exitosamente"}
+            {selectAssociation === "2"
+              ? "Haz rechazado la invitación a esta propiedad"
+              : "¡Felicidades, aceptaste la invitación a la propiedad!"}
           </p>
           <div className="icon-image-send">
-            {selectAssociation === "3" ? <IconRejected /> : <IconAssociate />}
+            {selectAssociation === "2" ? <IconRejected /> : <IconAssociate />}
           </div>
           <div
             className="button-action"
@@ -291,13 +197,6 @@ const SectionAssociationProperty = (props) => {
             <ButtonsModal
               primary
               onClick={() => {
-                if (selectAssociation === "3") {
-                  history.push(`/websystem/dashboard-properties`);
-                } else {
-                  history.push(
-                    `/websystem/detail-property-users/${newInfoProperty.idProperty}`
-                  );
-                }
                 setVisibleModal(false);
               }}
             >
@@ -325,4 +224,4 @@ const mapDispatchToProps = (dispatch) => ({
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(SectionAssociationProperty);
+)(SectionAssociationApplicant);

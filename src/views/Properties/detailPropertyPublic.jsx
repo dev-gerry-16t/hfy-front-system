@@ -15,6 +15,7 @@ import SectionFeatures from "./sectionsDetail/sectionFeatures";
 import SectionLocation from "./sectionsDetail/sectionLocation";
 import ContextProperty from "./context/contextProperty";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
+import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -72,8 +73,13 @@ const dataTabsProperty = [
 const DetailPropertyUsers = (props) => {
   const { match, callGlobalActionApi, dataProfile, history } = props;
   const { params } = match;
-  const idProperty = params.idProperty;
   const [dataDetail, setDataDetail] = useState({});
+  const [idProperty, setIdProperty] = useState(
+    params.idProperty.length > 30 ? params.idProperty : null
+  );
+  const [identifier, setIdentifier] = useState(
+    params.idProperty.length < 30 ? params.idProperty : null
+  );
   const [tabSelect, setTabSelect] = useState("1");
   const frontFunctions = new FrontFunctions();
 
@@ -84,7 +90,7 @@ const DetailPropertyUsers = (props) => {
         {
           idProperty,
           idApartment: null,
-          identifier: null,
+          identifier,
           idCustomer,
           idSystemUser,
           idLoginHistory,
@@ -160,12 +166,17 @@ const DetailPropertyUsers = (props) => {
         }}
       >
         <SectionAssociationProperty history={history} />
+        <SectionAssociationApplicant history={history} />
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
             <ButtonIcon>
               <IconHeart
-                backGround="var(--color-primary)"
+                backGround={
+                  dataDetail.isFavorite === true
+                    ? "var(--color-primary)"
+                    : "transparent"
+                }
                 color="var(--color-primary)"
               />
               {/* <IconShare

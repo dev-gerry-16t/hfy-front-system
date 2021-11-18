@@ -4181,6 +4181,12 @@ const callGlobalActionApi =
           { ...data, offset: getTimeZone() },
           config
         );
+      } else {
+        response = await RequesterAxios.post(
+          CONSTANT,
+          { ...data, offset: getTimeZone() },
+          config
+        );
       }
       const responseResultStatus =
         isNil(response) === false && isNil(response.status) === false

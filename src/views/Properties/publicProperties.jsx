@@ -4,18 +4,13 @@ import { connect } from "react-redux";
 import { Layout } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import {
-  callGetAllCustomerById,
-  callGetPropertyTypes,
-  callAddProperty,
-  callGetZipCodeAdress,
-  callGetPropertyCoincidences,
-  callGlobalActionApi,
-} from "../../utils/actions/actions";
+import { callGlobalActionApi } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomCardProperty from "../../components/customCardProperty";
+import ComponentFilter from "./component/componentFilter";
+import { method } from "lodash";
 
 const { Content } = Layout;
 
@@ -34,12 +29,29 @@ const ContentCards = styled.div`
   padding: 1em 0;
 `;
 
+const ContentCardsProcess = styled.div`
+  font-family: Poppins;
+  letter-spacing: 0.75px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+  gap: 2%;
+  padding: 1em 0;
+  overflow-x: scroll;
+`;
+
 const ContentAddFilter = styled.div`
   font-family: Poppins;
   padding: 1em 2em;
   background: #fff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 1em;
+  h1 {
+    font-weight: 700;
+    margin: 0px;
+    color: #4e4b66;
+    font-size: 20px;
+  }
   .button-actions-header {
     display: flex;
     justify-content: flex-end;
@@ -52,6 +64,9 @@ const ContentAddFilter = styled.div`
       font-weight: 600;
       letter-spacing: 0.75px;
     }
+  }
+  .filter-actions-components {
+    display: flex;
   }
 `;
 
@@ -97,15 +112,49 @@ const PropertiesOwner = (props) => {
     }
   };
 
+  const handlerCallUpdateProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SET_FAVORITE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetPropertyCoincidencesV2();
   }, []);
 
   return (
     <Content>
-      <h1>Propiedades de tu interés</h1>
       <Container>
-        <ContentCards>
+        <ContentAddFilter background="var(--color-primary)">
+          <h1>Propiedades de tu interes</h1>
+        </ContentAddFilter>
+        <ContentCardsProcess>
           {isEmpty(dataCoincidences) === false &&
             dataCoincidences.map((row) => {
               return (
@@ -123,10 +172,12 @@ const PropertiesOwner = (props) => {
                 />
               );
             })}
-        </ContentCards>
+        </ContentCardsProcess>
       </Container>
-      <h1>Propiedades que puedes aplicar</h1>
       <Container>
+        <ContentAddFilter background="var(--color-primary)">
+          <ComponentFilter />
+        </ContentAddFilter>
         <ContentCards>
           {isEmpty(dataCoincidencesPublic) === false &&
             dataCoincidencesPublic.map((row) => {
@@ -138,6 +189,15 @@ const PropertiesOwner = (props) => {
                     history.push(
                       `/websystem/detail-property/${row.idProperty}`
                     );
+                  }}
+                  onClickFavorite={async (data, id) => {
+                    console.log('data, id',data, id);
+                    try {
+                      await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
+                    } catch (error) {
+                      throw error;
+                    }
                   }}
                   data={row}
                   idUserType={dataProfile.idUserType}
@@ -159,8 +219,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant) =>
-    dispatch(callGlobalActionApi(data, id, constant)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertiesOwner);

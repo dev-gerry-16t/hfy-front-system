@@ -90,7 +90,7 @@ const CustomInputTypeForm = (props) => {
       >
         <Input
           id={isNil(id) === false ? id : null}
-          value={value}
+          value={isNil(value) === true ? "" : value}
           type={isNil(type) === false ? type : "text"}
           suffix={isNil(suffix) === false ? suffix : null}
           placeholder={placeholder}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
+import { Menu, Dropdown } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -27,6 +28,7 @@ import ContextProperty from "./context/contextProperty";
 import SectionDocuments from "./sectionsDetail/sectionDocuments";
 import SectionApplicants from "./sectionsDetail/sectionApplicants";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
+import SectionAgents from "./sectionsDetail/sectionAgents";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -320,6 +322,35 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        frontFunctions.showMessageStatusApi(
+          "Link copiado correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
+
   useEffect(() => {
     handlerCallGetPropertyById();
     handlerCallGetAllApplicationMethods();
@@ -337,22 +368,59 @@ const DetailPropertyUsers = (props) => {
               throw error;
             }
           },
+          getById: () => {
+            handlerCallGetPropertyById();
+          },
         }}
       >
         <SectionAssociationProperty history={history} />
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
-            <ButtonIcon>
-              {/* <IconHeart
-                backGround="var(--color-primary)"
-                color="var(--color-primary)"
-              /> */}
-              <IconShare
-                color="var(--color-primary)"
-                backGround="var(--color-primary)"
-              />
-            </ButtonIcon>
+            {dataDetail.isPublished === true && (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item>
+                      <a
+                        target="_blank"
+                        href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                      >
+                        WhatsApp
+                      </a>
+                    </Menu.Item>
+                    <Menu.Item>
+                      <span
+                        onClick={() => {
+                          copyTextToClipboard(
+                            `${window.location.origin}/property/${dataDetail.identifier}`
+                          );
+                        }}
+                      >
+                        Copiar link
+                      </span>
+                    </Menu.Item>
+                    {/* <Menu.Item>
+                      <a
+                        target="_blank"
+                        href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                      >
+                        Facebook
+                      </a>
+                    </Menu.Item> */}
+                  </Menu>
+                }
+                placement="bottomLeft"
+                arrow
+              >
+                <ButtonIcon onClick={() => {}}>
+                  <IconShare
+                    color="var(--color-primary)"
+                    backGround="var(--color-primary)"
+                  />
+                </ButtonIcon>
+              </Dropdown>
+            )}
           </div>
           <div>
             <SectionCarouselInfo
@@ -395,31 +463,7 @@ const DetailPropertyUsers = (props) => {
         <ContentRight>
           <SectionDocuments />
           <SectionApplicants />
-          <GeneralCard>
-            <div className="header-title">
-              <h1>Agentes</h1>
-            </div>
-            <div className="content-cards">
-              <Card>
-                <div className="card-user">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      <IconTenant size="100%" color="#4E4B66" />
-                    </div>
-                    <div className="name-info">
-                      <h3>Juan Valdez</h3>
-                      <span>Invitación enviada</span>
-                    </div>
-                  </div>
-                  <div className="button-action">
-                    <ButtonDocument>Deshacer</ButtonDocument>
-                  </div>
-                </div>
-              </Card>
-              <Card></Card>
-              <Card></Card>
-            </div>
-          </GeneralCard>
+          <SectionAgents idUserType={dataProfile.idUserType} />
         </ContentRight>
       </ContextProperty.Provider>
     </Content>

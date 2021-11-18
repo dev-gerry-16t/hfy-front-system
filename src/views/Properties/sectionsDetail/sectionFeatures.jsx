@@ -80,7 +80,7 @@ const CardAmenity = styled.div`
   }
 `;
 
-const SectionFeatures = () => {
+const SectionFeatures = ({ publicProperty = false }) => {
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail } = dataContexProperty;
   const {
@@ -95,7 +95,7 @@ const SectionFeatures = () => {
   } = dataDetail;
   return (
     <ContentFeatures>
-      <div className="container-features">
+      <div className={`container-features ${publicProperty === true ? "h1-1-17" : ""}`}>
         <CardAmenity>
           <div className="circle-content">
             <div>

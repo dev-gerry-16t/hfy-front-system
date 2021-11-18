@@ -65,6 +65,10 @@ const Login = (props) => {
           publicKeyStripe,
           email: data.email.trim(),
         });
+        // localStorage.setItem("idSystemUser", idSystemUser);
+        // localStorage.setItem("token", token);
+        // localStorage.setItem("publicKeyStripe", publicKeyStripe);
+        // localStorage.setItem("email", data.email.trim());
         setSpinVisible(false);
         history.push("/auth");
       } else {

@@ -20,7 +20,16 @@ const Location = styled.div`
   height: 21em;
 `;
 
-const ContentLocation = styled(Container)``;
+const ContentLocation = styled(Container)`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  .location-map {
+    width: 31em;
+    height: 21em;
+    display: flex;
+    position: relative;
+  }
+`;
 
 const ContentAddress = styled.div`
   display: flex;
@@ -32,6 +41,7 @@ const ContentAddress = styled.div`
     h1 {
       color: var(--color-primary);
       font-weight: 700;
+      font-size: 1.17em;
     }
   }
 `;
@@ -59,32 +69,29 @@ const SectionLocation = () => {
   };
   return (
     <ContentLocation>
-      <Row>
-        <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-          <Location>
-            {isNil(location) === false && (
-              <CustomMapContainer
-                location={location}
-                draggable={false}
-                onDragPosition={(position) => {}}
-                exact={isGMapsExact}
-              />
-            )}
-          </Location>
-        </Col>
-        <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-        <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-          <ContentAddress>
-            <div className="content-address">
-              <h1>{handlerLimitText(shortAddress)}</h1>
-              <hr />
-              <div>
-                <span>{fullAddress}</span>
-              </div>
+      <div className="location-map">
+        <Location>
+          {isNil(location) === false && (
+            <CustomMapContainer
+              location={location}
+              draggable={false}
+              onDragPosition={(position) => {}}
+              exact={isGMapsExact}
+            />
+          )}
+        </Location>
+      </div>
+      <div>
+        <ContentAddress>
+          <div className="content-address">
+            <h1>{handlerLimitText(shortAddress)}</h1>
+            <hr />
+            <div>
+              <span>{fullAddress}</span>
             </div>
-          </ContentAddress>
-        </Col>
-      </Row>
+          </div>
+        </ContentAddress>
+      </div>
     </ContentLocation>
   );
 };

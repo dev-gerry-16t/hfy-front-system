@@ -16,6 +16,7 @@ import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomCardProperty from "../../components/customCardProperty";
+import ComponentFilter from "./component/componentFilter";
 
 const { Content } = Layout;
 
@@ -40,6 +41,14 @@ const ContentAddFilter = styled.div`
   background: #fff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 1em;
+  display: flex;
+  justify-content: space-between;
+  h1 {
+    font-weight: 700;
+    margin: 0px;
+    color: #4e4b66;
+    font-size: 20px;
+  }
   .button-actions-header {
     display: flex;
     justify-content: flex-end;
@@ -58,6 +67,7 @@ const ContentAddFilter = styled.div`
 const PropertiesOwner = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
+  const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async () => {
@@ -80,7 +90,14 @@ const PropertiesOwner = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : [];
+      const responseResultPublic =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[1]) === false
+          ? response.response[1]
+          : [];
       setDataCoincidences(responseResult);
+      setDataCoincidencesPublic(responseResultPublic);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -130,6 +147,7 @@ const PropertiesOwner = (props) => {
     <Content>
       <Container>
         <ContentAddFilter background="var(--color-primary)">
+          <h1>Mis propiedades</h1>
           <div className="button-actions-header">
             <button
               onClick={() => {
@@ -167,6 +185,41 @@ const PropertiesOwner = (props) => {
             })}
         </ContentCards>
       </Container>
+      {dataProfile.idUserType === 4 && (
+        <Container>
+          <ContentAddFilter background="var(--color-primary)">
+            <ComponentFilter />
+          </ContentAddFilter>
+          <ContentCards>
+            {isEmpty(dataCoincidencesPublic) === false &&
+              dataCoincidencesPublic.map((row) => {
+                return (
+                  <CustomCardProperty
+                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+                    alt={row.identifier}
+                    onClickDetail={() => {
+                      history.push(
+                        `/websystem/detail-property/${row.idProperty}`
+                      );
+                    }}
+                    onClickFavorite={async (data, id) => {
+                      console.log("data, id", data, id);
+                      try {
+                        await handlerCallUpdateProperty(data, id);
+                        handlerCallGetPropertyCoincidencesV2();
+                      } catch (error) {
+                        throw error;
+                      }
+                    }}
+                    data={row}
+                    idUserType={dataProfile.idUserType}
+                    owner={false}
+                  />
+                );
+              })}
+          </ContentCards>
+        </Container>
+      )}
     </Content>
   );
 };

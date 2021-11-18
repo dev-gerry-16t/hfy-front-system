@@ -172,6 +172,7 @@ const CustomCardProperty = (props) => {
     idUserType,
     owner,
     updateProperty = () => {},
+    onClickFavorite = () => {},
   } = props;
   const {
     maintenanceAmount,
@@ -188,6 +189,8 @@ const CustomCardProperty = (props) => {
     canInviteTenant,
     idApartment,
     idProperty,
+    canApply,
+    isFavorite,
   } = data;
   const dataTimeLine =
     isNil(currentTimeLine) === false && isEmpty(currentTimeLine) === false
@@ -235,17 +238,35 @@ const CustomCardProperty = (props) => {
       </div>
       <div className="price-item">
         <span>{currentRent} MXN</span>
-        <ButtonIcon>
-          {owner === true ? (
+        {owner === true ? (
+          <ButtonIcon
+            onClick={async () => {
+              try {
+              } catch (error) {}
+            }}
+          >
             <IconShare
               color="var(--color-primary)"
               backGround="var(--color-primary)"
               size="16px"
             />
-          ) : (
-            <IconHeart backGround="transparent" color="var(--color-primary)" />
-          )}
-        </ButtonIcon>
+          </ButtonIcon>
+        ) : (
+          <ButtonIcon
+            onClick={async () => {
+              try {
+                await onClickFavorite({ idApartment }, idProperty);
+              } catch (error) {}
+            }}
+          >
+            <IconHeart
+              backGround={
+                isFavorite === true ? "var(--color-primary)" : "transparent"
+              }
+              color="var(--color-primary)"
+            />
+          </ButtonIcon>
+        )}
       </div>
       <div className="address-item">
         <span className="text-bold">{shortAddress}</span>
@@ -284,7 +305,7 @@ const CustomCardProperty = (props) => {
           </ButtonWhatsapp>
         </div>
       )} */}
-      {owner === false && (
+      {owner === false && canApply === true && (
         <div className="content-button">
           <ButtonPrimary>Postularme</ButtonPrimary>
           <ButtonWhatsapp>

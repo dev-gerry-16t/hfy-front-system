@@ -11,10 +11,11 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import CustomInputCurrency from "../../../components/customInputCurrency";
 
 const { Option } = Select;
 
-const ComponentAddCandidate = (props) => {
+const ComponentAddAgent = (props) => {
   const {
     isModalVisible,
     onClose,
@@ -28,10 +29,13 @@ const ComponentAddCandidate = (props) => {
     emailAddress: null,
     idCustomer: null,
     idInvitation: null,
+    mothersMaidenName: null,
+    commissionAmount: null,
+    isActive: true,
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [finishInvitation, setFinishInvitation] = useState(false);
-  const [dataTenants, setDataTenants] = useState([]);
+  const [dataAgents, setDataAgents] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallSearchCustomer = async (data) => {
@@ -42,7 +46,7 @@ const ComponentAddCandidate = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          type: 6,
+          type: 5,
           dataFiltered: data,
         },
         null,
@@ -53,7 +57,7 @@ const ComponentAddCandidate = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
-      setDataTenants(responseResult);
+      setDataAgents(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -73,10 +77,10 @@ const ComponentAddCandidate = (props) => {
       <FormModal>
         {finishInvitation === false && (
           <>
-            <h1>Agrega a tu candidato</h1>
+            <h1>Comparte con Agente</h1>
             <p>
-              Se le enviará una notificación a tu candidato para ser invitado a
-              conocer esta propiedad
+              Se le enviará una notificación al asesor para aceptar la
+              invitación
             </p>
             <div>
               <Row>
@@ -98,6 +102,7 @@ const ComponentAddCandidate = (props) => {
                       mode="tags"
                       style={{ width: "100%" }}
                       onChange={(e, a) => {
+                        console.log("a", e, a);
                         if (isEmpty(a) === false && isEmpty(a[0]) === false) {
                           const response = a[0].onClick();
                           setDataForm({
@@ -133,8 +138,8 @@ const ComponentAddCandidate = (props) => {
                         }
                       }}
                     >
-                      {isEmpty(dataTenants) === false &&
-                        dataTenants.map((row) => {
+                      {isEmpty(dataAgents) === false &&
+                        dataAgents.map((row) => {
                           return (
                             <Option value={row.idCustomer} onClick={() => row}>
                               {row.username}
@@ -155,7 +160,7 @@ const ComponentAddCandidate = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.givenName}
                     placeholder=""
-                    label="Nombre"
+                    label="Nombre *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
@@ -173,7 +178,7 @@ const ComponentAddCandidate = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.lastName}
                     placeholder=""
-                    label="Apellido paterno"
+                    label="Apellido paterno *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
@@ -183,6 +188,26 @@ const ComponentAddCandidate = (props) => {
                       });
                     }}
                     type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24}>
+                  <CustomInputCurrency
+                    value={dataForm.commissionAmount}
+                    placeholder="Comisión que deseas compartir con este agente"
+                    label="Monto de comisión"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        commissionAmount: value,
+                      });
+                    }}
+                    type="number"
+                    prefix="$"
+                    suffix=""
                   />
                 </Col>
               </Row>
@@ -224,7 +249,7 @@ const ComponentAddCandidate = (props) => {
                 fontSize: "1em",
               }}
             >
-              El candidato ha sido notificado, te deseamos mucho exito en tu
+              El agente ha sido notificado, te deseamos mucho exito en tu
               proceso
             </p>
             <div className="button-action">
@@ -257,7 +282,4 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ComponentAddCandidate);
+export default connect(mapStateToProps, mapDispatchToProps)(ComponentAddAgent);

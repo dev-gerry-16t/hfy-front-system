@@ -329,6 +329,9 @@ const DefaultLayout = (props) => {
   );
 
   useEffect(() => {
+    if (isNil(dataProfile) === true) {
+      return history.push("/");
+    }
     handlerCallGetNotifications();
     const documentHead = document.getElementsByTagName("head");
     const headExtractNode =
@@ -337,9 +340,6 @@ const DefaultLayout = (props) => {
       isNil(documentHead[0]) === false
         ? documentHead[0]
         : [];
-    if (isNil(dataProfile) === true) {
-      history.push("/");
-    }
     const { themeConfig } = dataProfile;
 
     const theme = document.getElementsByTagName("body")[0];
