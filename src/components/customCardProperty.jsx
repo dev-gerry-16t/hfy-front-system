@@ -238,7 +238,7 @@ const CustomCardProperty = (props) => {
       </div>
       <div className="price-item">
         <span>{currentRent} MXN</span>
-        {owner === true ? (
+        {owner === true && (
           <ButtonIcon
             onClick={async () => {
               try {
@@ -251,11 +251,13 @@ const CustomCardProperty = (props) => {
               size="16px"
             />
           </ButtonIcon>
-        ) : (
+        )}
+
+        {idUserType === 2 && (
           <ButtonIcon
             onClick={async () => {
               try {
-                await onClickFavorite({ idApartment }, idProperty);
+                await onClickFavorite({ idApartment, identifier }, idProperty);
               } catch (error) {}
             }}
           >

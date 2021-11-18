@@ -166,6 +166,14 @@ const PropertiesOwner = (props) => {
                       `/websystem/detail-property-users/${row.idProperty}`
                     );
                   }}
+                  onClickFavorite={async (data, id) => {
+                    try {
+                      await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
                   data={row}
                   idUserType={dataProfile.idUserType}
                   owner={false}
@@ -191,7 +199,6 @@ const PropertiesOwner = (props) => {
                     );
                   }}
                   onClickFavorite={async (data, id) => {
-                    console.log('data, id',data, id);
                     try {
                       await handlerCallUpdateProperty(data, id);
                       handlerCallGetPropertyCoincidencesV2();
