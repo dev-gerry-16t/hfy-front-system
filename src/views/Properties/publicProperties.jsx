@@ -144,6 +144,38 @@ const PropertiesOwner = (props) => {
     }
   };
 
+  const handlerCallApplyToProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetPropertyCoincidencesV2();
   }, []);
@@ -169,6 +201,14 @@ const PropertiesOwner = (props) => {
                   onClickFavorite={async (data, id) => {
                     try {
                       await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
+                  onClickApply={async (data, id) => {
+                    try {
+                      await handlerCallApplyToProperty(data, id);
                       handlerCallGetPropertyCoincidencesV2();
                     } catch (error) {
                       throw error;
@@ -201,6 +241,14 @@ const PropertiesOwner = (props) => {
                   onClickFavorite={async (data, id) => {
                     try {
                       await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
+                  onClickApply={async (data, id) => {
+                    try {
+                      await handlerCallApplyToProperty(data, id);
                       handlerCallGetPropertyCoincidencesV2();
                     } catch (error) {
                       throw error;

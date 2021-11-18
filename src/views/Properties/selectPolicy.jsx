@@ -622,7 +622,10 @@ const SelectPolicy = (props) => {
       <ContentForm
         id="share-commission-agent"
         style={{
-          display: isNil(selectMethodPolicy) === false ? "block" : "none",
+          display:
+            isNil(selectMethodPolicy) === false && dataProfile.idUserType === 4
+              ? "block"
+              : "none",
         }}
       >
         <div className="header-title">

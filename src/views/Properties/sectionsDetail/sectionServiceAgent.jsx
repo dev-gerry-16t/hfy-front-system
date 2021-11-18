@@ -220,60 +220,179 @@ const CardServices = styled.div`
   }
 `;
 
+const CardServiceSelect = styled.div`
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  min-height: 100px;
+  .service-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .service-hom {
+      padding: 0px 1em;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+      .check {
+        width: 18px;
+        height: 18px;
+        background: var(--color-primary);
+        color: #fff;
+        border-radius: 4px;
+      }
+      .check::before {
+        content: "\\2713";
+        width: 18px;
+        height: 18px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .label-check {
+        font-size: 1em;
+        margin-left: 10px;
+      }
+    }
+  }
+  .line {
+    border: 0.5px solid #4f4c66;
+    opacity: 0.3;
+    transform: rotate(90deg);
+    width: 100px;
+    height: 0px;
+  }
+  .info-service {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .info {
+      margin-bottom: 15px;
+      span {
+        margin-left: 10px;
+      }
+    }
+  }
+`;
+
 const SectionServiceAgent = (props) => {
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty } = dataContexProperty;
+  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const { idApplicationMethod, applicationMethod, applicationMethodTitle } =
+    dataDetail;
+
+  const arrayServiceSelect =
+    isNil(applicationMethod) === false && isEmpty(applicationMethod) === false
+      ? JSON.parse(applicationMethod)
+      : [];
+
   return (
     <ContentServiceAgent>
-      {/* <NoticeService>j</NoticeService> */}
-      <h1>¡Te ayudamos con tu proceso de renta!</h1>
-      <SectionCard>
-        {isEmpty(dataApplication) === false &&
-          dataApplication.map((row) => {
-            const methods =
-              isNil(row.applicationMethod) === false &&
-              isEmpty(row.applicationMethod) === false
-                ? JSON.parse(row.applicationMethod)
-                : [];
-            return (
-              <CardServices>
-                <div className="top-card">
-                  <div className="style-text">3 MESES GRATIS</div>
-                  <h3>{row.text}</h3>
+      {isNil(idApplicationMethod) === true && (
+        <>
+          <h1>¡Te ayudamos con tu proceso de renta!</h1>
+          <SectionCard>
+            {isEmpty(dataApplication) === false &&
+              dataApplication.map((row) => {
+                const methods =
+                  isNil(row.applicationMethod) === false &&
+                  isEmpty(row.applicationMethod) === false
+                    ? JSON.parse(row.applicationMethod)
+                    : [];
+                return (
+                  <CardServices>
+                    <div className="top-card">
+                      <div className="style-text">3 MESES GRATIS</div>
+                      <h3>{row.text}</h3>
+                    </div>
+                    <div className="pick"></div>
+                    <div className="body-card">
+                      <div className="content-service">
+                        {isEmpty(methods) === false &&
+                          methods.map((rowMap) => {
+                            return (
+                              <div className="service-hom">
+                                <span className="check" />{" "}
+                                <span className="label-check">{rowMap}</span>
+                              </div>
+                            );
+                          })}
+                      </div>
+                      <div className="button-action">
+                        <ButtonsService
+                          primary
+                          onClick={async () => {
+                            try {
+                              await updateProperty({
+                                idApartment: dataDetail.idApartment,
+                                idApplicationMethod: row.idApplicationMethod,
+                              });
+                              getById();
+                            } catch (error) {}
+                          }}
+                        >
+                          Seleccionar
+                        </ButtonsService>
+                        <ButtonsService>Ver más información</ButtonsService>
+                      </div>
+                    </div>
+                  </CardServices>
+                );
+              })}
+          </SectionCard>
+        </>
+      )}
+      {isNil(idApplicationMethod) === false &&
+        isEmpty(dataApplication) === false && (
+          <>
+            <div
+              style={{
+                marginBottom: 25,
+              }}
+            >
+              <h1>Servicio adquirido</h1>
+            </div>
+            <CardServiceSelect>
+              <div className="service-options">
+                <div className="content-service">
+                  {isEmpty(arrayServiceSelect) === false &&
+                    arrayServiceSelect.map((row) => {
+                      return (
+                        <div className="service-hom">
+                          <span className="check" />{" "}
+                          <span className="label-check">{row}</span>
+                        </div>
+                      );
+                    })}
                 </div>
-                <div className="pick"></div>
-                <div className="body-card">
-                  <div className="content-service">
-                    {isEmpty(methods) === false &&
-                      methods.map((rowMap) => {
-                        return (
-                          <div className="service-hom">
-                            <span className="check" />{" "}
-                            <span className="label-check">{rowMap}</span>
-                          </div>
-                        );
-                      })}
-                  </div>
-                  <div className="button-action">
-                    <ButtonsService
-                      primary
-                      onClick={() => {
-                        updateProperty({
-                          idApartment: dataDetail.idApartment,
-                          idApplicationMethod: row.idApplicationMethod,
-                        });
-                      }}
-                    >
-                      Seleccionar
-                    </ButtonsService>
-                    <ButtonsService>Ver más información</ButtonsService>
-                  </div>
+              </div>
+              <div className="line"></div>
+              <div className="info-service">
+                <div className="info">
+                  <strong>Costo de servicio:</strong>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "700",
+                    }}
+                  >
+                    $ 1,200 MXN
+                  </span>
                 </div>
-              </CardServices>
-            );
-          })}
-      </SectionCard>
+                <div className="info">
+                  <strong>Servicio:</strong>
+                  <span>{applicationMethodTitle}</span>
+                </div>
+                <div className="info">
+                  <strong>Fecha de adquisición:</strong>
+                  <span>02/11/2021</span>
+                </div>
+              </div>
+            </CardServiceSelect>
+          </>
+        )}
     </ContentServiceAgent>
   );
 };

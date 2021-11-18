@@ -173,6 +173,7 @@ const CustomCardProperty = (props) => {
     owner,
     updateProperty = () => {},
     onClickFavorite = () => {},
+    onClickApply = () => {},
   } = props;
   const {
     maintenanceAmount,
@@ -191,6 +192,7 @@ const CustomCardProperty = (props) => {
     idProperty,
     canApply,
     isFavorite,
+    canGiveUp,
   } = data;
   const dataTimeLine =
     isNil(currentTimeLine) === false && isEmpty(currentTimeLine) === false
@@ -307,16 +309,40 @@ const CustomCardProperty = (props) => {
           </ButtonWhatsapp>
         </div>
       )} */}
-      {owner === false && canApply === true && (
+      {owner === false && (
         <div className="content-button">
-          <ButtonPrimary>Postularme</ButtonPrimary>
-          <ButtonWhatsapp>
+          {idUserType === 2 && canApply === true && (
+            <ButtonPrimary
+              onClick={async () => {
+                try {
+                  await onClickApply({ idApartment, identifier }, idProperty);
+                } catch (error) {}
+              }}
+            >
+              Postularme
+            </ButtonPrimary>
+          )}
+          {canGiveUp === true && (
+            <ButtonPrimary
+              onClick={async () => {
+                try {
+                  await onClickApply(
+                    { idApartment, identifier, isGivingUp: true },
+                    idProperty
+                  );
+                } catch (error) {}
+              }}
+            >
+              Desistir
+            </ButtonPrimary>
+          )}
+          {/* <ButtonWhatsapp>
             <IconWhatsapp
               size="15"
               color="var(--color-primary)"
               backGround="var(--color-primary)"
             />
-          </ButtonWhatsapp>
+          </ButtonWhatsapp> */}
         </div>
       )}
       {owner === true && (

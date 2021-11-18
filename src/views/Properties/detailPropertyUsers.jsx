@@ -99,6 +99,13 @@ const GeneralCard = styled.div`
     flex-direction: column;
     gap: 1.5em;
   }
+
+  .content-card {
+    padding: 2em 2em;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+  }
 `;
 
 const Card = styled.div`
@@ -205,6 +212,12 @@ const ButtonDocument = styled.button`
   font-weight: 600;
   border-radius: 1em;
   padding: 0px 1em;
+`;
+
+const SharedByUser = styled.div`
+  font-style: italic;
+  font-size: 12px;
+  text-decoration: underline;
 `;
 
 const dataTabsProperty = [
@@ -377,6 +390,11 @@ const DetailPropertyUsers = (props) => {
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
+            {isNil(dataDetail.sharedBy) === false && (
+              <SharedByUser>
+                Ficha compartida por {dataDetail.sharedBy}
+              </SharedByUser>
+            )}
             {dataDetail.isPublished === true && (
               <Dropdown
                 overlay={
@@ -450,17 +468,21 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              <SectionPolicy
-                onClickViewPolicy={() => {
-                  history.push(`/websystem/select-policy/${idProperty}`);
-                }}
-                idUserType={dataProfile.idUserType}
-              />
+              {isNil(dataDetail.idApplicationMethod) === true && (
+                <SectionPolicy
+                  onClickViewPolicy={() => {
+                    history.push(`/websystem/select-policy/${idProperty}`);
+                  }}
+                  idUserType={dataProfile.idUserType}
+                />
+              )}
               {dataProfile.idUserType !== 2 && (
                 <>
-                  <SectionServiceAgent
-                    dataApplication={dataApplicationMethod}
-                  />
+                  {isNil(dataDetail.idPolicy) === true && (
+                    <SectionServiceAgent
+                      dataApplication={dataApplicationMethod}
+                    />
+                  )}
                   <SectionPublicProperty />
                 </>
               )}
@@ -476,6 +498,32 @@ const DetailPropertyUsers = (props) => {
               <SectionAgents idUserType={dataProfile.idUserType} />
             </>
           )}
+          {isNil(dataDetail.ownerEmailAddress) === false &&
+            dataProfile.idUserType === 4 && (
+              <GeneralCard>
+                <div className="header-title">
+                  <h1>Propietario</h1>
+                </div>
+                <div className="content-card">
+                  <Card>
+                    <div className="card-user">
+                      <div className="top-info">
+                        <div className="icon-info">
+                          <IconTenant size="100%" color="#4E4B66" />
+                        </div>
+                        <div className="name-info">
+                          <h3>
+                            {dataDetail.ownerGivenName}{" "}
+                            {dataDetail.ownerLastName}
+                          </h3>
+                          <span>{dataDetail.ownerEmailAddress}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </GeneralCard>
+            )}
         </ContentRight>
       </ContextProperty.Provider>
     </Content>

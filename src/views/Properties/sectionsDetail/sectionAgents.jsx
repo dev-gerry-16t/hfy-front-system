@@ -242,7 +242,9 @@ const SectionAgents = (props) => {
                       <h3>
                         {row.givenName} {row.lastName}
                       </h3>
-                      <span>Comisión: {row.commissionAmountFormat}</span>
+                      {isNil(row.commissionAmountFormat) === false && (
+                        <span>Comisión: {row.commissionAmountFormat}</span>
+                      )}
                     </div>
                   </div>
                   <div className="button-action">
