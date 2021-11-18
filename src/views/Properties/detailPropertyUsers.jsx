@@ -454,16 +454,28 @@ const DetailPropertyUsers = (props) => {
                 onClickViewPolicy={() => {
                   history.push(`/websystem/select-policy/${idProperty}`);
                 }}
+                idUserType={dataProfile.idUserType}
               />
-              <SectionServiceAgent dataApplication={dataApplicationMethod} />
-              <SectionPublicProperty />
+              {dataProfile.idUserType !== 2 && (
+                <>
+                  <SectionServiceAgent
+                    dataApplication={dataApplicationMethod}
+                  />
+                  <SectionPublicProperty />
+                </>
+              )}
             </ContainerDown>
           </div>
         </ContentForm>
+
         <ContentRight>
           <SectionDocuments />
-          <SectionApplicants />
-          <SectionAgents idUserType={dataProfile.idUserType} />
+          {dataProfile.idUserType !== 2 && (
+            <>
+              <SectionApplicants />
+              <SectionAgents idUserType={dataProfile.idUserType} />
+            </>
+          )}
         </ContentRight>
       </ContextProperty.Provider>
     </Content>
