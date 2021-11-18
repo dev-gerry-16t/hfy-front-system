@@ -35,6 +35,20 @@ const GeneralCard = styled.div`
   }
 `;
 
+const EmptyData = styled.div`
+  width: 100%;
+  height: 30em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  p {
+    color: rgba(78, 75, 102, 0.45);
+    font-weight: 700;
+    text-align: center;
+  }
+`;
+
 const Card = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
@@ -260,6 +274,16 @@ const SectionDocuments = () => {
               </Card>
             );
           })}
+        {isEmpty(documentsArray) === true && (
+          <EmptyData>
+            <img
+              width="150"
+              src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+              alt=""
+            />
+            <p>No hay Documentos disponibles</p>
+          </EmptyData>
+        )}
         {/* <Card>
           <div className="card-document">
             <div className="top-info">
