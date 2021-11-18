@@ -97,7 +97,7 @@ const PolicySelected = styled.div`
 `;
 
 const SectionPolicy = (props) => {
-  const { onClickViewPolicy } = props;
+  const { onClickViewPolicy, idUserType } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail } = dataContexProperty;
   const {
@@ -144,9 +144,12 @@ const SectionPolicy = (props) => {
                   <h2>{policyAmountFormat}</h2> {/*<span>35%</span>*/}
                 </div>
               </div>
-              <div className="comision">
-                <strong>Comisión para el asesor</strong> <span>$1,800.00</span>
-              </div>
+              {idUserType === 4 && (
+                <div className="comision">
+                  <strong>Comisión para el asesor</strong>{" "}
+                  <span>$1,800.00</span>
+                </div>
+              )}
               <div>
                 <strong>Tipo de pago:</strong>{" "}
                 <span>{policyPaymentMethod}</span>
