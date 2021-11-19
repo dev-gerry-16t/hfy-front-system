@@ -507,7 +507,8 @@ const SelectPolicy = (props) => {
                         {isNil(dataDetail.currentRent) === false &&
                         isNil(dataDetail.currentRent) === false
                           ? frontFunctions.parseFormatCurrency(
-                              rowMap.minimunAmount,
+                              rowMap.minimunAmount +
+                                rowMap.minimunAmount * rowMap.taxBase,
                               2,
                               2
                             )
@@ -519,7 +520,10 @@ const SelectPolicy = (props) => {
                         {isNil(dataDetail.currentRent) === false &&
                         isNil(dataDetail.currentRent) === false
                           ? frontFunctions.parseFormatCurrency(
-                              dataDetail.currentRent * rowMap.percentBase,
+                              dataDetail.currentRent * rowMap.percentBase +
+                                dataDetail.currentRent *
+                                  rowMap.percentBase *
+                                  rowMap.taxBase,
                               2,
                               2
                             )
@@ -554,7 +558,8 @@ const SelectPolicy = (props) => {
                         ) {
                           setAmountTotalPolicy({
                             amountFormat: frontFunctions.parseFormatCurrency(
-                              rowMap.minimunAmount,
+                              rowMap.minimunAmount +
+                                rowMap.minimunAmount * rowMap.taxBase,
                               2,
                               2
                             ),
@@ -563,7 +568,10 @@ const SelectPolicy = (props) => {
                         } else {
                           setAmountTotalPolicy({
                             amountFormat: frontFunctions.parseFormatCurrency(
-                              dataDetail.currentRent * rowMap.percentBase,
+                              dataDetail.currentRent * rowMap.percentBase +
+                                dataDetail.currentRent *
+                                  rowMap.percentBase *
+                                  rowMap.taxBase,
                               2,
                               2
                             ),
@@ -640,7 +648,7 @@ const SelectPolicy = (props) => {
               <strong>Comisión para el asesor</strong>{" "}
               <span>
                 {frontFunctions.parseFormatCurrency(
-                  amountTotalPolicy.amount * 0.35,
+                  amountTotalPolicy.amount * dataDetail.adviserCommissionBase,
                   2,
                   2
                 )}{" "}

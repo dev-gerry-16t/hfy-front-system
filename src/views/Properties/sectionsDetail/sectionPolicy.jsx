@@ -106,6 +106,7 @@ const SectionPolicy = (props) => {
     policyDescription,
     policyAmountFormat,
     policyPaymentMethod,
+    advCommissionAmountFormat,
   } = dataDetail;
 
   return (
@@ -147,7 +148,7 @@ const SectionPolicy = (props) => {
               {idUserType === 4 && (
                 <div className="comision">
                   <strong>Comisión para el asesor</strong>{" "}
-                  <span>$1,800.00</span>
+                  <span>{advCommissionAmountFormat}</span>
                 </div>
               )}
               <div>
