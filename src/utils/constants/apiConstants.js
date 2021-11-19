@@ -80,6 +80,9 @@ const API_CONSTANTS = {
     SET_APPLICANT: `${API.CUSTOMER}/property/setApplicant/`,
     APPLY_TO_PROPERTY: `${API.CUSTOMER}/property/applyToProperty/`,
     SET_FAVORITE_PROPERTY: `${API.CUSTOMER}/property/setFavoriteProperty/`,
+    SET_CONTRACT: `${API.CUSTOMER}/property/setContract/`,
+    GENERATE_DOCUMENT: `${API.CUSTOMER}/property/generateDocument/`,
+    
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,

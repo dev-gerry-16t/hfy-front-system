@@ -1,4 +1,5 @@
 import React, { useContext, useState } from "react";
+import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -10,6 +11,11 @@ import {
 import ContextProperty from "../context/contextProperty";
 import CustomViewDocument from "../../../components/CustomViewDocument";
 import CustomSignatureContractV2 from "../../../components/customSignatureContractv2";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
+import SectionContractAvailable from "../component/sectionContractAvailableOwner";
 
 const GeneralCard = styled.div`
   background: #ffffff;
@@ -24,6 +30,13 @@ const GeneralCard = styled.div`
       margin: 0;
       color: var(--color-primary);
       font-weight: 700;
+    }
+    button {
+      border: none;
+      border-radius: 1em;
+      color: #fff;
+      background: var(--color-primary);
+      font-weight: 500;
     }
   }
   .content-cards {
@@ -148,17 +161,20 @@ const ButtonDocument = styled.button`
   padding: 0px 1em;
 `;
 
-const SectionDocuments = () => {
+const SectionDocuments = (props) => {
+  const { callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {} } = dataContexProperty;
-  const { jsonDocuments } = dataDetail;
+  const { dataDetail = {}, getById } = dataContexProperty;
+  const { jsonDocuments, isInContract, idContract } = dataDetail;
   const documentsArray =
     isNil(jsonDocuments) === false && isEmpty(jsonDocuments) === false
       ? JSON.parse(jsonDocuments)
       : [];
   const [isVisibleModalDocument, setIsVisibleModalDocument] = useState(false);
+  const [isVisibleModalContract, setIsVisibleModalContract] = useState(false);
   const [isVisibleModalSignature, setIsVisibleModalSignature] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
+  const frontFunctions = new FrontFunctions();
 
   const handlerSelectIcon = (key, sign) => {
     let component = null;
@@ -187,6 +203,77 @@ const SectionDocuments = () => {
     return component;
   };
 
+  const handlerCallSetContract = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idContract,
+        API_CONSTANTS.CUSTOMER.SET_CONTRACT,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+      getById();
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallGenerateDocument = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idContract,
+        API_CONSTANTS.CUSTOMER.GENERATE_DOCUMENT,
+        "PUT"
+      );
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResultMessage,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+      getById();
+      return responseResult;
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   return (
     <GeneralCard>
       <CustomViewDocument
@@ -197,11 +284,33 @@ const SectionDocuments = () => {
           setDataDocument({});
         }}
       />
+      <SectionContractAvailable
+        isModalVisible={isVisibleModalContract}
+        onClose={() => {
+          setIsVisibleModalContract(false);
+          setDataDocument({});
+        }}
+        dataGetContract={{}}
+        onAcceptContract={async (data) => {
+          try {
+            await handlerCallSetContract({ ...data, type: dataDocument.type });
+          } catch (error) {
+            throw error;
+          }
+        }}
+        dataProfile={dataProfile}
+      />
       <CustomSignatureContractV2
         isModalVisible={isVisibleModalSignature}
-        name="Usuario"
-        onSignContract={() => {}}
-        titleSectionSignature="Firma de "
+        name={dataProfile.fullName}
+        onSignContract={async (data) => {
+          try {
+            await handlerCallSetContract(data);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        titleSectionSignature={`Firma de ${dataDocument.documentType}`}
         componentTerms={
           <span
             style={{
@@ -228,6 +337,15 @@ const SectionDocuments = () => {
       />
       <div className="header-title">
         <h1>Documentos</h1>
+        {isInContract == true && (
+          <button
+            onClick={() => {
+              setIsVisibleModalContract(true);
+            }}
+          >
+            Cita para firma
+          </button>
+        )}
       </div>
       <div className="content-cards">
         {isEmpty(documentsArray) === false &&
@@ -235,7 +353,7 @@ const SectionDocuments = () => {
             return (
               <Card
                 colorDocument={
-                  row.canSign === true ? "#eff0f6" : row.style.color
+                  row.canSign == true ? "#eff0f6" : row.style.color
                 }
               >
                 <div className="card-document">
@@ -251,18 +369,33 @@ const SectionDocuments = () => {
                     </div>
                   </div>
                   <div className="button-action">
-                    <ButtonDocument
-                      onClick={() => {
-                        setIsVisibleModalDocument(true);
-                        setDataDocument(row);
-                      }}
-                    >
-                      Ver detalle
-                    </ButtonDocument>
-                    {row.canSign === true && (
+                    {row.canSeeDetail == true && (
+                      <ButtonDocument
+                        onClick={async () => {
+                          try {
+                            const response = await handlerCallGenerateDocument({
+                              idDocument: row.idDocument,
+                              idPreviousDocument: row.idPreviousDocument,
+                              idDocumentType: row.idDocumentType,
+                              bucketSource: row.bucketSource,
+                              previousBucketSource: row.previousBucketSource,
+                              canGenerateDocument: row.canGenerateDocument,
+                              type: row.type,
+                            });
+                            console.log("response", response);
+                            setIsVisibleModalDocument(true);
+                            setDataDocument({ ...row, url: response.url });
+                          } catch (error) {}
+                        }}
+                      >
+                        Ver detalle
+                      </ButtonDocument>
+                    )}
+                    {row.canSign == true && (
                       <ButtonDocument
                         primary
                         onClick={() => {
+                          setDataDocument(row);
                           setIsVisibleModalSignature(true);
                         }}
                       >
@@ -345,4 +478,16 @@ const SectionDocuments = () => {
   );
 };
 
-export default SectionDocuments;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionDocuments);

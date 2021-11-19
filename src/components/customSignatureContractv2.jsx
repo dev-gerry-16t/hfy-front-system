@@ -115,6 +115,9 @@ const CustomSignatureContractV2 = ({
         <ButtonDocument
           primary
           onClick={() => {
+            signatureRef.current.clear();
+            setAceptTerms(false);
+            setViewSignatureMovement(false);
             onClose();
           }}
         >
