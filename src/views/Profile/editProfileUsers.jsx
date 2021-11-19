@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -17,12 +18,22 @@ import SectionReferences from "./sections/References/sectionReferencies";
 import SectionCurrentWorkTenant from "./sections/CurrentWork/sectionCurrentWorkTenant";
 import SectionCurrentWorkTenantMoral from "./sections/CurrentWork/sectionCurrentWorkTenantMoral";
 import SectionBankInformation from "./sections/BankInformation/sectionBankInformation";
+import CustomStepsHomify from "../../components/customStepsHomifyV2";
+
+const Content = styled.div`
+  overflow-y: scroll;
+  font-size: 16px;
+  font-family: Poppins;
+  padding: 1em;
+  letter-spacing: 0.75px;
+`;
 
 const EditProfileUsers = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
+  const [current, setCurrent] = useState(0);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetCustomerData = async () => {
@@ -87,125 +98,119 @@ const EditProfileUsers = (props) => {
   }, []);
 
   return (
-    <div
-      style={{
-        maxHeight: "100vh",
-        overflowY: "scroll",
-      }}
-    >
+    <Content>
+      <CustomStepsHomify
+        steps={dataTabs}
+        onClick={(ix, record) => {
+          setCurrent(ix);
+        }}
+        callBackFind={(record) => {
+          setDataConfigForm(record);
+        }}
+        current={current}
+      />
       <ContextProfile.Provider
         value={{
           dataCustomerDetail,
         }}
       >
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(6,1fr)",
-            columnGap: 2,
-            padding: "15px",
-          }}
-        >
-          <div>
-            {isEmpty(dataTabs) === false &&
-              dataTabs.map((row) => {
-                return (
-                  <div>
-                    <button
-                      onClick={() => {
-                        setDataConfigForm(row);
-                      }}
-                    >
-                      {row.tab}
-                    </button>
-                  </div>
-                );
-              })}
-          </div>
-          <div
-            style={{
-              background: "white",
-              borderRadius: 5,
-              gridColumn: "2/5",
-            }}
-          >
-            {/*Inquilino Persona fisica */}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 1 && (
-                <SectionPersonalInformationTenant />
-              )}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 3 && <SectionCurrentWorkTenant />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 4 && <SectionReferences />}
-            {/*Inquilino Persona fisica */}
+        {/*Inquilino Persona fisica */}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 1 && (
+            <SectionPersonalInformationTenant
+              onclickNext={() => {
+                setCurrent(1);
+              }}
+            />
+          )}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 6 && (
+            <SectionCurrentAddressTenant
+              onclickBack={() => {
+                setCurrent(0);
+              }}
+              onclickNext={() => {
+                setCurrent(2);
+              }}
+            />
+          )}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 3 && (
+            <SectionCurrentWorkTenant
+              onclickBack={() => {
+                setCurrent(1);
+              }}
+              onclickNext={() => {
+                setCurrent(3);
+              }}
+            />
+          )}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 4 && <SectionReferences />}
+        {/*Inquilino Persona fisica */}
 
-            {/*Inquilino Persona moral */}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 1 && (
-                <SectionPersonalInformationTenantMoral />
-              )}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 3 && <SectionCurrentWorkTenantMoral />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 1 &&
-              dataConfigForm.idTab === 4 && <SectionReferences />}
-            {/*Inquilino Persona moral */}
+        {/*Inquilino Persona moral */}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 1 && (
+            <SectionPersonalInformationTenantMoral />
+          )}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 3 && <SectionCurrentWorkTenantMoral />}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 1 &&
+          dataConfigForm.idTab === 4 && <SectionReferences />}
+        {/*Inquilino Persona moral */}
 
-            {/*Propietario Persona fisica */}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 1 && <SectionPersonalInformationOwner />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === false &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 2 && <SectionBankInformation />}
-            {/*Propietario Persona fisica */}
+        {/*Propietario Persona fisica */}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 1 && <SectionPersonalInformationOwner />}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === false &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 2 && <SectionBankInformation />}
+        {/*Propietario Persona fisica */}
 
-            {/*Propietario Persona moral */}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 1 && (
-                <SectionPersonalInformationOwnerMoral />
-              )}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
-            {isEmpty(dataConfigForm) === false &&
-              dataConfigForm.requiresEntInfo === true &&
-              dataConfigForm.idCustomerType === 2 &&
-              dataConfigForm.idTab === 2 && <SectionBankInformation />}
-            {/*Propietario Persona moral */}
-          </div>
-        </div>
+        {/*Propietario Persona moral */}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 1 && (
+            <SectionPersonalInformationOwnerMoral />
+          )}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+        {isEmpty(dataConfigForm) === false &&
+          dataConfigForm.requiresEntInfo === true &&
+          dataConfigForm.idCustomerType === 2 &&
+          dataConfigForm.idTab === 2 && <SectionBankInformation />}
+        {/*Propietario Persona moral */}
       </ContextProfile.Provider>
-    </div>
+    </Content>
   );
 };
 

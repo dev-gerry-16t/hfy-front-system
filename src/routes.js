@@ -219,7 +219,7 @@ const routes = [
   },
   {
     key: "19",
-    id: "Transacciones",
+    id: "Perfil de Usuario",
     path: "/websystem/profile",
     name: "ProfileUsers",
     component: ProfileUsers,
@@ -227,9 +227,9 @@ const routes = [
   },
   {
     key: "20",
-    id: "Transacciones",
+    id: "Información",
     path: "/websystem/edit-profile",
-    name: "ProfileUsers",
+    name: "editProfile",
     component: EditProfileUsers,
     exact: true,
   },
