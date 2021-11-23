@@ -166,7 +166,6 @@ const SectionAssociationApplicant = (props) => {
                       },
                       idProperty
                     );
-                    console.log("response", response);
                     setFinishProcess(true);
                   } catch (error) {}
                 }}

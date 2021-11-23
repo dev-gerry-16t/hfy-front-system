@@ -102,7 +102,6 @@ const ComponentAddAgent = (props) => {
                       mode="tags"
                       style={{ width: "100%" }}
                       onChange={(e, a) => {
-                        console.log("a", e, a);
                         if (isEmpty(a) === false && isEmpty(a[0]) === false) {
                           const response = a[0].onClick();
                           setDataForm({

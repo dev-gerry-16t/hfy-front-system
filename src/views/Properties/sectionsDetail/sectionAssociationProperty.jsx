@@ -259,7 +259,6 @@ const SectionAssociationProperty = (props) => {
                       },
                       idProperty
                     );
-                    console.log("response", response);
                     setNewInfoProperty(response);
                     setFinishProcess(true);
                   } catch (error) {}

@@ -399,7 +399,7 @@ const SectionDataProperty = (props) => {
               <CustomInputCurrency
                 value={dataForm.maintenanceAmount}
                 placeholder=""
-                label="Mantenimiento mensual *"
+                label="Mantenimiento mensual"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {

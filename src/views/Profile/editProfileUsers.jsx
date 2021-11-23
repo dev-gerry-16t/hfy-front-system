@@ -31,6 +31,7 @@ const Content = styled.div`
 const EditProfileUsers = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
+  const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
   const [current, setCurrent] = useState(0);
@@ -55,8 +56,16 @@ const EditProfileUsers = (props) => {
         isNil(response.response[0][0]) === false &&
         isEmpty(response.response[0][0]) === false
           ? response.response[0][0]
+          : {};
+      const responseResultReference =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[3]) === false &&
+        isEmpty(response.response[3]) === false
+          ? response.response[3]
           : [];
       setDataCustomerDetail(responseResult);
+      setDataDetailReference(responseResultReference);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -112,6 +121,10 @@ const EditProfileUsers = (props) => {
       <ContextProfile.Provider
         value={{
           dataCustomerDetail,
+          getById: () => {
+            handlerCallGetCustomerData();
+          },
+          dataDetailReference,
         }}
       >
         {/*Inquilino Persona fisica */}

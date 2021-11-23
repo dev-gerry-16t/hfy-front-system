@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Modal, Row, Col, Select } from "antd";
@@ -8,7 +8,8 @@ import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 const { Option } = Select;
 
 const ComponentAddReference = (props) => {
-  const { isModalVisible, onClose } = props;
+  const { isModalVisible, onClose, onSendInformation, dataDefaultReference } =
+    props;
   const initialForm = {
     givenName: null,
     lastName: null,
@@ -20,6 +21,12 @@ const ComponentAddReference = (props) => {
     isActive: true,
   };
   const [dataForm, setDataForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (isEmpty(dataDefaultReference) === false) {
+      setDataForm({ ...dataForm, ...dataDefaultReference });
+    }
+  }, [dataDefaultReference]);
 
   return (
     <Modal
@@ -33,7 +40,11 @@ const ComponentAddReference = (props) => {
       }}
     >
       <FormModal>
-        <h1>Agrega una Referencia</h1>
+        <h1>
+          {isEmpty(dataDefaultReference) === false
+            ? "Editar Referencia"
+            : "Agrega una Referencia"}
+        </h1>
         <p>
           Nos comunicaremos con tu referencia para saber que eres un inquilino
           de confianza
@@ -60,7 +71,7 @@ const ComponentAddReference = (props) => {
           <Row>
             <Col span={24}>
               <CustomInputTypeForm
-                value={dataForm.givenName}
+                value={dataForm.lastName}
                 placeholder=""
                 label="Apellido paterno *"
                 error={false}
@@ -68,7 +79,7 @@ const ComponentAddReference = (props) => {
                 onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    givenName: value,
+                    lastName: value,
                   });
                 }}
                 type="text"
@@ -78,7 +89,7 @@ const ComponentAddReference = (props) => {
           <Row>
             <Col span={24}>
               <CustomInputTypeForm
-                value={dataForm.lastName}
+                value={dataForm.mothersMaidenName}
                 placeholder=""
                 label="Apellido materno"
                 error={false}
@@ -86,7 +97,7 @@ const ComponentAddReference = (props) => {
                 onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    lastName: value,
+                    mothersMaidenName: value,
                   });
                 }}
                 type="text"
@@ -96,7 +107,7 @@ const ComponentAddReference = (props) => {
           <Row>
             <Col span={24}>
               <CustomInputTypeForm
-                value={dataForm.lastName}
+                value={dataForm.phoneNumber}
                 placeholder=""
                 label="Teléfono"
                 error={false}
@@ -104,7 +115,7 @@ const ComponentAddReference = (props) => {
                 onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    lastName: value,
+                    phoneNumber: value,
                   });
                 }}
                 type="number"
@@ -114,7 +125,7 @@ const ComponentAddReference = (props) => {
           <Row>
             <Col span={24}>
               <CustomInputTypeForm
-                value={dataForm.lastName}
+                value={dataForm.emailAddress}
                 placeholder=""
                 label="Correo *"
                 error={false}
@@ -122,22 +133,26 @@ const ComponentAddReference = (props) => {
                 onChange={(value) => {
                   setDataForm({
                     ...dataForm,
-                    lastName: value,
+                    emailAddress: value,
                   });
                 }}
-                type="number"
+                type="email"
               />
             </Col>
           </Row>
         </div>
         <div className="button-action">
           <ButtonsModal
-            onClick={() => {
-              onClose();
+            onClick={async () => {
+              try {
+                await onSendInformation(dataForm);
+                onClose();
+                setDataForm(initialForm);
+              } catch (error) {}
             }}
             primary
           >
-            Agregar
+            {isEmpty(dataDefaultReference) === false ? "Guardar" : "Agregar"}
           </ButtonsModal>
         </div>
       </FormModal>

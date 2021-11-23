@@ -110,7 +110,6 @@ const DetailPropertyUsers = (props) => {
         history.push(`/websystem/detail-property/${responseResult.identifier}`);
       }
     } catch (error) {
-      console.log("error", error);
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -119,8 +118,6 @@ const DetailPropertyUsers = (props) => {
   };
 
   useEffect(() => {
-    console.log("dataProfile", dataProfile);
-
     handlerCallGetPropertyById();
   }, []);
 
