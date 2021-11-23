@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
+import { Row, Col } from "antd";
+import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
@@ -10,9 +12,15 @@ import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import CustomSelect from "../../../../components/CustomSelect";
 import ContextProfile from "../../context/contextProfile";
 import moment from "moment";
+import {
+  ContentForm,
+  ButtonNextBackPage,
+  LineSeparator,
+  FormProperty,
+} from "../../constants/styleConstants";
 
 const SectionPersonalInformation = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, onclickNext } = props;
   const [dataForm, setDataForm] = useState({
     givenName: null,
     lastName: null,
@@ -288,192 +296,277 @@ const SectionPersonalInformation = (props) => {
   }, [dataIdTypes]);
 
   return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Información personal</h1>
-      <div>Foto de perfil</div>
-      <CustomInputTypeForm
-        value={dataForm.givenName}
-        placeholder=""
-        label="Nombres"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            givenName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.lastName}
-        placeholder=""
-        label="Apellido paterno"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            lastName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.mothersMaidenName}
-        placeholder=""
-        label="Apellido materno"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            mothersMaidenName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.phoneNumber}
-        placeholder=""
-        label="Teléfono"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            phoneNumber: value,
-          });
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={dataForm.email}
-        placeholder=""
-        label="Correo"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            email: value,
-          });
-        }}
-        type="email"
-      />
-      <CustomSelect
-        value={dataForm.idCountryNationality}
-        placeholder=""
-        label="Nacionalidad"
-        data={dataNationalities}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            idCountryNationality: value,
-          });
-        }}
-      />
-      <CustomSelect
-        value={dataForm.idType}
-        placeholder=""
-        label="Identificación oficial"
-        data={dataIdTypes}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value, option) => {
-          setDataForm({
-            ...dataForm,
-            idType: value,
-          });
-          setFieldDescription(option.fieldDescription);
-        }}
-      />
-      <CustomInputTypeForm
-        value={dataForm.idTypeNumber}
-        placeholder=""
-        label={fieldDescription}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            idTypeNumber: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.taxId}
-        placeholder=""
-        label="RFC con Homoclave"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            taxId: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.citizenId}
-        placeholder=""
-        label="CURP"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            citizenId: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.dateOfBirth}
-        placeholder="dd-mm-yy"
-        label="Fecha de nacimiento"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            dateOfBirth: value,
-          });
-        }}
-        type="date"
-      />
-      <CustomSelect
-        value={dataForm.idMaritalStatus}
-        placeholder=""
-        label="Estado civil"
-        data={dataMaritalStatus}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            idMaritalStatus: value,
-          });
-        }}
-      />
+    <ContentForm>
+      <div className="header-title">
+        <h1>Información personal</h1>
+      </div>
+      <FormProperty>
+        <div className="label-indicator">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>Por favor llena todos los campos correspondientes.</span>
+            </Col>
+          </Row>
+        </div>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.givenName}
+                placeholder=""
+                label="Nombres"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    givenName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.lastName}
+                placeholder=""
+                label="Apellido paterno"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    lastName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.mothersMaidenName}
+                placeholder=""
+                label="Apellido materno"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    mothersMaidenName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.idCountryNationality}
+                placeholder=""
+                label="Nacionalidad"
+                data={dataNationalities}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idCountryNationality: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.idType}
+                placeholder=""
+                label="Identificación oficial"
+                data={dataIdTypes}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value, option) => {
+                  setDataForm({
+                    ...dataForm,
+                    idType: value,
+                  });
+                  setFieldDescription(option.fieldDescription);
+                }}
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.idTypeNumber}
+                placeholder=""
+                label={fieldDescription}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idTypeNumber: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.taxId}
+                placeholder=""
+                label="RFC con Homoclave"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    taxId: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.citizenId}
+                placeholder=""
+                label="CURP"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    citizenId: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.dateOfBirth}
+                placeholder="dd-mm-yy"
+                label="Fecha de nacimiento"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    dateOfBirth: value,
+                  });
+                }}
+                type="date"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.idMaritalStatus}
+                placeholder=""
+                label="Estado civil"
+                data={dataMaritalStatus}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idMaritalStatus: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+        </div>
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        >
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>
+                Antes de continuar por favor verifica que tus datos sean
+                correctos.
+              </span>
+            </Col>
+          </Row>
+        </div>
+        <h1 className="subtitle-header">Datos de contacto</h1>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.phoneNumber}
+                placeholder=""
+                label="Teléfono"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    phoneNumber: value,
+                  });
+                }}
+                type="number"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.email}
+                placeholder=""
+                label="Correo"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    email: value,
+                  });
+                }}
+                type="email"
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className="next-back-buttons">
+          <ButtonNextBackPage block>
+            {"<< "}
+            <u>{"Atrás"}</u>
+          </ButtonNextBackPage>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickNext(dataForm);
+            }}
+          >
+            <u>{"Siguiente"}</u>
+            {" >>"}
+          </ButtonNextBackPage>
+        </div>
+      </FormProperty>
+    </ContentForm>
 
-      <button
-        onClick={() => {
-          handlerCallUpdateCustomerAccount(dataForm);
-        }}
-      >
-        Guardar
-      </button>
-    </div>
+    //   <button
+    //     onClick={() => {
+    //       handlerCallUpdateCustomerAccount(dataForm);
+    //     }}
+    //   >
+    //     Guardar
+    //   </button>
+    // </div>
   );
 };
 

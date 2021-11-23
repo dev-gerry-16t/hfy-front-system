@@ -229,7 +229,7 @@ const routes = [
     key: "20",
     id: "Información",
     path: "/websystem/edit-profile",
-    name: "editProfile",
+    name: "Agregar información",
     component: EditProfileUsers,
     exact: true,
   },

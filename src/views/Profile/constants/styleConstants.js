@@ -56,6 +56,12 @@ const FormProperty = styled.div`
   }
   .type-property {
     margin-top: 3em;
+    .section-card-reference {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 1em 0px;
+    }
   }
   .type-form-property {
     .subtitle-form {

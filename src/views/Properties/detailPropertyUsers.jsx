@@ -220,6 +220,20 @@ const SharedByUser = styled.div`
   text-decoration: underline;
 `;
 
+const LoaderAction = styled.div`
+    position: fixed;
+    width: 50vw;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+    display: block;
+    top: 0;
+    
+
+`;
+
 const dataTabsProperty = [
   {
     id: "1",
@@ -371,7 +385,7 @@ const DetailPropertyUsers = (props) => {
 
   return (
     <Content>
-      {/* <div style={{ position: "sticky" }}>
+      {/* <LoaderAction>
         <svg
           version="1.1"
           id="L9"
@@ -381,7 +395,7 @@ const DetailPropertyUsers = (props) => {
           viewBox="0 0 100 100"
           enable-background="new 0 0 0 0"
         >
-          <rect x="20" y="50" width="4" height="10" fill="#fff">
+          <rect x="30" y="50" width="4" height="10" fill="var(--color-primary)">
             <animateTransform
               attributeType="xml"
               attributeName="transform"
@@ -392,7 +406,7 @@ const DetailPropertyUsers = (props) => {
               repeatCount="indefinite"
             />
           </rect>
-          <rect x="30" y="50" width="4" height="10" fill="#fff">
+          <rect x="40" y="50" width="4" height="10" fill="var(--color-primary)">
             <animateTransform
               attributeType="xml"
               attributeName="transform"
@@ -403,7 +417,7 @@ const DetailPropertyUsers = (props) => {
               repeatCount="indefinite"
             />
           </rect>
-          <rect x="40" y="50" width="4" height="10" fill="#fff">
+          <rect x="50" y="50" width="4" height="10" fill="var(--color-primary)">
             <animateTransform
               attributeType="xml"
               attributeName="transform"
@@ -415,7 +429,7 @@ const DetailPropertyUsers = (props) => {
             />
           </rect>
         </svg>
-      </div> */}
+      </LoaderAction> */}
       <ContextProperty.Provider
         value={{
           dataDetail,

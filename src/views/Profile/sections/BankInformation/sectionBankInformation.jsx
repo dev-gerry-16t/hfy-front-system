@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
+import { Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
@@ -8,6 +9,12 @@ import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../../utils/actions/actions";
 import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import ContextProfile from "../../context/contextProfile";
+import {
+  ContentForm,
+  ButtonNextBackPage,
+  LineSeparator,
+  FormProperty,
+} from "../../constants/styleConstants";
 
 const SectionBankInformation = (props) => {
   const { callGlobalActionApi, dataProfile } = props;
@@ -109,93 +116,141 @@ const SectionBankInformation = (props) => {
   }, [dataCustomerDetail]);
 
   return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Información bancaria</h1>
-      <CustomInputTypeForm
-        value={dataForm.clabeNumber}
-        placeholder=""
-        label="CLABE interbancaria (18 dígitos)"
-        error={errorClabe}
-        errorMessage="CLABE incompleta"
-        onChange={(value) => {
-          if (value.length <= 18) {
-            setDataForm({
-              ...dataForm,
-              clabeNumber: value,
-            });
-            if (value.length === 18) {
-              handlerCallBankCatalog(value);
-            } else {
-              handlerCallBankCatalog("");
-            }
-          }
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={dataBankText}
-        placeholder=""
-        label="Banco"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {}}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.accountHolder}
-        placeholder=""
-        label="Nombre del titular de la cuenta"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            accountHolder: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.bankBranch}
-        placeholder=""
-        label="Sucursal"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            bankBranch: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.accountNumber}
-        placeholder=""
-        label="Número de cuenta"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            accountNumber: value,
-          });
-        }}
-        type="number"
-      />
-      <button
-        onClick={() => {
-          handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
-        }}
-      >
-        Guardar
-      </button>
-    </div>
+    <ContentForm>
+      <div className="header-title">
+        <h1>Dirección Actual</h1>
+      </div>
+      <FormProperty>
+        <div className="label-indicator">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>Por favor llena todos los campos correspondientes.</span>
+            </Col>
+          </Row>
+        </div>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.accountHolder}
+                placeholder=""
+                label="Nombre del titular de la cuenta"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    accountHolder: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.clabeNumber}
+                placeholder=""
+                label="CLABE interbancaria (18 dígitos)"
+                error={errorClabe}
+                errorMessage="CLABE incompleta"
+                onChange={(value) => {
+                  if (value.length <= 18) {
+                    setDataForm({
+                      ...dataForm,
+                      clabeNumber: value,
+                    });
+                    if (value.length === 18) {
+                      handlerCallBankCatalog(value);
+                    } else {
+                      handlerCallBankCatalog("");
+                    }
+                  }
+                }}
+                type="number"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataBankText}
+                placeholder=""
+                label="Banco"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.accountNumber}
+                placeholder=""
+                label="Número de cuenta"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    accountNumber: value,
+                  });
+                }}
+                type="number"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.bankBranch}
+                placeholder=""
+                label="Sucursal"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    bankBranch: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className="next-back-buttons">
+          <ButtonNextBackPage block={false} onClick={() => {}}>
+            {"<< "}
+            <u>{"Atrás"}</u>
+          </ButtonNextBackPage>
+          <ButtonNextBackPage block={false} onClick={() => {}}>
+            <u>{"Siguiente"}</u>
+            {" >>"}
+          </ButtonNextBackPage>
+        </div>
+      </FormProperty>
+    </ContentForm>
+
+    // <div
+    //   style={{
+    //     width: 200,
+    //     fontSize: 12,
+    //   }}
+    // >
+    //   <h1>Información bancaria</h1>
+
+    //   <button
+    //     onClick={() => {
+    //       handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
+    //     }}
+    //   >
+    //     Guardar
+    //   </button>
+    // </div>
   );
 };
 
