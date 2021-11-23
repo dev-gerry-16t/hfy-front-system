@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
+import { Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
@@ -9,9 +10,15 @@ import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../../utils/actions/actions";
+import {
+  ContentForm,
+  ButtonNextBackPage,
+  LineSeparator,
+  FormProperty,
+} from "../../constants/styleConstants";
 
 const SectionCurrentAddress = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, onclickBack, onclickNext } = props;
   const [idZipCode, setIdZipCode] = useState(null);
   const [zipCodeStateCity, setZipCodeStateCity] = useState({
     state: null,
@@ -158,129 +165,194 @@ const SectionCurrentAddress = (props) => {
   }, [dataCustomerDetail]);
 
   return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Dirección actual</h1>
-      <CustomInputTypeForm
-        value={dataForm.street}
-        placeholder=""
-        label="Calle"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            street: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.streetNumber}
-        placeholder=""
-        label="Número exterior"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            streetNumber: value,
-          });
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={dataForm.suite}
-        placeholder=""
-        label="Número interior"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            suite: value,
-          });
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={dataForm.zipCode}
-        placeholder=""
-        label="Código postal"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            zipCode: value,
-          });
-          hanlderCallGetZipCodeAdress(value, "");
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={zipCodeStateCity.state}
-        placeholder=""
-        label="Estado"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {}}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={zipCodeStateCity.city}
-        placeholder=""
-        label="Municipio/Delegación"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {}}
-        type="text"
-      />
-      <CustomSelect
-        value={idZipCode}
-        placeholder=""
-        label="Colonia"
-        data={dataZipCatalog}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value, option) => {
-          setDataForm({
-            ...dataForm,
-            idZipCode: value,
-          });
-          setIdZipCode(value);
-          setOpenOtherNeighborhood(option.isOpen);
-        }}
-      />
-      {openOtherNeighborhood === true && (
-        <CustomInputTypeForm
-          value={dataForm.neighborhood}
-          placeholder="Indica la colonia"
-          label="Otra colonia"
-          error={false}
-          errorMessage="Este campo es requerido"
-          onChange={(value) => {
-            setDataForm({
-              ...dataForm,
-              neighborhood: value,
-            });
-          }}
-          type="text"
-        />
-      )}
-
-      <button
-        onClick={() => {
-          handlerCallSetCustomerAddress(dataForm);
-        }}
-      >
-        Guardar
-      </button>
-    </div>
+    <ContentForm>
+      <div className="header-title">
+        <h1>Dirección Actual</h1>
+      </div>
+      <FormProperty>
+        <div className="label-indicator">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>Por favor llena todos los campos correspondientes.</span>
+            </Col>
+          </Row>
+        </div>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.street}
+                placeholder=""
+                label="Calle"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    street: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={zipCodeStateCity.city}
+                placeholder=""
+                label="Municipio/Delegación"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {}}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.streetNumber}
+                    placeholder=""
+                    label="Número exterior"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        streetNumber: value,
+                      });
+                    }}
+                    type="number"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.suite}
+                    placeholder=""
+                    label="Número interior"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        suite: value,
+                      });
+                    }}
+                    type="number"
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={idZipCode}
+                placeholder=""
+                label="Colonia"
+                data={dataZipCatalog}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value, option) => {
+                  setDataForm({
+                    ...dataForm,
+                    idZipCode: value,
+                  });
+                  setIdZipCode(value);
+                  setOpenOtherNeighborhood(option.isOpen);
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.zipCode}
+                    placeholder=""
+                    label="Código postal"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        zipCode: value,
+                      });
+                      hanlderCallGetZipCodeAdress(value, "");
+                    }}
+                    type="number"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={zipCodeStateCity.state}
+                    placeholder=""
+                    label="Estado"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {}}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              {openOtherNeighborhood === true && (
+                <CustomInputTypeForm
+                  value={dataForm.neighborhood}
+                  placeholder="Indica la colonia"
+                  label="Otra colonia"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      neighborhood: value,
+                    });
+                  }}
+                  type="text"
+                />
+              )}
+            </Col>
+          </Row>
+        </div>
+        <div className="label-indicator" style={{}}>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>
+                Antes de continuar por favor verifica que tus datos sean
+                correctos.
+              </span>
+            </Col>
+          </Row>
+        </div>
+        <div className="next-back-buttons">
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickBack(dataForm);
+            }}
+          >
+            {"<< "}
+            <u>{"Atrás"}</u>
+          </ButtonNextBackPage>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickNext(dataForm);
+            }}
+          >
+            <u>{"Siguiente"}</u>
+            {" >>"}
+          </ButtonNextBackPage>
+        </div>
+      </FormProperty>
+    </ContentForm>
   );
 };
 

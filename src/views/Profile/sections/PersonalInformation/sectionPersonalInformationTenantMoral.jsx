@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
+import { Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
@@ -10,9 +11,15 @@ import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import CustomSelect from "../../../../components/CustomSelect";
 import ContextProfile from "../../context/contextProfile";
 import moment from "moment";
+import {
+  ContentForm,
+  ButtonNextBackPage,
+  LineSeparator,
+  FormProperty,
+} from "../../constants/styleConstants";
 
 const SectionPersonalInformation = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, onclickNext } = props;
   const [dataForm, setDataForm] = useState({
     givenName: null,
     lastName: null,
@@ -291,361 +298,505 @@ const SectionPersonalInformation = (props) => {
   }, [dataIdTypes]);
 
   return (
-    <div
-      style={{
-        width: 200,
-        fontSize: 12,
-      }}
-    >
-      <h1>Información personal</h1>
-      <div>Foto de perfil</div>
-      <CustomInputTypeForm
-        value={dataForm.givenName}
-        placeholder=""
-        label="Razón social"
-        error={false}
-        errorMessage="Este campo es requerido"
-        info='La razón no debe incluir su tipo de sociedad mercantil, por ejemplo "Empresa SA de CV " capturar  "Empresa".'
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            givenName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomSelect
-        value={dataForm.enterpriseIdCommercialSocietyType}
-        placeholder=""
-        label="Tipo de sociedad mercantil"
-        data={dataCommerceSociality}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseIdCommercialSocietyType: value,
-          });
-        }}
-      />
-      <CustomInputTypeForm
-        value={dataForm.phoneNumber}
-        placeholder=""
-        label="Teléfono"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            phoneNumber: value,
-          });
-        }}
-        type="number"
-      />
-      <CustomInputTypeForm
-        value={dataForm.email}
-        placeholder=""
-        label="Correo"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            email: value,
-          });
-        }}
-        type="email"
-      />
-      <CustomInputTypeForm
-        value={dataForm.taxId}
-        placeholder=""
-        label="RFC con Homoclave"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            taxId: value,
-          });
-        }}
-        type="text"
-      />
-      <h1>Información acta constitutiva</h1>
-      <CustomSelect
-        value={dataForm.enterpriseIdStatePublicProperty}
-        placeholder=""
-        label="Estado de emisión"
-        data={dataStates}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseIdStatePublicProperty: value,
-          });
-        }}
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterpriseCommercialInvoice}
-        placeholder=""
-        label="Folio mercantil"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseCommercialInvoice: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterprisePublicWrtitingNo}
-        placeholder=""
-        label="Escritura pública No."
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterprisePublicWrtitingNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterprisePublicBookNo}
-        placeholder=""
-        label="Libro"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterprisePublicBookNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterpriseNotaryName}
-        placeholder=""
-        label="Nombre del notario"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseNotaryName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterpriseNotaryOfficeNo}
-        placeholder=""
-        label="Número de notaría"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseNotaryOfficeNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.enterpriseSignedAtPlace}
-        placeholder=""
-        label="Lugar de firma de escritura"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            enterpriseSignedAtPlace: value,
-          });
-        }}
-        type="text"
-      />
-      <h1>Representante Legal</h1>
-      <CustomInputTypeForm
-        value={dataForm.legalRepGivenName}
-        placeholder=""
-        label="Nombres"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepGivenName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepLastName}
-        placeholder=""
-        label="Apellido paterno"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepLastName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepMothersMaidenName}
-        placeholder=""
-        label="Apellido materno"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepMothersMaidenName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomSelect
-        value={dataForm.legalRepIdType}
-        placeholder=""
-        label="Identificación oficial"
-        data={dataIdTypes}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value, option) => {
-          setDataForm({
-            ...dataForm,
-            legalRepIdType: value,
-          });
-          setLegalRepFieldDescription(option.fieldDescription);
-        }}
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepIdTypeNumber}
-        placeholder=""
-        label={legalRepFieldDescription}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepIdTypeNumber: value,
-          });
-        }}
-        type="text"
-      />
-      <h1>
-        Información del documento que acredita la legalidad del representante
-      </h1>
-      <CustomSelect
-        value={dataForm.repeatInfoMoral}
-        placeholder=""
-        label="¿La legalidad del representante está indicada en el Acta Constitutiva?"
-        data={[
-          {
-            id: 1,
-            text: "Si",
-          },
-          {
-            id: 0,
-            text: "No, es diferente",
-          },
-        ]}
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            repeatInfoMoral: value,
-          });
-        }}
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepPublicWritingNo}
-        placeholder=""
-        label="Escritura pública No."
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepPublicWritingNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepPublicBookNo}
-        placeholder=""
-        label="Libro"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepPublicBookNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepNotaryName}
-        placeholder=""
-        label="Nombre del notario"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepNotaryName: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepNotaryOfficeNo}
-        placeholder=""
-        label="Número de notaría"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepNotaryOfficeNo: value,
-          });
-        }}
-        type="text"
-      />
-      <CustomInputTypeForm
-        value={dataForm.legalRepSignedAtPlace}
-        placeholder=""
-        label="Lugar de firma de escritura"
-        error={false}
-        errorMessage="Este campo es requerido"
-        onChange={(value) => {
-          setDataForm({
-            ...dataForm,
-            legalRepSignedAtPlace: value,
-          });
-        }}
-        type="text"
-      />
+    <ContentForm>
+      <div className="header-title">
+        <h1>Información personal</h1>
+      </div>
+      <FormProperty>
+        <div className="label-indicator">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>Por favor llena todos los campos correspondientes.</span>
+            </Col>
+          </Row>
+        </div>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.givenName}
+                placeholder=""
+                label="Razón social"
+                error={false}
+                errorMessage="Este campo es requerido"
+                info='La razón no debe incluir su tipo de sociedad mercantil, por ejemplo "Empresa SA de CV " capturar  "Empresa".'
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    givenName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
 
-      <button
-        onClick={() => {
-          handlerCallUpdateCustomerAccount(dataForm);
-        }}
-      >
-        Guardar
-      </button>
-    </div>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.enterpriseIdCommercialSocietyType}
+                placeholder=""
+                label="Tipo de sociedad mercantil"
+                data={dataCommerceSociality}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseIdCommercialSocietyType: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.phoneNumber}
+                placeholder=""
+                label="Teléfono"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    phoneNumber: value,
+                  });
+                }}
+                type="number"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.email}
+                placeholder=""
+                label="Correo"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    email: value,
+                  });
+                }}
+                type="email"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.taxId}
+                placeholder=""
+                label="RFC con Homoclave"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    taxId: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+          </Row>
+        </div>
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        ></div>
+        <h1 className="subtitle-header">Información acta constitutiva</h1>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.enterpriseIdStatePublicProperty}
+                placeholder=""
+                label="Estado de emisión"
+                data={dataStates}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseIdStatePublicProperty: value,
+                  });
+                }}
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterpriseCommercialInvoice}
+                placeholder=""
+                label="Folio mercantil"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseCommercialInvoice: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterprisePublicWrtitingNo}
+                placeholder=""
+                label="Escritura pública No."
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterprisePublicWrtitingNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterprisePublicBookNo}
+                placeholder=""
+                label="Libro"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterprisePublicBookNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterpriseNotaryName}
+                placeholder=""
+                label="Nombre del notario"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseNotaryName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterpriseNotaryOfficeNo}
+                placeholder=""
+                label="Número de notaría"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseNotaryOfficeNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.enterpriseSignedAtPlace}
+                placeholder=""
+                label="Lugar de firma de escritura"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    enterpriseSignedAtPlace: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+          </Row>
+        </div>
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        ></div>
+        <h1 className="subtitle-header">Representante legal</h1>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepGivenName}
+                placeholder=""
+                label="Nombres"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepGivenName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepLastName}
+                placeholder=""
+                label="Apellido paterno"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepLastName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepMothersMaidenName}
+                placeholder=""
+                label="Apellido materno"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepMothersMaidenName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.legalRepIdType}
+                placeholder=""
+                label="Identificación oficial"
+                data={dataIdTypes}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value, option) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepIdType: value,
+                  });
+                  setLegalRepFieldDescription(option.fieldDescription);
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepIdTypeNumber}
+                placeholder=""
+                label={legalRepFieldDescription}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepIdTypeNumber: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+          </Row>
+        </div>
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        ></div>
+        <h1 className="subtitle-header">
+          Información del documento que acredita la legalidad del representante
+        </h1>
+        <div className="type-property">
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.repeatInfoMoral}
+                placeholder=""
+                label="¿La legalidad del representante está indicada en el Acta Constitutiva?"
+                data={[
+                  {
+                    id: 1,
+                    text: "Si",
+                  },
+                  {
+                    id: 0,
+                    text: "No, es diferente",
+                  },
+                ]}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    repeatInfoMoral: value,
+                  });
+                }}
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepPublicWritingNo}
+                placeholder=""
+                label="Escritura pública No."
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepPublicWritingNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepPublicBookNo}
+                placeholder=""
+                label="Libro"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepPublicBookNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepNotaryName}
+                placeholder=""
+                label="Nombre del notario"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepNotaryName: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepNotaryOfficeNo}
+                placeholder=""
+                label="Número de notaría"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepNotaryOfficeNo: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.legalRepSignedAtPlace}
+                placeholder=""
+                label="Lugar de firma de escritura"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    legalRepSignedAtPlace: value,
+                  });
+                }}
+                type="text"
+              />
+            </Col>
+          </Row>
+        </div>
+        <div className="next-back-buttons">
+          <ButtonNextBackPage block>
+            {"<< "}
+            <u>{"Atrás"}</u>
+          </ButtonNextBackPage>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickNext(dataForm);
+            }}
+          >
+            <u>{"Siguiente"}</u>
+            {" >>"}
+          </ButtonNextBackPage>
+        </div>
+      </FormProperty>
+    </ContentForm>
+
+    //   <button
+    //     onClick={() => {
+    //       handlerCallUpdateCustomerAccount(dataForm);
+    //     }}
+    //   >
+    //     Guardar
+    //   </button>
+    // </div>
   );
 };
 

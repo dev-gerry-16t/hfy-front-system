@@ -154,7 +154,16 @@ const EditProfileUsers = (props) => {
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === false &&
           dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 4 && <SectionReferences />}
+          dataConfigForm.idTab === 4 && (
+            <SectionReferences
+              onclickBack={() => {
+                setCurrent(2);
+              }}
+              onclickNext={() => {
+                setCurrent(4);
+              }}
+            />
+          )}
         {/*Inquilino Persona fisica */}
 
         {/*Inquilino Persona moral */}
@@ -162,31 +171,77 @@ const EditProfileUsers = (props) => {
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 1 &&
           dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationTenantMoral />
+            <SectionPersonalInformationTenantMoral
+              onclickNext={() => {
+                setCurrent(1);
+              }}
+            />
           )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 6 && <SectionCurrentAddressTenant />}
+          dataConfigForm.idTab === 6 && (
+            <SectionCurrentAddressTenant
+              onclickBack={() => {
+                setCurrent(0);
+              }}
+              onclickNext={() => {
+                setCurrent(2);
+              }}
+            />
+          )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 3 && <SectionCurrentWorkTenantMoral />}
+          dataConfigForm.idTab === 3 && (
+            <SectionCurrentWorkTenantMoral
+              onclickBack={() => {
+                setCurrent(1);
+              }}
+              onclickNext={() => {
+                setCurrent(3);
+              }}
+            />
+          )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 4 && <SectionReferences />}
+          dataConfigForm.idTab === 4 && (
+            <SectionReferences
+              onclickBack={() => {
+                setCurrent(2);
+              }}
+              onclickNext={() => {
+                setCurrent(4);
+              }}
+            />
+          )}
         {/*Inquilino Persona moral */}
 
         {/*Propietario Persona fisica */}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === false &&
           dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 1 && <SectionPersonalInformationOwner />}
+          dataConfigForm.idTab === 1 && (
+            <SectionPersonalInformationOwner
+              onclickNext={() => {
+                setCurrent(1);
+              }}
+            />
+          )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === false &&
           dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+          dataConfigForm.idTab === 6 && (
+            <SectionCurrentAddress
+              onclickBack={() => {
+                setCurrent(0);
+              }}
+              onclickNext={() => {
+                setCurrent(2);
+              }}
+            />
+          )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === false &&
           dataConfigForm.idCustomerType === 2 &&
@@ -198,12 +253,25 @@ const EditProfileUsers = (props) => {
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 2 &&
           dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationOwnerMoral />
+            <SectionPersonalInformationOwnerMoral
+              onclickNext={() => {
+                setCurrent(1);
+              }}
+            />
           )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 6 && <SectionCurrentAddress />}
+          dataConfigForm.idTab === 6 && (
+            <SectionCurrentAddress
+              onclickBack={() => {
+                setCurrent(0);
+              }}
+              onclickNext={() => {
+                setCurrent(2);
+              }}
+            />
+          )}
         {isEmpty(dataConfigForm) === false &&
           dataConfigForm.requiresEntInfo === true &&
           dataConfigForm.idCustomerType === 2 &&
