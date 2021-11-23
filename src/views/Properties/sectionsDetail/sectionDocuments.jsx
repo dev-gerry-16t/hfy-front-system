@@ -382,7 +382,6 @@ const SectionDocuments = (props) => {
                               canGenerateDocument: row.canGenerateDocument,
                               type: row.type,
                             });
-                            console.log("response", response);
                             setIsVisibleModalDocument(true);
                             setDataDocument({ ...row, url: response.url });
                           } catch (error) {}

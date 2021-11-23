@@ -44,9 +44,32 @@ const ButtonHeader = styled.button`
 const SectionReferences = (props) => {
   const { callGlobalActionApi, dataProfile, onclickNext, onclickBack } = props;
   const [dataForm, setDataForm] = useState({});
+  const [dataDefaultReference, setDataDefaultReference] = useState({});
   const [isOpenAddReferences, setIsOpenAddReferences] = useState(false);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
+  const { dataDetailReference, getById } = dataContexProfile;
+  const handlerCallSetPersonalReference = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idCustomer,
+        API_CONSTANTS.CUSTOMER.SET_PERSONAL_REFERENCE,
+        "PUT"
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   return (
     <ContentForm>
@@ -56,8 +79,18 @@ const SectionReferences = (props) => {
       <FormProperty>
         <ComponentAddReference
           isModalVisible={isOpenAddReferences}
+          dataDefaultReference={dataDefaultReference}
           onClose={() => {
             setIsOpenAddReferences(false);
+            setDataDefaultReference({});
+          }}
+          onSendInformation={async (data) => {
+            try {
+              await handlerCallSetPersonalReference(data);
+              getById();
+            } catch (error) {
+              throw error;
+            }
           }}
         />
         <div className="label-indicator">
@@ -73,21 +106,46 @@ const SectionReferences = (props) => {
         </div>
         <div className="type-property">
           <div className="section-card-reference">
-            <CardReference>
-              <div className="header-buttons">
-                <ButtonHeader>
-                  <IconEditSquare color="var(--color-primary)" size="15px" />
-                </ButtonHeader>
-                <ButtonHeader>
-                  <IconDelete color="var(--color-primary)" size="15px" />
-                </ButtonHeader>
-              </div>
-              <div className="info-reference">
-                <strong>Joaquin Miguel Herrera Mendez</strong>
-                <u>Correoelectronico@email.com</u>
-                <span>476210012</span>
-              </div>
-            </CardReference>
+            {isEmpty(dataDetailReference) === false &&
+              dataDetailReference.map((row) => {
+                return (
+                  <CardReference>
+                    <div className="header-buttons">
+                      <ButtonHeader
+                        onClick={() => {
+                          setDataDefaultReference(row);
+                          setIsOpenAddReferences(true);
+                        }}
+                      >
+                        <IconEditSquare
+                          color="var(--color-primary)"
+                          size="15px"
+                        />
+                      </ButtonHeader>
+                      <ButtonHeader
+                        onClick={async () => {
+                          try {
+                            await handlerCallSetPersonalReference({
+                              idPersonalReference: row.idPersonalReference,
+                              isActive: false,
+                            });
+                            getById();
+                          } catch (error) {}
+                        }}
+                      >
+                        <IconDelete color="var(--color-primary)" size="15px" />
+                      </ButtonHeader>
+                    </div>
+                    <div className="info-reference">
+                      <strong>
+                        {row.givenName} {row.lastName} {row.mothersMaidenName}
+                      </strong>
+                      <u>{row.emailAddress}</u>
+                      <span>{row.phoneNumber}</span>
+                    </div>
+                  </CardReference>
+                );
+              })}
           </div>
           <Row justify="center">
             <Col span={5}>

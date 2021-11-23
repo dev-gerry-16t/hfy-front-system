@@ -327,7 +327,6 @@ const SectionDataLocation = (props) => {
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={async (value) => {
-                      console.log('value',value);
                       if (value.length === 5) {
                         setZipCode(value);
                         hanlderCallGetZipCodeAdress(value, "");

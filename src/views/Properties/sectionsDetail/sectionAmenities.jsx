@@ -65,17 +65,15 @@ const SectionAmenities = () => {
   const { propertyAmenities, propertyGeneralCharacteristics } = dataDetail;
 
   const amenities =
-  isNil(propertyAmenities) === false && isEmpty(propertyAmenities) === false
-  ? JSON.parse(propertyAmenities)
-  : [];
-  console.log("amenities", amenities);
+    isNil(propertyAmenities) === false && isEmpty(propertyAmenities) === false
+      ? JSON.parse(propertyAmenities)
+      : [];
+
   const general =
     isNil(propertyGeneralCharacteristics) === false &&
     isEmpty(propertyGeneralCharacteristics) === false
       ? JSON.parse(propertyGeneralCharacteristics)
       : [];
-
-      console.log('general',general);
 
   return (
     <ContentAmenities>

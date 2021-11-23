@@ -64,6 +64,7 @@ const API_CONSTANTS = {
     VALIDATE_CUSTOMER_PROPERTIES_IN_TAB: `${API.CUSTOMER}/customer/validateCustomerPropertiesInTab`,
     SET_CUSTOMER_ADDRESS: `${API.CUSTOMER}/address/setCustomerAddress/`,
     SET_CUSTOMER_BANKING_ACCOUNT: `${API.CUSTOMER}/account/setCustomerBankingAccount/`,
+    SET_PERSONAL_REFERENCE: `${API.CUSTOMER}/personalReferences/setPersonalReference/`,
     GET_CUSTOMER_TAB_BY_ID: `${API.CUSTOMER}/customer/getCustomerTabById`,
     GET_INVESTIGATION_PROCESS_COINCIDENCES: `${API.CUSTOMER}/investigation/getInvestigationProcessCoincidences`,
     GET_INVESTIGATION_PROCESS_BY_ID: `${API.CUSTOMER}/investigation/getInvestigationProcessById`,
@@ -82,7 +83,6 @@ const API_CONSTANTS = {
     SET_FAVORITE_PROPERTY: `${API.CUSTOMER}/property/setFavoriteProperty/`,
     SET_CONTRACT: `${API.CUSTOMER}/property/setContract/`,
     GENERATE_DOCUMENT: `${API.CUSTOMER}/property/generateDocument/`,
-    
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,

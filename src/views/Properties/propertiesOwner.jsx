@@ -203,7 +203,6 @@ const PropertiesOwner = (props) => {
                       );
                     }}
                     onClickFavorite={async (data, id) => {
-                      console.log("data, id", data, id);
                       try {
                         await handlerCallUpdateProperty(data, id);
                         handlerCallGetPropertyCoincidencesV2();

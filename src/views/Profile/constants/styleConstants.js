@@ -59,7 +59,7 @@ const FormProperty = styled.div`
     .section-card-reference {
       display: flex;
       flex-wrap: wrap;
-      gap: 10px;
+      gap: 20px;
       margin: 1em 0px;
     }
   }
