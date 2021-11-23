@@ -111,58 +111,50 @@ const SectionDataImages = (props) => {
   const [arrayImages, setArrayImages] = useState([]);
   const frontFunctions = new FrontFunctions();
 
-  const onChangeFile = (e) => {
-    const fileIndex = e.target.files[0];
-    if (!fileIndex) return;
+  const fileReaderPromise = async (fileIndex, countPromise) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileIndex);
+      reader.onload = async (event) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = event.target.result;
+        imgElement.onload = async (event1) => {
+          const canvas = document.createElement("canvas");
+          const width = event1.target.width;
+          const height = event1.target.height;
 
-    const reader = new FileReader();
-    reader.readAsDataURL(fileIndex);
-    reader.onload = (event) => {
-      const imgElement = document.createElement("img");
-      imgElement.src = event.target.result;
-      imgElement.onload = (event1) => {
-        const canvas = document.createElement("canvas");
-        const width = event1.target.width;
-        const height = event1.target.height;
+          const MAX_WIDTH = 578;
+          const scaleSize = MAX_WIDTH / width;
 
-        const MAX_WIDTH = 578;
-        const scaleSize = MAX_WIDTH / width;
+          canvas.width = MAX_WIDTH;
+          canvas.height = height * scaleSize;
 
-        canvas.width = MAX_WIDTH;
-        canvas.height = height * scaleSize;
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
-        setArrayImages([
-          ...arrayImages,
-          {
-            id: count,
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+          const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
+          resolve({
+            id: countPromise,
             src: srcEncoded,
             contentType: "image/jpeg",
-            name: `homify-image-${count}`,
-          },
-        ]);
-        setCount(count + 1);
-        // const srcEncodedBlob = ctx.canvas.toBlob(
-        //   (e1) => {
-        //     console.log("e1", e1);
-        //     // const formData = new FormData();
-        //     // formData.append("file", e1);
-        //     // formData.append(
-        //     //   "fileProperties",
-        //     //   JSON.stringify({ name: "test.jpeg", filetType: "image/jpeg" })
-        //     // );
-        //     // const response = fetch("http://localhost:3002/api/test", {
-        //     //   method: "POST",
-        //     //   body: formData,
-        //     // });
-        //   },
-        //   "image/jpeg",
-        //   0.7
-        // );
+            name: `homify-image-${countPromise}`,
+          });
+        };
       };
-    };
+    });
+  };
+
+  const onChangeFile = async (e) => {
+    const newArrayImages = [];
+    let newCont = count;
+    const files = e.target.files;
+    if (!files) return;
+    for (let i = 0; i < files.length; i++) {
+      const objectPromise = await fileReaderPromise(files[i], newCont);
+      newArrayImages.push(objectPromise);
+      newCont = newCont + 1;
+    }
+    setArrayImages([...arrayImages, ...newArrayImages]);
+    setCount(newCont);
   };
 
   const handlerOnDeleteImage = (id) => {
@@ -317,7 +309,7 @@ const SectionDataImages = (props) => {
                   </ButtonFilesLabel>
                   <input
                     id={`id-file-${row.id}`}
-                    accept="image/*"
+                    accept="image/png,image/jpg,image/jpeg"
                     style={{ display: "none" }}
                     type="file"
                     onChange={(e) => {
@@ -339,9 +331,10 @@ const SectionDataImages = (props) => {
               </label>
               <input
                 id={`id-file`}
-                accept="image/*"
+                accept="image/png,image/jpg,image/jpeg"
                 style={{ display: "none" }}
                 type="file"
+                multiple
                 onChange={onChangeFile}
               />
             </UploadSection>
