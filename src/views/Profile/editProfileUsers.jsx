@@ -35,6 +35,7 @@ const EditProfileUsers = (props) => {
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
   const [current, setCurrent] = useState(0);
+  const [maxTabs, setMaxTabs] = useState(0);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetCustomerData = async () => {
@@ -93,6 +94,7 @@ const EditProfileUsers = (props) => {
           ? response.response[0]
           : [];
       setDataTabs(responseResult);
+      setMaxTabs(responseResult.length);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -105,7 +107,6 @@ const EditProfileUsers = (props) => {
     handlerCallGetCustomerData();
     handlerCallGetCustomerTabById();
   }, []);
-
   return (
     <Content>
       <CustomStepsHomify
@@ -125,170 +126,101 @@ const EditProfileUsers = (props) => {
             handlerCallGetCustomerData();
           },
           dataDetailReference,
+          identifier: dataConfigForm.identifier,
+          type: dataConfigForm.type,
         }}
       >
         {/*Inquilino Persona fisica */}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationTenant
-              onclickNext={() => {
-                setCurrent(1);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 6 && (
-            <SectionCurrentAddressTenant
-              onclickBack={() => {
-                setCurrent(0);
-              }}
-              onclickNext={() => {
-                setCurrent(2);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 3 && (
-            <SectionCurrentWorkTenant
-              onclickBack={() => {
-                setCurrent(1);
-              }}
-              onclickNext={() => {
-                setCurrent(3);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 4 && (
-            <SectionReferences
-              onclickBack={() => {
-                setCurrent(2);
-              }}
-              onclickNext={() => {
-                setCurrent(4);
-              }}
-            />
-          )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 1 && (
+          <SectionPersonalInformationTenant
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 3 && (
+          <SectionCurrentAddressTenant
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 4 && (
+          <SectionCurrentWorkTenant
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 6 && (
+          <SectionReferences
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
         {/*Inquilino Persona fisica */}
 
         {/*Inquilino Persona moral */}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationTenantMoral
-              onclickNext={() => {
-                setCurrent(1);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 6 && (
-            <SectionCurrentAddressTenant
-              onclickBack={() => {
-                setCurrent(0);
-              }}
-              onclickNext={() => {
-                setCurrent(2);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 3 && (
-            <SectionCurrentWorkTenantMoral
-              onclickBack={() => {
-                setCurrent(1);
-              }}
-              onclickNext={() => {
-                setCurrent(3);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 1 &&
-          dataConfigForm.idTab === 4 && (
-            <SectionReferences
-              onclickBack={() => {
-                setCurrent(2);
-              }}
-              onclickNext={() => {
-                setCurrent(4);
-              }}
-            />
-          )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 2 && (
+          <SectionPersonalInformationTenantMoral
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 5 && (
+          <SectionCurrentWorkTenantMoral
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
         {/*Inquilino Persona moral */}
 
         {/*Propietario Persona fisica */}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 8 && (
+          <SectionPersonalInformationOwner
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 10 && (
+          <SectionCurrentAddress
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
         {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationOwner
-              onclickNext={() => {
-                setCurrent(1);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 6 && (
-            <SectionCurrentAddress
-              onclickBack={() => {
-                setCurrent(0);
-              }}
-              onclickNext={() => {
-                setCurrent(2);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === false &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 2 && <SectionBankInformation />}
+          dataConfigForm.identifier === 11 && <SectionBankInformation />}
         {/*Propietario Persona fisica */}
 
         {/*Propietario Persona moral */}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 1 && (
-            <SectionPersonalInformationOwnerMoral
-              onclickNext={() => {
-                setCurrent(1);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 6 && (
-            <SectionCurrentAddress
-              onclickBack={() => {
-                setCurrent(0);
-              }}
-              onclickNext={() => {
-                setCurrent(2);
-              }}
-            />
-          )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.requiresEntInfo === true &&
-          dataConfigForm.idCustomerType === 2 &&
-          dataConfigForm.idTab === 2 && <SectionBankInformation />}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 9 && (
+          <SectionPersonalInformationOwnerMoral
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
         {/*Propietario Persona moral */}
       </ContextProfile.Provider>
     </Content>
