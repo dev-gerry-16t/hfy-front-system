@@ -7,7 +7,10 @@ import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../../utils/actions/frontFunctions";
-import { callGlobalActionApi } from "../../../../utils/actions/actions";
+import {
+  callGlobalActionApi,
+  callAddDocument,
+} from "../../../../utils/actions/actions";
 import CustomInputCurrency from "../../../../components/customInputCurrency";
 import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import CustomSelect from "../../../../components/CustomSelect";
@@ -16,10 +19,9 @@ import ContextProfile from "../../context/contextProfile";
 import {
   ContentForm,
   ButtonNextBackPage,
-  LineSeparator,
   FormProperty,
 } from "../../constants/styleConstants";
-import { ReactComponent as IconActivity } from "../../../../assets/iconSvg/svgFile/iconActivity.svg";
+import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 
 const ComponentRadio = styled.div`
   display: flex;
@@ -61,38 +63,14 @@ const ComponentRadio = styled.div`
   }
 `;
 
-const UploadSection = styled.div`
-  width: 18em;
-  height: 8.8em;
-  border: 1px dashed #a0a3bd;
-  border-radius: 4px;
-  background: #f7f7fc;
-  .upload-file {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-    height: 100%;
-    padding: 1em 0;
-    cursor: pointer;
-    span {
-      font-size: 0.8em;
-      color: #a0a3bd;
-      text-align: center;
-      font-weight: 700;
-    }
-  }
-`;
-
-const ContentFile = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1em 0px;
-`;
-
 const SectionCurrentWork = (props) => {
-  const { callGlobalActionApi, dataProfile, onclickBack, onclickNext } = props;
+  const {
+    callGlobalActionApi,
+    dataProfile,
+    onclickBack,
+    onclickNext,
+    callAddDocument,
+  } = props;
   const [dataForm, setDataForm] = useState({
     idOccupationActivity: null,
     economicDependents: null,
@@ -113,9 +91,10 @@ const SectionCurrentWork = (props) => {
     childrenNo: null,
   });
   const [dataOccupations, setDataOccupations] = useState([]);
+  const [dataDocument, setDataDocument] = useState([]);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail } = dataContexProfile;
+  const { dataCustomerDetail, identifier, type } = dataContexProfile;
 
   const hanlderCallGetOccupations = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -143,8 +122,37 @@ const SectionCurrentWork = (props) => {
     }
   };
 
+  const handlerCallGetCustomerDocument = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          identifier,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_DOCUMENT
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDocument(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallInitApis = async () => {
     hanlderCallGetOccupations();
+    handlerCallGetCustomerDocument();
   };
 
   const handlerSetStateDataDetail = (data) => {
@@ -501,83 +509,13 @@ const SectionCurrentWork = (props) => {
           }}
         />
         <h1 className="subtitle-header">Documentos</h1>
-        <div className="type-property">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ContentFile>
-                <UploadSection>
-                  <label className="upload-file" for={`id-file-1`}>
-                    <IconActivity width="55px" height="55px" stroke="#A0A3BD" />
-                    <span>Primer comprobante de ingresos</span>
-                  </label>
-                  <input
-                    id={`id-file-1`}
-                    accept="image/*,.pdf,.docx"
-                    style={{ display: "none" }}
-                    type="file"
-                    onChange={() => {}}
-                  />
-                </UploadSection>
-              </ContentFile>
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ContentFile>
-                <UploadSection>
-                  <label className="upload-file" for={`id-file-2`}>
-                    <IconActivity width="55px" height="55px" stroke="#A0A3BD" />
-                    <span>Carta Laboral</span>
-                  </label>
-                  <input
-                    id={`id-file-2`}
-                    accept="image/*,.pdf,.docx"
-                    style={{ display: "none" }}
-                    type="file"
-                    onChange={() => {}}
-                  />
-                </UploadSection>
-              </ContentFile>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ContentFile>
-                <UploadSection>
-                  <label className="upload-file" for={`id-file-3`}>
-                    <IconActivity width="55px" height="55px" stroke="#A0A3BD" />
-                    <span>Segundo comprobante de ingresos</span>
-                  </label>
-                  <input
-                    id={`id-file-3`}
-                    accept="image/*,.pdf,.docx"
-                    style={{ display: "none" }}
-                    type="file"
-                    onChange={() => {}}
-                  />
-                </UploadSection>
-              </ContentFile>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ContentFile>
-                <UploadSection>
-                  <label className="upload-file" for={`id-file-4`}>
-                    <IconActivity width="55px" height="55px" stroke="#A0A3BD" />
-                    <span>Tercer comprobante de ingresos</span>
-                  </label>
-                  <input
-                    id={`id-file-4`}
-                    accept="image/*,.pdf,.docx"
-                    style={{ display: "none" }}
-                    type="file"
-                    onChange={() => {}}
-                  />
-                </UploadSection>
-              </ContentFile>
-            </Col>
-          </Row>
-        </div>
+        <WidgetUploadDocument
+          handlerCallGetCustomerDocument={() => {
+            handlerCallGetCustomerDocument();
+          }}
+          dataDocument={dataDocument}
+          type={type}
+        />
         <div
           className="label-indicator"
           style={{
@@ -642,6 +580,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant, method) =>
     dispatch(callGlobalActionApi(data, id, constant, method)),
+  callAddDocument: (file, data, callback) =>
+    dispatch(callAddDocument(file, data, callback)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionCurrentWork);

@@ -60,6 +60,7 @@ const API_CONSTANTS = {
   CUSTOMER: {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,
     GET_CUSTOMER_DATA: `${API.CUSTOMER}/customer/getCustomerData`,
+    GET_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customer/getCustomerDocument`,
     UPDATE_CUSTOMER_ACCOUNT: `${API.CUSTOMER}/customer/updateCustomerAccount/`,
     VALIDATE_CUSTOMER_PROPERTIES_IN_TAB: `${API.CUSTOMER}/customer/validateCustomerPropertiesInTab`,
     SET_CUSTOMER_ADDRESS: `${API.CUSTOMER}/address/setCustomerAddress/`,
@@ -83,6 +84,8 @@ const API_CONSTANTS = {
     SET_FAVORITE_PROPERTY: `${API.CUSTOMER}/property/setFavoriteProperty/`,
     SET_CONTRACT: `${API.CUSTOMER}/property/setContract/`,
     GENERATE_DOCUMENT: `${API.CUSTOMER}/property/generateDocument/`,
+    DEACTIVATE_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customerDocument/deactivateCustomerDocument/`,
+    ADD_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customerDocument/addCustomerDocument/`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
