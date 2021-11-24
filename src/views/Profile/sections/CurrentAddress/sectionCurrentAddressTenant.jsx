@@ -96,7 +96,7 @@ const SectionCurrentAddress = (props) => {
   const handlerCallSetCustomerAddress = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      await callGlobalActionApi(
+      const response = await callGlobalActionApi(
         {
           idCustomer,
           idSystemUser,
@@ -107,11 +107,21 @@ const SectionCurrentAddress = (props) => {
         API_CONSTANTS.CUSTOMER.SET_CUSTOMER_ADDRESS,
         "PUT"
       );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -611,8 +621,11 @@ const SectionCurrentAddress = (props) => {
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
-            onClick={() => {
-              onclickNext(dataForm);
+            onClick={async () => {
+              try {
+                await handlerCallSetCustomerAddress(dataForm);
+                onclickNext(dataForm);
+              } catch (error) {}
             }}
           >
             <u>{"Siguiente"}</u>
@@ -621,13 +634,6 @@ const SectionCurrentAddress = (props) => {
         </div>
       </FormProperty>
     </ContentForm>
-    //   <button
-    //     onClick={() => {
-    //       handlerCallSetCustomerAddress(dataForm);
-    //     }}
-    //   >
-    //     Guardar
-    //   </button>
   );
 };
 

@@ -49,6 +49,7 @@ import {
 } from "../../utils/actions/actions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
@@ -140,25 +141,49 @@ const DefaultLayout = (props) => {
     }
   };
 
-  const handlerCallSetImageProfile = async (data) => {
-    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+  const handlerCallSetImageProfile = async (file, data) => {
+    const {
+      idCustomer,
+      idLoginHistory,
+      idSystemUser,
+      idDocument,
+      bucketSource,
+    } = dataProfile;
     try {
-      await callSetImageProfile(
+      const response = await callSetImageProfile(
+        file,
         {
           idCustomer,
           idLoginHistory,
-          documentName: "avatar_image",
-          extension: "png/img",
+          documentName: data.documentName,
+          extension: data.extension,
           preview: null,
-          thumbnail: data,
+          thumbnail: null,
+          idDocument,
+          bucketSource,
         },
-        idSystemUser
+        idSystemUser,
+        () => {}
       );
+      const responseResult =
+        isNil(response.response) === false ? response.response : {};
       await setDataUserProfile({
         ...dataProfile,
-        thumbnail: data,
+        idDocument:
+          isNil(responseResult.idDocument) === false
+            ? responseResult.idDocument
+            : idDocument,
+        bucketSource:
+          isNil(responseResult.bucketSource) === false
+            ? responseResult.bucketSource
+            : bucketSource,
       });
-    } catch (error) {}
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallSetThemeProfile = async (theme) => {
@@ -606,8 +631,12 @@ const DefaultLayout = (props) => {
                 onClose={() => {
                   setIsVisibleAvatarSection(!isVisibleAvatarSection);
                 }}
-                onSelectImage={(preview) => {
-                  handlerCallSetImageProfile(preview);
+                onSelectImage={async (file, data) => {
+                  try {
+                    await handlerCallSetImageProfile(file, data);
+                  } catch (error) {
+                    throw error;
+                  }
                 }}
               />
               <div className="header-title-button">
@@ -779,8 +808,11 @@ const DefaultLayout = (props) => {
                   trigger="click"
                 >
                   <button className="button-header">
-                    {isNil(dataProfile.thumbnail) === false ? (
-                      <Avatar size={50} src={dataProfile.thumbnail} />
+                    {isNil(dataProfile.idDocument) === false ? (
+                      <Avatar
+                        size={50}
+                        src={`${ENVIROMENT}/api/viewFile/${dataProfile.idDocument}/${dataProfile.bucketSource}`}
+                      />
                     ) : (
                       <img className="icon-header-2" src={IconProfile} />
                     )}
@@ -837,7 +869,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant) =>
     dispatch(callGlobalActionApi(data, id, constant)),
-  callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
+  callSetImageProfile: (file, data, id, callback) =>
+    dispatch(callSetImageProfile(file, data, id, callback)),
   callUpdateNotifications: (data, id) =>
     dispatch(callUpdateNotifications(data, id)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),

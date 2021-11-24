@@ -7,6 +7,7 @@ import Arrow from "../../../assets/icons/Arrow.svg";
 const SectionChangeImage = (props) => {
   const { isModalVisible, onClose, onSelectImage } = props;
   const [preview, setPreview] = useState(null);
+  const [dataFile, setDataFile] = useState({});
 
   const refAvatar = useRef(null);
 
@@ -16,6 +17,7 @@ const SectionChangeImage = (props) => {
 
   const onCloseView = () => {
     setPreview(null);
+    setDataFile({});
   };
 
   return (
@@ -32,6 +34,7 @@ const SectionChangeImage = (props) => {
             type="button"
             onClick={() => {
               setPreview(null);
+              setDataFile({});
               onClose();
             }}
           >
@@ -55,6 +58,12 @@ const SectionChangeImage = (props) => {
             label="Haz click para seleccionar imagen"
             onCrop={onCrop}
             onClose={onCloseView}
+            onFileLoad={(file) => {
+              setDataFile({
+                documentName: file.name,
+                extension: file.type,
+              });
+            }}
             src={null}
             ref={refAvatar}
             cropRadius={50}
@@ -64,11 +73,18 @@ const SectionChangeImage = (props) => {
         <div className="button_init_primary">
           <button
             type="button"
-            onClick={() => {
-              onSelectImage(preview);
-              setPreview(null);
-              onClose();
-              refAvatar.current.onCloseClick();
+            onClick={async () => {
+              try {
+                const urlObject = await fetch(preview);
+                const blobFile = await urlObject.blob();
+                await onSelectImage(blobFile, dataFile);
+                setPreview(null);
+                setDataFile({});
+                onClose();
+                refAvatar.current.onCloseClick();
+              } catch (error) {
+                throw error;
+              }
             }}
           >
             <span>Guardar</span>

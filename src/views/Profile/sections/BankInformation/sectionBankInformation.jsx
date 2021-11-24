@@ -17,7 +17,7 @@ import {
 } from "../../constants/styleConstants";
 
 const SectionBankInformation = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, onclickBack } = props;
   const [dataForm, setDataForm] = useState({
     bankBranch: null,
     accountHolder: null,
@@ -223,34 +223,29 @@ const SectionBankInformation = (props) => {
           </Row>
         </div>
         <div className="next-back-buttons">
-          <ButtonNextBackPage block={false} onClick={() => {}}>
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onclickBack(dataForm);
+            }}
+          >
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          <ButtonNextBackPage block={false} onClick={() => {}}>
-            <u>{"Siguiente"}</u>
+          <ButtonNextBackPage
+            block={false}
+            onClick={async () => {
+              try {
+                await handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
+              } catch (error) {}
+            }}
+          >
+            <u>{"Finalizar"}</u>
             {" >>"}
           </ButtonNextBackPage>
         </div>
       </FormProperty>
     </ContentForm>
-
-    // <div
-    //   style={{
-    //     width: 200,
-    //     fontSize: 12,
-    //   }}
-    // >
-    //   <h1>Información bancaria</h1>
-
-    //   <button
-    //     onClick={() => {
-    //       handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
-    //     }}
-    //   >
-    //     Guardar
-    //   </button>
-    // </div>
   );
 };
 

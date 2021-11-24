@@ -78,6 +78,38 @@ const SectionCurrentWork = (props) => {
   const dataContexProfile = useContext(ContextProfile);
   const { dataCustomerDetail, identifier, type } = dataContexProfile;
 
+  const handlerCallSetCustomerWorkingInfo = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idCustomer,
+        API_CONSTANTS.CUSTOMER.SET_CUSTOMER_WORKING_INFO,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const hanlderCallGetOccupations = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -394,8 +426,11 @@ const SectionCurrentWork = (props) => {
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
-            onClick={() => {
-              onclickNext(dataForm);
+            onClick={async () => {
+              try {
+                await handlerCallSetCustomerWorkingInfo(dataForm);
+                onclickNext(dataForm);
+              } catch (error) {}
             }}
           >
             <u>{"Siguiente"}</u>
