@@ -209,8 +209,13 @@ const EditProfileUsers = (props) => {
             }}
           />
         )}
-        {isEmpty(dataConfigForm) === false &&
-          dataConfigForm.identifier === 11 && <SectionBankInformation />}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 11 && (
+          <SectionBankInformation
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+          />
+        )}
         {/*Propietario Persona fisica */}
 
         {/*Propietario Persona moral */}

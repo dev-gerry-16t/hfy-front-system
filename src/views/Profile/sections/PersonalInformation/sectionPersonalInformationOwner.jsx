@@ -70,7 +70,7 @@ const SectionPersonalInformation = (props) => {
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      await callGlobalActionApi(
+      const response = await callGlobalActionApi(
         {
           idCustomer,
           idSystemUser,
@@ -81,11 +81,21 @@ const SectionPersonalInformation = (props) => {
         API_CONSTANTS.CUSTOMER.UPDATE_CUSTOMER_ACCOUNT,
         "PUT"
       );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -548,8 +558,11 @@ const SectionPersonalInformation = (props) => {
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
-            onClick={() => {
-              onclickNext(dataForm);
+            onClick={async () => {
+              try {
+                await handlerCallUpdateCustomerAccount(dataForm);
+                onclickNext(dataForm);
+              } catch (error) {}
             }}
           >
             <u>{"Siguiente"}</u>
@@ -558,15 +571,6 @@ const SectionPersonalInformation = (props) => {
         </div>
       </FormProperty>
     </ContentForm>
-
-    //   <button
-    //     onClick={() => {
-    //       handlerCallUpdateCustomerAccount(dataForm);
-    //     }}
-    //   >
-    //     Guardar
-    //   </button>
-    // </div>
   );
 };
 

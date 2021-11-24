@@ -61,6 +61,7 @@ const API_CONSTANTS = {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,
     GET_CUSTOMER_DATA: `${API.CUSTOMER}/customer/getCustomerData`,
     GET_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customer/getCustomerDocument`,
+    SET_CUSTOMER_WORKING_INFO: `${API.CUSTOMER}/typeForm/setCustomerWorkingInfo/`,
     UPDATE_CUSTOMER_ACCOUNT: `${API.CUSTOMER}/customer/updateCustomerAccount/`,
     VALIDATE_CUSTOMER_PROPERTIES_IN_TAB: `${API.CUSTOMER}/customer/validateCustomerPropertiesInTab`,
     SET_CUSTOMER_ADDRESS: `${API.CUSTOMER}/address/setCustomerAddress/`,
