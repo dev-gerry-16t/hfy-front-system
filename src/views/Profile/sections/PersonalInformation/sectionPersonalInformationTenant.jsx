@@ -7,7 +7,6 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
-import ENVIROMENT from "../../../../utils/constants/enviroments";
 import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import {
   callGlobalActionApi,
@@ -20,49 +19,9 @@ import ContextProfile from "../../context/contextProfile";
 import {
   ContentForm,
   ButtonNextBackPage,
-  LineSeparator,
   FormProperty,
 } from "../../constants/styleConstants";
-import { IconDelete, IconEditSquare } from "../../../../assets/iconSvg";
-import SectionChangeImage from "../../../../containers/Layout/section/sectionChangeImage";
-
-const ComponentCheck = styled.div`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  .radio-check-option {
-    margin-left: 2em;
-    .input-checkbox {
-      input[type="checkbox"] {
-        appearance: none;
-        background-color: #fff;
-        font: inherit;
-        color: #fff;
-        width: 1.15em;
-        height: 1.15em;
-        border: 1px solid var(--color-primary);
-        border-radius: 5px;
-        display: inline-grid;
-        place-content: center;
-      }
-      input[type="checkbox"]::before {
-        content: "\\2713";
-        transform: scale(0);
-        width: 1.05em;
-        height: 1.05em;
-        border-radius: 5px;
-        transition: 120ms transform ease-in-out;
-        box-shadow: inset 1em 1em var(--color-primary);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      input[type="checkbox"]:checked::before {
-        transform: scale(1);
-      }
-    }
-  }
-`;
+import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 
 const ComponentRadio = styled.div`
   display: flex;
@@ -104,35 +63,8 @@ const ComponentRadio = styled.div`
   }
 `;
 
-const AvatarUpload = styled.div`
-  display: flex;
-  justify-content: center;
-  .edit-profile-image {
-    position: relative;
-    button {
-      position: absolute;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      border: none;
-      background: var(--color-primary);
-      bottom: 0;
-      right: 0.5em;
-    }
-  }
-`;
-
 const SectionPersonalInformation = (props) => {
-  const {
-    callGlobalActionApi,
-    dataProfile,
-    onclickNext,
-    callSetImageProfile,
-    setDataUserProfile,
-  } = props;
+  const { callGlobalActionApi, dataProfile, onclickNext } = props;
   const [dataForm, setDataForm] = useState({
     givenName: null,
     lastName: null,
@@ -173,7 +105,6 @@ const SectionPersonalInformation = (props) => {
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [fieldDescription, setFieldDescription] = useState("");
-  const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
@@ -276,51 +207,6 @@ const SectionPersonalInformation = (props) => {
           ? response.response
           : [];
       setDataIdTypes(responseResult);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallSetImageProfile = async (file, data) => {
-    const {
-      idCustomer,
-      idLoginHistory,
-      idSystemUser,
-      idDocument,
-      bucketSource,
-    } = dataProfile;
-    try {
-      const response = await callSetImageProfile(
-        file,
-        {
-          idCustomer,
-          idLoginHistory,
-          documentName: data.documentName,
-          extension: data.extension,
-          preview: null,
-          thumbnail: null,
-          idDocument,
-          bucketSource,
-        },
-        idSystemUser,
-        () => {}
-      );
-      const responseResult =
-        isNil(response.response) === false ? response.response : {};
-      await setDataUserProfile({
-        ...dataProfile,
-        idDocument:
-          isNil(responseResult.idDocument) === false
-            ? responseResult.idDocument
-            : idDocument,
-        bucketSource:
-          isNil(responseResult.bucketSource) === false
-            ? responseResult.bucketSource
-            : bucketSource,
-      });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -437,19 +323,6 @@ const SectionPersonalInformation = (props) => {
 
   return (
     <ContentForm>
-      <SectionChangeImage
-        isModalVisible={isVisibleAvatarSection}
-        onClose={() => {
-          setIsVisibleAvatarSection(!isVisibleAvatarSection);
-        }}
-        onSelectImage={async (file, data) => {
-          try {
-            await handlerCallSetImageProfile(file, data);
-          } catch (error) {
-            throw error;
-          }
-        }}
-      />
       <div className="header-title">
         <h1>Información personal</h1>
       </div>
@@ -461,21 +334,7 @@ const SectionPersonalInformation = (props) => {
             </Col>
           </Row>
         </div>
-        <AvatarUpload>
-          <div className="edit-profile-image">
-            <Avatar
-              size={150}
-              src={`${ENVIROMENT}/api/viewFile/${dataProfile.idDocument}/${dataProfile.bucketSource}`}
-            />
-            <button
-              onClick={() => {
-                setIsVisibleAvatarSection(!isVisibleAvatarSection);
-              }}
-            >
-              <IconEditSquare color="#fff" />
-            </button>
-          </div>
-        </AvatarUpload>
+        <WidgetUploadImageProfile />
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>

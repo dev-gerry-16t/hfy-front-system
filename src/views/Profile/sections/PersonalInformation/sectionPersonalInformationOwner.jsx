@@ -18,6 +18,7 @@ import {
   LineSeparator,
   FormProperty,
 } from "../../constants/styleConstants";
+import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 
 const SectionPersonalInformation = (props) => {
   const { callGlobalActionApi, dataProfile, onclickNext } = props;
@@ -318,6 +319,7 @@ const SectionPersonalInformation = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetUploadImageProfile />
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
