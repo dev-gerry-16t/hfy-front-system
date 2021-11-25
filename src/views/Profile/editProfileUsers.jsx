@@ -107,6 +107,7 @@ const EditProfileUsers = (props) => {
     handlerCallGetCustomerData();
     handlerCallGetCustomerTabById();
   }, []);
+  
   return (
     <Content>
       <CustomStepsHomify

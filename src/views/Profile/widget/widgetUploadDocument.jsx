@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { Row, Col ,Modal} from "antd";
+import { Row, Col, Modal } from "antd";
 import Magnifier from "react-magnifier";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
@@ -95,6 +95,7 @@ const WidgetUploadDocument = (props) => {
     callAddDocument,
     handlerCallGetCustomerDocument,
     dataDocument,
+    detail = false,
     type,
   } = props;
   const [previewVisible, setPreviewVisible] = useState(false);
@@ -249,83 +250,175 @@ const WidgetUploadDocument = (props) => {
           />
         )}
       </Modal>
-      <Row>
-        {isEmpty(dataDocument) === false &&
-          dataDocument.map((row, ix) => {
-            return (
-              <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
-                <ContentFile>
-                  <UploadSection>
-                    {isNil(row.idDocument) === true && (
-                      <>
-                        <label className="upload-file" for={`id-file-${ix}`}>
-                          <IconActivity
-                            width="55px"
-                            height="55px"
-                            stroke="#A0A3BD"
+      {detail === false && (
+        <Row>
+          {isEmpty(dataDocument) === false &&
+            dataDocument.map((row, ix) => {
+              return (
+                <Col span={8} xs={{ span: 24 }} md={{ span: 8 }}>
+                  <ContentFile>
+                    <UploadSection>
+                      {isNil(row.idDocument) === true && (
+                        <>
+                          <label className="upload-file" for={`id-file-${ix}`}>
+                            <IconActivity
+                              width="55px"
+                              height="55px"
+                              stroke="#A0A3BD"
+                            />
+                            <span>{row.documentType}</span>
+                          </label>
+                          <input
+                            id={`id-file-${ix}`}
+                            accept="image/*,.pdf,.docx"
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={(e) => {
+                              const fileIndex = e.target.files[0];
+                              handlerAddDocument(fileIndex, row);
+                            }}
                           />
-                          <span>{row.documentType}</span>
-                        </label>
-                        <input
-                          id={`id-file-${ix}`}
-                          accept="image/*,.pdf,.docx"
-                          style={{ display: "none" }}
-                          type="file"
-                          onChange={(e) => {
-                            const fileIndex = e.target.files[0];
-                            handlerAddDocument(fileIndex, row);
-                          }}
-                        />
-                      </>
-                    )}
-                    {isNil(row.idDocument) === false && (
-                      <div className="content-file-preview">
-                        {row.extension === "jpg" && (
-                          <img
-                            src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
-                            alt="preview"
+                        </>
+                      )}
+                      {isNil(row.idDocument) === false && (
+                        <div className="content-file-preview">
+                          {row.extension === "jpg" && (
+                            <img
+                              src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
+                              alt="preview"
+                            />
+                          )}
+                          {row.extension === "pdf" && (
+                            <i className="fa fa-file-pdf-o" />
+                          )}
+                          {row.extension === "docx" && (
+                            <i className="fa fa-file-word-o" />
+                          )}
+                        </div>
+                      )}
+                      {isNil(row.idDocument) === false && (
+                        <div className="content-buttons-file">
+                          <ButtonFiles
+                            onClick={() => {
+                              setPreviewVisible(!previewVisible);
+                              setDataPreviewDocument(row);
+                            }}
+                          >
+                            <IconEye color="var(--color-primary)" />
+                          </ButtonFiles>
+                          <ButtonFiles
+                            onClick={async () => {
+                              try {
+                                await handlerCallDeactivateCustomerDocument(
+                                  {
+                                    bucketSource: row.bucketSource,
+                                  },
+                                  row.idDocument
+                                );
+                              } catch (error) {}
+                            }}
+                          >
+                            <IconDelete color="var(--color-primary)" />
+                          </ButtonFiles>
+                        </div>
+                      )}
+                    </UploadSection>
+                  </ContentFile>
+                </Col>
+              );
+            })}
+        </Row>
+      )}
+      {detail === true && (
+        <Row>
+          {isEmpty(dataDocument) === false &&
+            dataDocument.map((row, ix) => {
+              return (
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <ContentFile>
+                    <UploadSection>
+                      {isNil(row.idDocument) === true && (
+                        <>
+                          <label className="upload-file" for={`id-file-${ix}`}>
+                            <IconActivity
+                              width="55px"
+                              height="55px"
+                              stroke="#A0A3BD"
+                            />
+                            <span>{row.documentType}</span>
+                          </label>
+                          <input
+                            id={`id-file-${ix}`}
+                            accept="image/*,.pdf,.docx"
+                            style={{ display: "none" }}
+                            type="file"
+                            onChange={(e) => {
+                              const fileIndex = e.target.files[0];
+                              handlerAddDocument(fileIndex, row);
+                            }}
                           />
-                        )}
-                        {row.extension === "pdf" && (
-                          <i className="fa fa-file-pdf-o" />
-                        )}
-                        {row.extension === "docx" && (
-                          <i className="fa fa-file-word-o" />
-                        )}
-                      </div>
-                    )}
-                    {isNil(row.idDocument) === false && (
-                      <div className="content-buttons-file">
-                        <ButtonFiles
-                          onClick={() => {
-                            setPreviewVisible(!previewVisible);
-                            setDataPreviewDocument(row);
-                          }}
-                        >
-                          <IconEye color="var(--color-primary)" />
-                        </ButtonFiles>
-                        <ButtonFiles
-                          onClick={async () => {
-                            try {
-                              await handlerCallDeactivateCustomerDocument(
-                                {
-                                  bucketSource: row.bucketSource,
-                                },
-                                row.idDocument
-                              );
-                            } catch (error) {}
-                          }}
-                        >
-                          <IconDelete color="var(--color-primary)" />
-                        </ButtonFiles>
-                      </div>
-                    )}
-                  </UploadSection>
-                </ContentFile>
-              </Col>
-            );
-          })}
-      </Row>
+                        </>
+                      )}
+                      {isNil(row.idDocument) === false && (
+                        <div className="content-file-preview">
+                          {row.extension === "jpg" && (
+                            <img
+                              src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
+                              alt="preview"
+                            />
+                          )}
+                          {row.extension === "pdf" && (
+                            <i className="fa fa-file-pdf-o" />
+                          )}
+                          {row.extension === "docx" && (
+                            <i className="fa fa-file-word-o" />
+                          )}
+                        </div>
+                      )}
+                      {isNil(row.idDocument) === false && (
+                        <div className="content-buttons-file">
+                          <ButtonFiles
+                            onClick={() => {
+                              setPreviewVisible(!previewVisible);
+                              setDataPreviewDocument(row);
+                            }}
+                          >
+                            <IconEye color="var(--color-primary)" />
+                          </ButtonFiles>
+                          <ButtonFiles
+                            onClick={async () => {
+                              try {
+                                await handlerCallDeactivateCustomerDocument(
+                                  {
+                                    bucketSource: row.bucketSource,
+                                  },
+                                  row.idDocument
+                                );
+                              } catch (error) {}
+                            }}
+                          >
+                            <IconDelete color="var(--color-primary)" />
+                          </ButtonFiles>
+                        </div>
+                      )}
+                    </UploadSection>
+                  </ContentFile>
+                  <div style={{
+                    textAlign:"center",
+                    fontSize:"1em",
+                    marginBottom:"10px",
+                    color:"#A0A3BD",
+                    fontWeight:"600"
+                  }}>
+                    {row.documentType}
+                  </div>
+                  <div className="line-separate"></div>
+                </Col>
+              );
+            })}
+        </Row>
+      )}
+
     </div>
   );
 };
