@@ -64,6 +64,20 @@ const ContentAddFilter = styled.div`
   }
 `;
 
+const EmptyData = styled.div`
+  width: 100%;
+  height: 30em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  p {
+    color: rgba(78, 75, 102, 0.45);
+    font-weight: 700;
+    text-align: center;
+  }
+`;
+
 const PropertiesOwner = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -204,6 +218,16 @@ const PropertiesOwner = (props) => {
                 />
               );
             })}
+          {isEmpty(dataCoincidences) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296S.png"
+                alt=""
+              />
+              <p>Aún no tienes ninguna propiedad agregada :( </p>
+            </EmptyData>
+          )}
         </ContentCards>
       </Container>
       {dataProfile.idUserType === 4 && (
@@ -256,33 +280,45 @@ const PropertiesOwner = (props) => {
                   />
                 );
               })}
+            {isEmpty(dataCoincidencesPublic) === true && (
+              <EmptyData>
+                <img
+                  width="150"
+                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                  alt=""
+                />
+                <p>No se encontraron resultados</p>
+              </EmptyData>
+            )}
           </ContentCards>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Pagination
-              current={currentPagination}
-              total={totalCoincidences}
-              pageSize={pageSize}
-              pageSizeOptions={[10, 20, 50, 100]}
-              onChange={(page, sizePage) => {
-                setCurrentPagination(page);
-                setPageSize(sizePage);
-                const objectConditions = JSON.stringify({
-                  currentPage: page,
-                  userConfig: sizePage,
-                });
-                setPaginationState(objectConditions);
-                handlerCallGetPropertyCoincidencesV2(
-                  jsonConditionsState,
-                  objectConditions
-                );
+          {isEmpty(dataCoincidencesPublic) === false && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
               }}
-            />
-          </div>
+            >
+              <Pagination
+                current={currentPagination}
+                total={totalCoincidences}
+                pageSize={pageSize}
+                pageSizeOptions={[10, 20, 50, 100]}
+                onChange={(page, sizePage) => {
+                  setCurrentPagination(page);
+                  setPageSize(sizePage);
+                  const objectConditions = JSON.stringify({
+                    currentPage: page,
+                    userConfig: sizePage,
+                  });
+                  setPaginationState(objectConditions);
+                  handlerCallGetPropertyCoincidencesV2(
+                    jsonConditionsState,
+                    objectConditions
+                  );
+                }}
+              />
+            </div>
+          )}
         </Container>
       )}
     </Content>
