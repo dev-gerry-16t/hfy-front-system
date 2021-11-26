@@ -12,6 +12,7 @@ import {
   callAddDocument,
   callSetImageProfile,
 } from "../../utils/actions/actions";
+import ContextProfile from "./context/contextProfile";
 import styled from "styled-components";
 import {
   ContentForm,
@@ -21,33 +22,12 @@ import {
 } from "./constants/styleConstants";
 import { IconDelete, IconEditSquare, IconEye } from "../../assets/iconSvg";
 import WidgetUploadDocument from "./widget/widgetUploadDocument";
-
-const AvatarUpload = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const CardReference = styled.div`
-  width: 290px;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 10px;
-  .header-buttons {
-    display: flex;
-    justify-content: right;
-    padding: 10px;
-  }
-  .info-reference {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    padding: 0px 0.8em 0.8em 0.8em;
-  }
-`;
-
-const ButtonHeader = styled.button`
-  background: transparent;
-  border: none;
-`;
+import WidgetReferenceProfile from "./widget/widgetReferenceProfile";
+import WidgetWorkInfoProfile from "./widget/widgetWorkInfoProfile";
+import WidgetDataBankProfile from "./widget/widgetDataBankProfile";
+import WidgetCurrentAddressProfile from "./widget/widgetCurrentAddressProfile";
+import WidgetPersonalInfoProfile from "./widget/widgetPersonalInfoProfile";
+import WidgetDataContactProfile from "./widget/widgetDataContactProfile";
 
 const DetailProfileContent = styled.div`
   padding: 2em 3em;
@@ -81,13 +61,18 @@ const DetailProfileContent = styled.div`
       }
       border-bottom: 0.5px solid var(--color-primary);
     }
-    .body-documents{
+    .body-documents {
       max-height: 550px;
       overflow-y: scroll;
     }
     .body-card-profile {
       padding: 0.8em 1em;
       color: #4e4b66;
+      .info-address-profile {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1em;
+      }
       .line-separate {
         border-bottom: 1px solid rgba(78, 75, 102, 0.3);
       }
@@ -173,6 +158,8 @@ const ProfileUsers = (props) => {
   const [dataDocument, setDataDocument] = useState([]);
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
+  const [dataEmail, setDataEmail] = useState([]);
+  const [dataPhoneNumber, setDataPhoneNumber] = useState([]);
 
   const frontFunctions = new FrontFunctions();
 
@@ -231,8 +218,24 @@ const ProfileUsers = (props) => {
         isEmpty(response.response[3]) === false
           ? response.response[3]
           : [];
+      const responseResultPhoneNumber =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[1]) === false &&
+        isEmpty(response.response[1]) === false
+          ? response.response[1]
+          : [];
+      const responseResultEmail =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[2]) === false &&
+        isEmpty(response.response[2]) === false
+          ? response.response[2]
+          : [];
       setDataCustomerDetail(responseResult);
       setDataDetailReference(responseResultReference);
+      setDataPhoneNumber(responseResultPhoneNumber);
+      setDataEmail(responseResultEmail);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -248,290 +251,94 @@ const ProfileUsers = (props) => {
 
   return (
     <Content>
-      <ContentForm>
-        <div className="header-title">
-          <h1>Detalle de perfil</h1>
-        </div>
-        <DetailProfileContent>
-          <div className="column-grid-1">
-            <div className="card-header-profile">
-              <div
-                className="header-title-card-profile"
-                style={{
-                  border: "none",
-                }}
-              >
-                <h1></h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile">
-                <AvatarUpload>
-                  <div className="edit-profile-image">
-                    <Avatar
-                      size={150}
-                      src={`${ENVIROMENT}/api/viewFile/${dataProfile.idDocument}/${dataProfile.bucketSource}`}
-                    />
+      <ContextProfile.Provider
+        value={{
+          dataCustomerDetail,
+          dataDetailReference,
+          getById: () => {
+            handlerCallGetCustomerData();
+          },
+        }}
+      >
+        <ContentForm>
+          <div className="header-title">
+            <h1>Detalle de perfil</h1>
+          </div>
+          <DetailProfileContent>
+            <div className="column-grid-1">
+              <WidgetPersonalInfoProfile dataProfile={dataProfile} />
+              <div className="card-header-profile">
+                <div className="header-title-card-profile">
+                  <h1>Obligado Solidario</h1>
+                  <button>
+                    <IconEditSquare color="var(--color-primary)" size="21px" />
+                  </button>
+                </div>
+                <div className="body-card-profile">
+                  <div className="label-strong">
+                    <span>¿Tienes Obligado solidario?</span>
+                    <strong
+                      style={{
+                        color: "var(--color-primary)",
+                      }}
+                    >
+                      x
+                    </strong>
                   </div>
-                </AvatarUpload>
-                <div className="name-user">
-                  <h1>Juan Ignacio</h1>
-                  <h2>Covarrubias Ruiz</h2>
-                </div>
-                <div className="label-strong">
-                  <span>Nacimiento:</span>
-                  <strong>25/10/1985</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Nacionalidad:</span>
-                  <strong>Mexicana</strong>
-                </div>
-                <div className="label-strong">
-                  <span>CURP:</span>
-                  <strong>GOJG931216HMCNMR01</strong>
-                </div>
-                <div className="label-strong">
-                  <span>RFC:</span>
-                  <strong>GOJG931216ML6</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Clave de elector:</span>
-                  <strong>12345678978912</strong>
                 </div>
               </div>
+              <div className="card-header-profile">
+                <div className="header-title-card-profile">
+                  <h1>Aval</h1>
+                  <button>
+                    <IconEditSquare color="var(--color-primary)" size="21px" />
+                  </button>
+                </div>
+                <div className="body-card-profile">
+                  <div className="label-strong">
+                    <span>¿Cuentas con Aval?</span>
+                    <strong
+                      style={{
+                        color: "var(--color-primary)",
+                      }}
+                    >
+                      {dataCustomerDetail.hasEndorsement == true ? "Si" : "No"}
+                    </strong>
+                  </div>
+                </div>
+              </div>
+              <WidgetDataContactProfile
+                dataEmail={dataEmail}
+                dataPhoneNumber={dataPhoneNumber}
+              />
             </div>
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Obligado Solidario</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile">
-                <div className="label-strong">
-                  <span>¿Tienes Obligado solidario?</span>
-                  <strong
-                    style={{
-                      color: "var(--color-primary)",
+            <div className="column-grid-2">
+              <WidgetCurrentAddressProfile />
+              <WidgetDataBankProfile />
+              <WidgetWorkInfoProfile />
+              <div className="card-header-profile">
+                <div className="header-title-card-profile">
+                  <h1>Documentos</h1>
+                  <button></button>
+                </div>
+                <div className="body-card-profile body-documents">
+                  <WidgetUploadDocument
+                    handlerCallGetCustomerDocument={() => {
+                      handlerCallGetCustomerDocument();
                     }}
-                  >
-                    No
-                  </strong>
+                    dataDocument={dataDocument}
+                    type={null}
+                    detail={true}
+                  />
                 </div>
               </div>
             </div>
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Aval</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile">
-                <div className="label-strong">
-                  <span>¿Cuentas con Aval?</span>
-                  <strong
-                    style={{
-                      color: "var(--color-primary)",
-                    }}
-                  >
-                    No
-                  </strong>
-                </div>
-              </div>
+            <div className="column-grid-3">
+              <WidgetReferenceProfile />
             </div>
-            <h1 className="subtitle-card">Datos de contacto</h1>
-            <div></div>
-          </div>
-          <div className="column-grid-2">
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Dirección Actual</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile"></div>
-            </div>
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Datos Bancarios</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile">
-                <div className="label-strong">
-                  <span>Titular:</span>
-                  <strong>Francisco Perez Gutierrez</strong>
-                </div>
-                <div className="label-strong">
-                  <span>CLABE:</span>
-                  <strong>XXXXXXXXXXXXXXXXXX</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Banco:</span>
-                  <strong>BBVA</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Cuenta:</span>
-                  <strong>xxxxxx</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Sucursal:</span>
-                  <strong>xxxxxx</strong>
-                </div>
-              </div>
-            </div>
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Información Socioeconómica</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile">
-                <div className="label-strong">
-                  <span>Empresa:</span>
-                  <strong>Grut Studio</strong>
-                </div>
-                <div className="label-strong">
-                  <span>Puesto:</span>
-                  <strong>Recursos Humanos</strong>
-                </div>
-                <div className="line-separate"></div>
-                <div className="info-work-person">
-                  <h3>Jefe Directo</h3>
-                  <span>Ana Laura Paredes Tapia</span>
-                  <u>analaupt@email.com</u>
-                  <span>5562100512</span>
-                </div>
-                <div className="line-separate"></div>
-                <div
-                  className="label-strong"
-                  style={{
-                    marginTop: "1em",
-                  }}
-                >
-                  <span>Otros ingresos:</span>
-                  <strong
-                    style={{
-                      color: "var(--color-primary)",
-                    }}
-                  >
-                    No
-                  </strong>
-                </div>
-                <div className="line-separate"></div>
-                <div
-                  className="label-strong"
-                  style={{
-                    marginTop: "1em",
-                  }}
-                >
-                  <span>Auto</span>
-                  <strong
-                    style={{
-                      color: "var(--color-primary)",
-                    }}
-                  >
-                    No
-                  </strong>
-                </div>
-              </div>
-            </div>
-            <div className="card-header-profile">
-              <div className="header-title-card-profile">
-                <h1>Documentos</h1>
-                <button>
-                  <IconEditSquare color="var(--color-primary)" size="21px" />
-                </button>
-              </div>
-              <div className="body-card-profile body-documents">
-                <WidgetUploadDocument
-                  handlerCallGetCustomerDocument={() => {
-                    handlerCallGetCustomerDocument();
-                  }}
-                  dataDocument={dataDocument}
-                  type={null}
-                  detail={true}
-                />
-              </div>
-            </div>
-          </div>
-          <div className="column-grid-3">
-            <h1 className="subtitle-card">Referencias</h1>
-            <div className="card-reference-profile">
-              {isEmpty(dataDetailReference) === false &&
-                dataDetailReference.map((row) => {
-                  return (
-                    <CardReference>
-                      <div className="header-buttons">
-                        <ButtonHeader
-                          onClick={() => {
-                            // setDataDefaultReference(row);
-                            // setIsOpenAddReferences(true);
-                          }}
-                        >
-                          <IconEditSquare
-                            color="var(--color-primary)"
-                            size="15px"
-                          />
-                        </ButtonHeader>
-                        <ButtonHeader
-                          onClick={async () => {
-                            // try {
-                            //   await handlerCallSetPersonalReference({
-                            //     idPersonalReference: row.idPersonalReference,
-                            //     isActive: false,
-                            //   });
-                            //   getById();
-                            // } catch (error) {}
-                          }}
-                        >
-                          <IconDelete
-                            color="var(--color-primary)"
-                            size="15px"
-                          />
-                        </ButtonHeader>
-                      </div>
-                      <div className="info-reference">
-                        <strong>
-                          {row.givenName} {row.lastName} {row.mothersMaidenName}
-                        </strong>
-                        <u>{row.emailAddress}</u>
-                        <span>{row.phoneNumber}</span>
-                      </div>
-                    </CardReference>
-                  );
-                })}
-            </div>
-            <div
-              style={{
-                marginTop: "20px",
-              }}
-            >
-              <ButtonNextBackPage
-                block={false}
-                onClick={() => {}}
-                style={{
-                  width: "100%",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <u>{"Agregar referencia +"}</u>
-                </div>
-              </ButtonNextBackPage>
-            </div>
-          </div>
-        </DetailProfileContent>
-      </ContentForm>
+          </DetailProfileContent>
+        </ContentForm>
+      </ContextProfile.Provider>
     </Content>
   );
 };

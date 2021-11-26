@@ -37,6 +37,7 @@ const ComponentAddReference = (props) => {
       width={600}
       onCancel={() => {
         onClose();
+        setDataForm(initialForm);
       }}
     >
       <FormModal>

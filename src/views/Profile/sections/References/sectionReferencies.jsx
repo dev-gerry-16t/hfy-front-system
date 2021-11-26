@@ -49,6 +49,7 @@ const SectionReferences = (props) => {
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
   const { dataDetailReference, getById } = dataContexProfile;
+
   const handlerCallSetPersonalReference = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {

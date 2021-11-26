@@ -19,7 +19,7 @@ const ContainerInput = styled.div`
 const Input = styled.input`
   padding: 5px 6px;
   border-radius: 5px;
-  background: transparent;
+  background: ${(props) => props.background};
   border: ${(props) =>
     props.error ? "1px solid #DA1414" : "1px solid #d6d8e7"};
   outline: none;
@@ -79,6 +79,7 @@ const CustomInputTypeForm = (props) => {
     errorMessage,
     info,
     onBlur = () => {},
+    background = "transparent",
   } = props;
   return (
     <ContainerInput>
@@ -89,6 +90,7 @@ const CustomInputTypeForm = (props) => {
         }}
       >
         <Input
+          background={background}
           id={isNil(id) === false ? id : null}
           value={isNil(value) === true ? "" : value}
           type={isNil(type) === false ? type : "text"}
