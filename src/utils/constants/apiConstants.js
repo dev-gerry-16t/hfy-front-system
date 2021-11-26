@@ -65,6 +65,8 @@ const API_CONSTANTS = {
     UPDATE_CUSTOMER_ACCOUNT: `${API.CUSTOMER}/customer/updateCustomerAccount/`,
     VALIDATE_CUSTOMER_PROPERTIES_IN_TAB: `${API.CUSTOMER}/customer/validateCustomerPropertiesInTab`,
     SET_CUSTOMER_ADDRESS: `${API.CUSTOMER}/address/setCustomerAddress/`,
+    SET_CUSTOMER_EMAIL_ADDRESS: `${API.CUSTOMER}/customerEmailAddress/setCustomerEmailAddress/`,
+    SET_CUSTOMER_PHONE_NUMBER: `${API.CUSTOMER}/customerPhoneNumber/setCustomerPhoneNumber/`,
     SET_CUSTOMER_BANKING_ACCOUNT: `${API.CUSTOMER}/account/setCustomerBankingAccount/`,
     SET_PERSONAL_REFERENCE: `${API.CUSTOMER}/personalReferences/setPersonalReference/`,
     GET_CUSTOMER_TAB_BY_ID: `${API.CUSTOMER}/customer/getCustomerTabById`,
