@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Layout } from "antd";
+import { Layout, Pagination } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -70,7 +70,9 @@ const PropertiesOwner = (props) => {
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const frontFunctions = new FrontFunctions();
 
-  const handlerCallGetPropertyCoincidencesV2 = async () => {
+  const handlerCallGetPropertyCoincidencesV2 = async (
+    jsonConditions = null
+  ) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -79,7 +81,7 @@ const PropertiesOwner = (props) => {
           idSystemUser,
           idLoginHistory,
           pagination: JSON.stringify({ currentPage: 1, userConfig: 10 }),
-          jsonConditions: null,
+          jsonConditions,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -103,6 +105,7 @@ const PropertiesOwner = (props) => {
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -188,7 +191,15 @@ const PropertiesOwner = (props) => {
       {dataProfile.idUserType === 4 && (
         <Container>
           <ContentAddFilter background="var(--color-primary)">
-            <ComponentFilter />
+            <ComponentFilter
+              onSendFilter={async (data) => {
+                try {
+                  await handlerCallGetPropertyCoincidencesV2(data);
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
           </ContentAddFilter>
           <ContentCards>
             {isEmpty(dataCoincidencesPublic) === false &&
@@ -217,6 +228,14 @@ const PropertiesOwner = (props) => {
                 );
               })}
           </ContentCards>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Pagination defaultCurrent={1} total={20} />
+          </div>
         </Container>
       )}
     </Content>

@@ -89,6 +89,7 @@ const API_CONSTANTS = {
     GENERATE_DOCUMENT: `${API.CUSTOMER}/property/generateDocument/`,
     DEACTIVATE_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customerDocument/deactivateCustomerDocument/`,
     ADD_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customerDocument/addCustomerDocument/`,
+    GET_LOCATION_FILTER: `${API.CUSTOMER}/zipCode/getLocationFilter`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
