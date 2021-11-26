@@ -68,10 +68,21 @@ const PropertiesOwner = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
+  const [totalCoincidences, setTotalCoincidences] = useState(0);
+  const [currentPagination, setCurrentPagination] = useState(1);
+  const [jsonConditionsState, setJsonConditionsState] = useState("[]");
+  const [pageSize, setPageSize] = useState(10);
+  const [paginationState, setPaginationState] = useState(
+    JSON.stringify({
+      currentPage: currentPagination,
+      userConfig: pageSize,
+    })
+  );
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async (
-    jsonConditions = null
+    jsonConditions = null,
+    pagination = "{}"
   ) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -80,7 +91,7 @@ const PropertiesOwner = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          pagination: JSON.stringify({ currentPage: 1, userConfig: 10 }),
+          pagination,
           jsonConditions,
         },
         null,
@@ -98,8 +109,15 @@ const PropertiesOwner = (props) => {
         isNil(response.response[1]) === false
           ? response.response[1]
           : [];
+      const responseResultTotal =
+        isEmpty(responseResultPublic) === false &&
+        isNil(responseResultPublic[0]) === false &&
+        isNil(responseResultPublic[0].total) === false
+          ? responseResultPublic[0].total
+          : 0;
       setDataCoincidences(responseResult);
       setDataCoincidencesPublic(responseResultPublic);
+      setTotalCoincidences(responseResultTotal);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -143,7 +161,7 @@ const PropertiesOwner = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetPropertyCoincidencesV2();
+    handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
   }, []);
 
   return (
@@ -194,7 +212,18 @@ const PropertiesOwner = (props) => {
             <ComponentFilter
               onSendFilter={async (data) => {
                 try {
-                  await handlerCallGetPropertyCoincidencesV2(data);
+                  const objectConditions = JSON.stringify({
+                    currentPage: 1,
+                    userConfig: 10,
+                  });
+                  await handlerCallGetPropertyCoincidencesV2(
+                    data,
+                    objectConditions
+                  );
+                  setPaginationState(objectConditions);
+                  setCurrentPagination(1);
+                  setPageSize(10);
+                  setJsonConditionsState(data);
                 } catch (error) {
                   throw error;
                 }
@@ -234,7 +263,25 @@ const PropertiesOwner = (props) => {
               justifyContent: "center",
             }}
           >
-            <Pagination defaultCurrent={1} total={20} />
+            <Pagination
+              current={currentPagination}
+              total={totalCoincidences}
+              pageSize={pageSize}
+              pageSizeOptions={[10, 20, 50, 100]}
+              onChange={(page, sizePage) => {
+                setCurrentPagination(page);
+                setPageSize(sizePage);
+                const objectConditions = JSON.stringify({
+                  currentPage: page,
+                  userConfig: sizePage,
+                });
+                setPaginationState(objectConditions);
+                handlerCallGetPropertyCoincidencesV2(
+                  jsonConditionsState,
+                  objectConditions
+                );
+              }}
+            />
           </div>
         </Container>
       )}
