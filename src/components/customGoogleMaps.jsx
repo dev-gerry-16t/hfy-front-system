@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { Map, GoogleApiWrapper, Marker, Circle } from "google-maps-react";
 
 const CustomMapContainer = (props) => {
-  const { google, location, onDragPosition, draggable = true, exact } = props;
+  const {
+    google,
+    location,
+    onDragPosition,
+    draggable = true,
+    exact,
+    zoom = 15,
+  } = props;
   const mapStyles = {
     width: "100%",
     height: "100%",
@@ -11,7 +18,7 @@ const CustomMapContainer = (props) => {
   return (
     <Map
       google={google}
-      zoom={15}
+      zoom={zoom}
       style={mapStyles}
       initialCenter={initialPosition}
       onClick={(e) => {}}
