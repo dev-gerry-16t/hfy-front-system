@@ -174,6 +174,7 @@ const CustomCardProperty = (props) => {
     updateProperty = () => {},
     onClickFavorite = () => {},
     onClickApply = () => {},
+    onOpenTicket = () => {},
   } = props;
   const {
     maintenanceAmount,
@@ -348,7 +349,16 @@ const CustomCardProperty = (props) => {
       {owner === true && (
         <div className="content-button-space">
           {idUserType === 4 && (
-            <ButtonIcon>
+            <ButtonIcon
+              onClick={() => {
+                onOpenTicket({
+                  identifier,
+                  idApartment,
+                  idProperty,
+                  documentMainPic,
+                });
+              }}
+            >
               <IconDownloadDetail color="var(--color-primary)" size="20px" />
             </ButtonIcon>
           )}

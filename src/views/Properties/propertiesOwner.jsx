@@ -17,6 +17,7 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomCardProperty from "../../components/customCardProperty";
 import ComponentFilter from "./component/componentFilter";
+import SectionViewTicket from "./sectionsDetail/sectionViewTicket";
 
 const { Content } = Layout;
 
@@ -80,6 +81,8 @@ const EmptyData = styled.div`
 
 const PropertiesOwner = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
+  const [isOpenTicket, setIsOpenTicket] = useState(false);
+  const [dataTicket, setDataTicket] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const [totalCoincidences, setTotalCoincidences] = useState(0);
@@ -180,6 +183,14 @@ const PropertiesOwner = (props) => {
 
   return (
     <Content>
+      <SectionViewTicket
+        onClose={() => {
+          setIsOpenTicket(false);
+          setDataTicket({});
+        }}
+        isVisibleModal={isOpenTicket}
+        dataTicket={dataTicket}
+      />
       <Container>
         <ContentAddFilter background="var(--color-primary)">
           <h1>Mis propiedades</h1>
@@ -214,6 +225,10 @@ const PropertiesOwner = (props) => {
                     } catch (error) {
                       throw error;
                     }
+                  }}
+                  onOpenTicket={(data) => {
+                    setIsOpenTicket(true);
+                    setDataTicket(data);
                   }}
                 />
               );
