@@ -114,13 +114,13 @@ const SectionDataFeatures = (props) => {
   return (
     <ContentForm>
       <div className="header-title">
-        <h1>Caracteristicas</h1>
+        <h1>Características</h1>
       </div>
       <FormProperty>
         <div className="label-indicator">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <span>Agrega las caracteristicas de tu inmueble.</span>
+              <span>Agrega las características de tu inmueble.</span>
             </Col>
           </Row>
         </div>

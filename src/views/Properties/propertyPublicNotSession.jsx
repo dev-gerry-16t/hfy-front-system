@@ -56,7 +56,7 @@ const Tab = styled.div`
 const dataTabsProperty = [
   {
     id: "1",
-    text: "Caracteristicas",
+    text: "Características",
   },
   {
     id: "2",

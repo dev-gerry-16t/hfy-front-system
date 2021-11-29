@@ -58,7 +58,7 @@ const AddProperty = (props) => {
         steps={[
           { style: "fa fa-home", tab: "Datos de propiedad" },
           { style: "fa fa-map-marker", tab: "Ubicación" },
-          { style: "fa fa-star-o", tab: "Caracteristicas" },
+          { style: "fa fa-star-o", tab: "Características" },
           { style: "fa fa-picture-o", tab: "Agregar fotos" },
         ]}
         onClick={(ix, record) => {

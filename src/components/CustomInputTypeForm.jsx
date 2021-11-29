@@ -79,6 +79,7 @@ const CustomInputTypeForm = (props) => {
     errorMessage,
     info,
     onBlur = () => {},
+    onKeyEnter = () => {},
     background = "transparent",
   } = props;
   return (
@@ -104,6 +105,11 @@ const CustomInputTypeForm = (props) => {
               if (e.keyCode === 109 || e.keyCode === 107) {
                 e.preventDefault();
               }
+            }
+          }}
+          onKeyPress={(e) => {
+            if (e.charCode === 13) {
+              onKeyEnter();
             }
           }}
           onBlur={onBlur}
