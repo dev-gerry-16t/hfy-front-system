@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
-import { Tooltip } from "antd";
+import { Tooltip, Dropdown, Menu } from "antd";
 import styled from "styled-components";
 import {
   IconProfile,
@@ -15,6 +15,8 @@ import {
   IconHeart,
 } from "../assets/iconSvg";
 import ComponentAddCandidate from "../views/Properties/component/componentAddCandidate";
+import GLOBAL_CONSTANTS from "../utils/constants/globalConstants";
+import FrontFunctions from "../utils/actions/frontFunctions";
 
 const ButtonIcon = styled.button`
   background: transparent;
@@ -170,7 +172,6 @@ const CustomCardProperty = (props) => {
     onClickDetail,
     data,
     idUserType,
-    owner,
     updateProperty = () => {},
     onClickFavorite = () => {},
     onClickApply = () => {},
@@ -194,12 +195,46 @@ const CustomCardProperty = (props) => {
     canApply,
     isFavorite,
     canGiveUp,
+    canBeShared,
+    canSeeDataSheet,
+    canBeFavorite,
   } = data;
   const dataTimeLine =
     isNil(currentTimeLine) === false && isEmpty(currentTimeLine) === false
       ? JSON.parse(currentTimeLine)
       : {};
   const [visibleAddUser, setVisibleAddUser] = useState(false);
+
+  const frontFunctions = new FrontFunctions();
+
+  const copiarAlPortapapeles = (text) => {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+      document.execCommand("copy");
+    } catch (err) {}
+
+    document.body.removeChild(textArea);
+  };
+
+  const copyTextToClipboard = (num) => {
+    if (!navigator.clipboard) {
+      copiarAlPortapapeles(num);
+      return;
+    }
+    navigator.clipboard.writeText(num).then(
+      () => {
+        frontFunctions.showMessageStatusApi(
+          "Link copiado correctamente",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+      },
+      (err) => {}
+    );
+  };
 
   return (
     <Card>
@@ -241,22 +276,57 @@ const CustomCardProperty = (props) => {
       </div>
       <div className="price-item">
         <span>{currentRent} MXN</span>
-        {owner === true && (
-          <ButtonIcon
-            onClick={async () => {
-              try {
-              } catch (error) {}
-            }}
+        {canBeShared === true && (
+          <Dropdown
+            overlay={
+              <Menu>
+                <Menu.Item>
+                  <a
+                    target="_blank"
+                    href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${identifier}`}
+                  >
+                    WhatsApp
+                  </a>
+                </Menu.Item>
+                <Menu.Item>
+                  <span
+                    onClick={() => {
+                      copyTextToClipboard(
+                        `${window.location.origin}/property/${identifier}`
+                      );
+                    }}
+                  >
+                    Copiar link
+                  </span>
+                </Menu.Item>
+                {/* <Menu.Item>
+                  <a
+                    target="_blank"
+                    href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                  >
+                    Facebook
+                  </a>
+                </Menu.Item> */}
+              </Menu>
+            }
+            placement="bottomLeft"
+            arrow
           >
-            <IconShare
-              color="var(--color-primary)"
-              backGround="var(--color-primary)"
-              size="16px"
-            />
-          </ButtonIcon>
+            <ButtonIcon
+              onClick={async () => {
+                try {
+                } catch (error) {}
+              }}
+            >
+              <IconShare
+                color="var(--color-primary)"
+                backGround="var(--color-primary)"
+                size="16px"
+              />
+            </ButtonIcon>
+          </Dropdown>
         )}
-
-        {idUserType === 2 && (
+        {canBeFavorite === true && (
           <ButtonIcon
             onClick={async () => {
               try {
@@ -310,69 +380,65 @@ const CustomCardProperty = (props) => {
           </ButtonWhatsapp>
         </div>
       )} */}
-      {owner === false && (
-        <div className="content-button">
-          {idUserType === 2 && canApply === true && (
-            <ButtonPrimary
-              onClick={async () => {
-                try {
-                  await onClickApply({ idApartment, identifier }, idProperty);
-                } catch (error) {}
-              }}
-            >
-              Postularme
-            </ButtonPrimary>
-          )}
-          {canGiveUp === true && (
-            <ButtonPrimary
-              onClick={async () => {
-                try {
-                  await onClickApply(
-                    { idApartment, identifier, isGivingUp: true },
-                    idProperty
-                  );
-                } catch (error) {}
-              }}
-            >
-              Desistir
-            </ButtonPrimary>
-          )}
-          {/* <ButtonWhatsapp>
+      <div className="content-button">
+        {canApply === true && (
+          <ButtonPrimary
+            onClick={async () => {
+              try {
+                await onClickApply({ idApartment, identifier }, idProperty);
+              } catch (error) {}
+            }}
+          >
+            Postularme
+          </ButtonPrimary>
+        )}
+        {canGiveUp === true && (
+          <ButtonPrimary
+            onClick={async () => {
+              try {
+                await onClickApply(
+                  { idApartment, identifier, isGivingUp: true },
+                  idProperty
+                );
+              } catch (error) {}
+            }}
+          >
+            Desistir
+          </ButtonPrimary>
+        )}
+        {/* <ButtonWhatsapp>
             <IconWhatsapp
               size="15"
               color="var(--color-primary)"
               backGround="var(--color-primary)"
             />
           </ButtonWhatsapp> */}
-        </div>
-      )}
-      {owner === true && (
-        <div className="content-button-space">
-          {idUserType === 4 && (
-            <ButtonIcon
-              onClick={() => {
-                onOpenTicket({
-                  identifier,
-                  idApartment,
-                  idProperty,
-                  documentMainPic,
-                });
-              }}
-            >
-              <IconDownloadDetail color="var(--color-primary)" size="20px" />
-            </ButtonIcon>
-          )}
-          {canInviteTenant === true && (
-            <ButtonPrimary
-              onClick={() => {
-                setVisibleAddUser(true);
-              }}
-            >
-              Invitar a inquilino
-            </ButtonPrimary>
-          )}
-        </div>
-      )}
+      </div>
+      <div className="content-button-space">
+        {canSeeDataSheet === true && (
+          <ButtonIcon
+            onClick={() => {
+              onOpenTicket({
+                identifier,
+                idApartment,
+                idProperty,
+                documentMainPic,
+              });
+            }}
+          >
+            <IconDownloadDetail color="var(--color-primary)" size="20px" />
+          </ButtonIcon>
+        )}
+        {canInviteTenant === true && (
+          <ButtonPrimary
+            onClick={() => {
+              setVisibleAddUser(true);
+            }}
+          >
+            Invitar a inquilino
+          </ButtonPrimary>
+        )}
+      </div>
     </Card>
   );
 };

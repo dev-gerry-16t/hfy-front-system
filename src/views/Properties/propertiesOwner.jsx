@@ -218,10 +218,17 @@ const PropertiesOwner = (props) => {
                   }}
                   data={row}
                   idUserType={dataProfile.idUserType}
-                  owner={true}
                   updateProperty={async (data, id) => {
                     try {
                       await handlerCallUpdateProperty(data, id);
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
+                  onClickFavorite={async (data, id) => {
+                    try {
+                      await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
                     } catch (error) {
                       throw error;
                     }
@@ -245,97 +252,94 @@ const PropertiesOwner = (props) => {
           )}
         </ContentCards>
       </Container>
-      {dataProfile.idUserType === 4 && (
-        <Container>
-          <ContentAddFilter background="var(--color-primary)">
-            <ComponentFilter
-              onSendFilter={async (data) => {
-                try {
-                  const objectConditions = JSON.stringify({
-                    currentPage: 1,
-                    userConfig: 10,
-                  });
-                  await handlerCallGetPropertyCoincidencesV2(
-                    data,
-                    objectConditions
-                  );
-                  setPaginationState(objectConditions);
-                  setCurrentPagination(1);
-                  setPageSize(10);
-                  setJsonConditionsState(data);
-                } catch (error) {
-                  throw error;
-                }
+      <Container>
+        <ContentAddFilter background="var(--color-primary)">
+          <ComponentFilter
+            onSendFilter={async (data) => {
+              try {
+                const objectConditions = JSON.stringify({
+                  currentPage: 1,
+                  userConfig: 10,
+                });
+                await handlerCallGetPropertyCoincidencesV2(
+                  data,
+                  objectConditions
+                );
+                setPaginationState(objectConditions);
+                setCurrentPagination(1);
+                setPageSize(10);
+                setJsonConditionsState(data);
+              } catch (error) {
+                throw error;
+              }
+            }}
+          />
+        </ContentAddFilter>
+        <ContentCards>
+          {isEmpty(dataCoincidencesPublic) === false &&
+            dataCoincidencesPublic.map((row) => {
+              return (
+                <CustomCardProperty
+                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+                  alt={row.identifier}
+                  onClickDetail={() => {
+                    history.push(
+                      `/websystem/detail-property/${row.idProperty}`
+                    );
+                  }}
+                  onClickFavorite={async (data, id) => {
+                    try {
+                      await handlerCallUpdateProperty(data, id);
+                      handlerCallGetPropertyCoincidencesV2();
+                    } catch (error) {
+                      throw error;
+                    }
+                  }}
+                  data={row}
+                  idUserType={dataProfile.idUserType}
+                />
+              );
+            })}
+          {isEmpty(dataCoincidencesPublic) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                alt=""
+              />
+              <p>No se encontraron resultados</p>
+            </EmptyData>
+          )}
+        </ContentCards>
+        {isEmpty(dataCoincidencesPublic) === false && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Pagination
+              current={currentPagination}
+              total={totalCoincidences}
+              pageSize={pageSize}
+              pageSizeOptions={[10, 20, 50, 100]}
+              onChange={(page, sizePage) => {
+                setCurrentPagination(page);
+                setPageSize(sizePage);
+                const objectConditions = JSON.stringify({
+                  currentPage: page,
+                  userConfig: sizePage,
+                });
+                setPaginationState(objectConditions);
+                handlerCallGetPropertyCoincidencesV2(
+                  jsonConditionsState,
+                  objectConditions
+                );
               }}
             />
-          </ContentAddFilter>
-          <ContentCards>
-            {isEmpty(dataCoincidencesPublic) === false &&
-              dataCoincidencesPublic.map((row) => {
-                return (
-                  <CustomCardProperty
-                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
-                    alt={row.identifier}
-                    onClickDetail={() => {
-                      history.push(
-                        `/websystem/detail-property/${row.idProperty}`
-                      );
-                    }}
-                    onClickFavorite={async (data, id) => {
-                      try {
-                        await handlerCallUpdateProperty(data, id);
-                        handlerCallGetPropertyCoincidencesV2();
-                      } catch (error) {
-                        throw error;
-                      }
-                    }}
-                    data={row}
-                    idUserType={dataProfile.idUserType}
-                    owner={false}
-                  />
-                );
-              })}
-            {isEmpty(dataCoincidencesPublic) === true && (
-              <EmptyData>
-                <img
-                  width="150"
-                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-                  alt=""
-                />
-                <p>No se encontraron resultados</p>
-              </EmptyData>
-            )}
-          </ContentCards>
-          {isEmpty(dataCoincidencesPublic) === false && (
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <Pagination
-                current={currentPagination}
-                total={totalCoincidences}
-                pageSize={pageSize}
-                pageSizeOptions={[10, 20, 50, 100]}
-                onChange={(page, sizePage) => {
-                  setCurrentPagination(page);
-                  setPageSize(sizePage);
-                  const objectConditions = JSON.stringify({
-                    currentPage: page,
-                    userConfig: sizePage,
-                  });
-                  setPaginationState(objectConditions);
-                  handlerCallGetPropertyCoincidencesV2(
-                    jsonConditionsState,
-                    objectConditions
-                  );
-                }}
-              />
-            </div>
-          )}
-        </Container>
-      )}
+          </div>
+        )}
+      </Container>
     </Content>
   );
 };
