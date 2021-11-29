@@ -500,7 +500,7 @@ const SectionViewTicket = (props) => {
           >
             <TabsProperty>
               <Tab selected>
-                <h1>Caracteristicas</h1>
+                <h1>Características</h1>
                 <hr />
               </Tab>
             </TabsProperty>

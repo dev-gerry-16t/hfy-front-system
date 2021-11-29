@@ -60,6 +60,7 @@ const SectionDataProperty = (props) => {
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
+  const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
     idPropertyType: null,
@@ -207,6 +208,7 @@ const SectionDataProperty = (props) => {
                     handlerCallGetAllCommercialActivities();
                   }
                   setDataForm({ ...dataForm, idPropertyType: value });
+                  setIsOpenFloorDescription(row.requiresFloorDescr);
                 }}
               />
             </Col>
@@ -366,33 +368,35 @@ const SectionDataProperty = (props) => {
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomSelect
-                value={dataForm.floorDescription}
-                placeholder=""
-                label="Piso en el que se encuentra *"
-                data={[
-                  { id: "other", text: "más" },
-                  { id: "10", text: "10" },
-                  { id: "9", text: "9" },
-                  { id: "8", text: "8" },
-                  { id: "7", text: "7" },
-                  { id: "6", text: "6" },
-                  { id: "5", text: "5" },
-                  { id: "4", text: "4" },
-                  { id: "3", text: "3" },
-                  { id: "2", text: "2" },
-                  { id: "1", text: "1" },
-                  { id: "PB", text: "Planta baja" },
-                  { id: "S", text: "Sotano" },
-                ]}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, floorDescription: value });
-                }}
-              />
-            </Col>
+            {isOpenFloorDescription === true && (
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomSelect
+                  value={dataForm.floorDescription}
+                  placeholder=""
+                  label="Piso en el que se encuentra *"
+                  data={[
+                    { id: "S", text: "Sotano" },
+                    { id: "PB", text: "Planta baja" },
+                    { id: "1", text: "1" },
+                    { id: "2", text: "2" },
+                    { id: "3", text: "3" },
+                    { id: "4", text: "4" },
+                    { id: "5", text: "5" },
+                    { id: "6", text: "6" },
+                    { id: "7", text: "7" },
+                    { id: "8", text: "8" },
+                    { id: "9", text: "9" },
+                    { id: "10", text: "10" },
+                    { id: "other", text: "más" },
+                  ]}
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, floorDescription: value });
+                  }}
+                />
+              </Col>
+            )}
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -451,18 +455,31 @@ const SectionDataProperty = (props) => {
                       Correo electrónico *
                     </label>
                     <Select
+                      mode="tags"
                       showSearch
                       style={{ width: "100%" }}
                       placeholder="Busca o agrega un usuario"
                       optionFilterProp="children"
                       onChange={(e, a) => {
-                        const response = a.onClick();
-                        setDataForm({
-                          ...dataForm,
-                          ownerGivenName: response.givenName,
-                          ownerLastName: response.lastName,
-                          ownerEmailAddress: response.username,
-                        });
+                        if (isEmpty(a) === false && isEmpty(a[0]) === false) {
+                          const response = a[0].onClick();
+                          setDataForm({
+                            ...dataForm,
+                            ownerGivenName: response.givenName,
+                            ownerLastName: response.lastName,
+                            ownerEmailAddress: response.username,
+                            idCustomer: response.idCustomer,
+                          });
+                        } else {
+                          setDataForm({
+                            ...dataForm,
+                            ownerGivenName: null,
+                            ownerLastName: null,
+                            ownerEmailAddress:
+                              isNil(e[0]) === false ? e[0] : null,
+                            idCustomer: null,
+                          });
+                        }
                       }}
                       onFocus={() => {}}
                       onBlur={() => {}}
@@ -471,6 +488,7 @@ const SectionDataProperty = (props) => {
                           handlerCallSearchCustomer(e);
                         }
                       }}
+                      tokenSeparators={[","]}
                       filterOption={(input, option) => {
                         if (isNil(option.children) === false) {
                           return (
