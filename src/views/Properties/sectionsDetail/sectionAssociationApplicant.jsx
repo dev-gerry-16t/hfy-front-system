@@ -122,7 +122,9 @@ const SectionAssociationApplicant = (props) => {
             <Row>
               <Col span={24}>
                 <MultiSelect>
-                  <span>¿Quue deseas hacer con la invitación?</span>
+                  <span style={{ textAlign: "center" }}>
+                    ¿Qué deseas hacer con tu invitación?
+                  </span>
                   <div className="button-actions-select">
                     {catalogAssociation.map((row) => {
                       return (

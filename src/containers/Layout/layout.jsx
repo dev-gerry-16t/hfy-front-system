@@ -82,6 +82,7 @@ const DefaultLayout = (props) => {
   const [notificationTopIndex, setNotificationTopIndex] = useState(null);
   const [numberNotifications, setNumberNotifications] = useState(0);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
+  const [isVisibleNotification, setIsVisibleNotification] = useState(false);
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
@@ -691,6 +692,7 @@ const DefaultLayout = (props) => {
                   <span>{dataProfile.userType}</span>
                 </div>
                 <Popover
+                  visible={isVisibleNotification}
                   className="popover-list-notification"
                   id="layout-popover-list"
                   placement="bottomRight"
@@ -718,6 +720,7 @@ const DefaultLayout = (props) => {
                                   item.idNotification
                                 );
                                 if (isNil(item.path) === false) {
+                                  setIsVisibleNotification(false);
                                   history.push(item.path);
                                 }
                               } catch (error) {}
@@ -788,7 +791,9 @@ const DefaultLayout = (props) => {
                   <button
                     className="button-header"
                     style={{ position: "relative" }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      setIsVisibleNotification(!isVisibleNotification);
+                    }}
                   >
                     <div
                       className="notification-header"

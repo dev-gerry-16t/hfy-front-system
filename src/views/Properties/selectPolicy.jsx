@@ -257,6 +257,7 @@ const SelectPolicy = (props) => {
   const [dataPolicyMethods, setDataPolicyMethods] = useState([]);
   const [selectPolicy, setSelectPolicy] = useState(null);
   const [idApartment, setIdApartment] = useState(null);
+  const [loadApi, setLoadApi] = useState(false);
   const [commissionAgent, setCommissionAgent] = useState({
     idCustomer: null,
     idInvitation: null,
@@ -804,31 +805,45 @@ const SelectPolicy = (props) => {
           select
           onClick={async () => {
             try {
-              if (shareCommission === true) {
-                await handlerCallSetAdviserInProperty({
-                  givenName: commissionAgent.givenName,
-                  lastName: commissionAgent.lastName,
-                  emailAddress: commissionAgent.emailAddress,
-                  idCustomer: commissionAgent.idCustomer,
-                  idInvitation: commissionAgent.idInvitation,
-                  mothersMaidenName: null,
-                  commissionAmount: commissionAgent.commissionAmount,
-                  isActive: true,
+              if (loadApi === false) {
+                if (shareCommission === true) {
+                  setLoadApi(true);
+                  await handlerCallSetAdviserInProperty({
+                    givenName: commissionAgent.givenName,
+                    lastName: commissionAgent.lastName,
+                    emailAddress: commissionAgent.emailAddress,
+                    idCustomer: commissionAgent.idCustomer,
+                    idInvitation: commissionAgent.idInvitation,
+                    mothersMaidenName: null,
+                    commissionAmount: commissionAgent.commissionAmount,
+                    isActive: true,
+                  });
+                }
+                await handlerCallUpdateProperty({
+                  idApartment: dataDetail.idApartment,
+                  idPolicy: selectPolicy,
+                  idPolicyPaymentMethod: selectMethodPolicy,
+                  jsonAdviserCommissionWith: JSON.stringify([commissionAgent]),
                 });
+                setTimeout(() => {
+                  setLoadApi(false);
+                  history.push(
+                    `/websystem/detail-property-users/${idProperty}`
+                  );
+                }, 4000);
               }
-              await handlerCallUpdateProperty({
-                idApartment: dataDetail.idApartment,
-                idPolicy: selectPolicy,
-                idPolicyPaymentMethod: selectMethodPolicy,
-                jsonAdviserCommissionWith: JSON.stringify([commissionAgent]),
-              });
-              setTimeout(() => {
-                history.push(`/websystem/detail-property-users/${idProperty}`);
-              }, 7000);
             } catch (error) {}
           }}
         >
-          Guardar
+          Guardar{" "}
+          {loadApi === true && (
+            <i
+              style={{
+                fontSize: 15,
+              }}
+              class="fa fa-spinner fa-spin fa-3x fa-fw"
+            ></i>
+          )}
         </ButtonPolicy>
       </div>
     </Content>

@@ -127,7 +127,9 @@ const SectionPolicy = (props) => {
           <span className="label-indicator">
             Eligiendo alguna de nuestras pólizas de arrendamiento
           </span>
-          <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
+          {idUserType !== 2 && (
+            <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
+          )}
         </NoticePolicy>
       )}
       {isNil(idPolicy) === false && requiresPolicy === false && (
