@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -17,6 +17,7 @@ import {
   FormProperty,
 } from "../constants/styleConstants";
 import { IconDelete, IconEditSquare } from "../../../assets/iconSvg";
+import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 
 const ContentImages = styled.div`
   margin-top: 2em;
@@ -71,6 +72,11 @@ const ContentImage = styled.div`
       flex-direction: row;
     }
   }
+  .description-image {
+    color: var(--color-primary);
+    font-size: 11px;
+    position: absolute;
+  }
 `;
 
 const ButtonFiles = styled.button`
@@ -106,100 +112,15 @@ const SectionDataImages = (props) => {
     dataProfile,
     redirect,
     callGlobalActionApi,
+    idProperty,
+    onBackTo,
+    dataFormSave,
+    idApartment,
+    getById,
   } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
   const frontFunctions = new FrontFunctions();
-
-  const fileReaderPromise = async (fileIndex, countPromise) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(fileIndex);
-      reader.onload = async (event) => {
-        const imgElement = document.createElement("img");
-        imgElement.src = event.target.result;
-        imgElement.onload = async (event1) => {
-          const canvas = document.createElement("canvas");
-          const width = event1.target.width;
-          const height = event1.target.height;
-
-          const MAX_WIDTH = 578;
-          const scaleSize = MAX_WIDTH / width;
-
-          canvas.width = MAX_WIDTH;
-          canvas.height = height * scaleSize;
-
-          const ctx = canvas.getContext("2d");
-          ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-          const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
-          resolve({
-            id: countPromise,
-            src: srcEncoded,
-            contentType: "image/jpeg",
-            name: `homify-image-${countPromise}`,
-          });
-        };
-      };
-    });
-  };
-
-  const onChangeFile = async (e) => {
-    const newArrayImages = [];
-    let newCont = count;
-    const files = e.target.files;
-    if (!files) return;
-    for (let i = 0; i < files.length; i++) {
-      const objectPromise = await fileReaderPromise(files[i], newCont);
-      newArrayImages.push(objectPromise);
-      newCont = newCont + 1;
-    }
-    setArrayImages([...arrayImages, ...newArrayImages]);
-    setCount(newCont);
-  };
-
-  const handlerOnDeleteImage = (id) => {
-    const filterId = arrayImages.filter((row) => {
-      return row.id !== id;
-    });
-    setArrayImages(filterId);
-  };
-
-  const handlerOnEditFile = (e, id) => {
-    const fileIndex = e.target.files[0];
-    if (!fileIndex) return;
-
-    const reader = new FileReader();
-    reader.readAsDataURL(fileIndex);
-    reader.onload = (event) => {
-      const imgElement = document.createElement("img");
-      imgElement.src = event.target.result;
-      imgElement.onload = (event1) => {
-        const canvas = document.createElement("canvas");
-        const width = event1.target.width;
-        const height = event1.target.height;
-
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext("2d");
-        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
-        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
-        const replaceArrayImage = arrayImages.map((row) => {
-          let objectImage = row;
-          if (row.id === id) {
-            objectImage = {
-              id: id,
-              src: srcEncoded,
-              contentType: "image/jpeg",
-              name: `homify-image-${id}`,
-            };
-          }
-          return objectImage;
-        });
-        setArrayImages(replaceArrayImage);
-      };
-    };
-  };
 
   const handlerCallSetPropertyDocument = async (data, id) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -258,6 +179,209 @@ const SectionDataImages = (props) => {
     }
   };
 
+  const fileReaderPromise = async (fileIndex, countPromise) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileIndex);
+      reader.onload = async (event) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = event.target.result;
+        imgElement.onload = async (event1) => {
+          const canvas = document.createElement("canvas");
+          const width = event1.target.width;
+          const height = event1.target.height;
+
+          const MAX_WIDTH = 578;
+          const scaleSize = MAX_WIDTH / width;
+
+          canvas.width = MAX_WIDTH;
+          canvas.height = height * scaleSize;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+          const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
+          resolve({
+            id: countPromise,
+            src: srcEncoded,
+            contentType: "image/jpeg",
+            name: `homify-image-${countPromise}`,
+          });
+        };
+      };
+    });
+  };
+
+  const handlerOnSendFilesV2 = async (dataImages) => {
+    try {
+      const arrayDataDocument = [];
+      for (let index = 0; index < dataImages.length; index++) {
+        const element = dataImages[index];
+        const urlObject = await fetch(element.src);
+        const blobFile = await urlObject.blob();
+        const idDocument = await handlerAddDocument(blobFile, element.name);
+        arrayDataDocument.push({
+          idDocument,
+          isMain: false,
+        });
+      }
+      return arrayDataDocument;
+    } catch (error) {}
+  };
+
+  const handlerOnSendFilesV3 = async (dataImages, ix) => {
+    try {
+      const arrayDataDocument = [];
+      for (let index = 0; index < dataImages.length; index++) {
+        const element = dataImages[index];
+        const urlObject = await fetch(element.src);
+        const blobFile = await urlObject.blob();
+        const idDocument = await handlerAddDocument(blobFile, element.name);
+        arrayDataDocument.push({
+          idDocument,
+          isMain: ix === 0 ? true : false,
+        });
+      }
+      return arrayDataDocument;
+    } catch (error) {}
+  };
+
+  const onChangeFile = async (e) => {
+    if (isNil(idProperty) === true) {
+      const newArrayImages = [];
+      let newCont = count;
+      const files = e.target.files;
+      if (!files) return;
+      for (let i = 0; i < files.length; i++) {
+        const objectPromise = await fileReaderPromise(files[i], newCont);
+        newArrayImages.push(objectPromise);
+        newCont = newCont + 1;
+      }
+      setArrayImages([...arrayImages, ...newArrayImages]);
+      setCount(newCont);
+    } else {
+      const newArrayImages = [];
+      let newCont = count;
+      const files = e.target.files;
+      if (!files) return;
+      for (let i = 0; i < files.length; i++) {
+        const objectPromise = await fileReaderPromise(files[i], newCont);
+        newArrayImages.push(objectPromise);
+        newCont = newCont + 1;
+      }
+      const responseImages = await handlerOnSendFilesV2(newArrayImages);
+      await handlerCallSetPropertyDocument(
+        {
+          jsonDocument: JSON.stringify(responseImages),
+          idApartment: idApartment,
+          isActive: true,
+        },
+        idProperty
+      );
+      getById();
+    }
+  };
+
+  const handlerOnDeleteImage = (id) => {
+    const filterId = arrayImages.filter((row) => {
+      return row.id !== id;
+    });
+    setArrayImages(filterId);
+  };
+
+  const handlerOnEditFile = (e, id) => {
+    const fileIndex = e.target.files[0];
+    if (!fileIndex) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(fileIndex);
+    reader.onload = (event) => {
+      const imgElement = document.createElement("img");
+      imgElement.src = event.target.result;
+      imgElement.onload = (event1) => {
+        const canvas = document.createElement("canvas");
+        const width = event1.target.width;
+        const height = event1.target.height;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
+        const replaceArrayImage = arrayImages.map((row) => {
+          let objectImage = row;
+          if (row.id === id) {
+            objectImage = {
+              id: id,
+              src: srcEncoded,
+              contentType: "image/jpeg",
+              name: `homify-image-${id}`,
+            };
+          }
+          return objectImage;
+        });
+        setArrayImages(replaceArrayImage);
+      };
+    };
+  };
+
+  const handlerOnEditFileV2 = async (e, id, ix) => {
+    const fileIndex = e.target.files[0];
+    if (!fileIndex) return;
+
+    const reader = new FileReader();
+    reader.readAsDataURL(fileIndex);
+    reader.onload = async (event) => {
+      const imgElement = document.createElement("img");
+      imgElement.src = event.target.result;
+      imgElement.onload = async (event1) => {
+        const canvas = document.createElement("canvas");
+        const width = event1.target.width;
+        const height = event1.target.height;
+
+        canvas.width = width;
+        canvas.height = height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
+        const replaceArrayImage = arrayImages.map((row) => {
+          let objectImage = row;
+          if (row.id === id) {
+            objectImage = {
+              id: id,
+              src: srcEncoded,
+              contentType: "image/jpeg",
+              name: `homify-image-${id}`,
+            };
+          }
+          return objectImage;
+        });
+        const responseImages = await handlerOnSendFilesV3(
+          [
+            {
+              id: id,
+              src: srcEncoded,
+              contentType: "image/jpeg",
+              name: `homify-image-${id}`,
+            },
+          ],
+          ix
+        );
+
+        await handlerCallSetPropertyDocument(
+          {
+            jsonDocument: JSON.stringify(responseImages),
+            idApartment: idApartment,
+            isActive: true,
+          },
+          idProperty
+        );
+        setArrayImages(replaceArrayImage);
+      };
+    };
+  };
+
   const handlerOnSendFiles = async (dataImages) => {
     try {
       const arrayDataDocument = [];
@@ -275,8 +399,37 @@ const SectionDataImages = (props) => {
     } catch (error) {}
   };
 
+  useEffect(() => {
+    if (
+      isNil(idProperty) === false &&
+      isEmpty(dataFormSave) === false &&
+      isNil(dataFormSave.apartmentDocuments) === false &&
+      isEmpty(dataFormSave.apartmentDocuments) === false
+    ) {
+      const parseArrayImages = JSON.parse(dataFormSave.apartmentDocuments);
+      const resultArrayImages = parseArrayImages.map((row, ix) => {
+        return {
+          contentType: "image/jpeg",
+          id: ix,
+          name: `homify-image-${ix}`,
+          src: row.url,
+          idDocument: row.idDocument,
+        };
+      });
+      setCount(parseArrayImages.length);
+      setArrayImages(resultArrayImages);
+    }
+  }, [dataFormSave]);
+
   return (
     <ContentForm>
+      {isNil(idProperty) === false && (
+        <div className="back-button">
+          <button onClick={onBackTo}>
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Agregar fotos</h1>
       </div>
@@ -289,14 +442,33 @@ const SectionDataImages = (props) => {
           </Row>
         </div>
         <ContentImages>
-          {arrayImages.map((row) => {
+          {arrayImages.map((row, ix) => {
             return (
               <ContentImage>
                 <img className="image-content" src={row.src} alt={"imagen"} />
                 <div className="button-actions-image">
                   <ButtonFiles
-                    onClick={() => {
-                      handlerOnDeleteImage(row.id);
+                    onClick={async () => {
+                      try {
+                        if (isNil(idProperty) === true) {
+                          handlerOnDeleteImage(row.id);
+                        } else {
+                          await handlerCallSetPropertyDocument(
+                            {
+                              jsonDocument: JSON.stringify([
+                                {
+                                  idDocument: row.idDocument,
+                                  isMain: ix === 0 ? true : false,
+                                },
+                              ]),
+                              idApartment,
+                              isActive: false,
+                            },
+                            idProperty
+                          );
+                          getById();
+                        }
+                      } catch (error) {}
                     }}
                   >
                     <IconDelete color="var(--color-primary)" />
@@ -312,11 +484,37 @@ const SectionDataImages = (props) => {
                     accept="image/png,image/jpg,image/jpeg"
                     style={{ display: "none" }}
                     type="file"
-                    onChange={(e) => {
-                      handlerOnEditFile(e, row.id);
+                    onChange={async(e) => {
+                      if (isNil(idProperty) === true) {
+                        handlerOnEditFile(e, row.id);
+                      } else {
+                        await handlerCallSetPropertyDocument(
+                          {
+                            jsonDocument: JSON.stringify([
+                              {
+                                idDocument: row.idDocument,
+                                isMain: ix === 0 ? true : false,
+                              },
+                            ]),
+                            idApartment,
+                            isActive: false,
+                          },
+                          idProperty
+                        );
+                        handlerOnEditFileV2(e, row.id, ix);
+                      }
                     }}
                   />
                 </div>
+                {row.id == 0 && (
+                  <div className="description-image">
+                    <span>
+                      {isNil(idProperty) === false
+                        ? "Esta es tu imagen principal"
+                        : "Esta será tu imagen principal"}
+                    </span>
+                  </div>
+                )}
               </ContentImage>
             );
           })}
@@ -340,6 +538,20 @@ const SectionDataImages = (props) => {
             </UploadSection>
           )}
         </ContentImages>
+        {isNil(idProperty) === false && (
+          <div
+            className="label-indicator"
+            style={{
+              marginTop: "25px",
+            }}
+          >
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <span>Tus cambios se guardan automaticamente.</span>
+              </Col>
+            </Row>
+          </div>
+        )}
         <div className="next-back-buttons">
           <ButtonNextBackPage block={false} onClick={onClickBack}>
             {"<< "}
@@ -349,17 +561,23 @@ const SectionDataImages = (props) => {
             block={false}
             onClick={async () => {
               try {
-                const response = await onClickFinish();
-                const responseDocument = await handlerOnSendFiles(arrayImages);
-                await handlerCallSetPropertyDocument(
-                  {
-                    jsonDocument: JSON.stringify(responseDocument),
-                    idApartment: response.idApartment,
-                    isActive: true,
-                  },
-                  response.idProperty
-                );
-                redirect();
+                if (isNil(idProperty) === true) {
+                  const response = await onClickFinish();
+                  const responseDocument = await handlerOnSendFiles(
+                    arrayImages
+                  );
+                  await handlerCallSetPropertyDocument(
+                    {
+                      jsonDocument: JSON.stringify(responseDocument),
+                      idApartment: response.idApartment,
+                      isActive: true,
+                    },
+                    response.idProperty
+                  );
+                  redirect();
+                } else {
+                  onBackTo();
+                }
               } catch (error) {}
             }}
           >

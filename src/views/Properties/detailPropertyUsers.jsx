@@ -12,7 +12,12 @@ import {
   ButtonNextBackPage,
   Container,
 } from "./constants/styleConstants";
-import { IconTenant, IconShare } from "../../assets/iconSvg";
+import {
+  IconTenant,
+  IconShare,
+  IconHeart,
+  IconEditSquare,
+} from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -221,17 +226,15 @@ const SharedByUser = styled.div`
 `;
 
 const LoaderAction = styled.div`
-    position: fixed;
-    width: 50vw;
-    height: 50vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1;
-    display: block;
-    top: 0;
-    
-
+  position: fixed;
+  width: 50vw;
+  height: 50vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+  display: block;
+  top: 0;
 `;
 
 const dataTabsProperty = [
@@ -328,6 +331,38 @@ const DetailPropertyUsers = (props) => {
         },
         idProperty,
         API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerCallSetFavoriteProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SET_FAVORITE_PROPERTY,
         "PUT"
       );
       const responseResult =
@@ -449,35 +484,42 @@ const DetailPropertyUsers = (props) => {
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
-            {isNil(dataDetail.sharedBy) === false && (
-              <SharedByUser>
-                Ficha compartida por {dataDetail.sharedBy}
-              </SharedByUser>
-            )}
-            {dataDetail.isPublished === true && (
-              <Dropdown
-                overlay={
-                  <Menu>
-                    <Menu.Item>
-                      <a
-                        target="_blank"
-                        href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
-                      >
-                        WhatsApp
-                      </a>
-                    </Menu.Item>
-                    <Menu.Item>
-                      <span
-                        onClick={() => {
-                          copyTextToClipboard(
-                            `${window.location.origin}/property/${dataDetail.identifier}`
-                          );
-                        }}
-                      >
-                        Copiar link
-                      </span>
-                    </Menu.Item>
-                    {/* <Menu.Item>
+            <div>
+              {isNil(dataDetail.sharedBy) === false && (
+                <SharedByUser>
+                  Ficha compartida por {dataDetail.sharedBy}
+                </SharedByUser>
+              )}
+            </div>
+            <div
+              style={{
+                display: "flex",
+              }}
+            >
+              {dataDetail.isPublished === true && (
+                <Dropdown
+                  overlay={
+                    <Menu>
+                      <Menu.Item>
+                        <a
+                          target="_blank"
+                          href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                        >
+                          WhatsApp
+                        </a>
+                      </Menu.Item>
+                      <Menu.Item>
+                        <span
+                          onClick={() => {
+                            copyTextToClipboard(
+                              `${window.location.origin}/property/${dataDetail.identifier}`
+                            );
+                          }}
+                        >
+                          Copiar link
+                        </span>
+                      </Menu.Item>
+                      {/* <Menu.Item>
                       <a
                         target="_blank"
                         href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
@@ -485,19 +527,56 @@ const DetailPropertyUsers = (props) => {
                         Facebook
                       </a>
                     </Menu.Item> */}
-                  </Menu>
-                }
-                placement="bottomLeft"
-                arrow
-              >
-                <ButtonIcon onClick={() => {}}>
-                  <IconShare
+                    </Menu>
+                  }
+                  placement="bottomLeft"
+                  arrow
+                >
+                  <ButtonIcon onClick={() => {}}>
+                    <IconShare
+                      color="var(--color-primary)"
+                      backGround="var(--color-primary)"
+                    />
+                  </ButtonIcon>
+                </Dropdown>
+              )}
+              {dataDetail.canBeFavorite === true && (
+                <ButtonIcon
+                  onClick={async () => {
+                    try {
+                      await handlerCallSetFavoriteProperty(
+                        {
+                          idApartment: dataDetail.idApartment,
+                          identifier: dataDetail.identifier,
+                        },
+                        dataDetail.idProperty
+                      );
+                      handlerCallGetPropertyById();
+                    } catch (error) {}
+                  }}
+                >
+                  <IconHeart
+                    backGround={
+                      dataDetail.isFavorite === true
+                        ? "var(--color-primary)"
+                        : "transparent"
+                    }
                     color="var(--color-primary)"
-                    backGround="var(--color-primary)"
                   />
                 </ButtonIcon>
-              </Dropdown>
-            )}
+              )}
+              {dataDetail.canBeEdited === true && (
+                <ButtonIcon onClick={async () => {
+                  history.push(`/websystem/edit-property/${idProperty}`);
+
+                }}>
+                  <IconEditSquare
+                    backGround="transparent"
+                    color="var(--color-primary)"
+                  />
+                </ButtonIcon>
+              )}
+            </div>
           </div>
           <div>
             <SectionCarouselInfo

@@ -18,6 +18,7 @@ import {
 } from "../constants/styleConstants";
 import CustomTextArea from "../../../components/customTextArea";
 import CustomMapContainer from "../../../components/customGoogleMaps";
+import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 
 const MultiSelect = styled.div`
   display: flex;
@@ -70,6 +71,8 @@ const SectionDataLocation = (props) => {
     callGlobalActionApi,
     dataProfile,
     dataFormSave,
+    idProperty,
+    onBackTo,
   } = props;
   const [idZipCode, setIdZipCode] = useState(null);
   const [positionCoordenates, setPositionCoordenates] = useState(null);
@@ -211,6 +214,39 @@ const SectionDataLocation = (props) => {
     }
   };
 
+  const handlerCallUpdateProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
       const {
@@ -247,6 +283,13 @@ const SectionDataLocation = (props) => {
 
   return (
     <ContentForm>
+      {isNil(idProperty) === false && (
+        <div className="back-button">
+          <button onClick={onBackTo}>
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Ubicación</h1>
       </div>
@@ -458,6 +501,22 @@ const SectionDataLocation = (props) => {
             </Col>
           </Row>
         </div>
+        {isNil(idProperty) === false && (
+          <div
+            className="label-indicator"
+            style={{
+              marginTop: "25px",
+            }}
+          >
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <span>
+                  Antes de dar clic en "Siguiente" recuerda guardar tus cambios
+                </span>
+              </Col>
+            </Row>
+          </div>
+        )}
         <div className="next-back-buttons">
           <ButtonNextBackPage
             block={false}
@@ -472,6 +531,18 @@ const SectionDataLocation = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
+          {isNil(idProperty) === false && (
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                try {
+                  await handlerCallUpdateProperty(dataForm, idProperty);
+                } catch (error) {}
+              }}
+            >
+              <u>{"Guardar"}</u>
+            </ButtonNextBackPage>
+          )}
           <ButtonNextBackPage
             block={false}
             onClick={() => {

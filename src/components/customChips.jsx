@@ -120,7 +120,7 @@ const CustomChips = ({ data, onChange, selected }) => {
       const newSelect = data.map((row) => {
         let returnRow = { ...row, select: false };
         const filterId = selected.find((rowMap) => {
-          return rowMap.id === row.id;
+          return rowMap.id == row.id;
         });
         if (isNil(filterId) === false) {
           returnRow = { ...row, select: true };

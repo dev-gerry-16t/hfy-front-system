@@ -17,6 +17,7 @@ import {
   LineSeparator,
   FormProperty,
 } from "../constants/styleConstants";
+import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 
 const { Option } = Select;
 
@@ -57,9 +58,12 @@ const SectionDataProperty = (props) => {
     dataProfile,
     dataFormSave,
     idUserType,
+    idProperty,
+    onBackTo,
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
+  const [nameOwner, setNameOwner] = useState([]);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
@@ -104,6 +108,7 @@ const SectionDataProperty = (props) => {
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
+
       setDataPropertyTypes(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -167,6 +172,39 @@ const SectionDataProperty = (props) => {
     }
   };
 
+  const handlerCallUpdateProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
   }, []);
@@ -174,11 +212,41 @@ const SectionDataProperty = (props) => {
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
       setDataForm(dataFormSave);
+      setNameOwner(
+        isNil(dataFormSave) === false &&
+          isNil(dataFormSave.ownerEmailAddress) === false
+          ? [dataFormSave.ownerEmailAddress]
+          : []
+      );
     }
   }, [dataFormSave]);
 
+  useEffect(() => {
+    if (
+      isEmpty(dataFormSave) === false &&
+      isEmpty(dataPropertyTypes) === false
+    ) {
+      const filterIdProperty = dataPropertyTypes.find((row) => {
+        return row.id == dataFormSave.idPropertyType;
+      });
+      setIsOpenFloorDescription(
+        isNil(filterIdProperty) === false &&
+          isNil(filterIdProperty.requiresFloorDescr) === false
+          ? filterIdProperty.requiresFloorDescr
+          : false
+      );
+    }
+  }, [dataFormSave, dataPropertyTypes]);
+
   return (
     <ContentForm>
+      {isNil(idProperty) === false && (
+        <div className="back-button">
+          <button onClick={onBackTo}>
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Datos de propiedad</h1>
       </div>
@@ -253,7 +321,7 @@ const SectionDataProperty = (props) => {
                   {catalogPrice.map((row) => {
                     return (
                       <ButtonCheck
-                        select={row.id === dataForm.priceBasedBy}
+                        select={row.id == dataForm.priceBasedBy}
                         onClick={() => {
                           setDataForm({ ...dataForm, priceBasedBy: row.id });
                         }}
@@ -282,34 +350,38 @@ const SectionDataProperty = (props) => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalBathrooms}
-                placeholder=""
-                label="Baños *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalBathrooms: value });
-                }}
-                type="number"
-              />
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.totalBathrooms}
+                    placeholder=""
+                    label="Baños *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, totalBathrooms: value });
+                    }}
+                    type="number"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.totalHalfBathrooms}
+                    placeholder=""
+                    label="Medio baños *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, totalHalfBathrooms: value });
+                    }}
+                    type="number"
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
           <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalHalfBathrooms}
-                placeholder=""
-                label="Medio baños *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalHalfBathrooms: value });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.totalParkingSpots}
@@ -323,8 +395,7 @@ const SectionDataProperty = (props) => {
                 type="number"
               />
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.totalSquareMetersBuilt}
@@ -338,7 +409,8 @@ const SectionDataProperty = (props) => {
                 type="number"
               />
             </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+          </Row>
+          <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.totalSquareMetersLand}
@@ -352,8 +424,7 @@ const SectionDataProperty = (props) => {
                 type="number"
               />
             </Col>
-          </Row>
-          <Row>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.totalFloors}
@@ -367,9 +438,10 @@ const SectionDataProperty = (props) => {
                 type="number"
               />
             </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            {isOpenFloorDescription === true && (
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              {isOpenFloorDescription === true && (
                 <CustomSelect
                   value={dataForm.floorDescription}
                   placeholder=""
@@ -395,8 +467,9 @@ const SectionDataProperty = (props) => {
                     setDataForm({ ...dataForm, floorDescription: value });
                   }}
                 />
-              </Col>
-            )}
+              )}
+            </Col>
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -423,7 +496,7 @@ const SectionDataProperty = (props) => {
                   ].map((row) => {
                     return (
                       <ButtonCheck
-                        select={row.id === dataForm.isFurnished}
+                        select={row.id == dataForm.isFurnished}
                         onClick={() => {
                           setDataForm({ ...dataForm, isFurnished: row.id });
                         }}
@@ -457,6 +530,7 @@ const SectionDataProperty = (props) => {
                     <Select
                       mode="tags"
                       showSearch
+                      value={nameOwner}
                       style={{ width: "100%" }}
                       placeholder="Busca o agrega un usuario"
                       optionFilterProp="children"
@@ -470,6 +544,7 @@ const SectionDataProperty = (props) => {
                             ownerEmailAddress: response.username,
                             idCustomer: response.idCustomer,
                           });
+                          setNameOwner([response.ownerEmailAddress]);
                         } else {
                           setDataForm({
                             ...dataForm,
@@ -479,6 +554,7 @@ const SectionDataProperty = (props) => {
                               isNil(e[0]) === false ? e[0] : null,
                             idCustomer: null,
                           });
+                          setNameOwner([]);
                         }
                       }}
                       onFocus={() => {}}
@@ -509,7 +585,6 @@ const SectionDataProperty = (props) => {
                         })}
                     </Select>
                   </div>
-                  ,
                   {/* <CustomInputTypeForm
                     value={dataForm.ownerEmailAddress}
                     placeholder=""
@@ -583,11 +658,39 @@ const SectionDataProperty = (props) => {
             </div>
           </>
         )}
+        {isNil(idProperty) === false && (
+          <div
+            className="label-indicator"
+            style={{
+              marginTop: "25px",
+            }}
+          >
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <span>
+                  Antes de dar clic en "Siguiente" recuerda guardar tus cambios
+                </span>
+              </Col>
+            </Row>
+          </div>
+        )}
         <div className="next-back-buttons">
           <ButtonNextBackPage block>
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
+          {isNil(idProperty) === false && (
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                try {
+                  await handlerCallUpdateProperty(dataForm, idProperty);
+                } catch (error) {}
+              }}
+            >
+              <u>{"Guardar"}</u>
+            </ButtonNextBackPage>
+          )}
           <ButtonNextBackPage
             block={false}
             onClick={() => {
