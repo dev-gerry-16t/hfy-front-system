@@ -258,6 +258,14 @@ const routes = [
     exact: true,
   },
   {
+    key: "23-1",
+    id: "editProperty",
+    path: "/websystem/edit-property/:idProperty",
+    name: "Editar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
     key: "24",
     id: "detailProperty",
     path: "/websystem/detail-property/:idProperty",

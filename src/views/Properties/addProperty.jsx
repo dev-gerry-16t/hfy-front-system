@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -22,8 +22,10 @@ const Content = styled.div`
 `;
 
 const AddProperty = (props) => {
-  const { callGlobalActionApi, dataProfile, history } = props;
-
+  const { callGlobalActionApi, dataProfile, history, match } = props;
+  const { params } = match;
+  const idProperty =
+    isNil(params.idProperty) === false ? params.idProperty : null;
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const frontFunctions = new FrontFunctions();
@@ -52,6 +54,43 @@ const AddProperty = (props) => {
     }
   };
 
+  const handlerCallGetPropertyById = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false
+          ? response.response[0][0]
+          : {};
+      setDataForm(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isNil(idProperty) === false) {
+      handlerCallGetPropertyById();
+    }
+  }, []);
+
   return (
     <Content>
       <CustomStepsHomify
@@ -74,6 +113,10 @@ const AddProperty = (props) => {
             setCurrent(1);
           }}
           idUserType={dataProfile.idUserType}
+          idProperty={idProperty}
+          onBackTo={() => {
+            history.push(`/websystem/detail-property-users/${idProperty}`);
+          }}
         />
       )}
       {current === 1 && (
@@ -87,6 +130,10 @@ const AddProperty = (props) => {
             setDataForm({ ...dataForm, ...data });
             setCurrent(2);
           }}
+          idProperty={idProperty}
+          onBackTo={() => {
+            history.push(`/websystem/detail-property-users/${idProperty}`);
+          }}
         />
       )}
       {current === 2 && (
@@ -99,6 +146,10 @@ const AddProperty = (props) => {
           onclickNext={(data) => {
             setDataForm({ ...dataForm, ...data });
             setCurrent(3);
+          }}
+          idProperty={idProperty}
+          onBackTo={() => {
+            history.push(`/websystem/detail-property-users/${idProperty}`);
           }}
         />
       )}
@@ -115,8 +166,19 @@ const AddProperty = (props) => {
               throw error;
             }
           }}
+          dataFormSave={dataForm}
           redirect={() => {
             history.push("/websystem/dashboard-properties");
+          }}
+          idProperty={idProperty}
+          idApartment={
+            isNil(dataForm.idApartment) === false ? dataForm.idApartment : null
+          }
+          onBackTo={() => {
+            history.push(`/websystem/detail-property-users/${idProperty}`);
+          }}
+          getById={() => {
+            handlerCallGetPropertyById();
           }}
         />
       )}

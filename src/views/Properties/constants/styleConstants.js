@@ -5,6 +5,14 @@ const ContentForm = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 0.5em;
   padding-bottom: 0.3em;
+  position: relative;
+  .back-button {
+    position:absolute;
+    button {
+      background: transparent;
+      border: none;
+    }
+  }
   .header-title {
     padding: ${(props) => (props.owner ? "1em 1em" : "1em 6em")};
     border-bottom: 0.5px solid #4e4b66;
@@ -92,12 +100,12 @@ const FormModal = styled.div`
     text-align: center;
     color: var(--color-primary);
   }
-  h2{
-    color: #4E4B66;
+  h2 {
+    color: #4e4b66;
     font-weight: 700;
     text-align: center;
   }
-  .icon-image-send{
+  .icon-image-send {
     text-align: center;
     margin: 4em 0px;
   }
