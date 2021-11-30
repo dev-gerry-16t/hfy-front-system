@@ -275,7 +275,7 @@ const SectionAssociationProperty = (props) => {
           <h1>Se procesó con éxito tu solicitud</h1>
           <p>
             {selectAssociation === "3"
-              ? "Haz rechazado la vinculación con esta propiedad"
+              ? "Has rechazado la vinculación con esta propiedad"
               : "Tu propiedad ha sido vinculada exitosamente"}
           </p>
           <div className="icon-image-send">

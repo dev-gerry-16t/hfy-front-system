@@ -183,7 +183,7 @@ const SectionAssociationApplicant = (props) => {
           <h1>Se procesó con éxito tu solicitud</h1>
           <p>
             {selectAssociation === "2"
-              ? "Haz rechazado la invitación a esta propiedad"
+              ? "Has rechazado la invitación a esta propiedad"
               : "¡Felicidades, aceptaste la invitación a la propiedad!"}
           </p>
           <div className="icon-image-send">
