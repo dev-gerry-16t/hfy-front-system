@@ -302,8 +302,11 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        canvas.width = width;
-        canvas.height = height;
+        const MAX_WIDTH = 578;
+        const scaleSize = MAX_WIDTH / width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = height * scaleSize;
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
@@ -339,8 +342,11 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        canvas.width = width;
-        canvas.height = height;
+        const MAX_WIDTH = 578;
+        const scaleSize = MAX_WIDTH / width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = height * scaleSize;
 
         const ctx = canvas.getContext("2d");
         ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
@@ -484,7 +490,7 @@ const SectionDataImages = (props) => {
                     accept="image/png,image/jpg,image/jpeg"
                     style={{ display: "none" }}
                     type="file"
-                    onChange={async(e) => {
+                    onChange={async (e) => {
                       if (isNil(idProperty) === true) {
                         handlerOnEditFile(e, row.id);
                       } else {

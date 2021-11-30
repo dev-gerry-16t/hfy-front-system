@@ -242,7 +242,7 @@ const CustomCardProperty = (props) => {
         isModalVisible={visibleAddUser}
         sendInvitation={async (data) => {
           try {
-            await updateProperty({ ...data, idApartment }, idProperty);
+            await updateProperty({ ...data, idProperty }, idApartment);
           } catch (error) {
             throw error;
           }

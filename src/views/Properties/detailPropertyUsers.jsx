@@ -34,6 +34,7 @@ import SectionDocuments from "./sectionsDetail/sectionDocuments";
 import SectionApplicants from "./sectionsDetail/sectionApplicants";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 import SectionAgents from "./sectionsDetail/sectionAgents";
+import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -481,6 +482,7 @@ const DetailPropertyUsers = (props) => {
         }}
       >
         <SectionAssociationProperty history={history} />
+        <SectionAssociationApplicant history={history} />
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
@@ -566,10 +568,11 @@ const DetailPropertyUsers = (props) => {
                 </ButtonIcon>
               )}
               {dataDetail.canBeEdited === true && (
-                <ButtonIcon onClick={async () => {
-                  history.push(`/websystem/edit-property/${idProperty}`);
-
-                }}>
+                <ButtonIcon
+                  onClick={async () => {
+                    history.push(`/websystem/edit-property/${idProperty}`);
+                  }}
+                >
                   <IconEditSquare
                     backGround="transparent"
                     color="var(--color-primary)"
@@ -606,14 +609,15 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              {isNil(dataDetail.idApplicationMethod) === true && (
-                <SectionPolicy
-                  onClickViewPolicy={() => {
-                    history.push(`/websystem/select-policy/${idProperty}`);
-                  }}
-                  idUserType={dataProfile.idUserType}
-                />
-              )}
+              {isNil(dataDetail.idApplicationMethod) === true &&
+                dataDetail.requiresPolicy === true && (
+                  <SectionPolicy
+                    onClickViewPolicy={() => {
+                      history.push(`/websystem/select-policy/${idProperty}`);
+                    }}
+                    idUserType={dataProfile.idUserType}
+                  />
+                )}
               {dataProfile.idUserType !== 2 && (
                 <>
                   {isNil(dataDetail.idPolicy) === true && (
