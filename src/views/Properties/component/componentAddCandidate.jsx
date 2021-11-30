@@ -73,10 +73,10 @@ const ComponentAddCandidate = (props) => {
       <FormModal>
         {finishInvitation === false && (
           <>
-            <h1>Agrega a tu candidato</h1>
+            <h1>Agregar un Prospecto</h1>
             <p>
-              Se le enviará una notificación a tu candidato para ser invitado a
-              conocer esta propiedad
+              Enviaremos una invitación a tu prospecto invitandolo a conocer y
+              aplicar a esta propiedad a través de su correo electrónico.
             </p>
             <div>
               <Row>

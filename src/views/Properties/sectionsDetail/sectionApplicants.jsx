@@ -64,6 +64,7 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
+
         h3 {
           margin: 0px;
         }
@@ -115,6 +116,8 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
+        display: flex;
+        flex-direction: column;
         h3 {
           margin: 0px;
         }
@@ -263,6 +266,7 @@ const SectionApplicants = (props) => {
       <div className="content-cards">
         {isEmpty(applicantsArray) === false &&
           applicantsArray.map((row) => {
+            console.log("row", row);
             return (
               <Card>
                 <div className="card-user">
@@ -278,7 +282,21 @@ const SectionApplicants = (props) => {
                     </div>
                     <div className="name-info">
                       <h3>{row.fullName}</h3>
-                      <span>{row.applicantStatus}</span>
+                      <span>{row.emailAddress}</span>
+                      <span>{row.phoneNumber}</span>
+                      {isNil(row.origin) === false && (
+                        <span style={{
+                          fontStyle:"italic"
+                        }}> Invitado por: {row.origin}</span>
+                      )}
+
+                      <strong
+                        style={{
+                          color: "#4E4B66",
+                        }}
+                      >
+                        {row.applicantStatus}
+                      </strong>
                     </div>
                   </div>
                   {row.canProcessInvitation === false && (

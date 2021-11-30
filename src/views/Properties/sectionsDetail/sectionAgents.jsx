@@ -115,6 +115,8 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
+        display: flex;
+        flex-direction: column;
         h3 {
           margin: 0px;
         }
@@ -242,8 +244,16 @@ const SectionAgents = (props) => {
                       <h3>
                         {row.givenName} {row.lastName}
                       </h3>
+                      <span>{row.emailAddress}</span>
+                      <span>{row.phoneNumber}</span>
                       {isNil(row.commissionAmountFormat) === false && (
-                        <span>Comisión: {row.commissionAmountFormat}</span>
+                        <strong
+                          style={{
+                            color: "#4E4B66",
+                          }}
+                        >
+                          Comisión: {row.commissionAmountFormat}
+                        </strong>
                       )}
                     </div>
                   </div>
