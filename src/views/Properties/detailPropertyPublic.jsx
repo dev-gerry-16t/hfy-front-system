@@ -180,9 +180,13 @@ const DetailPropertyUsers = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetPropertyById();
-  }, []);
+    setIdProperty(params.idProperty.length > 30 ? params.idProperty : null);
+    setIdentifier(params.idProperty.length < 30 ? params.idProperty : null);
+  }, [params.idProperty]);
 
+  useEffect(() => {
+    handlerCallGetPropertyById();
+  }, [identifier, idProperty]);
   return (
     <Content>
       <ContextProperty.Provider

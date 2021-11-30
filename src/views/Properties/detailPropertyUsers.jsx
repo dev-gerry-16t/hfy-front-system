@@ -609,15 +609,14 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              {isNil(dataDetail.idApplicationMethod) === true &&
-                dataDetail.requiresPolicy === true && (
-                  <SectionPolicy
-                    onClickViewPolicy={() => {
-                      history.push(`/websystem/select-policy/${idProperty}`);
-                    }}
-                    idUserType={dataProfile.idUserType}
-                  />
-                )}
+              {isNil(dataDetail.idApplicationMethod) === true && (
+                <SectionPolicy
+                  onClickViewPolicy={() => {
+                    history.push(`/websystem/select-policy/${idProperty}`);
+                  }}
+                  idUserType={dataProfile.idUserType}
+                />
+              )}
               {dataProfile.idUserType !== 2 && (
                 <>
                   {isNil(dataDetail.idPolicy) === true && (
