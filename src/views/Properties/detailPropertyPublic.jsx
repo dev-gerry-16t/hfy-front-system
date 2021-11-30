@@ -147,6 +147,38 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallSetFavoriteProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SET_FAVORITE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     handlerCallGetPropertyById();
   }, []);
@@ -170,7 +202,20 @@ const DetailPropertyUsers = (props) => {
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
-            <ButtonIcon>
+            <ButtonIcon
+              onClick={async () => {
+                try {
+                  await handlerCallSetFavoriteProperty(
+                    {
+                      idApartment: dataDetail.idApartment,
+                      identifier: dataDetail.identifier,
+                    },
+                    dataDetail.idProperty
+                  );
+                  handlerCallGetPropertyById();
+                } catch (error) {}
+              }}
+            >
               <IconHeart
                 backGround={
                   dataDetail.isFavorite === true

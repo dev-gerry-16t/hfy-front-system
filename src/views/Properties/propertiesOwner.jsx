@@ -155,7 +155,7 @@ const PropertiesOwner = (props) => {
           ...data,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.CUSTOMER.SEND_TENANT_INVITATION,
         "PUT"
       );
       const responseResult =

@@ -536,7 +536,10 @@ const SectionDataLocation = (props) => {
               block={false}
               onClick={async () => {
                 try {
-                  await handlerCallUpdateProperty(dataForm, idProperty);
+                  await handlerCallUpdateProperty(
+                    { ...dataForm, idApartment: dataFormSave.idApartment },
+                    idProperty
+                  );
                 } catch (error) {}
               }}
             >
