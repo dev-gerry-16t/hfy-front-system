@@ -266,7 +266,6 @@ const SectionApplicants = (props) => {
       <div className="content-cards">
         {isEmpty(applicantsArray) === false &&
           applicantsArray.map((row) => {
-            console.log("row", row);
             return (
               <Card>
                 <div className="card-user">
