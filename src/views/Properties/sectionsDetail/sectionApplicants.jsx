@@ -162,7 +162,7 @@ const SectionApplicants = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail = {}, getById } = dataContexProperty;
-  const { applicants, idApartment, idProperty } = dataDetail;
+  const { applicants, idApartment, idProperty, canInviteTenant } = dataDetail;
 
   const applicantsArray =
     isNil(applicants) === false && isEmpty(applicants) === false
@@ -255,13 +255,15 @@ const SectionApplicants = (props) => {
       />
       <div className="header-title">
         <h1>Prospectos</h1>
-        <button
-          onClick={() => {
-            setVisibleAddUser(true);
-          }}
-        >
-          Agregar
-        </button>
+        {canInviteTenant === true && (
+          <button
+            onClick={() => {
+              setVisibleAddUser(true);
+            }}
+          >
+            Agregar
+          </button>
+        )}
       </div>
       <div className="content-cards">
         {isEmpty(applicantsArray) === false &&
