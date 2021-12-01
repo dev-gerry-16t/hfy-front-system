@@ -885,14 +885,12 @@ const SelectPolicy = (props) => {
                   idPolicyPaymentMethod: selectMethodPolicy,
                   jsonAdviserCommissionWith: JSON.stringify([commissionAgent]),
                 });
-                setTimeout(() => {
-                  setLoadApi(false);
-                  history.push(
-                    `/websystem/detail-property-users/${idProperty}`
-                  );
-                }, 4000);
+                setLoadApi(false);
+                history.push(`/websystem/detail-property-users/${idProperty}`);
               }
-            } catch (error) {}
+            } catch (error) {
+              setLoadApi(false);
+            }
           }}
         >
           Guardar{" "}
