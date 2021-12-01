@@ -637,11 +637,16 @@ const DetailPropertyUsers = (props) => {
         </ContentForm>
 
         <ContentRight>
-          {dataDetail.isOwner === true && <SectionDocuments />}
-          {dataProfile.idUserType !== 2 && dataDetail.isOwner === true && (
+          {isNil(dataDetail.jsonDocuments) === false &&
+            isEmpty(dataDetail.jsonDocuments) === false && <SectionDocuments />}
+          {dataProfile.idUserType !== 2 && (
             <>
-              <SectionApplicants />
-              <SectionAgents idUserType={dataProfile.idUserType} />
+              {((isNil(dataDetail.sharedBy) === false &&
+                isEmpty(dataDetail.sharedBy) === false) ||
+                dataDetail.isOwner === true) && <SectionApplicants />}
+              {dataDetail.isOwner === true && (
+                <SectionAgents idUserType={dataProfile.idUserType} />
+              )}
             </>
           )}
           {isNil(dataDetail.ownerEmailAddress) === false &&

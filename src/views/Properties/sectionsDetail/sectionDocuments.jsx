@@ -40,11 +40,12 @@ const GeneralCard = styled.div`
     }
   }
   .content-cards {
-    min-height: 30em;
     padding: 2em 2em;
     display: flex;
     flex-direction: column;
     gap: 1.5em;
+    max-height: 30em;
+    overflow-y: scroll;
   }
 `;
 
@@ -66,7 +67,6 @@ const Card = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 4px;
-  min-height: 6em;
   .card-document {
     padding: 1em;
     .top-info {
