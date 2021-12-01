@@ -256,7 +256,7 @@ const dataTabsProperty = [
 const DetailPropertyUsers = (props) => {
   const { match, callGlobalActionApi, dataProfile, history } = props;
   const { params } = match;
-  const idProperty = params.idProperty;
+  const [idProperty, setIdProperty] = useState(params.idProperty);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
@@ -415,9 +415,13 @@ const DetailPropertyUsers = (props) => {
   };
 
   useEffect(() => {
+    setIdProperty(params.idProperty);
+  }, [params.idProperty]);
+
+  useEffect(() => {
     handlerCallGetPropertyById();
     handlerCallGetAllApplicationMethods();
-  }, []);
+  }, [idProperty]);
 
   return (
     <Content>
@@ -609,15 +613,16 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              {isNil(dataDetail.idApplicationMethod) === true && (
-                <SectionPolicy
-                  onClickViewPolicy={() => {
-                    history.push(`/websystem/select-policy/${idProperty}`);
-                  }}
-                  idUserType={dataProfile.idUserType}
-                />
-              )}
-              {dataProfile.idUserType !== 2 && (
+              {isNil(dataDetail.idApplicationMethod) === true &&
+                dataDetail.isOwner === true && (
+                  <SectionPolicy
+                    onClickViewPolicy={() => {
+                      history.push(`/websystem/select-policy/${idProperty}`);
+                    }}
+                    idUserType={dataProfile.idUserType}
+                  />
+                )}
+              {dataProfile.idUserType !== 2 && dataDetail.isOwner === true && (
                 <>
                   {isNil(dataDetail.idPolicy) === true && (
                     <SectionServiceAgent
@@ -632,8 +637,8 @@ const DetailPropertyUsers = (props) => {
         </ContentForm>
 
         <ContentRight>
-          <SectionDocuments />
-          {dataProfile.idUserType !== 2 && (
+          {dataDetail.isOwner === true && <SectionDocuments />}
+          {dataProfile.idUserType !== 2 && dataDetail.isOwner === true && (
             <>
               <SectionApplicants />
               <SectionAgents idUserType={dataProfile.idUserType} />
