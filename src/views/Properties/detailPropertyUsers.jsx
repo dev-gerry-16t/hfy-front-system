@@ -136,6 +136,7 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
+
         h3 {
           margin: 0px;
         }
@@ -187,6 +188,8 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
+        display: flex;
+        flex-direction: column;
         h3 {
           margin: 0px;
         }
@@ -668,6 +671,7 @@ const DetailPropertyUsers = (props) => {
                             {dataDetail.ownerLastName}
                           </h3>
                           <span>{dataDetail.ownerEmailAddress}</span>
+                          <span>{dataDetail.ownerPhoneNumber}</span>
                         </div>
                       </div>
                     </div>
