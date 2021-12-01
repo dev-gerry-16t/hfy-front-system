@@ -240,7 +240,16 @@ const SectionDataFeatures = (props) => {
               onClick={async () => {
                 try {
                   await handlerCallUpdateProperty(
-                    { ...dataForm, idApartment: dataFormSave.idApartment },
+                    {
+                      ...dataForm,
+                      propertyAmenities: JSON.stringify(
+                        dataForm.propertyAmenities
+                      ),
+                      propertyGeneralCharacteristics: JSON.stringify(
+                        dataForm.propertyGeneralCharacteristics
+                      ),
+                      idApartment: dataFormSave.idApartment,
+                    },
                     idProperty
                   );
                 } catch (error) {}

@@ -344,7 +344,7 @@ const SectionViewTicket = (props) => {
 
   const handlerOnClick = () => {
     var opt = {
-      image: { type: "jpeg", quality: 0.98 },
+      image: { type: "jpeg", quality: 1 },
       html2canvas: {
         dpi: 300,
         letterRendering: true,
