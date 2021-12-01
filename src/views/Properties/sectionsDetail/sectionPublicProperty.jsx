@@ -72,6 +72,16 @@ const SectionCandidate = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .edit-public-property {
+    display: flex;
+    justify-content: center;
+    button {
+      border: none;
+      background: transparent;
+      color: var(--color-primary);
+      font-weight: 500;
+    }
+  }
   h1 {
     font-weight: bold;
     color: var(--color-primary);
@@ -121,9 +131,18 @@ const SectionPublicProperty = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail, updateProperty, getById } = dataContexProperty;
-  const { applicants, isPublished, infoTenant, idApartment } = dataDetail;
+  const {
+    applicants,
+    isPublished,
+    infoTenant,
+    idApartment,
+    canInviteTenant,
+    title,
+    description,
+  } = dataDetail;
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
+  const [detailPublicProperty, setDetailPublicProperty] = useState({});
   const applicantsParse =
     isNil(infoTenant) === false && isEmpty(infoTenant) === false
       ? JSON.parse(infoTenant)
@@ -188,17 +207,18 @@ const SectionPublicProperty = (props) => {
             throw error;
           }
         }}
+        detailPublicProperty={detailPublicProperty}
         onClose={() => {
           setVisiblePublicProperty(false);
+          setDetailPublicProperty({});
         }}
       />
 
-      {isNil(applicants) === true &&
-        isNil(infoTenant) === true &&
-        isPublished === false && (
-          <NoticeProperty>
-            <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
-            <div className="section-select-option">
+      {isNil(infoTenant) === true && isPublished === false && (
+        <NoticeProperty>
+          <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
+          <div className="section-select-option">
+            {canInviteTenant === true && (
               <div className="option-select">
                 <span>Ya tengo un candidato</span>
                 <ButtonAction
@@ -209,19 +229,21 @@ const SectionPublicProperty = (props) => {
                   <IconAgreement size="51px" color="##4E4B66" />
                 </ButtonAction>
               </div>
-              <div className="option-select">
-                <span>Quiero publicar el inmueble</span>
-                <ButtonAction
-                  onClick={() => {
-                    setVisiblePublicProperty(true);
-                  }}
-                >
-                  <IconSpeakChat size="51px" color="##4E4B66" />
-                </ButtonAction>
-              </div>
+            )}
+
+            <div className="option-select">
+              <span>Quiero publicar el inmueble</span>
+              <ButtonAction
+                onClick={() => {
+                  setVisiblePublicProperty(true);
+                }}
+              >
+                <IconSpeakChat size="51px" color="##4E4B66" />
+              </ButtonAction>
             </div>
-          </NoticeProperty>
-        )}
+          </div>
+        </NoticeProperty>
+      )}
       {isNil(infoTenant) === false && (
         <SectionCandidate>
           <h1>Datos de candidato</h1>
@@ -264,7 +286,7 @@ const SectionPublicProperty = (props) => {
           </div>
         </SectionCandidate>
       )}
-      {isPublished === true && (
+      {isPublished === true && isNil(infoTenant) === true && (
         <SectionCandidate>
           <h1>Inmueble publicado en:</h1>
           <div className="info-user-select">
@@ -277,10 +299,23 @@ const SectionPublicProperty = (props) => {
             </div>
             <div>
               <div className="info">
-                <strong>Titulo:</strong> <span>Zona el Mirador</span>
+                <strong>Titulo:</strong> <span>{title}</span>
               </div>
               <div className="info">
-                <strong>Descripcion:</strong> <span>El Marquez Queretaro</span>
+                <strong>Descripcion:</strong> <span>{description}</span>
+              </div>
+              <div className="edit-public-property">
+                <button
+                  onClick={() => {
+                    setVisiblePublicProperty(true);
+                    setDetailPublicProperty({
+                      title,
+                      description,
+                    });
+                  }}
+                >
+                  <u>Editar</u>
+                </button>
               </div>
             </div>
           </div>

@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Row, Col } from "antd";
+import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
@@ -7,7 +8,8 @@ import CustomTextArea from "../../../components/customTextArea";
 import { ReactComponent as IconStyleCheck } from "../../../assets/iconSvg/svgFile/iconStyleCheck.svg";
 
 const ComponentPublicProperty = (props) => {
-  const { isModalVisible, onClose, onPublicProperty } = props;
+  const { isModalVisible, onClose, onPublicProperty, detailPublicProperty } =
+    props;
   const initialForm = {
     isPublished: null,
     title: null,
@@ -15,6 +17,16 @@ const ComponentPublicProperty = (props) => {
   };
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [dataForm, setDataForm] = useState(initialForm);
+
+  useEffect(() => {
+    if (isEmpty(detailPublicProperty) === false) {
+      setDataForm({
+        isPublished: true,
+        title: detailPublicProperty.title,
+        description: detailPublicProperty.description,
+      });
+    }
+  }, [detailPublicProperty]);
 
   return (
     <Modal
@@ -76,6 +88,7 @@ const ComponentPublicProperty = (props) => {
                   type="checkbox"
                   id="cbox1"
                   value="first_checkbox"
+                  checked={dataForm.isPublished===true}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
