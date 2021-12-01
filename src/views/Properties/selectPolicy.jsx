@@ -11,6 +11,7 @@ import FrontFunctions from "../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../utils/actions/actions";
 import CustomInputCurrency from "../../components/customInputCurrency";
 import CustomInputTypeForm from "../../components/CustomInputTypeForm";
+import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 
 const { Option } = Select;
 
@@ -28,6 +29,14 @@ const ContentForm = styled.div`
   border-radius: 0.5em;
   padding-bottom: 0.3em;
   margin-bottom: 2em;
+  position: relative;
+  .back-button {
+    position: absolute;
+    button {
+      background: transparent;
+      border: none;
+    }
+  }
   .header-title {
     padding: ${(props) => (props.owner ? "1em 1em" : "1em 6em")};
     border-bottom: 0.5px solid #4e4b66;
@@ -294,6 +303,7 @@ const SelectPolicy = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
+
       setIdApartment(responseResult.idApartment);
       setDataDetail(responseResult);
     } catch (error) {
@@ -456,9 +466,58 @@ const SelectPolicy = (props) => {
     hanlderCallGetPolicyPaymentMethod();
   }, []);
 
+  useEffect(() => {
+    if (isEmpty(dataDetail) === false && isEmpty(dataPolicies) === false) {
+      if (isNil(dataDetail.idPolicy) === false) {
+        const findPolicySelect = dataPolicies.find((row) => {
+          return row.id == dataDetail.idPolicy;
+        });
+        if (isNil(findPolicySelect) === false) {
+          if (
+            findPolicySelect.minimunAmount >
+            dataDetail.currentRent * findPolicySelect.percentBase
+          ) {
+            setAmountTotalPolicy({
+              amountFormat: frontFunctions.parseFormatCurrency(
+                findPolicySelect.minimunAmount +
+                  findPolicySelect.minimunAmount * findPolicySelect.taxBase,
+                2,
+                2
+              ),
+              amount: findPolicySelect.minimunAmount,
+            });
+          } else {
+            setAmountTotalPolicy({
+              amountFormat: frontFunctions.parseFormatCurrency(
+                dataDetail.currentRent * findPolicySelect.percentBase +
+                  dataDetail.currentRent *
+                    findPolicySelect.percentBase *
+                    findPolicySelect.taxBase,
+                2,
+                2
+              ),
+              amount: dataDetail.currentRent * findPolicySelect.percentBase,
+            });
+          }
+        }
+        setSelectPolicy(dataDetail.idPolicy);
+        setSelectMethodPolicy(dataDetail.idPolicyPaymentMethod);
+      }
+    }
+  }, [dataPolicies, dataDetail]);
+
   return (
     <Content>
       <ContentForm>
+        <div className="back-button">
+          <button
+            onClick={() => {
+              history.push(`/websystem/detail-property-users/${idProperty}`);
+            }}
+          >
+            <Arrow width="35px" />
+          </button>
+        </div>
         <div className="header-title">
           <h1>1.- Selecciona tu póliza</h1>
         </div>
@@ -616,6 +675,7 @@ const SelectPolicy = (props) => {
                       id={`method-policy-${row.id}`}
                       name="method"
                       value={row.idPolicyPaymentMethod}
+                      checked={row.idPolicyPaymentMethod == selectMethodPolicy}
                       onClick={() => {
                         setSelectMethodPolicy(row.idPolicyPaymentMethod);
                         window.location.href = "#share-commission-agent";
