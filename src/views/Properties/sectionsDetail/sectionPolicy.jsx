@@ -2,13 +2,18 @@ import React, { useContext } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { IconBed, IconMoneyPolicy } from "../../../assets/iconSvg";
+import {
+  IconBed,
+  IconMoneyPolicy,
+  IconEditSquare,
+} from "../../../assets/iconSvg";
 import {
   ContentForm,
   LineSeparator,
   FormProperty,
   ButtonNextBackPage,
   Container,
+  ButtonIcon,
 } from "../constants/styleConstants";
 import ContextProperty from "../context/contextProperty";
 
@@ -17,6 +22,12 @@ const ContentPolicy = styled(Container)`
   padding: 3em 0px;
   border-top: ${(props) =>
     props.selected ? "6px solid var(--color-primary)" : "none"};
+  position: relative;
+  .edit-data-policy {
+    top: 10px;
+    right: 10px;
+    position: absolute;
+  }
 `;
 
 const NoticePolicy = styled.div`
@@ -107,6 +118,7 @@ const SectionPolicy = (props) => {
     policyAmountFormat,
     policyPaymentMethod,
     advCommissionAmountFormat,
+    canBeEdited,
   } = dataDetail;
 
   return (
@@ -134,6 +146,16 @@ const SectionPolicy = (props) => {
       )}
       {isNil(idPolicy) === false && requiresPolicy === false && (
         <PolicySelected>
+          {canBeEdited === true && (
+            <div className="edit-data-policy">
+              <ButtonIcon onClick={onClickViewPolicy}>
+                <IconEditSquare
+                  backGround="transparent"
+                  color="var(--color-primary)"
+                />
+              </ButtonIcon>
+            </div>
+          )}
           <div className="left-policy">
             <div>
               <IconMoneyPolicy size="132px" />
