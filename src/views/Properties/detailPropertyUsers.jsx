@@ -11,6 +11,7 @@ import {
   FormProperty,
   ButtonNextBackPage,
   Container,
+  LoaderAction,
 } from "./constants/styleConstants";
 import {
   IconTenant,
@@ -44,6 +45,7 @@ const Content = styled.div`
   letter-spacing: 0.75px;
   display: grid;
   grid-template-columns: 3fr 1fr;
+  position: relative;
 `;
 
 const ContainerDown = styled.div`
@@ -229,16 +231,19 @@ const SharedByUser = styled.div`
   text-decoration: underline;
 `;
 
-const LoaderAction = styled.div`
-  position: fixed;
-  width: 50vw;
-  height: 50vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  display: block;
-  top: 0;
+const SeparateServices = styled.div`
+  background: #fff;
+  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+  border-radius: 4px;
+  margin-top: 2em;
+  .services-header {
+    border-bottom: 0.5px solid #4e4b66;
+    padding: 1em 2em;
+    h1 {
+      color: var(--color-primary);
+      font-weight: 700;
+    }
+  }
 `;
 
 const dataTabsProperty = [
@@ -428,51 +433,6 @@ const DetailPropertyUsers = (props) => {
 
   return (
     <Content>
-      {/* <LoaderAction>
-        <svg
-          version="1.1"
-          id="L9"
-          xmlns="http://www.w3.org/2000/svg"
-          x="0px"
-          y="0px"
-          viewBox="0 0 100 100"
-          enable-background="new 0 0 0 0"
-        >
-          <rect x="30" y="50" width="4" height="10" fill="var(--color-primary)">
-            <animateTransform
-              attributeType="xml"
-              attributeName="transform"
-              type="translate"
-              values="0 0; 0 20; 0 0"
-              begin="0"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="40" y="50" width="4" height="10" fill="var(--color-primary)">
-            <animateTransform
-              attributeType="xml"
-              attributeName="transform"
-              type="translate"
-              values="0 0; 0 20; 0 0"
-              begin="0.2s"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-          </rect>
-          <rect x="50" y="50" width="4" height="10" fill="var(--color-primary)">
-            <animateTransform
-              attributeType="xml"
-              attributeName="transform"
-              type="translate"
-              values="0 0; 0 20; 0 0"
-              begin="0.4s"
-              dur="0.6s"
-              repeatCount="indefinite"
-            />
-          </rect>
-        </svg>
-      </LoaderAction> */}
       <ContextProperty.Provider
         value={{
           dataDetail,
@@ -616,25 +576,29 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "1" && <SectionFeatures />}
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
-              {isNil(dataDetail.idApplicationMethod) === true &&
-                dataDetail.isOwner === true && (
+              {dataDetail.isOwner === true && (
+                <SeparateServices>
+                  <div className="services-header">
+                    <h1>Requisitos de la Propiedad</h1>
+                    <p>
+                      Establece los requisitos de tu propiedad, puedes solicitar
+                      que tus prospectos apliquen para una de nuestras Pólizas
+                      Juríducas o bien, puedes establecer cualquiera de los
+                      procesos disponibles para ti.
+                    </p>
+                  </div>
                   <SectionPolicy
                     onClickViewPolicy={() => {
                       history.push(`/websystem/select-policy/${idProperty}`);
                     }}
                     idUserType={dataProfile.idUserType}
                   />
-                )}
-              {dataProfile.idUserType !== 2 && dataDetail.isOwner === true && (
-                <>
-                  {isNil(dataDetail.idPolicy) === true && (
-                    <SectionServiceAgent
-                      dataApplication={dataApplicationMethod}
-                    />
-                  )}
-                  <SectionPublicProperty />
-                </>
+                  <SectionServiceAgent
+                    dataApplication={dataApplicationMethod}
+                  />
+                </SeparateServices>
               )}
+              {dataProfile.idUserType !== 2 && <SectionPublicProperty />}
             </ContainerDown>
           </div>
         </ContentForm>

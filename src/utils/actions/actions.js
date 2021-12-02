@@ -4174,6 +4174,7 @@ const callGlobalActionApi =
     if (token === true) {
       HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
     }
+
     try {
       const config = { headers: { ...HEADER } };
       if (method === "POST") {

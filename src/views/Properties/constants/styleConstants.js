@@ -1,5 +1,25 @@
 import styled from "styled-components";
 
+const LoaderAction = styled.div`
+  position: fixed;
+  width: 95vw;
+  height: 90vh;
+  z-index: 10001;
+  top: 0;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  h1 {
+    font-weight: 600;
+    font-size: 20px;
+    background: rgba(255, 255, 255, 0.5) !important;
+    backdrop-filter: blur(5px);
+    margin: 15px 0px 0px 0px;
+    color: rgba(255, 2, 130, 1);
+  }
+`;
+
 const ContentForm = styled.div`
   background: #fff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
@@ -7,7 +27,7 @@ const ContentForm = styled.div`
   padding-bottom: 0.3em;
   position: relative;
   .back-button {
-    position:absolute;
+    position: absolute;
     button {
       background: transparent;
       border: none;
@@ -183,4 +203,5 @@ export {
   ButtonIcon,
   FormModal,
   ButtonsModal,
+  LoaderAction,
 };

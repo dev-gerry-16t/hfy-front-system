@@ -292,7 +292,7 @@ const SectionApplicants = (props) => {
                           }}
                         >
                           {" "}
-                          Invitado por: {row.origin}
+                          Enviado por: {row.origin}
                         </span>
                       )}
 
@@ -313,7 +313,7 @@ const SectionApplicants = (props) => {
                             await handlerCallSetApplicant({
                               idCustomer: row.idCustomer,
                               idInvitation: row.idInvitation,
-                              isAcepted: false,
+                              isAccepted: false,
                             });
                           } catch (error) {
                             throw error;
