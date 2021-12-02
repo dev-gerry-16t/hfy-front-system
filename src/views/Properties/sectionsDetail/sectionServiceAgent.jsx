@@ -193,7 +193,6 @@ const CardServices = styled.div`
         padding: 0px 1em;
         width: 100%;
         display: flex;
-        justify-content: space-between;
         .check {
           width: 18px;
           height: 18px;
@@ -210,6 +209,7 @@ const CardServices = styled.div`
           align-items: center;
         }
         .label-check {
+          margin-left: 5px;
           font-size: 11px;
         }
       }
