@@ -61,7 +61,7 @@ const SectionStatsMovements = (props) => {
   };
 
   return (
-    <div className="card-chart-information-v2" style={{ margin: "15px 0px" }}>
+    <div className="card-chart-information-v2">
       <div className="title-cards">Movimientos</div>
       {finishCallApis === true && isEmpty(dataInformation) === false && (
         <div style={{ height: "100%" }}>
