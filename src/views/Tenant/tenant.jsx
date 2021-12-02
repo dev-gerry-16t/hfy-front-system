@@ -78,6 +78,7 @@ import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 import SectionStatsMovements from "../Owner/sections/sectionStatsMovements";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import IconsProfile from "../Owner/icons/icons";
+import SectionTimeLine from "../Owner/sections/sectionTimeLine";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -2339,6 +2340,11 @@ const Tenant = (props) => {
               dataInformation={dataTransactions}
               finishCallApis={true}
             />
+          </div>
+        </div>
+        <div className="main-information-process">
+          <div className="content-cards-process">
+            <SectionTimeLine history={history} />{" "}
           </div>
         </div>
       </div>
