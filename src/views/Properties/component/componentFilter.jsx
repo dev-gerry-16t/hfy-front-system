@@ -215,7 +215,7 @@ const ComponentFilter = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          type: 1,
+          type: 2,
         },
         null,
         API_CONSTANTS.CATALOGS.GET_CATALOG_PROPERTY_TYPES
