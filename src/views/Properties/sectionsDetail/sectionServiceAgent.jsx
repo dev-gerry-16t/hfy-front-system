@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -7,8 +7,10 @@ import {
   IconAgreement,
   IconSpeakChat,
   IconTenant,
+  IconEditSquare,
 } from "../../../assets/iconSvg";
 import {
+  ButtonIcon,
   ContentForm,
   LineSeparator,
   FormProperty,
@@ -282,6 +284,7 @@ const SectionServiceAgent = (props) => {
   const { dataDetail, updateProperty, getById } = dataContexProperty;
   const { idApplicationMethod, applicationMethod, applicationMethodTitle } =
     dataDetail;
+  const [isEditService, setIsEditService] = useState(false);
 
   const arrayServiceSelect =
     isNil(applicationMethod) === false && isEmpty(applicationMethod) === false
@@ -290,7 +293,7 @@ const SectionServiceAgent = (props) => {
 
   return (
     <ContentServiceAgent>
-      {isNil(idApplicationMethod) === true && (
+      {(isNil(idApplicationMethod) === true || isEditService === true) && (
         <>
           <h1>¡Te ayudamos con tu proceso de renta!</h1>
           <SectionCard>
@@ -322,7 +325,10 @@ const SectionServiceAgent = (props) => {
                       </div>
                       <div className="button-action">
                         <ButtonsService
-                          primary
+                          primary={
+                            idApplicationMethod == row.idApplicationMethod ||
+                            isNil(idApplicationMethod) === true
+                          }
                           onClick={async () => {
                             try {
                               await updateProperty({
@@ -330,10 +336,13 @@ const SectionServiceAgent = (props) => {
                                 idApplicationMethod: row.idApplicationMethod,
                               });
                               getById();
+                              setIsEditService(false);
                             } catch (error) {}
                           }}
                         >
-                          Seleccionar
+                          {idApplicationMethod == row.idApplicationMethod
+                            ? "Actual"
+                            : "Seleccionar"}
                         </ButtonsService>
                         <ButtonsService>Ver más información</ButtonsService>
                       </div>
@@ -345,13 +354,29 @@ const SectionServiceAgent = (props) => {
         </>
       )}
       {isNil(idApplicationMethod) === false &&
-        isEmpty(dataApplication) === false && (
+        isEmpty(dataApplication) === false &&
+        isEditService === false && (
           <>
             <div
               style={{
                 marginBottom: 25,
+                position: "relative",
               }}
             >
+              <ButtonIcon
+                onClick={async () => {
+                  setIsEditService(true);
+                }}
+                style={{
+                  position: "absolute",
+                  right: "32px",
+                }}
+              >
+                <IconEditSquare
+                  backGround="transparent"
+                  color="var(--color-primary)"
+                />
+              </ButtonIcon>
               <h1>Servicio adquirido</h1>
             </div>
             <CardServiceSelect>

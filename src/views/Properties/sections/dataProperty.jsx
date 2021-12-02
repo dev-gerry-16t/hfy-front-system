@@ -64,6 +64,11 @@ const SectionDataProperty = (props) => {
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
   const [nameOwner, setNameOwner] = useState([]);
+  const initialDataFloor = [
+    { id: "S", text: "Sotano" },
+    { id: "PB", text: "Planta baja" },
+  ];
+  const [dataFloor, setDataFloor] = useState(initialDataFloor);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
@@ -220,6 +225,18 @@ const SectionDataProperty = (props) => {
       );
     }
   }, [dataFormSave]);
+
+  useEffect(() => {
+    if (isNil(dataForm.totalFloors) === false) {
+      const totalFloors = Number(dataForm.totalFloors);
+      console.log("totalFloors", totalFloors);
+      const arrayFloor = initialDataFloor;
+      for (let index = 1; index <= totalFloors; index++) {
+        arrayFloor.push({ id: `${index}`, text: `${index}` });
+      }
+      setDataFloor(arrayFloor);
+    }
+  }, [dataForm.totalFloors]);
 
   useEffect(() => {
     if (
@@ -433,7 +450,11 @@ const SectionDataProperty = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({ ...dataForm, totalFloors: value });
+                  setDataForm({
+                    ...dataForm,
+                    totalFloors: value,
+                    floorDescription: null,
+                  });
                 }}
                 type="number"
               />
@@ -446,21 +467,7 @@ const SectionDataProperty = (props) => {
                   value={dataForm.floorDescription}
                   placeholder=""
                   label="Piso en el que se encuentra *"
-                  data={[
-                    { id: "S", text: "Sotano" },
-                    { id: "PB", text: "Planta baja" },
-                    { id: "1", text: "1" },
-                    { id: "2", text: "2" },
-                    { id: "3", text: "3" },
-                    { id: "4", text: "4" },
-                    { id: "5", text: "5" },
-                    { id: "6", text: "6" },
-                    { id: "7", text: "7" },
-                    { id: "8", text: "8" },
-                    { id: "9", text: "9" },
-                    { id: "10", text: "10" },
-                    { id: "other", text: "más" },
-                  ]}
+                  data={dataFloor}
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {

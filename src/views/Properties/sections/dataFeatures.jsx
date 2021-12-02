@@ -25,6 +25,7 @@ const SectionDataFeatures = (props) => {
     dataProfile,
     dataFormSave,
     idProperty,
+    idApartment,
     onBackTo,
   } = props;
   const [dataAmenities, setDataAmenities] = useState([]);
@@ -44,6 +45,7 @@ const SectionDataFeatures = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
+          idApartment,
           type: 1,
         },
         null,
@@ -70,6 +72,7 @@ const SectionDataFeatures = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
+          idApartment,
           type: 1,
         },
         null,
