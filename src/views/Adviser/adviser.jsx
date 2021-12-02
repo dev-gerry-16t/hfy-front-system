@@ -19,6 +19,7 @@ import SectionStatsChart from "./sections/sectionStatsChart";
 import SectionCardOwner from "./sections/sectionCardOwner";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import IconsProfile from "../Owner/icons/icons";
+import SectionTimeLine from "../Owner/sections/sectionTimeLine";
 
 const { Content } = Layout;
 
@@ -250,6 +251,11 @@ const Adviser = (props) => {
             finishCallApis
             onClickSendInvitation={() => {}}
           />
+        </div>
+        <div className="main-information-process">
+          <div className="content-cards-process">
+            <SectionTimeLine history={history} />
+          </div>
         </div>
       </div>
     </Content>
