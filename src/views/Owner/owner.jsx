@@ -56,6 +56,7 @@ import CustomCheckPayment from "../TypeForm/sections/customCheckPayment";
 import SectionStatsMovements from "./sections/sectionStatsMovements";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import IconsProfile from "./icons/icons";
+import SectionTimeLine from "./sections/sectionTimeLine";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -1688,6 +1689,59 @@ const Owner = (props) => {
             </span>
           </div>
         </div>
+        <div className="main-information-process">
+          <div className="content-cards-process">
+            <SectionTimeLine history={history} />
+            <SectionCardTenant
+              onUpdateInvitation={async (data, id) => {
+                try {
+                  await handlerCallUpdateInvitation(data, id);
+                  handlerCalllSyncApis();
+                } catch (error) {
+                  throw error;
+                }
+              }}
+              onForgiveInterest={async (data, id) => {
+                try {
+                  await handlerCallForgiveInterest(data, id);
+                  handlerCalllSyncApis();
+                } catch (error) {}
+              }}
+              dataCustomer={dataCustomer}
+              history={history}
+              tenantCoincidences={tenantCoincidences}
+              finishCallApis={finishCallApis}
+              onClickSendInvitation={async () => {
+                setIsModalVisibleTenant(!isModalVisibleTenant);
+                await handlerCallApiPersonTypes({
+                  idType: 2,
+                  idCustomerType: null,
+                });
+                await handlerCallGetProperties();
+              }}
+              onOpenContract={(data) => {
+                handlerCallGetContract({
+                  download: false,
+                  process: false,
+                  url: null,
+                  idCustomer: data.idCustomer,
+                  idCustomerTenant: data.idCustomerTenant,
+                  idContract: data.idContract,
+                  type: 1,
+                });
+                setIsVisibleContract(!isVisibleContract);
+              }}
+              onViewDocument={(data) => {
+                setDataDocument(data);
+                setIsVisibleModal(true);
+              }}
+              onOpenDetailPayment={(data) => {
+                setDataPaymentDescription(data);
+                setHowToPay(true);
+              }}
+            />
+          </div>
+        </div>
         <div className="main-information-user">
           <div className="content-cards-payments">
             <SectionStatsChart
@@ -1699,80 +1753,7 @@ const Owner = (props) => {
               finishCallApis={finishCallApis}
             />
           </div>
-          <SectionCardTenant
-            onUpdateInvitation={async (data, id) => {
-              try {
-                await handlerCallUpdateInvitation(data, id);
-                handlerCalllSyncApis();
-              } catch (error) {
-                throw error;
-              }
-            }}
-            onForgiveInterest={async (data, id) => {
-              try {
-                await handlerCallForgiveInterest(data, id);
-                handlerCalllSyncApis();
-              } catch (error) {}
-            }}
-            dataCustomer={dataCustomer}
-            history={history}
-            tenantCoincidences={tenantCoincidences}
-            finishCallApis={finishCallApis}
-            onClickSendInvitation={async () => {
-              setIsModalVisibleTenant(!isModalVisibleTenant);
-              await handlerCallApiPersonTypes({
-                idType: 2,
-                idCustomerType: null,
-              });
-              await handlerCallGetProperties();
-            }}
-            onOpenContract={(data) => {
-              handlerCallGetContract({
-                download: false,
-                process: false,
-                url: null,
-                idCustomer: data.idCustomer,
-                idCustomerTenant: data.idCustomerTenant,
-                idContract: data.idContract,
-                type: 1,
-              });
-              setIsVisibleContract(!isVisibleContract);
-            }}
-            onViewDocument={(data) => {
-              setDataDocument(data);
-              setIsVisibleModal(true);
-            }}
-            onOpenDetailPayment={(data) => {
-              setDataPaymentDescription(data);
-              setHowToPay(true);
-            }}
-          />
         </div>
-        {/* <div className="main-information-user" style={{ marginTop: 15 }}>
-          <SectionStatsMovements
-            dataInformation={[
-              {
-                payment: 1,
-                label: "Depósito recibido",
-                icon: "IconIn",
-                fromTo: "SPEI de STP ...2585",
-                concept: "Pago de investigación",
-                date: "10 agosto",
-                amount: "$ 500",
-              },
-              {
-                payment: 2,
-                label: "Transferencia",
-                icon: "IconOut",
-                fromTo: "SPEI a Banamex ...2548",
-                concept: "Pago de renta",
-                date: "hoy",
-                amount: "$ 12,500",
-              },
-            ]}
-            finishCallApis={finishCallApis}
-          />
-        </div> */}
       </div>
     </Content>
   );

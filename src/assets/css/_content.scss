@@ -201,6 +201,111 @@
   opacity: 0.6;
 }
 
+.main-information-process {
+  margin-bottom: 20px;
+  .title-cards {
+    padding: 10px 0px 5px 20px;
+    border-bottom: 1px solid #d6d8e7;
+    font-family: Poppins;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 15px;
+    color: black;
+    letter-spacing: 0.75px;
+  }
+  .content-cards-payments {
+    width: 35%;
+  }
+  .content-cards-process {
+    display: flex;
+    gap: 20px;
+  }
+  .card-chart-information {
+    background: #ffffff;
+    width: 35%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+  }
+  .card-timeline-process {
+    background: #ffffff;
+    width: 30%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    min-height: 300px;
+  }
+  .renter-card-information {
+    background: #ffffff;
+    width: 100%;
+    box-shadow: 0px 1px 8px 6px #ebebf1;
+    border-radius: 16px;
+    font-family: Poppins;
+    .section-information-renters {
+      padding: 10px 20px;
+      max-height: 520px;
+      overflow-y: scroll;
+      .data-renter-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #d6d8e7;
+        padding-bottom: 10px;
+        .box-info-user {
+          display: flex;
+          flex: 1 1 auto;
+          .avatar-user {
+            margin-right: 20px;
+            align-self: center;
+          }
+          .info-user {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            margin-right: 20px;
+            width: 230px;
+            .status-payment {
+              background: rgba(218, 20, 20, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              align-self: flex-start;
+              span {
+                // color: #da1414;
+              }
+            }
+            .status-payment-contract {
+              background: rgba(142, 227, 49, 0.3);
+              padding: 4px 10px;
+              border-radius: 15px;
+              display: flex;
+              justify-content: center;
+              align-self: flex-start;
+              cursor: pointer;
+              span {
+                color: #818181;
+              }
+            }
+          }
+          .info-user-payment {
+            align-self: center;
+          }
+          .info-action-payment-rent {
+            padding: 5px 25px;
+            display: flex;
+            align-items: center;
+          }
+        }
+        .button-collapse {
+          button {
+            background: transparent;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
+
 .main-information-user {
   display: flex;
   justify-content: space-between;
@@ -217,7 +322,12 @@
     letter-spacing: 0.75px;
   }
   .content-cards-payments {
-    width: 35%;
+    width: 100%;
+    display: flex;
+    gap: 20px;
+  }
+  .content-cards-process {
+    width: 100%;
   }
   .card-chart-information {
     background: #ffffff;
