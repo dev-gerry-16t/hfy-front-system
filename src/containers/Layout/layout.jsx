@@ -3,6 +3,7 @@ import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import styled from "styled-components";
 import {
   Layout,
   Menu,

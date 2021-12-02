@@ -486,7 +486,10 @@ const SectionDataProperty = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({ ...dataForm, maintenanceAmount: value });
+                  setDataForm({
+                    ...dataForm,
+                    maintenanceAmount: isNil(value) === true ? 0 : value,
+                  });
                 }}
                 type="number"
               />
