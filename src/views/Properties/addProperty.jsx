@@ -148,6 +148,9 @@ const AddProperty = (props) => {
             setCurrent(3);
           }}
           idProperty={idProperty}
+          idApartment={
+            isNil(dataForm.idApartment) === false ? dataForm.idApartment : null
+          }
           onBackTo={() => {
             history.push(`/websystem/detail-property-users/${idProperty}`);
           }}

@@ -74,7 +74,7 @@ const CustomSelect = (props) => {
       <div>
         <Select
           id={isNil(id) === false ? id : null}
-          value={value}
+          value={isNil(value) === false ? value : ""}
           placeholder={placeholder}
           onChange={(e, a) => {
             const dataOption = data.find((row) => {

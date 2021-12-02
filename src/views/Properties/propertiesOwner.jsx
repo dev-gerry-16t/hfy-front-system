@@ -258,15 +258,17 @@ const PropertiesOwner = (props) => {
       <Container>
         <ContentAddFilter background="var(--color-primary)">
           <h1>Mis propiedades</h1>
-          <div className="button-actions-header">
-            <button
-              onClick={() => {
-                history.push("/websystem/add-property");
-              }}
-            >
-              Agregar propiedad
-            </button>
-          </div>
+          {dataProfile.idUserType !== 2 && (
+            <div className="button-actions-header">
+              <button
+                onClick={() => {
+                  history.push("/websystem/add-property");
+                }}
+              >
+                Agregar propiedad
+              </button>
+            </div>
+          )}
         </ContentAddFilter>
         <ContentCards>
           {isEmpty(dataCoincidences) === false &&
