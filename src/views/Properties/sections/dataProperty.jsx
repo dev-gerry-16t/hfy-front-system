@@ -229,7 +229,6 @@ const SectionDataProperty = (props) => {
   useEffect(() => {
     if (isNil(dataForm.totalFloors) === false) {
       const totalFloors = Number(dataForm.totalFloors);
-      console.log("totalFloors", totalFloors);
       const arrayFloor = initialDataFloor;
       for (let index = 1; index <= totalFloors; index++) {
         arrayFloor.push({ id: `${index}`, text: `${index}` });
