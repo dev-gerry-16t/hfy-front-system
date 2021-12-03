@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -11,8 +11,66 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import CustomInputSelect from "../../../components/customInputSelect";
 
 const { Option } = Select;
+
+const Input = styled.input`
+  padding: 5px 6px;
+  border-radius: 5px;
+  background: ${(props) => props.background};
+  border: ${(props) =>
+    props.error ? "1px solid #DA1414" : "1px solid #d6d8e7"};
+  outline: none;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 700;
+  width: 100%;
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &:focus {
+    border: 1px solid #b9bbc7;
+  }
+  &:hover {
+    border: 1px solid #b9bbc7;
+  }
+  &::placeholder {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const MultiSelect = styled.div`
+  background: #fff;
+  position: absolute;
+  top: 57px;
+  width: 100%;
+  z-index: 1;
+  box-shadow: 0 3px 6px -4px #0000001f, 0 6px 16px #00000014,
+    0 9px 28px 8px #0000000d;
+  border-radius: 0px 0px 10px 10px;
+  padding: 5px;
+  max-height: 200px;
+  overflow-y: scroll;
+`;
+
+const Item = styled.div`
+  padding: 5px;
+  border-bottom: 1px solid rgba(78, 75, 102, 0.2);
+  cursor: pointer;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  &:hover {
+    background-color: #ddd;
+  }
+  &:last-child {
+    border-bottom: none;
+  }
+`;
 
 const ComponentAddCandidate = (props) => {
   const {
@@ -31,10 +89,12 @@ const ComponentAddCandidate = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [finishInvitation, setFinishInvitation] = useState(false);
+  const [isVisibleSelect, setIsVisibleSelect] = useState(true);
   const [dataTenants, setDataTenants] = useState([]);
   const frontFunctions = new FrontFunctions();
+  const selectRef = useRef(null);
 
-  const handlerCallSearchCustomer = async (data) => {
+  const handlerCallSearchCustomer = async (data = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -62,6 +122,10 @@ const ComponentAddCandidate = (props) => {
     }
   };
 
+  useEffect(() => {
+    handlerCallSearchCustomer();
+  }, []);
+
   return (
     <Modal
       visible={isModalVisible}
@@ -81,73 +145,37 @@ const ComponentAddCandidate = (props) => {
             <div>
               <Row>
                 <Col span={24}>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
+                  <CustomInputSelect
+                    value={dataForm.emailAddress}
+                    type="text"
+                    label="Correo electrónico *"
+                    error={false}
+                    data={dataTenants}
+                    onChange={(value) => {
+                      if (isEmpty(value) === true) {
+                        setDataTenants([]);
+                      }
+                      if (value.length >= 3) {
+                        handlerCallSearchCustomer(value);
+                      }
+                      setDataForm({
+                        ...dataForm,
+                        emailAddress: value,
+                        givenName: null,
+                        lastName: null,
+                        idCustomer: null,
+                      });
                     }}
-                  >
-                    <label
-                      style={{
-                        color: "#4e4b66",
-                      }}
-                    >
-                      Correo electrónico *
-                    </label>
-                    <Select
-                      mode="tags"
-                      style={{ width: "100%" }}
-                      onChange={(e, a) => {
-                        if (isEmpty(a) === false && isEmpty(a[0]) === false) {
-                          const response = a[0].onClick();
-                          setDataForm({
-                            ...dataForm,
-                            givenName: response.givenName,
-                            lastName: response.lastName,
-                            emailAddress: response.username,
-                            idCustomer: response.idCustomer,
-                          });
-                        } else {
-                          setDataForm({
-                            ...dataForm,
-                            givenName: null,
-                            lastName: null,
-                            emailAddress: isNil(e[0]) === false ? e[0] : null,
-                            idCustomer: null,
-                          });
-                        }
-                      }}
-                      onSearch={(e) => {
-                        if (e.length >= 5) {
-                          handlerCallSearchCustomer(e);
-                        }
-                      }}
-                      tokenSeparators={[","]}
-                      filterOption={(input, option) => {
-                        if (isNil(option.children) === false) {
-                          return (
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          );
-                        }
-                      }}
-                    >
-                      {isEmpty(dataTenants) === false &&
-                        dataTenants.map((row) => {
-                          return (
-                            <Option value={row.idCustomer} onClick={() => row}>
-                              {row.username}
-                            </Option>
-                          );
-                        })}
-                    </Select>
-                    <div
-                      style={{
-                        height: 25,
-                      }}
-                    ></div>
-                  </div>
+                    onSelectItem={(dataRecord) => {
+                      setDataForm({
+                        ...dataForm,
+                        givenName: dataRecord.givenName,
+                        lastName: dataRecord.lastName,
+                        emailAddress: dataRecord.username,
+                        idCustomer: dataRecord.idCustomer,
+                      });
+                    }}
+                  />
                 </Col>
               </Row>
               <Row>
@@ -195,6 +223,7 @@ const ComponentAddCandidate = (props) => {
                     await sendInvitation(dataForm);
                     setDataForm(initialForm);
                     setFinishInvitation(true);
+                    setDataTenants([]);
                   } catch (error) {}
                 }}
               >
@@ -203,6 +232,8 @@ const ComponentAddCandidate = (props) => {
               <ButtonsModal
                 onClick={() => {
                   onClose();
+                  setDataForm(initialForm);
+                  setDataTenants([]);
                 }}
               >
                 Cancelar
@@ -232,6 +263,8 @@ const ComponentAddCandidate = (props) => {
                 onClick={() => {
                   onClose();
                   setFinishInvitation(false);
+                  setDataForm(initialForm);
+                  setDataTenants([]);
                 }}
                 primary
               >

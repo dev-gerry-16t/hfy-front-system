@@ -18,6 +18,7 @@ import {
   FormProperty,
 } from "../constants/styleConstants";
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
+import CustomInputSelect from "../../../components/customInputSelect";
 
 const { Option } = Select;
 
@@ -149,7 +150,7 @@ const SectionDataProperty = (props) => {
     }
   };
 
-  const handlerCallSearchCustomer = async (data) => {
+  const handlerCallSearchCustomer = async (data = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -212,6 +213,7 @@ const SectionDataProperty = (props) => {
 
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
+    handlerCallSearchCustomer();
   }, []);
 
   useEffect(() => {
@@ -528,97 +530,38 @@ const SectionDataProperty = (props) => {
               </div>
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <div style={{ display: "flex", flexDirection: "column" }}>
-                    <label
-                      style={{
-                        color: "#4e4b66",
-                      }}
-                    >
-                      Correo electrónico *
-                    </label>
-                    <Select
-                      mode="tags"
-                      showSearch
-                      value={nameOwner}
-                      style={{ width: "100%" }}
-                      placeholder="Busca o agrega un usuario"
-                      optionFilterProp="children"
-                      onChange={(e, a) => {
-                        if (isEmpty(a) === false && isEmpty(a[0]) === false) {
-                          const response = a[0].onClick();
-                          setDataForm({
-                            ...dataForm,
-                            ownerGivenName: response.givenName,
-                            ownerLastName: response.lastName,
-                            ownerEmailAddress: response.username,
-                            idCustomer: response.idCustomer,
-                          });
-                          setNameOwner([response.ownerEmailAddress]);
-                        } else {
-                          setDataForm({
-                            ...dataForm,
-                            ownerGivenName: null,
-                            ownerLastName: null,
-                            ownerEmailAddress:
-                              isNil(e[0]) === false ? e[0] : null,
-                            idCustomer: null,
-                          });
-                          setNameOwner([]);
-                        }
-                      }}
-                      onFocus={() => {}}
-                      onBlur={() => {}}
-                      onSearch={(e) => {
-                        if (e.length >= 3) {
-                          handlerCallSearchCustomer(e);
-                        }
-                      }}
-                      tokenSeparators={[","]}
-                      filterOption={(input, option) => {
-                        if (isNil(option.children) === false) {
-                          return (
-                            option.children
-                              .toLowerCase()
-                              .indexOf(input.toLowerCase()) >= 0
-                          );
-                        }
-                      }}
-                    >
-                      {isEmpty(dataOwners) === false &&
-                        dataOwners.map((row) => {
-                          return (
-                            <Option value={row.idCustomer} onClick={() => row}>
-                              {row.username}
-                            </Option>
-                          );
-                        })}
-                    </Select>
-                  </div>
-                  {/* <CustomInputTypeForm
+                  <CustomInputSelect
                     value={dataForm.ownerEmailAddress}
-                    placeholder=""
+                    type="text"
+                    placeholder="Busca o agrega un usuario"
                     label="Correo electrónico *"
                     error={false}
-                    errorMessage="Este campo es requerido"
+                    data={dataOwners}
                     onChange={(value) => {
-                      setDataForm({ ...dataForm, ownerEmailAddress: value });
+                      if (isEmpty(value) === true) {
+                        setDataOwners([]);
+                      }
+                      if (value.length >= 3) {
+                        handlerCallSearchCustomer(value);
+                      }
+                      setDataForm({
+                        ...dataForm,
+                        ownerGivenName: value,
+                        ownerLastName: null,
+                        ownerEmailAddress: null,
+                        idCustomer: null,
+                      });
                     }}
-                    type="email"
-                    onBlur={async () => {
-                      try {
-                        const response = await handlerCallSearchCustomer(
-                          dataForm.ownerEmailAddress
-                        );
-                        if (isEmpty(response) === false) {
-                          setDataForm({
-                            ...dataForm,
-                            ownerGivenName: response.givenName,
-                            ownerLastName: response.lastName,
-                          });
-                        }
-                      } catch (error) {}
+                    onSelectItem={(dataRecord) => {
+                      setDataForm({
+                        ...dataForm,
+                        ownerGivenName: dataRecord.givenName,
+                        ownerLastName: dataRecord.lastName,
+                        ownerEmailAddress: dataRecord.username,
+                        idCustomer: dataRecord.idCustomer,
+                      });
                     }}
-                  /> */}
+                  />
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
