@@ -56,6 +56,10 @@ const SelectPolicy = React.lazy(() =>
   import("./views/Properties/selectPolicy")
 );
 
+const PaymentsService = React.lazy(() =>
+  import("./views/Payment/paymentService")
+);
+
 const routes = [
   {
     key: "1",
@@ -295,6 +299,14 @@ const routes = [
     path: "/websystem/properties",
     name: "Propiedades",
     component: PublicProperties,
+    exact: true,
+  },
+  {
+    key: "28",
+    id: "paymentService",
+    path: "/websystem/payment-service",
+    name: "Pago de servicio",
+    component: PaymentsService,
     exact: true,
   },
 ];

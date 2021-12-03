@@ -38,7 +38,8 @@ const Input = styled.input`
     border: 1px solid #b9bbc7;
   }
   &::placeholder {
-    font-weight: 200;
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
   }
 `;
 
