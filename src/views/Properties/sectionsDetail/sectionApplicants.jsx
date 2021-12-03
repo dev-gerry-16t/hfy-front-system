@@ -305,40 +305,41 @@ const SectionApplicants = (props) => {
                       </strong>
                     </div>
                   </div>
-                  {row.canProcessInvitation === false && (
-                    <div className="button-action">
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              isAccepted: false,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Rechazar
-                      </ButtonDocument>
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              isAccepted: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Aceptar
-                      </ButtonDocument>
-                    </div>
-                  )}
+                  {row.canProcessInvitation === false &&
+                    row.canBeProcessed === true && (
+                      <div className="button-action">
+                        <ButtonDocument
+                          onClick={async () => {
+                            try {
+                              await handlerCallSetApplicant({
+                                idCustomer: row.idCustomer,
+                                idInvitation: row.idInvitation,
+                                isAccepted: false,
+                              });
+                            } catch (error) {
+                              throw error;
+                            }
+                          }}
+                        >
+                          Rechazar
+                        </ButtonDocument>
+                        <ButtonDocument
+                          onClick={async () => {
+                            try {
+                              await handlerCallSetApplicant({
+                                idCustomer: row.idCustomer,
+                                idInvitation: row.idInvitation,
+                                isAccepted: true,
+                              });
+                            } catch (error) {
+                              throw error;
+                            }
+                          }}
+                        >
+                          Aceptar
+                        </ButtonDocument>
+                      </div>
+                    )}
                   {row.canProcessInvitation === true && (
                     <div className="button-action">
                       <ButtonDocument

@@ -139,6 +139,7 @@ const SectionPublicProperty = (props) => {
     canInviteTenant,
     title,
     description,
+    isOwner,
   } = dataDetail;
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
@@ -230,17 +231,18 @@ const SectionPublicProperty = (props) => {
                 </ButtonAction>
               </div>
             )}
-
-            <div className="option-select">
-              <span>Quiero publicar el inmueble</span>
-              <ButtonAction
-                onClick={() => {
-                  setVisiblePublicProperty(true);
-                }}
-              >
-                <IconSpeakChat size="51px" color="##4E4B66" />
-              </ButtonAction>
-            </div>
+            {isOwner === true && (
+              <div className="option-select">
+                <span>Quiero publicar el inmueble</span>
+                <ButtonAction
+                  onClick={() => {
+                    setVisiblePublicProperty(true);
+                  }}
+                >
+                  <IconSpeakChat size="51px" color="##4E4B66" />
+                </ButtonAction>
+              </div>
+            )}
           </div>
         </NoticeProperty>
       )}
@@ -304,19 +306,22 @@ const SectionPublicProperty = (props) => {
               <div className="info">
                 <strong>Descripcion:</strong> <span>{description}</span>
               </div>
-              <div className="edit-public-property">
-                <button
-                  onClick={() => {
-                    setVisiblePublicProperty(true);
-                    setDetailPublicProperty({
-                      title,
-                      description,
-                    });
-                  }}
-                >
-                  <u>Editar</u>
-                </button>
-              </div>
+              {isOwner === true && (
+                <div className="edit-public-property">
+                  <button
+                    onClick={() => {
+                      setVisiblePublicProperty(true);
+                      setDetailPublicProperty({
+                        title,
+                        description,
+                        isPublished,
+                      });
+                    }}
+                  >
+                    <u>Editar</u>
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </SectionCandidate>

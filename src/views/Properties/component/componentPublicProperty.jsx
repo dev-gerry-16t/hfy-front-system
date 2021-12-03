@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Modal, Row, Col } from "antd";
+import { Modal, Row, Col, Spin } from "antd";
+import { SyncOutlined } from "@ant-design/icons";
 import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import { FormModal, ButtonsModal } from "../constants/styleConstants";
@@ -7,21 +8,24 @@ import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomTextArea from "../../../components/customTextArea";
 import { ReactComponent as IconStyleCheck } from "../../../assets/iconSvg/svgFile/iconStyleCheck.svg";
 
+const LoadingSpin = <SyncOutlined spin />;
+
 const ComponentPublicProperty = (props) => {
   const { isModalVisible, onClose, onPublicProperty, detailPublicProperty } =
     props;
   const initialForm = {
-    isPublished: null,
+    isPublished: false,
     title: null,
     description: null,
   };
   const [finishInvitation, setFinishInvitation] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataForm, setDataForm] = useState(initialForm);
 
   useEffect(() => {
     if (isEmpty(detailPublicProperty) === false) {
       setDataForm({
-        isPublished: true,
+        isPublished: detailPublicProperty.isPublished,
         title: detailPublicProperty.title,
         description: detailPublicProperty.description,
       });
@@ -38,7 +42,7 @@ const ComponentPublicProperty = (props) => {
     >
       <FormModal>
         {finishInvitation === false && (
-          <>
+          <Spin indicator={LoadingSpin} spinning={isLoadApi} delay={100}>
             <h1>Pública tu inmueble</h1>
             <p>
               Tu inmueble será publicado en las plataformas que elijas con la
@@ -88,7 +92,7 @@ const ComponentPublicProperty = (props) => {
                   type="checkbox"
                   id="cbox1"
                   value="first_checkbox"
-                  checked={dataForm.isPublished===true}
+                  checked={dataForm.isPublished === true}
                   onChange={(e) => {
                     setDataForm({
                       ...dataForm,
@@ -104,20 +108,31 @@ const ComponentPublicProperty = (props) => {
               </label>
             </div>
             <div className="button-action">
-              {dataForm.isPublished === true && (
-                <ButtonsModal
-                  primary
-                  onClick={async () => {
-                    try {
-                      await onPublicProperty(dataForm);
-                      setDataForm(initialForm);
-                      setFinishInvitation(true);
-                    } catch (error) {}
-                  }}
-                >
-                  Publicar
-                </ButtonsModal>
-              )}
+              <ButtonsModal
+                primary
+                onClick={async () => {
+                  try {
+                    if (
+                      isEmpty(detailPublicProperty) === true &&
+                      dataForm.isPublished == false
+                    ) {
+                      return false;
+                    }
+                    setIsLoadApi(true);
+                    await onPublicProperty(dataForm);
+                    setDataForm(initialForm);
+                    setFinishInvitation(true);
+                    setIsLoadApi(false);
+                  } catch (error) {
+                    setIsLoadApi(false);
+                  }
+                }}
+              >
+                {dataForm.isPublished === true ||
+                isEmpty(detailPublicProperty) === true
+                  ? "Publicar"
+                  : "Quitar publicación"}
+              </ButtonsModal>
               <ButtonsModal
                 onClick={() => {
                   onClose();
@@ -126,7 +141,7 @@ const ComponentPublicProperty = (props) => {
                 Cancelar
               </ButtonsModal>
             </div>
-          </>
+          </Spin>
         )}
         {finishInvitation === true && (
           <>
@@ -134,7 +149,12 @@ const ComponentPublicProperty = (props) => {
             <div className="icon-image-send">
               <IconStyleCheck />
             </div>
-            <h2>El inmueble ha sido publicado</h2>
+            <h2>
+              {isEmpty(detailPublicProperty) === false &&
+              dataForm.isPublished === false
+                ? "Se retiró la publicación"
+                : "¡El inmueble ha sido publicado!"}
+            </h2>
             <p
               style={{
                 padding: "0px 4em",
@@ -142,8 +162,10 @@ const ComponentPublicProperty = (props) => {
                 fontSize: "1em",
               }}
             >
-              Ahora podrás ver tu inmueble publicado en las siguientes
-              plataformas
+              {isEmpty(detailPublicProperty) === false &&
+              dataForm.isPublished === false
+                ? "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos"
+                : " Ahora podrás ver tu inmueble publicado en las siguientes plataformas"}
             </p>
             <div
               style={{
