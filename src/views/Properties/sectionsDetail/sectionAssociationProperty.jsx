@@ -139,8 +139,11 @@ const SectionAssociationProperty = (props) => {
         <FormModal>
           <h1>Vincula o crea la propiedad</h1>
           <p>
-            Tu Asesor {canBeAssociatedWith} ha indicado que esta propiedad te
-            pertenece:
+            {dataProfile.idUserType === 4 ? "El propietario" : "Tu asesor"}{" "}
+            {canBeAssociatedWith} ha indicado que{" "}
+            {dataProfile.idUserType === 4
+              ? "administraras esta propiedad"
+              : "esta propiedad te pertenece:"}
           </p>
           <div className="icon-image-send">
             <IconAgentFile />
@@ -209,7 +212,11 @@ const SectionAssociationProperty = (props) => {
                         setMethodAssociation(1);
                       }}
                     />
-                    Vincular y actualizar con la ficha técnica de mi agente.
+                    Vincular y actualizar con la ficha técnica de{" "}
+                    {dataProfile.idUserType === 4
+                      ? "el propietario"
+                      : "mi agente"}
+                    .
                   </label>
                 </Col>
                 <label className="input-radio">
@@ -276,7 +283,7 @@ const SectionAssociationProperty = (props) => {
           <p>
             {selectAssociation === "3"
               ? "Has rechazado la vinculación con esta propiedad"
-              : "Tu propiedad ha sido vinculada exitosamente"}
+              : "La propiedad ha sido vinculada exitosamente"}
           </p>
           <div className="icon-image-send">
             {selectAssociation === "3" ? <IconRejected /> : <IconAssociate />}

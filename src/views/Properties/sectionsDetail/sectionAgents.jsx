@@ -220,15 +220,13 @@ const SectionAgents = (props) => {
       />
       <div className="header-title">
         <h1>Agentes</h1>
-        {idUserType === 4 && (
-          <button
-            onClick={() => {
-              setIsVisibleShare(true);
-            }}
-          >
-            Compartir
-          </button>
-        )}
+        <button
+          onClick={() => {
+            setIsVisibleShare(true);
+          }}
+        >
+          Compartir
+        </button>
       </div>
       <div className="content-cards">
         {isEmpty(agentsArray) === false &&

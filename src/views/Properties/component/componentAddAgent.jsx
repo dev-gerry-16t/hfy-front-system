@@ -159,26 +159,28 @@ const ComponentAddAgent = (props) => {
                   />
                 </Col>
               </Row>
-              <Row>
-                <Col span={24}>
-                  <CustomInputCurrency
-                    value={dataForm.commissionAmount}
-                    placeholder="Comisión que deseas compartir con este agente"
-                    label="Monto de comisión"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({
-                        ...dataForm,
-                        commissionAmount: value,
-                      });
-                    }}
-                    type="number"
-                    prefix="$"
-                    suffix=""
-                  />
-                </Col>
-              </Row>
+              {dataProfile.idUserType === 4 && (
+                <Row>
+                  <Col span={24}>
+                    <CustomInputCurrency
+                      value={dataForm.commissionAmount}
+                      placeholder="Comisión que deseas compartir con este agente"
+                      label="Monto de comisión"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          commissionAmount: value,
+                        });
+                      }}
+                      type="number"
+                      prefix="$"
+                      suffix=""
+                    />
+                  </Col>
+                </Row>
+              )}
             </div>
             <div className="button-action">
               <ButtonsModal
