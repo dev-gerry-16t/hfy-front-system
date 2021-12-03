@@ -12,6 +12,7 @@ import { callGlobalActionApi } from "../../utils/actions/actions";
 import CustomInputCurrency from "../../components/customInputCurrency";
 import CustomInputTypeForm from "../../components/CustomInputTypeForm";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
+import CustomInputSelect from "../../components/customInputSelect";
 
 const { Option } = Select;
 
@@ -399,7 +400,7 @@ const SelectPolicy = (props) => {
     }
   };
 
-  const handlerCallSearchCustomer = async (data) => {
+  const handlerCallSearchCustomer = async (data = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -464,6 +465,7 @@ const SelectPolicy = (props) => {
     handlerCallGetPropertyById();
     handlerCallGetPolicies();
     hanlderCallGetPolicyPaymentMethod();
+    handlerCallSearchCustomer();
   }, []);
 
   useEffect(() => {
@@ -757,63 +759,37 @@ const SelectPolicy = (props) => {
               <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
 
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <div style={{ display: "flex", flexDirection: "column" }}>
-                  <label
-                    style={{
-                      color: "#4e4b66",
-                    }}
-                  >
-                    Correo electrónico *
-                  </label>
-                  <Select
-                    mode="tags"
-                    style={{ width: "100%" }}
-                    onChange={(e, a) => {
-                      if (isEmpty(a) === false && isEmpty(a[0]) === false) {
-                        const response = a[0].onClick();
-                        setCommissionAgent({
-                          ...commissionAgent,
-                          givenName: response.givenName,
-                          lastName: response.lastName,
-                          emailAddress: response.username,
-                          idCustomer: response.idCustomer,
-                        });
-                      } else {
-                        setCommissionAgent({
-                          ...commissionAgent,
-                          givenName: null,
-                          lastName: null,
-                          emailAddress: isNil(e[0]) === false ? e[0] : null,
-                          idCustomer: null,
-                        });
-                      }
-                    }}
-                    onSearch={(e) => {
-                      if (e.length >= 5) {
-                        handlerCallSearchCustomer(e);
-                      }
-                    }}
-                    tokenSeparators={[","]}
-                    filterOption={(input, option) => {
-                      if (isNil(option.children) === false) {
-                        return (
-                          option.children
-                            .toLowerCase()
-                            .indexOf(input.toLowerCase()) >= 0
-                        );
-                      }
-                    }}
-                  >
-                    {isEmpty(dataAgents) === false &&
-                      dataAgents.map((row) => {
-                        return (
-                          <Option value={row.idCustomer} onClick={() => row}>
-                            {row.username}
-                          </Option>
-                        );
-                      })}
-                  </Select>
-                </div>
+                <CustomInputSelect
+                  value={commissionAgent.emailAddress}
+                  type="text"
+                  label="Correo electrónico *"
+                  error={false}
+                  data={dataAgents}
+                  onChange={(value) => {
+                    if (isEmpty(value) === true) {
+                      setDataAgents([]);
+                    }
+                    if (value.length >= 3) {
+                      handlerCallSearchCustomer(value);
+                    }
+                    setCommissionAgent({
+                      ...commissionAgent,
+                      emailAddress: value,
+                      givenName: null,
+                      lastName: null,
+                      idCustomer: null,
+                    });
+                  }}
+                  onSelectItem={(dataRecord) => {
+                    setCommissionAgent({
+                      ...commissionAgent,
+                      givenName: dataRecord.givenName,
+                      lastName: dataRecord.lastName,
+                      emailAddress: dataRecord.username,
+                      idCustomer: dataRecord.idCustomer,
+                    });
+                  }}
+                />
               </Col>
             </Row>
             <Row>

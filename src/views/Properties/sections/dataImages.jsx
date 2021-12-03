@@ -424,6 +424,16 @@ const SectionDataImages = (props) => {
       });
       setCount(parseArrayImages.length);
       setArrayImages(resultArrayImages);
+    } else {
+      if (
+        isNil(idProperty) === false &&
+        isEmpty(dataFormSave) === false &&
+        isNil(dataFormSave.apartmentDocuments) === true &&
+        isEmpty(dataFormSave.apartmentDocuments) === true
+      ) {
+        setCount(0);
+        setArrayImages([]);
+      }
     }
   }, [dataFormSave]);
 
