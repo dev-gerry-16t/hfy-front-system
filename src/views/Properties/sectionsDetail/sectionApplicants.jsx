@@ -10,6 +10,7 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const GeneralCard = styled.div`
   background: #ffffff;
@@ -162,6 +163,7 @@ const SectionApplicants = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail = {}, getById } = dataContexProperty;
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const { applicants, idApartment, idProperty, canInviteTenant } = dataDetail;
 
   const applicantsArray =
@@ -270,111 +272,129 @@ const SectionApplicants = (props) => {
           applicantsArray.map((row) => {
             return (
               <Card>
-                <div className="card-user">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      <IconTenant size="100%" color="#4E4B66" />
-                      {isNil(row.score) === false && (
-                        <div className="score">
-                          <span>Score</span>
-                          <strong>{row.score}</strong>
-                        </div>
-                      )}
-                    </div>
-                    <div className="name-info">
-                      <h3>{row.fullName}</h3>
-                      <span>{row.emailAddress}</span>
-                      <span>{row.phoneNumber}</span>
-                      {isNil(row.origin) === false && (
-                        <span
+                <ComponentLoadSection
+                  isLoadApi={isLoadApi}
+                  position="absolute"
+                  text=""
+                >
+                  <div className="card-user">
+                    <div className="top-info">
+                      <div className="icon-info">
+                        <IconTenant size="100%" color="#4E4B66" />
+                        {isNil(row.score) === false && (
+                          <div className="score">
+                            <span>Score</span>
+                            <strong>{row.score}</strong>
+                          </div>
+                        )}
+                      </div>
+                      <div className="name-info">
+                        <h3>{row.fullName}</h3>
+                        <span>{row.emailAddress}</span>
+                        <span>{row.phoneNumber}</span>
+                        {isNil(row.origin) === false && (
+                          <span
+                            style={{
+                              fontStyle: "italic",
+                            }}
+                          >
+                            {" "}
+                            Enviado por: {row.origin}
+                          </span>
+                        )}
+
+                        <strong
                           style={{
-                            fontStyle: "italic",
+                            color: "#4E4B66",
                           }}
                         >
-                          {" "}
-                          Enviado por: {row.origin}
-                        </span>
-                      )}
-
-                      <strong
-                        style={{
-                          color: "#4E4B66",
-                        }}
-                      >
-                        {row.applicantStatus}
-                      </strong>
+                          {row.applicantStatus}
+                        </strong>
+                      </div>
                     </div>
-                  </div>
-                  {row.canProcessInvitation === false &&
-                    row.canBeProcessed === true && (
+                    {row.canProcessInvitation === false &&
+                      row.canBeProcessed === true && (
+                        <div className="button-action">
+                          <ButtonDocument
+                            onClick={async () => {
+                              try {
+                                setIsLoadApi(true);
+                                await handlerCallSetApplicant({
+                                  idCustomer: row.idCustomer,
+                                  idInvitation: row.idInvitation,
+                                  isAccepted: false,
+                                });
+                                setIsLoadApi(false);
+                              } catch (error) {
+                                setIsLoadApi(false);
+                                throw error;
+                              }
+                            }}
+                          >
+                            Rechazar
+                          </ButtonDocument>
+                          <ButtonDocument
+                            onClick={async () => {
+                              try {
+                                setIsLoadApi(true);
+                                await handlerCallSetApplicant({
+                                  idCustomer: row.idCustomer,
+                                  idInvitation: row.idInvitation,
+                                  isAccepted: true,
+                                });
+                                setIsLoadApi(false);
+                              } catch (error) {
+                                setIsLoadApi(false);
+                                throw error;
+                              }
+                            }}
+                          >
+                            Aceptar
+                          </ButtonDocument>
+                        </div>
+                      )}
+                    {row.canProcessInvitation === true && (
                       <div className="button-action">
                         <ButtonDocument
                           onClick={async () => {
                             try {
+                              setIsLoadApi(true);
                               await handlerCallSetApplicant({
                                 idCustomer: row.idCustomer,
                                 idInvitation: row.idInvitation,
-                                isAccepted: false,
+                                deleteInvitation: true,
                               });
+                              setIsLoadApi(false);
                             } catch (error) {
+                              setIsLoadApi(false);
                               throw error;
                             }
                           }}
                         >
-                          Rechazar
+                          Eliminar
                         </ButtonDocument>
                         <ButtonDocument
                           onClick={async () => {
                             try {
+                              setIsLoadApi(true);
                               await handlerCallSetApplicant({
                                 idCustomer: row.idCustomer,
                                 idInvitation: row.idInvitation,
-                                isAccepted: true,
+                                resendInvitation: true,
                               });
+                              setIsLoadApi(false);
                             } catch (error) {
+                              setIsLoadApi(false);
                               throw error;
                             }
                           }}
                         >
-                          Aceptar
+                          Reenviar
                         </ButtonDocument>
                       </div>
                     )}
-                  {row.canProcessInvitation === true && (
-                    <div className="button-action">
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              deleteInvitation: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Eliminar
-                      </ButtonDocument>
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            await handlerCallSetApplicant({
-                              idCustomer: row.idCustomer,
-                              idInvitation: row.idInvitation,
-                              resendInvitation: true,
-                            });
-                          } catch (error) {
-                            throw error;
-                          }
-                        }}
-                      >
-                        Reenviar
-                      </ButtonDocument>
-                    </div>
-                  )}
-                </div>
+                  </div>
+                </ComponentLoadSection>
               </Card>
             );
           })}

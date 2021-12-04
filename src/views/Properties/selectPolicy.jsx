@@ -13,6 +13,7 @@ import CustomInputCurrency from "../../components/customInputCurrency";
 import CustomInputTypeForm from "../../components/CustomInputTypeForm";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import CustomInputSelect from "../../components/customInputSelect";
+import ComponentLoadSection from "../../components/componentLoadSection";
 
 const { Option } = Select;
 
@@ -510,340 +511,345 @@ const SelectPolicy = (props) => {
 
   return (
     <Content>
-      <ContentForm>
-        <div className="back-button">
-          <button
-            onClick={() => {
-              history.push(`/websystem/detail-property-users/${idProperty}`);
-            }}
-          >
-            <Arrow width="35px" />
-          </button>
-        </div>
-        <div className="header-title">
-          <h1>1.- Selecciona tu póliza</h1>
-        </div>
-        <NoticePolicy>
-          <h1>
-            ¡
-            <span
-              style={{
-                color: "#FF0282",
+      <ComponentLoadSection isLoadApi={loadApi}>
+        <ContentForm>
+          <div className="back-button">
+            <button
+              onClick={() => {
+                history.push(`/websystem/detail-property-users/${idProperty}`);
               }}
             >
-              Protege
-            </span>{" "}
-            tu propiedad!
-          </h1>
-          <span className="label-indicator">
-            Estas a un paso de tomar la mejor decisión
-          </span>
-          <div className="comision">
-            <strong>Monto de renta</strong>{" "}
-            <span>{dataDetail.currentRentFormat}</span>
+              <Arrow width="35px" />
+            </button>
           </div>
-        </NoticePolicy>
-        <SectionCard>
-          {isEmpty(dataPolicies) === false &&
-            dataPolicies.map((rowMap) => {
-              const namePolicy =
-                isNil(rowMap.style) === false && isEmpty(rowMap.style) === false
-                  ? JSON.parse(rowMap.style)
-                  : {};
-              const contentPolicy =
-                isNil(rowMap.contentCard) === false &&
-                isEmpty(rowMap.contentCard) === false
-                  ? JSON.parse(rowMap.contentCard)
-                  : [];
-              return (
-                <CardPolicy>
-                  <div className="size-text column-center">
-                    <span>{namePolicy.text1}</span>
-                    <strong>{namePolicy.text2}</strong>
-                  </div>
-                  <div className="price column-center">
-                    {isNil(dataDetail.currentRent) === false &&
-                    rowMap.minimunAmount >
-                      dataDetail.currentRent * rowMap.percentBase ? (
-                      <h2>
-                        {isNil(dataDetail.currentRent) === false &&
-                        isNil(dataDetail.currentRent) === false
-                          ? frontFunctions.parseFormatCurrency(
-                              rowMap.minimunAmount +
-                                rowMap.minimunAmount * rowMap.taxBase,
-                              2,
-                              2
-                            )
-                          : "$0.00"}{" "}
-                        MXN
-                      </h2>
-                    ) : (
-                      <h2>
-                        {isNil(dataDetail.currentRent) === false &&
-                        isNil(dataDetail.currentRent) === false
-                          ? frontFunctions.parseFormatCurrency(
-                              dataDetail.currentRent * rowMap.percentBase +
-                                dataDetail.currentRent *
-                                  rowMap.percentBase *
-                                  rowMap.taxBase,
-                              2,
-                              2
-                            )
-                          : "$0.00"}{" "}
-                        MXN
-                      </h2>
-                    )}
-                    <span>{rowMap.percentBase * 100}%</span>
-                  </div>
-                  <div className="icon-image">
-                    <img src={selectIconPolicy[rowMap.idPolicy]} alt="" />
-                  </div>
-                  {rowMap.idPolicy ===
-                    "54C9414E-3B8E-42B5-8F80-940F2641F888" && (
-                    <span
-                      style={{
-                        textAlign: "center",
-                        fontSize: "0.8em",
-                      }}
-                    >
-                      (No se necesita aval)
-                    </span>
-                  )}
-                  <div className="buttons-action">
-                    <ButtonPolicy
-                      primary
-                      select={rowMap.idPolicy === selectPolicy}
-                      onClick={() => {
-                        if (
-                          rowMap.minimunAmount >
-                          dataDetail.currentRent * rowMap.percentBase
-                        ) {
-                          setAmountTotalPolicy({
-                            amountFormat: frontFunctions.parseFormatCurrency(
-                              rowMap.minimunAmount +
-                                rowMap.minimunAmount * rowMap.taxBase,
-                              2,
-                              2
-                            ),
-                            amount: rowMap.minimunAmount,
-                          });
-                        } else {
-                          setAmountTotalPolicy({
-                            amountFormat: frontFunctions.parseFormatCurrency(
-                              dataDetail.currentRent * rowMap.percentBase +
-                                dataDetail.currentRent *
-                                  rowMap.percentBase *
-                                  rowMap.taxBase,
-                              2,
-                              2
-                            ),
-                            amount: dataDetail.currentRent * rowMap.percentBase,
-                          });
-                        }
-                        setSelectPolicy(rowMap.idPolicy);
-                        window.location.href = "#payment-user-method";
-                      }}
-                    >
-                      Seleccionar póliza
-                    </ButtonPolicy>
-                    <ButtonPolicy>Ver más detalles</ButtonPolicy>
-                  </div>
-                </CardPolicy>
-              );
-            })}
-        </SectionCard>
-      </ContentForm>
-      <ContentForm
-        id="payment-user-method"
-        style={{
-          display: isNil(selectPolicy) === false ? "block" : "none",
-        }}
-      >
-        <div className="header-title">
-          <h1>2.- Elige el modo de pago</h1>
-          <div className="comision">
-            Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
+          <div className="header-title">
+            <h1>1.- Selecciona tu póliza</h1>
           </div>
-        </div>
-        <ContentMethod>
-          <div className="section-method">
-            <h3>Elige cómo se pagara la póliza</h3>
-            {isEmpty(dataPolicyMethods) === false &&
-              dataPolicyMethods.map((row) => {
+          <NoticePolicy>
+            <h1>
+              ¡
+              <span
+                style={{
+                  color: "#FF0282",
+                }}
+              >
+                Protege
+              </span>{" "}
+              tu propiedad!
+            </h1>
+            <span className="label-indicator">
+              Estas a un paso de tomar la mejor decisión
+            </span>
+            <div className="comision">
+              <strong>Monto de renta</strong>{" "}
+              <span>{dataDetail.currentRentFormat}</span>
+            </div>
+          </NoticePolicy>
+          <SectionCard>
+            {isEmpty(dataPolicies) === false &&
+              dataPolicies.map((rowMap) => {
+                const namePolicy =
+                  isNil(rowMap.style) === false &&
+                  isEmpty(rowMap.style) === false
+                    ? JSON.parse(rowMap.style)
+                    : {};
+                const contentPolicy =
+                  isNil(rowMap.contentCard) === false &&
+                  isEmpty(rowMap.contentCard) === false
+                    ? JSON.parse(rowMap.contentCard)
+                    : [];
                 return (
-                  <label className="input-radio">
-                    <input
-                      type="radio"
-                      id={`method-policy-${row.id}`}
-                      name="method"
-                      value={row.idPolicyPaymentMethod}
-                      checked={row.idPolicyPaymentMethod == selectMethodPolicy}
-                      onClick={() => {
-                        setSelectMethodPolicy(row.idPolicyPaymentMethod);
-                        window.location.href = "#share-commission-agent";
-                      }}
-                    />
-                    {row.policyPaymentMethod}
-                  </label>
+                  <CardPolicy>
+                    <div className="size-text column-center">
+                      <span>{namePolicy.text1}</span>
+                      <strong>{namePolicy.text2}</strong>
+                    </div>
+                    <div className="price column-center">
+                      {isNil(dataDetail.currentRent) === false &&
+                      rowMap.minimunAmount >
+                        dataDetail.currentRent * rowMap.percentBase ? (
+                        <h2>
+                          {isNil(dataDetail.currentRent) === false &&
+                          isNil(dataDetail.currentRent) === false
+                            ? frontFunctions.parseFormatCurrency(
+                                rowMap.minimunAmount +
+                                  rowMap.minimunAmount * rowMap.taxBase,
+                                2,
+                                2
+                              )
+                            : "$0.00"}{" "}
+                          MXN
+                        </h2>
+                      ) : (
+                        <h2>
+                          {isNil(dataDetail.currentRent) === false &&
+                          isNil(dataDetail.currentRent) === false
+                            ? frontFunctions.parseFormatCurrency(
+                                dataDetail.currentRent * rowMap.percentBase +
+                                  dataDetail.currentRent *
+                                    rowMap.percentBase *
+                                    rowMap.taxBase,
+                                2,
+                                2
+                              )
+                            : "$0.00"}{" "}
+                          MXN
+                        </h2>
+                      )}
+                      <span>{rowMap.percentBase * 100}%</span>
+                    </div>
+                    <div className="icon-image">
+                      <img src={selectIconPolicy[rowMap.idPolicy]} alt="" />
+                    </div>
+                    {rowMap.idPolicy ===
+                      "54C9414E-3B8E-42B5-8F80-940F2641F888" && (
+                      <span
+                        style={{
+                          textAlign: "center",
+                          fontSize: "0.8em",
+                        }}
+                      >
+                        (No se necesita aval)
+                      </span>
+                    )}
+                    <div className="buttons-action">
+                      <ButtonPolicy
+                        primary
+                        select={rowMap.idPolicy === selectPolicy}
+                        onClick={() => {
+                          if (
+                            rowMap.minimunAmount >
+                            dataDetail.currentRent * rowMap.percentBase
+                          ) {
+                            setAmountTotalPolicy({
+                              amountFormat: frontFunctions.parseFormatCurrency(
+                                rowMap.minimunAmount +
+                                  rowMap.minimunAmount * rowMap.taxBase,
+                                2,
+                                2
+                              ),
+                              amount: rowMap.minimunAmount,
+                            });
+                          } else {
+                            setAmountTotalPolicy({
+                              amountFormat: frontFunctions.parseFormatCurrency(
+                                dataDetail.currentRent * rowMap.percentBase +
+                                  dataDetail.currentRent *
+                                    rowMap.percentBase *
+                                    rowMap.taxBase,
+                                2,
+                                2
+                              ),
+                              amount:
+                                dataDetail.currentRent * rowMap.percentBase,
+                            });
+                          }
+                          setSelectPolicy(rowMap.idPolicy);
+                          window.location.href = "#payment-user-method";
+                        }}
+                      >
+                        Seleccionar póliza
+                      </ButtonPolicy>
+                      <ButtonPolicy>Ver más detalles</ButtonPolicy>
+                    </div>
+                  </CardPolicy>
                 );
               })}
-          </div>
-        </ContentMethod>
-      </ContentForm>
-      <ContentForm
-        id="share-commission-agent"
-        style={{
-          display:
-            isNil(selectMethodPolicy) === false && dataProfile.idUserType === 4
-              ? "block"
-              : "none",
-        }}
-      >
-        <div className="header-title">
-          <h1>3.- Compartir comisión con asesor</h1>
-          <div className="comision">
-            Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
-          </div>
-        </div>
-        <SectionComision>
-          <div className="section-comision">
+          </SectionCard>
+        </ContentForm>
+        <ContentForm
+          id="payment-user-method"
+          style={{
+            display: isNil(selectPolicy) === false ? "block" : "none",
+          }}
+        >
+          <div className="header-title">
+            <h1>2.- Elige el modo de pago</h1>
             <div className="comision">
-              <strong>Comisión para el asesor</strong>{" "}
-              <span>
-                {frontFunctions.parseFormatCurrency(
-                  amountTotalPolicy.amount * dataDetail.adviserCommissionBase,
-                  2,
-                  2
-                )}{" "}
-                MXN
-              </span>
+              Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
             </div>
-            <label className="input-checkbox">
-              <input
-                type="checkbox"
-                id="cbox1"
-                value="first_checkbox"
-                onChange={(e) => {
-                  setShareCommission(e.target.checked);
-                }}
-              />{" "}
-              Compartir comisión
-            </label>
           </div>
-        </SectionComision>
-        <Slide left collapse when={shareCommission === true}>
-          <div
-            style={{
-              padding: "0px 4em",
-            }}
-          >
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputCurrency
-                  value={commissionAgent.commissionAmount}
-                  placeholder=""
-                  label="Monto de comisión *"
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      commissionAmount: value,
-                    });
+          <ContentMethod>
+            <div className="section-method">
+              <h3>Elige cómo se pagara la póliza</h3>
+              {isEmpty(dataPolicyMethods) === false &&
+                dataPolicyMethods.map((row) => {
+                  return (
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        id={`method-policy-${row.id}`}
+                        name="method"
+                        value={row.idPolicyPaymentMethod}
+                        checked={
+                          row.idPolicyPaymentMethod == selectMethodPolicy
+                        }
+                        onClick={() => {
+                          setSelectMethodPolicy(row.idPolicyPaymentMethod);
+                          window.location.href = "#share-commission-agent";
+                        }}
+                      />
+                      {row.policyPaymentMethod}
+                    </label>
+                  );
+                })}
+            </div>
+          </ContentMethod>
+        </ContentForm>
+        <ContentForm
+          id="share-commission-agent"
+          style={{
+            display:
+              isNil(selectMethodPolicy) === false &&
+              dataProfile.idUserType === 4
+                ? "block"
+                : "none",
+          }}
+        >
+          <div className="header-title">
+            <h1>3.- Compartir comisión con asesor</h1>
+            <div className="comision">
+              Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
+            </div>
+          </div>
+          <SectionComision>
+            <div className="section-comision">
+              <div className="comision">
+                <strong>Comisión para el asesor</strong>{" "}
+                <span>
+                  {frontFunctions.parseFormatCurrency(
+                    amountTotalPolicy.amount * dataDetail.adviserCommissionBase,
+                    2,
+                    2
+                  )}{" "}
+                  MXN
+                </span>
+              </div>
+              <label className="input-checkbox">
+                <input
+                  type="checkbox"
+                  id="cbox1"
+                  value="first_checkbox"
+                  onChange={(e) => {
+                    setShareCommission(e.target.checked);
                   }}
-                  type="number"
-                  prefix="$"
-                  suffix=""
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                />{" "}
+                Compartir comisión
+              </label>
+            </div>
+          </SectionComision>
+          <Slide left collapse when={shareCommission === true}>
+            <div
+              style={{
+                padding: "0px 4em",
+              }}
+            >
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputCurrency
+                    value={commissionAgent.commissionAmount}
+                    placeholder=""
+                    label="Monto de comisión *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        commissionAmount: value,
+                      });
+                    }}
+                    type="number"
+                    prefix="$"
+                    suffix=""
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
 
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputSelect
-                  value={commissionAgent.emailAddress}
-                  type="text"
-                  label="Correo electrónico *"
-                  error={false}
-                  data={dataAgents}
-                  onChange={(value) => {
-                    if (isEmpty(value) === true) {
-                      setDataAgents([]);
-                    }
-                    if (value.length >= 3) {
-                      handlerCallSearchCustomer(value);
-                    }
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      emailAddress: value,
-                      givenName: null,
-                      lastName: null,
-                      idCustomer: null,
-                    });
-                  }}
-                  onSelectItem={(dataRecord) => {
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      givenName: dataRecord.givenName,
-                      lastName: dataRecord.lastName,
-                      emailAddress: dataRecord.username,
-                      idCustomer: dataRecord.idCustomer,
-                    });
-                  }}
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputTypeForm
-                  value={commissionAgent.givenName}
-                  placeholder=""
-                  label="Nombre del asesor *"
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      givenName: value,
-                    });
-                  }}
-                  type="text"
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputTypeForm
-                  value={commissionAgent.lastName}
-                  placeholder=""
-                  label="Apellido paterno *"
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setCommissionAgent({
-                      ...commissionAgent,
-                      lastName: value,
-                    });
-                  }}
-                  type="text"
-                />
-              </Col>
-            </Row>
-          </div>
-        </Slide>
-      </ContentForm>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-        }}
-      >
-        <ButtonPolicy
-          primary
-          select
-          onClick={async () => {
-            try {
-              if (loadApi === false) {
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputSelect
+                    value={commissionAgent.emailAddress}
+                    type="text"
+                    label="Correo electrónico *"
+                    error={false}
+                    data={dataAgents}
+                    onChange={(value) => {
+                      if (isEmpty(value) === true) {
+                        setDataAgents([]);
+                      }
+                      if (value.length >= 3) {
+                        handlerCallSearchCustomer(value);
+                      }
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        emailAddress: value,
+                        givenName: null,
+                        lastName: null,
+                        idCustomer: null,
+                      });
+                    }}
+                    onSelectItem={(dataRecord) => {
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        givenName: dataRecord.givenName,
+                        lastName: dataRecord.lastName,
+                        emailAddress: dataRecord.username,
+                        idCustomer: dataRecord.idCustomer,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={commissionAgent.givenName}
+                    placeholder=""
+                    label="Nombre del asesor *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        givenName: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={commissionAgent.lastName}
+                    placeholder=""
+                    label="Apellido paterno *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setCommissionAgent({
+                        ...commissionAgent,
+                        lastName: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+            </div>
+          </Slide>
+        </ContentForm>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+          }}
+        >
+          <ButtonPolicy
+            primary
+            select
+            onClick={async () => {
+              try {
+                setLoadApi(true);
                 if (shareCommission === true) {
-                  setLoadApi(true);
                   await handlerCallSetAdviserInProperty({
                     givenName: commissionAgent.givenName,
                     lastName: commissionAgent.lastName,
@@ -861,25 +867,18 @@ const SelectPolicy = (props) => {
                   idPolicyPaymentMethod: selectMethodPolicy,
                   jsonAdviserCommissionWith: JSON.stringify([commissionAgent]),
                 });
-                setLoadApi(false);
                 history.push(`/websystem/detail-property-users/${idProperty}`);
+
+                setLoadApi(false);
+              } catch (error) {
+                setLoadApi(false);
               }
-            } catch (error) {
-              setLoadApi(false);
-            }
-          }}
-        >
-          Guardar{" "}
-          {loadApi === true && (
-            <i
-              style={{
-                fontSize: 15,
-              }}
-              class="fa fa-spinner fa-spin fa-3x fa-fw"
-            ></i>
-          )}
-        </ButtonPolicy>
-      </div>
+            }}
+          >
+            Guardar
+          </ButtonPolicy>
+        </div>
+      </ComponentLoadSection>
     </Content>
   );
 };
