@@ -19,6 +19,7 @@ import {
 } from "../constants/styleConstants";
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 import CustomInputSelect from "../../../components/customInputSelect";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const { Option } = Select;
 
@@ -71,6 +72,7 @@ const SectionDataProperty = (props) => {
   ];
   const [dataFloor, setDataFloor] = useState(initialDataFloor);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
     idPropertyType: null,
@@ -258,402 +260,409 @@ const SectionDataProperty = (props) => {
 
   return (
     <ContentForm>
-      {isNil(idProperty) === false && (
-        <div className="back-button">
-          <button onClick={onBackTo}>
-            <Arrow width="35px" />
-          </button>
-        </div>
-      )}
-      <div className="header-title">
-        <h1>Datos de propiedad</h1>
-      </div>
-      <FormProperty>
-        <div className="label-indicator">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <span>
-                Por favor llena todos los campos correspondientes. Los campos
-                marcados con * son obligatorios.
-              </span>
-            </Col>
-          </Row>
-        </div>
-        <div className="type-property">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomSelect
-                value={dataForm.idPropertyType}
-                placeholder=""
-                label="Tipo de propiedad *"
-                data={dataPropertyTypes}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value, row) => {
-                  if (row.idPropertyType === 4) {
-                    handlerCallGetAllCommercialActivities();
-                  }
-                  setDataForm({ ...dataForm, idPropertyType: value });
-                  setIsOpenFloorDescription(row.requiresFloorDescr);
-                }}
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            {dataForm.idPropertyType == "4" && (
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomSelect
-                  value={dataForm.idCommercialActivity}
-                  placeholder=""
-                  label="Actividad comercial del inmueble *"
-                  data={dataCommercialActivity}
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setDataForm({ ...dataForm, idCommercialActivity: value });
-                  }}
-                />
-              </Col>
-            )}
-          </Row>
-        </div>
-        <div className="type-form-property">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputCurrency
-                value={dataForm.currentRent}
-                placeholder=""
-                label="Precio de renta *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, currentRent: value });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <MultiSelect>
-                <span>Precio basado en:</span>
-                <div className="button-actions-select">
-                  {catalogPrice.map((row) => {
-                    return (
-                      <ButtonCheck
-                        select={row.id == dataForm.priceBasedBy}
-                        onClick={() => {
-                          setDataForm({ ...dataForm, priceBasedBy: row.id });
-                        }}
-                      >
-                        {row.text}
-                      </ButtonCheck>
-                    );
-                  })}
-                </div>
-              </MultiSelect>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalBedrooms}
-                placeholder=""
-                label="Recamaras *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalBedrooms: value });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.totalBathrooms}
-                    placeholder=""
-                    label="Baños *"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, totalBathrooms: value });
-                    }}
-                    type="number"
-                  />
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.totalHalfBathrooms}
-                    placeholder=""
-                    label="Medio baños *"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, totalHalfBathrooms: value });
-                    }}
-                    type="number"
-                  />
-                </Col>
-              </Row>
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalParkingSpots}
-                placeholder=""
-                label="Estacionamientos *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalParkingSpots: value });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalSquareMetersBuilt}
-                placeholder=""
-                label="Construcción m²"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalSquareMetersBuilt: value });
-                }}
-                type="number"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalSquareMetersLand}
-                placeholder=""
-                label="Terreno m²"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({ ...dataForm, totalSquareMetersLand: value });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.totalFloors}
-                placeholder=""
-                label="Cantidad de pisos en el inmueble *"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    totalFloors: value,
-                    floorDescription: null,
-                  });
-                }}
-                type="number"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              {isOpenFloorDescription === true && (
-                <CustomSelect
-                  value={dataForm.floorDescription}
-                  placeholder=""
-                  label="Piso en el que se encuentra *"
-                  data={dataFloor}
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setDataForm({ ...dataForm, floorDescription: value });
-                  }}
-                />
-              )}
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputCurrency
-                value={dataForm.maintenanceAmount}
-                placeholder=""
-                label="Mantenimiento mensual"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    maintenanceAmount: isNil(value) === true ? 0 : value,
-                  });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <MultiSelect>
-                <span>¿La propiedad está amueblada?</span>
-                <div className="button-actions-select">
-                  {[
-                    { id: true, text: "Si" },
-                    { id: false, text: "No" },
-                  ].map((row) => {
-                    return (
-                      <ButtonCheck
-                        select={row.id == dataForm.isFurnished}
-                        onClick={() => {
-                          setDataForm({ ...dataForm, isFurnished: row.id });
-                        }}
-                      >
-                        {row.text}
-                      </ButtonCheck>
-                    );
-                  })}
-                </div>
-              </MultiSelect>
-            </Col>
-          </Row>
-        </div>
-        {idUserType !== 3 && (
-          <>
-            <LineSeparator />
-            <div className="type-form-property">
-              <div className="subtitle-form">
-                <h1>Datos de inmobiliaria / Propietario</h1>
-              </div>
-              <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputSelect
-                    value={dataForm.ownerEmailAddress}
-                    type="text"
-                    placeholder="Busca o agrega un usuario"
-                    label="Correo electrónico *"
-                    error={false}
-                    data={dataOwners}
-                    onChange={(value) => {
-                      if (isEmpty(value) === true) {
-                        setDataOwners([]);
-                      }
-                      if (value.length >= 3) {
-                        handlerCallSearchCustomer(value);
-                      }
-                      setDataForm({
-                        ...dataForm,
-                        ownerGivenName: value,
-                        ownerLastName: null,
-                        ownerEmailAddress: null,
-                        idCustomer: null,
-                      });
-                    }}
-                    onSelectItem={(dataRecord) => {
-                      setDataForm({
-                        ...dataForm,
-                        ownerGivenName: dataRecord.givenName,
-                        ownerLastName: dataRecord.lastName,
-                        ownerEmailAddress: dataRecord.username,
-                        idCustomer: dataRecord.idCustomer,
-                      });
-                    }}
-                  />
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.ownerPhoneNumber}
-                    placeholder=""
-                    label="Teléfono"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, ownerPhoneNumber: value });
-                    }}
-                    type="number"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.ownerGivenName}
-                    placeholder=""
-                    label="Nombre *"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, ownerGivenName: value });
-                    }}
-                    type="text"
-                  />
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.ownerLastName}
-                    placeholder=""
-                    label="Apellido paterno"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({ ...dataForm, ownerLastName: value });
-                    }}
-                    type="text"
-                  />
-                </Col>
-              </Row>
-            </div>
-          </>
-        )}
+      <ComponentLoadSection isLoadApi={isLoadApi}>
         {isNil(idProperty) === false && (
-          <div
-            className="label-indicator"
-            style={{
-              marginTop: "25px",
-            }}
-          >
+          <div className="back-button">
+            <button onClick={onBackTo}>
+              <Arrow width="35px" />
+            </button>
+          </div>
+        )}
+        <div className="header-title">
+          <h1>Datos de propiedad</h1>
+        </div>
+        <FormProperty>
+          <div className="label-indicator">
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <span>
-                  Antes de dar clic en "Siguiente" recuerda guardar tus cambios
+                  Por favor llena todos los campos correspondientes. Los campos
+                  marcados con * son obligatorios.
                 </span>
               </Col>
             </Row>
           </div>
-        )}
-        <div className="next-back-buttons">
-          <ButtonNextBackPage block>
-            {"<< "}
-            <u>{"Atrás"}</u>
-          </ButtonNextBackPage>
+          <div className="type-property">
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomSelect
+                  value={dataForm.idPropertyType}
+                  placeholder=""
+                  label="Tipo de propiedad *"
+                  data={dataPropertyTypes}
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value, row) => {
+                    if (row.idPropertyType === 4) {
+                      handlerCallGetAllCommercialActivities();
+                    }
+                    setDataForm({ ...dataForm, idPropertyType: value });
+                    setIsOpenFloorDescription(row.requiresFloorDescr);
+                  }}
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              {dataForm.idPropertyType == "4" && (
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomSelect
+                    value={dataForm.idCommercialActivity}
+                    placeholder=""
+                    label="Actividad comercial del inmueble *"
+                    data={dataCommercialActivity}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, idCommercialActivity: value });
+                    }}
+                  />
+                </Col>
+              )}
+            </Row>
+          </div>
+          <div className="type-form-property">
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputCurrency
+                  value={dataForm.currentRent}
+                  placeholder=""
+                  label="Precio de renta *"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, currentRent: value });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <MultiSelect>
+                  <span>Precio basado en:</span>
+                  <div className="button-actions-select">
+                    {catalogPrice.map((row) => {
+                      return (
+                        <ButtonCheck
+                          select={row.id == dataForm.priceBasedBy}
+                          onClick={() => {
+                            setDataForm({ ...dataForm, priceBasedBy: row.id });
+                          }}
+                        >
+                          {row.text}
+                        </ButtonCheck>
+                      );
+                    })}
+                  </div>
+                </MultiSelect>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.totalBedrooms}
+                  placeholder=""
+                  label="Recamaras *"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, totalBedrooms: value });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.totalBathrooms}
+                      placeholder=""
+                      label="Baños *"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, totalBathrooms: value });
+                      }}
+                      type="number"
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.totalHalfBathrooms}
+                      placeholder=""
+                      label="Medio baños *"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, totalHalfBathrooms: value });
+                      }}
+                      type="number"
+                    />
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.totalParkingSpots}
+                  placeholder=""
+                  label="Estacionamientos *"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, totalParkingSpots: value });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.totalSquareMetersBuilt}
+                  placeholder=""
+                  label="Construcción m²"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, totalSquareMetersBuilt: value });
+                  }}
+                  type="number"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.totalSquareMetersLand}
+                  placeholder=""
+                  label="Terreno m²"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({ ...dataForm, totalSquareMetersLand: value });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.totalFloors}
+                  placeholder=""
+                  label="Cantidad de pisos en el inmueble *"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      totalFloors: value,
+                      floorDescription: null,
+                    });
+                  }}
+                  type="number"
+                />
+              </Col>
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                {isOpenFloorDescription === true && (
+                  <CustomSelect
+                    value={dataForm.floorDescription}
+                    placeholder=""
+                    label="Piso en el que se encuentra *"
+                    data={dataFloor}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, floorDescription: value });
+                    }}
+                  />
+                )}
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            </Row>
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputCurrency
+                  value={dataForm.maintenanceAmount}
+                  placeholder=""
+                  label="Mantenimiento mensual"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      maintenanceAmount: isNil(value) === true ? 0 : value,
+                    });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <MultiSelect>
+                  <span>¿La propiedad está amueblada?</span>
+                  <div className="button-actions-select">
+                    {[
+                      { id: true, text: "Si" },
+                      { id: false, text: "No" },
+                    ].map((row) => {
+                      return (
+                        <ButtonCheck
+                          select={row.id == dataForm.isFurnished}
+                          onClick={() => {
+                            setDataForm({ ...dataForm, isFurnished: row.id });
+                          }}
+                        >
+                          {row.text}
+                        </ButtonCheck>
+                      );
+                    })}
+                  </div>
+                </MultiSelect>
+              </Col>
+            </Row>
+          </div>
+          {idUserType !== 3 && (
+            <>
+              <LineSeparator />
+              <div className="type-form-property">
+                <div className="subtitle-form">
+                  <h1>Datos de inmobiliaria / Propietario</h1>
+                </div>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputSelect
+                      value={dataForm.ownerEmailAddress}
+                      type="text"
+                      placeholder="Busca o agrega un usuario"
+                      label="Correo electrónico *"
+                      error={false}
+                      data={dataOwners}
+                      onChange={(value) => {
+                        if (isEmpty(value) === true) {
+                          setDataOwners([]);
+                        }
+                        if (value.length >= 3) {
+                          handlerCallSearchCustomer(value);
+                        }
+                        setDataForm({
+                          ...dataForm,
+                          ownerGivenName: null,
+                          ownerLastName: null,
+                          ownerEmailAddress: value,
+                          idCustomer: null,
+                        });
+                      }}
+                      onSelectItem={(dataRecord) => {
+                        setDataForm({
+                          ...dataForm,
+                          ownerGivenName: dataRecord.givenName,
+                          ownerLastName: dataRecord.lastName,
+                          ownerEmailAddress: dataRecord.username,
+                          idCustomer: dataRecord.idCustomer,
+                        });
+                      }}
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.ownerPhoneNumber}
+                      placeholder=""
+                      label="Teléfono"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, ownerPhoneNumber: value });
+                      }}
+                      type="number"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.ownerGivenName}
+                      placeholder=""
+                      label="Nombre *"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, ownerGivenName: value });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.ownerLastName}
+                      placeholder=""
+                      label="Apellido paterno"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, ownerLastName: value });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+              </div>
+            </>
+          )}
           {isNil(idProperty) === false && (
-            <ButtonNextBackPage
-              block={false}
-              onClick={async () => {
-                try {
-                  await handlerCallUpdateProperty(dataForm, idProperty);
-                } catch (error) {}
+            <div
+              className="label-indicator"
+              style={{
+                marginTop: "25px",
               }}
             >
-              <u>{"Guardar"}</u>
-            </ButtonNextBackPage>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <span>
+                    Antes de dar clic en "Siguiente" recuerda guardar tus
+                    cambios
+                  </span>
+                </Col>
+              </Row>
+            </div>
           )}
-          <ButtonNextBackPage
-            block={false}
-            onClick={() => {
-              onclickNext(dataForm);
-            }}
-          >
-            <u>{"Siguiente"}</u>
-            {" >>"}
-          </ButtonNextBackPage>
-        </div>
-      </FormProperty>
+          <div className="next-back-buttons">
+            <ButtonNextBackPage block>
+              {"<< "}
+              <u>{"Atrás"}</u>
+            </ButtonNextBackPage>
+            {isNil(idProperty) === false && (
+              <ButtonNextBackPage
+                block={false}
+                onClick={async () => {
+                  try {
+                    setIsLoadApi(true);
+                    await handlerCallUpdateProperty(dataForm, idProperty);
+                    setIsLoadApi(false);
+                  } catch (error) {
+                    setIsLoadApi(false);
+                  }
+                }}
+              >
+                <u>{"Guardar"}</u>
+              </ButtonNextBackPage>
+            )}
+            <ButtonNextBackPage
+              block={false}
+              onClick={() => {
+                onclickNext(dataForm);
+              }}
+            >
+              <u>{"Siguiente"}</u>
+              {" >>"}
+            </ButtonNextBackPage>
+          </div>
+        </FormProperty>
+      </ComponentLoadSection>
     </ContentForm>
   );
 };

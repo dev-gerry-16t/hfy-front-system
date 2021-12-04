@@ -12,6 +12,7 @@ import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import CustomInputSelect from "../../../components/customInputSelect";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const { Option } = Select;
 
@@ -90,6 +91,7 @@ const ComponentAddCandidate = (props) => {
   const [dataForm, setDataForm] = useState(initialForm);
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [isVisibleSelect, setIsVisibleSelect] = useState(true);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataTenants, setDataTenants] = useState([]);
   const frontFunctions = new FrontFunctions();
   const selectRef = useRef(null);
@@ -135,144 +137,150 @@ const ComponentAddCandidate = (props) => {
       width={600}
     >
       <FormModal>
-        {finishInvitation === false && (
-          <>
-            <h1>Agregar un Prospecto</h1>
-            <p>
-              Enviaremos una invitación a tu prospecto invitandolo a conocer y
-              aplicar a esta propiedad a través de su correo electrónico.
-            </p>
-            <div>
-              <Row>
-                <Col span={24}>
-                  <CustomInputSelect
-                    value={dataForm.emailAddress}
-                    type="text"
-                    label="Correo electrónico *"
-                    error={false}
-                    data={dataTenants}
-                    onChange={(value) => {
-                      if (isEmpty(value) === true) {
-                        setDataTenants([]);
-                      }
-                      if (value.length >= 3) {
-                        handlerCallSearchCustomer(value);
-                      }
-                      setDataForm({
-                        ...dataForm,
-                        emailAddress: value,
-                        givenName: null,
-                        lastName: null,
-                        idCustomer: null,
-                      });
-                    }}
-                    onSelectItem={(dataRecord) => {
-                      setDataForm({
-                        ...dataForm,
-                        givenName: dataRecord.givenName,
-                        lastName: dataRecord.lastName,
-                        emailAddress: dataRecord.username,
-                        idCustomer: dataRecord.idCustomer,
-                      });
-                    }}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={24}>
-                  <CustomInputTypeForm
-                    value={dataForm.givenName}
-                    placeholder=""
-                    label="Nombre"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({
-                        ...dataForm,
-                        givenName: value,
-                      });
-                    }}
-                    type="text"
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={24}>
-                  <CustomInputTypeForm
-                    value={dataForm.lastName}
-                    placeholder=""
-                    label="Apellido paterno"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({
-                        ...dataForm,
-                        lastName: value,
-                      });
-                    }}
-                    type="text"
-                  />
-                </Col>
-              </Row>
-            </div>
-            <div className="button-action">
-              <ButtonsModal
-                primary
-                onClick={async () => {
-                  try {
-                    await sendInvitation(dataForm);
+        <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
+          {finishInvitation === false && (
+            <>
+              <h1>Agregar un Prospecto</h1>
+              <p>
+                Enviaremos una invitación a tu prospecto invitandolo a conocer y
+                aplicar a esta propiedad a través de su correo electrónico.
+              </p>
+              <div>
+                <Row>
+                  <Col span={24}>
+                    <CustomInputSelect
+                      value={dataForm.emailAddress}
+                      type="text"
+                      label="Correo electrónico *"
+                      error={false}
+                      data={dataTenants}
+                      onChange={(value) => {
+                        if (isEmpty(value) === true) {
+                          setDataTenants([]);
+                        }
+                        if (value.length >= 3) {
+                          handlerCallSearchCustomer(value);
+                        }
+                        setDataForm({
+                          ...dataForm,
+                          emailAddress: value,
+                          givenName: null,
+                          lastName: null,
+                          idCustomer: null,
+                        });
+                      }}
+                      onSelectItem={(dataRecord) => {
+                        setDataForm({
+                          ...dataForm,
+                          givenName: dataRecord.givenName,
+                          lastName: dataRecord.lastName,
+                          emailAddress: dataRecord.username,
+                          idCustomer: dataRecord.idCustomer,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <CustomInputTypeForm
+                      value={dataForm.givenName}
+                      placeholder=""
+                      label="Nombre"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          givenName: value,
+                        });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col span={24}>
+                    <CustomInputTypeForm
+                      value={dataForm.lastName}
+                      placeholder=""
+                      label="Apellido paterno"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          lastName: value,
+                        });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+              </div>
+              <div className="button-action">
+                <ButtonsModal
+                  primary
+                  onClick={async () => {
+                    try {
+                      setIsLoadApi(true);
+                      await sendInvitation(dataForm);
+                      setDataForm(initialForm);
+                      setFinishInvitation(true);
+                      setDataTenants([]);
+                      setIsLoadApi(false);
+                    } catch (error) {
+                      setIsLoadApi(false);
+                    }
+                  }}
+                >
+                  Enviar invitación
+                </ButtonsModal>
+                <ButtonsModal
+                  onClick={() => {
+                    onClose();
                     setDataForm(initialForm);
-                    setFinishInvitation(true);
                     setDataTenants([]);
-                  } catch (error) {}
+                  }}
+                >
+                  Cancelar
+                </ButtonsModal>
+              </div>
+            </>
+          )}
+          {finishInvitation === true && (
+            <>
+              <h1>¡Todo está listo!</h1>
+              <div className="icon-image-send">
+                <IconSendInvitation />
+              </div>
+              <h2>La invitación ha sido enviada</h2>
+              <p
+                style={{
+                  padding: "0px 8em",
+                  textAlign: "justify",
+                  fontSize: "1em",
                 }}
               >
-                Enviar invitación
-              </ButtonsModal>
-              <ButtonsModal
-                onClick={() => {
-                  onClose();
-                  setDataForm(initialForm);
-                  setDataTenants([]);
-                }}
-              >
-                Cancelar
-              </ButtonsModal>
-            </div>
-          </>
-        )}
-        {finishInvitation === true && (
-          <>
-            <h1>¡Todo está listo!</h1>
-            <div className="icon-image-send">
-              <IconSendInvitation />
-            </div>
-            <h2>La invitación ha sido enviada</h2>
-            <p
-              style={{
-                padding: "0px 8em",
-                textAlign: "justify",
-                fontSize: "1em",
-              }}
-            >
-              El candidato ha sido notificado, te deseamos mucho exito en tu
-              proceso
-            </p>
-            <div className="button-action">
-              <ButtonsModal
-                onClick={() => {
-                  onClose();
-                  setFinishInvitation(false);
-                  setDataForm(initialForm);
-                  setDataTenants([]);
-                }}
-                primary
-              >
-                Cerrar
-              </ButtonsModal>
-            </div>
-          </>
-        )}
+                El candidato ha sido notificado, te deseamos mucho exito en tu
+                proceso
+              </p>
+              <div className="button-action">
+                <ButtonsModal
+                  onClick={() => {
+                    onClose();
+                    setFinishInvitation(false);
+                    setDataForm(initialForm);
+                    setDataTenants([]);
+                  }}
+                  primary
+                >
+                  Cerrar
+                </ButtonsModal>
+              </div>
+            </>
+          )}
+        </ComponentLoadSection>
       </FormModal>
     </Modal>
   );

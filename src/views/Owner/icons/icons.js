@@ -1,28 +1,10 @@
 const IconCheck = (
-  <svg
-    width="15"
-    height="15"
-    viewBox="0 0 15 15"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
-      d="M10.209 1.71875H4.79087C2.90274 1.71875 1.71899 3.05562 1.71899 4.9475V10.0525C1.71899 11.9444 2.89712 13.2812 4.79087 13.2812H10.2084C12.1027 13.2812 13.2815 11.9444 13.2815 10.0525V4.9475C13.2815 3.05562 12.1027 1.71875 10.209 1.71875Z"
-      stroke="#39B54A"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <path
-      d="M5.2749 7.49997L6.75865 8.9831L9.7249 6.01685"
-      stroke="#39B54A"
-      stroke-width="1.5"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-  </svg>
+  <i
+    className="fa fa-check"
+    style={{
+      color: "#39B54A",
+    }}
+  ></i>
 );
 
 const IconTimes = (
@@ -85,6 +67,6 @@ const IconClock = (
   </svg>
 );
 
-const objectIcons = { IconCheck, IconTimes, IconClock };
+const objectIcons = { ["fa fa-check"]: IconCheck, IconTimes, IconClock };
 
 export default objectIcons;

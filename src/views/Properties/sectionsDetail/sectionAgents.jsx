@@ -10,6 +10,7 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const GeneralCard = styled.div`
   background: #ffffff;
@@ -163,6 +164,7 @@ const SectionAgents = (props) => {
   const { dataDetail = {}, getById } = dataContexProperty;
   const { propertySharedWith, idProperty, idApartment } = dataDetail;
   const [isVisibleShare, setIsVisibleShare] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const frontFunctions = new FrontFunctions();
   const agentsArray =
     isNil(propertySharedWith) === false && isEmpty(propertySharedWith) === false
@@ -233,51 +235,61 @@ const SectionAgents = (props) => {
           agentsArray.map((row) => {
             return (
               <Card>
-                <div className="card-user">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      <IconTenant size="100%" color="#4E4B66" />
+                <ComponentLoadSection
+                  isLoadApi={isLoadApi}
+                  position="absolute"
+                  text=""
+                >
+                  <div className="card-user">
+                    <div className="top-info">
+                      <div className="icon-info">
+                        <IconTenant size="100%" color="#4E4B66" />
+                      </div>
+                      <div className="name-info">
+                        <h3>
+                          {row.givenName} {row.lastName}
+                        </h3>
+                        <span>{row.emailAddress}</span>
+                        <span>{row.phoneNumber}</span>
+                        {isNil(row.commissionAmountFormat) === false && (
+                          <strong
+                            style={{
+                              color: "#4E4B66",
+                            }}
+                          >
+                            Comisión: {row.commissionAmountFormat}
+                          </strong>
+                        )}
+                      </div>
                     </div>
-                    <div className="name-info">
-                      <h3>
-                        {row.givenName} {row.lastName}
-                      </h3>
-                      <span>{row.emailAddress}</span>
-                      <span>{row.phoneNumber}</span>
-                      {isNil(row.commissionAmountFormat) === false && (
-                        <strong
-                          style={{
-                            color: "#4E4B66",
-                          }}
-                        >
-                          Comisión: {row.commissionAmountFormat}
-                        </strong>
-                      )}
+                    <div className="button-action">
+                      <ButtonDocument
+                        onClick={async () => {
+                          try {
+                            setIsLoadApi(true);
+                            await handlerCallSetAdviserInProperty({
+                              givenName: row.givenName,
+                              lastName: row.lastName,
+                              emailAddress: row.emailAddress,
+                              idCustomer: row.idCustomer,
+                              idInvitation: row.idInvitation,
+                              mothersMaidenName: null,
+                              commissionAmount: row.commissionAmount,
+                              isActive: false,
+                            });
+                            setIsLoadApi(false);
+                          } catch (error) {
+                            setIsLoadApi(false);
+
+                            throw error;
+                          }
+                        }}
+                      >
+                        Deshacer
+                      </ButtonDocument>
                     </div>
                   </div>
-                  <div className="button-action">
-                    <ButtonDocument
-                      onClick={async () => {
-                        try {
-                          await handlerCallSetAdviserInProperty({
-                            givenName: row.givenName,
-                            lastName: row.lastName,
-                            emailAddress: row.emailAddress,
-                            idCustomer: row.idCustomer,
-                            idInvitation: row.idInvitation,
-                            mothersMaidenName: null,
-                            commissionAmount: row.commissionAmount,
-                            isActive: false,
-                          });
-                        } catch (error) {
-                          throw error;
-                        }
-                      }}
-                    >
-                      Deshacer
-                    </ButtonDocument>
-                  </div>
-                </div>
+                </ComponentLoadSection>
               </Card>
             );
           })}

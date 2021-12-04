@@ -84,12 +84,13 @@ const IconStep = styled.div`
 `;
 
 const CardStep = ({ title, description, finish, select, icon, onClick }) => {
+  console.log("finish", finish);
   return (
     <Card finish={finish} select={select}>
       <div className="content-icon" onClick={onClick}>
         <IconStep finish={finish} select={select}>
           <div className="icon-circle">
-            <i className={icon}></i>
+            <i className={finish === true ? "fa fa-check" : icon}></i>
           </div>
         </IconStep>
         <div className="line-dashed-y"></div>

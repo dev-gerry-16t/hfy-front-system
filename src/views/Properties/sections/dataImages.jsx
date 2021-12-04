@@ -3,7 +3,8 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { Row, Col } from "antd";
+import { SyncOutlined } from "@ant-design/icons";
+import { Spin, Row, Col } from "antd";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
@@ -18,6 +19,25 @@ import {
 } from "../constants/styleConstants";
 import { IconDelete, IconEditSquare } from "../../../assets/iconSvg";
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
+
+const LoadingSpin = (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      width: "200px",
+    }}
+  >
+    <SyncOutlined spin />
+    <span
+      style={{
+        marginTop: "10px",
+      }}
+    >
+      Espera por favor...
+    </span>
+  </div>
+);
 
 const ContentImages = styled.div`
   margin-top: 2em;
@@ -120,6 +140,7 @@ const SectionDataImages = (props) => {
   } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallSetPropertyDocument = async (data, id) => {
@@ -439,35 +460,71 @@ const SectionDataImages = (props) => {
 
   return (
     <ContentForm>
-      {isNil(idProperty) === false && (
-        <div className="back-button">
-          <button onClick={onBackTo}>
-            <Arrow width="35px" />
-          </button>
+      <Spin indicator={LoadingSpin} spinning={isLoadApi} delay={100}>
+        {isNil(idProperty) === false && (
+          <div className="back-button">
+            <button onClick={onBackTo}>
+              <Arrow width="35px" />
+            </button>
+          </div>
+        )}
+        <div className="header-title">
+          <h1>Agregar fotos</h1>
         </div>
-      )}
-      <div className="header-title">
-        <h1>Agregar fotos</h1>
-      </div>
-      <FormProperty>
-        <div className="label-indicator">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <span>Agrega hasta 24 imagenes para mostrar la propiedad.</span>
-            </Col>
-          </Row>
-        </div>
-        <ContentImages>
-          {arrayImages.map((row, ix) => {
-            return (
-              <ContentImage>
-                <img className="image-content" src={row.src} alt={"imagen"} />
-                <div className="button-actions-image">
-                  <ButtonFiles
-                    onClick={async () => {
-                      try {
+        <FormProperty>
+          <div className="label-indicator">
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <span>Agrega hasta 24 imagenes para mostrar la propiedad.</span>
+              </Col>
+            </Row>
+          </div>
+          <ContentImages>
+            {arrayImages.map((row, ix) => {
+              return (
+                <ContentImage>
+                  <img className="image-content" src={row.src} alt={"imagen"} />
+                  <div className="button-actions-image">
+                    <ButtonFiles
+                      onClick={async () => {
+                        try {
+                          if (isNil(idProperty) === true) {
+                            handlerOnDeleteImage(row.id);
+                          } else {
+                            await handlerCallSetPropertyDocument(
+                              {
+                                jsonDocument: JSON.stringify([
+                                  {
+                                    idDocument: row.idDocument,
+                                    isMain: ix === 0 ? true : false,
+                                  },
+                                ]),
+                                idApartment,
+                                isActive: false,
+                              },
+                              idProperty
+                            );
+                            getById();
+                          }
+                        } catch (error) {}
+                      }}
+                    >
+                      <IconDelete color="var(--color-primary)" />
+                    </ButtonFiles>
+                    <ButtonFilesLabel
+                      className="upload-file"
+                      for={`id-file-${row.id}`}
+                    >
+                      <IconEditSquare color="var(--color-primary)" />
+                    </ButtonFilesLabel>
+                    <input
+                      id={`id-file-${row.id}`}
+                      accept="image/png,image/jpg,image/jpeg"
+                      style={{ display: "none" }}
+                      type="file"
+                      onChange={async (e) => {
                         if (isNil(idProperty) === true) {
-                          handlerOnDeleteImage(row.id);
+                          handlerOnEditFile(e, row.id);
                         } else {
                           await handlerCallSetPropertyDocument(
                             {
@@ -482,126 +539,96 @@ const SectionDataImages = (props) => {
                             },
                             idProperty
                           );
-                          getById();
+                          handlerOnEditFileV2(e, row.id, ix);
                         }
-                      } catch (error) {}
-                    }}
-                  >
-                    <IconDelete color="var(--color-primary)" />
-                  </ButtonFiles>
-                  <ButtonFilesLabel
-                    className="upload-file"
-                    for={`id-file-${row.id}`}
-                  >
-                    <IconEditSquare color="var(--color-primary)" />
-                  </ButtonFilesLabel>
-                  <input
-                    id={`id-file-${row.id}`}
-                    accept="image/png,image/jpg,image/jpeg"
-                    style={{ display: "none" }}
-                    type="file"
-                    onChange={async (e) => {
-                      if (isNil(idProperty) === true) {
-                        handlerOnEditFile(e, row.id);
-                      } else {
-                        await handlerCallSetPropertyDocument(
-                          {
-                            jsonDocument: JSON.stringify([
-                              {
-                                idDocument: row.idDocument,
-                                isMain: ix === 0 ? true : false,
-                              },
-                            ]),
-                            idApartment,
-                            isActive: false,
-                          },
-                          idProperty
-                        );
-                        handlerOnEditFileV2(e, row.id, ix);
-                      }
-                    }}
-                  />
-                </div>
-                {row.id == 0 && (
-                  <div className="description-image">
-                    <span>
-                      {isNil(idProperty) === false
-                        ? "Esta es tu imagen principal"
-                        : "Esta será tu imagen principal"}
-                    </span>
+                      }}
+                    />
                   </div>
-                )}
-              </ContentImage>
-            );
-          })}
-          {count < 24 && (
-            <UploadSection>
-              <label className="upload-file" for={`id-file`}>
-                <img
-                  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAALcSURBVHgB7Zk/ctNAFMa/t6Kg9A3inADTkECDU2UYinCDmBZiWwoHSNylIVLkwNDh3IBUTKo4FQmVOQHODZyOmaBd3pNkTwi2kfE68jD+zdha7e6sP+2fp93PhIy4rl/4ARRggftALwi8Xpa6hDGCIqACcjYIpgRL4m7QM6AOTHR0DbQ/BF4XWQXWvGYd0LuJKMONmDMDSAOZnvpv8I8W47aJnvKdPHwXpFrhfrUxpO7v1LfDj8aYioFp87VxGHhtzBAeqaIGdlngpiFqNfdrLzFKIIvzWZQL0o1w39vFHVJzfRG5c1uk009UXb/CevfyECdcnJ+0V1bXiUDuo9X1q6/nJ+eSP+jBunfwnYe1F/ruQ+RI1Q1PiUxJGb0sK10lmT7PORS1MR5yxiCShVL4CZTlPhaolLPBl+6sF0QWUg09HmrRlAjkhVGE0d8wLxh9TERlSao0S2JRB/NDF0mshJI4JIk0EM8FfS2v3xwuKVjkleuXtlz/BSxyDxZx4PgcRyX5CZaw2oOzYCFwWhYCp2XiVSxhhMipDytLdt6EqheeDiuPTOS9D7yJXggT96CWIGo0hn76jChX6dthEibuwbQH1oaVyVZJ4mAzcNdgicUimZaFwGn5/+LgOCJEnmzmbGJV4KRBOAsqSD0R+ocgOiv6Wt693bpUaUaXjZwlzAmknAeUnpHSU50+41OU1a36VBhTYk2XkowF6mSLXuCNQBk5IxrERDDpsSEWyCulDTksk7ODnFGkfL50m4HXiu/lSzwQ7tIGb5fKte1mbiJrbvzbMrwDn3DgbombtPL42TJPAHflyXNcfPl8hjskNk1J7/GEO+De2+vn058VD1p8ic3Eax01RlmztpA5J1NLRo/FHYW+V7lZPtwCZjORxPFM4lGHV3jb6OjKovtQYMNqiT2hMhLbJZ5i3HPB7YrjTPRiFFtgtMkCZ2Six/73Mc+z1ijXnzI2ltvfEL8A5S84g/9jchwAAAAASUVORK5CYII="
-                  alt=""
+                  {row.id == 0 && (
+                    <div className="description-image">
+                      <span>
+                        {isNil(idProperty) === false
+                          ? "Esta es tu imagen principal"
+                          : "Esta será tu imagen principal"}
+                      </span>
+                    </div>
+                  )}
+                </ContentImage>
+              );
+            })}
+            {count < 24 && (
+              <UploadSection>
+                <label className="upload-file" for={`id-file`}>
+                  <img
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAALcSURBVHgB7Zk/ctNAFMa/t6Kg9A3inADTkECDU2UYinCDmBZiWwoHSNylIVLkwNDh3IBUTKo4FQmVOQHODZyOmaBd3pNkTwi2kfE68jD+zdha7e6sP+2fp93PhIy4rl/4ARRggftALwi8Xpa6hDGCIqACcjYIpgRL4m7QM6AOTHR0DbQ/BF4XWQXWvGYd0LuJKMONmDMDSAOZnvpv8I8W47aJnvKdPHwXpFrhfrUxpO7v1LfDj8aYioFp87VxGHhtzBAeqaIGdlngpiFqNfdrLzFKIIvzWZQL0o1w39vFHVJzfRG5c1uk009UXb/CevfyECdcnJ+0V1bXiUDuo9X1q6/nJ+eSP+jBunfwnYe1F/ruQ+RI1Q1PiUxJGb0sK10lmT7PORS1MR5yxiCShVL4CZTlPhaolLPBl+6sF0QWUg09HmrRlAjkhVGE0d8wLxh9TERlSao0S2JRB/NDF0mshJI4JIk0EM8FfS2v3xwuKVjkleuXtlz/BSxyDxZx4PgcRyX5CZaw2oOzYCFwWhYCp2XiVSxhhMipDytLdt6EqheeDiuPTOS9D7yJXggT96CWIGo0hn76jChX6dthEibuwbQH1oaVyVZJ4mAzcNdgicUimZaFwGn5/+LgOCJEnmzmbGJV4KRBOAsqSD0R+ocgOiv6Wt693bpUaUaXjZwlzAmknAeUnpHSU50+41OU1a36VBhTYk2XkowF6mSLXuCNQBk5IxrERDDpsSEWyCulDTksk7ODnFGkfL50m4HXiu/lSzwQ7tIGb5fKte1mbiJrbvzbMrwDn3DgbombtPL42TJPAHflyXNcfPl8hjskNk1J7/GEO+De2+vn058VD1p8ic3Eax01RlmztpA5J1NLRo/FHYW+V7lZPtwCZjORxPFM4lGHV3jb6OjKovtQYMNqiT2hMhLbJZ5i3HPB7YrjTPRiFFtgtMkCZ2Six/73Mc+z1ijXnzI2ltvfEL8A5S84g/9jchwAAAAASUVORK5CYII="
+                    alt=""
+                  />
+                  <span>Haz clic aquí para subir una imagen</span>
+                </label>
+                <input
+                  id={`id-file`}
+                  accept="image/png,image/jpg,image/jpeg"
+                  style={{ display: "none" }}
+                  type="file"
+                  multiple
+                  onChange={onChangeFile}
                 />
-                <span>Haz clic aquí para subir una imagen</span>
-              </label>
-              <input
-                id={`id-file`}
-                accept="image/png,image/jpg,image/jpeg"
-                style={{ display: "none" }}
-                type="file"
-                multiple
-                onChange={onChangeFile}
-              />
-            </UploadSection>
+              </UploadSection>
+            )}
+          </ContentImages>
+          {isNil(idProperty) === false && (
+            <div
+              className="label-indicator"
+              style={{
+                marginTop: "25px",
+              }}
+            >
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <span>Tus cambios se guardan automaticamente.</span>
+                </Col>
+              </Row>
+            </div>
           )}
-        </ContentImages>
-        {isNil(idProperty) === false && (
-          <div
-            className="label-indicator"
-            style={{
-              marginTop: "25px",
-            }}
-          >
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <span>Tus cambios se guardan automaticamente.</span>
-              </Col>
-            </Row>
-          </div>
-        )}
-        <div className="next-back-buttons">
-          <ButtonNextBackPage block={false} onClick={onClickBack}>
-            {"<< "}
-            <u>{"Atrás"}</u>
-          </ButtonNextBackPage>
-          <ButtonNextBackPage
-            block={false}
-            onClick={async () => {
-              try {
-                if (isNil(idProperty) === true) {
-                  const response = await onClickFinish();
-                  const responseDocument = await handlerOnSendFiles(
-                    arrayImages
-                  );
-                  await handlerCallSetPropertyDocument(
-                    {
-                      jsonDocument: JSON.stringify(responseDocument),
-                      idApartment: response.idApartment,
-                      isActive: true,
-                    },
-                    response.idProperty
-                  );
-                  redirect();
-                } else {
-                  onBackTo();
+          <div className="next-back-buttons">
+            <ButtonNextBackPage block={false} onClick={onClickBack}>
+              {"<< "}
+              <u>{"Atrás"}</u>
+            </ButtonNextBackPage>
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                setIsLoadApi(true);
+                try {
+                  if (isNil(idProperty) === true) {
+                    const response = await onClickFinish();
+                    const responseDocument = await handlerOnSendFiles(
+                      arrayImages
+                    );
+                    await handlerCallSetPropertyDocument(
+                      {
+                        jsonDocument: JSON.stringify(responseDocument),
+                        idApartment: response.idApartment,
+                        isActive: true,
+                      },
+                      response.idProperty
+                    );
+                    redirect();
+                  } else {
+                    onBackTo();
+                  }
+                  setIsLoadApi(false);
+                } catch (error) {
+                  setIsLoadApi(false);
                 }
-              } catch (error) {}
-            }}
-          >
-            <u>{"Finalizar"}</u>
-            {" >>"}
-          </ButtonNextBackPage>
-        </div>
-      </FormProperty>
+              }}
+            >
+              <u>{"Finalizar"}</u>
+              {" >>"}
+            </ButtonNextBackPage>
+          </div>
+        </FormProperty>
+      </Spin>
     </ContentForm>
   );
 };

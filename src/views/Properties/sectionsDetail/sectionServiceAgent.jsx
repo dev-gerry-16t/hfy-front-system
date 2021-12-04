@@ -18,6 +18,7 @@ import {
   Container,
 } from "../constants/styleConstants";
 import ContextProperty from "../context/contextProperty";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const ContentServiceAgent = styled(Container)`
   margin-top: 1em;
@@ -285,6 +286,7 @@ const SectionServiceAgent = (props) => {
   const { idApplicationMethod, applicationMethod, applicationMethodTitle } =
     dataDetail;
   const [isEditService, setIsEditService] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
 
   const arrayServiceSelect =
     isNil(applicationMethod) === false && isEmpty(applicationMethod) === false
@@ -293,131 +295,137 @@ const SectionServiceAgent = (props) => {
 
   return (
     <ContentServiceAgent>
-      {(isNil(idApplicationMethod) === true || isEditService === true) && (
-        <>
-          <h1>¡Te ayudamos con tu proceso de renta!</h1>
-          <SectionCard>
-            {isEmpty(dataApplication) === false &&
-              dataApplication.map((row) => {
-                const methods =
-                  isNil(row.applicationMethod) === false &&
-                  isEmpty(row.applicationMethod) === false
-                    ? JSON.parse(row.applicationMethod)
-                    : [];
-                return (
-                  <CardServices>
-                    <div className="top-card">
-                      <div className="style-text">3 MESES GRATIS</div>
-                      <h3>{row.text}</h3>
-                    </div>
-                    <div className="pick"></div>
-                    <div className="body-card">
-                      <div className="content-service">
-                        {isEmpty(methods) === false &&
-                          methods.map((rowMap) => {
-                            return (
-                              <div className="service-hom">
-                                <span className="check" />{" "}
-                                <span className="label-check">{rowMap}</span>
-                              </div>
-                            );
-                          })}
-                      </div>
-                      <div className="button-action">
-                        <ButtonsService
-                          primary={
-                            idApplicationMethod == row.idApplicationMethod ||
-                            isNil(idApplicationMethod) === true
-                          }
-                          onClick={async () => {
-                            try {
-                              await updateProperty({
-                                idApartment: dataDetail.idApartment,
-                                idApplicationMethod: row.idApplicationMethod,
-                              });
-                              getById();
-                              setIsEditService(false);
-                            } catch (error) {}
-                          }}
-                        >
-                          {idApplicationMethod == row.idApplicationMethod
-                            ? "Actual"
-                            : "Seleccionar"}
-                        </ButtonsService>
-                        <ButtonsService>Ver más información</ButtonsService>
-                      </div>
-                    </div>
-                  </CardServices>
-                );
-              })}
-          </SectionCard>
-        </>
-      )}
-      {isNil(idApplicationMethod) === false &&
-        isEmpty(dataApplication) === false &&
-        isEditService === false && (
+      <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
+        {(isNil(idApplicationMethod) === true || isEditService === true) && (
           <>
-            <div
-              style={{
-                marginBottom: 25,
-                position: "relative",
-              }}
-            >
-              <ButtonIcon
-                onClick={async () => {
-                  setIsEditService(true);
-                }}
-                style={{
-                  position: "absolute",
-                  right: "32px",
-                }}
-              >
-                <IconEditSquare
-                  backGround="transparent"
-                  color="var(--color-primary)"
-                />
-              </ButtonIcon>
-              <h1>Servicio adquirido</h1>
-            </div>
-            <CardServiceSelect>
-              <div className="service-options">
-                <div className="content-service">
-                  {isEmpty(arrayServiceSelect) === false &&
-                    arrayServiceSelect.map((row) => {
-                      return (
-                        <div className="service-hom">
-                          <span className="check" />{" "}
-                          <span className="label-check">{row}</span>
+            <h1>¡Te ayudamos con tu proceso de renta!</h1>
+            <SectionCard>
+              {isEmpty(dataApplication) === false &&
+                dataApplication.map((row) => {
+                  const methods =
+                    isNil(row.applicationMethod) === false &&
+                    isEmpty(row.applicationMethod) === false
+                      ? JSON.parse(row.applicationMethod)
+                      : [];
+                  return (
+                    <CardServices>
+                      <div className="top-card">
+                        <div className="style-text">3 MESES GRATIS</div>
+                        <h3>{row.text}</h3>
+                      </div>
+                      <div className="pick"></div>
+                      <div className="body-card">
+                        <div className="content-service">
+                          {isEmpty(methods) === false &&
+                            methods.map((rowMap) => {
+                              return (
+                                <div className="service-hom">
+                                  <span className="check" />{" "}
+                                  <span className="label-check">{rowMap}</span>
+                                </div>
+                              );
+                            })}
                         </div>
-                      );
-                    })}
-                </div>
-              </div>
-              <div className="line"></div>
-              <div className="info-service">
-                <div className="info">
-                  <strong>Costo de servicio:</strong>
-                  <span
-                    style={{
-                      color: "var(--color-primary)",
-                      fontWeight: "700",
-                    }}
-                  >
-                    $ 1,200 MXN
-                  </span>
-                </div>
-                <div className="info">
-                  <strong>Servicio:</strong>
-                  <span>{applicationMethodTitle}</span>
-                </div>
-                <div className="info">
-                  <strong>Fecha de adquisición:</strong>
-                  <span>02/11/2021</span>
-                </div>
-              </div>
-            </CardServiceSelect>
+                        <div className="button-action">
+                          <ButtonsService
+                            primary={
+                              idApplicationMethod == row.idApplicationMethod ||
+                              isNil(idApplicationMethod) === true
+                            }
+                            onClick={async () => {
+                              try {
+                                setIsLoadApi(true);
+                                await updateProperty({
+                                  idApartment: dataDetail.idApartment,
+                                  idApplicationMethod: row.idApplicationMethod,
+                                });
+                                getById();
+                                setIsEditService(false);
+                                setIsLoadApi(false);
+                              } catch (error) {
+                                setIsLoadApi(false);
+                              }
+                            }}
+                          >
+                            {idApplicationMethod == row.idApplicationMethod
+                              ? "Actual"
+                              : "Seleccionar"}
+                          </ButtonsService>
+                          <ButtonsService>Ver más información</ButtonsService>
+                        </div>
+                      </div>
+                    </CardServices>
+                  );
+                })}
+            </SectionCard>
           </>
         )}
+        {isNil(idApplicationMethod) === false &&
+          isEmpty(dataApplication) === false &&
+          isEditService === false && (
+            <>
+              <div
+                style={{
+                  marginBottom: 25,
+                  position: "relative",
+                }}
+              >
+                <ButtonIcon
+                  onClick={async () => {
+                    setIsEditService(true);
+                  }}
+                  style={{
+                    position: "absolute",
+                    right: "32px",
+                  }}
+                >
+                  <IconEditSquare
+                    backGround="transparent"
+                    color="var(--color-primary)"
+                  />
+                </ButtonIcon>
+                <h1>Servicio adquirido</h1>
+              </div>
+              <CardServiceSelect>
+                <div className="service-options">
+                  <div className="content-service">
+                    {isEmpty(arrayServiceSelect) === false &&
+                      arrayServiceSelect.map((row) => {
+                        return (
+                          <div className="service-hom">
+                            <span className="check" />{" "}
+                            <span className="label-check">{row}</span>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
+                <div className="line"></div>
+                <div className="info-service">
+                  <div className="info">
+                    <strong>Costo de servicio:</strong>
+                    <span
+                      style={{
+                        color: "var(--color-primary)",
+                        fontWeight: "700",
+                      }}
+                    >
+                      $ 1,200 MXN
+                    </span>
+                  </div>
+                  <div className="info">
+                    <strong>Servicio:</strong>
+                    <span>{applicationMethodTitle}</span>
+                  </div>
+                  <div className="info">
+                    <strong>Fecha de adquisición:</strong>
+                    <span>02/11/2021</span>
+                  </div>
+                </div>
+              </CardServiceSelect>
+            </>
+          )}
+      </ComponentLoadSection>
     </ContentServiceAgent>
   );
 };
