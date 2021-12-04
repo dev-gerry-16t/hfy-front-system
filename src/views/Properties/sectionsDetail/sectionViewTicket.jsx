@@ -342,13 +342,15 @@ const SectionViewTicket = (props) => {
     return result;
   };
 
-  const handlerOnClick = () => {
+  const handlerOnClick = (name) => {
     var opt = {
-      image: { type: "jpeg", quality: 1 },
+      image: { type: "png", quality: 1 },
+      filename: name,
       html2canvas: {
         dpi: 300,
-        letterRendering: true,
+        letterRendering: false,
         useCORS: true,
+        scale: 2,
       },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
     };
@@ -402,7 +404,7 @@ const SectionViewTicket = (props) => {
       handlerCallGetPropertyById(dataTicket.idProperty);
     }
   }, [dataTicket]);
-  
+
   return (
     <Modal
       visible={isVisibleModal}
@@ -677,7 +679,7 @@ const SectionViewTicket = (props) => {
           <ButtonsModal
             primary
             onClick={() => {
-              handlerOnClick();
+              handlerOnClick(dataDetail.identifier);
             }}
           >
             Descargar
