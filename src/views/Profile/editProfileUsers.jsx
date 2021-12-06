@@ -18,6 +18,9 @@ import SectionReferences from "./sections/References/sectionReferencies";
 import SectionCurrentWorkTenant from "./sections/CurrentWork/sectionCurrentWorkTenant";
 import SectionCurrentWorkTenantMoral from "./sections/CurrentWork/sectionCurrentWorkTenantMoral";
 import SectionBankInformation from "./sections/BankInformation/sectionBankInformation";
+import SectionBankInformationAgent from "./sections/BankInformation/sectionBankInformationAgent";
+import SectionPersonalInformationAgentMoral from "./sections/PersonalInformation/sectionPersonalInformationAgentMoral";
+import SectionPersonalInformationAgent from "./sections/PersonalInformation/sectionPersonalInformationAgent";
 import CustomStepsHomify from "../../components/customStepsHomifyV2";
 
 const Content = styled.div`
@@ -29,7 +32,7 @@ const Content = styled.div`
 `;
 
 const EditProfileUsers = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, match } = props;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
@@ -95,6 +98,18 @@ const EditProfileUsers = (props) => {
           : [];
       setDataTabs(responseResult);
       setMaxTabs(responseResult.length);
+      if (
+        isEmpty(responseResult) === false &&
+        isNil(match.params.identifier) === false
+      ) {
+        const identifierMatch = match.params.identifier;
+        responseResult.find((row, ix) => {
+          if (row.identifier == identifierMatch) {
+            setCurrent(ix);
+          }
+          return row.identifier == identifierMatch;
+        });
+      }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -107,7 +122,7 @@ const EditProfileUsers = (props) => {
     handlerCallGetCustomerData();
     handlerCallGetCustomerTabById();
   }, []);
-  
+
   return (
     <Content>
       <CustomStepsHomify
@@ -228,6 +243,34 @@ const EditProfileUsers = (props) => {
           />
         )}
         {/*Propietario Persona moral */}
+
+        {/*Agente Persona fisica */}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 12 && (
+          <SectionPersonalInformationAgent
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 14 && (
+          <SectionBankInformationAgent
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+          />
+        )}
+        {/*Agente Persona fisica */}
+
+        {/*Agente Persona Moral */}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 13 && (
+          <SectionPersonalInformationAgentMoral
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {/*Agente Persona Moral */}
       </ContextProfile.Provider>
     </Content>
   );

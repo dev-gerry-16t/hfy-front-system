@@ -154,12 +154,14 @@ const ProfileUsers = (props) => {
     callAddDocument,
     callSetImageProfile,
     dataProfile,
+    history,
   } = props;
   const [dataDocument, setDataDocument] = useState([]);
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataEmail, setDataEmail] = useState([]);
   const [dataPhoneNumber, setDataPhoneNumber] = useState([]);
+  const [dataTabs, setDataTabs] = useState([]);
 
   const frontFunctions = new FrontFunctions();
 
@@ -244,7 +246,40 @@ const ProfileUsers = (props) => {
     }
   };
 
+  const handlerCallGetCustomerTabById = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TAB_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      let objectIdentifier = {};
+      responseResult.forEach((element) => {
+        objectIdentifier[`identifier-${element.identifier}`] =
+          element.identifier;
+      });
+      setDataTabs(objectIdentifier);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
+    handlerCallGetCustomerTabById();
     handlerCallGetCustomerData();
     handlerCallGetCustomerDocument();
   }, []);
@@ -266,56 +301,111 @@ const ProfileUsers = (props) => {
           </div>
           <DetailProfileContent>
             <div className="column-grid-1">
-              <WidgetPersonalInfoProfile dataProfile={dataProfile} />
-              <div className="card-header-profile">
-                <div className="header-title-card-profile">
-                  <h1>Obligado Solidario</h1>
-                  <button>
-                    <IconEditSquare color="var(--color-primary)" size="21px" />
-                  </button>
-                </div>
-                <div className="body-card-profile">
-                  <div className="label-strong">
-                    <span>¿Tienes Obligado solidario?</span>
-                    <strong
-                      style={{
-                        color: "var(--color-primary)",
+              <WidgetPersonalInfoProfile
+                history={history}
+                dataProfile={dataProfile}
+                identifier={
+                  dataTabs["identifier-1"] ||
+                  dataTabs["identifier-2"] ||
+                  dataTabs["identifier-8"] ||
+                  dataTabs["identifier-9"] ||
+                  dataTabs["identifier-12"] ||
+                  dataTabs["identifier-13"]
+                }
+              />
+              {(dataTabs["identifier-1"] || dataTabs["identifier-2"]) && (
+                <div className="card-header-profile">
+                  <div className="header-title-card-profile">
+                    <h1>Obligado Solidario</h1>
+                    <button
+                      onClick={() => {
+                        const identifierMatch =
+                          dataTabs["identifier-1"] || dataTabs["identifier-2"];
+                        history.push(
+                          `/websystem/edit-profile/${identifierMatch}`
+                        );
                       }}
                     >
-                      x
-                    </strong>
+                      <IconEditSquare
+                        color="var(--color-primary)"
+                        size="21px"
+                      />
+                    </button>
+                  </div>
+                  <div className="body-card-profile">
+                    <div className="label-strong">
+                      <span>¿Tienes Obligado solidario?</span>
+                      <strong
+                        style={{
+                          color: "var(--color-primary)",
+                        }}
+                      >
+                        x
+                      </strong>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="card-header-profile">
-                <div className="header-title-card-profile">
-                  <h1>Aval</h1>
-                  <button>
-                    <IconEditSquare color="var(--color-primary)" size="21px" />
-                  </button>
-                </div>
-                <div className="body-card-profile">
-                  <div className="label-strong">
-                    <span>¿Cuentas con Aval?</span>
-                    <strong
-                      style={{
-                        color: "var(--color-primary)",
+              )}
+
+              {dataTabs["identifier-7"] && (
+                <div className="card-header-profile">
+                  <div className="header-title-card-profile">
+                    <h1>Aval</h1>
+                    <button
+                      onClick={() => {
+                        const identifierMatch = dataTabs["identifier-7"];
+                        history.push(
+                          `/websystem/edit-profile/${identifierMatch}`
+                        );
                       }}
                     >
-                      {dataCustomerDetail.hasEndorsement == true ? "Si" : "No"}
-                    </strong>
+                      <IconEditSquare
+                        color="var(--color-primary)"
+                        size="21px"
+                      />
+                    </button>
+                  </div>
+                  <div className="body-card-profile">
+                    <div className="label-strong">
+                      <span>¿Cuentas con Aval?</span>
+                      <strong
+                        style={{
+                          color: "var(--color-primary)",
+                        }}
+                      >
+                        {dataCustomerDetail.hasEndorsement == true
+                          ? "Si"
+                          : "No"}
+                      </strong>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
+
               <WidgetDataContactProfile
                 dataEmail={dataEmail}
                 dataPhoneNumber={dataPhoneNumber}
               />
             </div>
             <div className="column-grid-2">
-              <WidgetCurrentAddressProfile />
-              <WidgetDataBankProfile />
-              <WidgetWorkInfoProfile />
+              <WidgetCurrentAddressProfile
+                identifier={
+                  dataTabs["identifier-3"] || dataTabs["identifier-10"]
+                }
+                history={history}
+              />
+              <WidgetDataBankProfile
+                identifier={
+                  dataTabs["identifier-11"] || dataTabs["identifier-14"]
+                }
+                history={history}
+              />
+              <WidgetWorkInfoProfile
+                identifier={
+                  dataTabs["identifier-4"] || dataTabs["identifier-5"]
+                }
+                history={history}
+              />
               <div className="card-header-profile">
                 <div className="header-title-card-profile">
                   <h1>Documentos</h1>
@@ -334,7 +424,7 @@ const ProfileUsers = (props) => {
               </div>
             </div>
             <div className="column-grid-3">
-              <WidgetReferenceProfile />
+              <WidgetReferenceProfile identifier={dataTabs["identifier-6"]} />
             </div>
           </DetailProfileContent>
         </ContentForm>

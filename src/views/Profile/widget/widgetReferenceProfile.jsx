@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -39,12 +40,13 @@ const ButtonHeader = styled.button`
 `;
 
 const WidgetReferenceProfile = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, identifier } = props;
   const [dataDefaultReference, setDataDefaultReference] = useState({});
   const [isOpenAddReferences, setIsOpenAddReferences] = useState(false);
   const dataContexProfile = useContext(ContextProfile);
   const { dataDetailReference, getById } = dataContexProfile;
   const frontFunctions = new FrontFunctions();
+  let component = <div />;
 
   const handlerCallSetPersonalReference = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -67,91 +69,97 @@ const WidgetReferenceProfile = (props) => {
       throw error;
     }
   };
-
-  return (
-    <>
-      <ComponentAddReference
-        isModalVisible={isOpenAddReferences}
-        dataDefaultReference={dataDefaultReference}
-        onClose={() => {
-          setIsOpenAddReferences(false);
-          setDataDefaultReference({});
-        }}
-        onSendInformation={async (data) => {
-          try {
-            await handlerCallSetPersonalReference(data);
-            getById();
-          } catch (error) {
-            throw error;
-          }
-        }}
-      />
-      <h1 className="subtitle-card">Referencias</h1>
-      <div className="card-reference-profile">
-        {isEmpty(dataDetailReference) === false &&
-          dataDetailReference.map((row) => {
-            return (
-              <CardReference>
-                <div className="header-buttons">
-                  <ButtonHeader
-                    onClick={() => {
-                      setDataDefaultReference(row);
-                      setIsOpenAddReferences(true);
-                    }}
-                  >
-                    <IconEditSquare color="var(--color-primary)" size="15px" />
-                  </ButtonHeader>
-                  <ButtonHeader
-                    onClick={async () => {
-                      try {
-                        await handlerCallSetPersonalReference({
-                          idPersonalReference: row.idPersonalReference,
-                          isActive: false,
-                        });
-                        getById();
-                      } catch (error) {}
-                    }}
-                  >
-                    <IconDelete color="var(--color-primary)" size="15px" />
-                  </ButtonHeader>
-                </div>
-                <div className="info-reference">
-                  <strong>
-                    {row.givenName} {row.lastName} {row.mothersMaidenName}
-                  </strong>
-                  <u>{row.emailAddress}</u>
-                  <span>{row.phoneNumber}</span>
-                </div>
-              </CardReference>
-            );
-          })}
-      </div>
-      <div
-        style={{
-          marginTop: "20px",
-        }}
-      >
-        <ButtonNextBackPage
-          block={false}
-          onClick={() => {
-            setIsOpenAddReferences(true);
+  if (isNil(identifier) === false) {
+    component = (
+      <>
+        <ComponentAddReference
+          isModalVisible={isOpenAddReferences}
+          dataDefaultReference={dataDefaultReference}
+          onClose={() => {
+            setIsOpenAddReferences(false);
+            setDataDefaultReference({});
           }}
+          onSendInformation={async (data) => {
+            try {
+              await handlerCallSetPersonalReference(data);
+              getById();
+            } catch (error) {
+              throw error;
+            }
+          }}
+        />
+        <h1 className="subtitle-card">Referencias</h1>
+        <div className="card-reference-profile">
+          {isEmpty(dataDetailReference) === false &&
+            dataDetailReference.map((row) => {
+              return (
+                <CardReference>
+                  <div className="header-buttons">
+                    <ButtonHeader
+                      onClick={() => {
+                        setDataDefaultReference(row);
+                        setIsOpenAddReferences(true);
+                      }}
+                    >
+                      <IconEditSquare
+                        color="var(--color-primary)"
+                        size="15px"
+                      />
+                    </ButtonHeader>
+                    <ButtonHeader
+                      onClick={async () => {
+                        try {
+                          await handlerCallSetPersonalReference({
+                            idPersonalReference: row.idPersonalReference,
+                            isActive: false,
+                          });
+                          getById();
+                        } catch (error) {}
+                      }}
+                    >
+                      <IconDelete color="var(--color-primary)" size="15px" />
+                    </ButtonHeader>
+                  </div>
+                  <div className="info-reference">
+                    <strong>
+                      {row.givenName} {row.lastName} {row.mothersMaidenName}
+                    </strong>
+                    <u>{row.emailAddress}</u>
+                    <span>{row.phoneNumber}</span>
+                  </div>
+                </CardReference>
+              );
+            })}
+        </div>
+        <div
           style={{
-            width: "100%",
+            marginTop: "20px",
           }}
         >
-          <div
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              setIsOpenAddReferences(true);
+            }}
             style={{
-              display: "flex",
-              justifyContent: "center",
+              width: "100%",
             }}
           >
-            <u>{"Agregar referencia +"}</u>
-          </div>
-        </ButtonNextBackPage>
-      </div>
-    </>
-  );
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <u>{"Agregar referencia +"}</u>
+            </div>
+          </ButtonNextBackPage>
+        </div>
+      </>
+    );
+  }
+
+  return component;
 };
 
 const mapStateToProps = (state) => {
