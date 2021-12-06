@@ -28,6 +28,8 @@ const CardInformation = styled.div`
   font-size: 0.8em;
   display: flex;
   justify-content: center;
+  max-height: 300px;
+  overflow-y: scroll;
   .content-info {
     width: 360px;
     .data-information {

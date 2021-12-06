@@ -87,8 +87,9 @@ const ComponentAddAgent = (props) => {
             <>
               <h1>Comparte con Agente</h1>
               <p>
-                Se le enviará una notificación al asesor para aceptar la
-                invitación
+                {dataProfile.idUserType === 3
+                  ? "Enviaremos una invitación al agente para vincular la propiedad"
+                  : "Asignaremos permiso al correo electrónico que nos proporciones para ver la ficha técnica de la propiedad y enviar prospectos."}
               </p>
               <div>
                 <Row>

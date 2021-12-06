@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import { Progress, Select, Popover } from "antd";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomInputCurrency from "../../../components/customInputCurrency";
@@ -11,6 +12,7 @@ import { callGlobalActionApi } from "../../../utils/actions/actions";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { split } from "lodash";
 
 const { Option } = Select;
 
@@ -54,13 +56,16 @@ const WidgetInvestigation = (props) => {
     idCustomer,
     dataProfile,
     updateDetailUser,
+    howManyUser,
+    policiesApproved,
   } = props;
   const [selectPolicies, setSelectPolicies] = useState([]);
   const [dataForm, setDataForm] = useState({
     idInvestigationStatus,
     paymentCapacity,
-    policiesApproved: "",
+    policiesApproved,
   });
+
   const frontFunctions = new FrontFunctions();
 
   const handlerCallUpdateInvestigationProcess = async (data) => {
@@ -86,6 +91,16 @@ const WidgetInvestigation = (props) => {
       throw error;
     }
   };
+
+  useEffect(() => {
+    if (isEmpty(dataPolicies) === false) {
+      const selectPolicies =
+        isNil(policiesApproved) === false && isEmpty(policiesApproved) === false
+          ? policiesApproved.split(",")
+          : [];
+      setSelectPolicies(selectPolicies);
+    }
+  }, [dataPolicies]);
 
   return (
     <Popover
@@ -123,6 +138,7 @@ const WidgetInvestigation = (props) => {
             <Select
               mode="multiple"
               allowClear
+              value={selectPolicies}
               style={{ width: "100%" }}
               placeholder="Pólizas aprobadas"
               defaultValue={selectPolicies}
@@ -158,14 +174,16 @@ const WidgetInvestigation = (props) => {
           }}
         >
           <span>Investigación</span>
-          <ButtonAction
-            background="#00aae4"
-            onClick={() => {
-              handlerCallUpdateInvestigationProcess({ switchCustomer: true });
-            }}
-          >
-            Cambiar roles
-          </ButtonAction>
+          {howManyUser > 1 && (
+            <ButtonAction
+              background="#00aae4"
+              onClick={() => {
+                handlerCallUpdateInvestigationProcess({ switchCustomer: true });
+              }}
+            >
+              Cambiar roles
+            </ButtonAction>
+          )}
         </div>
       }
       trigger="click"

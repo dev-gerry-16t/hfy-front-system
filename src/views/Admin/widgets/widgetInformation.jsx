@@ -172,20 +172,6 @@ const WidgetInformation = (props) => {
       </MiddleContactUser>
       <BottomCardInformation>
         <div>
-          <strong>Ocupación:</strong>
-          <span
-            style={{
-              width: "130px",
-              fontSize: "0.7em",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
-            }}
-          >
-            {occupationActivity}
-          </span>
-        </div>
-        <div>
           <strong>RFC:</strong>
           <span>{taxId}</span>
         </div>

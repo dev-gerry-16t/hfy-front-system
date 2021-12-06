@@ -545,7 +545,12 @@ const SectionDataLocation = (props) => {
                   try {
                     setIsLoadApi(true);
                     await handlerCallUpdateProperty(
-                      { ...dataForm, idApartment: dataFormSave.idApartment },
+                      {
+                        ...dataForm,
+                        idApartment: dataFormSave.idApartment,
+                        jsonCoordinates: JSON.stringify(positionCoordenates),
+                        zipCode,
+                      },
                       idProperty
                     );
                     setIsLoadApi(false);
