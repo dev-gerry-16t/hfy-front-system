@@ -22,6 +22,7 @@ import SectionBankInformationAgent from "./sections/BankInformation/sectionBankI
 import SectionPersonalInformationAgentMoral from "./sections/PersonalInformation/sectionPersonalInformationAgentMoral";
 import SectionPersonalInformationAgent from "./sections/PersonalInformation/sectionPersonalInformationAgent";
 import CustomStepsHomify from "../../components/customStepsHomifyV2";
+import SectionAvalInformation from "./sections/Aval/sectionAvalInformation";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -184,6 +185,13 @@ const EditProfileUsers = (props) => {
             }}
           />
         )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 7 && (
+          <SectionAvalInformation
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
+          />
+        )}
         {/*Inquilino Persona fisica */}
 
         {/*Inquilino Persona moral */}
@@ -260,6 +268,7 @@ const EditProfileUsers = (props) => {
             }}
           />
         )}
+
         {/*Agente Persona fisica */}
 
         {/*Agente Persona Moral */}
