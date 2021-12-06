@@ -515,7 +515,7 @@ const SectionPersonalInformation = (props) => {
             </Col>
           </Row>
         </div>
-        <h1 className="subtitle-header">Datos de contacto</h1>
+        {/* <h1 className="subtitle-header">Datos de contacto</h1>
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -552,7 +552,7 @@ const SectionPersonalInformation = (props) => {
               />
             </Col>
           </Row>
-        </div>
+        </div> */}
         <div className="next-back-buttons">
           <ButtonNextBackPage block>
             {"<< "}

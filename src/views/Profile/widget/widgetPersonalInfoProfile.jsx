@@ -14,7 +14,8 @@ const AvatarUpload = styled.div`
 `;
 
 const WidgetPersonalInfoProfile = (props) => {
-  const { dataProfile } = props;
+  const { dataProfile, identifier, history } = props;
+
   const dataContexProfile = useContext(ContextProfile);
   const { dataCustomerDetail } = dataContexProfile;
   const {
@@ -36,7 +37,11 @@ const WidgetPersonalInfoProfile = (props) => {
         }}
       >
         <h1></h1>
-        <button>
+        <button
+          onClick={() => {
+            history.push(`/websystem/edit-profile/${identifier}`);
+          }}
+        >
           <IconEditSquare color="var(--color-primary)" size="21px" />
         </button>
       </div>

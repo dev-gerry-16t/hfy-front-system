@@ -238,6 +238,14 @@ const routes = [
     exact: true,
   },
   {
+    key: "20-1",
+    id: "Información",
+    path: "/websystem/edit-profile/:identifier",
+    name: "Agregar información",
+    component: EditProfileUsers,
+    exact: true,
+  },
+  {
     key: "21",
     id: "UserDetail",
     path: "/websystem/user-detail/:idInvestigationProcess",
