@@ -290,12 +290,14 @@ const UserDetailInformation = (props) => {
             idDocument,
             thumbnail,
             isBS,
-            idInvestigationStatus,
+            idInvestigationstatus,
             idRejectionReason,
             paymentCapacity,
             rejectionReason,
             isApproved,
+            policiesApproved,
           } = row;
+
           const dataReferences =
             isEmpty(personalReferences) === false
               ? JSON.parse(personalReferences)
@@ -310,12 +312,14 @@ const UserDetailInformation = (props) => {
                 {isBS === false && (
                   <StickyInvestigation>
                     <WidgetInvestigation
-                      idInvestigationStatus={idInvestigationStatus}
+                      idInvestigationStatus={idInvestigationstatus}
                       paymentCapacity={paymentCapacity}
                       dataInvStatus={dataInvStatus}
                       dataPolicies={dataPolicies}
+                      policiesApproved={policiesApproved}
                       idInvestigationProcess={params.idInvestigationProcess}
                       idCustomer={idCustomer}
+                      howManyUser={dataDetail.length}
                       updateDetailUser={() => {
                         handlerCallGetInvestigationProcessById(
                           params.idInvestigationProcess
