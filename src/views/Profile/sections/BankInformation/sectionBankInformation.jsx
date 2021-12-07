@@ -9,6 +9,7 @@ import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../../utils/actions/actions";
 import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import ContextProfile from "../../context/contextProfile";
+import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import {
   ContentForm,
   ButtonNextBackPage,
@@ -30,7 +31,7 @@ const SectionBankInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail } = dataContexProfile;
+  const { dataCustomerDetail, matchParams, history } = dataContexProfile;
 
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -117,6 +118,17 @@ const SectionBankInformation = (props) => {
 
   return (
     <ContentForm>
+      {isNil(matchParams) === false && (
+        <div className="back-button">
+          <button
+            onClick={() => {
+              history.push("/websystem/profile");
+            }}
+          >
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Dirección Actual</h1>
       </div>
@@ -232,6 +244,21 @@ const SectionBankInformation = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
+          {isNil(matchParams) === false && (
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                try {
+                  await handlerCallUpdateCustomerAccount({
+                    ...dataForm,
+                    idBank,
+                  });
+                } catch (error) {}
+              }}
+            >
+              <u>{"Guardar"}</u>
+            </ButtonNextBackPage>
+          )}
           <ButtonNextBackPage
             block={false}
             onClick={async () => {

@@ -20,6 +20,7 @@ import {
   FormProperty,
 } from "../../constants/styleConstants";
 import { ReactComponent as IconActivity } from "../../../../assets/iconSvg/svgFile/iconActivity.svg";
+import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 
 const UploadSection = styled.div`
@@ -76,7 +77,8 @@ const SectionCurrentWork = (props) => {
   const [dataDocument, setDataDocument] = useState([]);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, identifier, type } = dataContexProfile;
+  const { dataCustomerDetail, identifier, type, matchParams, history } =
+    dataContexProfile;
 
   const handlerCallSetCustomerWorkingInfo = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -220,6 +222,17 @@ const SectionCurrentWork = (props) => {
 
   return (
     <ContentForm>
+      {isNil(matchParams) === false && (
+        <div className="back-button">
+          <button
+            onClick={() => {
+              history.push("/websystem/profile");
+            }}
+          >
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Información Socioeconómica</h1>
       </div>
@@ -424,6 +437,18 @@ const SectionCurrentWork = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
+          {isNil(matchParams) === false && (
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                try {
+                  await handlerCallSetCustomerWorkingInfo(dataForm);
+                } catch (error) {}
+              }}
+            >
+              <u>{"Guardar"}</u>
+            </ButtonNextBackPage>
+          )}
           <ButtonNextBackPage
             block={false}
             onClick={async () => {
