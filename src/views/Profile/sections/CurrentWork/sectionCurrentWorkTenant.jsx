@@ -84,6 +84,7 @@ const SectionCurrentWork = (props) => {
     bossPhoneNumber: null,
     otherIncomes: null,
     otherIncomesDescription: null,
+    hasOtherIncomes: null,
     hasCar: null,
     carriagePlate: null,
     nIV: null,
@@ -208,6 +209,7 @@ const SectionCurrentWork = (props) => {
       isCCAccepted,
       cCDigitalSignature,
       childrenNo,
+      hasOtherIncomes,
     } = data;
     setDataForm({
       idOccupationActivity,
@@ -227,6 +229,7 @@ const SectionCurrentWork = (props) => {
       isCCAccepted,
       cCDigitalSignature,
       childrenNo,
+      hasOtherIncomes,
     });
   };
 
@@ -409,12 +412,12 @@ const SectionCurrentWork = (props) => {
                   <label className="input-radio">
                     <input
                       type="radio"
-                      checked={dataForm.isOtherIncomes == true}
+                      checked={dataForm.hasOtherIncomes == true}
                       name="other-incomes"
                       onClick={() => {
                         setDataForm({
                           ...dataForm,
-                          isOtherIncomes: true,
+                          hasOtherIncomes: true,
                         });
                       }}
                     />
@@ -424,11 +427,11 @@ const SectionCurrentWork = (props) => {
                     <input
                       type="radio"
                       name="other-incomes"
-                      checked={dataForm.isOtherIncomes == false}
+                      checked={dataForm.hasOtherIncomes == false}
                       onClick={() => {
                         setDataForm({
                           ...dataForm,
-                          isOtherIncomes: false,
+                          hasOtherIncomes: false,
                         });
                       }}
                     />
@@ -440,7 +443,7 @@ const SectionCurrentWork = (props) => {
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
           </Row>
-          {dataForm.isOtherIncomes == true && (
+          {dataForm.hasOtherIncomes == true && (
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <CustomInputCurrency

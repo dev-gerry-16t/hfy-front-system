@@ -23,6 +23,7 @@ import SectionPersonalInformationAgentMoral from "./sections/PersonalInformation
 import SectionPersonalInformationAgent from "./sections/PersonalInformation/sectionPersonalInformationAgent";
 import CustomStepsHomify from "../../components/customStepsHomifyV2";
 import SectionAvalInformation from "./sections/Aval/sectionAvalInformation";
+import WidgetModalConfirmInformation from "./widget/widgetModalConfirmInformation";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -38,9 +39,42 @@ const EditProfileUsers = (props) => {
   const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
+  const [isConfirmInfo, setIsConfirmInfo] = useState(false);
   const [current, setCurrent] = useState(0);
   const [maxTabs, setMaxTabs] = useState(0);
   const frontFunctions = new FrontFunctions();
+
+  const handlerCallUpdateCustomerAccount = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idCustomer,
+        API_CONSTANTS.CUSTOMER.UPDATE_CUSTOMER_ACCOUNT,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallGetCustomerData = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -136,6 +170,19 @@ const EditProfileUsers = (props) => {
         }}
         current={current}
       />
+      <WidgetModalConfirmInformation
+        isModalVisible={isConfirmInfo}
+        onClose={() => {
+          setIsConfirmInfo(false);
+        }}
+        onSendConfirmation={async () => {
+          try {
+            await handlerCallUpdateCustomerAccount({ isDataConfirmed: true });
+          } catch (error) {
+            throw error;
+          }
+        }}
+      />
       <ContextProfile.Provider
         value={{
           dataCustomerDetail,
@@ -192,6 +239,11 @@ const EditProfileUsers = (props) => {
             onclickBack={() => {
               setCurrent(current - 1);
             }}
+            onClickFinish={async () => {
+              try {
+                setIsConfirmInfo(true);
+              } catch (error) {}
+            }}
           />
         )}
         {/*Inquilino Persona fisica */}
@@ -240,6 +292,11 @@ const EditProfileUsers = (props) => {
             onclickBack={() => {
               setCurrent(current - 1);
             }}
+            onClickFinish={async () => {
+              try {
+                setIsConfirmInfo(true);
+              } catch (error) {}
+            }}
           />
         )}
         {/*Propietario Persona fisica */}
@@ -267,6 +324,11 @@ const EditProfileUsers = (props) => {
           <SectionBankInformationAgent
             onclickBack={() => {
               setCurrent(current - 1);
+            }}
+            onClickFinish={async () => {
+              try {
+                setIsConfirmInfo(true);
+              } catch (error) {}
             }}
           />
         )}

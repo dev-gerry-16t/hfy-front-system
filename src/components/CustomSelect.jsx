@@ -78,7 +78,7 @@ const CustomSelect = (props) => {
           placeholder={placeholder}
           onChange={(e, a) => {
             const dataOption = data.find((row) => {
-              return row.id === e.target.value;
+              return row.id == e.target.value;
             });
             onChange(e.target.value, dataOption);
           }}

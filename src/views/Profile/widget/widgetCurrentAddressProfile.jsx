@@ -18,7 +18,7 @@ const WidgetCurrentAddressProfile = (props) => {
     lessorFullName,
     lessorPhoneNumber,
     state,
-    city,
+    municipality,
   } = dataCustomerDetail;
   let component = <div />;
 
@@ -81,13 +81,13 @@ const WidgetCurrentAddressProfile = (props) => {
           <div className="info-address-profile">
             <div>
               <span>Estado: </span>
-              <strong>{state}X</strong>
+              <strong>{state}</strong>
             </div>
           </div>
           <div className="info-address-profile">
             <div>
               <span>Municipio: </span>
-              <strong>{city}X</strong>
+              <strong>{municipality}</strong>
             </div>
           </div>
         </div>

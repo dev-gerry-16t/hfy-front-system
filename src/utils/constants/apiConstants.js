@@ -69,6 +69,7 @@ const API_CONSTANTS = {
     SET_CUSTOMER_PHONE_NUMBER: `${API.CUSTOMER}/customerPhoneNumber/setCustomerPhoneNumber/`,
     SET_CUSTOMER_BANKING_ACCOUNT: `${API.CUSTOMER}/account/setCustomerBankingAccount/`,
     SET_PERSONAL_REFERENCE: `${API.CUSTOMER}/personalReferences/setPersonalReference/`,
+    SET_CUSTOMER_ENDORSEMENT: `${API.CUSTOMER}/endorsement/setCustomerEndorsement/`,
     GET_CUSTOMER_TAB_BY_ID: `${API.CUSTOMER}/customer/getCustomerTabById`,
     GET_INVESTIGATION_PROCESS_COINCIDENCES: `${API.CUSTOMER}/investigation/getInvestigationProcessCoincidences`,
     GET_INVESTIGATION_PROCESS_BY_ID: `${API.CUSTOMER}/investigation/getInvestigationProcessById`,

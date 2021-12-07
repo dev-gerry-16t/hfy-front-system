@@ -100,8 +100,8 @@ const SectionPersonalInformation = (props) => {
     isDataConfirmed: null,
     boundSolidarityGivenName: null,
     boundSolidarityEmailAddress: null,
-    deactivateBoundSolidarity: null,
     sendReminderBoundSolidarity: null,
+    hasBoundSolidarity:null,
   });
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
@@ -249,9 +249,9 @@ const SectionPersonalInformation = (props) => {
       legalRepIdTypeNumber,
       legalRepDateOfBirth,
       isDataConfirmed,
+      hasBoundSolidarity,
       boundSolidarityGivenName,
       boundSolidarityEmailAddress,
-      deactivateBoundSolidarity,
       sendReminderBoundSolidarity,
     } = data;
     setDataForm({
@@ -286,9 +286,9 @@ const SectionPersonalInformation = (props) => {
       legalRepIdTypeNumber,
       legalRepDateOfBirth,
       isDataConfirmed,
+      hasBoundSolidarity,
       boundSolidarityGivenName,
       boundSolidarityEmailAddress,
-      deactivateBoundSolidarity,
       sendReminderBoundSolidarity,
     });
   };
@@ -437,22 +437,24 @@ const SectionPersonalInformation = (props) => {
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.idTypeNumber}
-                placeholder="Numero de identificación"
-                label={fieldDescription}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    idTypeNumber: value,
-                  });
-                }}
-                type="text"
-              />
-            </Col>
+            {isNil(dataForm.idType) === false && (
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.idTypeNumber}
+                  placeholder="Numero de identificación"
+                  label={fieldDescription}
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      idTypeNumber: value,
+                    });
+                  }}
+                  type="text"
+                />
+              </Col>
+            )}
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -489,7 +491,11 @@ const SectionPersonalInformation = (props) => {
               />
             </Col>
           </Row>
-          <Row>
+          <Row
+            style={{
+              marginBottom: "15px",
+            }}
+          >
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <ComponentRadio>
                 <strong>¿Tienes un obligado solidario?</strong>
@@ -497,12 +503,12 @@ const SectionPersonalInformation = (props) => {
                   <label className="input-radio">
                     <input
                       type="radio"
-                      checked={dataForm.deactivateBoundSolidarity == true}
+                      checked={dataForm.hasBoundSolidarity == true}
                       name="obligado-solidario"
                       onClick={() => {
                         setDataForm({
                           ...dataForm,
-                          deactivateBoundSolidarity: true,
+                          hasBoundSolidarity: true,
                         });
                       }}
                     />
@@ -512,11 +518,11 @@ const SectionPersonalInformation = (props) => {
                     <input
                       type="radio"
                       name="obligado-solidario"
-                      checked={dataForm.deactivateBoundSolidarity == false}
+                      checked={dataForm.hasBoundSolidarity == false}
                       onClick={() => {
                         setDataForm({
                           ...dataForm,
-                          deactivateBoundSolidarity: false,
+                          hasBoundSolidarity: false,
                         });
                       }}
                     />
@@ -526,23 +532,46 @@ const SectionPersonalInformation = (props) => {
               </ComponentRadio>
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.boundSolidarityEmailAddress}
-                placeholder=""
-                label="Correo del obligado solidario"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    boundSolidarityEmailAddress: value,
-                  });
-                }}
-                type="email"
-              />
-            </Col>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
           </Row>
+          {dataForm.hasBoundSolidarity == true && (
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.boundSolidarityGivenName}
+                  placeholder=""
+                  label="Nombre del obligado solidario"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      boundSolidarityGivenName: value,
+                    });
+                  }}
+                  type="text"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputTypeForm
+                  value={dataForm.boundSolidarityEmailAddress}
+                  placeholder=""
+                  label="Correo del obligado solidario"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      boundSolidarityEmailAddress: value,
+                    });
+                  }}
+                  type="email"
+                />
+              </Col>
+            </Row>
+          )}
+
           {/* <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <ComponentCheck>

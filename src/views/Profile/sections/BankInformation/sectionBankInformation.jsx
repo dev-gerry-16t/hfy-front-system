@@ -18,12 +18,14 @@ import {
 } from "../../constants/styleConstants";
 
 const SectionBankInformation = (props) => {
-  const { callGlobalActionApi, dataProfile, onclickBack } = props;
+  const { callGlobalActionApi, dataProfile, onclickBack, onClickFinish } =
+    props;
   const [dataForm, setDataForm] = useState({
     bankBranch: null,
     accountHolder: null,
     accountNumber: null,
     clabeNumber: null,
+    password: null,
   });
   const [dataBankText, setDataBankText] = useState("");
   const [idBank, setIdBank] = useState(null);
@@ -130,7 +132,7 @@ const SectionBankInformation = (props) => {
         </div>
       )}
       <div className="header-title">
-        <h1>Dirección Actual</h1>
+        <h1>Información Bancaria</h1>
       </div>
       <FormProperty>
         <div className="label-indicator">
@@ -159,7 +161,22 @@ const SectionBankInformation = (props) => {
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomInputTypeForm
+                value={dataForm.password}
+                placeholder="Por seguridad ingresa tu contraseña"
+                label="Contraseña de inicio de sesión"
+                error={true}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    password: value,
+                  });
+                }}
+                type="password"
+              />
+            </Col>
           </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -264,6 +281,7 @@ const SectionBankInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
+                onClickFinish();
               } catch (error) {}
             }}
           >
