@@ -340,7 +340,9 @@ const ProfileUsers = (props) => {
                           color: "var(--color-primary)",
                         }}
                       >
-                        x
+                        {dataCustomerDetail.hasBoundSolidarity == true
+                          ? "Si"
+                          : "No"}
                       </strong>
                     </div>
                   </div>

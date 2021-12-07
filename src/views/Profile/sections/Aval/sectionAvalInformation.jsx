@@ -119,7 +119,13 @@ const dataTabsAval = [
 ];
 
 const SectionAvalInformation = (props) => {
-  const { callGlobalActionApi, dataProfile, onclickNext, onclickBack } = props;
+  const {
+    callGlobalActionApi,
+    dataProfile,
+    onclickNext,
+    onclickBack,
+    onClickFinish,
+  } = props;
   const [dataForm, setDataForm] = useState({
     hasEndorsement: null,
     endorsementGivenName: null,
@@ -1389,6 +1395,7 @@ const SectionAvalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerEndorsement(dataForm);
+                onClickFinish();
               } catch (error) {}
             }}
           >

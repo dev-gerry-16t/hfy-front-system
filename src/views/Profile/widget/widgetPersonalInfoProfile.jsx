@@ -26,7 +26,7 @@ const WidgetPersonalInfoProfile = (props) => {
     taxId,
     citizenId,
     idTypeNumber,
-    idCountryNationality,
+    nationality,
   } = dataCustomerDetail;
   return (
     <div className="card-header-profile">
@@ -70,7 +70,7 @@ const WidgetPersonalInfoProfile = (props) => {
         </div>
         <div className="label-strong">
           <span>Nacionalidad:</span>
-          <strong>{idCountryNationality}</strong>
+          <strong>{nationality}</strong>
         </div>
         <div className="label-strong">
           <span>CURP:</span>
