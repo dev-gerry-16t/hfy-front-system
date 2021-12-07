@@ -12,6 +12,7 @@ import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../../utils/actions/actions";
 import CustomInputCurrency from "../../../../components/customInputCurrency";
+import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import {
   ContentForm,
   ButtonNextBackPage,
@@ -91,7 +92,7 @@ const SectionCurrentAddress = (props) => {
   const frontFunctions = new FrontFunctions();
 
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail } = dataContexProfile;
+  const { dataCustomerDetail, matchParams, history } = dataContexProfile;
 
   const handlerCallSetCustomerAddress = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -251,6 +252,17 @@ const SectionCurrentAddress = (props) => {
 
   return (
     <ContentForm>
+      {isNil(matchParams) === false && (
+        <div className="back-button">
+          <button
+            onClick={() => {
+              history.push("/websystem/profile");
+            }}
+          >
+            <Arrow width="35px" />
+          </button>
+        </div>
+      )}
       <div className="header-title">
         <h1>Dirección Actual</h1>
       </div>
@@ -619,6 +631,18 @@ const SectionCurrentAddress = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
+          {isNil(matchParams) === false && (
+            <ButtonNextBackPage
+              block={false}
+              onClick={async () => {
+                try {
+                  await handlerCallSetCustomerAddress(dataForm);
+                } catch (error) {}
+              }}
+            >
+              <u>{"Guardar"}</u>
+            </ButtonNextBackPage>
+          )}
           <ButtonNextBackPage
             block={false}
             onClick={async () => {

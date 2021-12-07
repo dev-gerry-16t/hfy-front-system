@@ -16,6 +16,13 @@ const ContentForm = styled.div`
       font-weight: 700;
     }
   }
+  .back-button {
+    position: absolute;
+    button {
+      background: transparent;
+      border: none;
+    }
+  }
   .subtitle-header {
     margin: 0;
     color: var(--color-primary);

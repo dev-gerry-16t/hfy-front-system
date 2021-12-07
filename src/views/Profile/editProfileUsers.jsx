@@ -33,7 +33,7 @@ const Content = styled.div`
 `;
 
 const EditProfileUsers = (props) => {
-  const { callGlobalActionApi, dataProfile, match } = props;
+  const { callGlobalActionApi, dataProfile, match, history } = props;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
@@ -145,6 +145,8 @@ const EditProfileUsers = (props) => {
           dataDetailReference,
           identifier: dataConfigForm.identifier,
           type: dataConfigForm.type,
+          matchParams: match.params.identifier,
+          history,
         }}
       >
         {/*Inquilino Persona fisica */}
