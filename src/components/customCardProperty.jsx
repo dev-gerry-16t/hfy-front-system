@@ -14,7 +14,6 @@ import {
   IconDownloadDetail,
   IconHeart,
 } from "../assets/iconSvg";
-import ComponentAddCandidate from "../views/Properties/component/componentAddCandidate";
 import GLOBAL_CONSTANTS from "../utils/constants/globalConstants";
 import FrontFunctions from "../utils/actions/frontFunctions";
 
@@ -176,6 +175,7 @@ const CustomCardProperty = (props) => {
     onClickFavorite = () => {},
     onClickApply = () => {},
     onOpenTicket = () => {},
+    onClickAddUser = () => {},
   } = props;
   const {
     maintenanceAmount,
@@ -238,19 +238,6 @@ const CustomCardProperty = (props) => {
 
   return (
     <Card>
-      <ComponentAddCandidate
-        isModalVisible={visibleAddUser}
-        sendInvitation={async (data) => {
-          try {
-            await updateProperty({ ...data, idProperty }, idApartment);
-          } catch (error) {
-            throw error;
-          }
-        }}
-        onClose={() => {
-          setVisibleAddUser(false);
-        }}
-      />
       {isNil(currentTimeLine) === false && (
         <Tooltip placement="topLeft" title={dataTimeLine.description}>
           <ProcessProperty>
@@ -432,7 +419,7 @@ const CustomCardProperty = (props) => {
         {canInviteTenant === true && (
           <ButtonPrimary
             onClick={() => {
-              setVisibleAddUser(true);
+              onClickAddUser(idApartment, idProperty);
             }}
           >
             Invitar a inquilino

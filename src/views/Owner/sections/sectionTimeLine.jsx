@@ -84,7 +84,6 @@ const IconStep = styled.div`
 `;
 
 const CardStep = ({ title, description, finish, select, icon, onClick }) => {
-  console.log("finish", finish);
   return (
     <Card finish={finish} select={select}>
       <div className="content-icon" onClick={onClick}>
