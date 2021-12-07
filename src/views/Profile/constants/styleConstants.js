@@ -1,5 +1,20 @@
 import styled from "styled-components";
 
+const ButtonCenterPrimary = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 25px 0px;
+  button {
+    padding: 5px 2em;
+    border: none;
+    background: var(--color-primary);
+    border-radius: 16px;
+    color: #fff;
+    font-weight: 600;
+  }
+`;
+
 const ContentForm = styled.div`
   background: #fff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
@@ -193,4 +208,5 @@ export {
   ButtonIcon,
   FormModal,
   ButtonsModal,
+  ButtonCenterPrimary,
 };
