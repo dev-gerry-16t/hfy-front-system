@@ -16,6 +16,7 @@ import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomCardProperty from "../../components/customCardProperty";
+import ComponentAddCandidate from "../../views/Properties/component/componentAddCandidate";
 import ComponentFilter from "./component/componentFilter";
 import SectionViewTicket from "./sectionsDetail/sectionViewTicket";
 
@@ -87,6 +88,11 @@ const PropertiesOwner = (props) => {
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const [totalCoincidences, setTotalCoincidences] = useState(0);
   const [currentPagination, setCurrentPagination] = useState(1);
+  const [visibleAddUser, setVisibleAddUser] = useState({
+    openModal: false,
+    idApartment: null,
+    idProperty: null,
+  });
   const [jsonConditionsState, setJsonConditionsState] = useState("[]");
   const [pageSize, setPageSize] = useState(10);
   const [paginationState, setPaginationState] = useState(
@@ -247,6 +253,26 @@ const PropertiesOwner = (props) => {
 
   return (
     <Content>
+      <ComponentAddCandidate
+        isModalVisible={visibleAddUser.openModal}
+        sendInvitation={async (data, id) => {
+          try {
+            await handlerCallUpdateProperty(
+              { ...data, idProperty: visibleAddUser.idProperty },
+              visibleAddUser.idApartment
+            );
+          } catch (error) {
+            throw error;
+          }
+        }}
+        onClose={() => {
+          setVisibleAddUser({
+            openModal: false,
+            idApartment: null,
+            idProperty: null,
+          });
+        }}
+      />
       <SectionViewTicket
         onClose={() => {
           setIsOpenTicket(false);
@@ -277,6 +303,13 @@ const PropertiesOwner = (props) => {
                 <CustomCardProperty
                   src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
                   alt={row.identifier}
+                  onClickAddUser={(idApartment, idProperty) => {
+                    setVisibleAddUser({
+                      openModal: true,
+                      idApartment,
+                      idProperty,
+                    });
+                  }}
                   onClickDetail={() => {
                     history.push(
                       `/websystem/detail-property-users/${row.idProperty}`
@@ -284,13 +317,6 @@ const PropertiesOwner = (props) => {
                   }}
                   data={row}
                   idUserType={dataProfile.idUserType}
-                  updateProperty={async (data, id) => {
-                    try {
-                      await handlerCallUpdateProperty(data, id);
-                    } catch (error) {
-                      throw error;
-                    }
-                  }}
                   onClickFavorite={async (data, id) => {
                     try {
                       await handlerCallSetFavoriteProperty(data, id);
