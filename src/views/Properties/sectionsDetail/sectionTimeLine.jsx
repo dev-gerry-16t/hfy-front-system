@@ -214,7 +214,6 @@ const SectionTimeLine = (props) => {
                     finish={row.isCompleted}
                     select={row.isCurrent}
                     onClick={() => {
-                      console.log("row.path", row.path);
                       if (isNil(row.path) === false) {
                         history.push(row.path);
                       }
