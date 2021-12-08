@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
+import { Modal } from "antd";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 
 const CardVerification = styled.div`
   display: grid;
+  position: relative;
   grid-template-rows: auto 1fr;
   background: #fff;
   height: 100%;
@@ -57,6 +59,39 @@ const ContentVerification = styled.div`
   }
 `;
 
+const UserDuplicate = styled.div`
+  position: absolute;
+  right: 0;
+  button {
+    background: transparent;
+    border: none;
+    text-decoration: underline;
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+`;
+
+const FormModalTable = styled.div`
+  font-family: Poppins;
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--color-primary);
+  }
+  table {
+    width: 100%;
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  }
+`;
+
 const WidgetVerification = (props) => {
   const {
     matiDashboardUrl,
@@ -65,14 +100,83 @@ const WidgetVerification = (props) => {
     matiVerificationNo,
     matiVerificationStatus,
     matiVerificationStatusStyle,
+    dataDuplicationUser,
   } = props;
   const styleVerification =
     isNil(matiVerificationStatusStyle) === false &&
     isEmpty(matiVerificationStatusStyle) === false
       ? JSON.parse(matiVerificationStatusStyle)
       : {};
+  const [isOpenDuplicate, setIsOpenDuplicate] = useState(false);
+
+  const handlerGetProperties = (data) => {
+    const arrayInfoEvaluated = [];
+    if (isEmpty(data) === false) {
+      for (let key in data) {
+        arrayInfoEvaluated.push({
+          name: key,
+          text: data[key],
+        });
+      }
+    }
+    return isEmpty(arrayInfoEvaluated) === false ? (
+      <div>
+        {arrayInfoEvaluated.map((row) => {
+          return (
+            <div>
+              <strong>{row.name}:</strong> <span>{row.text}</span>
+            </div>
+          );
+        })}
+      </div>
+    ) : (
+      <div />
+    );
+  };
   return (
     <CardVerification>
+      <Modal
+        visible={isOpenDuplicate}
+        closable={true}
+        footer={false}
+        style={{ top: 20 }}
+        width={800}
+        onCancel={() => {
+          setIsOpenDuplicate(false);
+        }}
+      >
+        <FormModalTable>
+          <h1>Usuarios duplicados</h1>
+          <table>
+            <tr>
+              <th>Nombre</th>
+              <th>Información evaluada</th>
+              <th>Tipo de usuario</th>
+            </tr>
+            {dataDuplicationUser.map((row) => {
+              return (
+                <tr>
+                  <td>{row.fullName}</td>
+                  <td>{handlerGetProperties(row.dataEvaluated)}</td>
+                  <td>{row.customerType}</td>
+                </tr>
+              );
+            })}
+          </table>
+        </FormModalTable>
+      </Modal>
+
+      {isEmpty(dataDuplicationUser) === false && (
+        <UserDuplicate>
+          <button
+            onClick={() => {
+              setIsOpenDuplicate(true);
+            }}
+          >
+            Se detectaron usuarios duplicados
+          </button>
+        </UserDuplicate>
+      )}
       <h1>Verificación</h1>
       <ContentVerification backGroundCard={styleVerification.backgroundColor}>
         <div className="status-card">

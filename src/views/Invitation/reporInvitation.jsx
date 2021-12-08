@@ -98,7 +98,7 @@ const ButtonsModal = styled.button`
 `;
 
 const ReportInvitation = (props) => {
-  const { callGlobalActionApi, match, dataProfile } = props;
+  const { callGlobalActionApi, match, dataProfile, history } = props;
   const [isModalVisible, setIsModalVisible] = useState(true);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [finishApi, setFinisApi] = useState(false);
@@ -204,7 +204,12 @@ const ReportInvitation = (props) => {
                 </div>
                 <h2>¡Tu respuesta se envio satisfactoriamente!</h2>
                 <div className="button-action">
-                  <ButtonsModal onClick={async () => {}} primary>
+                  <ButtonsModal
+                    onClick={async () => {
+                      history.push(dataProfile.path);
+                    }}
+                    primary
+                  >
                     Finalizar
                   </ButtonsModal>
                 </div>

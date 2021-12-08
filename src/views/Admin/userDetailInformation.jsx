@@ -296,6 +296,7 @@ const UserDetailInformation = (props) => {
             rejectionReason,
             isApproved,
             policiesApproved,
+            duplicationUser,
           } = row;
 
           const dataReferences =
@@ -306,6 +307,11 @@ const UserDetailInformation = (props) => {
             isEmpty(customerDocument) === false
               ? JSON.parse(customerDocument)
               : [];
+          const dataDuplicationUser =
+            isEmpty(duplicationUser) === false
+              ? JSON.parse(duplicationUser)
+              : [];
+
           return (
             <div>
               <ContentsTop>
@@ -352,6 +358,7 @@ const UserDetailInformation = (props) => {
                     matiVerificationNo={matiVerificationNo}
                     matiVerificationStatus={matiVerificationStatus}
                     matiVerificationStatusStyle={matiVerificationStatusStyle}
+                    dataDuplicationUser={dataDuplicationUser}
                   />
                 </ContentVerification>
                 <ContentReferences>
