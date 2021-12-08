@@ -60,6 +60,10 @@ const PaymentsService = React.lazy(() =>
   import("./views/Payment/paymentService")
 );
 
+const ReportInvitation = React.lazy(() =>
+  import("./views/Invitation/reporInvitation")
+);
+
 const routes = [
   {
     key: "1",
@@ -315,6 +319,14 @@ const routes = [
     path: "/websystem/payment-service/:idOrderPayment",
     name: "Pago de servicio",
     component: PaymentsService,
+    exact: true,
+  },
+  {
+    key: "29",
+    id: "reportInvitation",
+    path: "/websystem/report/:idInvitation",
+    name: "Invitación recibida",
+    component: ReportInvitation,
     exact: true,
   },
 ];
