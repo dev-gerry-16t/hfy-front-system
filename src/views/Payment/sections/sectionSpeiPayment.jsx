@@ -4,6 +4,8 @@ import isNil from "lodash/isNil";
 import { Payment } from "../constants/styleConstants";
 
 const SectionSpeiPayment = (props) => {
+  const { dataPayment } = props;
+
   const copiarAlPortapapeles = (text) => {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -69,12 +71,12 @@ const SectionSpeiPayment = (props) => {
         >
           <div className="info-bank">
             <span>Nombre del beneficiario</span>
-            <strong>GONZALEZ JIMENEZ</strong>
+            <strong>{dataPayment.beneficiary}</strong>
           </div>
           <div className="info-bank">
             <span>CLABE interbancaria</span>
             <strong>
-              {parseNumberClabe("646180266148545040")}{" "}
+              {parseNumberClabe(dataPayment.clabe)}{" "}
               <i
                 className="fa fa-clone"
                 style={{
@@ -83,14 +85,14 @@ const SectionSpeiPayment = (props) => {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  copyTextToClipboard("646180266148545040");
+                  copyTextToClipboard(dataPayment.clabe);
                 }}
               />
             </strong>
           </div>
           <div className="info-bank">
             <span>Banco</span>
-            <strong>STP</strong>
+            <strong>{dataPayment.bank}</strong>
           </div>
         </div>
         <p>

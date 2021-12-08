@@ -619,7 +619,7 @@ const DefaultLayout = (props) => {
                     collapsedButton ? MenuUnfoldOutlined : MenuFoldOutlined
                   )}
                 </button>
-                <h2>{nameSection}</h2>
+                <h2 id="name-screen-hfy">{nameSection}</h2>
               </div>
               <div className="header-info-user">
                 <div className="hi-user-name-type">

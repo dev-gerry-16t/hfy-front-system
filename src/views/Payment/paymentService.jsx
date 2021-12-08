@@ -4,9 +4,16 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import styled from "styled-components";
 import { Layout, Table, message } from "antd";
+import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
-import { callGetTransactions } from "../../utils/actions/actions";
+import {
+  callGetTransactions,
+  callGlobalActionApi,
+} from "../../utils/actions/actions";
 import {
   ContentForm,
   ButtonNextBackPage,
@@ -103,9 +110,52 @@ const dataTabsPaymentMethod = [
 ];
 
 const PaymentsService = (props) => {
-  const { dataProfile, callGetTransactions } = props;
+  const { dataProfile, callGetTransactions, callGlobalActionApi, match } =
+    props;
   const [tabSelect, setTabSelect] = useState("1");
+  const [dataPayment, setDataPayment] = useState({});
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetOrderPaymentById = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    const { params } = match;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          idOrderPayment: params.idOrderPayment,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_ORDER_PAYMENT_BY_ID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false
+          ? response.response[0][0]
+          : {};
+      setDataPayment(responseResult);
+      const elementTitle = document.getElementById("name-screen-hfy");
+      elementTitle.innerText =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.orderPaymentConcept) === false
+          ? responseResult.orderPaymentConcept
+          : "Dashboard";
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    handlerCallGetOrderPaymentById();
+  }, []);
 
   return (
     <Content>
@@ -135,19 +185,22 @@ const PaymentsService = (props) => {
           <CardPaymentMethod>
             <div className="header-card-payment">
               <div className="amount-to-pay">
-                <strong>Monto a pagar</strong> <span>$3,450.00 MXN</span>
+                <strong>Monto a pagar</strong>{" "}
+                <span>{dataPayment.formattedAmount}</span>
               </div>
             </div>
             <div className="card-body-payment">
-              {tabSelect === "1" && <SectionSpeiPayment />}
+              {tabSelect === "1" && (
+                <SectionSpeiPayment dataPayment={dataPayment} />
+              )}
               {tabSelect === "2" && (
                 <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                  <SectionCardPayment />
+                  <SectionCardPayment dataPayment={dataPayment} />
                 </Elements>
               )}
               {tabSelect === "3" && (
                 <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                  <SectionOxxoPayment />
+                  <SectionOxxoPayment dataPayment={dataPayment} />
                 </Elements>
               )}
             </div>
@@ -167,6 +220,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => ({
   callGetTransactions: (data) => dispatch(callGetTransactions(data)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PaymentsService);

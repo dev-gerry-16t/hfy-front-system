@@ -312,7 +312,7 @@ const routes = [
   {
     key: "28",
     id: "paymentService",
-    path: "/websystem/payment-service",
+    path: "/websystem/payment-service/:idOrderPayment",
     name: "Pago de servicio",
     component: PaymentsService,
     exact: true,
