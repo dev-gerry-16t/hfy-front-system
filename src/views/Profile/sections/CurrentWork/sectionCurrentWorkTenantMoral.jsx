@@ -23,6 +23,46 @@ import { ReactComponent as IconActivity } from "../../../../assets/iconSvg/svgFi
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 
+const ComponentRadio = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  .radio-inputs-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200px;
+    .input-radio {
+      input[type="radio"] {
+        appearance: none;
+        background-color: #fff;
+        margin-right: 5px;
+        font: inherit;
+        color: var(--color-primary);
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 50%;
+        display: inline-grid;
+        place-content: center;
+      }
+      input[type="radio"]::before {
+        content: "";
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+      }
+      input[type="radio"]:checked::before {
+        transform: scale(1);
+      }
+    }
+  }
+`;
+
 const UploadSection = styled.div`
   width: 18em;
   height: 8.8em;
@@ -67,6 +107,7 @@ const SectionCurrentWork = (props) => {
     bossPhoneNumber: null,
     otherIncomes: null,
     otherIncomesDescription: null,
+    hasOtherIncomes: null,
     hasCar: null,
     carriagePlate: null,
     nIV: null,
@@ -183,6 +224,7 @@ const SectionCurrentWork = (props) => {
       bossPhoneNumber,
       otherIncomes,
       otherIncomesDescription,
+      hasOtherIncomes,
       hasCar,
       carriagePlate,
       nIV,
@@ -201,6 +243,7 @@ const SectionCurrentWork = (props) => {
       bossPhoneNumber,
       otherIncomes,
       otherIncomesDescription,
+      hasOtherIncomes,
       hasCar,
       carriagePlate,
       nIV,
@@ -359,41 +402,82 @@ const SectionCurrentWork = (props) => {
               />
             </Col>
           </Row>
-          <Row>
+          <Row style={{ margin: "2em 0px" }}>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputCurrency
-                value={dataForm.otherIncomes}
-                placeholder=""
-                label="Otros ingresos"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    otherIncomes: value,
-                  });
-                }}
-                type="number"
-              />
+              <ComponentRadio>
+                <strong>¿Tienes otros ingresos?</strong>
+                <div className="radio-inputs-options">
+                  <label className="input-radio">
+                    <input
+                      type="radio"
+                      checked={dataForm.hasOtherIncomes == true}
+                      name="other-incomes"
+                      onClick={() => {
+                        setDataForm({
+                          ...dataForm,
+                          hasOtherIncomes: true,
+                        });
+                      }}
+                    />
+                    Si
+                  </label>
+                  <label className="input-radio">
+                    <input
+                      type="radio"
+                      name="other-incomes"
+                      checked={dataForm.hasOtherIncomes == false}
+                      onClick={() => {
+                        setDataForm({
+                          ...dataForm,
+                          hasOtherIncomes: false,
+                        });
+                      }}
+                    />
+                    No
+                  </label>
+                </div>
+              </ComponentRadio>
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomTextArea
-                placeholder="Descripción de otros ingresos"
-                label="Descripción"
-                value={dataForm.otherIncomesDescription}
-                maxlength="1000"
-                onChange={(e) => {
-                  setDataForm({
-                    ...dataForm,
-                    otherIncomesDescription: e,
-                  });
-                }}
-                error={false}
-                errorMessage="Este campo es requerido"
-              />
-            </Col>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
           </Row>
+          {dataForm.hasOtherIncomes == true && (
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomInputCurrency
+                  value={dataForm.otherIncomes}
+                  placeholder=""
+                  label="Monto de otros ingresos"
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                  onChange={(value) => {
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomes: value,
+                    });
+                  }}
+                  type="number"
+                />
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <CustomTextArea
+                  placeholder="Descripción de otros ingresos"
+                  label="Descripción"
+                  value={dataForm.otherIncomesDescription}
+                  maxlength="1000"
+                  onChange={(e) => {
+                    setDataForm({
+                      ...dataForm,
+                      otherIncomesDescription: e,
+                    });
+                  }}
+                  error={false}
+                  errorMessage="Este campo es requerido"
+                />
+              </Col>
+            </Row>
+          )}
         </div>
         <div
           className="label-indicator"
