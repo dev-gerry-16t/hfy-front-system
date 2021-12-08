@@ -36,6 +36,7 @@ import SectionApplicants from "./sectionsDetail/sectionApplicants";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 import SectionAgents from "./sectionsDetail/sectionAgents";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
+import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -604,6 +605,7 @@ const DetailPropertyUsers = (props) => {
         </ContentForm>
 
         <ContentRight>
+          <SectionTimeLine history={history} />
           {isNil(dataDetail.jsonDocuments) === false &&
             isEmpty(dataDetail.jsonDocuments) === false && <SectionDocuments />}
           {dataProfile.idUserType !== 2 && (
