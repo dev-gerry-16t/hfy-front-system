@@ -25,7 +25,10 @@ const Auth = (props) => {
 
   const handlerCallGetAllUserProfile = async () => {
     try {
-      const response = await callGetAllUserProfile(dataProfile.dataProfile);
+      const response = await callGetAllUserProfile({
+        idSystemUser: dataProfile.dataProfile.idSystemUser,
+        token: dataProfile.dataProfile.token,
+      });
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&

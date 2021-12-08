@@ -50,6 +50,21 @@ const Invesitgations = (props) => {
       title: "Inquilino",
       dataIndex: "fullName",
       key: "fullName",
+      render: (text, record) => (
+        <div
+          style={{
+            color: "blue",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            history.push(
+              `/websystem/user-detail/${record.idInvestigationProcess}`
+            );
+          }}
+        >
+          <u>{text}</u>
+        </div>
+      ),
     },
     {
       title: "Obligado solidario",
@@ -99,15 +114,6 @@ const Invesitgations = (props) => {
         dataSource={dataInvestigations}
         className="table-users-hfy"
         size="small"
-        onRow={(record) => {
-          return {
-            onClick: () => {
-              history.push(
-                `/websystem/user-detail/${record.idInvestigationProcess}`
-              );
-            },
-          };
-        }}
         bordered
       />
     </Content>
