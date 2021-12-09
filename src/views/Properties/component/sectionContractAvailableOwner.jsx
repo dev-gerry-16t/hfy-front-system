@@ -39,7 +39,7 @@ const SectionContractAvailable = (props) => {
           >
             <img src={Arrow} alt="backTo" width="30" />
           </button>
-          <h1>Contrato</h1>
+          <h1>Modalidad de firma</h1>
         </div>
         {finishProcess === false && (
           <div className="main-form-information">
@@ -53,7 +53,7 @@ const SectionContractAvailable = (props) => {
                         color: "var(--color-primary)",
                       }}
                     >
-                      ¿Como quieres firmar tu contrato?
+                      ¿Selecciona una modalidad de firma?
                     </h3>
                   </div>
                   <div
@@ -83,7 +83,7 @@ const SectionContractAvailable = (props) => {
                           marginTop: 5,
                         }}
                       >
-                        Firma electrónica
+                        Electrónicamente
                       </label>
                     </div>
                     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -105,7 +105,7 @@ const SectionContractAvailable = (props) => {
                           marginTop: 5,
                         }}
                       >
-                        Firma presencial
+                        Presencialmente
                       </label>
                     </div>
                   </div>

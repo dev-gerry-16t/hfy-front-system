@@ -345,7 +345,7 @@ const SectionDocuments = (props) => {
               setIsVisibleModalContract(true);
             }}
           >
-            Cita para firma
+            Modalidad de firma
           </button>
         )}
       </div>
