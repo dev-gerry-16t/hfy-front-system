@@ -23,6 +23,7 @@ import {
 import SectionSpeiPayment from "./sections/sectionSpeiPayment";
 import SectionCardPayment from "./sections/sectionCardPayment";
 import SectionOxxoPayment from "./sections/sectionOxxoPayment";
+import { ReactComponent as IconBigCheck } from "../../assets/iconSvg/svgFile/iconBigCheck.svg";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -94,6 +95,16 @@ const CardPaymentMethod = styled.div`
   }
 `;
 
+const PaidService = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  span {
+    margin-top: 15px;
+  }
+`;
+
 const dataTabsPaymentMethod = [
   {
     id: "1",
@@ -156,55 +167,73 @@ const PaymentsService = (props) => {
   useEffect(() => {
     handlerCallGetOrderPaymentById();
   }, []);
-
+  console.log("dataPayment.isPaid", dataPayment.isPaid);
   return (
     <Content>
       <ContentForm>
         <div className="header-title">
-          <h1>Elige un método de pago</h1>
+          <h1>
+            {isNil(dataPayment.isPaid) === false && dataPayment.isPaid === false
+              ? "Elige un método de pago"
+              : "Proceso pagado"}
+          </h1>
         </div>
         <div className="section-payment-method">
           <h2></h2>
-          <TabsProperty>
-            {dataTabsPaymentMethod.map((row) => {
-              return (
-                <Tab
-                  selected={tabSelect === row.id}
-                  onClick={() => {
-                    setTabSelect(row.id);
-                  }}
-                >
-                  <h1>
-                    {row.text} {row.id === "1" && <span>Sin comisión</span>}
-                  </h1>
-                  <hr />
-                </Tab>
-              );
-            })}
-          </TabsProperty>
-          <CardPaymentMethod>
-            <div className="header-card-payment">
-              <div className="amount-to-pay">
-                <strong>Monto a pagar</strong>{" "}
-                <span>{dataPayment.formattedAmount}</span>
-              </div>
-            </div>
-            <div className="card-body-payment">
-              {tabSelect === "1" && (
-                <SectionSpeiPayment dataPayment={dataPayment} />
-              )}
-              {tabSelect === "2" && (
-                <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                  <SectionCardPayment dataPayment={dataPayment} />
-                </Elements>
-              )}
-              {tabSelect === "3" && (
-                <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
-                  <SectionOxxoPayment dataPayment={dataPayment} />
-                </Elements>
-              )}
-            </div>
-          </CardPaymentMethod>
+          {isNil(dataPayment.isPaid) === false && dataPayment.isPaid === false && (
+            <>
+              <TabsProperty>
+                {dataTabsPaymentMethod.map((row) => {
+                  return (
+                    <Tab
+                      selected={tabSelect === row.id}
+                      onClick={() => {
+                        setTabSelect(row.id);
+                      }}
+                    >
+                      <h1>
+                        {row.text} {row.id === "1" && <span>Sin comisión</span>}
+                      </h1>
+                      <hr />
+                    </Tab>
+                  );
+                })}
+              </TabsProperty>
+              <CardPaymentMethod>
+                <div className="header-card-payment">
+                  <div className="amount-to-pay">
+                    <strong>Monto a pagar</strong>{" "}
+                    <span>{dataPayment.formattedAmount}</span>
+                  </div>
+                </div>
+                <div className="card-body-payment">
+                  {tabSelect === "1" && (
+                    <SectionSpeiPayment dataPayment={dataPayment} />
+                  )}
+                  {tabSelect === "2" && (
+                    <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                      <SectionCardPayment dataPayment={dataPayment} />
+                    </Elements>
+                  )}
+                  {tabSelect === "3" && (
+                    <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                      <SectionOxxoPayment dataPayment={dataPayment} />
+                    </Elements>
+                  )}
+                </div>
+              </CardPaymentMethod>
+            </>
+          )}
+          {isNil(dataPayment.isPaid) === false && dataPayment.isPaid === true && (
+            <PaidService>
+              <h1>¡Gracias por tu Pago!</h1>
+              <IconBigCheck />
+              <span>
+                Realizaste el {dataPayment.orderPaymentConcept}{" "}
+                <strong>{dataPayment.hfInvoice}</strong>
+              </span>
+            </PaidService>
+          )}
         </div>
       </ContentForm>
     </Content>
