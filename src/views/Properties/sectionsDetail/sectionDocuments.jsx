@@ -16,6 +16,7 @@ import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import SectionContractAvailable from "../component/sectionContractAvailableOwner";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const GeneralCard = styled.div`
   background: #ffffff;
@@ -173,6 +174,7 @@ const SectionDocuments = (props) => {
   const [isVisibleModalDocument, setIsVisibleModalDocument] = useState(false);
   const [isVisibleModalContract, setIsVisibleModalContract] = useState(false);
   const [isVisibleModalSignature, setIsVisibleModalSignature] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
   const frontFunctions = new FrontFunctions();
 
@@ -293,7 +295,7 @@ const SectionDocuments = (props) => {
         dataGetContract={{}}
         onAcceptContract={async (data) => {
           try {
-            await handlerCallSetContract({ ...data, type: dataDocument.type });
+            await handlerCallSetContract({ ...data, type: 1 });
           } catch (error) {
             throw error;
           }
@@ -347,76 +349,87 @@ const SectionDocuments = (props) => {
           </button>
         )}
       </div>
-      <div className="content-cards">
-        {isEmpty(documentsArray) === false &&
-          documentsArray.map((row) => {
-            return (
-              <Card
-                colorDocument={
-                  row.canSign == true ? "#eff0f6" : row.style.color
-                }
-              >
-                <div className="card-document">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      {handlerSelectIcon(row.style.icon, row.canSign)}
+      <ComponentLoadSection
+        isLoadApi={isLoadApi}
+        position="absolute"
+        text="Generando..."
+      >
+        <div className="content-cards">
+          {isEmpty(documentsArray) === false &&
+            documentsArray.map((row) => {
+              return (
+                <Card
+                  colorDocument={
+                    row.canSign == true ? "#eff0f6" : row.style.color
+                  }
+                >
+                  <div className="card-document">
+                    <div className="top-info">
+                      <div className="icon-info">
+                        {handlerSelectIcon(row.style.icon, row.canSign)}
+                      </div>
+                      <div className="name-info">
+                        <h3>{row.documentType}</h3>
+                        {row.canSign === true && (
+                          <span>Archivo listo para firmar</span>
+                        )}
+                      </div>
                     </div>
-                    <div className="name-info">
-                      <h3>{row.documentType}</h3>
-                      {row.canSign === true && (
-                        <span>Archivo listo para firmar</span>
+                    <div className="button-action">
+                      {row.canSeeDetail == true && (
+                        <ButtonDocument
+                          onClick={async () => {
+                            try {
+                              setIsLoadApi(true);
+                              const response =
+                                await handlerCallGenerateDocument({
+                                  idDocument: row.idDocument,
+                                  idPreviousDocument: row.idPreviousDocument,
+                                  idDocumentType: row.idDocumentType,
+                                  bucketSource: row.bucketSource,
+                                  previousBucketSource:
+                                    row.previousBucketSource,
+                                  canGenerateDocument: row.canGenerateDocument,
+                                  type: row.type,
+                                });
+                              setIsVisibleModalDocument(true);
+                              setDataDocument({ ...row, url: response.url });
+                              setIsLoadApi(false);
+                            } catch (error) {
+                              setIsLoadApi(false);
+                            }
+                          }}
+                        >
+                          Ver detalle
+                        </ButtonDocument>
+                      )}
+                      {row.canSign == true && (
+                        <ButtonDocument
+                          primary
+                          onClick={() => {
+                            setDataDocument(row);
+                            setIsVisibleModalSignature(true);
+                          }}
+                        >
+                          Firmar
+                        </ButtonDocument>
                       )}
                     </div>
                   </div>
-                  <div className="button-action">
-                    {row.canSeeDetail == true && (
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                            const response = await handlerCallGenerateDocument({
-                              idDocument: row.idDocument,
-                              idPreviousDocument: row.idPreviousDocument,
-                              idDocumentType: row.idDocumentType,
-                              bucketSource: row.bucketSource,
-                              previousBucketSource: row.previousBucketSource,
-                              canGenerateDocument: row.canGenerateDocument,
-                              type: row.type,
-                            });
-                            setIsVisibleModalDocument(true);
-                            setDataDocument({ ...row, url: response.url });
-                          } catch (error) {}
-                        }}
-                      >
-                        Ver detalle
-                      </ButtonDocument>
-                    )}
-                    {row.canSign == true && (
-                      <ButtonDocument
-                        primary
-                        onClick={() => {
-                          setDataDocument(row);
-                          setIsVisibleModalSignature(true);
-                        }}
-                      >
-                        Firmar
-                      </ButtonDocument>
-                    )}
-                  </div>
-                </div>
-              </Card>
-            );
-          })}
-        {isEmpty(documentsArray) === true && (
-          <EmptyData>
-            <img
-              width="150"
-              src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-              alt=""
-            />
-            <p>No hay Documentos disponibles</p>
-          </EmptyData>
-        )}
-        {/* <Card>
+                </Card>
+              );
+            })}
+          {isEmpty(documentsArray) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                alt=""
+              />
+              <p>No hay Documentos disponibles</p>
+            </EmptyData>
+          )}
+          {/* <Card>
           <div className="card-document">
             <div className="top-info">
               <div className="icon-info">
@@ -472,7 +485,8 @@ const SectionDocuments = (props) => {
             </div>
           </div>
         </Card> */}
-      </div>
+        </div>
+      </ComponentLoadSection>
     </GeneralCard>
   );
 };

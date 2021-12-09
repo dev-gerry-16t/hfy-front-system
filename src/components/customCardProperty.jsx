@@ -152,8 +152,9 @@ const ProcessProperty = styled.div`
   height: 4.4em;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 0px 0px 0.8em 0.8em;
+  cursor: pointer;
   span {
-    font-size: 0.4em;
+    font-size: 0.5em;
   }
   .current-process {
     font-size: 0.5em;
@@ -177,6 +178,7 @@ const CustomCardProperty = (props) => {
     onOpenTicket = () => {},
     onClickAddUser = () => {},
   } = props;
+
   const {
     maintenanceAmount,
     shortAddress,

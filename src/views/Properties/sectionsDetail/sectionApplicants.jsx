@@ -267,16 +267,12 @@ const SectionApplicants = (props) => {
           </button>
         )}
       </div>
-      <div className="content-cards">
-        {isEmpty(applicantsArray) === false &&
-          applicantsArray.map((row) => {
-            return (
-              <Card>
-                <ComponentLoadSection
-                  isLoadApi={isLoadApi}
-                  position="absolute"
-                  text=""
-                >
+      <ComponentLoadSection isLoadApi={isLoadApi} position="absolute" text="">
+        <div className="content-cards">
+          {isEmpty(applicantsArray) === false &&
+            applicantsArray.map((row) => {
+              return (
+                <Card>
                   <div className="card-user">
                     <div className="top-info">
                       <div className="icon-info">
@@ -394,21 +390,21 @@ const SectionApplicants = (props) => {
                       </div>
                     )}
                   </div>
-                </ComponentLoadSection>
-              </Card>
-            );
-          })}
-        {isEmpty(applicantsArray) === true && (
-          <EmptyData>
-            <img
-              width="150"
-              src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-              alt=""
-            />
-            <p>No has invitado a algún inquilino</p>
-          </EmptyData>
-        )}
-      </div>
+                </Card>
+              );
+            })}
+          {isEmpty(applicantsArray) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                alt=""
+              />
+              <p>No has invitado a algún inquilino</p>
+            </EmptyData>
+          )}
+        </div>
+      </ComponentLoadSection>
     </GeneralCard>
   );
 };

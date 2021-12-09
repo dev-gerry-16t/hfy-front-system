@@ -230,16 +230,12 @@ const SectionAgents = (props) => {
           Compartir
         </button>
       </div>
-      <div className="content-cards">
-        {isEmpty(agentsArray) === false &&
-          agentsArray.map((row) => {
-            return (
-              <Card>
-                <ComponentLoadSection
-                  isLoadApi={isLoadApi}
-                  position="absolute"
-                  text=""
-                >
+      <ComponentLoadSection isLoadApi={isLoadApi} position="absolute" text="">
+        <div className="content-cards">
+          {isEmpty(agentsArray) === false &&
+            agentsArray.map((row) => {
+              return (
+                <Card>
                   <div className="card-user">
                     <div className="top-info">
                       <div className="icon-info">
@@ -289,21 +285,21 @@ const SectionAgents = (props) => {
                       </ButtonDocument>
                     </div>
                   </div>
-                </ComponentLoadSection>
-              </Card>
-            );
-          })}
-        {isEmpty(agentsArray) === true && (
-          <EmptyData>
-            <img
-              width="150"
-              src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-              alt=""
-            />
-            <p>No has compartido con un agente esta propiedad</p>
-          </EmptyData>
-        )}
-      </div>
+                </Card>
+              );
+            })}
+          {isEmpty(agentsArray) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                alt=""
+              />
+              <p>No has compartido con un agente esta propiedad</p>
+            </EmptyData>
+          )}
+        </div>
+      </ComponentLoadSection>
     </GeneralCard>
   );
 };
