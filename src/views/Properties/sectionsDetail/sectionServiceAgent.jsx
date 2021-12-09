@@ -163,7 +163,7 @@ const CardServices = styled.div`
       position: absolute;
       background: #ff0282;
       color: #fff;
-      font-size: 7px;
+      font-size: 10px;
       font-weight: 700;
       width: 100px;
       padding: 2px 0px;
@@ -310,7 +310,7 @@ const SectionServiceAgent = (props) => {
                   return (
                     <CardServices>
                       <div className="top-card">
-                        <div className="style-text">3 MESES GRATIS</div>
+                        <div className="style-text">{row.costFormat}</div>
                         <h3>{row.text}</h3>
                       </div>
                       <div className="pick"></div>

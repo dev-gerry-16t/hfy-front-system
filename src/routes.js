@@ -64,6 +64,10 @@ const ReportInvitation = React.lazy(() =>
   import("./views/Invitation/reporInvitation")
 );
 
+const VerificationIdentity = React.lazy(() =>
+  import("./views/Verification/verificationIdentity")
+);
+
 const routes = [
   {
     key: "1",
@@ -327,6 +331,14 @@ const routes = [
     path: "/websystem/report/:idInvitation",
     name: "Invitación recibida",
     component: ReportInvitation,
+    exact: true,
+  },
+  {
+    key: "30",
+    id: "verificationIdentity",
+    path: "/websystem/verification",
+    name: "Verificación de identidad",
+    component: VerificationIdentity,
     exact: true,
   },
 ];
