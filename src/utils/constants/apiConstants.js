@@ -93,6 +93,8 @@ const API_CONSTANTS = {
     GET_LOCATION_FILTER: `${API.CUSTOMER}/zipCode/getLocationFilter`,
     GET_ORDER_PAYMENT_BY_ID: `${API.CUSTOMER}/orderPayment/getOrderPaymentById`,
     PROCESS_INVITATION: `${API.CUSTOMER}/invitation/processInvitation/`,
+    GET_VERIFICATION_IDENTITY_COINCIDENCES: `${API.CUSTOMER}/verificationIdentity/getVerificationIdentityCoincidences`,
+    
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

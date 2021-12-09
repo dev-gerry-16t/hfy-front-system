@@ -183,6 +183,17 @@ const SectionPublicProperty = (props) => {
     }
   };
 
+  const handlerLimitText = (text) => {
+    let textTransform = "";
+    if (isNil(text) === false && isEmpty(text) === false) {
+      const splitText = text.split(",");
+      if (splitText.length >= 2) {
+        textTransform = `${splitText[0]}, ${splitText[1]}`;
+      }
+    }
+    return textTransform;
+  };
+
   return (
     <ContentPublicProperty id="public-property">
       <ComponentAddCandidate
@@ -276,10 +287,8 @@ const SectionPublicProperty = (props) => {
                 <span>{applicantsParse.phoneNumber}</span>
               </div>
               <div className="info">
-                <strong>Dirección:</strong> <span>Nezahualcoyotl, MX</span>
-              </div>
-              <div className="info">
-                <strong>Ocupación:</strong> <span>Arquitecto</span>
+                <strong>Dirección:</strong>{" "}
+                <span>{handlerLimitText(applicantsParse.fullAddress)}</span>
               </div>
               {/* <div className="status-user">
                 Solicitud pendiente de aceptación
