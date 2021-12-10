@@ -3,12 +3,13 @@ import { Row, Col } from "antd";
 import { connect } from "react-redux";
 import styled from "styled-components";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
-
 import { Layout, Table, message } from "antd";
 import isNil from "lodash/isNil";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
-import { callGetTransactions } from "../../../utils/actions/actions";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callPostPaymentService } from "../../../utils/actions/actions";
 import { Payment } from "../constants/styleConstants";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 
 const CardPayment = styled.div`
@@ -31,6 +32,14 @@ const CardPayment = styled.div`
       color: #fff;
       font-weight: 600;
     }
+  }
+`;
+
+const PaymentPoster = styled.div`
+  display: flex;
+  justify-content: center;
+  h1 {
+    font-weight: 700;
   }
 `;
 
@@ -66,48 +75,149 @@ const CardField = ({ onChange }) => (
 );
 
 const SectionOxxoPayment = (props) => {
+  const { dataProfile, callPostPaymentService, dataPayment } = props;
+  const stripe = useStripe();
+  const elements = useElements();
+  const [processing, setProcessing] = useState(false);
+  const [labelErrors, setLabelErrors] = useState("");
+  const [paymentCancel, setPaymentCancel] = useState(false);
+  const [paymentMethods, setPaymentMethods] = useState(null);
+  const [dataForm, setDataForm] = useState({ email: "", name: "" });
+
+  const frontFunctions = new FrontFunctions();
+
+  const hanlderCallPostPaymentService = async (data, orderPayment) => {
+    const { idSystemUser, idLoginHistory, idContract } = dataProfile;
+    try {
+      const response = await callPostPaymentService({
+        ...data,
+        idOrderPayment: orderPayment,
+        idSystemUser,
+        idLoginHistory,
+      });
+      const responseResult = response.response.result;
+      return responseResult;
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        isNil(error) === false
+          ? error
+          : "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const handlerOnSendInfoPayment = async (orderPayment) => {
+    setProcessing(true);
+    if (!stripe || !elements) {
+      return;
+    }
+    try {
+      const response = await hanlderCallPostPaymentService(
+        {
+          payment_method: null,
+          payment_method_types: ["oxxo"],
+        },
+        orderPayment
+      );
+      const resultOxxo = await stripe.confirmOxxoPayment(
+        response.idClientSecret,
+        {
+          payment_method: {
+            billing_details: {
+              name: dataForm.name,
+              email: dataForm.email,
+            },
+          },
+        }
+      );
+      if (resultOxxo.error) {
+        setPaymentCancel(true);
+        setLabelErrors(resultOxxo.error.message);
+        frontFunctions.showMessageStatusApi(
+          resultOxxo.error.message,
+          GLOBAL_CONSTANTS.STATUS_API.ERROR
+        );
+      } else {
+        setPaymentMethods(true);
+      }
+      setProcessing(false);
+      // setTimeout(() => {
+      //   onRedirect();
+      // }, 5000);
+    } catch (error) {
+      setProcessing(false);
+      setLabelErrors(
+        "Tu banco rechazó la transacción, prueba con otra tarjeta o ponte en contacto con nosotros para saber otras alternativas de pago"
+      );
+      setPaymentCancel(true);
+    }
+  };
+
   return (
-    <Payment>
-      <div className="icon-method">
-        <img
-          src={iconOxxo}
-          alt="icon-homify"
-          width="45px"
-        />
-        <h1>Pago con OXXO</h1>
-      </div>
-      <CardPayment>
-        <Row>
-          <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-            <CustomInputTypeForm
-              value={""}
-              placeholder="Nombre *"
-              label=""
-              error={false}
-              errorMessage="Este campo es requerido"
-              onChange={(value) => {}}
-              type="text"
-            />
-          </Col>
-        </Row>
-        <Row>
-          <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-            <CustomInputTypeForm
-              value={""}
-              placeholder="Correo *"
-              label=""
-              error={false}
-              errorMessage="Este campo es requerido"
-              onChange={(value) => {}}
-              type="email"
-            />
-          </Col>
-        </Row>
-        <div className="button-payment">
-          <button>Pagar con OXXO</button>
+    <ComponentLoadSection
+      isLoadApi={processing}
+      position="absolute"
+      text="Procesando..."
+    >
+      <Payment>
+        <div className="icon-method">
+          <img src={iconOxxo} alt="icon-homify" width="45px" />
+          <h1>Pago con OXXO</h1>
         </div>
-      </CardPayment>
-    </Payment>
+        <CardPayment>
+          {paymentMethods === true && (
+            <PaymentPoster>
+              <h1>¡Esperamos pronto tu pago!</h1>
+            </PaymentPoster>
+          )}
+          {paymentMethods !== true && (
+            <>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.name}
+                    placeholder="Nombre completo *"
+                    label=""
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, name: value });
+                    }}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.email}
+                    placeholder="Correo *"
+                    label=""
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, email: value });
+                    }}
+                    type="email"
+                  />
+                </Col>
+              </Row>
+              <div className="button-payment">
+                <button
+                  onClick={() => {
+                    handlerOnSendInfoPayment(dataPayment.idOrderPayment);
+                  }}
+                >
+                  Pagar con OXXO
+                </button>
+              </div>
+            </>
+          )}
+        </CardPayment>
+      </Payment>
+    </ComponentLoadSection>
   );
 };
 
@@ -119,7 +229,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGetTransactions: (data) => dispatch(callGetTransactions(data)),
+  callPostPaymentService: (data) => dispatch(callPostPaymentService(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionOxxoPayment);
