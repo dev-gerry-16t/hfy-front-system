@@ -39,6 +39,7 @@ import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
 import IconTicket from "../../assets/icons/IconTicket.svg";
 import IconAgents from "../../assets/icons/agent.svg";
+import IconProfileWhite from "../../assets/icons/Profilewhite.svg";
 import IconSetting from "../../assets/icons/iconSetting.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
@@ -101,6 +102,7 @@ const DefaultLayout = (props) => {
     IconTicket,
     IconAgents,
     IconSetting,
+    IconProfileWhite,
   };
 
   const [nameSection, setNameSection] = useState("");
