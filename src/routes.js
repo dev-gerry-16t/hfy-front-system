@@ -67,6 +67,10 @@ const ReportInvitation = React.lazy(() =>
 const VerificationIdentity = React.lazy(() =>
   import("./views/Verification/verificationIdentity")
 );
+const InvitationProspects = React.lazy(() =>
+  import("./views/Prospects/invitationProspects")
+);
+const AllUsers = React.lazy(() => import("./views/Users/allUsers"));
 
 const routes = [
   {
@@ -341,6 +345,24 @@ const routes = [
     component: VerificationIdentity,
     exact: true,
   },
+  {
+    key: "31",
+    id: "invitationProscpect",
+    path: "/websystem/prospects",
+    name: "Prospectos Invitados",
+    component: InvitationProspects,
+    exact: true,
+  },
+  {
+    key: "32",
+    id: "allUsers",
+    path: "/websystem/users",
+    name: "Usuarios",
+    component: AllUsers,
+    exact: true,
+  },
+  
+
 ];
 
 export default routes;
