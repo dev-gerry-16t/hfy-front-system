@@ -72,6 +72,8 @@ const API_CONSTANTS = {
     SET_CUSTOMER_ENDORSEMENT: `${API.CUSTOMER}/endorsement/setCustomerEndorsement/`,
     GET_CUSTOMER_TAB_BY_ID: `${API.CUSTOMER}/customer/getCustomerTabById`,
     GET_INVESTIGATION_PROCESS_COINCIDENCES: `${API.CUSTOMER}/investigation/getInvestigationProcessCoincidences`,
+    GET_USER_COINCIDENCES: `${API.CUSTOMER}/customer/getUserCoincidences`,
+    GET_PROSPECT_COINCIDENCES: `${API.CUSTOMER}/prospect/getProspectCoincidences`,
     GET_INVESTIGATION_PROCESS_BY_ID: `${API.CUSTOMER}/investigation/getInvestigationProcessById`,
     GET_CUSTOMER_DATA_BY_TAB: `${API.CUSTOMER}/investigation/getCustomerDataByTab`,
     UPDATE_INVESTIGATION_PROCESS: `${API.CUSTOMER}/customer/updateInvestigationProcess/`,
@@ -94,7 +96,6 @@ const API_CONSTANTS = {
     GET_ORDER_PAYMENT_BY_ID: `${API.CUSTOMER}/orderPayment/getOrderPaymentById`,
     PROCESS_INVITATION: `${API.CUSTOMER}/invitation/processInvitation/`,
     GET_VERIFICATION_IDENTITY_COINCIDENCES: `${API.CUSTOMER}/verificationIdentity/getVerificationIdentityCoincidences`,
-    
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

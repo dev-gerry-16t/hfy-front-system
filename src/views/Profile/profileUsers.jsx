@@ -408,22 +408,24 @@ const ProfileUsers = (props) => {
                 }
                 history={history}
               />
-              <div className="card-header-profile">
-                <div className="header-title-card-profile">
-                  <h1>Documentos</h1>
-                  <button></button>
+              {isEmpty(dataDocument) === false && (
+                <div className="card-header-profile">
+                  <div className="header-title-card-profile">
+                    <h1>Documentos</h1>
+                    <button></button>
+                  </div>
+                  <div className="body-card-profile body-documents">
+                    <WidgetUploadDocument
+                      handlerCallGetCustomerDocument={() => {
+                        handlerCallGetCustomerDocument();
+                      }}
+                      dataDocument={dataDocument}
+                      type={null}
+                      detail={true}
+                    />
+                  </div>
                 </div>
-                <div className="body-card-profile body-documents">
-                  <WidgetUploadDocument
-                    handlerCallGetCustomerDocument={() => {
-                      handlerCallGetCustomerDocument();
-                    }}
-                    dataDocument={dataDocument}
-                    type={null}
-                    detail={true}
-                  />
-                </div>
-              </div>
+              )}
             </div>
             <div className="column-grid-3">
               <WidgetReferenceProfile identifier={dataTabs["identifier-6"]} />

@@ -152,7 +152,12 @@ const CustomInputSelect = (props) => {
               onKeyEnter();
             }
           }}
-          onBlur={onBlur}
+          onBlur={() => {
+            setTimeout(() => {
+              setIsVisibleSelect(false);
+            }, 300);
+            onBlur();
+          }}
           maxLength={isNil(maxLength) === false ? maxLength : null}
           minLength={isNil(minLength) === false ? minLength : null}
           error={error}

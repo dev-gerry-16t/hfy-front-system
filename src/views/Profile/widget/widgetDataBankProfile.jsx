@@ -7,7 +7,7 @@ const WidgetDataBankProfile = (props) => {
   const { identifier, history } = props;
   const dataContexProfile = useContext(ContextProfile);
   const { dataCustomerDetail } = dataContexProfile;
-  const { accountHolder, clabeNumber, accountNumber, bankBranch } =
+  const { accountHolder, clabeNumber, accountNumber, bankBranch, bankName } =
     dataCustomerDetail;
   let component = <div />;
 
@@ -35,7 +35,7 @@ const WidgetDataBankProfile = (props) => {
           </div>
           <div className="label-strong">
             <span>Banco:</span>
-            <strong>X</strong>
+            <strong>{bankName}</strong>
           </div>
           <div className="label-strong">
             <span>Cuenta:</span>

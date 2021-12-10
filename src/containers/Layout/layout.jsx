@@ -457,32 +457,6 @@ const DefaultLayout = (props) => {
     };
   }, []);
 
-  useEffect(() => {
-    if (isEmpty(dataProfileMenu) === false) {
-      const name = dataProfileMenu.find((row) => {
-        return row.path === props.location.pathname;
-      });
-      if (isNil(name) === false) {
-        setNameSection(
-          isNil(name.menuName) === false && isNil(name.menuName) === false
-            ? name.menuName
-            : "Dashboard"
-        );
-      } else {
-        const nameRoutes = routes.find((row) => {
-          return props.location.pathname.indexOf(row.path) !== -1;
-        });
-        setNameSection(
-          isNil(nameRoutes) === false &&
-            isNil(nameRoutes.name) === false &&
-            isNil(nameRoutes.name) === false
-            ? nameRoutes.name
-            : "Dashboard"
-        );
-      }
-    }
-  }, [props.location.pathname, dataProfileMenu]);
-
   return (
     <div className="App">
       <audio id="audio-notice-hfy">
@@ -631,6 +605,11 @@ const DefaultLayout = (props) => {
                   className="popover-list-notification"
                   id="layout-popover-list"
                   placement="bottomRight"
+                  onVisibleChange={(visible) => {
+                    if (visible === false) {
+                      setIsVisibleNotification(false);
+                    }
+                  }}
                   title={
                     <div className="title-notification-small">
                       Notificaciones
@@ -773,6 +752,15 @@ const DefaultLayout = (props) => {
                       exact={route.exact}
                       name={route.name}
                       render={(prop) => {
+                        const name = dataProfileMenu.find((row) => {
+                          return row.path === route.path;
+                        });
+                        setNameSection(
+                          isNil(name) === false &&
+                            isNil(name.menuName) === false
+                            ? name.menuName
+                            : route.name
+                        );
                         if (authenticated === true) {
                           return (
                             <route.component {...prop} history={history} />

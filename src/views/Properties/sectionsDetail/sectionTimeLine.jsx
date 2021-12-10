@@ -69,6 +69,7 @@ const Card = styled.div`
     }
   }
   .info-step {
+    font-size:14px;
     h1 {
       margin: 0px;
       color: #200e32;
@@ -193,7 +194,9 @@ const SectionTimeLine = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetCustomerTimeLine();
+    if (isEmpty(dataDetail) === false) {
+      handlerCallGetCustomerTimeLine();
+    }
   }, [dataDetail]);
 
   return (

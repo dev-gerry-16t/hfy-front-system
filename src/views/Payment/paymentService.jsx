@@ -78,12 +78,16 @@ const CardPaymentMethod = styled.div`
     padding: 2em 0px;
     border-bottom: 1px solid rgba(78, 75, 102, 0.3);
     .amount-to-pay {
+      position: relative;
       span {
         border: 1px solid var(--color-primary);
         padding: 0.5em;
         border-radius: 7px;
         font-weight: 600;
         color: var(--color-primary);
+      }
+      p {
+        position: absolute;
       }
     }
   }
@@ -160,10 +164,55 @@ const PaymentsService = (props) => {
   const [tabSelect, setTabSelect] = useState("1");
   const [dataPayment, setDataPayment] = useState({});
   const [isOkPayment, setIsOkPayment] = useState(null);
+  const [amountTaxes, setAmountTaxes] = useState("$ 0.00 MXN");
   const [labelErrorPayment, setLabelErrorPayment] = useState("");
 
   const stripePromise = loadStripe(dataProfile.publicKeyStripe);
   const frontFunctions = new FrontFunctions();
+
+  const handlerGetCatalogGWtransaction = async (data) => {
+    const { idSystemUser, idLoginHistory, token, idContract } = dataProfile;
+    const { params } = match;
+
+    try {
+      const responseInfo = await fetch(
+        `${ENVIROMENT}${API_CONSTANTS.GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION}`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            idOrderPayment: params.idOrderPayment,
+            idSystemUser,
+            idLoginHistory,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (isNil(responseInfo.status) === false && responseInfo.status !== 200) {
+        throw isNil(responseInfo.statusText) === false
+          ? responseInfo.statusText
+          : "";
+      }
+      const resultInfo = await responseInfo.json();
+      setAmountTaxes(
+        isEmpty(resultInfo) === false &&
+          isEmpty(resultInfo.response) === false &&
+          isEmpty(resultInfo.response.result) === false &&
+          isNil(resultInfo.response.result.amountFormat) === false
+          ? `$ ${resultInfo.response.result.amountFormat} MXN`
+          : "$ 0.00 MXN"
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallGetOrderPaymentById = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -187,12 +236,6 @@ const PaymentsService = (props) => {
           ? response.response[0][0]
           : {};
       setDataPayment(responseResult);
-      const elementTitle = document.getElementById("name-screen-hfy");
-      elementTitle.innerText =
-        isEmpty(responseResult) === false &&
-        isNil(responseResult.orderPaymentConcept) === false
-          ? responseResult.orderPaymentConcept
-          : "Dashboard";
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -203,6 +246,7 @@ const PaymentsService = (props) => {
 
   useEffect(() => {
     handlerCallGetOrderPaymentById();
+    handlerGetCatalogGWtransaction();
   }, []);
 
   return (
@@ -219,10 +263,21 @@ const PaymentsService = (props) => {
                     ? "Elige un método de pago"
                     : "Proceso pagado"}
                 </h1>
+                {isNil(dataPayment.hfInvoice) === false && (
+                  <div>
+                    Folio: <strong>{dataPayment.hfInvoice}</strong>
+                  </div>
+                )}
+              </div>
+              <div className="info-payment-detail">
+                {isNil(dataPayment.fullAddress) === false && (
+                  <div>Propiedad: {dataPayment.fullAddress}</div>
+                )}
+                {isNil(dataPayment.orderPaymentConcept) === false && (
+                  <div>Concepto {dataPayment.orderPaymentConcept}</div>
+                )}
               </div>
               <div className="section-payment-method">
-                <h2></h2>
-
                 <TabsProperty>
                   {dataTabsPaymentMethod.map((row) => {
                     return (
@@ -245,7 +300,11 @@ const PaymentsService = (props) => {
                   <div className="header-card-payment">
                     <div className="amount-to-pay">
                       <strong>Monto a pagar</strong>{" "}
-                      <span>{dataPayment.formattedAmount}</span>
+                      <span>
+                        {tabSelect === "1"
+                          ? dataPayment.formattedAmount
+                          : amountTaxes}
+                      </span>
                     </div>
                   </div>
                   <div className="card-body-payment">
