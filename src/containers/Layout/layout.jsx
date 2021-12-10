@@ -631,6 +631,11 @@ const DefaultLayout = (props) => {
                   className="popover-list-notification"
                   id="layout-popover-list"
                   placement="bottomRight"
+                  onVisibleChange={(visible) => {
+                    if (visible === false) {
+                      setIsVisibleNotification(false);
+                    }
+                  }}
                   title={
                     <div className="title-notification-small">
                       Notificaciones
