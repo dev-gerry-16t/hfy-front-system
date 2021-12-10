@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Table } from "antd";
+import { Table ,Progress} from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -94,6 +94,16 @@ const AllUsers = (props) => {
       title: "Avance",
       dataIndex: "percentDataCompleted",
       key: "percentDataCompleted",
+      width:250,
+      render: (percent, record) => (
+        <div style={{ padding: "0px 15px 0px 0px" }}>
+          <Progress
+            percent={isNil(percent) === false ? percent : 0}
+            size="small"
+            status="succes"
+          />
+        </div>
+      ),
     },
     {
       title: "Proceso Actual",
