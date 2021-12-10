@@ -312,10 +312,10 @@ const ComponentFilter = (props) => {
               <div className="group-input">
                 <IconLocation width="25px" height="25px" />
                 <Select
+                showSearch
                   className="select-type-property"
                   onChange={() => {}}
                   placeholder="Ubicación"
-                  mode="tags"
                   onChange={(a, e) => {
                     if (isNil(e[0]) === false) {
                       const dataRecord = e[0].onClick();

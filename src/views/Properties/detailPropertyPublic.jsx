@@ -185,6 +185,19 @@ const Card = styled.div`
   }
 `;
 
+const EmptyData = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  p {
+    color: rgba(78, 75, 102, 0.45);
+    font-weight: 700;
+    text-align: center;
+  }
+`;
+
 const dataTabsProperty = [
   {
     id: "1",
@@ -347,53 +360,55 @@ const DetailPropertyUsers = (props) => {
     handlerCallGetPropertyById();
   }, [identifier, idProperty]);
   return (
-    <Content>
-      <ContextProperty.Provider
-        value={{
-          dataDetail,
-          updateProperty: async (data) => {
-            try {
-              await handlerCallUpdateProperty(data);
-            } catch (error) {
-              throw error;
-            }
-          },
-        }}
-      >
-        <SectionAssociationProperty history={history} />
-        <SectionAssociationApplicant history={history} />
-        <ContentForm owner>
-          <div className="header-title">
-            <h1>Detalle de inmueble</h1>
-            <div
-              style={{
-                display: "flex",
-              }}
-            >
-              {dataDetail.isPublished === true && (
-                <Dropdown
-                  overlay={
-                    <Menu>
-                      <Menu.Item>
-                        <a
-                          target="_blank"
-                          href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
-                        >
-                          WhatsApp
-                        </a>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <span
-                          onClick={() => {
-                            copyTextToClipboard(
-                              `${window.location.origin}/property/${dataDetail.identifier}`
-                            );
-                          }}
-                        >
-                          Copiar link
-                        </span>
-                      </Menu.Item>
-                      {/* <Menu.Item>
+    <>
+      {isEmpty(dataDetail) === false && (
+        <Content>
+          <ContextProperty.Provider
+            value={{
+              dataDetail,
+              updateProperty: async (data) => {
+                try {
+                  await handlerCallUpdateProperty(data);
+                } catch (error) {
+                  throw error;
+                }
+              },
+            }}
+          >
+            <SectionAssociationProperty history={history} />
+            <SectionAssociationApplicant history={history} />
+            <ContentForm owner>
+              <div className="header-title">
+                <h1>Detalle de inmueble</h1>
+                <div
+                  style={{
+                    display: "flex",
+                  }}
+                >
+                  {dataDetail.isPublished === true && (
+                    <Dropdown
+                      overlay={
+                        <Menu>
+                          <Menu.Item>
+                            <a
+                              target="_blank"
+                              href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                            >
+                              WhatsApp
+                            </a>
+                          </Menu.Item>
+                          <Menu.Item>
+                            <span
+                              onClick={() => {
+                                copyTextToClipboard(
+                                  `${window.location.origin}/property/${dataDetail.identifier}`
+                                );
+                              }}
+                            >
+                              Copiar link
+                            </span>
+                          </Menu.Item>
+                          {/* <Menu.Item>
                       <a
                         target="_blank"
                         href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
@@ -401,101 +416,113 @@ const DetailPropertyUsers = (props) => {
                         Facebook
                       </a>
                     </Menu.Item> */}
-                    </Menu>
-                  }
-                  placement="bottomLeft"
-                  arrow
-                >
-                  <ButtonIcon onClick={() => {}}>
-                    <IconShare
-                      color="var(--color-primary)"
-                      backGround="var(--color-primary)"
-                    />
-                  </ButtonIcon>
-                </Dropdown>
-              )}
-              {dataDetail.canBeFavorite === true && (
-                <ButtonIcon
-                  onClick={async () => {
-                    try {
-                      await handlerCallSetFavoriteProperty(
-                        {
-                          idApartment: dataDetail.idApartment,
-                          identifier: dataDetail.identifier,
-                        },
-                        dataDetail.idProperty
-                      );
-                      handlerCallGetPropertyById();
-                    } catch (error) {}
-                  }}
-                >
-                  <IconHeart
-                    backGround={
-                      dataDetail.isFavorite === true
-                        ? "var(--color-primary)"
-                        : "transparent"
-                    }
-                    color="var(--color-primary)"
-                  />
-                </ButtonIcon>
-              )}
-            </div>
-          </div>
-          <div>
-            <SectionCarouselInfo
-              apartmentImages={
-                isNil(dataDetail) === false &&
-                isNil(dataDetail.apartmentDocuments) === false
-                  ? JSON.parse(dataDetail.apartmentDocuments)
-                  : []
-              }
-            />
-            <ContainerDown>
-              <TabsProperty>
-                {dataTabsProperty.map((row) => {
-                  return (
-                    <Tab
-                      selected={tabSelect === row.id}
-                      onClick={() => {
-                        setTabSelect(row.id);
+                        </Menu>
+                      }
+                      placement="bottomLeft"
+                      arrow
+                    >
+                      <ButtonIcon onClick={() => {}}>
+                        <IconShare
+                          color="var(--color-primary)"
+                          backGround="var(--color-primary)"
+                        />
+                      </ButtonIcon>
+                    </Dropdown>
+                  )}
+                  {dataDetail.canBeFavorite === true && (
+                    <ButtonIcon
+                      onClick={async () => {
+                        try {
+                          await handlerCallSetFavoriteProperty(
+                            {
+                              idApartment: dataDetail.idApartment,
+                              identifier: dataDetail.identifier,
+                            },
+                            dataDetail.idProperty
+                          );
+                          handlerCallGetPropertyById();
+                        } catch (error) {}
                       }}
                     >
-                      <h1>{row.text}</h1>
-                      <hr />
-                    </Tab>
-                  );
-                })}
-              </TabsProperty>
-              {tabSelect === "1" && <SectionFeatures />}
-              {tabSelect === "2" && <SectionLocation />}
-              {tabSelect === "3" && <SectionAmenities />}
-            </ContainerDown>
-          </div>
-        </ContentForm>
-        <ContentRight>
-          <GeneralCard>
-            <div className="header-title">
-              <h1>Contactar</h1>
-            </div>
-            <div className="content-card">
-              <Card>
-                <div className="card-user">
-                  <div className="top-info">
-                    <div className="icon-info">
-                      <IconTenant size="100%" color="#4E4B66" />
-                    </div>
-                    <div className="name-info">
-                      <h3>{dataDetail.contactName}</h3>
-                      <span>{dataDetail.contactPhoneNumberFormat}</span>
-                    </div>
-                  </div>
+                      <IconHeart
+                        backGround={
+                          dataDetail.isFavorite === true
+                            ? "var(--color-primary)"
+                            : "transparent"
+                        }
+                        color="var(--color-primary)"
+                      />
+                    </ButtonIcon>
+                  )}
                 </div>
-              </Card>
-            </div>
-          </GeneralCard>
-        </ContentRight>
-      </ContextProperty.Provider>
-    </Content>
+              </div>
+              <div>
+                <SectionCarouselInfo
+                  apartmentImages={
+                    isNil(dataDetail) === false &&
+                    isNil(dataDetail.apartmentDocuments) === false
+                      ? JSON.parse(dataDetail.apartmentDocuments)
+                      : []
+                  }
+                />
+                <ContainerDown>
+                  <TabsProperty>
+                    {dataTabsProperty.map((row) => {
+                      return (
+                        <Tab
+                          selected={tabSelect === row.id}
+                          onClick={() => {
+                            setTabSelect(row.id);
+                          }}
+                        >
+                          <h1>{row.text}</h1>
+                          <hr />
+                        </Tab>
+                      );
+                    })}
+                  </TabsProperty>
+                  {tabSelect === "1" && <SectionFeatures />}
+                  {tabSelect === "2" && <SectionLocation />}
+                  {tabSelect === "3" && <SectionAmenities />}
+                </ContainerDown>
+              </div>
+            </ContentForm>
+            <ContentRight>
+              <GeneralCard>
+                <div className="header-title">
+                  <h1>Contactar</h1>
+                </div>
+                <div className="content-card">
+                  <Card>
+                    <div className="card-user">
+                      <div className="top-info">
+                        <div className="icon-info">
+                          <IconTenant size="100%" color="#4E4B66" />
+                        </div>
+                        <div className="name-info">
+                          <h3>{dataDetail.contactName}</h3>
+                          <span>{dataDetail.contactPhoneNumberFormat}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </GeneralCard>
+            </ContentRight>
+          </ContextProperty.Provider>
+        </Content>
+      )}
+      {isEmpty(dataDetail) === true && (
+        <EmptyData>
+          <img
+            width="150"
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296S.png"
+            alt=""
+          />
+          <p>Propiedad no disponible :(</p>
+        </EmptyData>
+      )}
+    </>
   );
 };
 

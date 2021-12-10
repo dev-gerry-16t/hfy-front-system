@@ -52,8 +52,17 @@ const ContentForm = styled.div`
   border-radius: 0.5em;
   padding-bottom: 2em;
   position: relative;
+  .info-payment-detail {
+    background: #f7f7fc;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+    font-size: 12px;
+    margin-bottom: 3em;
+    padding: 10px;
+    color: rgba(78, 75, 102, 1);
+    font-weight: 500;
+  }
   .section-payment-method {
-    h2{
+    h2 {
       font-weight: 600;
       font-size: 1em;
       margin: 0px;
@@ -61,7 +70,6 @@ const ContentForm = styled.div`
     }
     margin-top: 1em;
     padding: 0px 2em;
-    
   }
   .back-button {
     position: absolute;

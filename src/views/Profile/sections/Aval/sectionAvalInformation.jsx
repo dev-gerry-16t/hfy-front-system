@@ -24,6 +24,7 @@ import {
 } from "../../constants/styleConstants";
 import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 import CustomInputCurrency from "../../../../components/customInputCurrency";
+import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 
 const ComponentRadio = styled.div`
   display: flex;
@@ -116,6 +117,10 @@ const dataTabsAval = [
     id: "5",
     text: "Escrituras",
   },
+  {
+    id: "6",
+    text: "Documentos",
+  },
 ];
 
 const SectionAvalInformation = (props) => {
@@ -172,6 +177,7 @@ const SectionAvalInformation = (props) => {
   const [openOtherNeighborhood, setOpenOtherNeighborhood] = useState(false);
   const [idZipCode, setIdZipCode] = useState(null);
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataDocument, setDataDocument] = useState([]);
   const [zipCodeStateCity, setZipCodeStateCity] = useState({
     state: null,
     city: null,
@@ -180,7 +186,35 @@ const SectionAvalInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail } = dataContexProfile;
+  const { dataCustomerDetail, identifier, type } = dataContexProfile;
+
+  const handlerCallGetCustomerDocument = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          identifier,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_DOCUMENT
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDocument(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
 
   const hanlderCallGetZipCodeAdress = async (code, id) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -452,6 +486,7 @@ const SectionAvalInformation = (props) => {
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
     await handlerCallGetMaritalStatus();
+    await handlerCallGetCustomerDocument();
   };
 
   useEffect(() => {
@@ -557,7 +592,11 @@ const SectionAvalInformation = (props) => {
                   marginBottom: "2em",
                 }}
               >
-                <span>Ingresa los datos correspondientes</span>
+                <span>
+                  {tabSelect === "6"
+                    ? "Sube los documentos que se piden a continuación"
+                    : "Ingresa los datos correspondientes"}
+                </span>
               </div>
               {tabSelect === "1" && (
                 <div>
@@ -1347,6 +1386,17 @@ const SectionAvalInformation = (props) => {
                       />
                     </Col>
                   </Row>
+                </div>
+              )}
+              {tabSelect === "6" && (
+                <div>
+                  <WidgetUploadDocument
+                    handlerCallGetCustomerDocument={() => {
+                      handlerCallGetCustomerDocument();
+                    }}
+                    dataDocument={dataDocument}
+                    type={type}
+                  />
                 </div>
               )}
               <ButtonCenterPrimary>
