@@ -407,6 +407,7 @@ const ProfileUsers = (props) => {
                   dataTabs["identifier-4"] || dataTabs["identifier-5"]
                 }
                 history={history}
+                frontFunctions={frontFunctions}
               />
               {isEmpty(dataDocument) === false && (
                 <div className="card-header-profile">

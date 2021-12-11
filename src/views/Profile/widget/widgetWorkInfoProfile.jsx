@@ -4,16 +4,18 @@ import ContextProfile from "../context/contextProfile";
 import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
 
 const WidgetWorkInfoProfile = (props) => {
-  const { identifier, history } = props;
+  const { identifier, history, frontFunctions } = props;
   const dataContexProfile = useContext(ContextProfile);
   const { dataCustomerDetail } = dataContexProfile;
   const {
     companyName,
-    idOccupationActivity,
     bossName,
     bossEmailAddress,
     bossPhoneNumber,
-    hasCar,
+    hasOtherIncomes,
+    occupationActivity,
+    otherIncomes,
+    otherIncomesDescription,
   } = dataCustomerDetail;
   let component = <div />;
 
@@ -37,7 +39,7 @@ const WidgetWorkInfoProfile = (props) => {
           </div>
           <div className="label-strong">
             <span>Puesto:</span>
-            <strong>{idOccupationActivity}</strong>
+            <strong>{occupationActivity}</strong>
           </div>
           <div className="line-separate"></div>
           <div className="info-work-person">
@@ -53,31 +55,45 @@ const WidgetWorkInfoProfile = (props) => {
               marginTop: "1em",
             }}
           >
-            <span>Otros ingresos:</span>
+            <span>¿Tienes otros ingresos?</span>
             <strong
               style={{
                 color: "var(--color-primary)",
               }}
             >
-              x
+              {hasOtherIncomes === true ? "Si" : "No"}
             </strong>
           </div>
-          <div className="line-separate"></div>
-          <div
-            className="label-strong"
-            style={{
-              marginTop: "1em",
-            }}
-          >
-            <span>Auto</span>
-            <strong
-              style={{
-                color: "var(--color-primary)",
-              }}
-            >
-              {hasCar == true ? "Si" : "No"}
-            </strong>
-          </div>
+          {hasOtherIncomes === true && (
+            <>
+              <div
+                className="label-strong"
+                style={{
+                  marginTop: "1em",
+                }}
+              >
+                <span>Monto:</span>
+                <strong
+                  style={{
+                    color: "var(--color-primary)",
+                  }}
+                >
+                  {frontFunctions.parseFormatCurrency(otherIncomes, 2, 2)}
+                </strong>
+              </div>
+              <div
+                className=""
+                style={{
+                  marginTop: "1em",
+                }}
+              >
+                <span>Descripción:</span>
+                <p>
+                  <strong>{otherIncomesDescription}</strong>
+                </p>
+              </div>
+            </>
+          )}
         </div>
       </div>
     );

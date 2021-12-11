@@ -48,7 +48,7 @@ const catalogAssociation = [
 const SectionAssociationProperty = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty } = dataContexProperty;
+  const { dataDetail, updateProperty, getById } = dataContexProperty;
   const {
     fullAddress,
     idProperty,
@@ -266,6 +266,7 @@ const SectionAssociationProperty = (props) => {
                       },
                       idProperty
                     );
+                    getById();
                     setNewInfoProperty(response);
                     setFinishProcess(true);
                   } catch (error) {}

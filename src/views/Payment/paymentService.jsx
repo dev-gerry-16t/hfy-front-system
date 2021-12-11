@@ -274,7 +274,7 @@ const PaymentsService = (props) => {
                   <div>Propiedad: {dataPayment.fullAddress}</div>
                 )}
                 {isNil(dataPayment.orderPaymentConcept) === false && (
-                  <div>Concepto {dataPayment.orderPaymentConcept}</div>
+                  <div>Concepto: {dataPayment.orderPaymentConcept}</div>
                 )}
               </div>
               <div className="section-payment-method">

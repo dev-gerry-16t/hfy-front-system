@@ -410,7 +410,7 @@ const ComponentFilter = (props) => {
         </div>
         <div className="input-number-filter">
           <div className="left-position">
-            <label>Minimo</label>
+            <label>Mínimo</label>
             <NumberFormat
               id={null}
               value={amountMinimum}

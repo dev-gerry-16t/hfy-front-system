@@ -36,24 +36,6 @@ const WidgetCurrentAddressProfile = (props) => {
           </button>
         </div>
         <div className="body-card-profile">
-          <div className="label-strong">
-            <span>Propietario:</span>
-            <strong
-              style={{
-                color: "var(--color-primary)",
-              }}
-            >
-              {isOwn == true ? "Si" : "No"}
-            </strong>
-          </div>
-          <div className="label-strong">
-            <span>Arrendador:</span>
-            <strong>{lessorFullName}</strong>
-          </div>
-          <div className="label-strong">
-            <span>Teléfono Arrendador:</span>
-            <strong>{lessorPhoneNumber}</strong>
-          </div>
           <div className="info-address-profile">
             <div>
               <span>Calle: </span>
