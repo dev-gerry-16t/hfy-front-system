@@ -110,7 +110,7 @@ const ComponentAddReference = (props) => {
               <CustomInputTypeForm
                 value={dataForm.phoneNumber}
                 placeholder=""
-                label="Teléfono"
+                label="Teléfono *"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
@@ -128,7 +128,7 @@ const ComponentAddReference = (props) => {
               <CustomInputTypeForm
                 value={dataForm.emailAddress}
                 placeholder=""
-                label="Correo *"
+                label="Correo"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {

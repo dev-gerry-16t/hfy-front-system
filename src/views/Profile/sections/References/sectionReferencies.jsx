@@ -99,7 +99,7 @@ const SectionReferences = (props) => {
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
               <span>
                 Por favor llena todos los campos correspondientes de tus
-                referencias. Recuerda que debes agregar como minimo 3
+                referencias. Recuerda que debes agregar como mínimo 3
                 referencias.
               </span>
             </Col>

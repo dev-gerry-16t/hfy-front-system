@@ -129,7 +129,7 @@ const DetailPropertyUsers = (props) => {
             dataDetail,
           }}
         >
-          <SectionAssociationProperty history={history} />
+          {/* <SectionAssociationProperty history={history} /> */}
           <ContentForm owner>
             <div className="header-title">
               <h1 style={{ fontSize: "1.17em" }}>Detalle de inmueble</h1>

@@ -155,12 +155,14 @@ const SectionAvalInformation = (props) => {
     endorsementStreet: null,
     endorsementSuite: null,
     endorsementStreetNumber: null,
+    endorsementZipCode: null,
     endorsementIdZipCode: null,
     endorsementNeighborhood: null,
     collateralPropertyStreet: null,
     collateralPropertyStreetNumber: null,
     collateralPropertySuite: null,
     collateralPropertyIdZipCoode: null,
+    collateralPropertyZipCode: null,
     collateralPropertyNeighborhood: null,
     publicPropertyRegistry: null,
     documentNumber: null,
@@ -168,17 +170,28 @@ const SectionAvalInformation = (props) => {
     signedAtPlace: null,
     notaryOfficeNumber: null,
     notaryName: null,
+    isCollPropSame: null,
   });
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [dataMaritalStatus, setDataMaritalStatus] = useState([]);
+  const [dataMaritalRegime, setDataMaritalRegime] = useState([]);
   const [fieldDescription, setFieldDescription] = useState("");
   const [isRequiresPlaceOfIssue, setIsRequiresPlaceOfIssue] = useState(false);
+  const [isOpenSelectRegime, setIsOpenSelectRegime] = useState(false);
   const [openOtherNeighborhood, setOpenOtherNeighborhood] = useState(false);
+  const [openOtherNeighborhoodCollateral, setOpenOtherNeighborhoodCollateral] =
+    useState(false);
   const [idZipCode, setIdZipCode] = useState(null);
+  const [idZipCodeCollateral, setIdZipCodeCollateral] = useState(null);
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataZipCatalogCollateral, setDataZipCatalogCollateral] = useState([]);
   const [dataDocument, setDataDocument] = useState([]);
   const [zipCodeStateCity, setZipCodeStateCity] = useState({
+    state: null,
+    city: null,
+  });
+  const [zipCodeStateCityCollateral, setZipCodeStateCityCollateral] = useState({
     state: null,
     city: null,
   });
@@ -254,6 +267,58 @@ const SectionAvalInformation = (props) => {
       setIdZipCode(isEmpty(responseResult2) ? "" : id);
       setDataZipCatalog(responseResult2);
       setZipCodeStateCity({
+        state: isEmpty(responseResult1) === false ? responseResult1.state : "",
+        city:
+          isEmpty(responseResult1) === false
+            ? responseResult1.municipality
+            : "",
+      });
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const hanlderCallGetZipCodeAdressCollateral = async (code, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+          zipCode: code,
+        },
+        null,
+        API_CONSTANTS.GET_ZIP_CODE_ADRESS
+      );
+      const responseResult1 =
+        isNil(response) === false &&
+        isNil(response.response1) === false &&
+        isNil(response.response1[0]) === false
+          ? response.response1[0]
+          : {};
+      const responseResult2 =
+        isNil(response) === false && isNil(response.response2) === false
+          ? response.response2
+          : [];
+      const neighborhood = responseResult2.find((row) => {
+        return row.idZipCode === id;
+      });
+      if (
+        isNil(neighborhood) === false &&
+        isNil(neighborhood.isOpen) === false &&
+        neighborhood.isOpen === true
+      ) {
+        setOpenOtherNeighborhoodCollateral(true);
+      }
+
+      setIdZipCodeCollateral(isEmpty(responseResult2) ? "" : id);
+      setDataZipCatalogCollateral(responseResult2);
+      setZipCodeStateCityCollateral({
         state: isEmpty(responseResult1) === false ? responseResult1.state : "",
         city:
           isEmpty(responseResult1) === false
@@ -373,6 +438,32 @@ const SectionAvalInformation = (props) => {
     }
   };
 
+  const handlerCallGetMaritalRegime = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_MARITAL_REGIME
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataMaritalRegime(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetMaritalStatus = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -413,6 +504,7 @@ const SectionAvalInformation = (props) => {
       endorsementPlaceOfIssue,
       endorsementEmailAddress,
       endorsementPhoneNumber,
+      endorsementZipCode,
       idEndorsementMaritalStatus,
       idEndorsementMaritalRegime,
       hasAssessment,
@@ -430,6 +522,7 @@ const SectionAvalInformation = (props) => {
       collateralPropertyStreetNumber,
       collateralPropertySuite,
       collateralPropertyIdZipCoode,
+      collateralPropertyZipCode,
       collateralPropertyNeighborhood,
       publicPropertyRegistry,
       documentNumber,
@@ -437,9 +530,8 @@ const SectionAvalInformation = (props) => {
       signedAtPlace,
       notaryOfficeNumber,
       notaryName,
-      repeatAddress,
+      isCollPropSame,
     } = data;
-
     setDataForm({
       hasEndorsement,
       endorsementGivenName,
@@ -453,6 +545,7 @@ const SectionAvalInformation = (props) => {
       endorsementPlaceOfIssue,
       endorsementEmailAddress,
       endorsementPhoneNumber,
+      endorsementZipCode,
       idEndorsementMaritalStatus,
       idEndorsementMaritalRegime,
       hasAssessment,
@@ -471,14 +564,20 @@ const SectionAvalInformation = (props) => {
       collateralPropertySuite,
       collateralPropertyIdZipCoode,
       collateralPropertyNeighborhood,
+      collateralPropertyZipCode,
       publicPropertyRegistry,
       documentNumber,
       documentSignedAt,
       signedAtPlace,
       notaryOfficeNumber,
       notaryName,
-      repeatAddress,
+      isCollPropSame,
     });
+    hanlderCallGetZipCodeAdress(endorsementZipCode, endorsementIdZipCode);
+    hanlderCallGetZipCodeAdressCollateral(
+      collateralPropertyZipCode,
+      collateralPropertyIdZipCoode
+    );
   };
 
   const handlerCallInitApis = async () => {
@@ -487,6 +586,7 @@ const SectionAvalInformation = (props) => {
     await hanlderCallGetIdTypes();
     await handlerCallGetMaritalStatus();
     await handlerCallGetCustomerDocument();
+    await handlerCallGetMaritalRegime();
   };
 
   useEffect(() => {
@@ -500,9 +600,24 @@ const SectionAvalInformation = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isEmpty(dataIdTypes) === false && isNil(dataForm.idType) === false) {
+    if (
+      isEmpty(dataCustomerDetail) === false &&
+      isEmpty(dataIdTypes) === false &&
+      isEmpty(dataMaritalStatus) === false
+    ) {
+      const selectDefaultMaritalStatus = dataMaritalStatus.find((row) => {
+        return (
+          dataCustomerDetail.idEndorsementMaritalStatus === row.idMaritalStatus
+        );
+      });
+      if (
+        isNil(selectDefaultMaritalStatus) === false &&
+        isNil(selectDefaultMaritalStatus.hasMaritalRegime) === false
+      ) {
+        setIsOpenSelectRegime(selectDefaultMaritalStatus.hasMaritalRegime);
+      }
       const selectDefaultIdType = dataIdTypes.find((row) => {
-        return dataForm.idType === row.idType;
+        return dataCustomerDetail.idEndorsementType === row.idType;
       });
       setFieldDescription(
         isNil(selectDefaultIdType) === false
@@ -510,7 +625,7 @@ const SectionAvalInformation = (props) => {
           : ""
       );
     }
-  }, [dataIdTypes]);
+  }, [dataIdTypes, dataCustomerDetail, dataMaritalStatus]);
 
   return (
     <ContentForm>
@@ -791,24 +906,7 @@ const SectionAvalInformation = (props) => {
                   </Row>
                   <Row>
                     <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                      <CustomSelect
-                        value={dataForm.idEndorsementMaritalStatus}
-                        placeholder=""
-                        label="Estado civil"
-                        data={dataMaritalStatus}
-                        error={false}
-                        errorMessage="Este campo es requerido"
-                        onChange={(value) => {
-                          setDataForm({
-                            ...dataForm,
-                            idEndorsementMaritalStatus: value,
-                          });
-                        }}
-                      />
-                    </Col>
-                    <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                    {isRequiresPlaceOfIssue === true && (
-                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      {isRequiresPlaceOfIssue === true && (
                         <CustomInputTypeForm
                           value={dataForm.endorsementPlaceOfIssue}
                           placeholder=""
@@ -823,8 +921,47 @@ const SectionAvalInformation = (props) => {
                           }}
                           type="text"
                         />
-                      </Col>
-                    )}
+                      )}
+                    </Col>
+                    <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                  </Row>
+                  <Row>
+                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <CustomSelect
+                        value={dataForm.idEndorsementMaritalStatus}
+                        placeholder=""
+                        label="Estado civil"
+                        data={dataMaritalStatus}
+                        error={false}
+                        errorMessage="Este campo es requerido"
+                        onChange={(value, option) => {
+                          setDataForm({
+                            ...dataForm,
+                            idEndorsementMaritalStatus: value,
+                          });
+                          setIsOpenSelectRegime(option.hasMaritalRegime);
+                        }}
+                      />
+                    </Col>
+                    <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      {isOpenSelectRegime === true && (
+                        <CustomSelect
+                          value={dataForm.idEndorsementMaritalRegime}
+                          placeholder=""
+                          label="Regimen"
+                          data={dataMaritalRegime}
+                          error={false}
+                          errorMessage="Este campo es requerido"
+                          onChange={(value) => {
+                            setDataForm({
+                              ...dataForm,
+                              idEndorsementMaritalRegime: value,
+                            });
+                          }}
+                        />
+                      )}
+                    </Col>
                   </Row>
                 </div>
               )}
@@ -984,13 +1121,33 @@ const SectionAvalInformation = (props) => {
                           <label className="input-radio">
                             <input
                               type="radio"
-                              checked={dataForm.repeatAddress == true}
+                              checked={dataForm.isCollPropSame == true}
                               name="repeat-address"
                               onClick={() => {
                                 setDataForm({
                                   ...dataForm,
-                                  deactivateBoundSolidarity: true,
+                                  collateralPropertyStreet:
+                                    dataForm.endorsementStreet,
+                                  collateralPropertyStreetNumber:
+                                    dataForm.endorsementStreetNumber,
+                                  collateralPropertySuite:
+                                    dataForm.endorsementSuite,
+                                  collateralPropertyIdZipCoode:
+                                    dataForm.endorsementIdZipCode,
+                                  collateralPropertyZipCoode:
+                                    dataForm.endorsementZipCode,
+                                  collateralPropertyNeighborhood:
+                                    dataForm.endorsementNeighborhood,
+                                  collateralPropertyCity:
+                                    dataForm.endorsementCity,
+                                  collateralPropertyState:
+                                    dataForm.endorsementState,
+                                  isCollPropSame: true,
                                 });
+                                hanlderCallGetZipCodeAdressCollateral(
+                                  dataForm.endorsementZipCode,
+                                  dataForm.endorsementIdZipCode
+                                );
                               }}
                             />
                             Si
@@ -999,11 +1156,26 @@ const SectionAvalInformation = (props) => {
                             <input
                               type="radio"
                               name="repeat-address"
-                              checked={dataForm.repeatAddress == false}
+                              checked={dataForm.isCollPropSame == false}
                               onClick={() => {
                                 setDataForm({
                                   ...dataForm,
-                                  repeatAddress: false,
+                                  collateralPropertyStreet: null,
+                                  collateralPropertyStreetNumber: null,
+                                  collateralPropertySuite: null,
+                                  collateralPropertyIdZipCoode: null,
+                                  collateralPropertyZipCoode: null,
+                                  collateralPropertyNeighborhood: null,
+                                  collateralPropertyCity: null,
+                                  collateralPropertyState: null,
+                                  isCollPropSame: false,
+                                });
+                                setOpenOtherNeighborhoodCollateral(false);
+                                setIdZipCodeCollateral(null);
+                                setDataZipCatalogCollateral([]);
+                                setZipCodeStateCityCollateral({
+                                  state: null,
+                                  city: null,
                                 });
                               }}
                             />
@@ -1034,7 +1206,7 @@ const SectionAvalInformation = (props) => {
                       <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <CustomInputTypeForm
-                          value={zipCodeStateCity.city}
+                          value={zipCodeStateCityCollateral.city}
                           placeholder=""
                           label="Municipio/Delegación"
                           error={false}
@@ -1085,10 +1257,10 @@ const SectionAvalInformation = (props) => {
                       <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                         <CustomSelect
-                          value={idZipCode}
+                          value={idZipCodeCollateral}
                           placeholder=""
                           label="Colonia"
-                          data={dataZipCatalog}
+                          data={dataZipCatalogCollateral}
                           error={false}
                           errorMessage="Este campo es requerido"
                           onChange={(value, option) => {
@@ -1096,8 +1268,8 @@ const SectionAvalInformation = (props) => {
                               ...dataForm,
                               collateralPropertyIdZipCoode: value,
                             });
-                            setIdZipCode(value);
-                            setOpenOtherNeighborhood(option.isOpen);
+                            setIdZipCodeCollateral(value);
+                            setOpenOtherNeighborhoodCollateral(option.isOpen);
                           }}
                         />
                       </Col>
@@ -1117,7 +1289,10 @@ const SectionAvalInformation = (props) => {
                                   ...dataForm,
                                   collateralPropertyZipCoode: value,
                                 });
-                                hanlderCallGetZipCodeAdress(value, "");
+                                hanlderCallGetZipCodeAdressCollateral(
+                                  value,
+                                  ""
+                                );
                               }}
                               type="number"
                             />
@@ -1125,7 +1300,7 @@ const SectionAvalInformation = (props) => {
                           <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                           <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                             <CustomInputTypeForm
-                              value={zipCodeStateCity.state}
+                              value={zipCodeStateCityCollateral.state}
                               placeholder=""
                               label="Estado"
                               error={false}
@@ -1138,7 +1313,7 @@ const SectionAvalInformation = (props) => {
                       </Col>
                       <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
                       <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                        {openOtherNeighborhood === true && (
+                        {openOtherNeighborhoodCollateral === true && (
                           <CustomInputTypeForm
                             value={dataForm.collateralPropertyNeighborhood}
                             placeholder="Indica la colonia"

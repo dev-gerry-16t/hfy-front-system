@@ -221,6 +221,7 @@ const SectionCurrentAddress = (props) => {
       idPropertyState,
       qtyDescription,
     } = data;
+
     setDataForm({
       isOwn,
       lessorFullName,
@@ -245,6 +246,20 @@ const SectionCurrentAddress = (props) => {
       handlerSetStateDataDetail(dataCustomerDetail);
     }
   }, [dataCustomerDetail]);
+
+  useEffect(() => {
+    if (
+      isEmpty(dataPropertyStates) === false &&
+      isEmpty(dataCustomerDetail) === false
+    ) {
+      const findInfo = dataPropertyStates.find((row) => {
+        return dataCustomerDetail.idPropertyState == row.idPropertyState;
+      });
+      if (isNil(findInfo) === false) {
+        setOpenRequiresQty(findInfo.requiresQty);
+      }
+    }
+  }, [dataPropertyStates, dataCustomerDetail]);
 
   useEffect(() => {
     hanlderCallGetAllPropertyStates();
@@ -488,7 +503,7 @@ const SectionCurrentAddress = (props) => {
                   <CustomInputCurrency
                     value={dataForm.qtyDescription}
                     placeholder=""
-                    label="Cuanto pagas"
+                    label="Monto que pagas:"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {

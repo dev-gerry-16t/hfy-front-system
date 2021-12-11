@@ -164,7 +164,7 @@ const SectionDataLocation = (props) => {
     }
   };
 
-  const hanlderCallGetZipCodeAdressFill = async (code, id) => {
+  const hanlderCallGetZipCodeAdressFill = async (code, id, coordinates) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -191,6 +191,10 @@ const SectionDataLocation = (props) => {
       const neighborhood = responseResult2.find((row) => {
         return row.idZipCode == id;
       });
+      const state =
+        isEmpty(responseResult1) === false ? responseResult1.state : "";
+      const city =
+        isEmpty(responseResult1) === false ? responseResult1.municipality : "";
       if (
         isNil(neighborhood) === false &&
         isNil(neighborhood.isOpen) === false &&
@@ -198,15 +202,30 @@ const SectionDataLocation = (props) => {
       ) {
         setOpenOtherNeighborhood(true);
       }
+      if (isNil(coordinates) === false) {
+        setPositionCoordenates(JSON.parse(coordinates));
+      } else {
+        const responseMaps = await fetch(
+          `https://maps.googleapis.com/maps/api/geocode/json?&address=${code}+${state}+${city}&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`,
+          {
+            method: "GET",
+          }
+        );
+        const responseResultMaps = await responseMaps.json();
+        const geolocation =
+          isEmpty(responseResultMaps) === false &&
+          isNil(responseResultMaps.results) === false &&
+          isNil(responseResultMaps.results[0]) === false
+            ? responseResultMaps.results[0].geometry.location
+            : {};
+        setPositionCoordenates(geolocation);
+      }
 
       setIdZipCode(isEmpty(responseResult2) ? "" : id);
       setDataZipCatalog(responseResult2);
       setZipCodeStateCity({
-        state: isEmpty(responseResult1) === false ? responseResult1.state : "",
-        city:
-          isEmpty(responseResult1) === false
-            ? responseResult1.municipality
-            : "",
+        state: state,
+        city: city,
       });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -271,14 +290,9 @@ const SectionDataLocation = (props) => {
         jsonCoordinates,
         zipCode,
       });
-      if (
-        isNil(jsonCoordinates) === false &&
-        isNil(zipCode) === false &&
-        isNil(idZipCode) === false
-      ) {
+      if (isNil(zipCode) === false && isNil(idZipCode) === false) {
         setZipCode(zipCode, idZipCode);
-        setPositionCoordenates(JSON.parse(jsonCoordinates));
-        hanlderCallGetZipCodeAdressFill(zipCode, idZipCode);
+        hanlderCallGetZipCodeAdressFill(zipCode, idZipCode, jsonCoordinates);
       }
     }
   }, [dataFormSave]);

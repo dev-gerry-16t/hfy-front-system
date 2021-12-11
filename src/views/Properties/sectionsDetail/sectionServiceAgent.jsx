@@ -283,8 +283,12 @@ const SectionServiceAgent = (props) => {
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail, updateProperty, getById } = dataContexProperty;
-  const { idApplicationMethod, applicationMethod, applicationMethodTitle } =
-    dataDetail;
+  const {
+    idApplicationMethod,
+    applicationMethod,
+    applicationMethodTitle,
+    costFormat,
+  } = dataDetail;
   const [isEditService, setIsEditService] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
 
@@ -410,7 +414,7 @@ const SectionServiceAgent = (props) => {
                         fontWeight: "700",
                       }}
                     >
-                      $ 1,200 MXN
+                      {costFormat}
                     </span>
                   </div>
                   <div className="info">
