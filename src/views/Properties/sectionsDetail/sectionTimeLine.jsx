@@ -11,6 +11,7 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import { setDataUserRedirect } from "../../../utils/dispatchs/userRedirectDispatch";
 import ContextProperty from "../context/contextProperty";
 
 const CardStepsY = styled.div`
@@ -69,7 +70,7 @@ const Card = styled.div`
     }
   }
   .info-step {
-    font-size:14px;
+    font-size: 14px;
     h1 {
       margin: 0px;
       color: #200e32;
@@ -150,6 +151,7 @@ const SectionTimeLine = (props) => {
     callGlobalActionApi,
     dataProfile,
     history,
+    setDataUserRedirect,
   } = props;
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
@@ -216,8 +218,11 @@ const SectionTimeLine = (props) => {
                     icon={row.style}
                     finish={row.isCompleted}
                     select={row.isCurrent}
-                    onClick={() => {
+                    onClick={async () => {
                       if (isNil(row.path) === false) {
+                        await setDataUserRedirect({
+                          backPath: window.location.pathname,
+                        });
                         history.push(row.path);
                       }
                     }}
@@ -242,6 +247,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant) =>
     dispatch(callGlobalActionApi(data, id, constant)),
+  setDataUserRedirect: (data) => dispatch(setDataUserRedirect(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionTimeLine);

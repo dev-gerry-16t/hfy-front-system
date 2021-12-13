@@ -357,8 +357,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant) =>
-    dispatch(callGlobalActionApi(data, id, constant)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditProfileUsers);

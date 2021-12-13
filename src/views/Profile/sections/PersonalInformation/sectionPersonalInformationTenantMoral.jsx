@@ -800,18 +800,16 @@ const SectionPersonalInformation = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          {isNil(matchParams) === false && (
-            <ButtonNextBackPage
-              block={false}
-              onClick={async () => {
-                try {
-                  await handlerCallUpdateCustomerAccount(dataForm);
-                } catch (error) {}
-              }}
-            >
-              <u>{"Guardar"}</u>
-            </ButtonNextBackPage>
-          )}
+          <ButtonNextBackPage
+            block={false}
+            onClick={async () => {
+              try {
+                await handlerCallUpdateCustomerAccount(dataForm);
+              } catch (error) {}
+            }}
+          >
+            <u>{"Guardar"}</u>
+          </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
             onClick={async () => {

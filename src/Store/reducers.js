@@ -4,10 +4,12 @@ import {
   dataProfile,
   dataProfileMenu,
 } from "../utils/reducers/dataProfileReducer";
+import { dataUserRedirect } from "../utils/reducers/dataRedirectReducer";
 
 const appReducers = combineReducers({
   dataProfile,
   dataProfileMenu,
+  dataUserRedirect,
 });
 
 const rootReducer = (state, action, persistConfig) => {
