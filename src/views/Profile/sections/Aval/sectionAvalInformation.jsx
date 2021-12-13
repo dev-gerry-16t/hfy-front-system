@@ -161,7 +161,7 @@ const SectionAvalInformation = (props) => {
     collateralPropertyStreet: null,
     collateralPropertyStreetNumber: null,
     collateralPropertySuite: null,
-    collateralPropertyIdZipCoode: null,
+    collateralPropertyIdZipCode: null,
     collateralPropertyZipCode: null,
     collateralPropertyNeighborhood: null,
     publicPropertyRegistry: null,
@@ -521,7 +521,7 @@ const SectionAvalInformation = (props) => {
       collateralPropertyStreet,
       collateralPropertyStreetNumber,
       collateralPropertySuite,
-      collateralPropertyIdZipCoode,
+      collateralPropertyIdZipCode,
       collateralPropertyZipCode,
       collateralPropertyNeighborhood,
       publicPropertyRegistry,
@@ -562,7 +562,7 @@ const SectionAvalInformation = (props) => {
       collateralPropertyStreet,
       collateralPropertyStreetNumber,
       collateralPropertySuite,
-      collateralPropertyIdZipCoode,
+      collateralPropertyIdZipCode,
       collateralPropertyNeighborhood,
       collateralPropertyZipCode,
       publicPropertyRegistry,
@@ -576,7 +576,7 @@ const SectionAvalInformation = (props) => {
     hanlderCallGetZipCodeAdress(endorsementZipCode, endorsementIdZipCode);
     hanlderCallGetZipCodeAdressCollateral(
       collateralPropertyZipCode,
-      collateralPropertyIdZipCoode
+      collateralPropertyIdZipCode
     );
   };
 
@@ -1132,9 +1132,9 @@ const SectionAvalInformation = (props) => {
                                     dataForm.endorsementStreetNumber,
                                   collateralPropertySuite:
                                     dataForm.endorsementSuite,
-                                  collateralPropertyIdZipCoode:
+                                  collateralPropertyIdZipCode:
                                     dataForm.endorsementIdZipCode,
-                                  collateralPropertyZipCoode:
+                                  collateralPropertyZipCode:
                                     dataForm.endorsementZipCode,
                                   collateralPropertyNeighborhood:
                                     dataForm.endorsementNeighborhood,
@@ -1163,8 +1163,8 @@ const SectionAvalInformation = (props) => {
                                   collateralPropertyStreet: null,
                                   collateralPropertyStreetNumber: null,
                                   collateralPropertySuite: null,
-                                  collateralPropertyIdZipCoode: null,
-                                  collateralPropertyZipCoode: null,
+                                  collateralPropertyIdZipCode: null,
+                                  collateralPropertyZipCode: null,
                                   collateralPropertyNeighborhood: null,
                                   collateralPropertyCity: null,
                                   collateralPropertyState: null,
@@ -1266,7 +1266,7 @@ const SectionAvalInformation = (props) => {
                           onChange={(value, option) => {
                             setDataForm({
                               ...dataForm,
-                              collateralPropertyIdZipCoode: value,
+                              collateralPropertyIdZipCode: value,
                             });
                             setIdZipCodeCollateral(value);
                             setOpenOtherNeighborhoodCollateral(option.isOpen);
@@ -1279,7 +1279,7 @@ const SectionAvalInformation = (props) => {
                         <Row>
                           <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                             <CustomInputTypeForm
-                              value={dataForm.collateralPropertyZipCoode}
+                              value={dataForm.collateralPropertyZipCode}
                               placeholder=""
                               label="Código postal"
                               error={false}
@@ -1287,7 +1287,7 @@ const SectionAvalInformation = (props) => {
                               onChange={(value) => {
                                 setDataForm({
                                   ...dataForm,
-                                  collateralPropertyZipCoode: value,
+                                  collateralPropertyZipCode: value,
                                 });
                                 hanlderCallGetZipCodeAdressCollateral(
                                   value,
