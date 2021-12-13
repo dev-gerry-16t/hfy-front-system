@@ -31,7 +31,7 @@ const CustomStepsHomify = (props) => {
             >
               <div
                 className={
-                  current >= index
+                  current === index
                     ? "background-circle-active"
                     : "background-circle-inactive"
                 }
@@ -40,7 +40,7 @@ const CustomStepsHomify = (props) => {
                 <i
                   className={row.style}
                   style={{
-                    color: current >= index ? "#fff" : "#A0A3BD",
+                    color: current === index ? "#fff" : "#A0A3BD",
                   }}
                 />
               </div>

@@ -156,6 +156,7 @@ const dataTabsPaymentMethod = [
 const PaymentsService = (props) => {
   const {
     dataProfile,
+    dataUserRedirect,
     callGetTransactions,
     callGlobalActionApi,
     match,
@@ -202,7 +203,7 @@ const PaymentsService = (props) => {
           isEmpty(resultInfo.response) === false &&
           isEmpty(resultInfo.response.result) === false &&
           isNil(resultInfo.response.result.amountFormat) === false
-          ? `$ ${resultInfo.response.result.amountFormat} MXN`
+          ? resultInfo.response.result.amountFormat
           : "$ 0.00 MXN"
       );
     } catch (error) {
@@ -356,7 +357,12 @@ const PaymentsService = (props) => {
               <button
                 onClick={() => {
                   if (isOkPayment === true) {
-                    history.push(dataProfile.path);
+                    history.push(
+                      isEmpty(dataUserRedirect) === false &&
+                        isNil(dataUserRedirect.backPath) === false
+                        ? dataUserRedirect.backPath
+                        : dataProfile.path
+                    );
                   } else {
                     setIsOkPayment(null);
                     setTabSelect("1");
@@ -365,7 +371,7 @@ const PaymentsService = (props) => {
                 }}
               >
                 {isOkPayment === true
-                  ? "Volver al inicio"
+                  ? "Continuar"
                   : "Intentar otro método de pago"}
               </button>
             </div>
@@ -377,9 +383,10 @@ const PaymentsService = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile, dataUserRedirect } = state;
   return {
     dataProfile: dataProfile.dataProfile,
+    dataUserRedirect: dataUserRedirect.dataUserRedirect,
   };
 };
 

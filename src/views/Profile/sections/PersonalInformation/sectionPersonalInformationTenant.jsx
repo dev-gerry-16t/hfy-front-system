@@ -101,7 +101,7 @@ const SectionPersonalInformation = (props) => {
     boundSolidarityGivenName: null,
     boundSolidarityEmailAddress: null,
     sendReminderBoundSolidarity: null,
-    hasBoundSolidarity:null,
+    hasBoundSolidarity: null,
   });
   const [dataNationalities, setDataNationalities] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
@@ -652,18 +652,16 @@ const SectionPersonalInformation = (props) => {
             {"<< "}
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
-          {isNil(matchParams) === false && (
-            <ButtonNextBackPage
-              block={false}
-              onClick={async () => {
-                try {
-                  await handlerCallUpdateCustomerAccount(dataForm);
-                } catch (error) {}
-              }}
-            >
-              <u>{"Guardar"}</u>
-            </ButtonNextBackPage>
-          )}
+          <ButtonNextBackPage
+            block={false}
+            onClick={async () => {
+              try {
+                await handlerCallUpdateCustomerAccount(dataForm);
+              } catch (error) {}
+            }}
+          >
+            <u>{"Guardar"}</u>
+          </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
             onClick={async () => {
