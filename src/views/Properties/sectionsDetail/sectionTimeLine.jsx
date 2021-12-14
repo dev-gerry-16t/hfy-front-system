@@ -47,10 +47,15 @@ const GeneralCard = styled.div`
     flex-direction: column;
     gap: 1.5em;
   }
+  @media screen and (max-width: 500px) {
+    .content-card {
+      padding: 1em 0px;
+    }
+  }
 `;
 
 const Card = styled.div`
-  max-height: 96px;
+  height: 96px;
   display: grid;
   grid-template-columns: 1fr 3fr;
   opacity: ${(props) =>
@@ -84,6 +89,13 @@ const Card = styled.div`
     }
     display: flex;
     flex-direction: column;
+  }
+  @media screen and (max-width: 640px) {
+    .info-step {
+      font-size: 12px;
+    }
+  }
+  @media screen and (max-width: 420px) {
   }
 `;
 

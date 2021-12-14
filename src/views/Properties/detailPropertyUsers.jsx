@@ -47,21 +47,50 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr;
   position: relative;
+  @media screen and (max-width: 1160px) {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 1em 5px;
+  }
 `;
 
 const ContainerDown = styled.div`
-  padding: 0 1em;
+  padding: 0px 1em;
   margin: 5em 1em 2em 1em;
+  @media screen and (max-width: 500px) {
+    padding: 0px 0px;
+    margin: 5em 0px 2em 0px;
+  }
 `;
 
 const TabsProperty = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 2em;
+  gap: 20px;
+  max-width: 100%;
+  overflow-x: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 12px;
+    padding: 0px 5px;
+  }
+  @media screen and (max-width: 360px) {
+    font-size: 10px;
+    padding: 0px 5px;
+  }
 `;
 
 const Tab = styled.div`
-  line-height: 5px;
   cursor: pointer;
   h1 {
     font-weight: bold;
@@ -74,6 +103,9 @@ const Tab = styled.div`
     margin: 0;
     border: 2px solid var(--color-primary);
     display: ${(props) => (props.selected === true ? "block" : "none")};
+  }
+  @media screen and (max-width: 420px) {
+    line-height: 10px;
   }
 `;
 
@@ -213,6 +245,16 @@ const ContentRight = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1em;
+  font-size: 16px;
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 0px 0px;
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 10px;
+  }
 `;
 
 const ButtonDocument = styled.button`
@@ -230,6 +272,10 @@ const SharedByUser = styled.div`
   font-style: italic;
   font-size: 12px;
   text-decoration: underline;
+  @media screen and (max-width: 640px) {
+    font-size: 10px;
+  }
+
 `;
 
 const SeparateServices = styled.div`
@@ -237,6 +283,7 @@ const SeparateServices = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 4px;
   margin-top: 2em;
+  font-size: 16px;
   .services-header {
     border-bottom: 0.5px solid #4e4b66;
     padding: 1em 2em;
@@ -244,6 +291,12 @@ const SeparateServices = styled.div`
       color: var(--color-primary);
       font-weight: 700;
     }
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 10px;
   }
 `;
 
@@ -454,7 +507,7 @@ const DetailPropertyUsers = (props) => {
         <ContentForm owner>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
-            <div>
+            <div className="shared-by-info">
               {isNil(dataDetail.sharedBy) === false && (
                 <SharedByUser>
                   Ficha compartida por {dataDetail.sharedBy}

@@ -47,6 +47,7 @@ const NoticeProperty = styled.div`
   justify-content: center;
   align-items: center;
   color: #4e4b66;
+  font-size: 16px;
   h1 {
     font-weight: 600;
   }
@@ -63,6 +64,23 @@ const NoticeProperty = styled.div`
         font-size: 0.8em;
         margin-bottom: 10px;
       }
+    }
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
+    .section-select-option {
+      flex-direction: column;
+      .option-select {
+        span {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 10px;
+    h1 {
+      text-align: center;
     }
   }
 `;
@@ -123,6 +141,19 @@ const SectionCandidate = styled.div`
       margin-top: 10px;
       font-size: 0.8em;
       color: var(--color-primary);
+    }
+  }
+  @media screen and (max-width: 640px) {
+    .info-user-select {
+      flex-direction: column;
+      align-items: center;
+      .content-info-public{
+        .info{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+      }
     }
   }
 `;
@@ -308,7 +339,7 @@ const SectionPublicProperty = (props) => {
                 alt="homify"
               />
             </div>
-            <div>
+            <div className="content-info-public">
               <div className="info">
                 <strong>Titulo:</strong> <span>{title}</span>
               </div>

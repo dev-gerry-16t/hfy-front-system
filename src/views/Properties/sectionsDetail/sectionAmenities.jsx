@@ -43,6 +43,19 @@ const ContentAmenities = styled(Container)`
       gap: 0.5em;
     }
   }
+  @media screen and (max-width: 950px) {
+    .container-chips {
+      display: flex;
+      flex-direction: column;
+      .border-1 {
+        border-bottom: 0.5px solid #e5e5e5;
+        border-right: none;
+      }
+      .border-2 {
+        border-bottom: none;
+      }
+    }
+  }
 `;
 
 const Chip = styled.span`
@@ -96,29 +109,7 @@ const SectionAmenities = () => {
               })}
           </div>
         </div>
-        {/* <div className="section-chips border-2">
-          <Title>RECREACIÓN</Title>
-          <div className="chips">
-            <Chip>Acceso a la playa</Chip>
-            <Chip>Frente a la playa</Chip>
-            <Chip>Estacionamiento techado</Chip>
-          </div>
-        </div> */}
       </div>
-      {/* <div className="bottom-chips">
-        <div
-          style={{
-            marginRight: 5,
-          }}
-        >
-          <Title>Restricciones:</Title>
-        </div>
-        <div className="chips">
-          <Chip>Acceso a la playa</Chip>
-          <Chip>Frente a la playa</Chip>
-          <Chip>Estacionamiento techado</Chip>
-        </div>
-      </div> */}
     </ContentAmenities>
   );
 };

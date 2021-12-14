@@ -22,6 +22,8 @@ const ContainerUp = styled.div`
   justify-content: center;
   gap: 2em;
   position: relative;
+  padding: 0px 1em;
+  font-size: 16px;
   .contain-carousel {
     display: flex;
     justify-content: center;
@@ -51,12 +53,96 @@ const ContainerUp = styled.div`
         }
       }
     }
-    .preview-carousel {
+    .preview-carousel-img {
       width: 36.125em;
       height: 24.625em;
       border-radius: 0.5em;
       object-fit: cover;
       margin-bottom: 0.5em;
+    }
+  }
+  @media screen and (max-width: 1500px) {
+    flex-direction: column;
+  }
+  @media screen and (max-width: 1150px) {
+    .contain-carousel {
+      .carousel-x {
+        .preview-carousel-img {
+          width: 100%;
+        }
+        .slide-carousel {
+          width: 100%;
+          .slide-images {
+            .preview-carousel {
+              width: 6.75em;
+            }
+            .select {
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 0px 0px;
+    .contain-carousel {
+      padding: 0px 5px;
+      .carousel-x {
+        .preview-carousel-img {
+          /* width: 100%; */
+        }
+        .slide-carousel {
+          .slide-images {
+            .preview-carousel {
+            }
+            .select {
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 10px;
+    .contain-carousel {
+      .carousel-x {
+        width: 100%;
+        .preview-carousel-img {
+          /* width: 100%; */
+        }
+        .slide-carousel {
+          width: 100%;
+          .slide-images {
+            .preview-carousel {
+            }
+            .select {
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 360px) {
+    .contain-carousel {
+      .carousel-x {
+        .preview-carousel-img {
+          /* width: 100%; */
+          height: 200px;
+        }
+        .slide-carousel {
+          width: 100%;
+          .slide-images {
+            .preview-carousel {
+            }
+            .select {
+            }
+          }
+        }
+      }
     }
   }
 `;
@@ -67,6 +153,7 @@ const ButtonCarousel = styled.button`
 `;
 
 const ShortDetail = styled.div`
+padding: 0px 10px;
   .header-title-short {
     position: relative;
     h1 {
@@ -178,7 +265,11 @@ const SectionCarouselInfo = (props) => {
     <ContainerUp>
       <div className="contain-carousel">
         <div className="carousel-x">
-          <img className="preview-carousel" src={currentImage} alt="imagen" />
+          <img
+            className="preview-carousel-img"
+            src={currentImage}
+            alt="imagen"
+          />
           <div className="slide-carousel">
             <ButtonCarousel
               onClick={() => {

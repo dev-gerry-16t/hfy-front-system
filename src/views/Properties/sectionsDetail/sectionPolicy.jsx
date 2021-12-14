@@ -105,6 +105,49 @@ const PolicySelected = styled.div`
       }
     }
   }
+  @media screen and (max-width: 420px) {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    .right-policy {
+      .info-payment {
+        .info-policy {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          h1 {
+            font-size: 20px;
+          }
+          .price {
+            h2 {
+              font-size: 24px;
+            }
+          }
+        }
+        strong {
+        }
+        span {
+        }
+        .comision {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 14px;
+          gap: 10px;
+          strong {
+          }
+          span {
+          }
+        }
+        .payment-type {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          font-size: 12px;
+        }
+      }
+    }
+  }
 `;
 
 const SectionPolicy = (props) => {
@@ -175,7 +218,7 @@ const SectionPolicy = (props) => {
                   <span>{advCommissionAmountFormat}</span>
                 </div>
               )}
-              <div>
+              <div className="payment-type">
                 <strong>Tipo de pago:</strong>{" "}
                 <span>{policyPaymentMethod}</span>
               </div>

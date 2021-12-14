@@ -18,6 +18,9 @@ const Location = styled.div`
   border-radius: 0.5em;
   width: 31em;
   height: 21em;
+  @media screen and (max-width: 650px) {
+    width: 100%;
+  }
 `;
 
 const ContentLocation = styled(Container)`
@@ -28,6 +31,17 @@ const ContentLocation = styled(Container)`
     height: 21em;
     display: flex;
     position: relative;
+  }
+  @media screen and (max-width: 1500px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+  @media screen and (max-width: 650px) {
+    .location-map {
+      width: 100%;
+    }
   }
 `;
 
