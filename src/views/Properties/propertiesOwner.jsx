@@ -44,6 +44,7 @@ const ContentAddFilter = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 1em;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   h1 {
     font-weight: 700;
@@ -53,7 +54,8 @@ const ContentAddFilter = styled.div`
   }
   .button-actions-header {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    margin-bottom: 10px;
     button {
       border-radius: 0.8em;
       border: none;
@@ -63,6 +65,11 @@ const ContentAddFilter = styled.div`
       font-weight: 600;
       letter-spacing: 0.75px;
     }
+  }
+  .content-filter-dad {
+    display: flex;
+    width: 100%;
+    gap: 20px;
   }
 `;
 
@@ -116,6 +123,7 @@ const PropertiesOwner = (props) => {
           idLoginHistory,
           pagination,
           jsonConditions,
+          type: 1,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -126,20 +134,13 @@ const PropertiesOwner = (props) => {
         isNil(response.response[0]) === false
           ? response.response[0]
           : [];
-      const responseResultPublic =
-        isEmpty(response) === false &&
-        isNil(response.response) === false &&
-        isNil(response.response[1]) === false
-          ? response.response[1]
-          : [];
       const responseResultTotal =
-        isEmpty(responseResultPublic) === false &&
-        isNil(responseResultPublic[0]) === false &&
-        isNil(responseResultPublic[0].total) === false
-          ? responseResultPublic[0].total
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].total) === false
+          ? responseResult[0].total
           : 0;
       setDataCoincidences(responseResult);
-      setDataCoincidencesPublic(responseResultPublic);
       setTotalCoincidences(responseResultTotal);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -283,9 +284,9 @@ const PropertiesOwner = (props) => {
       />
       <Container>
         <ContentAddFilter background="var(--color-primary)">
-          <h1>Mis propiedades</h1>
-          {dataProfile.idUserType !== 2 && (
-            <div className="button-actions-header">
+          <div className="button-actions-header">
+            <h1></h1>
+            {dataProfile.idUserType !== 2 && (
               <button
                 onClick={() => {
                   history.push("/websystem/add-property");
@@ -293,8 +294,31 @@ const PropertiesOwner = (props) => {
               >
                 Agregar propiedad
               </button>
-            </div>
-          )}
+            )}
+          </div>
+          <div className="content-filter-dad">
+            <ComponentFilter
+              owner
+              onSendFilter={async (data) => {
+                try {
+                  const objectConditions = JSON.stringify({
+                    currentPage: 1,
+                    userConfig: 10,
+                  });
+                  await handlerCallGetPropertyCoincidencesV2(
+                    data,
+                    objectConditions
+                  );
+                  setPaginationState(objectConditions);
+                  setCurrentPagination(1);
+                  setPageSize(10);
+                  setJsonConditionsState(data);
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
+          </div>
         </ContentAddFilter>
         <ContentCards>
           {isEmpty(dataCoincidences) === false &&
@@ -351,75 +375,7 @@ const PropertiesOwner = (props) => {
             </EmptyData>
           )}
         </ContentCards>
-      </Container>
-      <Container>
-        <ContentAddFilter background="var(--color-primary)">
-          <ComponentFilter
-            onSendFilter={async (data) => {
-              try {
-                const objectConditions = JSON.stringify({
-                  currentPage: 1,
-                  userConfig: 10,
-                });
-                await handlerCallGetPropertyCoincidencesV2(
-                  data,
-                  objectConditions
-                );
-                setPaginationState(objectConditions);
-                setCurrentPagination(1);
-                setPageSize(10);
-                setJsonConditionsState(data);
-              } catch (error) {
-                throw error;
-              }
-            }}
-          />
-        </ContentAddFilter>
-        <ContentCards>
-          {isEmpty(dataCoincidencesPublic) === false &&
-            dataCoincidencesPublic.map((row) => {
-              return (
-                <CustomCardProperty
-                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
-                  alt={row.identifier}
-                  onClickDetail={() => {
-                    history.push(
-                      `/websystem/detail-property/${row.idProperty}`
-                    );
-                  }}
-                  onClickFavorite={async (data, id) => {
-                    try {
-                      await handlerCallSetFavoriteProperty(data, id);
-                      handlerCallGetPropertyCoincidencesV2();
-                    } catch (error) {
-                      throw error;
-                    }
-                  }}
-                  data={row}
-                  idUserType={dataProfile.idUserType}
-                  onClickApply={async (data, id) => {
-                    try {
-                      await handlerCallApplyToProperty(data, id);
-                      handlerCallGetPropertyCoincidencesV2();
-                    } catch (error) {
-                      throw error;
-                    }
-                  }}
-                />
-              );
-            })}
-          {isEmpty(dataCoincidencesPublic) === true && (
-            <EmptyData>
-              <img
-                width="150"
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-                alt=""
-              />
-              <p>No se encontraron resultados</p>
-            </EmptyData>
-          )}
-        </ContentCards>
-        {isEmpty(dataCoincidencesPublic) === false && (
+        {isEmpty(dataCoincidences) === false && (
           <div
             style={{
               display: "flex",

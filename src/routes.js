@@ -316,7 +316,7 @@ const routes = [
   {
     key: "27",
     id: "publicProperties",
-    path: "/websystem/properties",
+    path: "/websystem/catalog-properties",
     name: "Propiedades",
     component: PublicProperties,
     exact: true,
