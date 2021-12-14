@@ -13,9 +13,70 @@ import {
   LineSeparator,
   FormProperty,
 } from "../constants/styleConstants";
-import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
+import {
+  IconDelete,
+  IconEditSquare,
+  IconEye,
+  IconStar,
+} from "../../../assets/iconSvg";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import { isNil } from "lodash";
+
+const Input = styled.input`
+  padding: 5px 6px;
+  border-radius: 0px;
+  background: ${(props) => props.background};
+  border-top: 1px solid #b9bbc7;
+  border-right: none;
+  border-left: none;
+  border-bottom: 1px solid #b9bbc7;
+  outline: none;
+  color: rgba(0, 0, 0, 0.85);
+  font-weight: 700;
+  width: 200;
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &:focus {
+  }
+  &:hover {
+  }
+  &::placeholder {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 0.2);
+  }
+`;
+
+const Select = styled.select`
+  padding: 5px 6px;
+  border-radius: ${(props) =>
+    props.left ? "5px 0px 0px 5px" : "0px 5px 5px 0px"};
+  border-right: ${(props) => (props.left ? "none" : "1px solid #d6d8e7")};
+  border-left: ${(props) => (props.left ? "1px solid #d6d8e7" : "none")};
+  background: rgba(255, 0, 131, 0.2);
+  border: ${(props) =>
+    props.error ? "1px solid #DA1414" : "1px solid #d6d8e7"};
+  outline: none;
+  color: #4e4b66;
+  font-weight: 700;
+  width: 100px;
+  &[type="number"]::-webkit-inner-spin-button,
+  &[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  &:focus {
+    border: 1px solid #b9bbc7;
+  }
+  &:hover {
+    border: 1px solid #b9bbc7;
+  }
+  &::placeholder {
+    font-weight: 100;
+  }
+`;
 
 const CardContactProfile = styled.div`
   background: #ffffff;
@@ -44,6 +105,14 @@ const CardContactProfile = styled.div`
       padding: 1em;
       display: flex;
       justify-content: space-between;
+    }
+    .row-contact-main {
+      padding: 1em;
+      display: flex;
+      justify-content: space-between;
+      background-color: var(--color-primary);
+      color: #fff;
+      font-weight: 600;
     }
     .row-contact:nth-child(odd) {
       background-color: #eff0f6;
@@ -80,11 +149,13 @@ const SectionAddContact = styled.div`
     margin-bottom: 10px;
   }
   .input-button-add {
-    padding: 0px 1em;
+    padding: 0px 0.5em;
     display: grid;
     column-gap: 1em;
     grid-template-columns: 1.8fr 1.5fr;
     .input-add {
+      display: flex;
+      align-items: center;
     }
     .button-add {
       display: flex;
@@ -92,7 +163,20 @@ const SectionAddContact = styled.div`
       align-items: center;
       margin-bottom: 25px;
       button {
-        padding: 5px 2em;
+        padding: 5px 1em;
+        border: none;
+        background: var(--color-primary);
+        border-radius: 16px;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+    .button-add-phone {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      button {
+        padding: 5px 1em;
         border: none;
         background: var(--color-primary);
         border-radius: 16px;
@@ -103,6 +187,16 @@ const SectionAddContact = styled.div`
   }
 `;
 
+const ButtonVerification = styled.span`
+  background: ${(props) =>
+    props.verification === true ? "#46E6FD" : "var(--color-primary)"};
+  color: #fff;
+  padding: 3px;
+  font-size: 12px;
+  box-shadow: 0px 0px 21px 5px rgba(205, 213, 219, 0.6);
+  border-radius: 5px;
+`;
+
 const WidgetDataContactProfile = (props) => {
   const { dataEmail, dataPhoneNumber, dataProfile, callGlobalActionApi } =
     props;
@@ -110,8 +204,14 @@ const WidgetDataContactProfile = (props) => {
   const [isOpenAddPhone, setIsOpenAddPhone] = useState(false);
   const [isOpenAddMail, setIsOpenAddMail] = useState(false);
   const [isOpenDetailPhone, setIsOpenDetailPhone] = useState({});
+  const [dataPhoneTypes, setDataPhoneTypes] = useState([]);
+  const [dataCountryPhone, setDataCountryPhone] = useState([]);
   const [isOpenDetailMail, setIsOpenDetailMail] = useState({});
-  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [phoneNumber, setPhoneNumber] = useState({
+    idPhoneType: null,
+    idCounry: null,
+    phoneNumber: null,
+  });
   const [emailAddress, setEmailAddress] = useState(null);
   const [phoneNumberDetail, setPhoneNumberDetail] = useState({});
   const [emailAddressDetail, setEmailAddressDetail] = useState({});
@@ -172,6 +272,60 @@ const WidgetDataContactProfile = (props) => {
     }
   };
 
+  const handlerCallGetAllCountries = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.GET_ALL_COUNTRIES
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataCountryPhone(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAllPhoneTypes = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_PHONE_TYPES
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataPhoneTypes(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     if (isEmpty(dataEmail) === false) {
       let infoStatesEmail = {};
@@ -183,7 +337,7 @@ const WidgetDataContactProfile = (props) => {
         };
         infoDataStatesEmail = {
           ...infoDataStatesEmail,
-          [element.idEmailAddress]: element.emailAddress,
+          [element.idEmailAddress]: "",
         };
       });
       setIsOpenDetailMail(infoStatesEmail);
@@ -199,7 +353,7 @@ const WidgetDataContactProfile = (props) => {
         };
         infoDataStatesPhone = {
           ...infoDataStatesPhone,
-          [element.idPhoneNumber]: element.phoneNumber,
+          [element.idPhoneNumber]: "",
         };
       });
       setIsOpenDetailPhone(infoStatesPhone);
@@ -207,9 +361,18 @@ const WidgetDataContactProfile = (props) => {
     }
   }, [dataEmail, dataPhoneNumber]);
 
+  useEffect(() => {
+    handlerCallGetAllCountries();
+    handlerCallGetAllPhoneTypes();
+  }, []);
+
   return (
     <>
       <h1 className="subtitle-card">Datos de contacto</h1>
+      <p>
+        Podrás inciar sesión con cualquiera de los medios de contacto que hayas
+        verificado.
+      </p>
       <CardContactProfile>
         <div className="select-type-contact">
           <SelectOption
@@ -242,17 +405,47 @@ const WidgetDataContactProfile = (props) => {
                     <>
                       <u>{row.emailAddress}</u>
                       <div>
+                        {row.requiresVerification == true ? (
+                          <ButtonHeader
+                            onClick={async () => {
+                              try {
+                                await handlerCallSetCustomerEmailAddress({
+                                  requiresVerificationCode: true,
+                                  idEmailAddress: row.idEmailAddress,
+                                });
+                                setIsOpenDetailMail({
+                                  ...isOpenDetailMail,
+                                  [row.idEmailAddress]:
+                                    !isOpenDetailMail[row.idEmailAddress],
+                                });
+                              } catch (error) {}
+                            }}
+                          >
+                            <ButtonVerification verification={false}>
+                              Verificar
+                            </ButtonVerification>
+                          </ButtonHeader>
+                        ) : (
+                          <ButtonVerification verification={true}>
+                            Verificado
+                          </ButtonVerification>
+                        )}
                         <ButtonHeader
-                          onClick={() => {
-                            setIsOpenDetailMail({
-                              ...isOpenDetailMail,
-                              [row.idEmailAddress]:
-                                !isOpenDetailMail[row.idEmailAddress],
+                          onClick={async () => {
+                            await handlerCallSetCustomerEmailAddress({
+                              isMain: true,
+                              idEmailAddress: row.idEmailAddress,
                             });
+                            getById();
                           }}
                         >
-                          <IconEditSquare
+                          <IconStar
                             color="var(--color-primary)"
+                            backGround={
+                              row.isMain === true
+                                ? "var(--color-primary)"
+                                : "transparent"
+                            }
                             size="15px"
                           />
                         </ButtonHeader>
@@ -277,32 +470,34 @@ const WidgetDataContactProfile = (props) => {
                   )}
                   {isOpenDetailMail[row.idEmailAddress] === true && (
                     <>
-                      <CustomInputTypeForm
-                        value={emailAddressDetail[row.idEmailAddress]}
-                        placeholder=""
-                        label=""
-                        error={false}
-                        errorMessage="Este campo es requerido"
-                        onChange={(value) => {
-                          setEmailAddressDetail({
-                            ...emailAddressDetail,
-                            [row.idEmailAddress]: value,
-                          });
-                        }}
-                        type="email"
-                        background="#fff"
-                      />
+                      <div>
+                        <CustomInputTypeForm
+                          value={emailAddressDetail[row.idEmailAddress]}
+                          placeholder="Código de confirmación"
+                          label=""
+                          error={false}
+                          errorMessage="Este campo es requerido"
+                          onChange={(value) => {
+                            setEmailAddressDetail({
+                              ...emailAddressDetail,
+                              [row.idEmailAddress]: value,
+                            });
+                          }}
+                          type="email"
+                          background="#fff"
+                        />
+
+                        <span>
+                          Ingresa tu código de confirmación de 6 dígitos.
+                        </span>
+                      </div>
                       <div>
                         <button
                           onClick={async () => {
                             try {
                               await handlerCallSetCustomerEmailAddress({
-                                isActive: true,
-                                emailAddress:
-                                  emailAddressDetail[row.idEmailAddress],
-                                requiresVerificationCode: false,
-                                isMain: row.isMain,
                                 idEmailAddress: row.idEmailAddress,
+                                code: emailAddressDetail[row.idEmailAddress],
                               });
                               getById();
                               setIsOpenDetailMail({
@@ -313,7 +508,7 @@ const WidgetDataContactProfile = (props) => {
                             } catch (error) {}
                           }}
                         >
-                          Guardar
+                          Confirmar
                         </button>
                         <button
                           onClick={() => {
@@ -343,17 +538,50 @@ const WidgetDataContactProfile = (props) => {
                     <>
                       <u>{row.phoneNumber}</u>
                       <div>
+                        {row.requiresVerification == true ? (
+                          <ButtonHeader
+                            onClick={async () => {
+                              try {
+                                await handlerCallSetCustomerPhoneNumber({
+                                  requiresVerificationCode: true,
+                                  idPhoneNumber: row.idPhoneNumber,
+                                });
+                                setIsOpenDetailPhone({
+                                  ...isOpenDetailPhone,
+                                  [row.idPhoneNumber]:
+                                    !isOpenDetailPhone[row.idPhoneNumber],
+                                });
+                              } catch (error) {}
+                            }}
+                          >
+                            <ButtonVerification verification={false}>
+                              Verificar
+                            </ButtonVerification>
+                          </ButtonHeader>
+                        ) : (
+                          <ButtonVerification verification={true}>
+                            Verificado
+                          </ButtonVerification>
+                        )}
+
                         <ButtonHeader
-                          onClick={() => {
-                            setIsOpenDetailPhone({
-                              ...isOpenDetailPhone,
-                              [row.idPhoneNumber]:
-                                !isOpenDetailPhone[row.idPhoneNumber],
-                            });
+                          onClick={async () => {
+                            try {
+                              await handlerCallSetCustomerPhoneNumber({
+                                isMain: true,
+                                idPhoneNumber: row.idPhoneNumber,
+                              });
+                              getById();
+                            } catch (error) {}
                           }}
                         >
-                          <IconEditSquare
+                          <IconStar
                             color="var(--color-primary)"
+                            backGround={
+                              row.isMain === true
+                                ? "var(--color-primary)"
+                                : "transparent"
+                            }
                             size="15px"
                           />
                         </ButtonHeader>
@@ -378,32 +606,33 @@ const WidgetDataContactProfile = (props) => {
                   )}
                   {isOpenDetailPhone[row.idPhoneNumber] === true && (
                     <>
-                      <CustomInputTypeForm
-                        value={phoneNumberDetail[row.idPhoneNumber]}
-                        placeholder=""
-                        label=""
-                        error={false}
-                        errorMessage="Este campo es requerido"
-                        onChange={(value) => {
-                          setPhoneNumberDetail({
-                            ...phoneNumberDetail,
-                            [row.idPhoneNumber]: value,
-                          });
-                        }}
-                        type="number"
-                        background="#fff"
-                      />
+                      <div>
+                        <CustomInputTypeForm
+                          value={phoneNumberDetail[row.idPhoneNumber]}
+                          placeholder="Código de confirmación"
+                          label=""
+                          error={false}
+                          errorMessage="Este campo es requerido"
+                          onChange={(value) => {
+                            setPhoneNumberDetail({
+                              ...phoneNumberDetail,
+                              [row.idPhoneNumber]: value,
+                            });
+                          }}
+                          type="number"
+                          background="#fff"
+                        />
+                        <span>
+                          Ingresa tu código de confirmación de 6 dígitos.
+                        </span>
+                      </div>
                       <div>
                         <button
                           onClick={async () => {
                             try {
-                              await handlerCallSetCustomerEmailAddress({
-                                isActive: true,
-                                phoneNumber:
-                                  phoneNumberDetail[row.idPhoneNumber],
-                                requiresVerificationCode: false,
-                                isMain: row.isMain,
-                                idEmailAddress: row.idPhoneNumber,
+                              await handlerCallSetCustomerPhoneNumber({
+                                idPhoneNumber: row.idPhoneNumber,
+                                code: phoneNumberDetail[row.idPhoneNumber],
                               });
                               getById();
                               setIsOpenDetailPhone({
@@ -414,7 +643,7 @@ const WidgetDataContactProfile = (props) => {
                             } catch (error) {}
                           }}
                         >
-                          Guardar
+                          Confirmar
                         </button>
                         <button
                           onClick={() => {
@@ -468,7 +697,7 @@ const WidgetDataContactProfile = (props) => {
                   </ButtonHeader>
                 </div>
                 <div className="input-button-add">
-                  <div className="input-add">
+                  <div className="input-add-email">
                     <CustomInputTypeForm
                       value={emailAddress}
                       placeholder="Correo"
@@ -540,32 +769,87 @@ const WidgetDataContactProfile = (props) => {
                     X
                   </ButtonHeader>
                 </div>
-                <div className="input-button-add">
+                <div
+                  className="input-button-add"
+                  style={{
+                    marginBottom: "10px",
+                  }}
+                >
                   <div className="input-add">
-                    <CustomInputTypeForm
-                      value={phoneNumber}
-                      placeholder="Teléfono"
-                      label=""
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {
-                        setPhoneNumber(value);
+                    <Select
+                      left={true}
+                      onChange={(e) => {
+                        setPhoneNumber({
+                          ...phoneNumber,
+                          idCounry: e.target.value,
+                        });
                       }}
+                    >
+                      <option disabled selected value="">
+                        Pais
+                      </option>
+                      {isNil(dataCountryPhone) === false &&
+                        isEmpty(dataCountryPhone) === false &&
+                        dataCountryPhone.map((row) => {
+                          return <option value={row.id}>{row.text}</option>;
+                        })}
+                    </Select>
+                    <Input
+                      value={phoneNumber.phoneNumber}
                       type="number"
+                      placeholder="Teléfono"
+                      onChange={(e) => {
+                        setPhoneNumber({
+                          ...phoneNumber,
+                          phoneNumber: e.target.value,
+                        });
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.keyCode === 109 || e.keyCode === 107) {
+                          e.preventDefault();
+                        }
+                      }}
+                      onKeyPress={(e) => {}}
+                      onBlur={() => {}}
+                      maxLength={null}
+                      minLength={null}
+                      error={false}
                     />
+                    <Select
+                      left={false}
+                      onChange={(e) => {
+                        setPhoneNumber({
+                          ...phoneNumber,
+                          idPhoneType: e.target.value,
+                        });
+                      }}
+                    >
+                      <option disabled selected value="">
+                        tipo
+                      </option>
+                      {isNil(dataPhoneTypes) === false &&
+                        isEmpty(dataPhoneTypes) === false &&
+                        dataPhoneTypes.map((row) => {
+                          return <option value={row.id}>{row.text}</option>;
+                        })}
+                    </Select>
                   </div>
-                  <div className="button-add">
+                  <div className="button-add-phone">
                     <button
                       onClick={async () => {
                         try {
                           await handlerCallSetCustomerPhoneNumber({
+                            ...phoneNumber,
                             isActive: true,
-                            phoneNumber,
                             requiresVerificationCode: false,
                             isMain: false,
                           });
                           getById();
-                          setPhoneNumber(null);
+                          setPhoneNumber({
+                            idPhoneType: null,
+                            idCounry: null,
+                            phoneNumber: null,
+                          });
                           setIsOpenAddPhone(false);
                         } catch (error) {}
                       }}

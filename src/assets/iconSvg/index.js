@@ -23,6 +23,7 @@ import IconPayments from "./iconPayments";
 import IconDownloadDetail from "./iconDownloadDetail";
 import IconHalfBathroom from "./iconHalfBathroom";
 import IconEye from "./iconEye";
+import IconStar from "./iconStar";
 
 export {
   IconWhatsapp,
@@ -49,5 +50,6 @@ export {
   IconPayments,
   IconDownloadDetail,
   IconHalfBathroom,
-  IconEye
+  IconEye,
+  IconStar,
 };
