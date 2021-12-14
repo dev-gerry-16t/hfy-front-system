@@ -168,7 +168,13 @@ const FilterPrice = styled.div`
 `;
 
 const ComponentFilter = (props) => {
-  const { dataProfile, callGlobalActionApi, history, onSendFilter } = props;
+  const {
+    dataProfile,
+    callGlobalActionApi,
+    history,
+    onSendFilter,
+    owner = false,
+  } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [jsonConditionsProperty, setJsonConditionsProperty] = useState(null);
   const [jsonConditionsLocation, setJsonConditionsLocation] = useState({});
@@ -279,7 +285,7 @@ const ComponentFilter = (props) => {
       <div className="filter-actions-components">
         <Filter>
           <div className="header-filter">
-            <h1>Propiedades</h1>
+            <h1>{owner===true?"Mis Propiedades":"Propiedades"}</h1>
             <button className="button-rent-select">Renta</button>
           </div>
           <div className="inputs-filter">
@@ -312,7 +318,7 @@ const ComponentFilter = (props) => {
               <div className="group-input">
                 <IconLocation width="25px" height="25px" />
                 <Select
-                showSearch
+                  showSearch
                   className="select-type-property"
                   onChange={() => {}}
                   placeholder="Ubicación"
