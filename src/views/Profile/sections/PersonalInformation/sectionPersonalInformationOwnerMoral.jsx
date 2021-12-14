@@ -242,7 +242,10 @@ const SectionPersonalInformation = (props) => {
       givenName,
       lastName,
       mothersMaidenName,
-      dateOfBirth: moment(dateOfBirth).parseZone().format("YYYY-MM-DD"),
+      dateOfBirth:
+        isNil(dateOfBirth) === false && isEmpty(dateOfBirth) === false
+          ? moment(dateOfBirth).parseZone().format("YYYY-MM-DD")
+          : null,
       taxId,
       citizenId,
       idMaritalStatus,
@@ -268,7 +271,11 @@ const SectionPersonalInformation = (props) => {
       legalRepSignedAtPlace,
       legalRepIdType,
       legalRepIdTypeNumber,
-      legalRepDateOfBirth,
+      legalRepDateOfBirth:
+        isNil(legalRepDateOfBirth) === false &&
+        isEmpty(legalRepDateOfBirth) === false
+          ? moment(legalRepDateOfBirth).parseZone().format("YYYY-MM-DD")
+          : null,
       isDataConfirmed,
       boundSolidarityGivenName,
       boundSolidarityEmailAddress,

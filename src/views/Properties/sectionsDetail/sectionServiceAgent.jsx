@@ -132,8 +132,11 @@ const SectionCandidate = styled.div`
 
 const SectionCard = styled.div`
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
+  gap: 20px;
   margin: 3em 0px;
+  padding: 0px 5px;
 `;
 
 const CardServices = styled.div`
@@ -275,6 +278,14 @@ const CardServiceSelect = styled.div`
       span {
         margin-left: 10px;
       }
+    }
+  }
+  @media screen and (max-width: 950px) {
+    flex-direction: column;
+    .line {
+      transform: rotate(0deg);
+      width: 100%;
+      margin:20px 0px;
     }
   }
 `;

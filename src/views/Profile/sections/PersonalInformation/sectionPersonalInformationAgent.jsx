@@ -238,11 +238,15 @@ const SectionPersonalInformationAgent = (props) => {
       deactivateBoundSolidarity,
       sendReminderBoundSolidarity,
     } = data;
+
     setDataForm({
       givenName,
       lastName,
       mothersMaidenName,
-      dateOfBirth: moment(dateOfBirth).parseZone().format("YYYY-MM-DD"),
+      dateOfBirth:
+        isNil(dateOfBirth) === false && isEmpty(dateOfBirth) === false
+          ? moment(dateOfBirth).parseZone().format("YYYY-MM-DD")
+          : null,
       taxId,
       citizenId,
       idMaritalStatus,
@@ -268,7 +272,10 @@ const SectionPersonalInformationAgent = (props) => {
       legalRepSignedAtPlace,
       legalRepIdType,
       legalRepIdTypeNumber,
-      legalRepDateOfBirth,
+      legalRepDateOfBirth:
+      isNil(legalRepDateOfBirth) === false && isEmpty(legalRepDateOfBirth) === false
+        ? moment(legalRepDateOfBirth).parseZone().format("YYYY-MM-DD")
+        : null,
       isDataConfirmed,
       boundSolidarityGivenName,
       boundSolidarityEmailAddress,
@@ -483,6 +490,7 @@ const SectionPersonalInformationAgent = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
+                  console.log("value", value);
                   setDataForm({
                     ...dataForm,
                     dateOfBirth: isEmpty(value) === false ? value : null,

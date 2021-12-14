@@ -17,38 +17,7 @@ import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import SectionContractAvailable from "../component/sectionContractAvailableOwner";
 import ComponentLoadSection from "../../../components/componentLoadSection";
-
-const GeneralCard = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 0.5em;
-  .header-title {
-    border-bottom: 0.5px solid #4e4b66;
-    display: flex;
-    justify-content: space-between;
-    padding: 1em;
-    h1 {
-      margin: 0;
-      color: var(--color-primary);
-      font-weight: 700;
-    }
-    button {
-      border: none;
-      border-radius: 1em;
-      color: #fff;
-      background: var(--color-primary);
-      font-weight: 500;
-    }
-  }
-  .content-cards {
-    padding: 2em 2em;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-    max-height: 30em;
-    overflow-y: scroll;
-  }
-`;
+import { GeneralCard } from "../constants/styleConstants";
 
 const EmptyData = styled.div`
   width: 100%;
