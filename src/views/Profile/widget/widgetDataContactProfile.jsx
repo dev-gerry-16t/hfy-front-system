@@ -100,6 +100,32 @@ const CardContactProfile = styled.div`
       border-right: 2px solid black;
     }
   }
+  .action-buttons-confirmation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    padding-bottom: 50px;
+    button:first-child {
+      padding: 2px 5px;
+      border: none;
+      background: var(--color-primary);
+      border-radius: 16px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+    }
+    button:last-child {
+      padding: 2px 5px;
+      border: none;
+      background: #fff;
+      border-radius: 16px;
+      color: var(--color-primary);
+      font-weight: 600;
+      font-size: 12px;
+    }
+  }
+
   .type-table-contact {
     .row-contact {
       padding: 1em;
@@ -491,7 +517,7 @@ const WidgetDataContactProfile = (props) => {
                           Ingresa tu código de confirmación de 6 dígitos.
                         </span>
                       </div>
-                      <div>
+                      <div className="action-buttons-confirmation">
                         <button
                           onClick={async () => {
                             try {
@@ -626,7 +652,7 @@ const WidgetDataContactProfile = (props) => {
                           Ingresa tu código de confirmación de 6 dígitos.
                         </span>
                       </div>
-                      <div>
+                      <div className="action-buttons-confirmation">
                         <button
                           onClick={async () => {
                             try {
