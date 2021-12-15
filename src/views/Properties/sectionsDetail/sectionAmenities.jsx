@@ -13,6 +13,7 @@ import {
 import ContextProperty from "../context/contextProperty";
 
 const ContentAmenities = styled(Container)`
+  font-size: 16px;
   .container-chips {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -55,6 +56,9 @@ const ContentAmenities = styled(Container)`
         border-bottom: none;
       }
     }
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
   }
 `;
 

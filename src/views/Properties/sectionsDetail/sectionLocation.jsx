@@ -42,6 +42,9 @@ const ContentLocation = styled(Container)`
     .location-map {
       width: 100%;
     }
+    .location-map-info {
+      width: 100%;
+    }
   }
 `;
 
@@ -56,6 +59,17 @@ const ContentAddress = styled.div`
       color: var(--color-primary);
       font-weight: 700;
       font-size: 1.17em;
+    }
+  }
+  @media screen and (max-width: 650px) {
+    .content-address {
+      padding: 0px 10px;
+      h1 {
+        font-size: 16px;
+      }
+      span{
+        font-size: 12px;
+      }
     }
   }
 `;
@@ -95,7 +109,7 @@ const SectionLocation = () => {
           )}
         </Location>
       </div>
-      <div>
+      <div className="location-map-info">
         <ContentAddress>
           <div className="content-address">
             <h1>{handlerLimitText(shortAddress)}</h1>

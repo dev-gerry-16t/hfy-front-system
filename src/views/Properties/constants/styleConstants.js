@@ -166,6 +166,9 @@ const Container = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 0.5em;
+  @media screen and (max-width: 650px) {
+    padding: 2em 5px;
+  }
 `;
 
 const ButtonIcon = styled.button`
