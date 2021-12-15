@@ -18,6 +18,7 @@ import CustomSelect from "../../../components/CustomSelect";
 
 const CardPayment = styled.div`
   min-width: 400px;
+  padding: 0px 10px;
   .data-card {
     padding: 5px 6px;
     border-radius: 5px;
@@ -36,6 +37,10 @@ const CardPayment = styled.div`
       color: #fff;
       font-weight: 600;
     }
+  }
+  @media screen and (max-width: 640px) {
+    width: 100%;
+    min-width: auto;
   }
 `;
 

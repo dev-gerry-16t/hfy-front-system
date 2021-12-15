@@ -44,6 +44,13 @@ const Payment = styled.div`
       margin-bottom: 10px;
     }
   }
+  @media screen and (max-width: 640px) {
+    .card-data-bank {
+      .info-bank {
+        flex-direction: column;
+      }
+    }
+  }
 `;
 
 const ContentForm = styled.div`
@@ -94,6 +101,16 @@ const ContentForm = styled.div`
     justify-content: center;
     gap: 2em;
     margin: 2em 0px;
+  }
+  @media screen and (max-width: 420px) {
+    .section-payment-method {
+      padding: 0px 10px;
+    }
+    .header-title {
+      flex-direction: column;
+      align-items: center;
+  }
+
   }
 `;
 
