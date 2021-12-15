@@ -914,7 +914,7 @@ const WidgetDataContactProfile = (props) => {
                     justifyContent: "center",
                   }}
                 >
-                  <u>Agregar correo +</u>
+                  Agregar correo +
                 </div>
               </ButtonNextBackPage>
             )}
@@ -987,7 +987,7 @@ const WidgetDataContactProfile = (props) => {
                     justifyContent: "center",
                   }}
                 >
-                  <u>Agregar teléfono +</u>
+                  Agregar teléfono +
                 </div>
               </ButtonNextBackPage>
             )}

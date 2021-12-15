@@ -148,18 +148,21 @@ const SectionReferences = (props) => {
                 );
               })}
           </div>
-          <Row justify="center">
-            <Col span={5}>
-              <ButtonNextBackPage
-                block={false}
-                onClick={() => {
-                  setIsOpenAddReferences(true);
-                }}
-              >
-                <u>{"Agregar referencia +"}</u>
-              </ButtonNextBackPage>
-            </Col>
-          </Row>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <ButtonNextBackPage
+              block={false}
+              onClick={() => {
+                setIsOpenAddReferences(true);
+              }}
+            >
+              {"Agregar referencia +"}
+            </ButtonNextBackPage>
+          </div>
         </div>
         <div className="next-back-buttons">
           <ButtonNextBackPage

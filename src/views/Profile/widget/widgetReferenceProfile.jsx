@@ -154,7 +154,7 @@ const WidgetReferenceProfile = (props) => {
                 justifyContent: "center",
               }}
             >
-              <u>{"Agregar referencia +"}</u>
+              {"Agregar referencia +"}
             </div>
           </ButtonNextBackPage>
         </div>
