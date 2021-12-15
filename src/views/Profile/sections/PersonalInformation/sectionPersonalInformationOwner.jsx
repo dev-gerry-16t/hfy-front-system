@@ -584,7 +584,7 @@ const SectionPersonalInformation = (props) => {
               } catch (error) {}
             }}
           >
-            <u>{"Guardar"}</u>
+            Guardar
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}

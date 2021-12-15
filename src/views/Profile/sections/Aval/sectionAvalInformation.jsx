@@ -21,62 +21,45 @@ import {
   ButtonNextBackPage,
   FormProperty,
   ButtonCenterPrimary,
+  ComponentRadio,
 } from "../../constants/styleConstants";
 import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 import CustomInputCurrency from "../../../../components/customInputCurrency";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 
-const ComponentRadio = styled.div`
+const TabsProperty = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 100%;
-  .radio-inputs-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 200px;
-    .input-radio {
-      input[type="radio"] {
-        appearance: none;
-        background-color: #fff;
-        margin-right: 5px;
-        font: inherit;
-        color: var(--color-primary);
-        width: 1.15em;
-        height: 1.15em;
-        border: 1px solid var(--color-primary);
-        border-radius: 50%;
-        display: inline-grid;
-        place-content: center;
-      }
-      input[type="radio"]::before {
-        content: "";
-        width: 0.65em;
-        height: 0.65em;
-        border-radius: 50%;
-        transform: scale(0);
-        transition: 120ms transform ease-in-out;
-        box-shadow: inset 1em 1em var(--color-primary);
-      }
-      input[type="radio"]:checked::before {
-        transform: scale(1);
-      }
-    }
+  justify-content: space-between;
+  margin-bottom: 2em;
+  gap: 20px;
+  max-width: 100%;
+  overflow-x: scroll;
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  @media screen and (max-width: 1400px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 420px) {
+    font-size: 12px;
+    padding: 0px 5px;
+  }
+  @media screen and (max-width: 360px) {
+    font-size: 10px;
+    padding: 0px 5px;
   }
 `;
 
-const TabsProperty = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2em;
-`;
-
 const Tab = styled.div`
-  line-height: 5px;
+  line-height: 15px;
   cursor: pointer;
   h1 {
     font-weight: bold;
+    min-width: 225px;
     color: ${(props) =>
       props.selected === true ? "var(--color-primary)" : "#4e4b66"};
   }
@@ -87,6 +70,11 @@ const Tab = styled.div`
     border: 2px solid var(--color-primary);
     display: ${(props) => (props.selected === true ? "block" : "none")};
   }
+  @media screen and (max-width: 420px) {
+    h1 {
+      min-width: 180px;
+    }
+  }
 `;
 
 const CardDataAval = styled.div`
@@ -94,6 +82,10 @@ const CardDataAval = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 8px;
   padding: 2em;
+`;
+
+const ContentTab = styled.div`
+  position: relative;
 `;
 
 const dataTabsAval = [
@@ -680,11 +672,7 @@ const SectionAvalInformation = (props) => {
                 paddingBottom: "0.5em",
               }}
             ></div>
-            <div
-              style={{
-                marginTop: "4em",
-              }}
-            >
+            <ContentTab>
               <TabsProperty>
                 {dataTabsAval.map((row) => {
                   return (
@@ -700,7 +688,7 @@ const SectionAvalInformation = (props) => {
                   );
                 })}
               </TabsProperty>
-            </div>
+            </ContentTab>
             <CardDataAval>
               <div
                 style={{
@@ -1613,7 +1601,7 @@ const SectionAvalInformation = (props) => {
             }}
           >
             {"<< "}
-            <u>{"Atrás"}</u>
+            {"Atrás"}
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
@@ -1624,7 +1612,7 @@ const SectionAvalInformation = (props) => {
               } catch (error) {}
             }}
           >
-            <u>{"Finalizar"}</u>
+            {"Finalizar"}
             {" >>"}
           </ButtonNextBackPage>
         </div>

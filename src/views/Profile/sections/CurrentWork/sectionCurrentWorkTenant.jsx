@@ -20,49 +20,10 @@ import {
   ContentForm,
   ButtonNextBackPage,
   FormProperty,
+  ComponentRadio,
 } from "../../constants/styleConstants";
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
-
-const ComponentRadio = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%;
-  .radio-inputs-options {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 200px;
-    .input-radio {
-      input[type="radio"] {
-        appearance: none;
-        background-color: #fff;
-        margin-right: 5px;
-        font: inherit;
-        color: var(--color-primary);
-        width: 1.15em;
-        height: 1.15em;
-        border: 1px solid var(--color-primary);
-        border-radius: 50%;
-        display: inline-grid;
-        place-content: center;
-      }
-      input[type="radio"]::before {
-        content: "";
-        width: 0.65em;
-        height: 0.65em;
-        border-radius: 50%;
-        transform: scale(0);
-        transition: 120ms transform ease-in-out;
-        box-shadow: inset 1em 1em var(--color-primary);
-      }
-      input[type="radio"]:checked::before {
-        transform: scale(1);
-      }
-    }
-  }
-`;
 
 const SectionCurrentWork = (props) => {
   const {
@@ -598,7 +559,7 @@ const SectionCurrentWork = (props) => {
               } catch (error) {}
             }}
           >
-            <u>{"Guardar"}</u>
+            Guardar
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}

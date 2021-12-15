@@ -658,7 +658,7 @@ const SectionDataProperty = (props) => {
                   }
                 }}
               >
-                <u>{"Guardar"}</u>
+                Guardar
               </ButtonNextBackPage>
             )}
             <ButtonNextBackPage
