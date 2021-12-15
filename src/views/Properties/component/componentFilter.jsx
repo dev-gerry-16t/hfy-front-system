@@ -47,6 +47,9 @@ const Input = styled.input`
   &::placeholder {
     font-weight: 200;
   }
+  @media screen and (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const Filter = styled.div`
@@ -84,6 +87,42 @@ const Filter = styled.div`
       font-weight: 700;
       letter-spacing: 0.75px;
     }
+    .group-inputs-filter-mobile {
+      display: none;
+      .group-input {
+        display: flex;
+        align-items: center;
+        padding: 0.5em;
+        border: 1px solid #200e32;
+        border-radius: 1em;
+
+        .select-type-property {
+          width: 100%;
+          margin-left: 10px;
+          max-height: 30px;
+          overflow-y: hidden;
+          .ant-select-selector {
+            border: none;
+            box-shadow: none;
+            .ant-select-selection-placeholder {
+              font-style: italic;
+            }
+          }
+        }
+        .input-type-property {
+          width: 100%;
+          border: none;
+          outline: none;
+          margin-left: 10px;
+        }
+        .input-type-property::placeholder {
+          color: #bfbfbf;
+          font-style: italic;
+          font-size: 14px;
+        }
+      }
+    }
+
     .group-inputs-filter {
       display: flex;
       align-items: center;
@@ -127,6 +166,28 @@ const Filter = styled.div`
       }
     }
   }
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+    .inputs-filter {
+      flex-direction: column;
+    }
+  }
+
+  @media screen and (max-width: 945px) {
+    width: 100%;
+    .inputs-filter {
+      flex-direction: column;
+      .group-inputs-filter {
+        display: none;
+      }
+      .group-inputs-filter-mobile {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+      }
+    }
+  }
 `;
 
 const FilterPrice = styled.div`
@@ -151,6 +212,7 @@ const FilterPrice = styled.div`
   .input-number-filter {
     display: flex;
     justify-content: space-between;
+    gap: 15px;
     .left-position {
       display: flex;
       flex-direction: column;
@@ -164,6 +226,11 @@ const FilterPrice = styled.div`
       display: flex;
       flex-direction: column;
     }
+  }
+  @media screen and (max-width: 1200px) {
+    width: 100%;
+  }
+  @media screen and (max-width: 640px) {
   }
 `;
 
@@ -285,7 +352,7 @@ const ComponentFilter = (props) => {
       <div className="filter-actions-components">
         <Filter>
           <div className="header-filter">
-            <h1>{owner===true?"Mis Propiedades":"Propiedades"}</h1>
+            <h1>{owner === true ? "Mis Propiedades" : "Propiedades"}</h1>
             <button className="button-rent-select">Renta</button>
           </div>
           <div className="inputs-filter">
@@ -365,6 +432,98 @@ const ComponentFilter = (props) => {
                 </Select>
               </div>
               <div className="line"></div>
+              <div className="group-input">
+                <IconBed width="25px" height="25px" fill="#4E4B66" />
+                <input
+                  placeholder="Recamaras"
+                  className="input-type-property"
+                  type="number"
+                  onChange={(e) => {
+                    setJsonConditionsBedRoom(e.target.value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.keyCode === 109 || e.keyCode === 107) {
+                      e.preventDefault();
+                    }
+                  }}
+                  min={0}
+                />
+              </div>
+            </div>
+            <div className="group-inputs-filter-mobile">
+              <div className="group-input">
+                <IconHouseFilter width="25px" height="25px" />
+                <Select
+                  className="select-type-property"
+                  onChange={(a, e) => {
+                    const dataRecord = e.onClick();
+                    const objetCondition = {
+                      queryCondition: 1,
+                      compValue: dataRecord.idPropertyType,
+                    };
+                    setJsonConditionsProperty(objetCondition);
+                  }}
+                  placeholder="Inmueble"
+                >
+                  {isEmpty(dataPropertyTypes) === false &&
+                    dataPropertyTypes.map((row) => {
+                      return (
+                        <Option value={row.id} onClick={() => row}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </div>
+              <div className="group-input">
+                <IconLocation width="25px" height="25px" />
+                <Select
+                  showSearch
+                  className="select-type-property"
+                  onChange={() => {}}
+                  placeholder="Ubicación"
+                  onChange={(a, e) => {
+                    if (isNil(e[0]) === false) {
+                      const dataRecord = e[0].onClick();
+                      const objetCondition = {
+                        queryCondition: 2,
+                        compValue: {
+                          idState: dataRecord.idState,
+                          idMunicipality: dataRecord.idMunicipality,
+                          idNeighborhood: dataRecord.idNeighborhood,
+                        },
+                      };
+                      setJsonConditionsLocation(objetCondition);
+                    } else {
+                      setJsonConditionsLocation({});
+                    }
+                  }}
+                  onSearch={(e) => {
+                    if (e.length >= 5) {
+                      handlerCallGetLocationFilter(e);
+                    }
+                  }}
+                  tokenSeparators={[","]}
+                  filterOption={(input, option) => {
+                    if (isNil(option.children) === false) {
+                      return (
+                        option.children
+                          .toLowerCase()
+                          .indexOf(input.toLowerCase()) >= 0
+                      );
+                    }
+                  }}
+                >
+                  {isEmpty(dataLocation) === false &&
+                    dataLocation.map((row) => {
+                      return (
+                        <Option value={row.id} onClick={() => row}>
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
+              </div>
               <div className="group-input">
                 <IconBed width="25px" height="25px" fill="#4E4B66" />
                 <input

@@ -19,66 +19,14 @@ import CustomCardProperty from "../../components/customCardProperty";
 import ComponentAddCandidate from "../../views/Properties/component/componentAddCandidate";
 import ComponentFilter from "./component/componentFilter";
 import SectionViewTicket from "./sectionsDetail/sectionViewTicket";
+import {
+  Container,
+  ContentCards,
+  ContentAddFilter,
+  EmptyData,
+} from "./constants/styleDashboardProperties";
 
 const { Content } = Layout;
-
-const Container = styled.div`
-  padding: 1em 2em;
-  font-size: 16px;
-`;
-
-const ContentCards = styled.div`
-  font-family: Poppins;
-  letter-spacing: 0.75px;
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 2%;
-  padding: 1em 0;
-`;
-
-const ContentAddFilter = styled.div`
-  font-family: Poppins;
-  padding: 1em 2em;
-  background: #fff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 1em;
-  display: flex;
-  justify-content: space-between;
-  h1 {
-    font-weight: 700;
-    margin: 0px;
-    color: #4e4b66;
-    font-size: 20px;
-  }
-  .button-actions-header {
-    display: flex;
-    justify-content: flex-end;
-    button {
-      border-radius: 0.8em;
-      border: none;
-      background: ${(props) => props.background};
-      color: #fff;
-      padding: 0.125em 2em;
-      font-weight: 600;
-      letter-spacing: 0.75px;
-    }
-  }
-`;
-
-const EmptyData = styled.div`
-  width: 100%;
-  height: 30em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  p {
-    color: rgba(78, 75, 102, 0.45);
-    font-weight: 700;
-    text-align: center;
-  }
-`;
 
 const PropertiesPublic = (props) => {
   const { dataProfile, callGlobalActionApi, history } = props;
@@ -276,27 +224,30 @@ const PropertiesPublic = (props) => {
         dataTicket={dataTicket}
       />
       <Container>
-        <ContentAddFilter background="var(--color-primary)">
-          <ComponentFilter
-            onSendFilter={async (data) => {
-              try {
-                const objectConditions = JSON.stringify({
-                  currentPage: 1,
-                  userConfig: 10,
-                });
-                await handlerCallGetPropertyCoincidencesV2(
-                  data,
-                  objectConditions
-                );
-                setPaginationState(objectConditions);
-                setCurrentPagination(1);
-                setPageSize(10);
-                setJsonConditionsState(data);
-              } catch (error) {
-                throw error;
-              }
-            }}
-          />
+        <ContentAddFilter owner={false} background="var(--color-primary)">
+          <div className="button-actions-header"></div>
+          <div className="content-filter-dad">
+            <ComponentFilter
+              onSendFilter={async (data) => {
+                try {
+                  const objectConditions = JSON.stringify({
+                    currentPage: 1,
+                    userConfig: 10,
+                  });
+                  await handlerCallGetPropertyCoincidencesV2(
+                    data,
+                    objectConditions
+                  );
+                  setPaginationState(objectConditions);
+                  setCurrentPagination(1);
+                  setPageSize(10);
+                  setJsonConditionsState(data);
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
+          </div>
         </ContentAddFilter>
         <ContentCards>
           {isEmpty(dataCoincidencesPublic) === false &&
