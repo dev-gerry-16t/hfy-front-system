@@ -90,13 +90,10 @@ const Select = styled.select`
   }
   @media screen and (max-width: 640px) {
     width: 80px;
-
   }
   @media screen and (max-width: 320px) {
     width: 70px;
-
   }
-
 `;
 
 const CardContactProfile = styled.div`
@@ -122,32 +119,40 @@ const CardContactProfile = styled.div`
       border-right: 2px solid black;
     }
   }
-  .action-buttons-confirmation {
+  .section-code-verification {
+    width: 100%;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 5px;
-    padding-bottom: 50px;
-    button:first-child {
-      padding: 2px 5px;
-      border: none;
-      background: var(--color-primary);
-      border-radius: 16px;
-      color: #fff;
-      font-weight: 600;
-      font-size: 12px;
+    justify-content: space-between;
+    gap: 20px;
+    .input-code-verification {
+      width: 100%;
     }
-    button:last-child {
-      padding: 2px 5px;
-      border: none;
-      background: #fff;
-      border-radius: 16px;
-      color: var(--color-primary);
-      font-weight: 600;
-      font-size: 12px;
+    .action-buttons-confirmation {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      padding-bottom: 25px;
+      button:first-child {
+        padding: 2px 5px;
+        border: none;
+        background: var(--color-primary);
+        border-radius: 16px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      button:last-child {
+        padding: 2px 5px;
+        border: none;
+        background: #fff;
+        border-radius: 16px;
+        color: var(--color-primary);
+        font-weight: 600;
+        font-size: 12px;
+      }
     }
   }
-
   .type-table-contact {
     .row-contact {
       padding: 1em;
@@ -182,6 +187,15 @@ const CardContactProfile = styled.div`
   }
 
   @media screen and (max-width: 420px) {
+    .section-code-verification {
+      flex-direction: column;
+      gap: 5px;
+      margin-bottom: 10px;
+      .action-buttons-confirmation {
+        padding-bottom: 0px;
+      }
+    }
+
     .type-table-contact {
       .row-contact {
         padding: 1em 5px;
@@ -668,60 +682,65 @@ const WidgetDataContactProfile = (props) => {
                     </div>
                   )}
                   {isOpenDetailMail[row.idEmailAddress] === true && (
-                    <>
-                      <div>
-                        <CustomInputTypeForm
-                          value={emailAddressDetail[row.idEmailAddress]}
-                          placeholder="Código de confirmación"
-                          label=""
-                          error={false}
-                          errorMessage="Este campo es requerido"
-                          onChange={(value) => {
-                            setEmailAddressDetail({
-                              ...emailAddressDetail,
-                              [row.idEmailAddress]: value,
-                            });
-                          }}
-                          type="email"
-                          background="#fff"
-                        />
-
-                        <span>
-                          Ingresa tu código de confirmación de 6 dígitos.
-                        </span>
-                      </div>
-                      <div className="action-buttons-confirmation">
-                        <button
-                          onClick={async () => {
-                            try {
-                              await handlerCallSetCustomerEmailAddress({
-                                idEmailAddress: row.idEmailAddress,
-                                code: emailAddressDetail[row.idEmailAddress],
+                    <div
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <div className="section-code-verification">
+                        <div className="input-code-verification">
+                          <CustomInputTypeForm
+                            value={emailAddressDetail[row.idEmailAddress]}
+                            placeholder="Código de confirmación"
+                            label=""
+                            error={false}
+                            errorMessage="Este campo es requerido"
+                            onChange={(value) => {
+                              setEmailAddressDetail({
+                                ...emailAddressDetail,
+                                [row.idEmailAddress]: value,
                               });
-                              getById();
+                            }}
+                            type="email"
+                            background="#fff"
+                          />
+                        </div>
+                        <div className="action-buttons-confirmation">
+                          <button
+                            onClick={async () => {
+                              try {
+                                await handlerCallSetCustomerEmailAddress({
+                                  idEmailAddress: row.idEmailAddress,
+                                  code: emailAddressDetail[row.idEmailAddress],
+                                });
+                                getById();
+                                setIsOpenDetailMail({
+                                  ...isOpenDetailMail,
+                                  [row.idEmailAddress]:
+                                    !isOpenDetailMail[row.idEmailAddress],
+                                });
+                              } catch (error) {}
+                            }}
+                          >
+                            Confirmar
+                          </button>
+                          <button
+                            onClick={() => {
                               setIsOpenDetailMail({
                                 ...isOpenDetailMail,
                                 [row.idEmailAddress]:
                                   !isOpenDetailMail[row.idEmailAddress],
                               });
-                            } catch (error) {}
-                          }}
-                        >
-                          Confirmar
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsOpenDetailMail({
-                              ...isOpenDetailMail,
-                              [row.idEmailAddress]:
-                                !isOpenDetailMail[row.idEmailAddress],
-                            });
-                          }}
-                        >
-                          Cancelar
-                        </button>
+                            }}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
-                    </>
+                      <span>
+                        Ingresa tu código de confirmación de 6 dígitos.
+                      </span>
+                    </div>
                   )}
                 </div>
               );
@@ -813,59 +832,65 @@ const WidgetDataContactProfile = (props) => {
                     </div>
                   )}
                   {isOpenDetailPhone[row.idPhoneNumber] === true && (
-                    <>
-                      <div>
-                        <CustomInputTypeForm
-                          value={phoneNumberDetail[row.idPhoneNumber]}
-                          placeholder="Código de confirmación"
-                          label=""
-                          error={false}
-                          errorMessage="Este campo es requerido"
-                          onChange={(value) => {
-                            setPhoneNumberDetail({
-                              ...phoneNumberDetail,
-                              [row.idPhoneNumber]: value,
-                            });
-                          }}
-                          type="number"
-                          background="#fff"
-                        />
-                        <span>
-                          Ingresa tu código de confirmación de 6 dígitos.
-                        </span>
-                      </div>
-                      <div className="action-buttons-confirmation">
-                        <button
-                          onClick={async () => {
-                            try {
-                              await handlerCallSetCustomerPhoneNumber({
-                                idPhoneNumber: row.idPhoneNumber,
-                                code: phoneNumberDetail[row.idPhoneNumber],
+                    <div
+                      style={{
+                        width: "100%",
+                      }}
+                    >
+                      <div className="section-code-verification">
+                        <div className="input-code-verification">
+                          <CustomInputTypeForm
+                            value={phoneNumberDetail[row.idPhoneNumber]}
+                            placeholder="Código de confirmación"
+                            label=""
+                            error={false}
+                            errorMessage="Este campo es requerido"
+                            onChange={(value) => {
+                              setPhoneNumberDetail({
+                                ...phoneNumberDetail,
+                                [row.idPhoneNumber]: value,
                               });
-                              getById();
+                            }}
+                            type="number"
+                            background="#fff"
+                          />
+                        </div>
+                        <div className="action-buttons-confirmation">
+                          <button
+                            onClick={async () => {
+                              try {
+                                await handlerCallSetCustomerPhoneNumber({
+                                  idPhoneNumber: row.idPhoneNumber,
+                                  code: phoneNumberDetail[row.idPhoneNumber],
+                                });
+                                getById();
+                                setIsOpenDetailPhone({
+                                  ...isOpenDetailPhone,
+                                  [row.idPhoneNumber]:
+                                    !isOpenDetailPhone[row.idPhoneNumber],
+                                });
+                              } catch (error) {}
+                            }}
+                          >
+                            Confirmar
+                          </button>
+                          <button
+                            onClick={() => {
                               setIsOpenDetailPhone({
                                 ...isOpenDetailPhone,
                                 [row.idPhoneNumber]:
                                   !isOpenDetailPhone[row.idPhoneNumber],
                               });
-                            } catch (error) {}
-                          }}
-                        >
-                          Confirmar
-                        </button>
-                        <button
-                          onClick={() => {
-                            setIsOpenDetailPhone({
-                              ...isOpenDetailPhone,
-                              [row.idPhoneNumber]:
-                                !isOpenDetailPhone[row.idPhoneNumber],
-                            });
-                          }}
-                        >
-                          Cancelar
-                        </button>
+                            }}
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
-                    </>
+                      <span>
+                        Ingresa tu código de confirmación de 6 dígitos.
+                      </span>
+                    </div>
                   )}
                 </div>
               );
