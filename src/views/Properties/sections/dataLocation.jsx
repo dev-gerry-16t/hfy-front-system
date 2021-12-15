@@ -549,7 +549,7 @@ const SectionDataLocation = (props) => {
                   }
                 }}
               >
-                <u>{"Guardar"}</u>
+                Guardar
               </ButtonNextBackPage>
             )}
             <ButtonNextBackPage

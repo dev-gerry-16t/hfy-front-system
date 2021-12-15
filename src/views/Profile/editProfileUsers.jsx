@@ -31,6 +31,11 @@ const Content = styled.div`
   font-family: Poppins;
   padding: 1em;
   letter-spacing: 0.75px;
+  @media screen and (max-width: 420px) {
+    font-size: 12px;
+  padding: 1em 5px;
+
+  }
 `;
 
 const EditProfileUsers = (props) => {

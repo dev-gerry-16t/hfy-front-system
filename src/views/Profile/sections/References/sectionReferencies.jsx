@@ -169,7 +169,7 @@ const SectionReferences = (props) => {
             }}
           >
             {"<< "}
-            <u>{"Atrás"}</u>
+            <>{"Atrás"}</>
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
@@ -177,7 +177,7 @@ const SectionReferences = (props) => {
               onclickNext(dataForm);
             }}
           >
-            <u>{"Siguiente"}</u>
+            <>{"Siguiente"}</>
             {" >>"}
           </ButtonNextBackPage>
         </div>

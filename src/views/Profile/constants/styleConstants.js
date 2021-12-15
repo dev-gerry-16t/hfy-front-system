@@ -1,5 +1,50 @@
 import styled from "styled-components";
 
+const ComponentRadio = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  .radio-inputs-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 200px;
+    .input-radio {
+      input[type="radio"] {
+        appearance: none;
+        background-color: #fff;
+        margin-right: 5px;
+        font: inherit;
+        color: var(--color-primary);
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 50%;
+        display: inline-grid;
+        place-content: center;
+      }
+      input[type="radio"]::before {
+        content: "";
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+      }
+      input[type="radio"]:checked::before {
+        transform: scale(1);
+      }
+    }
+  }
+  @media screen and (max-width: 640px) {
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+  }
+`;
+
 const ButtonCenterPrimary = styled.div`
   display: flex;
   justify-content: center;
@@ -63,6 +108,11 @@ const ButtonNextBackPage = styled.button`
     props.block === true ? "#6E7191" : "var(--color-primary)"};
   font-weight: 500;
   cursor: ${(props) => (props.block === true ? "no-drop" : "pointer")};
+  @media screen and (max-width: 420px) {
+    u {
+      display: none;
+    }
+  }
 `;
 
 const LineSeparator = styled.hr`
@@ -86,6 +136,7 @@ const FormProperty = styled.div`
     .section-card-reference {
       display: flex;
       flex-wrap: wrap;
+      justify-content: center;
       gap: 20px;
       margin: 1em 0px;
     }
@@ -105,6 +156,15 @@ const FormProperty = styled.div`
     justify-content: center;
     gap: 3em;
     margin-top: 2em;
+  }
+  @media screen and (max-width: 640px) {
+    padding: 2em 3em;
+  }
+  @media screen and (max-width: 420px) {
+    padding: 1em 1em;
+  }
+  @media screen and (max-width: 320px) {
+    padding: 1em 5px;
   }
 `;
 
@@ -214,4 +274,5 @@ export {
   FormModal,
   ButtonsModal,
   ButtonCenterPrimary,
+  ComponentRadio,
 };

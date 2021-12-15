@@ -273,9 +273,10 @@ const SectionPersonalInformationAgent = (props) => {
       legalRepIdType,
       legalRepIdTypeNumber,
       legalRepDateOfBirth:
-      isNil(legalRepDateOfBirth) === false && isEmpty(legalRepDateOfBirth) === false
-        ? moment(legalRepDateOfBirth).parseZone().format("YYYY-MM-DD")
-        : null,
+        isNil(legalRepDateOfBirth) === false &&
+        isEmpty(legalRepDateOfBirth) === false
+          ? moment(legalRepDateOfBirth).parseZone().format("YYYY-MM-DD")
+          : null,
       isDataConfirmed,
       boundSolidarityGivenName,
       boundSolidarityEmailAddress,
@@ -586,7 +587,7 @@ const SectionPersonalInformationAgent = (props) => {
               } catch (error) {}
             }}
           >
-            <u>{"Guardar"}</u>
+            Guardar
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
