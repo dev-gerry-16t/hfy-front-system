@@ -91,6 +91,9 @@ const SectionAddChip = styled.div`
       }
     }
   }
+  @media screen and (max-width: 640px) {
+    width: 100%;
+  }
 `;
 
 const ButtonHeader = styled.button`

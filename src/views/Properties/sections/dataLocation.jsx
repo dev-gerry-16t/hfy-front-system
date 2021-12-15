@@ -15,6 +15,7 @@ import {
   ContentForm,
   ButtonNextBackPage,
   FormProperty,
+  ButtonCheck,
 } from "../constants/styleConstants";
 import CustomTextArea from "../../../components/customTextArea";
 import CustomMapContainer from "../../../components/customGoogleMaps";
@@ -32,37 +33,11 @@ const MultiSelect = styled.div`
   }
 `;
 
-const ButtonCheck = styled.button`
-  border: ${(props) =>
-    props.select === true ? "1px solid #FF0083" : "1px solid #d6d8e7"};
-  border-radius: 0.5em;
-  background: ${(props) =>
-    props.select === true ? "rgba(255, 0, 131, 0.2)" : "transparent"};
-  color: #000;
-  font-weight: 500;
-  padding: 0.5em 0.8em;
-  box-shadow: ${(props) =>
-    props.select ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
-`;
-
 const Location = styled.div`
   border: 1px solid #d6d8e7;
   border-radius: 0.5em;
   width: 100%;
   height: 100%;
-  .no-location {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    span {
-      margin-top: 4em;
-      color: rgba(78, 75, 102, 0.2);
-      font-weight: 700;
-    }
-  }
 `;
 
 const SectionDataLocation = (props) => {
@@ -322,205 +297,206 @@ const SectionDataLocation = (props) => {
             </Row>
           </div>
           <div className="type-property"></div>
-          <div className="type-form-property">
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+          <div className="type-form-property-location">
+            <div>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.street}
+                    placeholder=""
+                    label="Calle *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        street: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.streetNumber}
+                    placeholder=""
+                    label="Número exterior *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        streetNumber: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.suite}
+                    placeholder=""
+                    label="Número interior"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        suite: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={zipCode}
+                    placeholder=""
+                    label="Código postal *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={async (value) => {
+                      if (value.length === 5) {
+                        setZipCode(value);
+                        hanlderCallGetZipCodeAdress(value, "");
+                      } else {
+                        setDataForm({
+                          ...dataForm,
+                          jsonCoordinates: null,
+                          zipCode: value,
+                        });
+                        setZipCode(value);
+                        setPositionCoordenates(null);
+                      }
+                    }}
+                    type="number"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={zipCodeStateCity.state}
+                    placeholder=""
+                    label="Estado *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {}}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={zipCodeStateCity.city}
+                    placeholder=""
+                    label="Municipio/Delegación *"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {}}
+                    type="text"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomSelect
+                    value={idZipCode}
+                    placeholder=""
+                    label="Colonia *"
+                    data={dataZipCatalog}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value, option) => {
+                      setDataForm({
+                        ...dataForm,
+                        idZipCode: value,
+                      });
+                      setIdZipCode(value);
+                      setOpenOtherNeighborhood(option.isOpen);
+                    }}
+                  />
+                </Col>
+              </Row>
+              {openOtherNeighborhood === true && (
                 <Row>
-                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                     <CustomInputTypeForm
-                      value={dataForm.street}
-                      placeholder=""
-                      label="Calle *"
+                      value={dataForm.neighborhood}
+                      placeholder="Indica la colonia"
+                      label="Otra colonia"
                       error={false}
                       errorMessage="Este campo es requerido"
                       onChange={(value) => {
                         setDataForm({
                           ...dataForm,
-                          street: value,
+                          neighborhood: value,
                         });
                       }}
                       type="text"
                     />
                   </Col>
                 </Row>
-                <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomInputTypeForm
-                      value={dataForm.streetNumber}
-                      placeholder=""
-                      label="Número exterior *"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          streetNumber: value,
-                        });
-                      }}
-                      type="text"
+              )}
+            </div>
+            <div className="content-map-location">
+              {isNil(positionCoordenates) === true &&
+                isEmpty(positionCoordenates) === true && (
+                  <div className="no-location">
+                    <img
+                      src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296P.png"
+                      alt="location"
                     />
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomInputTypeForm
-                      value={dataForm.suite}
-                      placeholder=""
-                      label="Número interior"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          suite: value,
-                        });
-                      }}
-                      type="text"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomInputTypeForm
-                      value={zipCode}
-                      placeholder=""
-                      label="Código postal *"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={async (value) => {
-                        if (value.length === 5) {
-                          setZipCode(value);
-                          hanlderCallGetZipCodeAdress(value, "");
-                        } else {
+                    <span>Agrega la ubicación del inmueble</span>
+                  </div>
+                )}
+              {isNil(positionCoordenates) === false &&
+                isEmpty(positionCoordenates) === false && (
+                  <div className="location-map">
+                    <Location>
+                      <CustomMapContainer
+                        location={positionCoordenates}
+                        onDragPosition={(position) => {
+                          setPositionCoordenates(position);
+                        }}
+                        exact={dataForm.isExactLocation}
+                      />
+                    </Location>
+                  </div>
+                )}
+            </div>
+          </div>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <MultiSelect>
+                <span>¿Compartir ubicación precisa?</span>
+                <div className="button-actions-select">
+                  {[
+                    { id: true, text: "Si" },
+                    { id: false, text: "No" },
+                  ].map((row) => {
+                    return (
+                      <ButtonCheck
+                        select={row.id === dataForm.isExactLocation}
+                        onClick={() => {
                           setDataForm({
                             ...dataForm,
-                            jsonCoordinates: null,
-                            zipCode: value,
-                          });
-                          setZipCode(value);
-                          setPositionCoordenates(null);
-                        }
-                      }}
-                      type="number"
-                    />
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomInputTypeForm
-                      value={zipCodeStateCity.state}
-                      placeholder=""
-                      label="Estado *"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {}}
-                      type="text"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomInputTypeForm
-                      value={zipCodeStateCity.city}
-                      placeholder=""
-                      label="Municipio/Delegación *"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {}}
-                      type="text"
-                    />
-                  </Col>
-                  <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                  <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                    <CustomSelect
-                      value={idZipCode}
-                      placeholder=""
-                      label="Colonia *"
-                      data={dataZipCatalog}
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value, option) => {
-                        setDataForm({
-                          ...dataForm,
-                          idZipCode: value,
-                        });
-                        setIdZipCode(value);
-                        setOpenOtherNeighborhood(option.isOpen);
-                      }}
-                    />
-                  </Col>
-                </Row>
-                {openOtherNeighborhood === true && (
-                  <Row>
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                      <CustomInputTypeForm
-                        value={dataForm.neighborhood}
-                        placeholder="Indica la colonia"
-                        label="Otra colonia"
-                        error={false}
-                        errorMessage="Este campo es requerido"
-                        onChange={(value) => {
-                          setDataForm({
-                            ...dataForm,
-                            neighborhood: value,
+                            isExactLocation: row.id,
                           });
                         }}
-                        type="text"
-                      />
-                    </Col>
-                  </Row>
-                )}
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <Location>
-                  {isNil(positionCoordenates) === true &&
-                  isEmpty(positionCoordenates) === true ? (
-                    <div className="no-location">
-                      <img
-                        src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296P.png"
-                        alt="location"
-                      />
-                      <span>Agrega la ubicación del inmueble</span>
-                    </div>
-                  ) : (
-                    <CustomMapContainer
-                      location={positionCoordenates}
-                      onDragPosition={(position) => {
-                        setPositionCoordenates(position);
-                      }}
-                      exact={dataForm.isExactLocation}
-                    />
-                  )}
-                </Location>
-              </Col>
-            </Row>
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <MultiSelect>
-                  <span>¿Compartir ubicación precisa?</span>
-                  <div className="button-actions-select">
-                    {[
-                      { id: true, text: "Si" },
-                      { id: false, text: "No" },
-                    ].map((row) => {
-                      return (
-                        <ButtonCheck
-                          select={row.id === dataForm.isExactLocation}
-                          onClick={() => {
-                            setDataForm({
-                              ...dataForm,
-                              isExactLocation: row.id,
-                            });
-                          }}
-                        >
-                          {row.text}
-                        </ButtonCheck>
-                      );
-                    })}
-                  </div>
-                </MultiSelect>
-              </Col>
-            </Row>
-          </div>
+                      >
+                        {row.text}
+                      </ButtonCheck>
+                    );
+                  })}
+                </div>
+              </MultiSelect>
+            </Col>
+          </Row>
           {isNil(idProperty) === false && (
             <div
               className="label-indicator"

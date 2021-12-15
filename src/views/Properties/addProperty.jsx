@@ -19,6 +19,12 @@ const Content = styled.div`
   font-family: Poppins;
   padding: 1em;
   letter-spacing: 0.75px;
+  @media screen and (max-width: 640px) {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 500px) {
+    padding: 1em 0px;
+  }
 `;
 
 const AddProperty = (props) => {

@@ -1,5 +1,21 @@
 import styled from "styled-components";
 
+const ButtonCheck = styled.button`
+  border: ${(props) =>
+    props.select === true ? "1px solid #FF0083" : "1px solid #d6d8e7"};
+  border-radius: 0.5em;
+  background: ${(props) =>
+    props.select === true ? "rgba(255, 0, 131, 0.2)" : "transparent"};
+  color: #000;
+  font-weight: 500;
+  padding: 0.5em 0.8em;
+  box-shadow: ${(props) =>
+    props.select ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
+  @media screen and (max-width: 1320px) {
+    font-size: 12px;
+  }
+`;
+
 const GeneralCard = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
@@ -153,11 +169,58 @@ const FormProperty = styled.div`
       }
     }
   }
+  .type-form-property-location {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+    .subtitle-form {
+      margin-bottom: 2em;
+      h1 {
+        margin: 0;
+        color: var(--color-primary);
+        font-weight: 700;
+      }
+    }
+    .no-location {
+      padding: 1em 0px;
+      border: 1px solid #d6d8e7;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      span {
+        margin-top: 4em;
+        color: rgba(78, 75, 102, 0.2);
+        font-weight: 700;
+      }
+    }
+    .location-map {
+      width: 100%;
+      height: 21em;
+      display: flex;
+      position: relative;
+    }
+  }
   .next-back-buttons {
     display: flex;
     justify-content: center;
     gap: 3em;
     margin-top: 2em;
+  }
+  @media screen and (max-width: 1320px) {
+    padding: 2em 3em;
+  }
+  @media screen and (max-width: 1170px) {
+    .type-form-property-location {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 20px;
+    }
+  }
+  @media screen and (max-width: 910px) {
+    padding: 1em 10px;
   }
 `;
 
@@ -271,4 +334,5 @@ export {
   ButtonsModal,
   LoaderAction,
   GeneralCard,
+  ButtonCheck,
 };

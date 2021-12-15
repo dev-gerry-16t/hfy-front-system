@@ -32,6 +32,13 @@ const MultiSelect = styled.div`
     display: flex;
     gap: 1em;
   }
+  @media screen and (max-width: 420px) {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    margin: 0px 0px 15px 0px;
+  }
+
 `;
 
 const ButtonCheck = styled.button`
@@ -45,6 +52,9 @@ const ButtonCheck = styled.button`
   padding: 0.5em 0.8em;
   box-shadow: ${(props) =>
     props.select ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
+  @media screen and (max-width: 1320px) {
+    font-size: 12px;
+  }
 `;
 
 const catalogPrice = [
