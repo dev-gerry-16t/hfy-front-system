@@ -12,6 +12,7 @@ import {
   callGetPropertyCoincidences,
   callGlobalActionApi,
 } from "../../utils/actions/actions";
+import { IconVector } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
@@ -24,6 +25,7 @@ import {
   ContentCards,
   ContentAddFilter,
   EmptyData,
+  ButtonIcon,
 } from "./constants/styleDashboardProperties";
 
 const { Content } = Layout;
@@ -36,6 +38,7 @@ const PropertiesPublic = (props) => {
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const [totalCoincidences, setTotalCoincidences] = useState(0);
   const [currentPagination, setCurrentPagination] = useState(1);
+  const [isHorizontal, setIsHorizontal] = useState(false);
   const [visibleAddUser, setVisibleAddUser] = useState({
     openModal: false,
     idApartment: null,
@@ -250,38 +253,66 @@ const PropertiesPublic = (props) => {
           </div>
         </ContentAddFilter>
         <ContentCards>
-          {isEmpty(dataCoincidencesPublic) === false &&
-            dataCoincidencesPublic.map((row) => {
-              return (
-                <CustomCardProperty
-                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
-                  alt={row.identifier}
-                  onClickDetail={() => {
-                    history.push(
-                      `/websystem/detail-property/${row.idProperty}`
-                    );
-                  }}
-                  onClickFavorite={async (data, id) => {
-                    try {
-                      await handlerCallSetFavoriteProperty(data, id);
-                      handlerCallGetPropertyCoincidencesV2();
-                    } catch (error) {
-                      throw error;
-                    }
-                  }}
-                  data={row}
-                  idUserType={dataProfile.idUserType}
-                  onClickApply={async (data, id) => {
-                    try {
-                      await handlerCallApplyToProperty(data, id);
-                      handlerCallGetPropertyCoincidencesV2();
-                    } catch (error) {
-                      throw error;
-                    }
-                  }}
-                />
-              );
-            })}
+          {isEmpty(dataCoincidencesPublic) === false && (
+            <>
+              <div className="button-actions-header">
+                <h1>Resultados</h1>
+                <div>
+                  <ButtonIcon
+                    onClick={() => {
+                      setIsHorizontal(!isHorizontal);
+                    }}
+                  >
+                    <IconVector
+                      color="var(--color-primary)"
+                      backGround="var(--color-primary)"
+                      size="20px"
+                    />
+                  </ButtonIcon>
+                </div>
+              </div>
+              <div
+                className={
+                  isHorizontal === false
+                    ? "body-cards-property"
+                    : "body-cards-property-x"
+                }
+              >
+                {dataCoincidencesPublic.map((row) => {
+                  return (
+                    <CustomCardProperty
+                      src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+                      alt={row.identifier}
+                      onClickDetail={() => {
+                        history.push(
+                          `/websystem/detail-property/${row.idProperty}`
+                        );
+                      }}
+                      onClickFavorite={async (data, id) => {
+                        try {
+                          await handlerCallSetFavoriteProperty(data, id);
+                          handlerCallGetPropertyCoincidencesV2();
+                        } catch (error) {
+                          throw error;
+                        }
+                      }}
+                      data={row}
+                      idUserType={dataProfile.idUserType}
+                      onClickApply={async (data, id) => {
+                        try {
+                          await handlerCallApplyToProperty(data, id);
+                          handlerCallGetPropertyCoincidencesV2();
+                        } catch (error) {
+                          throw error;
+                        }
+                      }}
+                    />
+                  );
+                })}
+              </div>
+            </>
+          )}
+
           {isEmpty(dataCoincidencesPublic) === true && (
             <EmptyData>
               <img
@@ -298,6 +329,7 @@ const PropertiesPublic = (props) => {
             style={{
               display: "flex",
               justifyContent: "center",
+              marginTop: "15px",
             }}
           >
             <Pagination

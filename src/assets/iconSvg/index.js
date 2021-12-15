@@ -24,6 +24,8 @@ import IconDownloadDetail from "./iconDownloadDetail";
 import IconHalfBathroom from "./iconHalfBathroom";
 import IconEye from "./iconEye";
 import IconStar from "./iconStar";
+import IconVector from "./iconVector";
+
 
 export {
   IconWhatsapp,
@@ -52,4 +54,5 @@ export {
   IconHalfBathroom,
   IconEye,
   IconStar,
+  IconVector,
 };

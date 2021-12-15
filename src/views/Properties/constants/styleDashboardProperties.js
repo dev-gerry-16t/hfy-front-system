@@ -1,5 +1,13 @@
 import styled from "styled-components";
 
+const ButtonIcon = styled.button`
+  background: transparent;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const Container = styled.div`
   padding: 1em 2em;
   font-size: 16px;
@@ -23,15 +31,52 @@ const Container = styled.div`
 
 const ContentCards = styled.div`
   font-family: Poppins;
-  letter-spacing: 0.75px;
-  display: flex;
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 2%;
-  padding: 1em 0;
+  margin-top: 25px;
+  .body-cards-property {
+    letter-spacing: 0.75px;
+    display: flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 2%;
+    padding: 1em 0;
+  }
+  .body-cards-property-x {
+    margin: 20px 0px;
+    padding: 10px 10px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: nowrap;
+    gap: 20px;
+    overflow-x: scroll;
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  .button-actions-header {
+    display: none;
+  }
   @media screen and (max-width: 520px) {
-    flex-direction: column;
-    align-items: center;
+    background: #ffffff;
+    box-shadow: 0px 6px 22px 12px rgb(205 213 219 / 60%);
+    border-radius: 0.5em;
+    .body-cards-property {
+      flex-direction: column;
+      align-items: center;
+    }
+    .button-actions-header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 0.5px solid #4e4b66;
+      padding: 1em;
+
+      h1 {
+        font-weight: 700;
+        margin: 0px;
+        color: #4e4b66;
+        font-size: 16px;
+      }
+    }
   }
 `;
 
@@ -117,4 +162,4 @@ const EmptyData = styled.div`
   }
 `;
 
-export { Container, ContentCards, ContentAddFilter, EmptyData };
+export { Container, ContentCards, ContentAddFilter, EmptyData, ButtonIcon };
