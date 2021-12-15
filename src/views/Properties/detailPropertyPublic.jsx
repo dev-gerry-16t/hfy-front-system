@@ -5,6 +5,15 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { ButtonIcon, ContentForm } from "./constants/styleConstants";
+import {
+  Content,
+  ContainerDown,
+  TabsProperty,
+  Tab,
+  GeneralCard,
+  Card,
+  ContentRight,
+} from "./constants/styleDashboardProperties";
 import { IconHeart, IconShare, IconTenant } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -17,173 +26,6 @@ import SectionLocation from "./sectionsDetail/sectionLocation";
 import ContextProperty from "./context/contextProperty";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
-
-const Content = styled.div`
-  overflow-y: scroll;
-  font-size: 16px;
-  font-family: Poppins;
-  padding: 1em;
-  letter-spacing: 0.75px;
-  display: grid;
-  grid-template-columns: 3fr 1fr;
-`;
-
-const ContainerDown = styled.div`
-  padding: 0 1em;
-  margin: 5em 1em 2em 1em;
-`;
-
-const TabsProperty = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2em;
-`;
-
-const Tab = styled.div`
-  line-height: 5px;
-  cursor: pointer;
-  h1 {
-    font-weight: bold;
-    color: ${(props) =>
-      props.selected === true ? "var(--color-primary)" : "#4e4b66"};
-  }
-  hr {
-    width: 30%;
-    background: #d6d8e7;
-    margin: 0;
-    border: 2px solid var(--color-primary);
-    display: ${(props) => (props.selected === true ? "block" : "none")};
-  }
-`;
-
-const ContentRight = styled.div`
-  padding: 0 1em;
-  display: flex;
-  flex-direction: column;
-  gap: 1em;
-`;
-
-const GeneralCard = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 0.5em;
-  .header-title {
-    border-bottom: 0.5px solid #4e4b66;
-    display: flex;
-    justify-content: space-between;
-    padding: 1em;
-    h1 {
-      margin: 0;
-      color: var(--color-primary);
-      font-weight: 700;
-    }
-  }
-  .content-cards {
-    min-height: 30em;
-    padding: 2em 2em;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-  }
-
-  .content-card {
-    padding: 2em 2em;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5em;
-  }
-`;
-
-const Card = styled.div`
-  background: #ffffff;
-  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
-  border-radius: 4px;
-  min-height: 6em;
-  .card-document {
-    padding: 1em;
-    .top-info {
-      display: flex;
-      .icon-info {
-        width: 43px;
-        height: 42px;
-        background: #eff0f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 10px;
-      }
-      .name-info {
-        font-size: 0.9em;
-        line-height: 1.4em;
-        max-width: 192px;
-
-        h3 {
-          margin: 0px;
-        }
-        span {
-          color: var(--color-primary);
-        }
-      }
-    }
-    .button-action {
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
-
-  .card-user {
-    padding: 1em;
-    .top-info {
-      display: flex;
-      .icon-info {
-        width: 60px;
-        height: 60px;
-        background: #eff0f6;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-right: 10px;
-        border-radius: 5px;
-        position: relative;
-        .score {
-          position: absolute;
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          background: var(--color-primary);
-          top: 4em;
-          left: 4em;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          font-size: 0.6em;
-          color: #fff;
-          span {
-            font-weight: 300;
-          }
-        }
-      }
-      .name-info {
-        font-size: 0.9em;
-        line-height: 1.4em;
-        max-width: 192px;
-        display: flex;
-        flex-direction: column;
-        h3 {
-          margin: 0px;
-        }
-        span {
-          color: var(--color-primary);
-        }
-      }
-    }
-    .button-action {
-      display: flex;
-      justify-content: flex-end;
-    }
-  }
-`;
 
 const EmptyData = styled.div`
   display: flex;
