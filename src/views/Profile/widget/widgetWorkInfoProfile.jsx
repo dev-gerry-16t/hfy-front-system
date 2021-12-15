@@ -33,11 +33,11 @@ const WidgetWorkInfoProfile = (props) => {
           </button>
         </div>
         <div className="body-card-profile">
-          <div className="label-strong">
+          <div className="label-strong-work">
             <span>Empresa:</span>
             <strong>{companyName}</strong>
           </div>
-          <div className="label-strong">
+          <div className="label-strong-work">
             <span>Puesto:</span>
             <strong>{occupationActivity}</strong>
           </div>
