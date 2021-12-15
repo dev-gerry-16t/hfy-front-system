@@ -574,18 +574,19 @@ const Attorney = (props) => {
                         if (canGenerateDocument === true) {
                           setSpinVisible(true);
                           try {
-                            const response = await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 1,
-                                typeProcess: 1,
-                              },
-                              `Contrato_${record.idContract}`,
-                              extension,
-                              true
-                            );
+                            const response =
+                              await handlerCallGetContractDocumentById(
+                                {
+                                  idContract: record.idContract,
+                                  idCustomer: record.idCustomer,
+                                  idCustomerTenant: record.idCustomerTenant,
+                                  type: 1,
+                                  typeProcess: 1,
+                                },
+                                `Contrato_${record.idContract}`,
+                                extension,
+                                true
+                              );
 
                             setSpinVisible(false);
                             await setDocumentUrl({
@@ -772,18 +773,19 @@ const Attorney = (props) => {
                         if (canGenerateDocument === true) {
                           setSpinVisible(true);
                           try {
-                            const response = await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 3,
-                                typeProcess: 2,
-                              },
-                              `Poliza_${record.idContract}`,
-                              extension,
-                              true
-                            );
+                            const response =
+                              await handlerCallGetContractDocumentById(
+                                {
+                                  idContract: record.idContract,
+                                  idCustomer: record.idCustomer,
+                                  idCustomerTenant: record.idCustomerTenant,
+                                  type: 3,
+                                  typeProcess: 2,
+                                },
+                                `Poliza_${record.idContract}`,
+                                extension,
+                                true
+                              );
 
                             setSpinVisible(false);
                             await setDocumentUrl({
@@ -911,18 +913,19 @@ const Attorney = (props) => {
                         if (canGenerateDocument === true) {
                           setSpinVisible(true);
                           try {
-                            const response = await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 2,
-                                typeProcess: 4,
-                              },
-                              `Pagare_${record.idContract}`,
-                              extension,
-                              true
-                            );
+                            const response =
+                              await handlerCallGetContractDocumentById(
+                                {
+                                  idContract: record.idContract,
+                                  idCustomer: record.idCustomer,
+                                  idCustomerTenant: record.idCustomerTenant,
+                                  type: 2,
+                                  typeProcess: 4,
+                                },
+                                `Pagare_${record.idContract}`,
+                                extension,
+                                true
+                              );
 
                             setSpinVisible(false);
                             await setDocumentUrl({
