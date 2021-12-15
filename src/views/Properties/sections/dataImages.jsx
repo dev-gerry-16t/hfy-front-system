@@ -43,6 +43,7 @@ const ContentImages = styled.div`
   margin-top: 2em;
   display: flex;
   justify-content: flex-start;
+  flex-wrap: wrap;
   gap: 1em;
   .image-content {
     width: 12em;
@@ -50,6 +51,9 @@ const ContentImages = styled.div`
     border-radius: 0.5em;
     object-fit: cover;
     border: 2px solid #a0a3bd;
+  }
+  @media screen and (max-width: 420px) {
+    justify-content: center;
   }
 `;
 
@@ -96,6 +100,24 @@ const ContentImage = styled.div`
     color: var(--color-primary);
     font-size: 11px;
     position: absolute;
+  }
+  @media screen and (max-width: 640px) {
+    margin-bottom: 15px;
+    .description-image {
+      line-height: 10px;
+    }
+    .button-actions-image {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+  @media screen and (max-width: 420px) {
+    &:first-child {
+      .image-content {
+        width: 90vw;
+        height: 200px;
+      }
+    }
   }
 `;
 
