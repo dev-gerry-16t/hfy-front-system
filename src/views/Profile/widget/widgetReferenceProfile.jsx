@@ -32,6 +32,9 @@ const CardReference = styled.div`
     gap: 5px;
     padding: 0px 0.8em 0.8em 0.8em;
   }
+  @media screen and (max-width: 360px) {
+    width: 100%;
+  }
 `;
 
 const ButtonHeader = styled.button`

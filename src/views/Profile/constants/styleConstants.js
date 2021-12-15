@@ -49,6 +49,11 @@ const ContentForm = styled.div`
     gap: 2em;
     margin: 2em 0px;
   }
+  @media screen and (max-width: 640px) {
+    .header-title {
+      padding: 1em 15px;
+    }
+  }
 `;
 
 const ButtonNextBackPage = styled.button`

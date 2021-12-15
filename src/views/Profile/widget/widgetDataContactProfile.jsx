@@ -33,7 +33,7 @@ const Input = styled.input`
   outline: none;
   color: rgba(0, 0, 0, 0.85);
   font-weight: 700;
-  width: 200;
+  width: 200px;
   &[type="number"]::-webkit-inner-spin-button,
   &[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -46,6 +46,15 @@ const Input = styled.input`
   &::placeholder {
     font-weight: 600;
     color: rgba(0, 0, 0, 0.2);
+  }
+  @media screen and (max-width: 845px) {
+    width: 100px;
+  }
+  @media screen and (max-width: 640px) {
+    width: 200px;
+  }
+  @media screen and (max-width: 420px) {
+    width: 100px;
   }
 `;
 
@@ -76,6 +85,18 @@ const Select = styled.select`
   &::placeholder {
     font-weight: 100;
   }
+  @media screen and (max-width: 845px) {
+    width: 70px;
+  }
+  @media screen and (max-width: 640px) {
+    width: 80px;
+
+  }
+  @media screen and (max-width: 320px) {
+    width: 70px;
+
+  }
+
 `;
 
 const CardContactProfile = styled.div`
@@ -83,6 +104,7 @@ const CardContactProfile = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 10px;
   border: 1px solid gray;
+  width: 100%;
   .add-contact-profile {
     padding: 1em 0px;
   }
@@ -131,6 +153,17 @@ const CardContactProfile = styled.div`
       padding: 1em;
       display: flex;
       justify-content: space-between;
+      .data-contact {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .buttons-verification-contact {
+          display: flex;
+          justify-content: space-between;
+        }
+      }
     }
     .row-contact-main {
       padding: 1em;
@@ -145,6 +178,39 @@ const CardContactProfile = styled.div`
     }
     .row-contact:hover {
       background-color: #ddd;
+    }
+  }
+
+  @media screen and (max-width: 420px) {
+    .type-table-contact {
+      .row-contact {
+        padding: 1em 5px;
+        .data-contact {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 360px) {
+    .type-table-contact {
+      .row-contact {
+        .data-contact {
+          flex-wrap: wrap;
+          .buttons-verification-contact {
+          }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 320px) {
+    .type-table-contact {
+      .row-contact {
+        .data-contact {
+          .buttons-verification-contact {
+            justify-content: flex-start;
+          }
+        }
+      }
     }
   }
 `;
@@ -211,16 +277,114 @@ const SectionAddContact = styled.div`
       }
     }
   }
+
+  .input-button-add-phone {
+    padding: 0px 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    grid-template-columns: 1.8fr 1.5fr;
+    .input-add {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .button-add {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 25px;
+      button {
+        padding: 5px 1em;
+        border: none;
+        background: var(--color-primary);
+        border-radius: 16px;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+    .button-add-phone {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      button {
+        padding: 5px 1em;
+        border: none;
+        background: var(--color-primary);
+        border-radius: 16px;
+        color: #fff;
+        font-weight: 600;
+      }
+    }
+  }
+
+  @media screen and (max-width: 560px) {
+    font-size: 12px;
+    .input-button-add-phone {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      .input-add {
+        width: 100%;
+      }
+      .button-add {
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    .input-button-add {
+      display: flex;
+      flex-direction: column;
+      .input-add-email {
+      }
+      .button-add {
+      }
+    }
+    .poster-text {
+      margin-left: 5px;
+    }
+  }
 `;
 
 const ButtonVerification = styled.span`
-  background: ${(props) =>
-    props.verification === true ? "#46E6FD" : "var(--color-primary)"};
   color: #fff;
-  padding: 3px;
   font-size: 12px;
-  box-shadow: 0px 0px 21px 5px rgba(205, 213, 219, 0.6);
-  border-radius: 5px;
+  background: transparent;
+  .verification-action {
+    border-radius: 5px;
+    padding: 3px;
+    box-shadow: 0px 0px 21px 5px rgba(205, 213, 219, 0.6);
+    background: ${(props) =>
+      props.verification === true ? "#46E6FD" : "var(--color-primary)"};
+  }
+  .verification-action-now {
+    border-radius: 5px;
+    padding: 3px;
+    box-shadow: 0px 0px 21px 5px rgba(205, 213, 219, 0.6);
+    background: ${(props) =>
+      props.verification === true ? "#46E6FD" : "var(--color-primary)"};
+  }
+  .verification-icon {
+    display: none;
+    div {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: ${(props) =>
+        props.verification === true ? "#46E6FD" : "var(--color-primary)"};
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+  }
+  @media screen and (max-width: 420px) {
+    .verification-action {
+      display: none;
+    }
+    .verification-icon {
+      display: block;
+    }
+  }
 `;
 
 const WidgetDataContactProfile = (props) => {
@@ -428,9 +592,9 @@ const WidgetDataContactProfile = (props) => {
               return (
                 <div className="row-contact">
                   {isOpenDetailMail[row.idEmailAddress] === false && (
-                    <>
+                    <div className="data-contact">
                       <u>{row.emailAddress}</u>
-                      <div>
+                      <div className="buttons-verification-contact">
                         {row.requiresVerification == true ? (
                           <ButtonHeader
                             onClick={async () => {
@@ -448,12 +612,21 @@ const WidgetDataContactProfile = (props) => {
                             }}
                           >
                             <ButtonVerification verification={false}>
-                              Verificar
+                              <div className="verification-action-now">
+                                Verificar
+                              </div>
                             </ButtonVerification>
                           </ButtonHeader>
                         ) : (
                           <ButtonVerification verification={true}>
-                            Verificado
+                            <div className="verification-action">
+                              Verificado
+                            </div>
+                            <div className="verification-icon">
+                              <div>
+                                <i className="fa fa-check"></i>
+                              </div>
+                            </div>
                           </ButtonVerification>
                         )}
                         <ButtonHeader
@@ -492,7 +665,7 @@ const WidgetDataContactProfile = (props) => {
                           />
                         </ButtonHeader>
                       </div>
-                    </>
+                    </div>
                   )}
                   {isOpenDetailMail[row.idEmailAddress] === true && (
                     <>
@@ -561,9 +734,9 @@ const WidgetDataContactProfile = (props) => {
               return (
                 <div className="row-contact">
                   {isOpenDetailPhone[row.idPhoneNumber] === false && (
-                    <>
+                    <div className="data-contact">
                       <u>{row.phoneNumber}</u>
-                      <div>
+                      <div className="buttons-verification-contact">
                         {row.requiresVerification == true ? (
                           <ButtonHeader
                             onClick={async () => {
@@ -581,12 +754,21 @@ const WidgetDataContactProfile = (props) => {
                             }}
                           >
                             <ButtonVerification verification={false}>
-                              Verificar
+                              <div className="verification-action-now">
+                                Verificar
+                              </div>
                             </ButtonVerification>
                           </ButtonHeader>
                         ) : (
                           <ButtonVerification verification={true}>
-                            Verificado
+                            <div className="verification-action">
+                              Verificado
+                            </div>
+                            <div className="verification-icon">
+                              <div>
+                                <i className="fa fa-check"></i>
+                              </div>
+                            </div>
                           </ButtonVerification>
                         )}
 
@@ -628,7 +810,7 @@ const WidgetDataContactProfile = (props) => {
                           />
                         </ButtonHeader>
                       </div>
-                    </>
+                    </div>
                   )}
                   {isOpenDetailPhone[row.idPhoneNumber] === true && (
                     <>
@@ -796,7 +978,7 @@ const WidgetDataContactProfile = (props) => {
                   </ButtonHeader>
                 </div>
                 <div
-                  className="input-button-add"
+                  className="input-button-add-phone"
                   style={{
                     marginBottom: "10px",
                   }}

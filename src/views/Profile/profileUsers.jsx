@@ -81,6 +81,11 @@ const DetailProfileContent = styled.div`
         justify-content: space-between;
         margin-bottom: 1em;
       }
+      .label-strong-work {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 1em;
+      }
       .info-work-person {
         margin: 1em 0px;
         display: flex;
@@ -138,6 +143,68 @@ const DetailProfileContent = styled.div`
       align-items: center;
     }
   }
+  @media screen and (max-width: 1500px) {
+    padding: 2em 10px;
+    column-gap: 5px;
+  }
+  @media screen and (max-width: 1300px) {
+    .column-grid-1 {
+      padding: 0px 5px;
+    }
+    .column-grid-2 {
+      padding: 0px 5px;
+    }
+    .column-grid-3 {
+      padding: 0px 5px;
+    }
+  }
+  @media screen and (max-width: 1200px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    row-gap: 10px;
+    .column-grid-1 {
+      padding: 0px 5px;
+    }
+    .column-grid-2 {
+      padding: 0px 5px;
+    }
+    .column-grid-3 {
+      padding: 0px 5px;
+    }
+  }
+  @media screen and (max-width: 640px) {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  @media screen and (max-width: 420px) {
+    .column-grid-1 {
+      padding: 0px 0px;
+    }
+    .column-grid-2 {
+      padding: 0px 0px;
+    }
+    .column-grid-3 {
+      padding: 0px 0px;
+    }
+    .card-header-profile {
+      .body-card-profile {
+        padding: 0.8em 0.5em;
+
+        .info-address-profile {
+          flex-direction: column;
+          gap: 10px;
+          div {
+            display: flex;
+            margin-bottom: 5px;
+            justify-content: space-between;
+          }
+        }
+        .label-strong-work {
+          flex-direction: column;
+        }
+      }
+    }
+  }
 `;
 
 const Content = styled.div`
@@ -146,6 +213,18 @@ const Content = styled.div`
   font-family: Poppins;
   padding: 1em;
   letter-spacing: 0.75px;
+  @media screen and (max-width: 1500px) {
+    padding: 1em 5px;
+  }
+  @media screen and (max-width: 1300px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 920px) {
+    font-size: 12px;
+  }
+  @media screen and (max-width: 640px) {
+    font-size: 14px;
+  }
 `;
 
 const ProfileUsers = (props) => {

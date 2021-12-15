@@ -67,6 +67,20 @@ const UploadSection = styled.div`
       flex-direction: row;
     }
   }
+  @media screen and (max-width: 420px) {
+    width: 100%;
+    .content-buttons-file {
+      display: flex;
+      flex-direction: row;
+    }
+  }
+  @media screen and (max-width: 320px) {
+    .content-file-preview {
+      img {
+        width: 100%;
+      }
+    }
+  }
 `;
 
 const ButtonFiles = styled.button`
@@ -82,10 +96,15 @@ const ButtonFiles = styled.button`
 `;
 
 const ContentFile = styled.div`
+  font-size: 16px;
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 1em 0px;
+  @media screen and (max-width: 320px) {
+    width: 100%;
+    font-size: 12px;
+  }
 `;
 
 const WidgetUploadDocument = (props) => {
@@ -403,13 +422,15 @@ const WidgetUploadDocument = (props) => {
                       )}
                     </UploadSection>
                   </ContentFile>
-                  <div style={{
-                    textAlign:"center",
-                    fontSize:"1em",
-                    marginBottom:"10px",
-                    color:"#A0A3BD",
-                    fontWeight:"600"
-                  }}>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      fontSize: "1em",
+                      marginBottom: "10px",
+                      color: "#A0A3BD",
+                      fontWeight: "600",
+                    }}
+                  >
                     {row.documentType}
                   </div>
                   <div className="line-separate"></div>
@@ -418,7 +439,6 @@ const WidgetUploadDocument = (props) => {
             })}
         </Row>
       )}
-
     </div>
   );
 };
