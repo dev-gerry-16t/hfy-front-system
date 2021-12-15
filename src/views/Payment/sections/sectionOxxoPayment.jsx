@@ -33,6 +33,10 @@ const CardPayment = styled.div`
       font-weight: 600;
     }
   }
+  @media screen and (max-width: 640px) {
+    width: 100%;
+    min-width: auto;
+  }
 `;
 
 const PaymentPoster = styled.div`

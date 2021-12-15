@@ -24,6 +24,7 @@ import SectionSpeiPayment from "./sections/sectionSpeiPayment";
 import SectionCardPayment from "./sections/sectionCardPayment";
 import SectionOxxoPayment from "./sections/sectionOxxoPayment";
 import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
+import { ReactComponent as IconPaymentTimes } from "../../assets/iconSvg/svgFile/iconPaymentTimes.svg";
 
 const ELEMENTS_OPTIONS = {
   fonts: [
@@ -39,6 +40,15 @@ const Content = styled.div`
   font-family: Poppins;
   padding: 1em;
   letter-spacing: 0.75px;
+  @media screen and (max-width: 900px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 420px) {
+    padding: 1em 5px;
+  }
+  @media screen and (max-width: 360px) {
+    font-size: 12px;
+  }
 `;
 
 const TabsProperty = styled.div`
@@ -66,6 +76,19 @@ const Tab = styled.div`
     border: 2px solid var(--color-primary);
     display: ${(props) => (props.selected === true ? "block" : "none")};
   }
+  @media screen and (max-width: 720px) {
+    h1 {
+      font-size: 14px;
+    }
+  }
+  @media screen and (max-width: 420px) {
+    h1 {
+      span {
+        margin-left: 2px;
+        font-size: 10px;
+      }
+    }
+  }
 `;
 
 const CardPaymentMethod = styled.div`
@@ -89,13 +112,23 @@ const CardPaymentMethod = styled.div`
       p {
         position: absolute;
       }
+      @media screen and (max-width: 320px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
     }
   }
   .card-body-payment {
     display: flex;
     justify-content: center;
     margin-top: 20px;
-    padding: 1em 0px 2em 0px;
+    padding: 1em 10px 2em 10px;
+  }
+  @media screen and (max-width: 640px) {
+    .card-body-payment {
+      display: block;
+    }
   }
 `;
 
@@ -136,6 +169,10 @@ const PaidService = styled.div`
       font-weight: 600;
     }
   }
+
+  .label-success-pay {
+    text-align: center;
+  }
 `;
 
 const dataTabsPaymentMethod = [
@@ -145,11 +182,26 @@ const dataTabsPaymentMethod = [
   },
   {
     id: "2",
-    text: "Pago conTarjeta",
+    text: "Pago con Tarjeta",
   },
   {
     id: "3",
     text: "Pago con OXXO",
+  },
+];
+
+const dataTabsPaymentMethodMobile = [
+  {
+    id: "1",
+    text: "SPEI",
+  },
+  {
+    id: "2",
+    text: "Tarjeta",
+  },
+  {
+    id: "3",
+    text: "OXXO",
   },
 ];
 
@@ -164,6 +216,7 @@ const PaymentsService = (props) => {
   } = props;
   const [tabSelect, setTabSelect] = useState("1");
   const [dataPayment, setDataPayment] = useState({});
+  const [dataTab, setDataTab] = useState(dataTabsPaymentMethod);
   const [isOkPayment, setIsOkPayment] = useState(null);
   const [amountTaxes, setAmountTaxes] = useState("$ 0.00 MXN");
   const [labelErrorPayment, setLabelErrorPayment] = useState("");
@@ -248,8 +301,10 @@ const PaymentsService = (props) => {
   useEffect(() => {
     handlerCallGetOrderPaymentById();
     handlerGetCatalogGWtransaction();
+    if (window.screen.width <= 720) {
+      setDataTab(dataTabsPaymentMethodMobile);
+    }
   }, []);
-
   return (
     <Content>
       <ContentForm>
@@ -280,7 +335,7 @@ const PaymentsService = (props) => {
               </div>
               <div className="section-payment-method">
                 <TabsProperty>
-                  {dataTabsPaymentMethod.map((row) => {
+                  {dataTab.map((row) => {
                     return (
                       <Tab
                         selected={tabSelect === row.id}
@@ -346,9 +401,10 @@ const PaymentsService = (props) => {
             <h1>
               Pago <span>{isOkPayment === true ? "Exitoso" : "Fallido"}</span>
             </h1>
-            <IconPaymentCheck />
+
+            {isOkPayment === true ? <IconPaymentCheck /> : <IconPaymentTimes />}
             <h2>{isOkPayment === true ? "¡Felicidades!" : "¡Oh no!"}</h2>
-            <span>
+            <span className="label-success-pay">
               {isOkPayment === true
                 ? "Disfruta de los beneficios que Homify tiene para ti."
                 : labelErrorPayment}

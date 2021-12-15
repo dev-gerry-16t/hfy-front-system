@@ -4,6 +4,12 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { ButtonIcon, ContentForm } from "./constants/styleConstants";
+import {
+  Content,
+  ContainerDown,
+  TabsProperty,
+  Tab,
+} from "./constants/styleDashboardProperties";
 import { IconHeart } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -15,43 +21,6 @@ import SectionFeatures from "./sectionsDetail/sectionFeatures";
 import SectionLocation from "./sectionsDetail/sectionLocation";
 import ContextProperty from "./context/contextProperty";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
-
-const Content = styled.div`
-  overflow-y: scroll;
-  font-size: 16px;
-  font-family: Poppins;
-  padding: 4em;
-  letter-spacing: 0.75px;
-`;
-
-const ContainerDown = styled.div`
-  padding: 0 1em;
-  margin: 5em 1em 2em 1em;
-`;
-
-const TabsProperty = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 2em;
-`;
-
-const Tab = styled.div`
-  line-height: 5px;
-  cursor: pointer;
-  h1 {
-    font-weight: bold;
-    font-size: 1.17em;
-    color: ${(props) =>
-      props.selected === true ? "var(--color-primary)" : "#4e4b66"};
-  }
-  hr {
-    width: 30%;
-    background: #d6d8e7;
-    margin: 0;
-    border: 2px solid var(--color-primary);
-    display: ${(props) => (props.selected === true ? "block" : "none")};
-  }
-`;
 
 const dataTabsProperty = [
   {

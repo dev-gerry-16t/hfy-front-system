@@ -23,6 +23,9 @@ const Content = styled.div`
   font-family: Poppins;
   padding: 1em;
   letter-spacing: 0.75px;
+  @media screen and (max-width: 820px) {
+    font-size: 12px;
+  }
 `;
 
 const ContentForm = styled.div`
@@ -59,6 +62,20 @@ const ContentForm = styled.div`
       font-weight: 700;
     }
   }
+  @media screen and (max-width: 1004px) {
+    .header-title {
+      padding: 1em 1em;
+    }
+  }
+  @media screen and (max-width: 560px) {
+    .header-title {
+      flex-direction: column;
+      align-items: center;
+      .comision {
+        margin-top: 10px;
+      }
+    }
+  }
 `;
 
 const NoticePolicy = styled.div`
@@ -91,6 +108,11 @@ const SectionCard = styled.div`
   display: flex;
   justify-content: space-around;
   margin: 3em 0px;
+  gap: 20px;
+  flex-wrap: wrap;
+  @media screen and (max-width: 1004px) {
+    justify-content: center;
+  }
 `;
 
 const CardPolicy = styled.div`
@@ -243,6 +265,15 @@ const SectionComision = styled.div`
       }
       input[type="checkbox"]:checked::before {
         transform: scale(1);
+      }
+    }
+  }
+  @media screen and (max-width: 420px) {
+    .section-comision {
+      .comision {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       }
     }
   }
