@@ -390,8 +390,8 @@ const ComponentFilter = (props) => {
                   onChange={() => {}}
                   placeholder="Ubicación"
                   onChange={(a, e) => {
-                    if (isNil(e[0]) === false) {
-                      const dataRecord = e[0].onClick();
+                    if (isNil(e) === false) {
+                      const dataRecord = e.onClick();
                       const objetCondition = {
                         queryCondition: 2,
                         compValue: {

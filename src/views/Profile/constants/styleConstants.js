@@ -249,6 +249,12 @@ const FormModal = styled.div`
     justify-content: center;
     gap: 10px;
   }
+  .button-action-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
 `;
 
 const ButtonsModal = styled.button`

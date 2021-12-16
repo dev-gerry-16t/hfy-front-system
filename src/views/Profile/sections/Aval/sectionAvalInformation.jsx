@@ -26,6 +26,7 @@ import {
 import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 import CustomInputCurrency from "../../../../components/customInputCurrency";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const TabsProperty = styled.div`
   display: flex;
@@ -188,6 +189,8 @@ const SectionAvalInformation = (props) => {
     city: null,
   });
   const [tabSelect, setTabSelect] = useState("1");
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
@@ -362,7 +365,7 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          identifier: 0,
+          identifier: null,
           idCustomer,
           idSystemUser,
           idLoginHistory,
@@ -370,11 +373,27 @@ const SectionAvalInformation = (props) => {
         null,
         API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
       );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -573,7 +592,6 @@ const SectionAvalInformation = (props) => {
   };
 
   const handlerCallInitApis = async () => {
-    await handlerCallValidateCustomerPropertiesInTab();
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
     await handlerCallGetMaritalStatus();
@@ -624,6 +642,17 @@ const SectionAvalInformation = (props) => {
       <div className="header-title">
         <h1>Información del Aval</h1>
       </div>
+      <WidgetModalConfirmation
+        finish={true}
+        data={dataVerificationInfo}
+        isVisibleModal={isOpenVerification}
+        onNextStep={() => {
+          onClickFinish();
+        }}
+        onClose={() => {
+          setIsOpenVerification(false);
+        }}
+      />
       <FormProperty>
         <Row>
           <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -1608,6 +1637,7 @@ const SectionAvalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerEndorsement(dataForm);
+                await handlerCallValidateCustomerPropertiesInTab();
                 onClickFinish();
               } catch (error) {}
             }}
