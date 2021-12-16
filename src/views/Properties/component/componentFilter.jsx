@@ -408,23 +408,35 @@ const ComponentFilter = (props) => {
                   onSearch={(e) => {
                     if (e.length >= 5) {
                       handlerCallGetLocationFilter(e);
+                    } else if (e.length < 5) {
+                      setDataLocation([]);
                     }
                   }}
-                  tokenSeparators={[","]}
                   filterOption={(input, option) => {
-                    if (isNil(option.children) === false) {
-                      return (
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      );
-                    }
+                    const normalizeInput = input
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u0320]/g, "");
+                    const normalizeOption =
+                      isNil(option.children) === false
+                        ? option.children
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u0320]/g, "")
+                        : "";
+
+                    return (
+                      normalizeOption
+                        .toLowerCase()
+                        .indexOf(normalizeInput.toLowerCase()) >= 0
+                    );
                   }}
                 >
                   {isEmpty(dataLocation) === false &&
                     dataLocation.map((row) => {
                       return (
-                        <Option value={row.id} onClick={() => row}>
+                        <Option
+                          value={`${row.id}-${row.idState}`}
+                          onClick={() => row}
+                        >
                           {row.text}
                         </Option>
                       );
