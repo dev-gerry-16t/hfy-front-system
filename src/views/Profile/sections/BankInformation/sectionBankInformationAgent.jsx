@@ -16,6 +16,7 @@ import {
   LineSeparator,
   FormProperty,
 } from "../../constants/styleConstants";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const SectionBankInformationAgent = (props) => {
   const { callGlobalActionApi, dataProfile, onclickBack, onClickFinish } =
@@ -30,10 +31,50 @@ const SectionBankInformationAgent = (props) => {
   const [dataBankText, setDataBankText] = useState("");
   const [idBank, setIdBank] = useState(null);
   const [errorClabe, setErrorClabe] = useState(false);
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history } = dataContexProfile;
+  const { dataCustomerDetail, matchParams, history, identifier } =
+    dataContexProfile;
+
+  const handlerCallValidateCustomerPropertiesInTab = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          identifier,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -142,6 +183,16 @@ const SectionBankInformationAgent = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetModalConfirmation
+          finish
+          data={dataVerificationInfo}
+          isVisibleModal={isOpenVerification}
+          onNextStep={() => {}}
+          onClose={() => {
+            setIsOpenVerification(false);
+          }}
+        />
+
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -269,6 +320,7 @@ const SectionBankInformationAgent = (props) => {
                   ...dataForm,
                   idBank,
                 });
+                handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
           >
@@ -279,6 +331,7 @@ const SectionBankInformationAgent = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
+                await handlerCallValidateCustomerPropertiesInTab();
                 onClickFinish();
               } catch (error) {}
             }}

@@ -18,6 +18,7 @@ import {
 } from "../../constants/styleConstants";
 import ComponentAddReference from "./sectionAddReferences";
 import { IconDelete, IconEditSquare } from "../../../../assets/iconSvg";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const CardReference = styled.div`
   width: 290px;
@@ -46,9 +47,49 @@ const SectionReferences = (props) => {
   const [dataForm, setDataForm] = useState({});
   const [dataDefaultReference, setDataDefaultReference] = useState({});
   const [isOpenAddReferences, setIsOpenAddReferences] = useState(false);
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
+
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataDetailReference, getById } = dataContexProfile;
+  const { dataDetailReference, getById, identifier } = dataContexProfile;
+
+  const handlerCallValidateCustomerPropertiesInTab = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          identifier,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallSetPersonalReference = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -105,6 +146,16 @@ const SectionReferences = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetModalConfirmation
+          data={dataVerificationInfo}
+          isVisibleModal={isOpenVerification}
+          onNextStep={() => {
+            onclickNext(dataForm); //verifica que sea next o finish
+          }}
+          onClose={() => {
+            setIsOpenVerification(false);
+          }}
+        />
         <div className="type-property">
           <div className="section-card-reference">
             {isEmpty(dataDetailReference) === false &&
@@ -176,8 +227,11 @@ const SectionReferences = (props) => {
           </ButtonNextBackPage>
           <ButtonNextBackPage
             block={false}
-            onClick={() => {
-              onclickNext(dataForm);
+            onClick={async () => {
+              try {
+                await handlerCallValidateCustomerPropertiesInTab();
+                onclickNext(dataForm);
+              } catch (error) {}
             }}
           >
             <>{"Siguiente"}</>

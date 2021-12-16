@@ -19,6 +19,7 @@ import {
 } from "../../constants/styleConstants";
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const SectionPersonalInformation = (props) => {
   const { callGlobalActionApi, dataProfile, onclickNext } = props;
@@ -63,10 +64,13 @@ const SectionPersonalInformation = (props) => {
   const [dataCommerceSociality, setDataCommerceSociety] = useState([]);
   const [dataStates, setDataStates] = useState([]);
   const [legalRepFieldDescription, setLegalRepFieldDescription] = useState("");
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history } = dataContexProfile;
+  const { dataCustomerDetail, matchParams, history, identifier } =
+    dataContexProfile;
 
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -105,7 +109,7 @@ const SectionPersonalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          identifier: 0,
+          identifier,
           idCustomer,
           idSystemUser,
           idLoginHistory,
@@ -113,11 +117,27 @@ const SectionPersonalInformation = (props) => {
         null,
         API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
       );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -277,7 +297,6 @@ const SectionPersonalInformation = (props) => {
   };
 
   const handlerCallInitApis = async () => {
-    await handlerCallValidateCustomerPropertiesInTab();
     await hanlderCallGetIdTypes();
     await handlerCallGetAllCommercialSocietyTypes();
     await handlerCallGetAllStates();
@@ -333,6 +352,16 @@ const SectionPersonalInformation = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetModalConfirmation
+          data={dataVerificationInfo}
+          isVisibleModal={isOpenVerification}
+          onNextStep={() => {
+            onclickNext(dataForm);
+          }}
+          onClose={() => {
+            setIsOpenVerification(false);
+          }}
+        />
         <WidgetUploadImageProfile />
         <div className="type-property">
           <Row>
@@ -805,6 +834,7 @@ const SectionPersonalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount(dataForm);
+                handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
           >
@@ -815,6 +845,7 @@ const SectionPersonalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount(dataForm);
+                await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}
             }}

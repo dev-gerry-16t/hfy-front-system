@@ -20,6 +20,7 @@ import {
   FormProperty,
   ComponentRadio,
 } from "../../constants/styleConstants";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const SectionCurrentAddress = (props) => {
   const { callGlobalActionApi, dataProfile, onclickBack, onclickNext } = props;
@@ -32,7 +33,8 @@ const SectionCurrentAddress = (props) => {
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
   const [dataPropertyStates, setDataPropertyStates] = useState([]);
   const [openRequiresQty, setOpenRequiresQty] = useState(false);
-
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
   const [dataForm, setDataForm] = useState({
     isOwn: null,
     lessorFullName: null,
@@ -53,7 +55,45 @@ const SectionCurrentAddress = (props) => {
   const frontFunctions = new FrontFunctions();
 
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history } = dataContexProfile;
+  const { dataCustomerDetail, matchParams, history, identifier } =
+    dataContexProfile;
+
+  const handlerCallValidateCustomerPropertiesInTab = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          identifier,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallSetCustomerAddress = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -250,6 +290,16 @@ const SectionCurrentAddress = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetModalConfirmation
+          data={dataVerificationInfo}
+          isVisibleModal={isOpenVerification}
+          onNextStep={() => {
+            onclickNext(dataForm); //verifica que sea next o finish
+          }}
+          onClose={() => {
+            setIsOpenVerification(false);
+          }}
+        />
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
@@ -612,6 +662,7 @@ const SectionCurrentAddress = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerAddress(dataForm);
+                handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
           >
@@ -622,6 +673,7 @@ const SectionCurrentAddress = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerAddress(dataForm);
+                await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}
             }}
