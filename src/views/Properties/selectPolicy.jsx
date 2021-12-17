@@ -317,6 +317,7 @@ const SelectPolicy = (props) => {
   const handlerCallGetPropertyById = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
+      setLoadApi(true);
       const response = await callGlobalActionApi(
         {
           idProperty,
@@ -339,6 +340,7 @@ const SelectPolicy = (props) => {
 
       setIdApartment(responseResult.idApartment);
       setDataDetail(responseResult);
+      setLoadApi(false);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,

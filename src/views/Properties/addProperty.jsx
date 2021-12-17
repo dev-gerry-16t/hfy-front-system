@@ -176,8 +176,8 @@ const AddProperty = (props) => {
             }
           }}
           dataFormSave={dataForm}
-          redirect={() => {
-            history.push("/websystem/dashboard-properties");
+          redirect={(id) => {
+            history.push(`/websystem/detail-property-users/${id}`);
           }}
           idProperty={idProperty}
           idApartment={

@@ -153,13 +153,17 @@ const ButtonCarousel = styled.button`
 `;
 
 const ShortDetail = styled.div`
-padding: 0px 10px;
+  padding: 0px 10px;
   .header-title-short {
     position: relative;
     h1 {
-      font-size: 2em;
+      font-size: 1.8em;
       font-weight: 600;
       max-width: 14em;
+    }
+    .identifier-property {
+      color: #9295ad;
+      font-size: 1em;
     }
   }
 
@@ -327,17 +331,7 @@ const SectionCarouselInfo = (props) => {
       <ShortDetail>
         <div className="header-title-short">
           <h1>{handlerLimitText(shortAddress)}</h1>
-          <div
-            style={{
-              position: "absolute",
-              left: 0,
-              top: "6em",
-              color: "#9295AD",
-              fontSize: "1em",
-            }}
-          >
-            {identifier}
-          </div>
+          <div className="identifier-property">{identifier}</div>
         </div>
         <LineSeparator opacity="0.3" />
         <div className="info-data-property">
