@@ -164,6 +164,7 @@ const SectionTimeLine = (props) => {
     dataProfile,
     history,
     setDataUserRedirect,
+    onOpenComponent,
   } = props;
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
@@ -236,6 +237,9 @@ const SectionTimeLine = (props) => {
                           backPath: window.location.pathname,
                         });
                         history.push(row.path);
+                      }
+                      if (row.isCurrent === true) {
+                        onOpenComponent(row.idComponent);
                       }
                     }}
                   />

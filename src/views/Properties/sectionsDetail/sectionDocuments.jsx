@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -132,9 +132,9 @@ const ButtonDocument = styled.button`
 `;
 
 const SectionDocuments = (props) => {
-  const { callGlobalActionApi, dataProfile } = props;
+  const { callGlobalActionApi, dataProfile, onReportClose } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {}, getById } = dataContexProperty;
+  const { dataDetail = {}, getById, isOpenComponent } = dataContexProperty;
   const { jsonDocuments, isInContract, idContract } = dataDetail;
   const documentsArray =
     isNil(jsonDocuments) === false && isEmpty(jsonDocuments) === false
@@ -145,6 +145,7 @@ const SectionDocuments = (props) => {
   const [isVisibleModalSignature, setIsVisibleModalSignature] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
+  let component = <></>;
   const frontFunctions = new FrontFunctions();
 
   const handlerSelectIcon = (key, sign) => {
@@ -245,21 +246,235 @@ const SectionDocuments = (props) => {
     }
   };
 
-  return (
-    <GeneralCard>
-      <CustomViewDocument
-        isVisibleModal={isVisibleModalDocument}
-        dataDocument={dataDocument}
-        onClose={() => {
-          setIsVisibleModalDocument(false);
-          setDataDocument({});
-        }}
-      />
+  useEffect(() => {
+    if (isNil(isOpenComponent) === false && isOpenComponent === 2) {
+      setIsVisibleModalContract(true);
+    }
+  }, [isOpenComponent]);
+
+  if (isEmpty(documentsArray) === false) {
+    component = (
+      <GeneralCard>
+        <CustomViewDocument
+          isVisibleModal={isVisibleModalDocument}
+          dataDocument={dataDocument}
+          onClose={() => {
+            setIsVisibleModalDocument(false);
+            setDataDocument({});
+          }}
+        />
+        <SectionContractAvailable
+          isModalVisible={isVisibleModalContract}
+          onClose={() => {
+            setIsVisibleModalContract(false);
+            setDataDocument({});
+          }}
+          dataGetContract={{}}
+          onAcceptContract={async (data) => {
+            try {
+              await handlerCallSetContract({ ...data, type: 1 });
+            } catch (error) {
+              throw error;
+            }
+          }}
+          dataProfile={dataProfile}
+        />
+        <CustomSignatureContractV2
+          isModalVisible={isVisibleModalSignature}
+          name={dataProfile.fullName}
+          onSignContract={async (data) => {
+            try {
+              await handlerCallSetContract(data);
+            } catch (error) {
+              throw error;
+            }
+          }}
+          titleSectionSignature={`Firma de ${dataDocument.documentType}`}
+          componentTerms={
+            <span
+              style={{
+                marginLeft: 5,
+                textAlign: "center",
+                fontSize: 10,
+                color: "black",
+                marginBottom: 10,
+              }}
+            >
+              Acepto los términos publicados en la pagina{" "}
+              <a
+                href="https://www.homify.ai/aviso-de-privacidad"
+                target="__blank"
+              >
+                https://www.homify.ai/aviso-de-privacidad
+              </a>{" "}
+              así como lo descrito en el contrato
+            </span>
+          }
+          onClose={() => {
+            setIsVisibleModalSignature(false);
+          }}
+        />
+        <div className="header-title">
+          <h1>Documentos</h1>
+          {isInContract == true && (
+            <button
+              onClick={() => {
+                setIsVisibleModalContract(true);
+              }}
+            >
+              Modalidad de firma
+            </button>
+          )}
+        </div>
+        <ComponentLoadSection
+          isLoadApi={isLoadApi}
+          position="absolute"
+          text="Generando..."
+        >
+          <div className="content-cards">
+            {isEmpty(documentsArray) === false &&
+              documentsArray.map((row) => {
+                return (
+                  <Card
+                    colorDocument={
+                      row.canSign == true ? "#eff0f6" : row.style.color
+                    }
+                  >
+                    <div className="card-document">
+                      <div className="top-info">
+                        <div className="icon-info">
+                          {handlerSelectIcon(row.style.icon, row.canSign)}
+                        </div>
+                        <div className="name-info">
+                          <h3>{row.documentType}</h3>
+                          {row.canSign === true && (
+                            <span>Archivo listo para firmar</span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="button-action">
+                        {row.canSeeDetail == true && (
+                          <ButtonDocument
+                            onClick={async () => {
+                              try {
+                                setIsLoadApi(true);
+                                const response =
+                                  await handlerCallGenerateDocument({
+                                    idDocument: row.idDocument,
+                                    idPreviousDocument: row.idPreviousDocument,
+                                    idDocumentType: row.idDocumentType,
+                                    bucketSource: row.bucketSource,
+                                    previousBucketSource:
+                                      row.previousBucketSource,
+                                    canGenerateDocument:
+                                      row.canGenerateDocument,
+                                    type: row.type,
+                                  });
+                                setIsVisibleModalDocument(true);
+                                setDataDocument({ ...row, url: response.url });
+                                setIsLoadApi(false);
+                              } catch (error) {
+                                setIsLoadApi(false);
+                              }
+                            }}
+                          >
+                            Ver detalle
+                          </ButtonDocument>
+                        )}
+                        {row.canSign == true && (
+                          <ButtonDocument
+                            primary
+                            onClick={() => {
+                              setDataDocument(row);
+                              setIsVisibleModalSignature(true);
+                            }}
+                          >
+                            Firmar
+                          </ButtonDocument>
+                        )}
+                      </div>
+                    </div>
+                  </Card>
+                );
+              })}
+            {isEmpty(documentsArray) === true && (
+              <EmptyData>
+                <img
+                  width="150"
+                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
+                  alt=""
+                />
+                <p>No hay Documentos disponibles</p>
+              </EmptyData>
+            )}
+            {/* <Card>
+            <div className="card-document">
+              <div className="top-info">
+                <div className="icon-info">
+                  <IconPolicy backGround="#A0A3BD" color="#A0A3BD" size="34px" />
+                </div>
+                <div className="name-info">
+                  <h3>Póliza jurídica</h3>
+                  <span>Archivo listo para firmar</span>
+                </div>
+              </div>
+              <div className="button-action">
+                <ButtonDocument primary>Firmar</ButtonDocument>
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <div className="card-document">
+              <div className="top-info">
+                <div className="icon-info">
+                  <IconContract
+                    backGround="#A0A3BD"
+                    color="#A0A3BD"
+                    size="34px"
+                  />
+                </div>
+                <div className="name-info">
+                  <h3>Contrato de arrendamiento</h3>
+                  <span>Archivo listo para firmar</span>
+                </div>
+              </div>
+              <div className="button-action">
+                <ButtonDocument primary>Firmar</ButtonDocument>
+              </div>
+            </div>
+          </Card>
+          <Card>
+            <div className="card-document">
+              <div className="top-info">
+                <div className="icon-info">
+                  <IconPayments
+                    backGround="#A0A3BD"
+                    color="#A0A3BD"
+                    size="34px"
+                  />
+                </div>
+                <div className="name-info">
+                  <h3>Pagares</h3>
+                  <span>Archivo listo para firmar</span>
+                </div>
+              </div>
+              <div className="button-action">
+                <ButtonDocument primary>Firmar</ButtonDocument>
+              </div>
+            </div>
+          </Card> */}
+          </div>
+        </ComponentLoadSection>
+      </GeneralCard>
+    );
+  } else {
+    component = (
       <SectionContractAvailable
         isModalVisible={isVisibleModalContract}
         onClose={() => {
           setIsVisibleModalContract(false);
           setDataDocument({});
+          onReportClose();
         }}
         dataGetContract={{}}
         onAcceptContract={async (data) => {
@@ -271,193 +486,10 @@ const SectionDocuments = (props) => {
         }}
         dataProfile={dataProfile}
       />
-      <CustomSignatureContractV2
-        isModalVisible={isVisibleModalSignature}
-        name={dataProfile.fullName}
-        onSignContract={async (data) => {
-          try {
-            await handlerCallSetContract(data);
-          } catch (error) {
-            throw error;
-          }
-        }}
-        titleSectionSignature={`Firma de ${dataDocument.documentType}`}
-        componentTerms={
-          <span
-            style={{
-              marginLeft: 5,
-              textAlign: "center",
-              fontSize: 10,
-              color: "black",
-              marginBottom: 10,
-            }}
-          >
-            Acepto los términos publicados en la pagina{" "}
-            <a
-              href="https://www.homify.ai/aviso-de-privacidad"
-              target="__blank"
-            >
-              https://www.homify.ai/aviso-de-privacidad
-            </a>{" "}
-            así como lo descrito en el contrato
-          </span>
-        }
-        onClose={() => {
-          setIsVisibleModalSignature(false);
-        }}
-      />
-      <div className="header-title">
-        <h1>Documentos</h1>
-        {isInContract == true && (
-          <button
-            onClick={() => {
-              setIsVisibleModalContract(true);
-            }}
-          >
-            Modalidad de firma
-          </button>
-        )}
-      </div>
-      <ComponentLoadSection
-        isLoadApi={isLoadApi}
-        position="absolute"
-        text="Generando..."
-      >
-        <div className="content-cards">
-          {isEmpty(documentsArray) === false &&
-            documentsArray.map((row) => {
-              return (
-                <Card
-                  colorDocument={
-                    row.canSign == true ? "#eff0f6" : row.style.color
-                  }
-                >
-                  <div className="card-document">
-                    <div className="top-info">
-                      <div className="icon-info">
-                        {handlerSelectIcon(row.style.icon, row.canSign)}
-                      </div>
-                      <div className="name-info">
-                        <h3>{row.documentType}</h3>
-                        {row.canSign === true && (
-                          <span>Archivo listo para firmar</span>
-                        )}
-                      </div>
-                    </div>
-                    <div className="button-action">
-                      {row.canSeeDetail == true && (
-                        <ButtonDocument
-                          onClick={async () => {
-                            try {
-                              setIsLoadApi(true);
-                              const response =
-                                await handlerCallGenerateDocument({
-                                  idDocument: row.idDocument,
-                                  idPreviousDocument: row.idPreviousDocument,
-                                  idDocumentType: row.idDocumentType,
-                                  bucketSource: row.bucketSource,
-                                  previousBucketSource:
-                                    row.previousBucketSource,
-                                  canGenerateDocument: row.canGenerateDocument,
-                                  type: row.type,
-                                });
-                              setIsVisibleModalDocument(true);
-                              setDataDocument({ ...row, url: response.url });
-                              setIsLoadApi(false);
-                            } catch (error) {
-                              setIsLoadApi(false);
-                            }
-                          }}
-                        >
-                          Ver detalle
-                        </ButtonDocument>
-                      )}
-                      {row.canSign == true && (
-                        <ButtonDocument
-                          primary
-                          onClick={() => {
-                            setDataDocument(row);
-                            setIsVisibleModalSignature(true);
-                          }}
-                        >
-                          Firmar
-                        </ButtonDocument>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              );
-            })}
-          {isEmpty(documentsArray) === true && (
-            <EmptyData>
-              <img
-                width="150"
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-                alt=""
-              />
-              <p>No hay Documentos disponibles</p>
-            </EmptyData>
-          )}
-          {/* <Card>
-          <div className="card-document">
-            <div className="top-info">
-              <div className="icon-info">
-                <IconPolicy backGround="#A0A3BD" color="#A0A3BD" size="34px" />
-              </div>
-              <div className="name-info">
-                <h3>Póliza jurídica</h3>
-                <span>Archivo listo para firmar</span>
-              </div>
-            </div>
-            <div className="button-action">
-              <ButtonDocument primary>Firmar</ButtonDocument>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="card-document">
-            <div className="top-info">
-              <div className="icon-info">
-                <IconContract
-                  backGround="#A0A3BD"
-                  color="#A0A3BD"
-                  size="34px"
-                />
-              </div>
-              <div className="name-info">
-                <h3>Contrato de arrendamiento</h3>
-                <span>Archivo listo para firmar</span>
-              </div>
-            </div>
-            <div className="button-action">
-              <ButtonDocument primary>Firmar</ButtonDocument>
-            </div>
-          </div>
-        </Card>
-        <Card>
-          <div className="card-document">
-            <div className="top-info">
-              <div className="icon-info">
-                <IconPayments
-                  backGround="#A0A3BD"
-                  color="#A0A3BD"
-                  size="34px"
-                />
-              </div>
-              <div className="name-info">
-                <h3>Pagares</h3>
-                <span>Archivo listo para firmar</span>
-              </div>
-            </div>
-            <div className="button-action">
-              <ButtonDocument primary>Firmar</ButtonDocument>
-            </div>
-          </div>
-        </Card> */}
-        </div>
-      </ComponentLoadSection>
-    </GeneralCard>
-  );
+    );
+  }
+
+  return component;
 };
 
 const mapStateToProps = (state) => {

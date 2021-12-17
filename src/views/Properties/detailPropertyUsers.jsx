@@ -72,6 +72,7 @@ const DetailPropertyUsers = (props) => {
   const { params } = match;
   const [idProperty, setIdProperty] = useState(params.idProperty);
   const [isVisibleDelete, setIsVisibleDelete] = useState(false);
+  const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
@@ -259,6 +260,7 @@ const DetailPropertyUsers = (props) => {
     <Content>
       <ContextProperty.Provider
         value={{
+          isOpenComponent,
           dataDetail,
           updateProperty: async (data) => {
             try {
@@ -476,9 +478,17 @@ const DetailPropertyUsers = (props) => {
         </ContentForm>
 
         <ContentRight>
-          <SectionTimeLine history={history} />
-          {isNil(dataDetail.jsonDocuments) === false &&
-            isEmpty(dataDetail.jsonDocuments) === false && <SectionDocuments />}
+          <SectionTimeLine
+            history={history}
+            onOpenComponent={(id) => {
+              setIsOpenComponent(id);
+            }}
+          />
+          <SectionDocuments
+            onReportClose={() => {
+              setIsOpenComponent(null);
+            }}
+          />
           {dataProfile.idUserType !== 2 && (
             <>
               {((isNil(dataDetail.sharedBy) === false &&
