@@ -4,6 +4,7 @@ import { Menu, Dropdown } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
+import { InfoCircleOutlined } from "@ant-design/icons";
 import {
   ButtonIcon,
   ContentForm,
@@ -29,6 +30,7 @@ import {
   IconShare,
   IconHeart,
   IconEditSquare,
+  IconDelete,
 } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -48,6 +50,7 @@ import SectionAssociationProperty from "./sectionsDetail/sectionAssociationPrope
 import SectionAgents from "./sectionsDetail/sectionAgents";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
+import CustomModalMessage from "../../components/customModalMessage";
 
 const dataTabsProperty = [
   {
@@ -68,6 +71,7 @@ const DetailPropertyUsers = (props) => {
   const { match, callGlobalActionApi, dataProfile, history } = props;
   const { params } = match;
   const [idProperty, setIdProperty] = useState(params.idProperty);
+  const [isVisibleDelete, setIsVisibleDelete] = useState(false);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
@@ -225,6 +229,23 @@ const DetailPropertyUsers = (props) => {
     );
   };
 
+  const handlerParseBackArray = (array) => {
+    let arrayDocuments =
+      isNil(array) === false && isEmpty(array) === false
+        ? JSON.parse(array)
+        : [];
+
+    if (isEmpty(arrayDocuments) === false) {
+      arrayDocuments = arrayDocuments.map((row) => {
+        return {
+          idDocument: row.idDocument,
+          bucketSource: row.bucketSource,
+        };
+      });
+    }
+    return arrayDocuments;
+  };
+
   useEffect(() => {
     setIdProperty(params.idProperty);
   }, [params.idProperty]);
@@ -251,6 +272,42 @@ const DetailPropertyUsers = (props) => {
           },
         }}
       >
+        <CustomModalMessage
+          isModalVisible={isVisibleDelete}
+          title="Eliminar propiedad"
+          subTitle="¿Estás seguro que deseas eliminar la propiedad?"
+          mainText="Al eliminar la propiedad perderás toda la información asociada a ella."
+          icon={
+            <InfoCircleOutlined
+              style={{
+                fontSize: 100,
+                color: "var(--color-primary)",
+              }}
+            />
+          }
+          labelLeft="Aceptar"
+          labelRight="Cancelar"
+          onClose={() => {
+            setIsVisibleDelete(false);
+          }}
+          onClickRight={() => {
+            setIsVisibleDelete(false);
+          }}
+          onClickLeft={async () => {
+            try {
+              await handlerCallUpdateProperty({
+                idApartment: dataDetail.idApartment,
+                isActive: false,
+                apartmentDocuments: handlerParseBackArray(
+                  dataDetail.apartmentDocuments
+                ),
+              });
+              history.push(`/websystem/dashboard-properties`);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        />
         <SectionAssociationProperty history={history} />
         <SectionAssociationApplicant history={history} />
         <ContentForm owner>
@@ -333,6 +390,18 @@ const DetailPropertyUsers = (props) => {
                         ? "var(--color-primary)"
                         : "transparent"
                     }
+                    color="var(--color-primary)"
+                  />
+                </ButtonIcon>
+              )}
+              {dataDetail.isOwner === true && (
+                <ButtonIcon
+                  onClick={() => {
+                    setIsVisibleDelete(true);
+                  }}
+                >
+                  <IconDelete
+                    backGround="transparent"
                     color="var(--color-primary)"
                   />
                 </ButtonIcon>

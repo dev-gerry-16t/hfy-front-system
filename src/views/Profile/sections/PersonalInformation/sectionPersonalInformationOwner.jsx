@@ -431,10 +431,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    idCountryNationality: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   idCountryNationality: value,
+                  // });
                 }}
               />
             </Col>
