@@ -323,7 +323,7 @@ const ControlDesk = (props) => {
         data.idPersonalReference
       );
       showMessageStatusApi(
-        "La información se actualizo correctamente",
+        "La información se actualizó correctamente",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
