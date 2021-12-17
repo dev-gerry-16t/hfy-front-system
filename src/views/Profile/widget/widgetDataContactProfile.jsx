@@ -778,7 +778,7 @@ const WidgetDataContactProfile = (props) => {
                               </div>
                             </ButtonVerification>
                           </ButtonHeader>
-                        ) : (
+                        ) : isNil(row.requiresVerification) === false ? (
                           <ButtonVerification verification={true}>
                             <div className="verification-action">
                               Verificado
@@ -789,6 +789,8 @@ const WidgetDataContactProfile = (props) => {
                               </div>
                             </div>
                           </ButtonVerification>
+                        ) : (
+                          <div />
                         )}
 
                         <ButtonHeader

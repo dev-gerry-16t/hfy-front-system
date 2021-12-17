@@ -347,10 +347,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    givenName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   givenName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -364,10 +364,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    lastName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   lastName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -382,10 +382,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    mothersMaidenName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   mothersMaidenName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -418,11 +418,11 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value, option) => {
-                  setDataForm({
-                    ...dataForm,
-                    idType: value,
-                  });
-                  setFieldDescription(option.fieldDescription);
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   idType: value,
+                  // });
+                  // setFieldDescription(option.fieldDescription);
                 }}
               />
             </Col>
@@ -436,10 +436,10 @@ const SectionPersonalInformation = (props) => {
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {
-                    setDataForm({
-                      ...dataForm,
-                      idTypeNumber: value,
-                    });
+                    // setDataForm({
+                    //   ...dataForm,
+                    //   idTypeNumber: value,
+                    // });
                   }}
                   type="text"
                 />
@@ -487,39 +487,46 @@ const SectionPersonalInformation = (props) => {
             }}
           >
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ComponentRadio>
-                <strong>¿Tienes un obligado solidario?</strong>
-                <div className="radio-inputs-options">
-                  <label className="input-radio">
-                    <input
-                      type="radio"
-                      checked={dataForm.hasBoundSolidarity == true}
-                      name="obligado-solidario"
-                      onClick={() => {
-                        setDataForm({
-                          ...dataForm,
-                          hasBoundSolidarity: true,
-                        });
-                      }}
-                    />
-                    Si
-                  </label>
-                  <label className="input-radio">
-                    <input
-                      type="radio"
-                      name="obligado-solidario"
-                      checked={dataForm.hasBoundSolidarity == false}
-                      onClick={() => {
-                        setDataForm({
-                          ...dataForm,
-                          hasBoundSolidarity: false,
-                        });
-                      }}
-                    />
-                    No
-                  </label>
-                </div>
-              </ComponentRadio>
+              {isNil(dataCustomerDetail.tenantMainFullName) === false ? (
+                <span>
+                  Inquilino principal:{" "}
+                  <strong>{dataCustomerDetail.tenantMainFullName}</strong>
+                </span>
+              ) : (
+                <ComponentRadio>
+                  <strong>¿Tienes un obligado solidario?</strong>
+                  <div className="radio-inputs-options">
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        checked={dataForm.hasBoundSolidarity == true}
+                        name="obligado-solidario"
+                        onClick={() => {
+                          setDataForm({
+                            ...dataForm,
+                            hasBoundSolidarity: true,
+                          });
+                        }}
+                      />
+                      Si
+                    </label>
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        name="obligado-solidario"
+                        checked={dataForm.hasBoundSolidarity == false}
+                        onClick={() => {
+                          setDataForm({
+                            ...dataForm,
+                            hasBoundSolidarity: false,
+                          });
+                        }}
+                      />
+                      No
+                    </label>
+                  </div>
+                </ComponentRadio>
+              )}
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
