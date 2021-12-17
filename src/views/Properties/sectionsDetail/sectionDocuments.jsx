@@ -132,7 +132,7 @@ const ButtonDocument = styled.button`
 `;
 
 const SectionDocuments = (props) => {
-  const { callGlobalActionApi, dataProfile, onReportClose } = props;
+  const { callGlobalActionApi, dataProfile, onReportClose = () => {} } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail = {}, getById, isOpenComponent } = dataContexProperty;
   const { jsonDocuments, isInContract, idContract } = dataDetail;
@@ -268,6 +268,7 @@ const SectionDocuments = (props) => {
           onClose={() => {
             setIsVisibleModalContract(false);
             setDataDocument({});
+            onReportClose();
           }}
           dataGetContract={{}}
           onAcceptContract={async (data) => {
