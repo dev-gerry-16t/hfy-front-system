@@ -406,9 +406,9 @@ const ComponentFilter = (props) => {
                     }
                   }}
                   onSearch={(e) => {
-                    if (e.length >= 5) {
+                    if (e.length >= 3) {
                       handlerCallGetLocationFilter(e);
-                    } else if (e.length < 5) {
+                    } else if (e.length < 3) {
                       setDataLocation([]);
                     }
                   }}
@@ -434,7 +434,7 @@ const ComponentFilter = (props) => {
                     dataLocation.map((row) => {
                       return (
                         <Option
-                          value={`${row.id}-${row.idState}`}
+                          value={`${row.id}-${row.idState}-${row.idMunicipality}-${row.idNeighborhood}`}
                           onClick={() => row}
                         >
                           {row.text}
