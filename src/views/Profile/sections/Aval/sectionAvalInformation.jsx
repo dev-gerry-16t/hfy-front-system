@@ -562,7 +562,10 @@ const SectionAvalInformation = (props) => {
       hasAssessment,
       assessmentInvoice,
       assessmentTicket,
-      assessmentDate,
+      assessmentDate:
+        isNil(assessmentDate) === false && isEmpty(assessmentDate) === false
+          ? moment(assessmentDate).parseZone().format("YYYY-MM-DD")
+          : null,
       assessmentIssuedBy,
       endorsementAssessment,
       endorsementStreet,
@@ -578,7 +581,10 @@ const SectionAvalInformation = (props) => {
       collateralPropertyZipCode,
       publicPropertyRegistry,
       documentNumber,
-      documentSignedAt,
+      documentSignedAt:
+        isNil(documentSignedAt) === false && isEmpty(documentSignedAt) === false
+          ? moment(documentSignedAt).parseZone().format("YYYY-MM-DD")
+          : null,
       signedAtPlace,
       notaryOfficeNumber,
       notaryName,

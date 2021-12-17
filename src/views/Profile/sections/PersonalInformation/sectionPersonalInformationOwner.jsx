@@ -378,10 +378,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    givenName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   givenName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -395,10 +395,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    lastName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   lastName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -413,10 +413,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    mothersMaidenName: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   mothersMaidenName: value,
+                  // });
                 }}
                 type="text"
               />
@@ -449,11 +449,11 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value, option) => {
-                  setDataForm({
-                    ...dataForm,
-                    idType: value,
-                  });
-                  setFieldDescription(option.fieldDescription);
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   idType: value,
+                  // });
+                  // setFieldDescription(option.fieldDescription);
                 }}
               />
             </Col>
@@ -466,10 +466,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    idTypeNumber: value,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   idTypeNumber: value,
+                  // });
                 }}
                 type="text"
               />
@@ -519,10 +519,10 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    dateOfBirth: isEmpty(value) === false ? value : null,
-                  });
+                  // setDataForm({
+                  //   ...dataForm,
+                  //   dateOfBirth: isEmpty(value) === false ? value : null,
+                  // });
                 }}
                 type="date"
               />
