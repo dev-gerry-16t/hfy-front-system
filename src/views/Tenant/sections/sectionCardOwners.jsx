@@ -25,7 +25,6 @@ const SectionCardOwners = (props) => {
   } = props;
   const [visiblePopover, setVisiblePopover] = useState(false);
   const popUp = useRef(null);
-  console.log("ownerCoincidences", ownerCoincidences);
   const formatDate = (date) => {
     let dateFormat = "";
     if (date !== "NA") {
@@ -165,8 +164,7 @@ const SectionCardOwners = (props) => {
                       Monto de Renta: <strong>{row.currentRent}</strong>
                     </div>
                     <div>
-                      Interés Acumulado:{" "}
-                      <strong>{row.interestAmount}</strong>
+                      Interés Acumulado: <strong>{row.interestAmount}</strong>
                     </div>
                     {row.canForgiveInterest === true && (
                       <div>

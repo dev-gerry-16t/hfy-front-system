@@ -425,10 +425,8 @@ const Tenant = (props) => {
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response
-          : {};
-      console.log("responseResult", responseResult);
+          : [];
       setDataTenant(responseResult);
-
       setIsVisibleVerification(shouldCustomerBeVerified);
     } catch (error) {
       showMessageStatusApi(
