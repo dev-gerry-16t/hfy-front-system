@@ -457,7 +457,7 @@ const DetailPropertyUsers = (props) => {
                     <p>
                       Establece los requisitos de tu propiedad, puedes solicitar
                       que tus prospectos apliquen para una de nuestras Pólizas
-                      Juríducas o bien, puedes establecer cualquiera de los
+                      Jurídicas o bien, puedes establecer cualquiera de los
                       procesos disponibles para ti.
                     </p>
                   </div>

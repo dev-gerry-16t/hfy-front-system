@@ -31,8 +31,10 @@ import {
   callGetContractDocument,
   callGetCustomerMessage,
   callGetContractComment,
+  callGlobalActionApi,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import DocumentIcon from "../../assets/icons/DocumentsIcon.svg";
 import Lock from "../../assets/icons/Lock.svg";
@@ -54,6 +56,7 @@ const Attorney = (props) => {
     callGetCustomerMessage,
     setDataUserProfile,
     callGetContractComment,
+    callGlobalActionApi,
   } = props;
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [isVisibleAddDocs, setIsVisibleAddDocs] = useState(false);
@@ -66,6 +69,7 @@ const Attorney = (props) => {
   const [documentUrl, setDocumentUrl] = useState({});
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [spinVisible, setSpinVisible] = useState(false);
+  const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
     switch (status) {
@@ -80,6 +84,31 @@ const Attorney = (props) => {
         break;
       default:
         break;
+    }
+  };
+
+  const handlerCallSetContractApprovement = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idContract: id,
+          idLoginHistory,
+        },
+        idSystemUser,
+        API_CONSTANTS.CUSTOMER.SET_CONTRACT_APPROVEMENT,
+        "PUT"
+      );
+      frontFunctions.showMessageStatusApi(
+        "Se ejecutó correctamente la petición",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -252,7 +281,7 @@ const Attorney = (props) => {
       },
     },
     {
-      title: "Partes involucradas",
+      title: <strong>Partes involucradas</strong>,
       fixed: "left",
       children: [
         {
@@ -497,7 +526,57 @@ const Attorney = (props) => {
       align: "center",
     },
     {
-      title: "Contrato",
+      title: <strong>Confirmación de Documentos</strong>,
+      children: [
+        {
+          title: "Solicitado el",
+          dataIndex: "requestedAtFormat",
+          key: "requestedAtFormat",
+        },
+        {
+          title: "Confirmar antes de:",
+          dataIndex: "timeRemaining",
+          key: "timeRemaining",
+        },
+        {
+          title: "Confirmado el:",
+          dataIndex: "contractConfirmedAtFormat",
+          key: "contractConfirmedAtFormat",
+        },
+        {
+          title: "Confirmado por:",
+          dataIndex: "contractConfirmedByUser",
+          key: "contractConfirmedByUser",
+        },
+        {
+          title: "Confirmar documento",
+          dataIndex: "canConfirmContract",
+          key: "canConfirmContract",
+          render: (status, record) => {
+            return status === true ? (
+              <div
+                style={{
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  handlerCallSetContractApprovement(record.idContract);
+                }}
+              >
+                <span>
+                  <Tag color="var(--color-primary)" key="1">
+                    Confirmar
+                  </Tag>
+                </span>
+              </div>
+            ) : (
+              <></>
+            );
+          },
+        },
+      ],
+    },
+    {
+      title: <strong>Contrato</strong>,
       children: [
         {
           title: "Estatus",
@@ -662,7 +741,7 @@ const Attorney = (props) => {
       ],
     },
     {
-      title: "Póliza",
+      title: <strong>Póliza</strong>,
       children: [
         {
           title: "Estatus ",
@@ -851,7 +930,7 @@ const Attorney = (props) => {
       ],
     },
     {
-      title: "Pagarés",
+      title: <strong>Pagarés</strong>,
       children: [
         {
           title: "Documento",
@@ -1180,7 +1259,7 @@ const Attorney = (props) => {
                   className="table-users-hfy"
                   size="small"
                   bordered
-                  scroll={{ x: 3500 }}
+                  scroll={{ x: 3700 }}
                 />
               </Spin>
             </div>
@@ -1205,6 +1284,8 @@ const mapDispatchToProps = (dispatch) => ({
   callGetContractDocument: (data) => dispatch(callGetContractDocument(data)),
   callGetCustomerMessage: (data) => dispatch(callGetCustomerMessage(data)),
   callGetContractComment: (data) => dispatch(callGetContractComment(data)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Attorney);

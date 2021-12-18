@@ -279,7 +279,7 @@ const SectionContractAvailable = (props) => {
               <IconBigCheck />
             </div>
             <h2>
-              Tu solicitud para la firma de contrato se actualizo con éxito
+              Tu solicitud para la firma de contrato se actualizó con éxito
             </h2>
             <div className="button-action">
               <ButtonsModal
