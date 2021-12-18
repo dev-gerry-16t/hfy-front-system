@@ -219,6 +219,9 @@
   .content-cards-process {
     display: flex;
     gap: 20px;
+    @media screen and (max-width: 970px) {
+      flex-direction: column;
+    }
   }
   .card-chart-information {
     background: #ffffff;
@@ -229,9 +232,14 @@
   .card-timeline-process {
     background: #ffffff;
     width: 30%;
+    min-width: 320px;
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 16px;
     min-height: 300px;
+    @media screen and (max-width: 970px) {
+      width: 100%;
+      min-width: auto;
+    }
   }
   .renter-card-information {
     background: #ffffff;
@@ -325,6 +333,9 @@
     width: 100%;
     display: flex;
     gap: 20px;
+    @media screen and (max-width: 970px) {
+      flex-direction: column;
+    }
   }
   .content-cards-process {
     width: 100%;

@@ -17,9 +17,9 @@ const CardStepsY = styled.div`
 `;
 
 const Card = styled.div`
+  height: 96px;
   display: grid;
   grid-template-columns: 1fr 3fr;
-  margin-bottom: 16px;
   opacity: ${(props) =>
     props.finish === false && props.select === false ? "0.3" : "1"};
   .content-icon {
@@ -37,6 +37,7 @@ const Card = styled.div`
     }
   }
   .info-step {
+    font-size: 14px;
     h1 {
       margin: 0px;
       color: #200e32;
@@ -50,6 +51,13 @@ const Card = styled.div`
     }
     display: flex;
     flex-direction: column;
+  }
+  @media screen and (max-width: 640px) {
+    .info-step {
+      font-size: 12px;
+    }
+  }
+  @media screen and (max-width: 420px) {
   }
 `;
 

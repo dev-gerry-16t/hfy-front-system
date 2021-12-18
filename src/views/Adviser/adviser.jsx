@@ -243,18 +243,20 @@ const Adviser = (props) => {
             <span>Renovaciones</span>
           </div>
         </div>
-        <div className="main-information-user">
-          <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
-          <SectionCardOwner
-            history={history}
-            tenantCoincidences={dataCoincidences}
-            finishCallApis
-            onClickSendInvitation={() => {}}
-          />
-        </div>
         <div className="main-information-process">
           <div className="content-cards-process">
             <SectionTimeLine history={history} />
+            <SectionCardOwner
+              history={history}
+              tenantCoincidences={dataCoincidences}
+              finishCallApis
+              onClickSendInvitation={() => {}}
+            />
+          </div>
+        </div>
+        <div className="main-information-user">
+          <div className="content-cards-payments">
+            <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
           </div>
         </div>
       </div>
