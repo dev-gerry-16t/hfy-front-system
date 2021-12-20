@@ -19,10 +19,12 @@ import {
   callGetAllRegisterUser,
   callGetAllVerifyCode,
 } from "../../utils/actions/actions";
+import { callGetAllCountries } from "../../utils/actions/catalogActions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomInputTypeForm from "../../components/CustomInputTypeForm";
+import CustomSelect from "../../components/CustomSelect";
 import CityScape from "../../assets/img/cityscape.png";
 import LogoHomify from "../../assets/img/logo.png";
 import { ReactComponent as IconInclusive } from "../../assets/iconSvg/svgFile/iconInclusive.svg";
@@ -281,6 +283,7 @@ const LoadingSpin = <SyncOutlined spin />;
 const RegisterAgent = (props) => {
   const {
     callGlobalActionApi,
+    callGetAllCountries,
     history,
     callGetAllRegisterUser,
     callGetAllVerifyCode,
@@ -292,6 +295,7 @@ const RegisterAgent = (props) => {
     username: null,
     phoneNumber: null,
     password: null,
+    idCountryNationality: null,
   });
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [idRequestSignUp, setIdRequestSignUp] = useState(null);
@@ -300,6 +304,7 @@ const RegisterAgent = (props) => {
   const [visiblePassConfirm, setVisiblePassConfirm] = useState(false);
   const [stepsProcess, setStepProcess] = useState(1);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [dataCountries, setDataCountries] = useState([]);
   const [codeVerify, setCodeVerify] = useState("");
   const refInput = useRef(null);
   const recaptchaV3 = useRef(null);
@@ -319,6 +324,17 @@ const RegisterAgent = (props) => {
     }
   };
 
+  const handlerCallGetAllCountries = async () => {
+    try {
+      const response = await callGetAllCountries({ type: 2 });
+      const responseResult =
+        isNil(response) === false && isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataCountries(responseResult);
+    } catch (error) {}
+  };
+
   const handlerCallVerifyCode = async (data) => {
     try {
       await callGetAllVerifyCode(data);
@@ -327,7 +343,9 @@ const RegisterAgent = (props) => {
     }
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    handlerCallGetAllCountries();
+  }, []);
 
   return (
     <Container>
@@ -376,6 +394,25 @@ const RegisterAgent = (props) => {
                   />
                 </Col>
               </Row>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomSelect
+                    value={dataForm.idCountryNationality}
+                    placeholder=""
+                    label="Nacionalidad"
+                    data={dataCountries}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        idCountryNationality: value,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
+
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                   <CustomInputTypeForm
@@ -647,6 +684,7 @@ const mapStateToProps = (state) => ({});
 const mapDispatchToProps = (dispatch) => ({
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
+  callGetAllCountries: (data) => dispatch(callGetAllCountries(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(RegisterAgent);
