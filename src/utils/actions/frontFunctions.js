@@ -1,4 +1,5 @@
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import { message } from "antd";
 class FrontFunctions {
   parseFormatCurrency = (money, fraction, maxFraction) => {
@@ -34,6 +35,13 @@ class FrontFunctions {
       default:
         break;
     }
+  };
+  letterInitialName = (name) => {
+    let nameInitial = "";
+    if (isEmpty(name) === false) {
+      nameInitial = name[0].toUpperCase();
+    }
+    return nameInitial;
   };
 }
 

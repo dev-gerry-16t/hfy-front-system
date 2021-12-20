@@ -314,6 +314,19 @@ const Card = styled.div`
     padding: 1em;
     .top-info {
       display: flex;
+      .icon-info-circle {
+        div {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          background: blue;
+          color: #fff;
+          font-size:18px;
+        }
+      }
       .icon-info {
         width: 60px;
         height: 60px;
