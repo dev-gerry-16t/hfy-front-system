@@ -338,8 +338,14 @@ const DetailPropertyUsers = (props) => {
                   <Card>
                     <div className="card-user">
                       <div className="top-info">
-                        <div className="icon-info">
-                          <IconTenant size="100%" color="#4E4B66" />
+                        <div className="icon-info-circle">
+                          <div>
+                            <span>
+                              {frontFunctions.letterInitialName(
+                                dataDetail.contactName
+                              )}
+                            </span>
+                          </div>
                         </div>
                         <div className="name-info">
                           <h3>{dataDetail.contactName}</h3>
