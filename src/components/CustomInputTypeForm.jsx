@@ -65,6 +65,12 @@ const PositionTooltip = styled.div`
   top: 0;
 `;
 
+const PositionSuffix = styled.div`
+  position: absolute;
+  right: 5px;
+  top: 5px;
+`;
+
 const CustomInputTypeForm = (props) => {
   const {
     value,
@@ -96,7 +102,6 @@ const CustomInputTypeForm = (props) => {
           id={isNil(id) === false ? id : null}
           value={isNil(value) === true ? "" : value}
           type={isNil(type) === false ? type : "text"}
-          suffix={isNil(suffix) === false ? suffix : null}
           placeholder={placeholder}
           onChange={(e) => {
             onChange(e.target.value);
@@ -131,6 +136,7 @@ const CustomInputTypeForm = (props) => {
             </Tooltip>
           </PositionTooltip>
         )}
+        {isNil(suffix) === false && <PositionSuffix>{suffix}</PositionSuffix>}
         <ErrorMessage error={error}>
           <img src={saqareX} alt="exclaim" />
           <span>{errorMessage}</span>
