@@ -63,7 +63,7 @@ const CustomSelect = (props) => {
     id,
     data,
     label,
-    placeholder,
+    placeholder = "-- Selecciona una opción --",
     onChange,
     error = false,
     errorMessage,
@@ -75,7 +75,6 @@ const CustomSelect = (props) => {
         <Select
           id={isNil(id) === false ? id : null}
           value={isNil(value) === false ? value : ""}
-          placeholder={placeholder}
           onChange={(e, a) => {
             const dataOption = data.find((row) => {
               return row.id == e.target.value;
@@ -85,7 +84,7 @@ const CustomSelect = (props) => {
           error={error}
         >
           <option disabled selected value="">
-            -- Selecciona una opción --
+            {placeholder}
           </option>
           {isNil(data) === false &&
             isEmpty(data) === false &&
