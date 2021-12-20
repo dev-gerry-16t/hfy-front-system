@@ -61,7 +61,7 @@ const Container = styled.div`
   }
   .container-form {
     background: #fff;
-    max-height: 100vh;
+    max-height: auto;
     position: relative;
     display: flex;
     justify-content: center;
@@ -398,8 +398,8 @@ const RegisterAgent = (props) => {
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                   <CustomSelect
                     value={dataForm.idCountryNationality}
-                    placeholder=""
-                    label="Nacionalidad"
+                    placeholder="-- Selecciona tu Nacionalidad --"
+                    label=""
                     data={dataCountries}
                     error={false}
                     errorMessage="Este campo es requerido"
@@ -533,6 +533,15 @@ const RegisterAgent = (props) => {
                 </ButtonAction>
               </div>
             </Spin>
+            <div>
+              <ReCAPTCHA
+                sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
+                onChange={(e) => {}}
+                style={{ display: "inline-block", zIndex: "5" }}
+                size="invisible"
+                ref={recaptchaV3}
+              />
+            </div>
           </ContainerForm>
         )}
         {stepsProcess === 2 && (
@@ -663,15 +672,6 @@ const RegisterAgent = (props) => {
           </div>
           <div className="promo">
             <span>Por lanzamiento la suscripción es gratis</span>
-          </div>
-          <div>
-            <ReCAPTCHA
-              sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
-              onChange={(e) => {}}
-              style={{ display: "inline-block" }}
-              size="invisible"
-              ref={recaptchaV3}
-            />
           </div>
         </ContainerInfo>
       </div>
