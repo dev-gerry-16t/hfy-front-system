@@ -18,7 +18,7 @@ const ButtonDocument = styled.button`
 
 const CustomViewDocument = (props) => {
   const { isVisibleModal, dataDocument, onClose, downloadDoc = false } = props;
-  console.log("dataDocument", dataDocument);
+
   return (
     <Modal
       style={{ top: 20 }}
