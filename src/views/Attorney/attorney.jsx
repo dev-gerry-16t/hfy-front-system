@@ -42,6 +42,7 @@ import Arrow from "../../assets/icons/Arrow.svg";
 import SectionUploadDocument from "../Admin/sections/sectionUploadDocuments";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
+import CustomViewDocument from "../../components/CustomViewDocument";
 
 const { Content } = Layout;
 
@@ -69,6 +70,10 @@ const Attorney = (props) => {
   const [documentUrl, setDocumentUrl] = useState({});
   const [idTopIndexMessage, setIdTopIndexMessage] = useState(-1);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
+  const [isVisibleModalDocument, setIsVisibleModalDocument] = useState(false);
+  const [dataDocument, setDataDocument] = useState({});
+
   const frontFunctions = new FrontFunctions();
 
   const showMessageStatusApi = (text, status) => {
@@ -204,6 +209,43 @@ const Attorney = (props) => {
         "Error en el sistema, no se pudo ejecutar la petición",
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+    }
+  };
+
+  const handlerCallGenerateDocument = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.GENERATE_DOCUMENT,
+        "PUT"
+      );
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResultMessage,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+      return responseResult;
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
@@ -529,6 +571,76 @@ const Attorney = (props) => {
       title: <strong>Confirmación de Documentos</strong>,
       children: [
         {
+          title: "Documentos generados",
+          dataIndex: "jsonDocuments",
+          key: "jsonDocuments",
+          render: (name, record) => {
+            const catalogDocuments =
+              isNil(name) === false && isEmpty(name) === false
+                ? JSON.parse(name)
+                : [];
+            return isEmpty(catalogDocuments) === false ? (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    {isEmpty(catalogDocuments) === false &&
+                      catalogDocuments.map((rowMap) => {
+                        return (
+                          <Menu.Item
+                            key={`${rowMap.idDocument}`}
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "space-between",
+                            }}
+                            onClick={async () => {
+                              try {
+                                setSpinVisible(true);
+                                const response =
+                                  await handlerCallGenerateDocument(
+                                    {
+                                      idDocument: rowMap.idDocument,
+                                      idPreviousDocument:
+                                        rowMap.idPreviousDocument,
+                                      idDocumentType: rowMap.idDocumentType,
+                                      bucketSource: rowMap.bucketSource,
+                                      previousBucketSource:
+                                        rowMap.previousBucketSource,
+                                      canGenerateDocument:
+                                        rowMap.canGenerateDocument,
+                                      type: rowMap.type,
+                                    },
+                                    record.idContract
+                                  );
+                                setIsVisibleModalDocument(true);
+                                setDataDocument({
+                                  ...rowMap,
+                                  url: response.url,
+                                  newIdDocument: response.newIdDocument,
+                                  newBucketSorce: response.newBucketSorce,
+                                });
+                                setSpinVisible(false);
+                              } catch (error) {
+                                setSpinVisible(false);
+                              }
+                            }}
+                          >
+                            <a>{rowMap.documentType}</a>
+                          </Menu.Item>
+                        );
+                      })}
+                  </Menu>
+                }
+                trigger={["click"]}
+              >
+                <a>Documentos</a>
+              </Dropdown>
+            ) : (
+              <span>Documentos no disponibles</span>
+            );
+          },
+        },
+        {
           title: "Solicitado el",
           dataIndex: "requestedAtFormat",
           key: "requestedAtFormat",
@@ -593,141 +705,7 @@ const Attorney = (props) => {
             );
           },
         },
-        {
-          title: "Documento",
-          dataIndex: "infoContractDocument",
-          key: "infoContractDocument",
-          align: "center",
-          render: (doc, record) => {
-            const dataDocument =
-              isNil(doc) === false && isEmpty(doc) === false
-                ? JSON.parse(doc)
-                : [];
-            const dataObjectDocument =
-              isEmpty(dataDocument) === false &&
-              isNil(dataDocument[0]) === false
-                ? dataDocument[0]
-                : {};
-            const documentId =
-              isEmpty(dataObjectDocument.idDocument) === false &&
-              isNil(dataObjectDocument.idDocument) === false
-                ? dataObjectDocument.idDocument
-                : "";
-            const bucketSource =
-              isEmpty(dataObjectDocument.bucketSource) === false &&
-              isNil(dataObjectDocument.bucketSource) === false
-                ? dataObjectDocument.bucketSource
-                : "";
-            const extension =
-              isEmpty(dataObjectDocument.extension) === false &&
-              isNil(dataObjectDocument.extension) === false
-                ? dataObjectDocument.extension
-                : "";
-            const canGenerateDocument =
-              isNil(dataObjectDocument.canGenerateDocument) === false
-                ? dataObjectDocument.canGenerateDocument
-                : false;
-            const idPreviousDocument =
-              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
-              isNil(dataObjectDocument.idPreviousDocument) === false
-                ? dataObjectDocument.idPreviousDocument
-                : "";
-            let url = "";
 
-            if (extension === "docx" || extension === "pdf") {
-              url = `/api/viewFilesDocx/${documentId}/${bucketSource}`;
-            } else {
-              url = `${ENVIROMENT}/api/viewFile/${documentId}/${bucketSource}`;
-            }
-
-            return (
-              <div>
-                {isEmpty(documentId) === false &&
-                isEmpty(bucketSource) === false &&
-                isEmpty(extension) === false ? (
-                  <>
-                    <Button
-                      type="link"
-                      size="small"
-                      onClick={async () => {
-                        if (canGenerateDocument === true) {
-                          setSpinVisible(true);
-                          try {
-                            const response =
-                              await handlerCallGetContractDocumentById(
-                                {
-                                  idContract: record.idContract,
-                                  idCustomer: record.idCustomer,
-                                  idCustomerTenant: record.idCustomerTenant,
-                                  type: 1,
-                                  typeProcess: 1,
-                                },
-                                `Contrato_${record.idContract}`,
-                                extension,
-                                true
-                              );
-
-                            setSpinVisible(false);
-                            await setDocumentUrl({
-                              url: response.response.url,
-                              extension,
-                            });
-                            setIsVisibleViewImage(!isVisibleViewImage);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        } else {
-                          setDocumentUrl({ url, extension });
-                          setIsVisibleViewImage(!isVisibleViewImage);
-                        }
-                      }}
-                    >
-                      Ver
-                    </Button>
-                    {canGenerateDocument === true ? (
-                      <Button
-                        type="link"
-                        size="small"
-                        onClick={async () => {
-                          setSpinVisible(true);
-                          try {
-                            await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 1,
-                                typeProcess: 1,
-                              },
-                              `Contrato_${record.idContract}`,
-                              extension
-                            );
-                            setSpinVisible(false);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        }}
-                      >
-                        Descargar
-                      </Button>
-                    ) : (
-                      <a
-                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
-                        className="download"
-                        download
-                        style={{ fontSize: 14 }}
-                      >
-                        Descargar
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  "No disponible"
-                )}
-              </div>
-            );
-          },
-        },
         {
           title: "Fecha de inicio",
           dataIndex: "startedAt",
@@ -792,281 +770,6 @@ const Attorney = (props) => {
           dataIndex: "policy",
           key: "policy",
         },
-        {
-          title: "Documento",
-          dataIndex: "infoPolicyDocument",
-          key: "infoPolicyDocument",
-          align: "center",
-          render: (doc, record) => {
-            const dataDocument =
-              isNil(doc) === false && isEmpty(doc) === false
-                ? JSON.parse(doc)
-                : [];
-            const dataObjectDocument =
-              isEmpty(dataDocument) === false &&
-              isNil(dataDocument[0]) === false
-                ? dataDocument[0]
-                : {};
-            const documentId =
-              isEmpty(dataObjectDocument.idDocument) === false &&
-              isNil(dataObjectDocument.idDocument) === false
-                ? dataObjectDocument.idDocument
-                : "";
-            const bucketSource =
-              isEmpty(dataObjectDocument.bucketSource) === false &&
-              isNil(dataObjectDocument.bucketSource) === false
-                ? dataObjectDocument.bucketSource
-                : "";
-            const extension =
-              isEmpty(dataObjectDocument.extension) === false &&
-              isNil(dataObjectDocument.extension) === false
-                ? dataObjectDocument.extension
-                : "";
-            const canGenerateDocument =
-              isNil(dataObjectDocument.canGenerateDocument) === false
-                ? dataObjectDocument.canGenerateDocument
-                : false;
-            const idPreviousDocument =
-              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
-              isNil(dataObjectDocument.idPreviousDocument) === false
-                ? dataObjectDocument.idPreviousDocument
-                : "";
-            let url = "";
-
-            if (extension === "docx" || extension === "pdf") {
-              url = `/api/viewFilesDocx/${documentId}/${bucketSource}`;
-            } else {
-              url = `${ENVIROMENT}/api/viewFile/${documentId}/${bucketSource}`;
-            }
-
-            return (
-              <div>
-                {isEmpty(documentId) === false &&
-                isEmpty(bucketSource) === false &&
-                isEmpty(extension) === false ? (
-                  <>
-                    <Button
-                      type="link"
-                      size="small"
-                      onClick={async () => {
-                        if (canGenerateDocument === true) {
-                          setSpinVisible(true);
-                          try {
-                            const response =
-                              await handlerCallGetContractDocumentById(
-                                {
-                                  idContract: record.idContract,
-                                  idCustomer: record.idCustomer,
-                                  idCustomerTenant: record.idCustomerTenant,
-                                  type: 3,
-                                  typeProcess: 2,
-                                },
-                                `Poliza_${record.idContract}`,
-                                extension,
-                                true
-                              );
-
-                            setSpinVisible(false);
-                            await setDocumentUrl({
-                              url: response.response.url,
-                              extension,
-                            });
-                            setIsVisibleViewImage(!isVisibleViewImage);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        } else {
-                          setDocumentUrl({ url, extension });
-                          setIsVisibleViewImage(!isVisibleViewImage);
-                        }
-                      }}
-                    >
-                      Ver
-                    </Button>
-                    {canGenerateDocument === true ? (
-                      <Button
-                        type="link"
-                        size="small"
-                        onClick={async () => {
-                          setSpinVisible(true);
-                          try {
-                            await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 3,
-                                typeProcess: 2,
-                              },
-                              `Poliza_${record.idContract}`,
-                              extension
-                            );
-                            setSpinVisible(false);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        }}
-                      >
-                        Descargar
-                      </Button>
-                    ) : (
-                      <a
-                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
-                        className="download"
-                        download
-                        style={{ fontSize: 14 }}
-                      >
-                        Descargar
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  "No disponible"
-                )}
-              </div>
-            );
-          },
-        },
-      ],
-    },
-    {
-      title: <strong>Pagarés</strong>,
-      children: [
-        {
-          title: "Documento",
-          dataIndex: "infoPaymentDocument",
-          key: "infoPaymentDocument",
-          align: "center",
-          render: (doc, record) => {
-            const dataDocument =
-              isNil(doc) === false && isEmpty(doc) === false
-                ? JSON.parse(doc)
-                : [];
-            const dataObjectDocument =
-              isEmpty(dataDocument) === false &&
-              isNil(dataDocument[0]) === false
-                ? dataDocument[0]
-                : {};
-            const documentId =
-              isEmpty(dataObjectDocument.idDocument) === false &&
-              isNil(dataObjectDocument.idDocument) === false
-                ? dataObjectDocument.idDocument
-                : "";
-            const bucketSource =
-              isEmpty(dataObjectDocument.bucketSource) === false &&
-              isNil(dataObjectDocument.bucketSource) === false
-                ? dataObjectDocument.bucketSource
-                : "";
-            const extension =
-              isEmpty(dataObjectDocument.extension) === false &&
-              isNil(dataObjectDocument.extension) === false
-                ? dataObjectDocument.extension
-                : "";
-            const canGenerateDocument =
-              isNil(dataObjectDocument.canGenerateDocument) === false
-                ? dataObjectDocument.canGenerateDocument
-                : false;
-            const idPreviousDocument =
-              isEmpty(dataObjectDocument.idPreviousDocument) === false &&
-              isNil(dataObjectDocument.idPreviousDocument) === false
-                ? dataObjectDocument.idPreviousDocument
-                : "";
-            let url = "";
-
-            if (extension === "docx" || extension === "pdf") {
-              url = `/api/viewFilesDocx/${documentId}/${bucketSource}`;
-            } else {
-              url = `${ENVIROMENT}/api/viewFile/${documentId}/${bucketSource}`;
-            }
-
-            return (
-              <div>
-                {isEmpty(documentId) === false &&
-                isEmpty(bucketSource) === false &&
-                isEmpty(extension) === false ? (
-                  <>
-                    <Button
-                      type="link"
-                      size="small"
-                      onClick={async () => {
-                        if (canGenerateDocument === true) {
-                          setSpinVisible(true);
-                          try {
-                            const response =
-                              await handlerCallGetContractDocumentById(
-                                {
-                                  idContract: record.idContract,
-                                  idCustomer: record.idCustomer,
-                                  idCustomerTenant: record.idCustomerTenant,
-                                  type: 2,
-                                  typeProcess: 4,
-                                },
-                                `Pagare_${record.idContract}`,
-                                extension,
-                                true
-                              );
-
-                            setSpinVisible(false);
-                            await setDocumentUrl({
-                              url: response.response.url,
-                              extension,
-                            });
-                            setIsVisibleViewImage(!isVisibleViewImage);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        } else {
-                          setDocumentUrl({ url, extension });
-                          setIsVisibleViewImage(!isVisibleViewImage);
-                        }
-                      }}
-                    >
-                      Ver
-                    </Button>
-                    {canGenerateDocument === true ? (
-                      <Button
-                        type="link"
-                        size="small"
-                        onClick={async () => {
-                          setSpinVisible(true);
-                          try {
-                            await handlerCallGetContractDocumentById(
-                              {
-                                idContract: record.idContract,
-                                idCustomer: record.idCustomer,
-                                idCustomerTenant: record.idCustomerTenant,
-                                type: 2,
-                                typeProcess: 4,
-                              },
-                              `Pagare_${record.idContract}`,
-                              extension
-                            );
-                            setSpinVisible(false);
-                          } catch (error) {
-                            setSpinVisible(false);
-                          }
-                        }}
-                      >
-                        Descargar
-                      </Button>
-                    ) : (
-                      <a
-                        href={`${ENVIROMENT}/api/downloadFile/${documentId}/${bucketSource}/Pagare_${record.idContract}/${extension}`}
-                        className="download"
-                        download
-                        style={{ fontSize: 14 }}
-                      >
-                        Descargar
-                      </a>
-                    )}
-                  </>
-                ) : (
-                  "No disponible"
-                )}
-              </div>
-            );
-          },
-        },
       ],
     },
     {
@@ -1107,6 +810,15 @@ const Attorney = (props) => {
 
   return (
     <Content>
+      <CustomViewDocument
+        isVisibleModal={isVisibleModalDocument}
+        downloadDoc
+        dataDocument={dataDocument}
+        onClose={() => {
+          setIsVisibleModalDocument(false);
+          setDataDocument({});
+        }}
+      />
       <Modal
         style={{ top: 20 }}
         visible={isVisibleViewImage}

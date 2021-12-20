@@ -17,7 +17,7 @@ const ButtonDocument = styled.button`
 `;
 
 const CustomViewDocument = (props) => {
-  const { isVisibleModal, dataDocument, onClose } = props;
+  const { isVisibleModal, dataDocument, onClose, downloadDoc = false } = props;
 
   return (
     <Modal
@@ -29,8 +29,24 @@ const CustomViewDocument = (props) => {
     >
       <div className="form-modal">
         <div className="title-head-modal">
-          <h1>Documento</h1>
+          <h1>{dataDocument.documentType}</h1>
         </div>
+        {downloadDoc === true && (
+          <div
+            style={{
+              textAlign: "center",
+              marginBottom: 10,
+            }}
+          >
+            <a
+              href={`${ENVIROMENT}/api/viewFile/${dataDocument.newIdDocument}/${dataDocument.newBucketSorce}/${dataDocument.extension}`}
+              download
+              target="_blank"
+            >
+              Descargar
+            </a>
+          </div>
+        )}
         <div className="contract-children-information">
           {dataDocument.extension === "docx" ||
           dataDocument.extension === "pdf" ? (
