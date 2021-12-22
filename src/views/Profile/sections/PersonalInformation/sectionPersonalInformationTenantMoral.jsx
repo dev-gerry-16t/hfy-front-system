@@ -92,7 +92,9 @@ const SectionPersonalInformation = (props) => {
           ? response.response.message
           : "";
       frontFunctions.showMessageStatusApi(
-        responseResult,
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Se ejecutó correctamente la solicitud",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
@@ -337,7 +339,7 @@ const SectionPersonalInformation = (props) => {
               history.push("/websystem/profile");
             }}
           >
-            <Arrow width="35px" />
+            <Arrow width="25px" />
           </button>
         </div>
       )}

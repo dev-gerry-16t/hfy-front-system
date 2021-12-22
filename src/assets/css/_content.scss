@@ -1133,6 +1133,32 @@
     margin-bottom: 10px;
   }
 }
+@media screen and (max-width: 520px) {
+  .header-title-button {
+    h2 {
+      font-size: 14px;
+    }
+  }
+  .header-info-user {
+    .hi-user-name-type {
+      strong {
+        display: none;
+        font-size: 12px !important;
+      }
+      span {
+        display: none;
+
+        font-size: 12px !important;
+      }
+    }
+    .button-header {
+      margin: 0px 5px !important;
+      .icon-header-1 {
+        width: 25px;
+      }
+    }
+  }
+}
 
 @media screen and (max-width: 390px) {
   .two-action-buttons-banner {
@@ -1174,25 +1200,9 @@
   }
   .header-title-button {
     h2 {
-      font-size: 15px;
     }
   }
-  .header-info-user {
-    .hi-user-name-type {
-      strong {
-        font-size: 12px !important;
-        display: none;
-      }
-      span {
-        font-size: 12px !important;
-      }
-    }
-    .button-header {
-      margin: 0px 5px !important;
-      .icon-header-1 {
-      }
-    }
-  }
+
   .info-action-payment-rent {
     padding: 5px 0px !important;
     display: flex;

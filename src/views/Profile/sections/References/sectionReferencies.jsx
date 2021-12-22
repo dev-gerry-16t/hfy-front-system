@@ -94,7 +94,7 @@ const SectionReferences = (props) => {
   const handlerCallSetPersonalReference = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      await callGlobalActionApi(
+      const response = await callGlobalActionApi(
         {
           idSystemUser,
           idLoginHistory,
@@ -103,6 +103,17 @@ const SectionReferences = (props) => {
         idCustomer,
         API_CONSTANTS.CUSTOMER.SET_PERSONAL_REFERENCE,
         "PUT"
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Se ejecutó correctamente la solicitud",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
       frontFunctions.showMessageStatusApi(

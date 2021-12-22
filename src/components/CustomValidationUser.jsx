@@ -49,6 +49,15 @@ const CustomValidationUser = (props) => {
     >
       {stepsValidation === 1 && (
         <div className="banner-move-tenant">
+          <div className="times-close-banner">
+            <button
+              onClick={() => {
+                onClose();
+              }}
+            >
+              &#88;
+            </button>
+          </div>
           <h1>Verificación de cuenta</h1>
           <div style={{ fontSize: 16, marginBottom: 20 }}>
             <span>Bienvenido al proceso de verificación de tu cuenta</span>

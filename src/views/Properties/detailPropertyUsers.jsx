@@ -51,6 +51,7 @@ import SectionAgents from "./sectionsDetail/sectionAgents";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
+import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 
 const dataTabsProperty = [
   {
@@ -313,6 +314,15 @@ const DetailPropertyUsers = (props) => {
         <SectionAssociationProperty history={history} />
         <SectionAssociationApplicant history={history} />
         <ContentForm owner>
+          <div className="back-button">
+            <button
+              onClick={() => {
+                history.push(`/websystem/dashboard-properties`);
+              }}
+            >
+              <Arrow width="25px" />
+            </button>
+          </div>
           <div className="header-title">
             <h1>Detalle de inmueble</h1>
             <div className="shared-by-info">
@@ -323,6 +333,7 @@ const DetailPropertyUsers = (props) => {
               )}
             </div>
             <div
+              className="buttons-actions"
               style={{
                 display: "flex",
               }}

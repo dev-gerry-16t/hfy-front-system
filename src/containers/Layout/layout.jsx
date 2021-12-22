@@ -326,6 +326,17 @@ const DefaultLayout = (props) => {
     </Menu>
   );
 
+  const handlerLimitText = (text) => {
+    let textTransform = "";
+    if (isNil(text) === false && isEmpty(text) === false) {
+      const splitText = text.split(" ");
+      if (splitText.length >= 2) {
+        textTransform = `${splitText[0]} ${splitText[1]}`;
+      }
+    }
+    return textTransform;
+  };
+
   useEffect(() => {
     if (isNil(dataProfile) === true) {
       return history.push("/");
@@ -601,7 +612,7 @@ const DefaultLayout = (props) => {
               </div>
               <div className="header-info-user">
                 <div className="hi-user-name-type">
-                  <strong>{dataProfile.showName}</strong>
+                  <strong>{handlerLimitText(dataProfile.showName)}</strong>
                   <span>{dataProfile.userType}</span>
                 </div>
                 <Popover

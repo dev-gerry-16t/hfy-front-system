@@ -30,6 +30,19 @@ import {
   IconHalfBathroom,
 } from "../../../assets/iconSvg";
 
+const SectionGalery = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  .image-content {
+    width: 150px;
+    height: 100px;
+    border-radius: 0.5em;
+    object-fit: cover;
+    border: 2px solid #a0a3bd;
+  }
+`;
+
 const ContentAmenities = styled.div`
   .container-chips {
     display: grid;
@@ -48,6 +61,7 @@ const ContentAmenities = styled.div`
         justify-content: flex-start;
         flex-wrap: wrap;
         gap: 0.3em;
+        font-size: 12px;
       }
     }
   }
@@ -103,10 +117,12 @@ const ContentAddress = styled.div`
   align-items: center;
   .content-address {
     width: 21.8em;
+    font-size: 14px;
     h1 {
       color: var(--color-primary);
       font-weight: 700;
       font-size: 1.17em;
+      text-align: left;
     }
   }
 `;
@@ -174,6 +190,7 @@ const ShortDetail = styled.div`
     flex-direction: column;
     height: 55%;
     justify-content: space-between;
+    font-size: 14px;
     .item-description {
       display: flex;
       justify-content: space-between;
@@ -230,6 +247,9 @@ const CardAmenity = styled.div`
     h1 {
       margin: 0;
     }
+    span {
+      font-size: 12px;
+    }
   }
 `;
 
@@ -249,6 +269,7 @@ const ContentFeatures = styled.div`
   .container-cards {
     display: flex;
     justify-content: space-around;
+    font-size: 14px;
     .card-content {
       padding: 0.7em;
       display: flex;
@@ -311,7 +332,12 @@ const SectionViewTicket = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
-      setDataDetail(responseResult);
+      const parseDocument =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult.apartmentDocuments) === false
+          ? JSON.parse(responseResult.apartmentDocuments)
+          : [];
+      setDataDetail({ ...responseResult, apartmentDocuments: parseDocument });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -346,13 +372,14 @@ const SectionViewTicket = (props) => {
     var opt = {
       image: { type: "png", quality: 1 },
       filename: name,
+      margin: 1,
       html2canvas: {
         dpi: 300,
         letterRendering: false,
         useCORS: true,
         scale: 2,
       },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      jsPDF: { unit: "mm", format: "letter", orientation: "portrait" },
     };
     try {
       var element = document.getElementById("section-print-pdf");
@@ -360,12 +387,12 @@ const SectionViewTicket = (props) => {
     } catch (error) {}
   };
 
-  const GMapCircle = (lat, lng, rad, detail = 8) => {
+  const GMapCircle = (lat, lng, rad, key, detail = 8) => {
     var uri = "https://maps.googleapis.com/maps/api/staticmap?";
     var staticMapSrc = "center=" + lat + "," + lng;
-    staticMapSrc += "&size=100x100";
-    staticMapSrc += "&path=color:0xff0000ff:weight:1";
-
+    staticMapSrc += "&size=310x210";
+    staticMapSrc += "&zoom=14";
+    staticMapSrc += "&path=color:0xFF0282|fillcolor:0xFF028260|weight:1";
     var r = 6371;
 
     var pi = Math.PI;
@@ -396,7 +423,7 @@ const SectionViewTicket = (props) => {
       staticMapSrc += "|" + pLat + "," + pLng;
     }
 
-    return uri + encodeURI(staticMapSrc);
+    return uri + encodeURI(staticMapSrc) + `&key=${key}`;
   };
 
   useEffect(() => {
@@ -422,252 +449,309 @@ const SectionViewTicket = (props) => {
           Puedes descargarla para compartirla con otros asesores o usuarios.
         </p>
         <div
-          id="section-print-pdf"
           style={{
-            fontSize: "10px",
-            padding: "18px",
+            display: "block",
           }}
         >
           <div
+            id="section-print-pdf"
             style={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: "0px 50px",
+              fontSize: "10px",
+              padding: "18px",
             }}
           >
-            <h1
+            <div
               style={{
-                fontWeight: "700",
-                margin: "0px",
-                textAlign: "left",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "0px 50px",
               }}
             >
-              {handlerLimitText(dataDetail.shortAddress)}
-            </h1>
-            <img src={imageLogo} alt="homify" />
-          </div>
-          <ContainerUp>
-            <div className="contain-carousel">
-              <div className="carousel-x">
-                <img
-                  className="preview-carousel"
-                  src={dataTicket.documentMainPic}
-                  alt="imagen"
-                />
-                <div
-                  style={{
-                    position: "absolute",
-                    right: 0,
-                    bottom: "-2em",
-                    color: "#9295AD",
-                    fontSize: "1em",
-                  }}
-                >
-                  {dataTicket.identifier}
-                </div>
-              </div>
+              <h1
+                style={{
+                  fontWeight: "700",
+                  margin: "0px",
+                  textAlign: "left",
+                }}
+              >
+                {handlerLimitText(dataDetail.shortAddress)}
+              </h1>
+              <img src={imageLogo} alt="homify" />
             </div>
-            <ShortDetail>
-              <div className="header-title-short">
-                <h1>Datos de propiedad</h1>
-              </div>
-              <LineSeparator opacity="0.3" />
-              <div className="info-data-property">
-                <div className="item-description">
-                  <span>Tipo de propiedad</span>
-                  <strong>{dataDetail.propertyType}</strong>
-                </div>
-                <div className="item-description">
-                  <span>Precio Renta</span>
-                  <strong>{dataDetail.currentRentFormat}</strong>
-                </div>
-                <div className="item-description">
-                  <span>Mantenimiento Mensual</span>
-                  <strong>{dataDetail.manitenanceAmountFormat}</strong>
-                </div>
-                <div className="item-description">
-                  <span>Precio Basado en</span>
-                  <strong>
-                    {handlerSelectCatalog(dataDetail.priceBasedBy)}
-                  </strong>
+            <ContainerUp>
+              <div className="contain-carousel">
+                <div className="carousel-x">
+                  <img
+                    className="preview-carousel"
+                    src={dataTicket.documentMainPic}
+                    alt="imagen"
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      right: 0,
+                      bottom: "-2em",
+                      color: "#9295AD",
+                      fontSize: "1em",
+                    }}
+                  >
+                    {dataTicket.identifier}
+                  </div>
                 </div>
               </div>
-            </ShortDetail>
-          </ContainerUp>
-          <LineSeparator opacity="0.3" />
-          <div
-            style={{
-              padding: "0px 3em",
-            }}
-          >
-            <TabsProperty>
-              <Tab selected>
-                <h1>Características</h1>
+              <ShortDetail>
+                <div className="header-title-short">
+                  <h1>Datos de propiedad</h1>
+                </div>
+                <LineSeparator opacity="0.3" />
+                <div className="info-data-property">
+                  <div className="item-description">
+                    <span>Tipo de propiedad</span>
+                    <strong>{dataDetail.propertyType}</strong>
+                  </div>
+                  <div className="item-description">
+                    <span>Precio Renta</span>
+                    <strong>{dataDetail.currentRentFormat}</strong>
+                  </div>
+                  <div className="item-description">
+                    <span>Mantenimiento Mensual</span>
+                    <strong>{dataDetail.manitenanceAmountFormat}</strong>
+                  </div>
+                  <div className="item-description">
+                    <span>Precio Basado en</span>
+                    <strong>
+                      {handlerSelectCatalog(dataDetail.priceBasedBy)}
+                    </strong>
+                  </div>
+                </div>
+              </ShortDetail>
+            </ContainerUp>
+            <LineSeparator opacity="0.3" />
+            <div
+              style={{
+                padding: "0px 3em",
+              }}
+            >
+              <TabsProperty>
+                <Tab selected>
+                  <h1>Características</h1>
+                  <hr />
+                </Tab>
+              </TabsProperty>
+              <ContentFeatures>
+                <div className={`container-features`}>
+                  <CardAmenity>
+                    <div className="circle-content">
+                      <div>
+                        <IconBed size="25" color="#fff" backGround="#fff" />
+                      </div>
+                    </div>
+                    <div className="info-amenity">
+                      <h1>{dataDetail.totalBedrooms}</h1>
+                      <span>Recámaras</span>
+                    </div>
+                  </CardAmenity>
+                  <CardAmenity>
+                    <div className="circle-content">
+                      <div>
+                        <IconBathroom
+                          size="25"
+                          color="#fff"
+                          backGround="#fff"
+                        />
+                      </div>
+                    </div>
+                    <div className="info-amenity">
+                      <h1>{dataDetail.totalBathrooms}</h1>
+                      <span>Baños</span>
+                    </div>
+                  </CardAmenity>
+                  <CardAmenity>
+                    <div className="circle-content">
+                      <div>
+                        <IconHalfBathroom
+                          size="25"
+                          color="#fff"
+                          backGround="#fff"
+                        />
+                      </div>
+                    </div>
+                    <div className="info-amenity">
+                      <h1>{dataDetail.totalHalfBathrooms}</h1>
+                      <span>Medios Baños</span>
+                    </div>
+                  </CardAmenity>
+                  <CardAmenity>
+                    <div className="circle-content">
+                      <div>
+                        <IconCar size="25" color="#fff" backGround="#fff" />
+                      </div>
+                    </div>
+                    <div className="info-amenity">
+                      <h1>{dataDetail.totalParkingSpots}</h1>
+                      <span>Estacionamiento</span>
+                    </div>
+                  </CardAmenity>
+                </div>
                 <hr />
-              </Tab>
-            </TabsProperty>
-            <ContentFeatures>
-              <div className={`container-features`}>
-                <CardAmenity>
-                  <div className="circle-content">
-                    <div>
-                      <IconBed size="25" color="#fff" backGround="#fff" />
-                    </div>
+                <div className="container-cards">
+                  <div className="card-content">
+                    <span>{dataDetail.totalSquareMetersBuilt} m²</span>
+                    <label htmlFor="">De construcción</label>
                   </div>
-                  <div className="info-amenity">
-                    <h1>{dataDetail.totalBedrooms}</h1>
-                    <span>Recámaras</span>
+                  <div className="card-content">
+                    <span>{dataDetail.totalSquareMetersLand} m²</span>
+                    <label htmlFor="">De Terreno</label>
                   </div>
-                </CardAmenity>
-                <CardAmenity>
-                  <div className="circle-content">
-                    <div>
-                      <IconBathroom size="25" color="#fff" backGround="#fff" />
-                    </div>
+                  <div className="card-content">
+                    <span>{dataDetail.totalFloors}</span>
+                    <label htmlFor="">Cantidad de pisos</label>
                   </div>
-                  <div className="info-amenity">
-                    <h1>{dataDetail.totalBathrooms}</h1>
-                    <span>Baños</span>
-                  </div>
-                </CardAmenity>
-                <CardAmenity>
-                  <div className="circle-content">
-                    <div>
-                      <IconHalfBathroom
-                        size="25"
-                        color="#fff"
-                        backGround="#fff"
-                      />
-                    </div>
-                  </div>
-                  <div className="info-amenity">
-                    <h1>{dataDetail.totalHalfBathrooms}</h1>
-                    <span>Medios Baños</span>
-                  </div>
-                </CardAmenity>
-                <CardAmenity>
-                  <div className="circle-content">
-                    <div>
-                      <IconCar size="25" color="#fff" backGround="#fff" />
-                    </div>
-                  </div>
-                  <div className="info-amenity">
-                    <h1>{dataDetail.totalParkingSpots}</h1>
-                    <span>Estacionamiento</span>
-                  </div>
-                </CardAmenity>
-              </div>
-              <hr />
-              <div className="container-cards">
-                <div className="card-content">
-                  <span>{dataDetail.totalSquareMetersBuilt} m²</span>
-                  <label htmlFor="">De construcción</label>
-                </div>
-                <div className="card-content">
-                  <span>{dataDetail.totalSquareMetersLand} m²</span>
-                  <label htmlFor="">De Terreno</label>
-                </div>
-                <div className="card-content">
-                  <span>{dataDetail.totalFloors}</span>
-                  <label htmlFor="">Cantidad de pisos</label>
-                </div>
-                <div className="card-content">
-                  <span>{dataDetail.floorDescription}</span>
-                  <label htmlFor="">Piso en el que se encuentra</label>
-                </div>
-              </div>
-            </ContentFeatures>
-          </div>
-          <LineSeparator opacity="0.3" />
-          <div
-            style={{
-              padding: "0px 3em",
-            }}
-          >
-            <TabsProperty>
-              <Tab selected>
-                <h1>Ubicación</h1>
-                <hr />
-              </Tab>
-            </TabsProperty>
-            <ContentLocation>
-              <div className="location-map">
-                <Location>
-                  {isNil(dataDetail.jsonCoordinates) === false &&
-                    isEmpty(dataDetail.jsonCoordinates) === false && (
-                      <img
-                        src={`https://maps.googleapis.com/maps/api/staticmap?size=310x210&center=${
-                          JSON.parse(dataDetail.jsonCoordinates).lat
-                        },${
-                          JSON.parse(dataDetail.jsonCoordinates).lng
-                        }&zoom=14&markers=icon:https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296Q.png%7C${
-                          JSON.parse(dataDetail.jsonCoordinates).lat
-                        },
-                        ${
-                          JSON.parse(dataDetail.jsonCoordinates).lng
-                        }&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`}
-                        alt="mapa"
-                      />
-                      //   <CustomMapContainer
-                      //     location={JSON.parse(dataDetail.jsonCoordinates)}
-                      //     draggable={false}
-                      //     zoom={14}
-                      //     onDragPosition={(position) => {}}
-                      //     exact={dataDetail.isGMapsExact}
-                      //   />
-                    )}
-                </Location>
-              </div>
-              <div>
-                <ContentAddress>
-                  <div className="content-address">
-                    <h1>{handlerLimitText(dataDetail.shortAddress)}</h1>
-                    <hr />
-                    <div>
-                      <span>{dataDetail.fullAddress}</span>
-                    </div>
-                  </div>
-                </ContentAddress>
-              </div>
-            </ContentLocation>
-          </div>
-          <LineSeparator opacity="0.3" />
-          <div
-            style={{
-              padding: "0px 3em",
-            }}
-          >
-            <TabsProperty>
-              <Tab selected>
-                <h1>Amenidades</h1>
-                <hr />
-              </Tab>
-            </TabsProperty>
-            <ContentAmenities>
-              <div className="container-chips">
-                <div className="section-chips border-1">
-                  <Title>AMENIDADES</Title>
-                  <div className="chips">
-                    {isEmpty(dataDetail.propertyAmenities) === false &&
-                      JSON.parse(dataDetail.propertyAmenities).map((row) => {
-                        return <Chip>{row.text}</Chip>;
-                      })}
+                  <div className="card-content">
+                    <span>{dataDetail.floorDescription}</span>
+                    <label htmlFor="">Piso en el que se encuentra</label>
                   </div>
                 </div>
-                <div className="section-chips border-2">
-                  <Title>GENERAL</Title>
-                  <div className="chips">
-                    {isEmpty(dataDetail.propertyGeneralCharacteristics) ===
-                      false &&
-                      JSON.parse(dataDetail.propertyGeneralCharacteristics).map(
-                        (row) => {
-                          return <Chip>{row.text}</Chip>;
-                        }
+              </ContentFeatures>
+            </div>
+            <LineSeparator opacity="0.3" />
+            <div
+              style={{
+                padding: "0px 3em",
+              }}
+            >
+              <TabsProperty>
+                <Tab selected>
+                  <h1>Ubicación</h1>
+                  <hr />
+                </Tab>
+              </TabsProperty>
+              <ContentLocation>
+                <div className="location-map">
+                  <Location>
+                    {isNil(dataDetail.jsonCoordinates) === false &&
+                      isEmpty(dataDetail.jsonCoordinates) === false && (
+                        <>
+                          {dataDetail.isGMapsExact === true ? (
+                            <img
+                              src={`https://maps.googleapis.com/maps/api/staticmap?size=310x210&center=${
+                                JSON.parse(dataDetail.jsonCoordinates).lat
+                              },${
+                                JSON.parse(dataDetail.jsonCoordinates).lng
+                              }&zoom=14&markers=icon:https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296Q.png%7C${
+                                JSON.parse(dataDetail.jsonCoordinates).lat
+                              },
+                         ${
+                           JSON.parse(dataDetail.jsonCoordinates).lng
+                         }&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`}
+                              alt="mapa"
+                            />
+                          ) : (
+                            <img
+                              src={GMapCircle(
+                                JSON.parse(dataDetail.jsonCoordinates).lat,
+                                JSON.parse(dataDetail.jsonCoordinates).lng,
+                                700,
+                                "AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ"
+                              )}
+                              alt="mapa"
+                            />
+                          )}
+                        </>
                       )}
+                  </Location>
+                </div>
+                <div>
+                  <ContentAddress>
+                    <div className="content-address">
+                      <h1>{handlerLimitText(dataDetail.shortAddress)}</h1>
+                      <hr />
+                      <div>
+                        <span>{dataDetail.fullAddress}</span>
+                      </div>
+                    </div>
+                  </ContentAddress>
+                </div>
+              </ContentLocation>
+            </div>
+            <div class="html2pdf__page-break"></div>
+            <LineSeparator opacity="0.3" />
+            <div
+              style={{
+                padding: "0px 3em",
+              }}
+            >
+              <TabsProperty>
+                <Tab selected>
+                  <h1>Amenidades</h1>
+                  <hr />
+                </Tab>
+              </TabsProperty>
+              <ContentAmenities>
+                <div className="container-chips">
+                  <div className="section-chips border-1">
+                    <Title>AMENIDADES</Title>
+                    <div className="chips">
+                      {isEmpty(dataDetail.propertyAmenities) === false &&
+                        JSON.parse(dataDetail.propertyAmenities).map((row) => {
+                          return <Chip>{row.text}</Chip>;
+                        })}
+                    </div>
+                  </div>
+                  <div className="section-chips border-2">
+                    <Title>GENERAL</Title>
+                    <div className="chips">
+                      {isEmpty(dataDetail.propertyGeneralCharacteristics) ===
+                        false &&
+                        JSON.parse(
+                          dataDetail.propertyGeneralCharacteristics
+                        ).map((row) => {
+                          return <Chip>{row.text}</Chip>;
+                        })}
+                    </div>
                   </div>
                 </div>
-              </div>
-            </ContentAmenities>
+              </ContentAmenities>
+            </div>
+            <LineSeparator opacity="0.3" />
+            <div
+              style={{
+                padding: "0px 3em",
+              }}
+            >
+              <TabsProperty>
+                <Tab selected>
+                  <h1>Galeria</h1>
+                  <hr />
+                </Tab>
+              </TabsProperty>
+              <SectionGalery>
+                {isEmpty(dataDetail.apartmentDocuments) === false &&
+                  dataDetail.apartmentDocuments.map((row) => {
+                    return (
+                      <img
+                        src={row.url}
+                        alt=""
+                        srcset=""
+                        className="image-content"
+                      />
+                    );
+                  })}
+              </SectionGalery>
+            </div>
+            {/* <LineSeparator opacity="0.3" />
+            <div
+              style={{
+                padding: "0px 3em",
+              }}
+            >
+              <TabsProperty>
+                <Tab selected>
+                  <h1>Datos de contacto</h1>
+                  <hr />
+                </Tab>
+              </TabsProperty>
+            </div> */}
           </div>
         </div>
         <div

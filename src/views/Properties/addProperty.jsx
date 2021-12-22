@@ -121,7 +121,11 @@ const AddProperty = (props) => {
           idUserType={dataProfile.idUserType}
           idProperty={idProperty}
           onBackTo={() => {
-            history.push(`/websystem/detail-property-users/${idProperty}`);
+            if (isNil(idProperty) === false && isEmpty(idProperty) === false) {
+              history.push(`/websystem/detail-property-users/${idProperty}`);
+            } else {
+              history.push(`/websystem/dashboard-properties`);
+            }
           }}
         />
       )}

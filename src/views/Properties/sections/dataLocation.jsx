@@ -278,7 +278,7 @@ const SectionDataLocation = (props) => {
         {isNil(idProperty) === false && (
           <div className="back-button">
             <button onClick={onBackTo}>
-              <Arrow width="35px" />
+              <Arrow width="25px" />
             </button>
           </div>
         )}
