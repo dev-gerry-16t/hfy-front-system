@@ -26,13 +26,7 @@ const WidgetModalConfirmInformation = (props) => {
             <IconForm />
           </div>
           <h2>¿Deseas confirmar tu información?</h2>
-          <p
-            style={{
-              padding: "0px 8em",
-              textAlign: "justify",
-              fontSize: "1em",
-            }}
-          >
+          <p>
             Por favor considera que una vez que confirmes tu información no
             podrás realizar cambios, a excepción de tu información bancaria y de
             contacto

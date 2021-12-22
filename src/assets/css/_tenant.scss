@@ -1,4 +1,5 @@
 .banner-move-tenant {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,6 +12,14 @@
   span {
     font-size: 12px;
     font-weight: 500;
+  }
+  .times-close-banner {
+    position: absolute;
+    right: 5px;
+    button {
+      background: transparent;
+      border: none;
+    }
   }
 }
 
@@ -54,7 +63,7 @@
       display: flex;
       flex-direction: column;
       padding: 15px 20px 15px 0px;
-      span{
+      span {
         color: #a0a3bd;
       }
     }
@@ -74,7 +83,7 @@
       display: flex;
       flex-direction: column;
       padding: 15px 20px 5px 0px;
-      span{
+      span {
         color: #a0a3bd;
       }
     }

@@ -99,6 +99,11 @@ const ContentForm = styled.div`
       padding: 1em 15px;
     }
   }
+  @media screen and (max-width: 420px) {
+    .header-title {
+      justify-content: center;
+    }
+  }
 `;
 
 const ButtonNextBackPage = styled.button`
@@ -184,13 +189,16 @@ const ButtonIcon = styled.button`
 `;
 
 const FormModal = styled.div`
+font-size: 16px;
   font-family: Poppins;
   padding: 1em 2em;
   h1 {
+    font-size: 2em;
     text-align: center;
     color: var(--color-primary);
   }
   h2 {
+    font-size: 1.3em;
     color: #4e4b66;
     font-weight: 700;
     text-align: center;
@@ -254,6 +262,13 @@ const FormModal = styled.div`
     justify-content: center;
     gap: 10px;
     margin-top: 20px;
+  }
+  @media screen and (max-width: 370px) {
+    font-size: 12px;
+    padding: 1em 5px;
+    p {
+      text-align: justify;
+    }
   }
 `;
 

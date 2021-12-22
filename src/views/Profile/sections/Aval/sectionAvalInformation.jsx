@@ -348,7 +348,9 @@ const SectionAvalInformation = (props) => {
           ? response.response.message
           : "";
       frontFunctions.showMessageStatusApi(
-        responseResult,
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Se ejecutó correctamente la solicitud",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {

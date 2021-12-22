@@ -87,7 +87,9 @@ const ContentForm = styled.div`
   padding-bottom: 0.3em;
   position: relative;
   .back-button {
+    z-index: 1;
     position: absolute;
+    top: 5px;
     button {
       background: transparent;
       border: none;
@@ -96,7 +98,7 @@ const ContentForm = styled.div`
   .shared-by-info {
   }
   .header-title {
-    padding: ${(props) => (props.owner ? "1em 1em" : "1em 6em")};
+    padding: 1em 2em;
     border-bottom: 0.5px solid #4e4b66;
     display: flex;
     justify-content: space-between;
@@ -113,8 +115,11 @@ const ContentForm = styled.div`
     margin: 2em 0px;
   }
   @media screen and (max-width: 640px) {
+    .back-button {
+      top: 0px;
+    }
+
     .header-title {
-      padding: 1em 5px;
       position: relative;
       h1 {
         font-size: 14px;
@@ -122,12 +127,23 @@ const ContentForm = styled.div`
       .shared-by-info {
         position: absolute;
         bottom: 0px;
+        left: 5px;
       }
     }
   }
   @media screen and (max-width: 500px) {
   }
   @media screen and (max-width: 420px) {
+    .header-title {
+      justify-content: center;
+    }
+    .buttons-actions {
+      position: absolute;
+      right: 5px;
+      svg {
+        width: 15px;
+      }
+    }
   }
 `;
 
@@ -243,9 +259,11 @@ const ButtonIcon = styled.button`
 `;
 
 const FormModal = styled.div`
+  font-size: 16px;
   font-family: Poppins;
   padding: 1em 2em;
   h1 {
+    font-size: 2em;
     text-align: center;
     color: var(--color-primary);
   }
@@ -307,6 +325,13 @@ const FormModal = styled.div`
     align-items: center;
     justify-content: center;
     gap: 10px;
+  }
+  @media screen and (max-width: 370px) {
+    font-size: 12px;
+    padding: 1em 5px;
+    p {
+      text-align: justify;
+    }
   }
 `;
 

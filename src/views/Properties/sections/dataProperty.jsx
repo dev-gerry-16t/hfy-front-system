@@ -38,7 +38,6 @@ const MultiSelect = styled.div`
     justify-content: flex-start;
     margin: 0px 0px 15px 0px;
   }
-
 `;
 
 const ButtonCheck = styled.button`
@@ -76,11 +75,6 @@ const SectionDataProperty = (props) => {
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
   const [nameOwner, setNameOwner] = useState([]);
-  const initialDataFloor = [
-    { id: "S", text: "Sotano" },
-    { id: "PB", text: "Planta baja" },
-  ];
-  const [dataFloor, setDataFloor] = useState(initialDataFloor);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
@@ -241,17 +235,6 @@ const SectionDataProperty = (props) => {
   }, [dataFormSave]);
 
   useEffect(() => {
-    if (isNil(dataForm.totalFloors) === false) {
-      const totalFloors = Number(dataForm.totalFloors);
-      const arrayFloor = initialDataFloor;
-      for (let index = 1; index <= totalFloors; index++) {
-        arrayFloor.push({ id: `${index}`, text: `${index}` });
-      }
-      setDataFloor(arrayFloor);
-    }
-  }, [dataForm.totalFloors]);
-
-  useEffect(() => {
     if (
       isEmpty(dataFormSave) === false &&
       isEmpty(dataPropertyTypes) === false
@@ -271,13 +254,11 @@ const SectionDataProperty = (props) => {
   return (
     <ContentForm>
       <ComponentLoadSection isLoadApi={isLoadApi}>
-        {isNil(idProperty) === false && (
-          <div className="back-button">
-            <button onClick={onBackTo}>
-              <Arrow width="35px" />
-            </button>
-          </div>
-        )}
+        <div className="back-button">
+          <button onClick={onBackTo}>
+            <Arrow width="25px" />
+          </button>
+        </div>
         <div className="header-title">
           <h1>Datos de propiedad</h1>
         </div>
@@ -467,7 +448,6 @@ const SectionDataProperty = (props) => {
                     setDataForm({
                       ...dataForm,
                       totalFloors: value,
-                      floorDescription: null,
                     });
                   }}
                   type="number"
@@ -477,16 +457,19 @@ const SectionDataProperty = (props) => {
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 {isOpenFloorDescription === true && (
-                  <CustomSelect
+                  <CustomInputTypeForm
                     value={dataForm.floorDescription}
                     placeholder=""
                     label="Piso en el que se encuentra *"
-                    data={dataFloor}
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
-                      setDataForm({ ...dataForm, floorDescription: value });
+                      setDataForm({
+                        ...dataForm,
+                        floorDescription: value,
+                      });
                     }}
+                    type="text"
                   />
                 )}
               </Col>

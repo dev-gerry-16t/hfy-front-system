@@ -79,7 +79,7 @@ const SectionBankInformationAgent = (props) => {
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      await callGlobalActionApi(
+      const response = await callGlobalActionApi(
         {
           idCustomer,
           idSystemUser,
@@ -89,6 +89,17 @@ const SectionBankInformationAgent = (props) => {
         idCustomer,
         API_CONSTANTS.CUSTOMER.SET_CUSTOMER_BANKING_ACCOUNT,
         "PUT"
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Se ejecutó correctamente la solicitud",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -168,7 +179,7 @@ const SectionBankInformationAgent = (props) => {
               history.push("/websystem/profile");
             }}
           >
-            <Arrow width="35px" />
+            <Arrow width="25px" />
           </button>
         </div>
       )}

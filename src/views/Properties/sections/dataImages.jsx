@@ -3,8 +3,7 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { SyncOutlined } from "@ant-design/icons";
-import { Spin, Row, Col } from "antd";
+import { Row, Col } from "antd";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
@@ -19,25 +18,7 @@ import {
 } from "../constants/styleConstants";
 import { IconDelete, IconEditSquare } from "../../../assets/iconSvg";
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
-
-const LoadingSpin = (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      width: "200px",
-    }}
-  >
-    <SyncOutlined spin />
-    <span
-      style={{
-        marginTop: "10px",
-      }}
-    >
-      Espera por favor...
-    </span>
-  </div>
-);
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const ContentImages = styled.div`
   margin-top: 2em;
@@ -482,11 +463,11 @@ const SectionDataImages = (props) => {
 
   return (
     <ContentForm>
-      <Spin indicator={LoadingSpin} spinning={isLoadApi} delay={100}>
+      <ComponentLoadSection isLoadApi={isLoadApi}>
         {isNil(idProperty) === false && (
           <div className="back-button">
             <button onClick={onBackTo}>
-              <Arrow width="35px" />
+              <Arrow width="25px" />
             </button>
           </div>
         )}
@@ -650,7 +631,7 @@ const SectionDataImages = (props) => {
             </ButtonNextBackPage>
           </div>
         </FormProperty>
-      </Spin>
+      </ComponentLoadSection>
     </ContentForm>
   );
 };

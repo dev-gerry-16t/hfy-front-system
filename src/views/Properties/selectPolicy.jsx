@@ -552,7 +552,7 @@ const SelectPolicy = (props) => {
                 history.push(`/websystem/detail-property-users/${idProperty}`);
               }}
             >
-              <Arrow width="35px" />
+              <Arrow width="25px" />
             </button>
           </div>
           <div className="header-title">

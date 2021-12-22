@@ -26,6 +26,7 @@ import SectionLocation from "./sectionsDetail/sectionLocation";
 import ContextProperty from "./context/contextProperty";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
+import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 
 const EmptyData = styled.div`
   display: flex;
@@ -220,9 +221,19 @@ const DetailPropertyUsers = (props) => {
             <SectionAssociationProperty history={history} />
             <SectionAssociationApplicant history={history} />
             <ContentForm owner>
+              <div className="back-button">
+                <button
+                  onClick={() => {
+                    history.push(`/websystem/catalog-properties`);
+                  }}
+                >
+                  <Arrow width="25px" />
+                </button>
+              </div>
               <div className="header-title">
                 <h1>Detalle de inmueble</h1>
                 <div
+                  className="buttons-actions"
                   style={{
                     display: "flex",
                   }}

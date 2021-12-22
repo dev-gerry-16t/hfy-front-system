@@ -314,6 +314,7 @@ const Card = styled.div`
     padding: 1em;
     .top-info {
       display: flex;
+      gap: 10px;
       .icon-info-circle {
         div {
           display: flex;
@@ -324,7 +325,7 @@ const Card = styled.div`
           border-radius: 50%;
           background: blue;
           color: #fff;
-          font-size:18px;
+          font-size: 18px;
         }
       }
       .icon-info {

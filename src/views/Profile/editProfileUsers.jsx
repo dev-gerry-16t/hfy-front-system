@@ -33,8 +33,7 @@ const Content = styled.div`
   letter-spacing: 0.75px;
   @media screen and (max-width: 420px) {
     font-size: 12px;
-  padding: 1em 5px;
-
+    padding: 1em 5px;
   }
 `;
 
@@ -69,7 +68,9 @@ const EditProfileUsers = (props) => {
           ? response.response.message
           : "";
       frontFunctions.showMessageStatusApi(
-        responseResult,
+        isEmpty(responseResult) === false
+          ? responseResult
+          : "Se ejecutó correctamente la solicitud",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
     } catch (error) {
