@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { Layout, Pagination } from "antd";
+import { Steps } from "intro.js-react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -39,6 +40,7 @@ const PropertiesOwner = (props) => {
   const [totalCoincidences, setTotalCoincidences] = useState(0);
   const [currentPagination, setCurrentPagination] = useState(1);
   const [isHorizontal, setIsHorizontal] = useState(false);
+  const [enableIntro, setEnableIntro] = useState(false);
   const [visibleAddUser, setVisibleAddUser] = useState({
     openModal: false,
     idApartment: null,
@@ -226,6 +228,64 @@ const PropertiesOwner = (props) => {
         isVisibleModal={isOpenTicket}
         dataTicket={dataTicket}
       />
+      <Steps
+        enabled={enableIntro}
+        steps={[
+          {
+            title: "Bienvenido",
+            intro:
+              "Esta es la sección de tus propiedades, en la cual te daremos un tour para que conozcas cada una de las acciones que puedes realizar.",
+          },
+          {
+            title: "Agrega",
+            element: "#add-property",
+            intro:
+              "Puedes agregar una propiedad la cual aparecerá en esta pantalla.",
+          },
+          {
+            title: "Busca",
+            element: "#filter-coincidences",
+            intro: "Busca tu propiedad con ayuda de este filtro.",
+          },
+          {
+            title: "Tu propiedad",
+            element: "#property-0",
+            intro:
+              "Esta es tu propiedad, en la cual puedes hacer diferentes acciones.",
+          },
+          {
+            title: "Proceso",
+            element: "#process-property-0",
+            intro: "Aqui puedes ver en que proceso se encuentra tu propiedad.",
+          },
+          {
+            title: "Acciones",
+            element: "#button-top-property-0",
+            intro: "Comparte la propiedad o marcala como favorita.",
+          },
+          {
+            title: "Acciones",
+            element: "#button-bottom-property-0",
+            intro:
+              "Descarga la ficha en formato pdf o invita a un inquilino para que aplique a esta propiedad.",
+          },
+          {
+            title: "Listo",
+            intro: "Ahora puedes continuar con tus procesos.",
+          },
+        ]}
+        initialStep={0}
+        options={{
+          nextLabel: " >> ",
+          prevLabel: " << ",
+          doneLabel: "Finalizar",
+          hideNext: false,
+        }}
+        onComplete={() => {}}
+        onExit={() => {
+          setEnableIntro(false);
+        }}
+      />
       <Container>
         <ContentAddFilter owner background="var(--color-primary)">
           <div className="button-actions-header">
@@ -235,12 +295,13 @@ const PropertiesOwner = (props) => {
                 onClick={() => {
                   history.push("/websystem/add-property");
                 }}
+                id="add-property"
               >
                 Agregar propiedad
               </button>
             )}
           </div>
-          <div className="content-filter-dad">
+          <div className="content-filter-dad" id="filter-coincidences">
             <ComponentFilter
               owner
               onSendFilter={async (data) => {
@@ -290,9 +351,10 @@ const PropertiesOwner = (props) => {
                     : "body-cards-property-x"
                 }
               >
-                {dataCoincidences.map((row) => {
+                {dataCoincidences.map((row, ix) => {
                   return (
                     <CustomCardProperty
+                      id={`property-${ix}`}
                       src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
                       alt={row.identifier}
                       onClickAddUser={(idApartment, idProperty) => {

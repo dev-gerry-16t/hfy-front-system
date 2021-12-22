@@ -210,7 +210,7 @@ const SectionApplicants = (props) => {
   };
 
   return (
-    <GeneralCard>
+    <GeneralCard id="section-prospect">
       <ComponentAddCandidate
         isModalVisible={visibleAddUser}
         sendInvitation={async (data) => {
@@ -231,6 +231,7 @@ const SectionApplicants = (props) => {
             onClick={() => {
               setVisibleAddUser(true);
             }}
+            id="add-prospect"
           >
             Agregar
           </button>

@@ -378,7 +378,7 @@ const DetailPropertyUsers = (props) => {
             src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296S.png"
             alt=""
           />
-          <p>Ops!, parece que este inmueble ya no está disponible :(</p>
+          <p>Oops!, parece que este inmueble ya no está disponible :(</p>
         </EmptyData>
       )}
     </>

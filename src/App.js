@@ -7,6 +7,7 @@ import Loadable from "react-loadable";
 import { ConfigProvider } from "antd";
 import { Route, Switch } from "react-router-dom";
 import es_ES from "antd/lib/locale-provider/es_ES";
+import "intro.js/introjs.css";
 import "./App.css";
 
 const loading = () => (
