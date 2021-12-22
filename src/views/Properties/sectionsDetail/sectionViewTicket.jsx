@@ -10,25 +10,14 @@ import { callGlobalActionApi } from "../../../utils/actions/actions";
 import { Modal, Row, Col } from "antd";
 import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import styled from "styled-components";
-import {
-  ContentForm,
-  LineSeparator,
-  FormProperty,
-  ButtonNextBackPage,
-  Container,
-} from "../constants/styleConstants";
-import ContextProperty from "../context/contextProperty";
-import CustomSelect from "../../../components/CustomSelect";
-import CustomMapContainer from "../../../components/customGoogleMaps";
-import { ReactComponent as IconMailLetter } from "../../../assets/iconSvg/svgFile/iconMailLetter.svg";
-import { ReactComponent as IconAssociate } from "../../../assets/iconSvg/svgFile/iconAssociate.svg";
-import { ReactComponent as IconRejected } from "../../../assets/iconSvg/svgFile/iconRejected.svg";
+import { LineSeparator } from "../constants/styleConstants";
 import {
   IconBathroom,
   IconBed,
   IconCar,
   IconHalfBathroom,
 } from "../../../assets/iconSvg";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const SectionGalery = styled.div`
   display: flex;
@@ -297,6 +286,7 @@ const catalogPrice = [
 ];
 const imageLogo =
   "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAYEBAQFBAYFBQYJBgUGCQsIBgYICwwKCgsKCgwQDAwMDAwMEAwODxAPDgwTExQUExMcGxsbHCAgICAgICAgICD/2wBDAQcHBw0MDRgQEBgaFREVGiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICD/wAARCAAkAHsDAREAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAYDBQcEAQII/8QARhAAAgECBQICBQMODwAAAAAAAQIDBAUABhESIQcTMUEVIjJRYRQWIxczN0JSVXFydJShsbLSCCQ2OENjc4GRkqKztcHw/8QAGgEBAQADAQEAAAAAAAAAAAAAAAMCBQYEAf/EADURAQABAgIFBwsFAAAAAAAAAAABAgMEEQUSITFBEzJRYXKx8AYUIiMzNVKRksHScYGh0fH/2gAMAwEAAhEDEQA/AP05d7xbrRRNWV8oihXj3lj5Ko8zj5M5L4fDV3qtWiM5Z41HmfqA7VLP6MscOvyJDqS7jXRiB4/E+A8vPEdtX6Oki5Y0d6PPuzv6vH+8FlYM43C0Vwy/mz6KdPVprgeVkGui7m9x8m/zc4ypry2S8uL0dReo5bDbY409Hjo+R+xVzwwBgDAGAMAYAwBgDAGAMAYBAocm3y+3c3TOHEUJ/itsjYGPy+5LALxz5nzxKKJne6G7pG1Yt8nht876uPju4H5VVVCqAqqNFUcAAYq56ZV1+y/bb5Qmkr49y67o5F4dG96nHyac3qwmMrsVa1BTyLVXi25jrspVlQKunoIe7BMddwH0e1RqeF2yeHl5YnRnnk2+laLVyxTiaY1ZqnKf5/px9R+pV9yzmy0WiggpZKavWNpnnWRnG+YxnaVdB4DzGKueaQJIy5QMC6+0uvI194wHrMFBZjoo5JOA8jlilG6Nw6+GqnX9WA+sB8pLE5ZUcMycMAddPw4ASWJyyo4Zk4YA66fhwCbFfuoJ6gm1vaYhlTcw9J7H7mggLr63c2/XfV9jAUGderV/oc4/NTLNrirrgu1WaYkhpHQSbVVWj4VTyS36sBpVtkq5bdSy1sYirHhRqmJfBZCoLqOT4N8cB04AwCj08zFcbrl6qr7rN3ZIKiRd4VV0jWNH00QDw3HE7dWcNzpjB0Wr0UW4yzpj55ybVZWUMpDKw1VhyCDijTTCvkuXeuy22lbVoR3q9hzsX+jT8aQ/6QfeMfM3pizlb16uOynr6Z/bvmOsq2j7L17/ACJP2abE457b4j3bb7f5s8/hAx1Emd7HHTNsqHpkWF9dNHM7bTr+HFXPl7P2WK7p3ma2VtDdJaqumHys1Mg2t3Vf193J3K/mD4+eAaep1xueZ+p9JkcVUlJakeGKZUPDtLGJmkI+2IRtqg+H9+Aqs2Wmo6TZrtdXYK6okoapd8sE5U7xGwEkb7QisCG49XjAT9UaOqrutFDRUtQ1JPVCkgWqjOjxiTVWZdNOQCcBR3TKVyy11HiyxaLrMnpPswNVj1H7dX6r7gDzpqTgO6Cz1OQ+sVqtlBXSTxzz0scjt6peKrYI6uBqD4k4C7o/5yzf2kv/ABzYBVGRrYOroykKmqFvEvaFRvX5RtFP3B62zb48ez4YC9z/AGkZB6jWO/Ue70e4iJZvaJgUQ1AJUDl4yCfiTxgJxEuduvLlSJrdanDNryvbotF494aoP+BwG+4BD6OfyYqvy1/9qLErW50HlJ7eOxHfKC42PqHbKmWjy7Ub7PMxaEExa04bxQdzkAeW3Xj44TFUblbOKwV2mKr8esjfv9Lr2fc1ZWy8tkt3aeU1FbO3eraliWLykc8nnQeWuM6acmox+M5evPLKmNkR0QXbR9l69/kSfs02MI57ZYj3bb7f5qzqX05zDmTNtoutuanWmoUjWbvOQ2qzFzoAp14PvxVz6LrB01zHm65W+otTU6x0sLRyd92Q7mbXgBWwEvUnpheLrfqbNWWKpKa90uwtHJwHaL626nRhu8iG4I/SFPB00z7mvMtLdc9TQw0lDt2UkO1t6q24oAnChj7TE6/9BcZj6cX+4dU7dminaD0bTPTNKrOwl+hPraLtI/TgDMfTrMFx6p2/NFOYBbaR6YyBnIk0iOraLtI/TgIs19NcxXXqhbczUzQC3Uk1G8odyJCKeQO+ihSPDw5wEtP05zAnWI5vZoPRW9227z3dGpDAPV26e0ffgIvqa5i+q/8AO7dT+iu93Nu893T5P2vZ26e18cBJ18NgqMpNTVVdBDdqV46qipWYd6QFjEQE9raQTzppxgKboFZqmjyxecyJD362q3RUUZ+3FOpbg/1kjbT+LhKlqmJriKpyiZ2mmlzf1EeBWfLWrHXU6PF5/cOSwxLWq6G+r0dgon23dLLoLvd7f3Kehr6imh3klIpXjBPhqQpA10GIZurqw9u5trppmeuIS/OnM/33rfziX97DWlj5hY+Cj6YHzpzP996384l/ew1pPMLHwUfTBv6ST1FXmiuqqqZ56g0hDSyMXY+vGOS2pOgUDFLW9pfKGiKMPTTTERGt9pa5j0OOGAMAYAwBgDAGAMAqZq6Z5VzRcorjd4pZKiGJYF2SMi7FZn0IHxc4BitttobZQw0FBCtPR067IYU8AP8A3icB04D/2Q==";
+
 const SectionViewTicket = (props) => {
   const {
     callGlobalActionApi,
@@ -307,6 +297,7 @@ const SectionViewTicket = (props) => {
     dataTicket,
   } = props;
   const [dataDetail, setDataDetail] = useState({});
+  const [isLoadApi, setIsLoadApi] = useState(false);
 
   const frontFunctions = new FrontFunctions();
 
@@ -368,7 +359,8 @@ const SectionViewTicket = (props) => {
     return result;
   };
 
-  const handlerOnClick = (name) => {
+  const handlerOnClick = async (name) => {
+    setIsLoadApi(true);
     var opt = {
       image: { type: "png", quality: 1 },
       filename: name,
@@ -383,8 +375,11 @@ const SectionViewTicket = (props) => {
     };
     try {
       var element = document.getElementById("section-print-pdf");
-      var worker = html2pdf().from(element).set(opt).save();
-    } catch (error) {}
+      var worker = await html2pdf().from(element).set(opt).save();
+      setIsLoadApi(false);
+    } catch (error) {
+      setIsLoadApi(false);
+    }
   };
 
   const GMapCircle = (lat, lng, rad, key, detail = 8) => {
@@ -444,302 +439,301 @@ const SectionViewTicket = (props) => {
       }}
     >
       <FormModal>
-        <h1>Esta es tu ficha de la propiedad </h1>
-        <p>
-          Puedes descargarla para compartirla con otros asesores o usuarios.
-        </p>
-        <div
-          style={{
-            display: "block",
-          }}
-        >
-          <div
-            id="section-print-pdf"
-            style={{
-              fontSize: "10px",
-              padding: "18px",
-            }}
-          >
+        <ComponentLoadSection text="Descargando..." isLoadApi={isLoadApi}>
+          <h1>Esta es tu ficha de la propiedad </h1>
+          <p>
+            Puedes descargarla para compartirla con otros asesores o usuarios.
+          </p>
+          <div className="view-ticket-property">
             <div
+              id="section-print-pdf"
               style={{
-                display: "flex",
-                justifyContent: "space-between",
-                padding: "0px 50px",
+                fontSize: "10px",
+                padding: "18px",
               }}
             >
-              <h1
+              <div
                 style={{
-                  fontWeight: "700",
-                  margin: "0px",
-                  textAlign: "left",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  padding: "0px 50px",
                 }}
               >
-                {handlerLimitText(dataDetail.shortAddress)}
-              </h1>
-              <img src={imageLogo} alt="homify" />
-            </div>
-            <ContainerUp>
-              <div className="contain-carousel">
-                <div className="carousel-x">
-                  <img
-                    className="preview-carousel"
-                    src={dataTicket.documentMainPic}
-                    alt="imagen"
-                  />
-                  <div
-                    style={{
-                      position: "absolute",
-                      right: 0,
-                      bottom: "-2em",
-                      color: "#9295AD",
-                      fontSize: "1em",
-                    }}
-                  >
-                    {dataTicket.identifier}
-                  </div>
-                </div>
+                <h1
+                  style={{
+                    fontWeight: "700",
+                    margin: "0px",
+                    textAlign: "left",
+                  }}
+                >
+                  {handlerLimitText(dataDetail.shortAddress)}
+                </h1>
+                <img src={imageLogo} alt="homify" />
               </div>
-              <ShortDetail>
-                <div className="header-title-short">
-                  <h1>Datos de propiedad</h1>
-                </div>
-                <LineSeparator opacity="0.3" />
-                <div className="info-data-property">
-                  <div className="item-description">
-                    <span>Tipo de propiedad</span>
-                    <strong>{dataDetail.propertyType}</strong>
-                  </div>
-                  <div className="item-description">
-                    <span>Precio Renta</span>
-                    <strong>{dataDetail.currentRentFormat}</strong>
-                  </div>
-                  <div className="item-description">
-                    <span>Mantenimiento Mensual</span>
-                    <strong>{dataDetail.manitenanceAmountFormat}</strong>
-                  </div>
-                  <div className="item-description">
-                    <span>Precio Basado en</span>
-                    <strong>
-                      {handlerSelectCatalog(dataDetail.priceBasedBy)}
-                    </strong>
+              <ContainerUp>
+                <div className="contain-carousel">
+                  <div className="carousel-x">
+                    <img
+                      className="preview-carousel"
+                      src={dataTicket.documentMainPic}
+                      alt="imagen"
+                    />
+                    <div
+                      style={{
+                        position: "absolute",
+                        right: 0,
+                        bottom: "-2em",
+                        color: "#9295AD",
+                        fontSize: "1em",
+                      }}
+                    >
+                      {dataTicket.identifier}
+                    </div>
                   </div>
                 </div>
-              </ShortDetail>
-            </ContainerUp>
-            <LineSeparator opacity="0.3" />
-            <div
-              style={{
-                padding: "0px 3em",
-              }}
-            >
-              <TabsProperty>
-                <Tab selected>
-                  <h1>Características</h1>
+                <ShortDetail>
+                  <div className="header-title-short">
+                    <h1>Datos de propiedad</h1>
+                  </div>
+                  <LineSeparator opacity="0.3" />
+                  <div className="info-data-property">
+                    <div className="item-description">
+                      <span>Tipo de propiedad</span>
+                      <strong>{dataDetail.propertyType}</strong>
+                    </div>
+                    <div className="item-description">
+                      <span>Precio Renta</span>
+                      <strong>{dataDetail.currentRentFormat}</strong>
+                    </div>
+                    <div className="item-description">
+                      <span>Mantenimiento Mensual</span>
+                      <strong>{dataDetail.manitenanceAmountFormat}</strong>
+                    </div>
+                    <div className="item-description">
+                      <span>Precio Basado en</span>
+                      <strong>
+                        {handlerSelectCatalog(dataDetail.priceBasedBy)}
+                      </strong>
+                    </div>
+                  </div>
+                </ShortDetail>
+              </ContainerUp>
+              <LineSeparator opacity="0.3" />
+              <div
+                style={{
+                  padding: "0px 3em",
+                }}
+              >
+                <TabsProperty>
+                  <Tab selected>
+                    <h1>Características</h1>
+                    <hr />
+                  </Tab>
+                </TabsProperty>
+                <ContentFeatures>
+                  <div className={`container-features`}>
+                    <CardAmenity>
+                      <div className="circle-content">
+                        <div>
+                          <IconBed size="25" color="#fff" backGround="#fff" />
+                        </div>
+                      </div>
+                      <div className="info-amenity">
+                        <h1>{dataDetail.totalBedrooms}</h1>
+                        <span>Recámaras</span>
+                      </div>
+                    </CardAmenity>
+                    <CardAmenity>
+                      <div className="circle-content">
+                        <div>
+                          <IconBathroom
+                            size="25"
+                            color="#fff"
+                            backGround="#fff"
+                          />
+                        </div>
+                      </div>
+                      <div className="info-amenity">
+                        <h1>{dataDetail.totalBathrooms}</h1>
+                        <span>Baños</span>
+                      </div>
+                    </CardAmenity>
+                    <CardAmenity>
+                      <div className="circle-content">
+                        <div>
+                          <IconHalfBathroom
+                            size="25"
+                            color="#fff"
+                            backGround="#fff"
+                          />
+                        </div>
+                      </div>
+                      <div className="info-amenity">
+                        <h1>{dataDetail.totalHalfBathrooms}</h1>
+                        <span>Medios Baños</span>
+                      </div>
+                    </CardAmenity>
+                    <CardAmenity>
+                      <div className="circle-content">
+                        <div>
+                          <IconCar size="25" color="#fff" backGround="#fff" />
+                        </div>
+                      </div>
+                      <div className="info-amenity">
+                        <h1>{dataDetail.totalParkingSpots}</h1>
+                        <span>Estacionamiento</span>
+                      </div>
+                    </CardAmenity>
+                  </div>
                   <hr />
-                </Tab>
-              </TabsProperty>
-              <ContentFeatures>
-                <div className={`container-features`}>
-                  <CardAmenity>
-                    <div className="circle-content">
-                      <div>
-                        <IconBed size="25" color="#fff" backGround="#fff" />
-                      </div>
+                  <div className="container-cards">
+                    <div className="card-content">
+                      <span>{dataDetail.totalSquareMetersBuilt} m²</span>
+                      <label htmlFor="">De construcción</label>
                     </div>
-                    <div className="info-amenity">
-                      <h1>{dataDetail.totalBedrooms}</h1>
-                      <span>Recámaras</span>
+                    <div className="card-content">
+                      <span>{dataDetail.totalSquareMetersLand} m²</span>
+                      <label htmlFor="">De Terreno</label>
                     </div>
-                  </CardAmenity>
-                  <CardAmenity>
-                    <div className="circle-content">
-                      <div>
-                        <IconBathroom
-                          size="25"
-                          color="#fff"
-                          backGround="#fff"
-                        />
-                      </div>
+                    <div className="card-content">
+                      <span>{dataDetail.totalFloors}</span>
+                      <label htmlFor="">Cantidad de pisos</label>
                     </div>
-                    <div className="info-amenity">
-                      <h1>{dataDetail.totalBathrooms}</h1>
-                      <span>Baños</span>
+                    <div className="card-content">
+                      <span>{dataDetail.floorDescription}</span>
+                      <label htmlFor="">Piso en el que se encuentra</label>
                     </div>
-                  </CardAmenity>
-                  <CardAmenity>
-                    <div className="circle-content">
-                      <div>
-                        <IconHalfBathroom
-                          size="25"
-                          color="#fff"
-                          backGround="#fff"
-                        />
-                      </div>
-                    </div>
-                    <div className="info-amenity">
-                      <h1>{dataDetail.totalHalfBathrooms}</h1>
-                      <span>Medios Baños</span>
-                    </div>
-                  </CardAmenity>
-                  <CardAmenity>
-                    <div className="circle-content">
-                      <div>
-                        <IconCar size="25" color="#fff" backGround="#fff" />
-                      </div>
-                    </div>
-                    <div className="info-amenity">
-                      <h1>{dataDetail.totalParkingSpots}</h1>
-                      <span>Estacionamiento</span>
-                    </div>
-                  </CardAmenity>
-                </div>
-                <hr />
-                <div className="container-cards">
-                  <div className="card-content">
-                    <span>{dataDetail.totalSquareMetersBuilt} m²</span>
-                    <label htmlFor="">De construcción</label>
                   </div>
-                  <div className="card-content">
-                    <span>{dataDetail.totalSquareMetersLand} m²</span>
-                    <label htmlFor="">De Terreno</label>
-                  </div>
-                  <div className="card-content">
-                    <span>{dataDetail.totalFloors}</span>
-                    <label htmlFor="">Cantidad de pisos</label>
-                  </div>
-                  <div className="card-content">
-                    <span>{dataDetail.floorDescription}</span>
-                    <label htmlFor="">Piso en el que se encuentra</label>
-                  </div>
-                </div>
-              </ContentFeatures>
-            </div>
-            <LineSeparator opacity="0.3" />
-            <div
-              style={{
-                padding: "0px 3em",
-              }}
-            >
-              <TabsProperty>
-                <Tab selected>
-                  <h1>Ubicación</h1>
-                  <hr />
-                </Tab>
-              </TabsProperty>
-              <ContentLocation>
-                <div className="location-map">
-                  <Location>
-                    {isNil(dataDetail.jsonCoordinates) === false &&
-                      isEmpty(dataDetail.jsonCoordinates) === false && (
-                        <>
-                          {dataDetail.isGMapsExact === true ? (
-                            <img
-                              src={`https://maps.googleapis.com/maps/api/staticmap?size=310x210&center=${
-                                JSON.parse(dataDetail.jsonCoordinates).lat
-                              },${
-                                JSON.parse(dataDetail.jsonCoordinates).lng
-                              }&zoom=14&markers=icon:https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296Q.png%7C${
-                                JSON.parse(dataDetail.jsonCoordinates).lat
-                              },
+                </ContentFeatures>
+              </div>
+              <LineSeparator opacity="0.3" />
+              <div
+                style={{
+                  padding: "0px 3em",
+                }}
+              >
+                <TabsProperty>
+                  <Tab selected>
+                    <h1>Ubicación</h1>
+                    <hr />
+                  </Tab>
+                </TabsProperty>
+                <ContentLocation>
+                  <div className="location-map">
+                    <Location>
+                      {isNil(dataDetail.jsonCoordinates) === false &&
+                        isEmpty(dataDetail.jsonCoordinates) === false && (
+                          <>
+                            {dataDetail.isGMapsExact === true ? (
+                              <img
+                                src={`https://maps.googleapis.com/maps/api/staticmap?size=310x210&center=${
+                                  JSON.parse(dataDetail.jsonCoordinates).lat
+                                },${
+                                  JSON.parse(dataDetail.jsonCoordinates).lng
+                                }&zoom=14&markers=icon:https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296Q.png%7C${
+                                  JSON.parse(dataDetail.jsonCoordinates).lat
+                                },
                          ${
                            JSON.parse(dataDetail.jsonCoordinates).lng
                          }&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`}
-                              alt="mapa"
-                            />
-                          ) : (
-                            <img
-                              src={GMapCircle(
-                                JSON.parse(dataDetail.jsonCoordinates).lat,
-                                JSON.parse(dataDetail.jsonCoordinates).lng,
-                                700,
-                                "AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ"
-                              )}
-                              alt="mapa"
-                            />
+                                alt="mapa"
+                              />
+                            ) : (
+                              <img
+                                src={GMapCircle(
+                                  JSON.parse(dataDetail.jsonCoordinates).lat,
+                                  JSON.parse(dataDetail.jsonCoordinates).lng,
+                                  700,
+                                  "AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ"
+                                )}
+                                alt="mapa"
+                              />
+                            )}
+                          </>
+                        )}
+                    </Location>
+                  </div>
+                  <div>
+                    <ContentAddress>
+                      <div className="content-address">
+                        <h1>{handlerLimitText(dataDetail.shortAddress)}</h1>
+                        <hr />
+                        <div>
+                          <span>{dataDetail.fullAddress}</span>
+                        </div>
+                      </div>
+                    </ContentAddress>
+                  </div>
+                </ContentLocation>
+              </div>
+              <div class="html2pdf__page-break"></div>
+              <LineSeparator opacity="0.3" />
+              <div
+                style={{
+                  padding: "0px 3em",
+                }}
+              >
+                <TabsProperty>
+                  <Tab selected>
+                    <h1>Amenidades</h1>
+                    <hr />
+                  </Tab>
+                </TabsProperty>
+                <ContentAmenities>
+                  <div className="container-chips">
+                    <div className="section-chips border-1">
+                      <Title>AMENIDADES</Title>
+                      <div className="chips">
+                        {isEmpty(dataDetail.propertyAmenities) === false &&
+                          JSON.parse(dataDetail.propertyAmenities).map(
+                            (row) => {
+                              return <Chip>{row.text}</Chip>;
+                            }
                           )}
-                        </>
-                      )}
-                  </Location>
-                </div>
-                <div>
-                  <ContentAddress>
-                    <div className="content-address">
-                      <h1>{handlerLimitText(dataDetail.shortAddress)}</h1>
-                      <hr />
-                      <div>
-                        <span>{dataDetail.fullAddress}</span>
                       </div>
                     </div>
-                  </ContentAddress>
-                </div>
-              </ContentLocation>
-            </div>
-            <div class="html2pdf__page-break"></div>
-            <LineSeparator opacity="0.3" />
-            <div
-              style={{
-                padding: "0px 3em",
-              }}
-            >
-              <TabsProperty>
-                <Tab selected>
-                  <h1>Amenidades</h1>
-                  <hr />
-                </Tab>
-              </TabsProperty>
-              <ContentAmenities>
-                <div className="container-chips">
-                  <div className="section-chips border-1">
-                    <Title>AMENIDADES</Title>
-                    <div className="chips">
-                      {isEmpty(dataDetail.propertyAmenities) === false &&
-                        JSON.parse(dataDetail.propertyAmenities).map((row) => {
-                          return <Chip>{row.text}</Chip>;
-                        })}
+                    <div className="section-chips border-2">
+                      <Title>GENERAL</Title>
+                      <div className="chips">
+                        {isEmpty(dataDetail.propertyGeneralCharacteristics) ===
+                          false &&
+                          JSON.parse(
+                            dataDetail.propertyGeneralCharacteristics
+                          ).map((row) => {
+                            return <Chip>{row.text}</Chip>;
+                          })}
+                      </div>
                     </div>
                   </div>
-                  <div className="section-chips border-2">
-                    <Title>GENERAL</Title>
-                    <div className="chips">
-                      {isEmpty(dataDetail.propertyGeneralCharacteristics) ===
-                        false &&
-                        JSON.parse(
-                          dataDetail.propertyGeneralCharacteristics
-                        ).map((row) => {
-                          return <Chip>{row.text}</Chip>;
-                        })}
-                    </div>
-                  </div>
-                </div>
-              </ContentAmenities>
-            </div>
-            <LineSeparator opacity="0.3" />
-            <div
-              style={{
-                padding: "0px 3em",
-              }}
-            >
-              <TabsProperty>
-                <Tab selected>
-                  <h1>Galeria</h1>
-                  <hr />
-                </Tab>
-              </TabsProperty>
-              <SectionGalery>
-                {isEmpty(dataDetail.apartmentDocuments) === false &&
-                  dataDetail.apartmentDocuments.map((row) => {
-                    return (
-                      <img
-                        src={row.url}
-                        alt=""
-                        srcset=""
-                        className="image-content"
-                      />
-                    );
-                  })}
-              </SectionGalery>
-            </div>
-            {/* <LineSeparator opacity="0.3" />
+                </ContentAmenities>
+              </div>
+              <LineSeparator opacity="0.3" />
+              <div
+                style={{
+                  padding: "0px 3em",
+                }}
+              >
+                <TabsProperty>
+                  <Tab selected>
+                    <h1>Galeria</h1>
+                    <hr />
+                  </Tab>
+                </TabsProperty>
+                <SectionGalery>
+                  {isEmpty(dataDetail.apartmentDocuments) === false &&
+                    dataDetail.apartmentDocuments.map((row) => {
+                      return (
+                        <img
+                          src={row.url}
+                          alt=""
+                          srcset=""
+                          className="image-content"
+                        />
+                      );
+                    })}
+                </SectionGalery>
+              </div>
+              {/* <LineSeparator opacity="0.3" />
             <div
               style={{
                 padding: "0px 3em",
@@ -752,23 +746,24 @@ const SectionViewTicket = (props) => {
                 </Tab>
               </TabsProperty>
             </div> */}
+            </div>
           </div>
-        </div>
-        <div
-          className="button-action"
-          style={{
-            marginTop: "2em",
-          }}
-        >
-          <ButtonsModal
-            primary
-            onClick={() => {
-              handlerOnClick(dataDetail.identifier);
+          <div
+            className="button-action"
+            style={{
+              marginTop: "2em",
             }}
           >
-            Descargar
-          </ButtonsModal>
-        </div>
+            <ButtonsModal
+              primary
+              onClick={() => {
+                handlerOnClick(dataDetail.identifier);
+              }}
+            >
+              Descargar
+            </ButtonsModal>
+          </div>
+        </ComponentLoadSection>
       </FormModal>
     </Modal>
   );

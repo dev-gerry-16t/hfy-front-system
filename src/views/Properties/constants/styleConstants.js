@@ -326,6 +326,15 @@ const FormModal = styled.div`
     justify-content: center;
     gap: 10px;
   }
+  .view-ticket-property {
+    display: block;
+  }
+  @media screen and (max-width: 800px) {
+    .view-ticket-property {
+      display: none;
+    }
+  }
+
   @media screen and (max-width: 370px) {
     font-size: 12px;
     padding: 1em 5px;
