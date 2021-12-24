@@ -109,6 +109,7 @@ const SectionCandidate = styled.div`
     gap: 2em;
     color: #4e4b66;
     margin-top: 3em;
+    padding: 0px 10px;
     .score-user {
       position: absolute;
       width: 58px;
@@ -148,7 +149,6 @@ const SectionCandidate = styled.div`
       flex-direction: column;
       align-items: center;
       .content-info-public {
-        padding: 0px 10px;
         font-size: 12px;
         .info {
           display: flex;

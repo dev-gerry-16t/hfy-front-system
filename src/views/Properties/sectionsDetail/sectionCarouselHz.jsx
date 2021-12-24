@@ -29,6 +29,7 @@ const ContainerUp = styled.div`
     justify-content: center;
     gap: 2em;
     .carousel-x {
+      width: 100%;
       .slide-carousel {
         display: flex;
         justify-content: space-between;
@@ -157,7 +158,7 @@ const ShortDetail = styled.div`
   .header-title-short {
     position: relative;
     h1 {
-      font-size: 1.8em;
+      font-size: 1.3em;
       font-weight: 600;
       max-width: 14em;
     }
