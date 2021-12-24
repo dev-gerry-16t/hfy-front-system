@@ -78,7 +78,7 @@ const DefaultLayout = (props) => {
     callUpdateNotifications,
     callGetNotifications,
   } = props;
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [dataNotifications, setDataNotifications] = useState([]);
   const [notificationTopIndex, setNotificationTopIndex] = useState(null);
   const [numberNotifications, setNumberNotifications] = useState(0);

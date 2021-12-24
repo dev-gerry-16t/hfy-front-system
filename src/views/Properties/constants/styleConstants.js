@@ -174,6 +174,7 @@ const FormProperty = styled.div`
   }
   .type-property {
     margin-top: 3em;
+    margin-bottom: 2em;
   }
   .type-form-property {
     .subtitle-form {
