@@ -268,7 +268,7 @@ const CustomCardProperty = (props) => {
         <span>{identifier}</span>
       </div>
       <div className="price-item">
-        <span>{currentRent} MXN</span>
+        <span>{currentRent}</span>
         <div id={`button-top-${id}`} className="buttons-property">
           {canBeShared === true && (
             <Dropdown
