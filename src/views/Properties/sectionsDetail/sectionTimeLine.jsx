@@ -217,7 +217,7 @@ const SectionTimeLine = (props) => {
   return (
     <>
       {isEmpty(dataTimeLine) === false && (
-        <GeneralCard>
+        <GeneralCard id="timeline-process">
           <div className="header-title">
             <h1>Proceso</h1>
           </div>

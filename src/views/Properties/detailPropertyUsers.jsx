@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Menu, Dropdown } from "antd";
+import { Steps } from "intro.js-react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -76,6 +77,7 @@ const DetailPropertyUsers = (props) => {
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
+  const [enableIntro, setEnableIntro] = useState(false);
   const [tabSelect, setTabSelect] = useState("1");
   const frontFunctions = new FrontFunctions();
 
@@ -275,6 +277,51 @@ const DetailPropertyUsers = (props) => {
           },
         }}
       >
+        <Steps
+          enabled={enableIntro}
+          steps={[
+            {
+              title: "Bienvenido",
+              intro:
+                "Bienvenido al detalle de tu propiedad, te daremos un tour para que conozcas las acciones que puedes realizar con tu propiedad",
+            },
+            {
+              title: "Proceso a seguir",
+              element: "#timeline-process",
+              intro:
+                "En esta sección encontraras los pasos que debes seguir para finalizar un proceso.",
+            },
+            {
+              title: "Agrega un prospecto",
+              element: "#section-prospect",
+              intro:
+                "Aqui aparecerán todos tus prospectos a inquilinos, los cuales tu podras agregar o bien nuestros usuarios que se postulan a tu propiedad y podras aceptarlos o rechazarlos.",
+            },
+            {
+              title: "Agrega un prospecto",
+              element: "#add-prospect",
+              intro:
+                "Para agregar un prospecto debes dar clic en este botón, ingresar la información que se te indica y enviar invitación.",
+            },
+            {
+              title: "Acciones",
+              element: "#buttons-action-detail",
+              intro:
+                "Puedes eliminar o editar esta propiedad dando clic a alguno de estos botones, en caso de que tu propiedad sea pública tambien podras compartirla con cualquier persona.",
+            },
+          ]}
+          initialStep={0}
+          options={{
+            nextLabel: " >> ",
+            prevLabel: " << ",
+            doneLabel: "Finalizar",
+            hideNext: false,
+          }}
+          onComplete={() => {}}
+          onExit={() => {
+            setEnableIntro(false);
+          }}
+        />
         <CustomModalMessage
           isModalVisible={isVisibleDelete}
           title="Eliminar propiedad"
@@ -337,6 +384,7 @@ const DetailPropertyUsers = (props) => {
               style={{
                 display: "flex",
               }}
+              id="buttons-action-detail"
             >
               {dataDetail.isPublished === true && (
                 <Dropdown

@@ -30,7 +30,7 @@ const Card = styled.div`
   flex-direction: column;
   justify-content: space-between;
   position: relative;
-  width: 15.43em;
+  width: 17.43em;
   min-height: 22.7em;
   height: auto;
   padding: 0.687em 0.625em;
@@ -40,7 +40,7 @@ const Card = styled.div`
   justify-self: center;
   margin-bottom: 1em;
   .image-content {
-    width: 14.15em;
+    width: 16.15em;
     height: 9.625em;
     border-radius: 0.5em;
     object-fit: cover;
@@ -67,6 +67,9 @@ const Card = styled.div`
       font-size: 1em;
       font-weight: 700;
       color: var(--color-primary);
+    }
+    .buttons-property {
+      display: flex;
     }
   }
   .address-item {
@@ -167,6 +170,7 @@ const ProcessProperty = styled.div`
 
 const CustomCardProperty = (props) => {
   const {
+    id = null,
     src,
     alt,
     onClickDetail,
@@ -239,10 +243,10 @@ const CustomCardProperty = (props) => {
   };
 
   return (
-    <Card>
+    <Card id={id}>
       {isNil(currentTimeLine) === false && (
         <Tooltip placement="topLeft" title={dataTimeLine.description}>
-          <ProcessProperty>
+          <ProcessProperty id={`process-${id}`}>
             {/* <IconProfile color="#fff" size="1em" /> */}
             <i className={dataTimeLine.style} />
             <span>En proceso de:</span>
@@ -265,30 +269,31 @@ const CustomCardProperty = (props) => {
       </div>
       <div className="price-item">
         <span>{currentRent} MXN</span>
-        {canBeShared === true && (
-          <Dropdown
-            overlay={
-              <Menu>
-                <Menu.Item>
-                  <a
-                    target="_blank"
-                    href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${identifier}`}
-                  >
-                    WhatsApp
-                  </a>
-                </Menu.Item>
-                <Menu.Item>
-                  <span
-                    onClick={() => {
-                      copyTextToClipboard(
-                        `${window.location.origin}/property/${identifier}`
-                      );
-                    }}
-                  >
-                    Copiar link
-                  </span>
-                </Menu.Item>
-                {/* <Menu.Item>
+        <div id={`button-top-${id}`} className="buttons-property">
+          {canBeShared === true && (
+            <Dropdown
+              overlay={
+                <Menu>
+                  <Menu.Item>
+                    <a
+                      target="_blank"
+                      href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${identifier}`}
+                    >
+                      WhatsApp
+                    </a>
+                  </Menu.Item>
+                  <Menu.Item>
+                    <span
+                      onClick={() => {
+                        copyTextToClipboard(
+                          `${window.location.origin}/property/${identifier}`
+                        );
+                      }}
+                    >
+                      Copiar link
+                    </span>
+                  </Menu.Item>
+                  {/* <Menu.Item>
                   <a
                     target="_blank"
                     href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
@@ -296,41 +301,45 @@ const CustomCardProperty = (props) => {
                     Facebook
                   </a>
                 </Menu.Item> */}
-              </Menu>
-            }
-            placement="bottomLeft"
-            arrow
-          >
+                </Menu>
+              }
+              placement="bottomLeft"
+              arrow
+            >
+              <ButtonIcon
+                onClick={async () => {
+                  try {
+                  } catch (error) {}
+                }}
+              >
+                <IconShare
+                  color="var(--color-primary)"
+                  backGround="var(--color-primary)"
+                  size="16px"
+                />
+              </ButtonIcon>
+            </Dropdown>
+          )}
+          {canBeFavorite === true && (
             <ButtonIcon
               onClick={async () => {
                 try {
+                  await onClickFavorite(
+                    { idApartment, identifier },
+                    idProperty
+                  );
                 } catch (error) {}
               }}
             >
-              <IconShare
+              <IconHeart
+                backGround={
+                  isFavorite === true ? "var(--color-primary)" : "transparent"
+                }
                 color="var(--color-primary)"
-                backGround="var(--color-primary)"
-                size="16px"
               />
             </ButtonIcon>
-          </Dropdown>
-        )}
-        {canBeFavorite === true && (
-          <ButtonIcon
-            onClick={async () => {
-              try {
-                await onClickFavorite({ idApartment, identifier }, idProperty);
-              } catch (error) {}
-            }}
-          >
-            <IconHeart
-              backGround={
-                isFavorite === true ? "var(--color-primary)" : "transparent"
-              }
-              color="var(--color-primary)"
-            />
-          </ButtonIcon>
-        )}
+          )}
+        </div>
       </div>
       <div className="address-item">
         <span className="text-bold">{shortAddress}</span>
@@ -338,7 +347,7 @@ const CustomCardProperty = (props) => {
       <div className="price-maintenance">
         Mantenimiento: <span>{maintenanceAmount} MXN</span>
       </div>
-      <div className="icon-property">
+      <div className="icon-property" id={`features-${id}`}>
         <div className="info">
           <IconBed color="#6E7191" backGround="#6E7191" />
           <span>{totalRooms}</span>
@@ -369,7 +378,7 @@ const CustomCardProperty = (props) => {
           </ButtonWhatsapp>
         </div>
       )} */}
-      <div className="content-button">
+      <div className="content-button" id={`button-bottom-1-${id}`}>
         {canApply === true && (
           <ButtonPrimary
             onClick={async () => {
@@ -403,7 +412,7 @@ const CustomCardProperty = (props) => {
             />
           </ButtonWhatsapp> */}
       </div>
-      <div className="content-button-space">
+      <div className="content-button-space" id={`button-bottom-${id}`}>
         {canSeeDataSheet === true && (
           <ButtonIcon
             onClick={() => {

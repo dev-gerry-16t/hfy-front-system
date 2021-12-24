@@ -62,6 +62,11 @@ const catalogPrice = [
   { id: "3", text: "por ha" },
 ];
 
+const catalogOperation = [
+  { id: "1", text: "Renta" },
+  { id: "2", text: "Venta" },
+];
+
 const SectionDataProperty = (props) => {
   const {
     onclickNext,
@@ -79,6 +84,7 @@ const SectionDataProperty = (props) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
+    idOperationType: 1,
     idPropertyType: null,
     idCommercialActivity: null,
     currentRent: null,
@@ -276,6 +282,34 @@ const SectionDataProperty = (props) => {
           <div className="type-property">
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <MultiSelect>
+                  <span>Tipo de operación:</span>
+                  <div className="button-actions-select">
+                    {catalogOperation.map((row) => {
+                      return (
+                        <ButtonCheck
+                          select={row.id == dataForm.idOperationType}
+                          onClick={() => {
+                            setDataForm({
+                              ...dataForm,
+                              idOperationType: row.id,
+                            });
+                          }}
+                        >
+                          {row.text}
+                        </ButtonCheck>
+                      );
+                    })}
+                  </div>
+                </MultiSelect>
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
+            </Row>
+          </div>
+          <div className="type-form-property">
+            <Row>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <CustomSelect
                   value={dataForm.idPropertyType}
                   placeholder=""
@@ -309,14 +343,16 @@ const SectionDataProperty = (props) => {
                 </Col>
               )}
             </Row>
-          </div>
-          <div className="type-form-property">
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                 <CustomInputCurrency
                   value={dataForm.currentRent}
                   placeholder=""
-                  label="Precio de renta *"
+                  label={
+                    dataForm.idOperationType == 1
+                      ? "Precio de renta *"
+                      : "Precio de venta *"
+                  }
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {

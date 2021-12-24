@@ -64,12 +64,20 @@ const Filter = styled.div`
     display: flex;
     align-items: center;
     margin-bottom: 1em;
-    .button-rent-select {
+    .button-select {
       border: none;
       border-bottom: 2px solid var(--color-primary);
       background: transparent;
       color: var(--color-primary);
       font-weight: 700;
+      margin-left: 3em;
+      padding: 0px 1em;
+    }
+    .button-unselect {
+      border: none;
+      background: transparent;
+      color: #200e32;
+      font-weight: 500;
       margin-left: 3em;
       padding: 0px 1em;
     }
@@ -249,6 +257,7 @@ const ComponentFilter = (props) => {
   const [dataLocation, setDataLocation] = useState([]);
   const [amountMinimum, setAmountMinimum] = useState(null);
   const [amountMaximum, setAmountMaximum] = useState(null);
+  const [idOperationType, setIdOperationType] = useState(1);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetLocationFilter = async (value) => {
@@ -340,6 +349,13 @@ const ComponentFilter = (props) => {
       });
     }
 
+    if (isNil(idOperationType) === false) {
+      arrayConditions.push({
+        queryCondition: 7,
+        compValue: idOperationType,
+      });
+    }
+
     return arrayConditions;
   };
 
@@ -353,7 +369,26 @@ const ComponentFilter = (props) => {
         <Filter>
           <div className="header-filter">
             <h1>{owner === true ? "Mis Propiedades" : "Propiedades"}</h1>
-            <button className="button-rent-select">Renta</button>
+            <button
+              className={
+                idOperationType === 1 ? "button-select" : "button-unselect"
+              }
+              onClick={() => {
+                setIdOperationType(1);
+              }}
+            >
+              Renta
+            </button>
+            <button
+              className={
+                idOperationType === 2 ? "button-select" : "button-unselect"
+              }
+              onClick={() => {
+                setIdOperationType(2);
+              }}
+            >
+              Venta
+            </button>
           </div>
           <div className="inputs-filter">
             <div className="group-inputs-filter">
