@@ -81,6 +81,7 @@ const ComponentPublicProperty = (props) => {
                         });
                       }}
                       type="text"
+                      height="200px"
                     />
                   </Col>
                 </Row>

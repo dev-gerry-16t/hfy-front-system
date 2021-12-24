@@ -24,6 +24,7 @@ const TextArea = styled.textarea`
   color: rgba(0, 0, 0, 0.85);
   font-weight: 700;
   width: 100%;
+  height: ${(props) => props.height};
   &[type="number"]::-webkit-inner-spin-button,
   &[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
@@ -69,6 +70,7 @@ const CustomTextArea = (props) => {
     minLength,
     error = false,
     errorMessage,
+    height = "auto",
   } = props;
   return (
     <ContainerInput>
@@ -93,6 +95,7 @@ const CustomTextArea = (props) => {
           maxLength={isNil(maxLength) === false ? maxLength : null}
           minLength={isNil(minLength) === false ? minLength : null}
           error={error}
+          height={height}
         />
         <ErrorMessage error={error}>
           <img src={saqareX} alt="exclaim" />

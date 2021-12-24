@@ -530,8 +530,8 @@ const ComponentFilter = (props) => {
                   onChange={() => {}}
                   placeholder="Ubicación"
                   onChange={(a, e) => {
-                    if (isNil(e[0]) === false) {
-                      const dataRecord = e[0].onClick();
+                    if (isNil(e) === false) {
+                      const dataRecord = e.onClick();
                       const objetCondition = {
                         queryCondition: 2,
                         compValue: {
@@ -546,25 +546,37 @@ const ComponentFilter = (props) => {
                     }
                   }}
                   onSearch={(e) => {
-                    if (e.length >= 5) {
+                    if (e.length >= 3) {
                       handlerCallGetLocationFilter(e);
+                    } else if (e.length < 3) {
+                      setDataLocation([]);
                     }
                   }}
-                  tokenSeparators={[","]}
                   filterOption={(input, option) => {
-                    if (isNil(option.children) === false) {
-                      return (
-                        option.children
-                          .toLowerCase()
-                          .indexOf(input.toLowerCase()) >= 0
-                      );
-                    }
+                    const normalizeInput = input
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u0320]/g, "");
+                    const normalizeOption =
+                      isNil(option.children) === false
+                        ? option.children
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u0320]/g, "")
+                        : "";
+
+                    return (
+                      normalizeOption
+                        .toLowerCase()
+                        .indexOf(normalizeInput.toLowerCase()) >= 0
+                    );
                   }}
                 >
                   {isEmpty(dataLocation) === false &&
                     dataLocation.map((row) => {
                       return (
-                        <Option value={row.id} onClick={() => row}>
+                        <Option
+                          value={`${row.id}-${row.idState}-${row.idMunicipality}-${row.idNeighborhood}`}
+                          onClick={() => row}
+                        >
                           {row.text}
                         </Option>
                       );

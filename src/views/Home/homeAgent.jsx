@@ -1,4 +1,5 @@
 import React, { createElement } from "react";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { ReactComponent as IconProperties } from "../../assets/iconSvg/svgFile/iconProperties.svg";
 import { ReactComponent as IconBagHouse } from "../../assets/iconSvg/svgFile/iconBagHouse.svg";
@@ -68,7 +69,7 @@ const ContentHome = styled.div`
   }
 
   @media screen and (max-width: 420px) {
-      font-size: 12px;
+    font-size: 12px;
   }
 `;
 
@@ -97,8 +98,8 @@ const CardHome = styled.div`
   &:hover {
     transform: scale(1.1);
   }
-  &:last-child{
-      visibility: hidden;
+  &:last-child {
+    visibility: hidden;
   }
   @media screen and (max-width: 870px) {
     width: 15.5em;
@@ -120,18 +121,35 @@ const CardHome = styled.div`
 `;
 
 const catalogHome = [
-  { text: "Mis propiedades", icon: IconProperties },
-  { text: "Bolsa inmobiliaria", icon: IconBagHouse },
-  { text: "Agregar Propiedad", icon: IconHousePlus },
-  { text: "Bandeja de entrada", icon: IconInMessage },
-  { text: "Contactos", icon: IconSchedule },
-  { text: "Dashboard", icon: IconHomeDashboard },
-  { text: "Generar contrato de arrendamiento", icon: IconNote },
-  { text: "Investigar inquilino", icon: IconSearchUser },
-  { text: "Solicita póliza juridica", icon: IconHomePolicy },
+  {
+    text: "Mis propiedades",
+    icon: IconProperties,
+    path: "/websystem/dashboard-properties",
+  },
+  {
+    text: "Bolsa inmobiliaria",
+    icon: IconBagHouse,
+    path: "/websystem/catalog-properties",
+  },
+  {
+    text: "Agregar Propiedad",
+    icon: IconHousePlus,
+    path: "/websystem/add-property",
+  },
+  { text: "Bandeja de entrada", icon: IconInMessage, path: null },
+  { text: "Contactos", icon: IconSchedule, path: null },
+  {
+    text: "Dashboard",
+    icon: IconHomeDashboard,
+    path: "/websystem/dashboard-adviser",
+  },
+  { text: "Generar contrato de arrendamiento", icon: IconNote, path: null },
+  { text: "Investigar inquilino", icon: IconSearchUser, path: null },
+  { text: "Solicita póliza juridica", icon: IconHomePolicy, path: null },
 ];
 
-const HomeAgent = () => {
+const HomeAgent = (props) => {
+  const { history } = props;
   return (
     <ContentHome>
       <div className="top-home">
@@ -150,7 +168,13 @@ const HomeAgent = () => {
         <div className="main-cards">
           {catalogHome.map((row) => {
             return (
-              <CardHome>
+              <CardHome
+                onClick={() => {
+                  if (isNil(row.path) === false) {
+                    history.push(row.path);
+                  }
+                }}
+              >
                 {createElement(row.icon, null, null)}
                 <span>{row.text}</span>
               </CardHome>

@@ -147,8 +147,10 @@ const SectionCandidate = styled.div`
     .info-user-select {
       flex-direction: column;
       align-items: center;
-      .content-info-public{
-        .info{
+      .content-info-public {
+        padding: 0px 10px;
+        font-size: 12px;
+        .info {
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -172,6 +174,7 @@ const SectionPublicProperty = (props) => {
     description,
     isOwner,
   } = dataDetail;
+
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
   const [detailPublicProperty, setDetailPublicProperty] = useState({});
@@ -344,7 +347,17 @@ const SectionPublicProperty = (props) => {
                 <strong>Titulo:</strong> <span>{title}</span>
               </div>
               <div className="info">
-                <strong>Descripcion:</strong> <span>{description}</span>
+                <strong>Descripción:</strong>
+
+                <div
+                  className="section-info-notification"
+                  dangerouslySetInnerHTML={{
+                    __html:
+                      isNil(description) === false
+                        ? description.replace(/\n/g, "<br />")
+                        : "",
+                  }}
+                />
               </div>
               {isOwner === true && (
                 <div className="edit-public-property">

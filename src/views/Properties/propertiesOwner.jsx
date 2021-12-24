@@ -46,7 +46,14 @@ const PropertiesOwner = (props) => {
     idApartment: null,
     idProperty: null,
   });
-  const [jsonConditionsState, setJsonConditionsState] = useState("[]");
+  const [jsonConditionsState, setJsonConditionsState] = useState(
+    JSON.stringify([
+      {
+        queryCondition: 7,
+        compValue: 1,
+      },
+    ])
+  );
   const [pageSize, setPageSize] = useState(10);
   const [paginationState, setPaginationState] = useState(
     JSON.stringify({

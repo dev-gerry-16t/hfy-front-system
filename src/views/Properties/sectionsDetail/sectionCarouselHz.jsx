@@ -226,6 +226,7 @@ const SectionCarouselInfo = (props) => {
     shortAddress,
     manitenanceAmountFormat,
     priceBasedBy,
+    idOperationType,
   } = dataDetail;
 
   const handlerLimitText = (text) => {
@@ -340,7 +341,7 @@ const SectionCarouselInfo = (props) => {
             <strong>{propertyType}</strong>
           </div>
           <div className="item-description">
-            <span>Precio Renta</span>
+            <span>Precio {idOperationType === 1 ? "Renta" : "Venta"}</span>
             <strong>{currentRentFormat}</strong>
           </div>
           <div className="item-description">
