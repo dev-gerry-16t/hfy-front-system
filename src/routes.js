@@ -71,6 +71,7 @@ const InvitationProspects = React.lazy(() =>
   import("./views/Prospects/invitationProspects")
 );
 const AllUsers = React.lazy(() => import("./views/Users/allUsers"));
+const HomeAgent = React.lazy(() => import("./views/Home/homeAgent"));
 
 const routes = [
   {
@@ -361,8 +362,14 @@ const routes = [
     component: AllUsers,
     exact: true,
   },
-  
-
+  {
+    key: "33",
+    id: "home",
+    path: "/websystem/home-asesor",
+    name: "Home",
+    component: HomeAgent,
+    exact: true,
+  },
 ];
 
 export default routes;
