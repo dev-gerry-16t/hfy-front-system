@@ -528,6 +528,9 @@ const DetailPropertyUsers = (props) => {
                   />
                   <SectionServiceAgent
                     dataApplication={dataApplicationMethod}
+                    onClickViewPolicy={() => {
+                      history.push(`/websystem/select-policy/${idProperty}`);
+                    }}
                   />
                 </SeparateServices>
               )}

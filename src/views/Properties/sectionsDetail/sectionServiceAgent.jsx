@@ -133,8 +133,8 @@ const SectionCandidate = styled.div`
 const SectionCard = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
-  gap: 20px;
+  justify-content: center;
+  gap: 30px;
   margin: 3em 0px;
   padding: 0px 5px;
 `;
@@ -144,7 +144,7 @@ const CardServices = styled.div`
   box-shadow: 0px 1px 8px 6px #ebebf1;
   border-radius: 1em;
   width: 215px;
-  height: 258px;
+  height: 270px;
   position: relative;
 
   .top-card {
@@ -187,6 +187,7 @@ const CardServices = styled.div`
   .body-card {
     display: grid;
     grid-template-rows: 2fr 1fr;
+    height: 215px;
     .content-service {
       display: flex;
       flex-direction: column;
@@ -285,13 +286,13 @@ const CardServiceSelect = styled.div`
     .line {
       transform: rotate(0deg);
       width: 100%;
-      margin:20px 0px;
+      margin: 20px 0px;
     }
   }
 `;
 
 const SectionServiceAgent = (props) => {
-  const { dataApplication } = props;
+  const { dataApplication, onClickViewPolicy } = props;
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail, updateProperty, getById } = dataContexProperty;
   const {
@@ -317,6 +318,7 @@ const SectionServiceAgent = (props) => {
             <SectionCard>
               {isEmpty(dataApplication) === false &&
                 dataApplication.map((row) => {
+                  console.log("row", row);
                   const methods =
                     isNil(row.applicationMethod) === false &&
                     isEmpty(row.applicationMethod) === false
@@ -325,7 +327,9 @@ const SectionServiceAgent = (props) => {
                   return (
                     <CardServices>
                       <div className="top-card">
-                        <div className="style-text">{row.costFormat}</div>
+                        {row.requiresPolicy === false && (
+                          <div className="style-text">{row.costFormat}</div>
+                        )}
                         <h3>{row.text}</h3>
                       </div>
                       <div className="pick"></div>
@@ -349,14 +353,19 @@ const SectionServiceAgent = (props) => {
                             }
                             onClick={async () => {
                               try {
-                                setIsLoadApi(true);
-                                await updateProperty({
-                                  idApartment: dataDetail.idApartment,
-                                  idApplicationMethod: row.idApplicationMethod,
-                                });
-                                getById();
-                                setIsEditService(false);
-                                setIsLoadApi(false);
+                                if (row.requiresPolicy === false) {
+                                  setIsLoadApi(true);
+                                  await updateProperty({
+                                    idApartment: dataDetail.idApartment,
+                                    idApplicationMethod:
+                                      row.idApplicationMethod,
+                                  });
+                                  getById();
+                                  setIsEditService(false);
+                                  setIsLoadApi(false);
+                                } else if (row.requiresPolicy === true) {
+                                  onClickViewPolicy();
+                                }
                               } catch (error) {
                                 setIsLoadApi(false);
                               }

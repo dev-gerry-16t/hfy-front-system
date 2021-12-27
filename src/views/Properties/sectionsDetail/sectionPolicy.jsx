@@ -165,68 +165,74 @@ const SectionPolicy = (props) => {
   } = dataDetail;
 
   return (
-    <ContentPolicy selected={isNil(idPolicy) === false}>
-      {isNil(idPolicy) === true && requiresPolicy === false && (
-        <NoticePolicy>
-          <h1>
-            ¡
-            <span
-              style={{
-                color: "#FF0282",
-              }}
-            >
-              Protege
-            </span>{" "}
-            tu propiedad!
-          </h1>
-          <span className="label-indicator">
-            Eligiendo alguna de nuestras pólizas de arrendamiento
-          </span>
-          {idUserType !== 2 && (
-            <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
+    <>
+      {isNil(idPolicy) === false ? (
+        <ContentPolicy selected={isNil(idPolicy) === false}>
+          {isNil(idPolicy) === true && requiresPolicy === false && (
+            <NoticePolicy>
+              <h1>
+                ¡
+                <span
+                  style={{
+                    color: "#FF0282",
+                  }}
+                >
+                  Protege
+                </span>{" "}
+                tu propiedad!
+              </h1>
+              <span className="label-indicator">
+                Eligiendo alguna de nuestras pólizas de arrendamiento
+              </span>
+              {idUserType !== 2 && (
+                <Button onClick={onClickViewPolicy}>Ver pólizas</Button>
+              )}
+            </NoticePolicy>
           )}
-        </NoticePolicy>
-      )}
-      {isNil(idPolicy) === false && requiresPolicy === false && (
-        <PolicySelected>
-          {canBeEdited === true && (
-            <div className="edit-data-policy">
-              <ButtonIcon onClick={onClickViewPolicy}>
-                <IconEditSquare
-                  backGround="transparent"
-                  color="var(--color-primary)"
-                />
-              </ButtonIcon>
-            </div>
-          )}
-          <div className="left-policy">
-            <div>
-              <IconMoneyPolicy size="132px" />
-            </div>
-          </div>
-          <div className="right-policy">
-            <div className="info-payment">
-              <div className="info-policy">
-                <h1>{policyDescription}</h1>
-                <div className="price">
-                  <h2>{policyAmountFormat}</h2> {/*<span>35%</span>*/}
-                </div>
-              </div>
-              {idUserType === 4 && (
-                <div className="comision">
-                  <strong>Comisión para el asesor</strong>{" "}
-                  <span>{advCommissionAmountFormat}</span>
+          {isNil(idPolicy) === false && requiresPolicy === false && (
+            <PolicySelected>
+              {canBeEdited === true && (
+                <div className="edit-data-policy">
+                  <ButtonIcon onClick={onClickViewPolicy}>
+                    <IconEditSquare
+                      backGround="transparent"
+                      color="var(--color-primary)"
+                    />
+                  </ButtonIcon>
                 </div>
               )}
-              <div className="payment-type">
-                <strong>Tipo de pago:</strong>{" "}
-                <span>{policyPaymentMethod}</span>
+              <div className="left-policy">
+                <div>
+                  <IconMoneyPolicy size="132px" />
+                </div>
               </div>
-            </div>
-          </div>
-        </PolicySelected>
+              <div className="right-policy">
+                <div className="info-payment">
+                  <div className="info-policy">
+                    <h1>{policyDescription}</h1>
+                    <div className="price">
+                      <h2>{policyAmountFormat}</h2> {/*<span>35%</span>*/}
+                    </div>
+                  </div>
+                  {idUserType === 4 && (
+                    <div className="comision">
+                      <strong>Comisión para el asesor</strong>{" "}
+                      <span>{advCommissionAmountFormat}</span>
+                    </div>
+                  )}
+                  <div className="payment-type">
+                    <strong>Tipo de pago:</strong>{" "}
+                    <span>{policyPaymentMethod}</span>
+                  </div>
+                </div>
+              </div>
+            </PolicySelected>
+          )}
+        </ContentPolicy>
+      ) : (
+        <div />
       )}
-    </ContentPolicy>
+    </>
   );
 };
 
