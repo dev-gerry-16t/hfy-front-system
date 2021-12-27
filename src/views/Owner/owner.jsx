@@ -1691,7 +1691,14 @@ const Owner = (props) => {
         </div>
         <div className="main-information-process">
           <div className="content-cards-process">
-            <SectionTimeLine history={history} />
+            <SectionTimeLine
+              history={history}
+              onOpenComponent={(type) => {
+                if (type === 4) {
+                  setIsVisibleVerification(true);
+                }
+              }}
+            />
             <SectionCardTenant
               onUpdateInvitation={async (data, id) => {
                 try {

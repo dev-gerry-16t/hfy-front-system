@@ -362,14 +362,14 @@ const SectionViewTicket = (props) => {
   const handlerOnClick = async (name) => {
     setIsLoadApi(true);
     var opt = {
-      image: { type: "png", quality: 1 },
+      image: { type: "png", quality: 0.95 },
       filename: name,
       margin: 1,
       html2canvas: {
         dpi: 300,
         letterRendering: false,
         useCORS: true,
-        scale: 2,
+        scale: 1,
       },
       jsPDF: { unit: "mm", format: "letter", orientation: "portrait" },
     };
@@ -502,7 +502,10 @@ const SectionViewTicket = (props) => {
                       <strong>{dataDetail.propertyType}</strong>
                     </div>
                     <div className="item-description">
-                      <span>Precio Renta</span>
+                      <span>
+                        Precio{" "}
+                        {dataDetail.idOperationType == 1 ? "Renta" : "Venta"}
+                      </span>
                       <strong>{dataDetail.currentRentFormat}</strong>
                     </div>
                     <div className="item-description">
@@ -732,6 +735,40 @@ const SectionViewTicket = (props) => {
                       );
                     })}
                 </SectionGalery>
+              </div>
+              <LineSeparator opacity="0.3" />
+
+              <div
+                style={{
+                  padding: "0px 3em",
+                }}
+              >
+                <TabsProperty>
+                  <Tab selected>
+                    <h1>Datos de contacto</h1>
+                    <hr />
+                  </Tab>
+                </TabsProperty>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-around",
+                    fontSize: "16px",
+                  }}
+                >
+                  <div></div>
+                  <div>
+                    <div>
+                      <strong>Nombre:</strong>{" "}
+                      <span>{dataDetail.contactName}</span>
+                    </div>
+                    <div>
+                      <strong>Contacto:</strong>{" "}
+                      <span>{dataDetail.contactPhoneNumberFormat}</span>
+                    </div>
+                  </div>
+                  <div></div>
+                </div>
               </div>
               {/* <LineSeparator opacity="0.3" />
             <div

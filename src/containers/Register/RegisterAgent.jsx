@@ -127,6 +127,10 @@ const Container = styled.div`
         top: 40em;
       }
     }
+    .container-info {
+      padding-bottom: 100px;
+    }
+
   }
 `;
 

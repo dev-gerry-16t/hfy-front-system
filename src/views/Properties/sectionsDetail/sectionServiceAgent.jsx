@@ -80,6 +80,18 @@ const ButtonsService = styled.button`
   font-size: 12px;
 `;
 
+const ButtonsService1 = styled.button`
+  border: ${(props) =>
+    props.primary ? "none" : "1px solid var(--color-primary)"};
+  background: ${(props) =>
+    props.primary ? "var(--color-primary)" : "transparent"};
+  color: ${(props) => (props.primary ? "#fff" : "#4E4B66")};
+  border-radius: 1em;
+  padding: 2px 15px;
+  margin-bottom: 5px;
+  font-size: 12px;
+`;
+
 const SectionCandidate = styled.div`
   display: flex;
   flex-direction: column;
@@ -318,7 +330,6 @@ const SectionServiceAgent = (props) => {
             <SectionCard>
               {isEmpty(dataApplication) === false &&
                 dataApplication.map((row) => {
-                  console.log("row", row);
                   const methods =
                     isNil(row.applicationMethod) === false &&
                     isEmpty(row.applicationMethod) === false
@@ -382,6 +393,32 @@ const SectionServiceAgent = (props) => {
                   );
                 })}
             </SectionCard>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <ButtonsService1
+                primary
+                onClick={async () => {
+                  try {
+                    setIsLoadApi(true);
+                    await updateProperty({
+                      idApartment: dataDetail.idApartment,
+                      idApplicationMethod: 7,
+                    });
+                    getById();
+                    setIsEditService(false);
+                    setIsLoadApi(false);
+                  } catch (error) {
+                    setIsLoadApi(false);
+                  }
+                }}
+              >
+                No me interesa
+              </ButtonsService1>
+            </div>
           </>
         )}
         {isNil(idApplicationMethod) === false &&
@@ -441,10 +478,10 @@ const SectionServiceAgent = (props) => {
                     <strong>Servicio:</strong>
                     <span>{applicationMethodTitle}</span>
                   </div>
-                  <div className="info">
+                  {/* <div className="info">
                     <strong>Fecha de adquisición:</strong>
                     <span>02/11/2021</span>
-                  </div>
+                  </div> */}
                 </div>
               </CardServiceSelect>
             </>

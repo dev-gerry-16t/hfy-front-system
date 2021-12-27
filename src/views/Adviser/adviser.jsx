@@ -245,7 +245,14 @@ const Adviser = (props) => {
         </div>
         <div className="main-information-process">
           <div className="content-cards-process">
-            <SectionTimeLine history={history} />
+            <SectionTimeLine
+              history={history}
+              onOpenComponent={(type) => {
+                if (type === 4) {
+                  setIsVisibleVerification(true);
+                }
+              }}
+            />
             <SectionCardOwner
               history={history}
               tenantCoincidences={dataCoincidences}
