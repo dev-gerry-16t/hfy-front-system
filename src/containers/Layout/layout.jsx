@@ -18,7 +18,8 @@ import {
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import IconDashboard from "../../assets/icons/iconDashboard.svg";
+import IconHome from "../../assets/icons/iconDashboard.svg";
+import IconDashboard from "../../assets/icons/iconChart.svg";
 import IconOwner from "../../assets/icons/iconHome.svg";
 import IconRenter from "../../assets/icons/renter.svg";
 import IconDocument from "../../assets/icons/document.svg";
@@ -87,6 +88,7 @@ const DefaultLayout = (props) => {
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
+    IconHome,
     IconOwner,
     IconRenter,
     IconDocument,
