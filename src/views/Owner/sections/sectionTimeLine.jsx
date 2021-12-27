@@ -125,6 +125,7 @@ const SectionTimeLine = (props) => {
     callGlobalActionApi,
     dataProfile,
     history,
+    onOpenComponent = () => {},
   } = props;
   const [dataTimeLine, setDataTimeLine] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -183,6 +184,9 @@ const SectionTimeLine = (props) => {
                   onClick={() => {
                     if (isNil(row.path) === false) {
                       history.push(row.path);
+                    }
+                    if (row.isCurrent === true) {
+                      onOpenComponent(row.idComponent);
                     }
                   }}
                 />

@@ -212,10 +212,10 @@ const SectionAssociationProperty = (props) => {
                         setMethodAssociation(1);
                       }}
                     />
-                    Vincular y actualizar con la ficha técnica de{" "}
+                    Vincular y actualizar con la ficha técnica{" "}
                     {dataProfile.idUserType === 4
-                      ? "el propietario"
-                      : "mi agente"}
+                      ? "del propietario"
+                      : "de mi agente"}
                     .
                   </label>
                 </Col>

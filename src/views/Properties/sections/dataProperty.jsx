@@ -559,6 +559,13 @@ const SectionDataProperty = (props) => {
               <div className="type-form-property">
                 <div className="subtitle-form">
                   <h1>Datos de inmobiliaria / Propietario</h1>
+                  <span>
+                    Si la propiedad no es tuya, puedes proporcionar el correo
+                    del propietario, enviaremos una invitación para que también
+                    este informad@ sobre los prospectos que recibe. La
+                    información que ingreses es confidencial y solo tu podras
+                    verla.
+                  </span>
                 </div>
                 <Row>
                   <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>

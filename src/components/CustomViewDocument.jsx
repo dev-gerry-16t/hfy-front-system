@@ -19,6 +19,17 @@ const ButtonDocument = styled.button`
 const CustomViewDocument = (props) => {
   const { isVisibleModal, dataDocument, onClose, downloadDoc = false } = props;
 
+  const matchedScreen = (sizeMatch) => {
+    let width = "60%";
+    if (sizeMatch.matches) {
+      width = "100%";
+    } else {
+      width = "60%";
+    }
+
+    return width;
+  };
+
   return (
     <Modal
       style={{ top: 20 }}
@@ -26,6 +37,7 @@ const CustomViewDocument = (props) => {
       closable={false}
       footer={false}
       className="modal-signature-contract"
+      width={matchedScreen(window.matchMedia("(max-width: 900px)"))}
     >
       <div className="form-modal">
         <div className="title-head-modal">
