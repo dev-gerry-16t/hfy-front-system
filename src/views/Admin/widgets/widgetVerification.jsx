@@ -57,6 +57,20 @@ const ContentVerification = styled.div`
       justify-content: center;
     }
   }
+
+  @media screen and (max-width: 1320px) {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    .info-verification {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      div {
+      }
+    }
+  }
 `;
 
 const UserDuplicate = styled.div`
@@ -68,6 +82,10 @@ const UserDuplicate = styled.div`
     text-decoration: underline;
     color: var(--color-primary);
     font-weight: 600;
+    font-size: 12px;
+  }
+  @media screen and (max-width: 1320px) {
+    bottom: 0px;
   }
 `;
 
@@ -173,7 +191,7 @@ const WidgetVerification = (props) => {
               setIsOpenDuplicate(true);
             }}
           >
-            Se detectaron usuarios duplicados
+            Duplicados
           </button>
         </UserDuplicate>
       )}

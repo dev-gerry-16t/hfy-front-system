@@ -563,7 +563,7 @@ const SectionDataProperty = (props) => {
                     Si la propiedad no es tuya, puedes proporcionar el correo
                     del propietario, enviaremos una invitación para que también
                     este informad@ sobre los prospectos que recibe. La
-                    información que ingreses es confidencial y solo tu podras
+                    información que ingreses es confidencial y solo tu podrás
                     verla.
                   </span>
                 </div>

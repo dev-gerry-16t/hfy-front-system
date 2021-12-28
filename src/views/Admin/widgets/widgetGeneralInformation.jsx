@@ -35,7 +35,16 @@ const CardInformation = styled.div`
     .data-information {
       display: flex;
       justify-content: space-between;
-      border-bottom: 1px solid #D6D7E8;
+      border-bottom: 1px solid #d6d7e8;
+    }
+  }
+  @media screen and (max-width: 560px) {
+    .content-info {
+      width: 100%;
+      padding: 0px 10px;
+      .data-information {
+        flex-wrap: wrap;
+      }
     }
   }
 `;
