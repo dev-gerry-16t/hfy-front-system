@@ -14,6 +14,7 @@ import CustomSelect from "../../../components/CustomSelect";
 import { ReactComponent as IconAgentFile } from "../../../assets/iconSvg/svgFile/iconAgentFile.svg";
 import { ReactComponent as IconAssociate } from "../../../assets/iconSvg/svgFile/iconAssociate.svg";
 import { ReactComponent as IconRejected } from "../../../assets/iconSvg/svgFile/iconRejected.svg";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const MultiSelect = styled.div`
   margin: 1em 0px;
@@ -56,6 +57,7 @@ const SectionAssociationProperty = (props) => {
     canBeAssociated,
     canBeAssociatedWith,
   } = dataDetail;
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [finishProcess, setFinishProcess] = useState(false);
   const [selectAssociation, setSelectAssociation] = useState(null);
@@ -136,147 +138,153 @@ const SectionAssociationProperty = (props) => {
       }}
     >
       {finishProcess === false && (
-        <FormModal>
-          <h1>Vincula o crea la propiedad</h1>
-          <p>
-            {dataProfile.idUserType === 4 ? "El propietario" : "Tu asesor"}{" "}
-            {canBeAssociatedWith} ha indicado que{" "}
-            {dataProfile.idUserType === 4
-              ? "administraras esta propiedad"
-              : "esta propiedad te pertenece:"}
-          </p>
-          <div className="icon-image-send">
-            <IconAgentFile />
-          </div>
+        <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
+          <FormModal>
+            <h1>Vincula o crea la propiedad</h1>
+            <p>
+              {dataProfile.idUserType === 4 ? "El propietario" : "Tu asesor"}{" "}
+              {canBeAssociatedWith} ha indicado que{" "}
+              {dataProfile.idUserType === 4
+                ? "administraras esta propiedad"
+                : "esta propiedad te pertenece:"}
+            </p>
+            <div className="icon-image-send">
+              <IconAgentFile />
+            </div>
 
-          <div>
-            <Row>
-              <Col span={24}>
-                <MultiSelect>
-                  <span>¿Qué deseas hacer con esta propiedad?</span>
-                  <div className="button-actions-select">
-                    {catalogAssociation.map((row) => {
-                      return (
-                        <ButtonCheck
-                          select={row.id === selectAssociation}
-                          onClick={() => {
-                            if (row.id !== "1") {
-                              setSelectProperty(null);
-                              setDataPropertyParent({});
-                              setMethodAssociation(null);
-                            }
-                            if (row.id === "3") {
-                              setAcceptProperty(false);
-                            } else {
-                              setAcceptProperty(true);
-                            }
-                            setSelectAssociation(row.id);
-                          }}
-                        >
-                          {row.text}
-                        </ButtonCheck>
-                      );
-                    })}
-                  </div>
-                </MultiSelect>
-              </Col>
-            </Row>
-            {selectAssociation === "1" && (
+            <div>
               <Row>
                 <Col span={24}>
-                  <CustomSelect
-                    value={selectProperty}
-                    placeholder=""
-                    label="Propiedad a vincular"
-                    data={dataProperty}
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value, row) => {
-                      setSelectProperty(value);
-                      setDataPropertyParent(row);
-                    }}
-                  />
+                  <MultiSelect>
+                    <span>¿Qué deseas hacer con esta propiedad?</span>
+                    <div className="button-actions-select">
+                      {catalogAssociation.map((row) => {
+                        return (
+                          <ButtonCheck
+                            select={row.id === selectAssociation}
+                            onClick={() => {
+                              if (row.id !== "1") {
+                                setSelectProperty(null);
+                                setDataPropertyParent({});
+                                setMethodAssociation(null);
+                              }
+                              if (row.id === "3") {
+                                setAcceptProperty(false);
+                              } else {
+                                setAcceptProperty(true);
+                              }
+                              setSelectAssociation(row.id);
+                            }}
+                          >
+                            {row.text}
+                          </ButtonCheck>
+                        );
+                      })}
+                    </div>
+                  </MultiSelect>
                 </Col>
               </Row>
-            )}
-            {selectAssociation === "1" && isNil(selectProperty) === false && (
-              <Row>
-                <Col span={24}>
+              {selectAssociation === "1" && (
+                <Row>
+                  <Col span={24}>
+                    <CustomSelect
+                      value={selectProperty}
+                      placeholder=""
+                      label="Propiedad a vincular"
+                      data={dataProperty}
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value, row) => {
+                        setSelectProperty(value);
+                        setDataPropertyParent(row);
+                      }}
+                    />
+                  </Col>
+                </Row>
+              )}
+              {selectAssociation === "1" && isNil(selectProperty) === false && (
+                <Row>
+                  <Col span={24}>
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        id={`type-association-1`}
+                        name="associate"
+                        value={""}
+                        onClick={() => {
+                          setMethodAssociation(1);
+                        }}
+                      />
+                      Vincular y actualizar con la ficha técnica{" "}
+                      {dataProfile.idUserType === 4
+                        ? "del propietario"
+                        : "de mi agente"}
+                      .
+                    </label>
+                  </Col>
                   <label className="input-radio">
                     <input
                       type="radio"
-                      id={`type-association-1`}
+                      id={`type-association-2`}
                       name="associate"
                       value={""}
                       onClick={() => {
-                        setMethodAssociation(1);
+                        setMethodAssociation(2);
                       }}
                     />
-                    Vincular y actualizar con la ficha técnica{" "}
-                    {dataProfile.idUserType === 4
-                      ? "del propietario"
-                      : "de mi agente"}
-                    .
+                    Vincular y actualizar con la ficha técnica de mi propiedad
                   </label>
-                </Col>
-                <label className="input-radio">
-                  <input
-                    type="radio"
-                    id={`type-association-2`}
-                    name="associate"
-                    value={""}
-                    onClick={() => {
-                      setMethodAssociation(2);
-                    }}
-                  />
-                  Vincular y actualizar con la ficha técnica de mi propiedad
-                </label>
-                <Col span={24}></Col>
-              </Row>
-            )}
-          </div>
-          {(selectAssociation === "2" ||
-            selectAssociation === "3" ||
-            (selectAssociation === "1" &&
-              isNil(methodAssociation) === false)) && (
-            <div
-              className="button-action"
-              style={{
-                marginTop: "2em",
-              }}
-            >
-              <ButtonsModal
-                primary
-                onClick={async () => {
-                  try {
-                    const response = await handlerCallSetPropertyAssociation(
-                      {
-                        idPropertyParent:
-                          isEmpty(dataPropertyParent) === false
-                            ? dataPropertyParent.idProperty
-                            : null,
-                        idApartmentParent:
-                          isEmpty(dataPropertyParent) === false
-                            ? dataPropertyParent.idApartment
-                            : null,
-                        isAccepted: acceptProperty,
-                        method: methodAssociation,
-                        idApartment,
-                        idProperty,
-                      },
-                      idProperty
-                    );
-                    getById();
-                    setNewInfoProperty(response);
-                    setFinishProcess(true);
-                  } catch (error) {}
+                  <Col span={24}></Col>
+                </Row>
+              )}
+            </div>
+            {(selectAssociation === "2" ||
+              selectAssociation === "3" ||
+              (selectAssociation === "1" &&
+                isNil(methodAssociation) === false)) && (
+              <div
+                className="button-action"
+                style={{
+                  marginTop: "2em",
                 }}
               >
-                Finalizar
-              </ButtonsModal>
-            </div>
-          )}
-        </FormModal>
+                <ButtonsModal
+                  primary
+                  onClick={async () => {
+                    try {
+                      setIsLoadApi(true);
+                      const response = await handlerCallSetPropertyAssociation(
+                        {
+                          idPropertyParent:
+                            isEmpty(dataPropertyParent) === false
+                              ? dataPropertyParent.idProperty
+                              : null,
+                          idApartmentParent:
+                            isEmpty(dataPropertyParent) === false
+                              ? dataPropertyParent.idApartment
+                              : null,
+                          isAccepted: acceptProperty,
+                          method: methodAssociation,
+                          idApartment,
+                          idProperty,
+                        },
+                        idProperty
+                      );
+                      getById();
+                      setNewInfoProperty(response);
+                      setFinishProcess(true);
+                      setIsLoadApi(false);
+                    } catch (error) {
+                      setIsLoadApi(false);
+                    }
+                  }}
+                >
+                  Finalizar
+                </ButtonsModal>
+              </div>
+            )}
+          </FormModal>
+        </ComponentLoadSection>
       )}
       {finishProcess === true && (
         <FormModal>
