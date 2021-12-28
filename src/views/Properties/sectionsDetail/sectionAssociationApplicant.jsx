@@ -14,6 +14,7 @@ import CustomSelect from "../../../components/CustomSelect";
 import { ReactComponent as IconMailLetter } from "../../../assets/iconSvg/svgFile/iconMailLetter.svg";
 import { ReactComponent as IconAssociate } from "../../../assets/iconSvg/svgFile/iconAssociate.svg";
 import { ReactComponent as IconRejected } from "../../../assets/iconSvg/svgFile/iconRejected.svg";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const MultiSelect = styled.div`
   margin: 1em 0px;
@@ -56,6 +57,7 @@ const SectionAssociationApplicant = (props) => {
     identifier,
   } = dataDetail;
   const [visibleModal, setVisibleModal] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [finishProcess, setFinishProcess] = useState(false);
   const [selectAssociation, setSelectAssociation] = useState(null);
   const [methodAssociation, setMethodAssociation] = useState(null);
@@ -78,6 +80,10 @@ const SectionAssociationApplicant = (props) => {
         id,
         API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
         "PUT"
+      );
+      frontFunctions.showMessageStatusApi(
+        "Se procesó con exito tu solicitud",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
       return response.response;
     } catch (error) {
@@ -109,75 +115,81 @@ const SectionAssociationApplicant = (props) => {
       }}
     >
       {finishProcess === false && (
-        <FormModal>
-          <h1>Invitación a propiedad</h1>
-          <p>
-            Has recibido una invitación para ser inquilino en esta propiedad
-          </p>
-          <div className="icon-image-send">
-            <IconMailLetter />
-          </div>
+        <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
+          <FormModal>
+            <h1>Invitación a propiedad</h1>
+            <p>
+              Has recibido una invitación para ser inquilino en esta propiedad
+            </p>
+            <div className="icon-image-send">
+              <IconMailLetter />
+            </div>
 
-          <div>
-            <Row>
-              <Col span={24}>
-                <MultiSelect>
-                  <span style={{ textAlign: "center" }}>
-                    ¿Qué deseas hacer con tu invitación?
-                  </span>
-                  <div className="button-actions-select">
-                    {catalogAssociation.map((row) => {
-                      return (
-                        <ButtonCheck
-                          select={row.id === selectAssociation}
-                          onClick={() => {
-                            if (row.id === "1") {
-                              setAcceptProperty(true);
-                            }
-                            if (row.id === "2") {
-                              setAcceptProperty(false);
-                            }
-                            setSelectAssociation(row.id);
-                          }}
-                        >
-                          {row.text}
-                        </ButtonCheck>
-                      );
-                    })}
-                  </div>
-                </MultiSelect>
-              </Col>
-            </Row>
-          </div>
-          {isNil(selectAssociation) === false && (
-            <div
-              className="button-action"
-              style={{
-                marginTop: "2em",
-              }}
-            >
-              <ButtonsModal
-                primary
-                onClick={async () => {
-                  try {
-                    const response = await handlerCallApplyToProperty(
-                      {
-                        isAccepted: acceptProperty,
-                        idApartment,
-                        identifier,
-                      },
-                      idProperty
-                    );
-                    getById();
-                    setFinishProcess(true);
-                  } catch (error) {}
+            <div>
+              <Row>
+                <Col span={24}>
+                  <MultiSelect>
+                    <span style={{ textAlign: "center" }}>
+                      ¿Qué deseas hacer con tu invitación?
+                    </span>
+                    <div className="button-actions-select">
+                      {catalogAssociation.map((row) => {
+                        return (
+                          <ButtonCheck
+                            select={row.id === selectAssociation}
+                            onClick={() => {
+                              if (row.id === "1") {
+                                setAcceptProperty(true);
+                              }
+                              if (row.id === "2") {
+                                setAcceptProperty(false);
+                              }
+                              setSelectAssociation(row.id);
+                            }}
+                          >
+                            {row.text}
+                          </ButtonCheck>
+                        );
+                      })}
+                    </div>
+                  </MultiSelect>
+                </Col>
+              </Row>
+            </div>
+            {isNil(selectAssociation) === false && (
+              <div
+                className="button-action"
+                style={{
+                  marginTop: "2em",
                 }}
               >
-                Finalizar
-              </ButtonsModal>
-            </div>
-          )}
-        </FormModal>
+                <ButtonsModal
+                  primary
+                  onClick={async () => {
+                    try {
+                      setIsLoadApi(true);
+                      const response = await handlerCallApplyToProperty(
+                        {
+                          isAccepted: acceptProperty,
+                          idApartment,
+                          identifier,
+                        },
+                        idProperty
+                      );
+                      getById();
+                      setFinishProcess(true);
+                      setIsLoadApi(false);
+                    } catch (error) {
+                      setIsLoadApi(false);
+                    }
+                  }}
+                >
+                  Finalizar
+                </ButtonsModal>
+              </div>
+            )}
+          </FormModal>
+        </ComponentLoadSection>
       )}
       {finishProcess === true && (
         <FormModal>
@@ -200,6 +212,7 @@ const SectionAssociationApplicant = (props) => {
               primary
               onClick={() => {
                 setVisibleModal(false);
+                history.push(`/websystem/detail-property-users/${idProperty}`);
               }}
             >
               Cerrar

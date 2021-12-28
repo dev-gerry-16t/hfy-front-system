@@ -53,6 +53,7 @@ import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationAppl
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
+import CustomValidationUser from "../../components/CustomValidationUser";
 
 const dataTabsProperty = [
   {
@@ -356,6 +357,24 @@ const DetailPropertyUsers = (props) => {
             } catch (error) {
               throw error;
             }
+          }}
+        />
+        <CustomValidationUser
+          isVisible={isOpenComponent == 4}
+          onClose={() => {
+            setIsOpenComponent(null);
+          }}
+          finished={() => {
+            setIsOpenComponent(null);
+          }}
+          metadata={{
+            idCustomer: dataProfile.idCustomer,
+          }}
+          clientId={dataProfile.clientId}
+          flowId={dataProfile.flowId}
+          finishedProcess={() => {
+            setIsOpenComponent(null);
+            handlerCallGetPropertyById();
           }}
         />
         <SectionAssociationProperty history={history} />

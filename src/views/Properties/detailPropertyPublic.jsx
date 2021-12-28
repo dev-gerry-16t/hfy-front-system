@@ -208,6 +208,9 @@ const DetailPropertyUsers = (props) => {
         <Content>
           <ContextProperty.Provider
             value={{
+              getById: () => {
+                handlerCallGetPropertyById();
+              },
               dataDetail,
               updateProperty: async (data) => {
                 try {
