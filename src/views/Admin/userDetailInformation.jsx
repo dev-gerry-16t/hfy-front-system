@@ -26,55 +26,117 @@ const Content = styled.div`
 `;
 
 const ContentsTop = styled.div`
-  height: 50vh;
+  height: auto;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   column-gap: 0.5em;
   row-gap: 0.5em;
+  @media screen and (max-width: 1320px) {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    column-gap: 0px;
+    row-gap: 0px;
+  }
+  @media screen and (max-width: 1230px) {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(4, auto);
+  }
+  @media screen and (max-width: 560px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const ContentInformation = styled.div`
   grid-column: 1/2;
   grid-row: 1/3;
   padding: 1em 2em;
+  @media screen and (max-width: 1320px) {
+    padding: 1em 10px;
+  }
+  @media screen and (max-width: 1230px) {
+  }
 `;
 
 const ContentVerification = styled.div`
   grid-column: 2/3;
   grid-row: 1/2;
   padding: 1em;
+  @media screen and (max-width: 1320px) {
+    grid-row: 1/3;
+    padding: 1em 10px;
+  }
+  @media screen and (max-width: 1230px) {
+  }
 `;
 
 const ContentReferences = styled.div`
   grid-column: 2/3;
   grid-row: 2/3;
   padding: 1em;
+  @media screen and (max-width: 1320px) {
+    grid-column: 3/4;
+    grid-row: 1/3;
+    padding: 1em 10px;
+  }
+  @media screen and (max-width: 1230px) {
+    grid-column: 1/2;
+    grid-row: 3/5;
+  }
 `;
 
 const ContentDocument = styled.div`
   grid-column: 3/4;
   grid-row: 1/3;
   padding: 1em;
+  @media screen and (max-width: 1320px) {
+    grid-column: 4/5;
+    padding: 1em 10px;
+  }
+  @media screen and (max-width: 1230px) {
+    grid-column: 2/3;
+    grid-row: 3/5;
+  }
 `;
 
 const ContentsBottom = styled.div`
-  height: 50vh;
+  height: auto;
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   column-gap: 0.5em;
   row-gap: 0.5em;
+  @media screen and (max-width: 1320px) {
+    grid-template-columns: 1fr 1fr;
+  }
+  @media screen and (max-width: 560px) {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 const ContentInvestigation = styled.div`
   padding: 1em 2em;
+  @media screen and (max-width: 1320px) {
+    padding: 1em 10px;
+    grid-column: 1/2;
+  }
 `;
 
 const ContentGeneralInformation = styled.div`
   padding: 1em;
+  @media screen and (max-width: 1320px) {
+    padding: 1em 10px;
+    grid-column: 1/3;
+    grid-row: 2/3;
+  }
 `;
 
 const ContentLocation = styled.div`
   padding: 1em;
+  @media screen and (max-width: 1320px) {
+    padding: 1em 10px;
+    grid-column: 2/3;
+    grid-row: 1/2;
+  }
 `;
 
 const StickyInvestigation = styled.div`
@@ -83,6 +145,12 @@ const StickyInvestigation = styled.div`
   bottom: 2vh;
   display: flex;
   flex-direction: column;
+  z-index: 5;
+  @media screen and (max-width: 560px) {
+    width: 100%;
+    right: 0px;
+    align-items: center;
+  }
 `;
 
 const UserDetailInformation = (props) => {

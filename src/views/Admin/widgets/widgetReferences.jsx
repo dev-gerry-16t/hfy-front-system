@@ -33,6 +33,12 @@ const CardInformation = styled.div`
   border-radius: 1em;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px,
     rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+
+  @media screen and (max-width: 1320px) {
+    min-width: auto;
+    width: 100%;
+    padding: 0.7em 10px;
+  }
 `;
 
 const SectionCardInfoReference = styled.div`
@@ -83,6 +89,13 @@ const SectionCardInfoReference = styled.div`
       padding: 0.3em 1em;
       border-radius: 1em;
     }
+  }
+  @media screen and (max-width: 1320px) {
+    flex-direction: column;
+    max-width: auto;
+    max-height: 450px;
+    overflow-y: scroll;
+    padding: 0px 5px;
   }
 `;
 

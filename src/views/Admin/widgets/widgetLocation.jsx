@@ -19,6 +19,7 @@ const CardLocation = styled.div`
     padding: 0.7em 1em;
     iframe {
       height: 100%;
+      width: 100%;
     }
   }
 `;

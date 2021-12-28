@@ -296,7 +296,7 @@ const DetailPropertyUsers = (props) => {
               title: "Agrega un prospecto",
               element: "#section-prospect",
               intro:
-                "Aqui aparecerán todos tus prospectos a inquilinos, los cuales tu podras agregar o bien nuestros usuarios que se postulan a tu propiedad y podras aceptarlos o rechazarlos.",
+                "Aqui aparecerán todos tus prospectos a inquilinos, los cuales tu podrás agregar o bien nuestros usuarios que se postulan a tu propiedad y podrás aceptarlos o rechazarlos.",
             },
             {
               title: "Agrega un prospecto",
@@ -308,7 +308,7 @@ const DetailPropertyUsers = (props) => {
               title: "Acciones",
               element: "#buttons-action-detail",
               intro:
-                "Puedes eliminar o editar esta propiedad dando clic a alguno de estos botones, en caso de que tu propiedad sea pública tambien podras compartirla con cualquier persona.",
+                "Puedes eliminar o editar esta propiedad dando clic a alguno de estos botones, en caso de que tu propiedad sea pública tambien podrás compartirla con cualquier persona.",
             },
           ]}
           initialStep={0}
