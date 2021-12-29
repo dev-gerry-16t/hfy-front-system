@@ -12,6 +12,7 @@ import {
   callGetAgentIndicators,
   callGetAgentContractCoincidences,
   callGetAgentCommissionChart,
+  callGetTransactionsByUser,
 } from "../../utils/actions/actions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -20,6 +21,7 @@ import SectionCardOwner from "./sections/sectionCardOwner";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import IconsProfile from "../Owner/icons/icons";
 import SectionTimeLine from "../Owner/sections/sectionTimeLine";
+import SectionStatsMovements from "../Owner/sections/sectionStatsMovements";
 
 const { Content } = Layout;
 
@@ -32,9 +34,11 @@ const Adviser = (props) => {
     callGetAgentIndicators,
     callGetAgentContractCoincidences,
     callGetAgentCommissionChart,
+    callGetTransactionsByUser,
   } = props;
 
   const [dataStats, setDataStats] = useState({});
+  const [dataTransactions, setDataTransactions] = useState([]);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [dataChartBar, setDataChartBar] = useState([]);
   const [isVisibleVerification, setIsVisibleVerification] = useState(false);
@@ -56,6 +60,27 @@ const Adviser = (props) => {
         break;
       default:
         break;
+    }
+  };
+
+  const handlerCallGetTransactionsByUser = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetTransactionsByUser({
+        idSystemUser,
+        idLoginHistory,
+      });
+
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataTransactions(responseResult);
+    } catch (error) {
+      showMessageStatusApi(
+        "Error en el sistema, no se pudo ejecutar la petición",
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
     }
   };
 
@@ -140,6 +165,7 @@ const Adviser = (props) => {
     await handlerCallGetAgentIndicators();
     await handlerCallGetAgentContractCoincidences();
     await handlerCallGetAgentCommissionChart();
+    handlerCallGetTransactionsByUser();
   };
 
   const handlerCallGetAllUserProfile = async () => {
@@ -252,6 +278,7 @@ const Adviser = (props) => {
                   setIsVisibleVerification(true);
                 }
               }}
+              isVisibleVerification={isVisibleVerification}
             />
             <SectionCardOwner
               history={history}
@@ -264,6 +291,10 @@ const Adviser = (props) => {
         <div className="main-information-user">
           <div className="content-cards-payments">
             <SectionStatsChart dataStatsChart={dataChartBar} finishCallApis />
+            <SectionStatsMovements
+              dataInformation={dataTransactions}
+              finishCallApis={true}
+            />
           </div>
         </div>
       </div>
@@ -286,6 +317,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(callGetAgentContractCoincidences(data)),
   callGetAgentCommissionChart: (data) =>
     dispatch(callGetAgentCommissionChart(data)),
+  callGetTransactionsByUser: (data) =>
+    dispatch(callGetTransactionsByUser(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Adviser);

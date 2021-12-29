@@ -588,7 +588,7 @@ const SectionDataProperty = (props) => {
                           ownerGivenName: null,
                           ownerLastName: null,
                           ownerEmailAddress: value,
-                          idCustomer: null,
+                          idCustomerOwner: null,
                         });
                       }}
                       onSelectItem={(dataRecord) => {
@@ -597,7 +597,7 @@ const SectionDataProperty = (props) => {
                           ownerGivenName: dataRecord.givenName,
                           ownerLastName: dataRecord.lastName,
                           ownerEmailAddress: dataRecord.username,
-                          idCustomer: dataRecord.idCustomer,
+                          idCustomerOwner: dataRecord.idCustomer,
                         });
                       }}
                     />

@@ -58,6 +58,7 @@ const Card = styled.div`
   height: 96px;
   display: grid;
   grid-template-columns: 1fr 3fr;
+  cursor: pointer;
   opacity: ${(props) =>
     props.finish === false && props.select === false ? "0.3" : "1"};
   .content-icon {
@@ -75,6 +76,7 @@ const Card = styled.div`
     }
   }
   .info-step {
+    cursor: pointer;
     font-size: 14px;
     h1 {
       margin: 0px;
@@ -131,8 +133,8 @@ const IconStep = styled.div`
 
 const CardStep = ({ title, description, finish, select, icon, onClick }) => {
   return (
-    <Card finish={finish} select={select}>
-      <div className="content-icon" onClick={onClick}>
+    <Card finish={finish} select={select} onClick={onClick}>
+      <div className="content-icon">
         <IconStep finish={finish} select={select}>
           <div className="icon-circle">
             <i className={finish === true ? "fa fa-check" : icon}></i>
@@ -165,6 +167,7 @@ const SectionTimeLine = (props) => {
     history,
     setDataUserRedirect,
     onOpenComponent,
+    isOpenComponent,
   } = props;
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
@@ -209,10 +212,10 @@ const SectionTimeLine = (props) => {
   };
 
   useEffect(() => {
-    if (isEmpty(dataDetail) === false) {
+    if (isEmpty(dataDetail) === false && isNil(isOpenComponent) === true) {
       handlerCallGetCustomerTimeLine();
     }
-  }, [dataDetail]);
+  }, [dataDetail, isOpenComponent]);
 
   return (
     <>
