@@ -258,6 +258,7 @@ const SectionPublicProperty = (props) => {
           setVisiblePublicProperty(false);
           setDetailPublicProperty({});
         }}
+        dataDetail={dataDetail}
       />
 
       {isNil(infoTenant) === true && isPublished === false && (
