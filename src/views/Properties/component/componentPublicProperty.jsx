@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
@@ -9,8 +10,13 @@ import { ReactComponent as IconStyleCheck } from "../../../assets/iconSvg/svgFil
 import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const ComponentPublicProperty = (props) => {
-  const { isModalVisible, onClose, onPublicProperty, detailPublicProperty } =
-    props;
+  const {
+    isModalVisible,
+    onClose,
+    onPublicProperty,
+    detailPublicProperty,
+    dataDetail = {},
+  } = props;
   const initialForm = {
     isPublished: false,
     title: null,
@@ -20,6 +26,90 @@ const ComponentPublicProperty = (props) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataForm, setDataForm] = useState(initialForm);
 
+  const handlerLimitText = (text) => {
+    let textTransform = "";
+    if (isNil(text) === false && isEmpty(text) === false) {
+      const splitText = text.split(",");
+      if (splitText.length >= 2) {
+        textTransform = `${splitText[0]}`;
+      }
+    }
+    return textTransform;
+  };
+
+  const handlerDefaultTitleDescription = (data) => {
+    let title = "";
+    let description = "";
+    const amenities =
+      isEmpty(data.propertyAmenities) === false
+        ? JSON.parse(data.propertyAmenities)
+        : [];
+
+    const characteristics =
+      isEmpty(data.propertyGeneralCharacteristics) === false
+        ? JSON.parse(data.propertyGeneralCharacteristics)
+        : [];
+
+    if (isEmpty(data.operationType) === false) {
+      title = `${data.propertyType} en ${
+        data.operationType
+      } en ${handlerLimitText(data.shortAddress)}`;
+      description = `Bonit@ ${data.propertyType} en ${
+        data.operationType
+      } en ${handlerLimitText(data.shortAddress)}`;
+    }
+    if (isEmpty(amenities) === false) {
+      description = `${description}
+con ${isNil(amenities[0]) === false ? amenities[0].text : ""}
+
+caracteristicas:`;
+    }
+    if (isNil(data.isFurnished) === false && data.isFurnished == true) {
+      description = `${description}
+- Amueblado`;
+    }
+    if (isNil(data.totalSquareMetersBuilt) === false) {
+      description = `${description}
+- ${data.totalSquareMetersBuilt} m² de construcción`;
+    }
+    if (isNil(data.totalSquareMetersLand) === false) {
+      description = `${description}
+- ${data.totalSquareMetersLand} m² de terreno`;
+    }
+    if (isNil(data.totalBedrooms) === false) {
+      description = `${description}
+- ${data.totalBedrooms} recamaras`;
+    }
+    if (isNil(data.totalBathrooms) === false) {
+      description = `${description}
+- ${data.totalBathrooms} baños completos`;
+    }
+    if (isNil(data.totalParkingSpots) === false) {
+      description = `${description}
+- ${data.totalParkingSpots} lugares de estacionamiento`;
+    }
+    if (isEmpty(characteristics) === false) {
+      for (const element of characteristics) {
+        description = `${description}
+- ${element.text}`;
+      }
+    }
+
+    if (isEmpty(amenities) === false) {
+      description = `${description}
+
+Amenidades:`;
+      for (const element of amenities) {
+        description = `${description}
+- ${element.text}`;
+      }
+    }
+    setDataForm({
+      title: title.toUpperCase(),
+      description: description.toUpperCase(),
+    });
+  };
+
   useEffect(() => {
     if (isEmpty(detailPublicProperty) === false) {
       setDataForm({
@@ -27,8 +117,16 @@ const ComponentPublicProperty = (props) => {
         title: detailPublicProperty.title,
         description: detailPublicProperty.description,
       });
+    } else {
+      if (
+        isEmpty(detailPublicProperty.title) === true &&
+        isEmpty(detailPublicProperty.description) === true &&
+        isEmpty(dataDetail) === false
+      ) {
+        handlerDefaultTitleDescription(dataDetail);
+      }
     }
-  }, [detailPublicProperty]);
+  }, [detailPublicProperty, dataDetail]);
 
   return (
     <Modal
