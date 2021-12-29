@@ -140,6 +140,8 @@ const SectionDataImages = (props) => {
     dataFormSave,
     idApartment,
     getById,
+    onSaveImages = () => {},
+    dataSaveImages,
   } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
@@ -282,6 +284,7 @@ const SectionDataImages = (props) => {
       }
       setArrayImages([...arrayImages, ...newArrayImages]);
       setCount(newCont);
+      onSaveImages([...arrayImages, ...newArrayImages]);
     } else {
       const newArrayImages = [];
       let newCont = count;
@@ -457,6 +460,8 @@ const SectionDataImages = (props) => {
       ) {
         setCount(0);
         setArrayImages([]);
+      } else if (isNil(idProperty) === true) {
+        setArrayImages(dataSaveImages);
       }
     }
   }, [dataFormSave]);
@@ -478,7 +483,7 @@ const SectionDataImages = (props) => {
           <div className="label-indicator">
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <span>Agrega hasta 24 imagenes para mostrar la propiedad.</span>
+                <span>Agrega hasta 18 imágenes para mostrar la propiedad.</span>
               </Col>
             </Row>
           </div>

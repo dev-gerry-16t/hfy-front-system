@@ -95,7 +95,8 @@ const SectionCardInfoReference = styled.div`
     max-width: auto;
     max-height: 450px;
     overflow-y: scroll;
-    padding: 0px 5px;
+    padding: 15px 5px;
+    justify-content: flex-start;
   }
 `;
 

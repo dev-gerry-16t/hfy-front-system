@@ -662,7 +662,7 @@ const SectionViewTicket = (props) => {
                         <h1>{handlerLimitText(dataDetail.shortAddress)}</h1>
                         <hr />
                         <div>
-                          <span>{dataDetail.fullAddress}</span>
+                          <span>{dataDetail.shortAddress}</span>
                         </div>
                       </div>
                     </ContentAddress>
