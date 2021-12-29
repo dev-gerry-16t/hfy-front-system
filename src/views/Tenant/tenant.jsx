@@ -1051,6 +1051,7 @@ const Tenant = (props) => {
                   setIsVisibleVerification(true);
                 }
               }}
+              isVisibleVerification={isVisibleVerification}
             />
             <SectionCardOwners
               finishCallApis={true}

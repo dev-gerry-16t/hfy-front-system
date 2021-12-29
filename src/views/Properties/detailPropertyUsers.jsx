@@ -54,6 +54,7 @@ import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import CustomValidationUser from "../../components/CustomValidationUser";
+import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
 
 const dataTabsProperty = [
   {
@@ -323,6 +324,12 @@ const DetailPropertyUsers = (props) => {
             setEnableIntro(false);
           }}
         />
+        <SectionAreYouOwner
+          visibleModal={isOpenComponent == 5}
+          onClose={() => {
+            setIsOpenComponent(null);
+          }}
+        />
         <CustomModalMessage
           isModalVisible={isVisibleDelete}
           title="Eliminar propiedad"
@@ -564,6 +571,7 @@ const DetailPropertyUsers = (props) => {
             onOpenComponent={(id) => {
               setIsOpenComponent(id);
             }}
+            isOpenComponent={isOpenComponent}
           />
           <SectionDocuments
             onReportClose={() => {

@@ -1698,6 +1698,7 @@ const Owner = (props) => {
                   setIsVisibleVerification(true);
                 }
               }}
+              isVisibleVerification={isVisibleVerification}
             />
             <SectionCardTenant
               onUpdateInvitation={async (data, id) => {
