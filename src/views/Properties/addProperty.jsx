@@ -34,6 +34,7 @@ const AddProperty = (props) => {
     isNil(params.idProperty) === false ? params.idProperty : null;
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
+  const [dataSaveImages, setDataSaveImages] = useState([]);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallAddPropertyV2 = async (data) => {
@@ -180,6 +181,10 @@ const AddProperty = (props) => {
             }
           }}
           dataFormSave={dataForm}
+          onSaveImages={(arrayImages) => {
+            setDataSaveImages(arrayImages);
+          }}
+          dataSaveImages={dataSaveImages}
           redirect={(id) => {
             history.push(`/websystem/detail-property-users/${id}`);
           }}
