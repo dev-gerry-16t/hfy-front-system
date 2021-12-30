@@ -492,44 +492,94 @@ const SectionCurrentAddress = (props) => {
             dataForm.isOwn === 1 ||
             dataForm.isOwn === true ||
             dataForm.isOwn === "true") && (
-            <Row>
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomSelect
-                  value={dataForm.idPropertyState}
-                  placeholder=""
-                  label="Estatus de tu propiedad"
-                  data={dataPropertyStates}
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value, option) => {
-                    setDataForm({
-                      ...dataForm,
-                      idPropertyState: value,
-                    });
-                    setOpenRequiresQty(option.requiresQty);
-                  }}
-                />
-              </Col>
-              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                {openRequiresQty === true && (
-                  <CustomInputCurrency
-                    value={dataForm.qtyDescription}
+            <>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomSelect
+                    value={dataForm.idPropertyState}
                     placeholder=""
-                    label="Monto que pagas:"
+                    label="Estatus de tu propiedad"
+                    data={dataPropertyStates}
                     error={false}
                     errorMessage="Este campo es requerido"
-                    onChange={(value) => {
+                    onChange={(value, option) => {
                       setDataForm({
                         ...dataForm,
-                        qtyDescription: value,
+                        idPropertyState: value,
                       });
+                      setOpenRequiresQty(option.requiresQty);
                     }}
-                    type="number"
                   />
-                )}
-              </Col>
-            </Row>
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  {openRequiresQty === true && (
+                    <CustomInputCurrency
+                      value={dataForm.qtyDescription}
+                      placeholder=""
+                      label="Monto que pagas:"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          qtyDescription: value,
+                        });
+                      }}
+                      type="number"
+                    />
+                  )}
+                </Col>
+              </Row>
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <Row>
+                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <CustomInputTypeForm
+                        value={dataForm.currentTime}
+                        placeholder=""
+                        label="Tiempo habitando"
+                        error={false}
+                        errorMessage="Este campo es requerido"
+                        onChange={(value) => {
+                          setDataForm({
+                            ...dataForm,
+                            currentTime: value,
+                          });
+                        }}
+                        type="number"
+                      />
+                    </Col>
+                    <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                      <CustomSelect
+                        value={dataForm.currentTimeRange}
+                        placeholder=""
+                        label="Periodo"
+                        data={[
+                          {
+                            id: "M",
+                            text: "Meses",
+                          },
+                          {
+                            id: "Y",
+                            text: "Años",
+                          },
+                        ]}
+                        error={false}
+                        errorMessage="Este campo es requerido"
+                        onChange={(value) => {
+                          setDataForm({
+                            ...dataForm,
+                            currentTimeRange: value,
+                          });
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                </Col>
+              </Row>
+            </>
           )}
           {(dataForm.isOwn === "0" ||
             dataForm.isOwn === 0 ||
