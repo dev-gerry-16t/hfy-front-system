@@ -139,6 +139,25 @@ const WidgetDocuments = (props) => {
                   src={`https://docs.google.com/gview?url=${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}&embedded=true`}
                 ></iframe>
               </div>
+            ) : dataFile.extension === "webm" ? (
+              <div
+                style={{
+                  width: "100%",
+                }}
+              >
+                <video
+                  controls
+                  autoplay="true"
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  <source
+                    src={`${ENVIROMENT}/api/viewVideo/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}
+                    type='video/webm; codecs="vp8, vorbis"'
+                  />
+                </video>
+              </div>
             ) : (
               <Magnifier
                 src={`${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}

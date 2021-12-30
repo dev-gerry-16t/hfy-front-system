@@ -83,6 +83,10 @@ const WidgetInvestigation = (props) => {
         "PUT"
       );
       updateDetailUser();
+      frontFunctions.showMessageStatusApi(
+        "Se ejecuto con éxito tu solicitud",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,

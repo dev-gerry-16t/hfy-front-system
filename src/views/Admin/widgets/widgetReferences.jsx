@@ -43,7 +43,8 @@ const CardInformation = styled.div`
 
 const SectionCardInfoReference = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: flex-start;
+  padding: 5px 15px;
   gap: 0.8em;
   flex-wrap: nowrap;
   align-items: center;
