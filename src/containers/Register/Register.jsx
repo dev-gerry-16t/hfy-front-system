@@ -46,7 +46,6 @@ const Register = (props) => {
     lengthCharacter: false,
     upperLowerword: false,
     numbers: false,
-    specialCharacters: false,
     percentStatus: 0,
   });
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
@@ -347,16 +346,13 @@ const Register = (props) => {
     const lowerInPass = /^(?:.*[a-z])/;
     const upperInPass = /^(?:.*[A-Z])/;
     const numberInPass = /^(?=.*\d)/;
-    const specialCharacter = /^(?=.*[$@$!%*?&])/;
 
     let lengthCharacter = false;
     let upperLowerword = false;
     let numbers = false;
-    let specialCharacters = false;
     let lengthCharacterPercent = 0;
     let upperLowerwordPercent = 0;
     let numbersPercent = 0;
-    let specialCharactersPercent = 0;
 
     if (size.test(pass) === true) {
       lengthCharacter = true;
@@ -365,26 +361,19 @@ const Register = (props) => {
 
     if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
       upperLowerword = true;
-      upperLowerwordPercent = 25;
+      upperLowerwordPercent = 50;
     }
     if (numberInPass.test(pass) === true) {
       numbers = true;
       numbersPercent = 25;
     }
-    if (specialCharacter.test(pass) === true) {
-      specialCharacters = true;
-      specialCharactersPercent = 25;
-    }
+
     setSecurePass({
       lengthCharacter,
       upperLowerword,
       numbers,
-      specialCharacters,
       percentStatus:
-        lengthCharacterPercent +
-        upperLowerwordPercent +
-        numbersPercent +
-        specialCharactersPercent,
+        lengthCharacterPercent + upperLowerwordPercent + numbersPercent,
     });
   };
 
@@ -480,7 +469,10 @@ const Register = (props) => {
                 className={`error_login_incorrect_data ${
                   errorFormulary === false ? "hide" : "visible"
                 }`}
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
                 {errorBase.error && (
                   <div>
@@ -571,7 +563,8 @@ const Register = (props) => {
                       })}
                   </Select>
                   {isEmpty(configComponents) === false &&
-                    configComponents.idEndorsement && (
+                    configComponents.idEndorsement &&
+                    selectuserCustomer == 1 && (
                       <Select
                         placeholder="Aval"
                         onChange={(value) => {
@@ -779,13 +772,6 @@ const Register = (props) => {
                 {securePass.numbers === false && (
                   <Alert message="Números" type="warning" showIcon />
                 )}
-                {securePass.specialCharacters === false && (
-                  <Alert
-                    message="Caracteres especiales (@$&!%*?)"
-                    type="warning"
-                    showIcon
-                  />
-                )}
               </div>
               <div>
                 <Checkbox
@@ -848,9 +834,12 @@ const Register = (props) => {
                           });
                           setUserType(3);
                           setSpinVisible(false);
+                        } else {
+                          window.scrollTo(0, 0);
                         }
                       }
                     } catch (error) {
+                      window.scrollTo(0, 0);
                       setSpinVisible(false);
                       setErrorFormulary(true);
                       setErrorBase({
@@ -1184,6 +1173,19 @@ const Register = (props) => {
     }
     handlerCallGetAllCountries();
   }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataCountries) === false) {
+      const defaultValue = dataCountries.find((row) => {
+        return row.isSelected == true;
+      });
+      setDataForm({
+        ...dataForm,
+        idCountryNationality:
+          isNil(defaultValue) === false ? defaultValue.idCountry : null,
+      });
+    }
+  }, [dataCountries]);
 
   return (
     <div className="App">
