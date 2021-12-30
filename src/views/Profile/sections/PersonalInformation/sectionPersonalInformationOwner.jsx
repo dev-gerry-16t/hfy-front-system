@@ -70,7 +70,7 @@ const SectionPersonalInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history, identifier } =
+  const { dataCustomerDetail, matchParams, history, identifier, getById } =
     dataContexProfile;
 
   const handlerCallUpdateCustomerAccount = async (data) => {
@@ -613,6 +613,7 @@ const SectionPersonalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount(dataForm);
+                getById();
                 handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
@@ -624,6 +625,7 @@ const SectionPersonalInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount(dataForm);
+                getById();
                 await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}

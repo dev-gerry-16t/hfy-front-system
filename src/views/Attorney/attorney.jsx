@@ -670,8 +670,9 @@ const Attorney = (props) => {
                 style={{
                   cursor: "pointer",
                 }}
-                onClick={() => {
-                  handlerCallSetContractApprovement(record.idContract);
+                onClick={async () => {
+                  await handlerCallSetContractApprovement(record.idContract);
+                  handlerCallGetLegalContractCoincidences();
                 }}
               >
                 <span>

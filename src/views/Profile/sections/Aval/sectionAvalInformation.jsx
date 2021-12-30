@@ -194,7 +194,7 @@ const SectionAvalInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, identifier, type } = dataContexProfile;
+  const { dataCustomerDetail, identifier, type, getById } = dataContexProfile;
 
   const handlerCallGetCustomerDocument = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -1604,6 +1604,7 @@ const SectionAvalInformation = (props) => {
                   onClick={async () => {
                     try {
                       await handlerCallSetCustomerEndorsement(dataForm);
+                      getById();
                     } catch (error) {}
                   }}
                 >

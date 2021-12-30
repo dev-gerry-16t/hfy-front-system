@@ -285,7 +285,10 @@ const SectionDocuments = (props) => {
           name={dataProfile.fullName}
           onSignContract={async (data) => {
             try {
-              await handlerCallSetContract(data);
+              await handlerCallSetContract({
+                ...data,
+                type: dataDocument.type,
+              });
             } catch (error) {
               throw error;
             }
@@ -313,6 +316,7 @@ const SectionDocuments = (props) => {
           }
           onClose={() => {
             setIsVisibleModalSignature(false);
+            setDataDocument({});
           }}
         />
         <div className="header-title">
