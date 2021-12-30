@@ -493,17 +493,7 @@ const SectionCardOwner = (props) => {
   return (
     <div className="renter-card-information total-width">
       <div className="title-cards flex-title-card">
-        <span>Usuarios</span>
-        <div className="button_init_primary">
-          <button
-            type="button"
-            onClick={() => {
-              onAddUser();
-            }}
-          >
-            <span>Agregar</span>
-          </button>
-        </div>
+        <span>Contratos</span>
       </div>
       <div className="section-information-renters">
         {isEmpty(dataCoincidences) === false && finishCallApis === true && (

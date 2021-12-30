@@ -50,6 +50,17 @@ const ButtonCheck = styled.button`
     props.selected ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
 `;
 
+const ButtonCheckAdd = styled.button`
+  border: ${(props) =>
+    props.selected === true ? "1px solid #FF0083" : "3px solid #d6d8e7"};
+  border-radius: 0.5em;
+  background: ${(props) =>
+    props.selected === true ? "rgba(255, 0, 131, 0.2)" : "transparent"};
+  color: #000;
+  padding: 0.2em 0.8em;
+  box-shadow: 0px 0px 5px 2px rgba(255, 0, 131, 0.15);
+`;
+
 const SectionAddChip = styled.div`
   width: 360px;
   margin-top: 15px;
@@ -222,14 +233,14 @@ const CustomChips = ({ data, onChange, selected }) => {
             </ButtonCheck>
           );
         })}
-        <ButtonCheck
+        <ButtonCheckAdd
           selected={false}
           onClick={() => {
             setIsOpenAdd(!isOpenAdd);
           }}
         >
           Agregar personalizado +
-        </ButtonCheck>
+        </ButtonCheckAdd>
       </ButtonsChips>
       {isOpenAdd === true && (
         <SectionAddChip>

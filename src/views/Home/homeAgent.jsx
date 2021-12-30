@@ -16,7 +16,7 @@ const ContentHome = styled.div`
   font-family: Poppins;
   width: 100%;
   min-height: 90vh;
-  overflow-x: scroll;
+  overflow-y: scroll;
   .top-home {
     background: #fff;
     padding: 1em;
