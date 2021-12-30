@@ -184,6 +184,11 @@ const EditProfileUsers = (props) => {
         onSendConfirmation={async () => {
           try {
             await handlerCallUpdateCustomerAccount({ isDataConfirmed: true });
+            if (dataProfile.idUserType === 4) {
+              history.push("/websystem/dashboard-adviser");
+            } else {
+              history.push(dataProfile.path);
+            }
           } catch (error) {
             throw error;
           }

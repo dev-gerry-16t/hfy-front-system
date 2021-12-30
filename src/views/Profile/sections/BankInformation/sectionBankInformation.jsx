@@ -36,7 +36,7 @@ const SectionBankInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history, identifier } =
+  const { dataCustomerDetail, matchParams, history, identifier, getById } =
     dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
@@ -44,7 +44,7 @@ const SectionBankInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          identifier,
+          identifier: null,
           idCustomer,
           idSystemUser,
           idLoginHistory,
@@ -330,6 +330,7 @@ const SectionBankInformation = (props) => {
                   ...dataForm,
                   idBank,
                 });
+                getById();
                 handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
@@ -341,6 +342,7 @@ const SectionBankInformation = (props) => {
             onClick={async () => {
               try {
                 await handlerCallUpdateCustomerAccount({ ...dataForm, idBank });
+                await getById();
                 await handlerCallValidateCustomerPropertiesInTab();
                 onClickFinish();
               } catch (error) {}

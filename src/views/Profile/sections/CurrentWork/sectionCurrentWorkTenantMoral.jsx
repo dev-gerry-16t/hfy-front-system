@@ -82,8 +82,14 @@ const SectionCurrentWork = (props) => {
   const [isOpenVerification, setIsOpenVerification] = useState(false);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, identifier, type, matchParams, history } =
-    dataContexProfile;
+  const {
+    dataCustomerDetail,
+    identifier,
+    type,
+    matchParams,
+    history,
+    getById,
+  } = dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -539,6 +545,7 @@ const SectionCurrentWork = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerWorkingInfo(dataForm);
+                getById();
                 handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
@@ -550,6 +557,7 @@ const SectionCurrentWork = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerWorkingInfo(dataForm);
+                getById();
                 await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}

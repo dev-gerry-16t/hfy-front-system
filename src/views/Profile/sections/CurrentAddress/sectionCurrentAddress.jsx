@@ -50,7 +50,7 @@ const SectionCurrentAddress = (props) => {
   const frontFunctions = new FrontFunctions();
 
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history, identifier } =
+  const { dataCustomerDetail, matchParams, history, identifier, getById } =
     dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
@@ -421,6 +421,7 @@ const SectionCurrentAddress = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerAddress(dataForm);
+                getById();
                 handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
@@ -432,6 +433,7 @@ const SectionCurrentAddress = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerAddress(dataForm);
+                getById();
                 await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}

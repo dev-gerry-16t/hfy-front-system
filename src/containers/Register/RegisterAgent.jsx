@@ -130,7 +130,6 @@ const Container = styled.div`
     .container-info {
       padding-bottom: 100px;
     }
-
   }
 `;
 
@@ -350,6 +349,19 @@ const RegisterAgent = (props) => {
   useEffect(() => {
     handlerCallGetAllCountries();
   }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataCountries) === false) {
+      const defaultValue = dataCountries.find((row) => {
+        return row.isSelected == true;
+      });
+      setDataForm({
+        ...dataForm,
+        idCountryNationality:
+          isNil(defaultValue) === false ? defaultValue.id : null,
+      });
+    }
+  }, [dataCountries]);
 
   return (
     <Container>

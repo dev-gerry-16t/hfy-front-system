@@ -213,10 +213,6 @@ const WidgetUploadDocument = (props) => {
         idDocument: documentId,
         type,
       });
-      frontFunctions.showMessageStatusApi(
-        "Documento subido exitosamente",
-        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-      );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,

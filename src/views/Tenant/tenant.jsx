@@ -428,6 +428,10 @@ const Tenant = (props) => {
           : [];
       setDataTenant(responseResult);
       setIsVisibleVerification(shouldCustomerBeVerified);
+      setIconVerification({
+        icon: dataProfile.verificationStatusStyle,
+        label: dataProfile.verificationStatus,
+      });
     } catch (error) {
       showMessageStatusApi(
         "Error en el sistema, no se pudo ejecutar la petición",

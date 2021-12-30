@@ -61,8 +61,14 @@ const SectionCurrentWork = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, identifier, type, history, matchParams } =
-    dataContexProfile;
+  const {
+    dataCustomerDetail,
+    identifier,
+    type,
+    history,
+    matchParams,
+    getById,
+  } = dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -609,6 +615,7 @@ const SectionCurrentWork = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerWorkingInfo(dataForm);
+                getById();
                 handlerCallValidateCustomerPropertiesInTab();
               } catch (error) {}
             }}
@@ -620,6 +627,7 @@ const SectionCurrentWork = (props) => {
             onClick={async () => {
               try {
                 await handlerCallSetCustomerWorkingInfo(dataForm);
+                getById();
                 await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext(dataForm);
               } catch (error) {}
