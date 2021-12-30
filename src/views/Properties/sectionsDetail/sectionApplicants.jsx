@@ -1,5 +1,6 @@
 import React, { useContext, useState } from "react";
 import { connect } from "react-redux";
+import { Popconfirm } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -281,8 +282,10 @@ const SectionApplicants = (props) => {
                     {row.canProcessInvitation === false &&
                       row.canBeProcessed === true && (
                         <div className="button-action">
-                          <ButtonDocument
-                            onClick={async () => {
+                          <Popconfirm
+                            placement="left"
+                            title="Estás seguro de rechazar a este prospecto"
+                            onConfirm={async () => {
                               try {
                                 setIsLoadApi(true);
                                 await handlerCallSetApplicant({
@@ -296,9 +299,13 @@ const SectionApplicants = (props) => {
                                 throw error;
                               }
                             }}
+                            okText="Yes"
+                            cancelText="No"
                           >
-                            Rechazar
-                          </ButtonDocument>
+                            <ButtonDocument onClick={() => {}}>
+                              Rechazar
+                            </ButtonDocument>
+                          </Popconfirm>
                           <ButtonDocument
                             onClick={async () => {
                               try {
@@ -321,8 +328,10 @@ const SectionApplicants = (props) => {
                       )}
                     {row.canProcessInvitation === true && (
                       <div className="button-action">
-                        <ButtonDocument
-                          onClick={async () => {
+                        <Popconfirm
+                          placement="left"
+                          title="Estás seguro de rechazar a este prospecto"
+                          onConfirm={async () => {
                             try {
                               setIsLoadApi(true);
                               await handlerCallSetApplicant({
@@ -336,9 +345,13 @@ const SectionApplicants = (props) => {
                               throw error;
                             }
                           }}
+                          okText="Yes"
+                          cancelText="No"
                         >
-                          Eliminar
-                        </ButtonDocument>
+                          <ButtonDocument onClick={() => {}}>
+                            Eliminar
+                          </ButtonDocument>
+                        </Popconfirm>
                         <ButtonDocument
                           onClick={async () => {
                             try {
