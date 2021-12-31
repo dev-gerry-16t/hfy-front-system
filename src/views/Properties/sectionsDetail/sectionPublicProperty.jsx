@@ -116,7 +116,7 @@ const SectionCandidate = styled.div`
       height: 58px;
       border-radius: 50%;
       background: var(--color-primary);
-      bottom: 40px;
+      bottom: 10px;
       right: 5px;
       display: flex;
       flex-direction: column;
@@ -306,7 +306,7 @@ const SectionPublicProperty = (props) => {
               </div>
               <div className="score-user">
                 <span>Score</span>
-                <strong>4.3</strong>
+                <strong>{applicantsParse.score}</strong>
               </div>
             </div>
             <div>

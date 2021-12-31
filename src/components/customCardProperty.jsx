@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
-import { Tooltip, Dropdown, Menu } from "antd";
+import { Tooltip, Dropdown, Menu, Popconfirm } from "antd";
 import styled from "styled-components";
 import {
   IconProfile,
@@ -391,8 +391,10 @@ const CustomCardProperty = (props) => {
           </ButtonPrimary>
         )}
         {canGiveUp === true && (
-          <ButtonPrimary
-            onClick={async () => {
+          <Popconfirm
+            placement="left"
+            title="¿Estás seguro de que quieres desistir a la propiedad?"
+            onConfirm={async () => {
               try {
                 await onClickApply(
                   { idApartment, identifier, isGivingUp: true },
@@ -400,9 +402,11 @@ const CustomCardProperty = (props) => {
                 );
               } catch (error) {}
             }}
+            okText="Yes"
+            cancelText="No"
           >
-            Desistir
-          </ButtonPrimary>
+            <ButtonPrimary onClick={() => {}}>Desistir</ButtonPrimary>
+          </Popconfirm>
         )}
         {/* <ButtonWhatsapp>
             <IconWhatsapp

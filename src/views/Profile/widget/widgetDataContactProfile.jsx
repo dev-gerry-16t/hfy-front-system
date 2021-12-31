@@ -599,7 +599,7 @@ const WidgetDataContactProfile = (props) => {
           </SelectOption>
         </div>
         <div className="type-table-contact">
-          {/* Correos electronicos */}
+          {/* Correos electrónicos */}
           {isEmpty(dataEmail) === false &&
             selectOption === 1 &&
             dataEmail.map((row) => {
@@ -966,7 +966,7 @@ const WidgetDataContactProfile = (props) => {
                   </div>
                 </div>
                 <span className="poster-text">
-                  Los correos electronicos serán verificados
+                  Los correos electrónicos serán verificados
                 </span>
               </SectionAddContact>
             )}

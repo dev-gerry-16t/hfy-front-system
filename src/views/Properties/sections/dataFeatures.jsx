@@ -132,6 +132,7 @@ const SectionDataFeatures = (props) => {
   }, []);
 
   useEffect(() => {
+    console.log('dataFormSave',dataFormSave);
     if (isEmpty(dataFormSave) === false) {
       const { propertyAmenities, propertyGeneralCharacteristics } =
         dataFormSave;
@@ -183,6 +184,7 @@ const SectionDataFeatures = (props) => {
                   selected={dataForm.propertyAmenities}
                   data={dataAmenities}
                   onChange={(data, join) => {
+                    console.log('data',data);
                     setDataForm({ ...dataForm, propertyAmenities: data });
                   }}
                 />
