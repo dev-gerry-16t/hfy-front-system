@@ -254,58 +254,6 @@ const SectionCardTenant = (props) => {
                         </Popover>
                       </div>
                     )}
-
-                    {isNil(row.infoContractDocument) === false &&
-                      isEmpty(row.infoContractDocument) === false && (
-                        <Dropdown
-                          overlay={
-                            <Menu onClick={() => {}}>
-                              <Menu.Item key="0">
-                                <a
-                                  onClick={() => {
-                                    const parseData = JSON.parse(
-                                      row.infoContractDocument
-                                    );
-                                    onViewDocument(parseData[0]);
-                                  }}
-                                  style={{ marginRight: 10 }}
-                                >
-                                  Contrato
-                                </a>
-                              </Menu.Item>
-                              <Menu.Item key="1">
-                                <a
-                                  onClick={() => {
-                                    const parseData = JSON.parse(
-                                      row.infoPolicyDocument
-                                    );
-                                    onViewDocument(parseData[0]);
-                                  }}
-                                  style={{ marginRight: 10 }}
-                                >
-                                  Póliza
-                                </a>
-                              </Menu.Item>
-                              <Menu.Item key="2">
-                                <a
-                                  onClick={() => {
-                                    const parseData = JSON.parse(
-                                      row.infoPaymentDocument
-                                    );
-                                    onViewDocument(parseData[0]);
-                                  }}
-                                  style={{ marginRight: 10 }}
-                                >
-                                  Pagarés
-                                </a>
-                              </Menu.Item>
-                            </Menu>
-                          }
-                          trigger={["click"]}
-                        >
-                          <a>Ver Documentos</a>
-                        </Dropdown>
-                      )}
                   </div>
                   {row.hasAdvancePymt === true && (
                     <div className="info-action-payment-rent">
