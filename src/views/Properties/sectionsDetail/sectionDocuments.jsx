@@ -289,6 +289,15 @@ const SectionDocuments = (props) => {
                 ...data,
                 type: dataDocument.type,
               });
+              await handlerCallGenerateDocument({
+                idDocument: dataDocument.idDocument,
+                idPreviousDocument: dataDocument.idPreviousDocument,
+                idDocumentType: dataDocument.idDocumentType,
+                bucketSource: dataDocument.bucketSource,
+                previousBucketSource: dataDocument.previousBucketSource,
+                canGenerateDocument: dataDocument.canGenerateDocument,
+                type: dataDocument.type,
+              });
             } catch (error) {
               throw error;
             }
