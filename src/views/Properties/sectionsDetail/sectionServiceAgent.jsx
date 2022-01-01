@@ -155,7 +155,7 @@ const CardServices = styled.div`
   background: #ffffff;
   box-shadow: 0px 1px 8px 6px #ebebf1;
   border-radius: 1em;
-  width: 215px;
+  width: auto;
   height: 270px;
   position: relative;
 
@@ -187,14 +187,16 @@ const CardServices = styled.div`
       top: 20px;
     }
   }
-  .pick {
-    content: "";
+  .pick-section {
     position: absolute;
-    border-style: solid;
-    right: 92px;
-    top: 65px;
-    border-width: 15px 15px 0px 15px;
-    border-color: #4f4c66 transparent transparent transparent;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    .pick {
+      border-style: solid;
+      border-width: 15px 15px 0px 15px;
+      border-color: #4f4c66 transparent transparent transparent;
+    }
   }
   .body-card {
     display: grid;
@@ -343,7 +345,9 @@ const SectionServiceAgent = (props) => {
                         )}
                         <h3>{row.text}</h3>
                       </div>
-                      <div className="pick"></div>
+                      <div className="pick-section">
+                        <div className="pick"></div>
+                      </div>
                       <div className="body-card">
                         <div className="content-service">
                           {isEmpty(methods) === false &&
@@ -386,7 +390,7 @@ const SectionServiceAgent = (props) => {
                               ? "Actual"
                               : "Seleccionar"}
                           </ButtonsService>
-                          <ButtonsService>Ver más información</ButtonsService>
+                          {/* <ButtonsService>Ver más información</ButtonsService> */}
                         </div>
                       </div>
                     </CardServices>

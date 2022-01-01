@@ -92,7 +92,7 @@ const Register = (props) => {
       error: false,
       message: "El correo electrónico es requerido",
       errorFormat: false,
-      messageFormatError: "El correo electronico no es valido",
+      messageFormatError: "El correo electrónico no es valido",
     },
     errorPersonType: {
       error: false,

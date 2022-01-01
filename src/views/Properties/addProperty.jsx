@@ -35,6 +35,10 @@ const AddProperty = (props) => {
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
+  const [dataSaveFeatures, setDataSaveFeatures] = useState({
+    propertyAmenities: [],
+    propertyGeneralCharacteristics: [],
+  });
   const frontFunctions = new FrontFunctions();
 
   const handlerCallAddPropertyV2 = async (data) => {
@@ -151,9 +155,13 @@ const AddProperty = (props) => {
         <SectionDataFeatures
           dataFormSave={dataForm}
           onClickBack={(data) => {
-            setDataForm({ ...dataForm, ...data });
             setCurrent(1);
           }}
+          onSaveData={(data, dataString) => {
+            setDataSaveFeatures(data);
+            setDataForm({ ...dataForm, ...dataString });
+          }}
+          dataSaveFeatures={dataSaveFeatures}
           onclickNext={(data) => {
             setDataForm({ ...dataForm, ...data });
             setCurrent(3);

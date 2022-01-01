@@ -35,7 +35,6 @@ const Card = styled.div`
         font-size: 0.9em;
         line-height: 1.4em;
         max-width: 192px;
-
         h3 {
           margin: 0px;
         }
@@ -61,7 +60,7 @@ const Card = styled.div`
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: 10px;
+        margin-right: 20px;
         border-radius: 5px;
         position: relative;
         .score {
@@ -284,7 +283,7 @@ const SectionApplicants = (props) => {
                         <div className="button-action">
                           <Popconfirm
                             placement="left"
-                            title="Estás seguro de rechazar a este prospecto"
+                            title="¿Estás seguro de rechazar a este prospecto?"
                             onConfirm={async () => {
                               try {
                                 setIsLoadApi(true);
@@ -330,7 +329,7 @@ const SectionApplicants = (props) => {
                       <div className="button-action">
                         <Popconfirm
                           placement="left"
-                          title="Estás seguro de rechazar a este prospecto"
+                          title="¿Estás seguro de rechazar a este prospecto?"
                           onConfirm={async () => {
                             try {
                               setIsLoadApi(true);

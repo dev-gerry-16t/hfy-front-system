@@ -28,6 +28,8 @@ const SectionDataFeatures = (props) => {
     idProperty,
     idApartment,
     onBackTo,
+    onSaveData,
+    dataSaveFeatures,
   } = props;
   const [dataAmenities, setDataAmenities] = useState([]);
   const [dataCharacteristics, setDataCharacteristics] = useState([]);
@@ -133,22 +135,30 @@ const SectionDataFeatures = (props) => {
 
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
-      const { propertyAmenities, propertyGeneralCharacteristics } =
-        dataFormSave;
-      const amenities =
-        isNil(propertyAmenities) === false &&
-        isEmpty(propertyAmenities) === false
-          ? JSON.parse(propertyAmenities)
-          : [];
-      const characteristics =
-        isNil(propertyGeneralCharacteristics) === false &&
-        isEmpty(propertyGeneralCharacteristics) === false
-          ? JSON.parse(propertyGeneralCharacteristics)
-          : [];
-      setDataForm({
-        propertyAmenities: amenities,
-        propertyGeneralCharacteristics: characteristics,
-      });
+      if (isNil(idProperty) === true) {
+        setDataForm(dataSaveFeatures);
+      } else {
+        const { propertyAmenities, propertyGeneralCharacteristics } =
+          dataFormSave;
+        const amenities =
+          isNil(propertyAmenities) === false &&
+          isEmpty(propertyAmenities) === false
+            ? JSON.parse(propertyAmenities)
+            : [];
+        const characteristics =
+          isNil(propertyGeneralCharacteristics) === false &&
+          isEmpty(propertyGeneralCharacteristics) === false
+            ? JSON.parse(propertyGeneralCharacteristics)
+            : [];
+        setDataForm({
+          propertyAmenities: amenities,
+          propertyGeneralCharacteristics: characteristics,
+        });
+      }
+    } else {
+      if (isNil(idProperty) === true) {
+        setDataForm(dataSaveFeatures);
+      }
     }
   }, [dataFormSave]);
 
@@ -183,6 +193,21 @@ const SectionDataFeatures = (props) => {
                   selected={dataForm.propertyAmenities}
                   data={dataAmenities}
                   onChange={(data, join) => {
+                    if (isNil(idProperty) === true) {
+                      onSaveData(
+                        {
+                          propertyAmenities: data,
+                          propertyGeneralCharacteristics:
+                            dataForm.propertyGeneralCharacteristics,
+                        },
+                        {
+                          propertyAmenities: JSON.stringify(data),
+                          propertyGeneralCharacteristics: JSON.stringify(
+                            dataForm.propertyGeneralCharacteristics
+                          ),
+                        }
+                      );
+                    }
                     setDataForm({ ...dataForm, propertyAmenities: data });
                   }}
                 />
@@ -198,6 +223,20 @@ const SectionDataFeatures = (props) => {
                   selected={dataForm.propertyGeneralCharacteristics}
                   data={dataCharacteristics}
                   onChange={(data, join) => {
+                    if (isNil(idProperty) === true) {
+                      onSaveData(
+                        {
+                          propertyAmenities: dataForm.propertyAmenities,
+                          propertyGeneralCharacteristics: data,
+                        },
+                        {
+                          propertyAmenities: JSON.stringify(
+                            dataForm.propertyAmenities
+                          ),
+                          propertyGeneralCharacteristics: JSON.stringify(data),
+                        }
+                      );
+                    }
                     setDataForm({
                       ...dataForm,
                       propertyGeneralCharacteristics: data,
@@ -229,13 +268,7 @@ const SectionDataFeatures = (props) => {
             <ButtonNextBackPage
               block={false}
               onClick={() => {
-                onClickBack({
-                  ...dataForm,
-                  propertyAmenities: JSON.stringify(dataForm.propertyAmenities),
-                  propertyGeneralCharacteristics: JSON.stringify(
-                    dataForm.propertyGeneralCharacteristics
-                  ),
-                });
+                onClickBack();
               }}
             >
               {"<< "}

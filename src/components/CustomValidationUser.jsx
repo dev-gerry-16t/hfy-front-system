@@ -1,6 +1,154 @@
 import React, { useEffect, useState } from "react";
-import CustomDialog from "./CustomDialog";
+import styled from "styled-components";
+import { Modal } from "antd";
+import LogoHomify from "../assets/img/logo.png";
 import CustomReactMati from "./customReactMati";
+import { ReactComponent as IconCheck } from "../assets/iconSvg/svgFile/iconBigCheckWhite.svg";
+import { ReactComponent as IconLocation } from "../assets/iconSvg/svgFile/iconLocationSecurity.svg";
+import { ReactComponent as IconIdUser } from "../assets/iconSvg/svgFile/iconIdUser.svg";
+import { ReactComponent as IconStart } from "../assets/iconSvg/svgFile/iconStarSuccess.svg";
+
+const FormModal = styled.div`
+  font-family: Poppins;
+  color: #4e4b66;
+  padding: 0px 15%;
+  font-size: 16px;
+  .logo-hfy-modal {
+    text-align: center;
+    img {
+      width: 100px;
+    }
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.375em;
+    font-weight: 700;
+    color: var(--color-primary);
+    letter-spacing: 1px;
+  }
+  .step-init-verification {
+    margin: 25px 0px 20px 0px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    .top-title-information {
+      p {
+        text-align: center;
+        letter-spacing: 0.75px;
+      }
+    }
+    .info-user-verify {
+      margin-top: 50px;
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .button-action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .button-action-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+  }
+  @media screen and (max-width: 1250px) {
+    padding: 0px 25px;
+  }
+  @media screen and (max-width: 560px) {
+    padding: 0px 5px;
+    font-size: 14px;
+  }
+  @media screen and (max-width: 360px) {
+    padding: 0px;
+    font-size: 12px;
+  }
+`;
+
+const ButtonsModal = styled.button`
+  border: none;
+  background: ${(props) =>
+    props.primary ? "var(--color-primary)" : "transparent"};
+  color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
+  border-radius: 1em;
+  padding: 5px 2em;
+  margin-bottom: 5px;
+  font-size: 0.875em;
+  text-decoration: ${(props) => (props.primary ? "none" : "underline")};
+  font-weight: 700;
+`;
+
+const InfoVerify = styled.div`
+  position: relative;
+  border: 1px solid #ff0282;
+  box-sizing: border-box;
+  border-radius: 20px;
+  width: 500px;
+  .icon-top {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    top: -40px;
+    .circle-icon {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 81px;
+      height: 81px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+  }
+  .info-main {
+    margin-top: 50px;
+    padding: 0px 25px;
+    h2 {
+      font-size: 1em;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    p {
+      text-align: justify;
+      letter-spacing: 0.75px;
+    }
+  }
+`;
+
+const ViewInformation = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .image-section {
+    margin: 40px;
+  }
+  .bottom-information {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    h1 {
+      margin: 0px;
+    }
+    h2 {
+      font-weight: bold;
+      text-align: center;
+    }
+
+    p {
+      margin-top: 20px;
+      text-align: justify;
+      letter-spacing: 0.75px;
+      font-size: 1em;
+    }
+  }
+`;
 
 const CustomValidationUser = (props) => {
   const {
@@ -15,373 +163,215 @@ const CustomValidationUser = (props) => {
   const [stepsValidation, setStepsValidation] = useState(1);
   const [geolocation, setGeolocation] = useState({ latitud: 0, longitud: 0 });
 
-  const geoSuccess = (position) => {
-    const startPos = position;
-    setStepsValidation(3);
-
-    setGeolocation({
-      latitud: startPos.coords.latitude,
-      longitud: startPos.coords.longitude,
-      maps: `https://www.google.com/maps/embed/v1/place?key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ&q=${startPos.coords.latitude},${startPos.coords.longitude}&zoom=18`,
-    });
-  };
-
-  const getError = (error) => {};
-
-  const handlerGetGeolocation = () => {
-    navigator.geolocation.getCurrentPosition(geoSuccess, getError);
-  };
-
-  useEffect(() => {
-    if (stepsValidation === 2) {
-      handlerGetGeolocation();
+  const matchedScreen = (sizeMatch) => {
+    let width = "60%";
+    if (sizeMatch.matches) {
+      width = "100%";
+    } else {
+      width = "50%";
     }
-  }, [stepsValidation]);
+
+    return width;
+  };
+
+  const handlerGetGeolocation = async () => {
+    try {
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      return {
+        lng: pos.coords.longitude,
+        lat: pos.coords.latitude,
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
 
   return (
-    <CustomDialog
-      isVisibleDialog={isVisible}
-      onClose={() => {
+    <Modal
+      visible={isVisible}
+      closable={true}
+      footer={false}
+      style={{ top: 20 }}
+      width={matchedScreen(window.matchMedia("(max-width: 900px)"))}
+      onCancel={() => {
         setGeolocation({ latitud: 0, longitud: 0 });
         setStepsValidation(1);
         onClose();
       }}
     >
-      {stepsValidation === 1 && (
-        <div className="banner-move-tenant">
-          <div className="times-close-banner">
-            <button
-              onClick={() => {
-                onClose();
-              }}
-            >
-              &#88;
-            </button>
+      <FormModal>
+        <div className="logo-hfy-modal">
+          <img src={LogoHomify} alt="" srcset="" />
+        </div>
+        {stepsValidation === 1 && (
+          <div className="step-init-verification">
+            <div className="top-title-information">
+              <h1>Aquí comienza la verificación de tu cuenta</h1>
+              <p>
+                <strong>¡Recuerda!</strong> Este proceso es con el fin de
+                brindarte seguridad contra la implantación de identidad y
+                detección de fraudes.
+              </p>
+            </div>
+            <div className="info-user-verify">
+              <InfoVerify>
+                <div className="icon-top">
+                  <div className="circle-icon">
+                    <IconCheck />
+                  </div>
+                </div>
+                <div className="info-main">
+                  <h2>No olvides tener en cuenta los siguientes puntos:</h2>
+                  <p>
+                    <ul>
+                      <li>
+                        Si interrumpes tu proceso, deberás esperar 30 min. para
+                        intentarlo nuevamente.
+                      </li>
+                      <li>
+                        Debes permitir el acceso a tu ubicación para un correcto
+                        funcionamiento.
+                      </li>
+                      <li>
+                        El resultado te llegará a través de un correo
+                        electrónico.
+                      </li>
+                    </ul>
+                  </p>
+                  <p>
+                    <strong>Nota:</strong> Si no realizas el proceso de
+                    verificación, por seguridad algunos procesos estarán
+                    bloqueados.
+                  </p>
+                </div>
+              </InfoVerify>
+            </div>
+            <div className="button-action-row">
+              <ButtonsModal
+                primary
+                onClick={() => {
+                  setStepsValidation(2);
+                }}
+              >
+                Comenzar mi verificación
+              </ButtonsModal>
+            </div>
           </div>
-          <h1>Verificación de cuenta</h1>
-          <div style={{ fontSize: 16, marginBottom: 20 }}>
-            <span>Bienvenido al proceso de verificación de tu cuenta</span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 35,
-            }}
-          >
-            <svg
-              width="90"
-              height="115"
-              viewBox="0 0 90 115"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M83.5079 15.6641C85.9572 16.5629 87.5938 18.9832 87.5938 21.703V61.4904C87.5938 72.6107 83.7377 83.2258 76.9278 91.45C73.5033 95.5914 69.1708 98.8165 64.5692 101.425L44.6274 112.715L24.6519 101.419C20.0447 98.8106 15.7066 95.5914 12.2765 91.4441C5.46106 83.2199 1.59375 72.599 1.59375 61.4669V21.703C1.59375 18.9832 3.23035 16.5629 5.67965 15.6641L42.5704 2.07661C43.8819 1.59491 45.3112 1.59491 46.6171 2.07661L83.5079 15.6641Z"
-                stroke="#A0A3BD"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+        )}
+        {stepsValidation === 2 && (
+          <ViewInformation>
+            <div className="image-section">
+              <IconLocation />
+            </div>
+            <div className="bottom-information">
+              <h1>Permite el acceso a tu ubicación</h1>
+              <p>
+                Así podremos evitar que alguien acceda a tu información desde
+                algún lugar desconocido.
+              </p>
+            </div>
+            <div className="button-action-row">
+              <ButtonsModal
+                primary
+                onClick={async () => {
+                  try {
+                    const geolocation = await handlerGetGeolocation();
+                    setGeolocation({
+                      latitud: geolocation.lat,
+                      longitud: geolocation.lng,
+                      maps: `https://www.google.com/maps/embed/v1/place?key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ&q=${geolocation.lat},${geolocation.lng}&zoom=18`,
+                    });
+                    setStepsValidation(3);
+                  } catch (error) {
+                    setGeolocation({
+                      latitud: 0,
+                      longitud: 0,
+                      maps: null,
+                    });
+                    setStepsValidation(3);
+                  }
+                }}
+              >
+                Entendido
+              </ButtonsModal>
+            </div>
+          </ViewInformation>
+        )}
+        {stepsValidation === 3 && (
+          <ViewInformation>
+            <div className="image-section">
+              <IconIdUser />
+            </div>
+            <div className="bottom-information">
+              <h1>Ayudanos a verificar tu identidad</h1>
+              <p>
+                No olvides tener a la mano:
+                <ul>
+                  <li>Identificación Oficial</li>
+                  <li>Comprobante de domicilio</li>
+                </ul>
+              </p>
+            </div>
+            <div className="button-action-row">
+              <CustomReactMati
+                clientId={clientId}
+                flowId={flowId}
+                country="mx"
+                loaded={() => {}}
+                product="kyc"
+                color={document.getElementsByTagName("body")[0].className}
+                metadata={{
+                  ...geolocation,
+                  ...metadata,
+                }}
+                exited={() => {
+                  setStepsValidation(1);
+                  setGeolocation({ latitud: 0, longitud: 0 });
+                  onClose();
+                }}
+                finished={() => {
+                  setStepsValidation(4);
+                  finished();
+                }}
               />
-              <path
-                d="M30.0242 55.5739L40.6284 66.6941L62.4759 43.7957"
-                stroke="#A0A3BD"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div style={{ width: 350, fontSize: 16 }}>
-            <ul style={{ fontSize: 12, marginTop: 10 }}>
-              <li>
-                Este proceso se realiza con el fin de brindarte seguridad contra
-                suplantación de identidad y detección de fraudes.
-              </li>
-              <li>
-                Si por alguna razón no terminas tu proceso deberás de esperar 30
-                minutos antes de realizar una nueva verificación.
-              </li>
-              <li>Deberás de permitir el acceso a tu ubicación.</li>
-              <li>
-                En caso de no aprobar el proceso de verificación o de no
-                realizarlo, no podremos ofrecerte nuestros servicios.
-              </li>
-              <li>
-                Te informaremos sobre el resultado a través de un correo
+            </div>
+          </ViewInformation>
+        )}
+        {stepsValidation === 4 && (
+          <ViewInformation>
+            <div className="image-section">
+              <IconStart />
+            </div>
+            <div className="bottom-information">
+              <h1>¡Felicidades!</h1>
+              <h2>Has concluido tu verificación exitosamente</h2>
+              <p
+                style={{
+                  textAlign: "center",
+                }}
+              >
+                Te informaremos sobre el resultado final a través de tu correo
                 electrónico.
-              </li>
-            </ul>
-          </div>
-          <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
-            <button
-              type="button"
-              onClick={() => {
-                setStepsValidation(2);
-              }}
-            >
-              <span>Continuar</span>
-            </button>
-          </div>
-        </div>
-      )}
-      {stepsValidation === 2 && (
-        <div className="banner-move-tenant">
-          <h1>Ubicación</h1>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 35,
-            }}
-          >
-            <svg
-              width="90"
-              height="115"
-              viewBox="0 0 90 115"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M1.5462 48.1589C1.62689 22.3954 20.944 1.58096 44.6922 1.66849C68.4403 1.75602 87.6266 22.7124 87.5459 48.4759V49.0042C87.2538 65.7513 78.6343 81.2305 68.067 93.3285C62.0235 100.137 55.2747 106.164 47.9549 111.291C45.9977 113.127 43.0945 113.127 41.1373 111.291C30.2253 103.586 20.6482 93.8573 12.844 82.5512C5.88833 72.6921 1.93914 60.7255 1.5462 48.3174L1.5462 48.1589Z"
-                stroke="#A0A3BD"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <ellipse
-                cx="44.5461"
-                cy="49.0566"
-                rx="13.7814"
-                ry="14.9509"
-                stroke="#A0A3BD"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
-          </div>
-          <div style={{ width: 350, fontSize: 16, marginBottom: 10 }}>
-            <span>
-              Para evitar que otros usuarios accedan a tu información personal
-              desde lugares desconocidos te recomendamos permitir el acceso a tu
-              ubicación.
-            </span>
-          </div>
-        </div>
-      )}
-      {stepsValidation === 3 && (
-        <div className="banner-move-tenant">
-          <h1>Verificación de identidad</h1>
-          <div style={{ fontSize: 16, marginBottom: 20 }}>
-            <span>Queremos asegurarnos de que eres tu</span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 35,
-            }}
-          >
-            <svg
-              width="106"
-              height="104"
-              viewBox="0 0 106 104"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M77.1008 61.6147C76.423 61.8633 75.9301 61.9876 75.2523 61.5525C70.5078 58.7555 65.7634 55.9584 60.9573 53.1614C60.2795 52.7263 59.9715 52.4776 60.526 51.6696C62.0664 49.3076 63.2371 46.7592 64.1614 44.0864C64.2846 43.6514 64.4694 43.3406 64.8391 43.0919C68.5361 40.73 69.5836 37.0627 69.6452 33.0225C69.7068 30.5362 69.1523 28.1121 66.1947 27.3041C65.825 27.1798 65.7634 26.9933 65.7018 26.6204C65.4553 24.9421 64.9008 23.326 64.3462 21.5856C65.0856 21.3992 65.5785 21.6478 66.1331 21.8343C66.8725 22.0829 67.6119 22.2072 68.2897 21.5856C68.9058 20.9641 68.8442 20.2804 68.5977 19.4102C64.5927 2.93857 46.5391 -4.95535 31.6896 3.31152C31.0735 3.6223 30.4573 3.80877 29.8411 3.87093C27.8694 4.0574 26.0825 4.74112 24.5421 5.98426C21.03 8.78132 19.9825 12.6351 19.7361 16.7996C19.5512 19.7209 19.7977 22.5802 20.1674 25.4394C20.2906 26.1853 20.5371 27.0555 19.428 27.3662C17.7027 27.8013 16.9017 29.0445 16.5936 30.6606C15.6694 34.8872 16.4704 38.8653 19.5512 41.7866C21.2765 43.4027 22.0775 45.2674 23.0017 47.1321C23.7411 48.6239 24.4189 50.1157 25.2815 51.4831C25.8977 52.4155 25.7128 52.7884 24.7886 53.2857C19.9209 56.0827 15.0532 58.8798 10.2472 61.8012C4.7017 65.282 1.31281 70.3788 0.388568 77.0296C-0.350827 82.1886 0.203719 87.4098 0.142103 92.631C0.142103 92.8796 0.265335 93.1282 0.326952 93.3769C1.06635 95.8631 2.91483 97.0441 6.18049 97.0441C26.5755 97.0441 46.9704 97.0441 67.3654 97.0441C68.1664 97.0441 68.9058 97.1063 69.5836 97.7279C74.6361 102.452 80.6129 104.379 87.4523 103.384C99.4058 101.644 107.786 89.6475 105.259 77.7133C102.548 64.7225 89.5473 57.3259 77.1008 61.6147ZM24.7886 42.4704C24.3573 41.2894 24.0492 40.2949 22.5704 40.0463C22.2007 39.9841 21.831 39.4868 21.5846 39.1761C19.9825 36.9384 19.428 34.4521 19.7977 31.7172C19.8593 31.22 19.7977 30.4741 20.9068 30.847C22.3856 31.3443 23.0633 30.7849 23.3098 29.2309C23.6179 27.1798 23.6179 25.1286 23.3098 23.0774C22.9401 20.0317 22.8785 16.986 23.4947 14.0025C24.234 10.0245 26.8835 7.60034 30.8886 7.16524C31.7512 7.10309 32.429 6.85446 33.1684 6.41936C36.5573 4.36818 40.3159 3.74661 44.2593 3.80877C49.3735 3.74661 54.1795 4.92759 58.3078 8.22191C61.2038 10.5217 63.1139 13.5052 64.4078 16.9239C64.6543 17.6076 64.7775 17.9805 63.7917 18.0427C61.327 18.2913 60.4028 19.7209 61.0806 22.1451C61.7583 24.5692 62.621 26.9311 62.7442 29.4796C62.8058 30.5984 63.6684 31.3443 64.7775 30.847C65.9482 30.3498 66.1331 30.9713 66.2563 31.7794C66.626 34.6386 65.9482 37.187 64.1614 39.4247C64.0381 39.549 63.9765 39.7355 63.8533 39.7355C61.5119 40.1706 61.3886 42.2839 60.7109 43.9621C58.8008 48.7482 56.2129 53.0992 52.2694 56.4557C46.231 61.6147 39.3916 61.5525 33.4765 56.207C29.2866 52.4776 26.5755 47.7537 24.7886 42.4704ZM64.7159 93.6877C45.1836 93.6877 25.6512 93.6877 6.11888 93.6877C3.83908 93.6877 3.46938 93.3147 3.46938 91.0149C3.46938 87.3476 3.40776 83.6804 3.46938 80.0131C3.59261 73.3002 6.48858 68.1412 12.1573 64.5982C17.0866 61.5525 22.2007 58.6933 27.1916 55.7098C27.8694 55.2747 28.2391 55.4612 28.6704 56.0206C29.7795 57.388 31.0734 58.569 32.429 59.6257C39.3916 65.0955 47.3401 64.9712 54.1179 59.2527C55.3502 58.1961 56.521 57.1394 57.4452 55.8963C57.8149 55.399 58.123 55.3368 58.6775 55.7098C63.2371 58.3825 67.8583 61.0553 72.5412 63.8523C63.4836 70.0059 59.4785 82.2508 65.9482 93.5633C65.5785 93.812 65.1472 93.6877 64.7159 93.6877ZM84.2483 100.276C74.2664 100.276 66.1331 92.1337 66.0715 82.0643C66.0715 71.9327 74.2664 63.6659 84.2483 63.728C94.2301 63.728 102.302 71.9949 102.302 82.0643C102.363 92.1337 94.2301 100.276 84.2483 100.276Z"
-                fill="#A0A3BD"
-              />
-              <path
-                fill-rule="evenodd"
-                clip-rule="evenodd"
-                d="M90.865 75.1238C91.302 75.2768 91.594 75.6888 91.594 76.1518V82.9248C91.594 84.8178 90.906 86.6248 89.691 88.0248C89.08 88.7298 88.307 89.2788 87.486 89.7228L83.928 91.6448L80.364 89.7218C79.542 89.2778 78.768 88.7298 78.156 88.0238C76.94 86.6238 76.25 84.8158 76.25 82.9208V76.1518C76.25 75.6888 76.542 75.2768 76.979 75.1238L83.561 72.8108C83.795 72.7288 84.05 72.7288 84.283 72.8108L90.865 75.1238Z"
-                stroke="#FF0282"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M81.3225 81.9176L83.2145 83.8106L87.1125 79.9126"
-                stroke="#FF0282"
-                stroke-width="1.5"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M34.9552 17.856C40.4391 20.8395 46.2926 22.1448 52.4543 22.0826C53.3169 22.0826 54.1795 22.0826 55.0421 22.0826C56.2128 22.0826 57.2603 21.7718 57.1987 20.2801C57.1371 18.9127 56.2128 18.664 55.0421 18.7262C52.2078 18.7884 49.3118 18.7884 46.4775 18.2911C42.5957 17.6696 39.0219 16.24 35.5714 14.4375C33.4148 13.3187 31.9361 13.7538 30.5805 15.8049C29.8411 16.9858 29.0401 18.1046 28.3007 19.2856C27.7462 20.2179 27.7461 21.0881 28.6704 21.7097C29.5946 22.3312 30.3956 22.0204 31.0118 21.1503C31.628 20.2801 32.3057 19.4099 32.7987 18.4154C33.4148 17.4209 33.9694 17.3588 34.9552 17.856Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M57.6301 64.5983C57.014 63.3552 55.9665 63.5416 54.8574 64.101C51.2836 65.9657 47.6483 67.7061 44.0745 69.5707C43.3352 69.9437 42.7806 70.0058 41.9796 69.5707C38.3442 67.7061 34.7089 65.9036 31.0735 64.0389C30.026 63.4795 28.9786 63.293 28.3624 64.5361C27.7462 65.8414 28.5472 66.5251 29.6563 67.0224C33.6614 69.0113 37.6665 71.0625 41.6715 73.1136C42.1028 73.3001 42.4725 73.6109 43.0271 73.5487C43.4584 73.673 43.8281 73.4244 44.2594 73.1758C48.3261 71.1246 52.3927 69.0735 56.3978 67.0224C57.5069 66.5873 58.2463 65.8414 57.6301 64.5983Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M61.1423 87.0371C61.1423 86.5399 61.1423 85.9805 61.1423 85.4832C61.0806 84.3644 60.5261 83.6807 59.4786 83.6807C58.3695 83.6807 57.815 84.3644 57.815 85.4832C57.815 86.5399 57.7534 87.6587 57.815 88.7154C57.8766 89.6477 58.4311 90.2693 59.417 90.2693C60.4645 90.3314 61.019 89.6477 61.1423 88.7154C61.2039 88.1559 61.1423 87.5965 61.1423 87.0371Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M52.8857 85.3589C52.824 84.3644 52.3311 83.805 51.4069 83.7428C50.4826 83.6185 49.7432 84.1779 49.62 85.0481C49.4968 86.3534 49.4968 87.7209 49.62 89.0262C49.6816 89.8342 50.3594 90.3936 51.2836 90.3315C52.2079 90.2693 52.7624 89.7099 52.824 88.7775C52.8856 88.2181 52.824 87.6587 52.824 87.0993C52.8856 86.4777 52.8857 85.9183 52.8857 85.3589Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M11.6644 85.1723C11.4795 84.1778 10.8633 83.6184 9.81586 83.7427C8.89161 83.867 8.39868 84.4265 8.39868 85.421C8.39868 86.5398 8.39868 87.6586 8.39868 88.8396C8.4603 89.7098 8.95323 90.2692 9.81586 90.3935C10.7401 90.5178 11.4179 90.0206 11.6027 89.0882C11.726 88.4667 11.726 87.7829 11.726 87.0992H11.6644C11.6644 86.4155 11.726 85.7318 11.6644 85.1723Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M44.6291 85.2342C44.5675 84.3018 44.0746 83.8045 43.2119 83.6802C42.2877 83.5559 41.5483 83.991 41.4251 84.9234C41.1786 86.2909 41.1786 87.6584 41.4251 89.0259C41.6099 89.8961 42.2877 90.3312 43.1503 90.2069C44.0129 90.1447 44.5675 89.5853 44.6291 88.7151C44.6907 88.0935 44.6291 87.4719 44.6291 86.8503C44.6291 86.4152 44.6291 85.7936 44.6291 85.2342Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M18.0724 83.6804C17.2098 83.7425 16.6553 84.2398 16.6553 85.1721C16.6553 85.7937 16.6553 86.4153 16.6553 87.0368C16.6553 87.5963 16.6553 88.1557 16.6553 88.7151C16.7169 89.7096 17.2714 90.2068 18.1957 90.269C19.1199 90.3311 19.7977 89.7717 19.8593 88.8394C19.9209 87.5963 19.9209 86.291 19.8593 84.9857C19.7361 84.0533 18.9967 83.6182 18.0724 83.6804Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M36.3725 85.2343C36.3109 84.2398 35.7563 83.7425 34.8321 83.6804C33.9694 83.6182 33.3533 84.0533 33.1684 84.9857C32.9836 86.3531 32.922 87.7206 33.1684 89.0881C33.2917 89.8961 33.9078 90.269 34.7088 90.269C35.5715 90.269 36.1876 89.7718 36.3109 88.9016C36.3725 88.2179 36.3109 87.5963 36.3109 86.9126C36.3725 86.4153 36.3725 85.7937 36.3725 85.2343Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M26.5138 83.6807C25.5896 83.6807 24.9118 84.1779 24.9118 85.1724C24.8502 86.4155 24.8502 87.6587 24.9118 88.8396C24.9734 89.8341 25.5896 90.3314 26.5138 90.2692C27.3765 90.2692 27.931 89.772 28.0542 88.9018C28.1159 88.2802 28.0542 87.6587 28.0542 87.0371C28.0542 86.4155 28.0542 85.794 28.0542 85.1724C28.0542 84.2401 27.4381 83.7428 26.5138 83.6807Z"
-                fill="#FF0282"
-              />
-            </svg>
-          </div>
-          <div style={{ width: 350, fontSize: 16 }}>
-            <span>
-              Para continuar con el proceso es necesario tener a la mano los
-              siguientes documentos:
-            </span>
-
-            <ul style={{ fontSize: 12, marginTop: 10 }}>
-              <li>
-                Identificación Oficial (IFE, INE, FM3 o Pasaporte en el caso de
-                extranjeros).
-              </li>
-              <li>
-                Comprobante de Domicilio (Recibo de Luz, Agua, Teléfono,
-                Internet o TV).
-              </li>
-              <li>
-                No se acepta como comprobante de domicilio estados de cuenta
-                bancarios.
-              </li>
-            </ul>
-          </div>
-          <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
-            <CustomReactMati
-              clientId={clientId}
-              flowId={flowId}
-              country="mx"
-              loaded={() => {}}
-              product="kyc"
-              color={document.getElementsByTagName("body")[0].className}
-              metadata={{
-                ...geolocation,
-                ...metadata,
-              }}
-              exited={() => {
-                setStepsValidation(1);
-                setGeolocation({ latitud: 0, longitud: 0 });
-                onClose();
-              }}
-              finished={() => {
-                setStepsValidation(4);
-                finished();
-              }}
-            />
-          </div>
-        </div>
-      )}
-      {stepsValidation === 4 && (
-        <div className="banner-move-tenant">
-          <h1>Verificación completa</h1>
-          <div style={{ fontSize: 16, marginBottom: 20 }}>
-            <span>¡Felicidades!</span>
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              marginBottom: 35,
-            }}
-          >
-            <svg
-              width="109"
-              height="108"
-              viewBox="0 0 109 108"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M54.4696 0C24.6052 0 0 24.2296 0 53.7183C0 83.5826 24.2296 108 53.9061 108C83.7704 108 108.188 83.7704 108.188 53.9061C108.188 24.4174 83.9583 0 54.4696 0ZM54.0939 104.243C26.4835 104.243 3.75652 81.7043 3.75652 54.0939C3.75652 26.2957 26.4835 3.5687 54.2818 3.75652C81.8922 3.75652 104.431 26.4835 104.431 54.0939C104.431 81.7043 81.8922 104.243 54.0939 104.243Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M55.4091 15.0262C55.7847 15.0262 56.3482 15.0262 56.7239 15.0262C58.6021 14.6506 61.7952 16.9045 62.1708 13.7114C62.3587 10.894 58.9778 11.8332 56.9117 11.2697C56.5361 11.2697 56.3482 11.2697 55.9726 11.2697C27.423 10.5184 6.38648 35.4993 12.2091 63.2975C13.7117 70.9984 17.4682 77.7601 22.9152 83.5827C23.8543 84.5219 24.6056 85.461 26.1082 84.5219C26.6717 84.1462 27.2352 83.3949 26.6717 82.4558C26.1082 81.5167 25.3569 80.7654 24.6056 79.8262C14.0874 66.8662 11.6456 52.5914 18.5952 37.3775C25.9204 22.1636 38.8804 15.4019 55.4091 15.0262Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M82.4565 21.9758C81.3296 21.0366 80.0148 18.7827 78.1365 20.661C76.2583 22.7271 78.7 23.4784 79.8269 24.6053C96.5435 40.1949 97.8582 62.734 83.02 80.3897C82.0808 81.5166 80.0148 82.4558 81.7052 84.1462C83.5835 86.0245 84.7104 83.7706 85.6496 82.6436C93.1626 74.5671 96.5435 64.8001 96.9191 53.9062C96.7313 41.3219 92.0357 30.4279 82.4565 21.9758Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M73.6273 39.4433C65.9264 46.9564 58.4134 54.4694 50.9003 62.1703C49.0221 64.0485 47.8951 64.0485 46.2047 62.1703C42.8238 58.6016 39.2551 55.0329 35.6864 51.652C34.7473 50.9007 33.996 49.5859 32.4933 50.9007C30.8029 52.4033 32.1177 53.3425 33.0568 54.2816C37.3768 58.6016 41.8847 63.1094 46.2047 67.4294C46.7681 67.9929 47.3316 68.932 48.8342 68.932C49.3977 68.3686 50.3368 67.8051 51.0881 67.0538C59.5403 58.7894 67.8046 50.3372 76.069 42.0729C77.0081 40.9459 79.4499 40.0068 77.5716 37.9407C75.6933 36.0625 74.5664 38.5042 73.6273 39.4433Z"
-                fill="#FF0282"
-              />
-              <path
-                d="M72.3111 19.1585C73.2503 19.5342 74.7529 18.4072 74.3772 17.2802C73.6259 14.6507 70.8085 14.6507 69.1181 13.8994C67.6155 13.7115 66.4885 14.4628 66.8642 15.5898C67.4277 18.4072 70.245 18.4072 72.3111 19.1585Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M44.514 88.4663C42.0722 89.0297 42.4479 91.4715 41.8844 93.1619C41.5088 94.2889 42.2601 95.228 43.5749 95.4158C46.2044 95.0402 45.6409 92.4106 46.3922 90.7202C46.9557 89.4054 46.0166 88.0906 44.514 88.4663Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M63.6721 88.2783C61.9817 88.4661 61.2304 89.5931 61.7939 90.9079C62.5452 92.5983 61.7939 95.2279 64.7991 95.2279C66.1139 95.2279 66.6773 94.1009 66.3017 92.974C65.7382 91.2835 66.1139 89.0296 63.6721 88.2783Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M54.2804 89.5931C52.0265 89.4053 52.2143 91.2836 52.2143 92.7862C52.2143 94.2888 51.6508 96.5427 54.0925 96.7305C56.1586 96.7305 55.783 94.6644 55.9708 93.1618C55.9708 91.6592 56.3465 89.7809 54.2804 89.5931Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M36.0624 84.7095C33.4329 85.273 33.0572 87.5269 32.4937 89.593C32.3059 90.5321 32.8694 91.4712 33.9963 91.2834C36.6259 90.7199 36.6259 88.2782 37.7529 86.3999C37.3772 85.4608 37.1894 84.5217 36.0624 84.7095Z"
-                fill="#A0A3BD"
-              />
-              <path
-                d="M72.1265 84.7094C70.9995 84.5216 70.436 85.6486 70.6238 86.5877C71.1873 88.6538 71.563 90.9077 74.1925 91.2833C75.3195 91.4712 75.6951 90.532 75.6951 88.8416C74.756 87.7146 74.9439 84.8973 72.1265 84.7094Z"
-                fill="#A0A3BD"
-              />
-            </svg>
-          </div>
-          <div style={{ width: 350, fontSize: 16 }}>
-            <span>
-              Concluiste tu verificación de cuenta, ahora eres un usuario de
-              confianza dentro de nuestro sistema. Es momento de llenar tu
-              TypeForm, haz clic en finalizar para continuar con tu proceso.
-            </span>
-          </div>
-          <div className="two-action-buttons-banner" style={{ marginTop: 20 }}>
-            <button
-              type="button"
-              onClick={() => {
-                setGeolocation({ latitud: 0, longitud: 0 });
-                setStepsValidation(1);
-                finishedProcess();
-              }}
-            >
-              <span>Finalizar</span>
-            </button>
-          </div>
-        </div>
-      )}
-    </CustomDialog>
+              </p>
+            </div>
+            <div className="button-action-row">
+              <ButtonsModal
+                primary
+                onClick={() => {
+                  setGeolocation({ latitud: 0, longitud: 0 });
+                  setStepsValidation(1);
+                  finishedProcess();
+                }}
+              >
+                Finalizar
+              </ButtonsModal>
+            </div>
+          </ViewInformation>
+        )}
+      </FormModal>
+    </Modal>
   );
 };
 
