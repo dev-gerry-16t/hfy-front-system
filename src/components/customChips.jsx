@@ -131,6 +131,7 @@ const CustomChips = ({ data, onChange, selected }) => {
   const [newChip, setNewChip] = useState(null);
   useEffect(() => {
     if (isEmpty(data) === false && isNil(selected) === false) {
+      let pseudoSelectMap = [];
       const newSelect = data.map((row) => {
         let returnRow = { ...row, select: false };
         const filterId = selected.find((rowMap) => {
@@ -144,8 +145,24 @@ const CustomChips = ({ data, onChange, selected }) => {
       const arrayChips = newSelect.filter((rowFilter) => {
         return rowFilter.select === true;
       });
-      setNewArray(arrayChips);
-      setArrayData(newSelect);
+      const pseudoSelect = selected.filter((row) => {
+        return isNil(row.id) === true;
+      });
+      if (isNil(pseudoSelect) === false && isEmpty(pseudoSelect) === false) {
+        pseudoSelectMap = pseudoSelect.map((rowMap, ix) => {
+          return {
+            id: null,
+            pseudoId: `new-chip-${ix}`,
+            idPropertyAmenity: null,
+            propertyAmenity: rowMap.text,
+            select: true,
+            style: null,
+            text: rowMap.text,
+          };
+        });
+      }
+      setNewArray([...arrayChips, ...pseudoSelectMap]);
+      setArrayData([...newSelect, ...pseudoSelectMap]);
     }
   }, [data]);
   return (
