@@ -97,26 +97,6 @@ const SectionCardOwner = (props) => {
             </div>
           ),
         },
-        {
-          title: "Inicio TypeForm",
-          dataIndex: "customerStartedAt",
-          key: "customerStartedAt",
-        },
-        {
-          title: "Avance formulario",
-          dataIndex: "customerPercentCompleted",
-          key: "customerPercentCompleted",
-          width: 200,
-          render: (percent, record) => (
-            <div style={{ padding: "0px 15px 0px 0px" }}>
-              <Progress
-                percent={isNil(percent) === false ? percent : 0}
-                size="small"
-                status="succes"
-              />
-            </div>
-          ),
-        },
       ],
     },
     {
@@ -150,26 +130,6 @@ const SectionCardOwner = (props) => {
               ) : (
                 <EditTwoTone twoToneColor="#4169e1" />
               )}
-            </div>
-          ),
-        },
-        {
-          title: "Inicio TypeForm",
-          dataIndex: "tenantStartedAt",
-          key: "tenantStartedAt",
-        },
-        {
-          title: "Avance formulario",
-          dataIndex: "tenantPercentCompleted",
-          key: "tenantPercentCompleted",
-          width: 200,
-          render: (percent, record) => (
-            <div style={{ padding: "0px 15px 0px 0px" }}>
-              <Progress
-                percent={isNil(percent) === false ? percent : 0}
-                size="small"
-                status="succes"
-              />
             </div>
           ),
         },
@@ -384,76 +344,6 @@ const SectionCardOwner = (props) => {
       },
     },
     {
-      title: (
-        <div>
-          <span>Invitación</span>
-          <br />
-          <span>Eliminar/Reenviar</span>
-        </div>
-      ),
-      dataIndex: "actions",
-      key: "actions",
-      align: "center",
-      fixed: "right",
-      render: (documents, record) => {
-        return (
-          <div style={{ display: "flex", justifyContent: "space-around" }}>
-            {record.canBeDeleted === true && (
-              <button
-                type="button"
-                style={{ border: "none", background: "transparent" }}
-                onClick={async () => {
-                  try {
-                    await onSendActionInvitation(
-                      {
-                        isActive: false,
-                        requestResend: false,
-                      },
-                      record.idProspect
-                    );
-                  } catch (error) {}
-                }}
-              >
-                <i
-                  className="fa fa-trash-o"
-                  style={{ fontSize: 18, color: "red" }}
-                />
-              </button>
-            )}
-            {record.canRequestResend === true && (
-              <button
-                type="button"
-                style={{ border: "none", background: "transparent" }}
-                onClick={async () => {
-                  try {
-                    await onSendActionInvitation(
-                      {
-                        isActive: true,
-                        requestResend: true,
-                      },
-                      record.idProspect
-                    );
-                  } catch (error) {}
-                }}
-              >
-                <i
-                  className="fa fa-paper-plane-o"
-                  style={{ fontSize: 18, color: "#1890ff" }}
-                />
-              </button>
-            )}
-            {record.canBeDeleted === false &&
-              record.canRequestResend === false && (
-                <i
-                  className="fa fa-circle-o"
-                  style={{ fontSize: 18, color: "gray" }}
-                />
-              )}
-          </div>
-        );
-      },
-    },
-    {
       title: "Documentos",
       dataIndex: "hasAllDocumentation",
       key: "hasAllDocumentation",
@@ -493,17 +383,7 @@ const SectionCardOwner = (props) => {
   return (
     <div className="renter-card-information total-width">
       <div className="title-cards flex-title-card">
-        <span>Usuarios</span>
-        <div className="button_init_primary">
-          <button
-            type="button"
-            onClick={() => {
-              onAddUser();
-            }}
-          >
-            <span>Agregar</span>
-          </button>
-        </div>
+        <span>Contratos</span>
       </div>
       <div className="section-information-renters">
         {isEmpty(dataCoincidences) === false && finishCallApis === true && (
@@ -515,7 +395,7 @@ const SectionCardOwner = (props) => {
             size="small"
             pagination={pagination}
             bordered
-            scroll={{ x: 3000 }}
+            scroll={{ x: 2500 }}
             onChange={(pag) => {
               setPagination({ ...pagination, ...pag });
             }}

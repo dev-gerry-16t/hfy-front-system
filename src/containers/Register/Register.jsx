@@ -20,6 +20,7 @@ import {
   callGetAllVerifyCode,
   callGetInvitationUser,
 } from "../../utils/actions/actions";
+import { callGetAllCountries } from "../../utils/actions/catalogActions";
 import logo from "../../assets/img/logo.png";
 import admiration from "../../assets/icons/exclaim.svg";
 import Arrow from "../../assets/icons/Arrow.svg";
@@ -36,6 +37,7 @@ const Register = (props) => {
     callGetAllRegisterUser,
     callGetAllVerifyCode,
     callGetInvitationUser,
+    callGetAllCountries,
   } = props;
   const [userType, setUserType] = useState(null);
   const [aceptTerms, setAceptTerms] = useState(false);
@@ -44,7 +46,6 @@ const Register = (props) => {
     lengthCharacter: false,
     upperLowerword: false,
     numbers: false,
-    specialCharacters: false,
     percentStatus: 0,
   });
   const [selectuserCustomer, setSelectUserCustomer] = useState(1);
@@ -53,6 +54,7 @@ const Register = (props) => {
   const [configComponents, setConfigComponents] = useState({});
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [spinVisible, setSpinVisible] = useState(false);
+  const [dataCountries, setDataCountries] = useState([]);
   const [dataForm, setDataForm] = useState({
     idPersonType: null,
     idEndorsement: null,
@@ -63,6 +65,7 @@ const Register = (props) => {
     username: null,
     password: null,
     idInvitation: null,
+    idCountryNationality: null,
   });
   const recaptchaV3 = useRef(null);
 
@@ -89,11 +92,15 @@ const Register = (props) => {
       error: false,
       message: "El correo electrónico es requerido",
       errorFormat: false,
-      messageFormatError: "El correo electronico no es valido",
+      messageFormatError: "El correo electrónico no es valido",
     },
     errorPersonType: {
       error: false,
       message: "El tipo de persona es requerido",
+    },
+    errorNationality: {
+      error: false,
+      message: "La nacionalidad es requerida",
     },
     errorCodeVerify: {
       error: false,
@@ -145,6 +152,19 @@ const Register = (props) => {
         setConfigComponents(parseResult);
       }
       setUserPerson(responseResult);
+    } catch (error) {}
+  };
+
+  const handlerCallGetAllCountries = async () => {
+    const { match } = props;
+    const params = isEmpty(match.params) === false ? match.params : {};
+    try {
+      const response = await callGetAllCountries({ type: 2 });
+      const responseResult =
+        isNil(response) === false && isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataCountries(responseResult);
     } catch (error) {}
   };
 
@@ -269,6 +289,16 @@ const Register = (props) => {
       validateIdPerson = false;
     }
 
+    if (isNil(data.idCountryNationality) === false) {
+      validateIdPerson = true;
+    } else {
+      objectErrors = {
+        ...objectErrors,
+        errorNationality: { ...objectErrors.errorNationality, error: true },
+      };
+      validateIdPerson = false;
+    }
+
     if (isNil(data.givenName) === false && isEmpty(data.givenName) === false) {
       validateGivenName = true;
     } else {
@@ -316,16 +346,13 @@ const Register = (props) => {
     const lowerInPass = /^(?:.*[a-z])/;
     const upperInPass = /^(?:.*[A-Z])/;
     const numberInPass = /^(?=.*\d)/;
-    const specialCharacter = /^(?=.*[$@$!%*?&])/;
 
     let lengthCharacter = false;
     let upperLowerword = false;
     let numbers = false;
-    let specialCharacters = false;
     let lengthCharacterPercent = 0;
     let upperLowerwordPercent = 0;
     let numbersPercent = 0;
-    let specialCharactersPercent = 0;
 
     if (size.test(pass) === true) {
       lengthCharacter = true;
@@ -334,26 +361,19 @@ const Register = (props) => {
 
     if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
       upperLowerword = true;
-      upperLowerwordPercent = 25;
+      upperLowerwordPercent = 50;
     }
     if (numberInPass.test(pass) === true) {
       numbers = true;
       numbersPercent = 25;
     }
-    if (specialCharacter.test(pass) === true) {
-      specialCharacters = true;
-      specialCharactersPercent = 25;
-    }
+
     setSecurePass({
       lengthCharacter,
       upperLowerword,
       numbers,
-      specialCharacters,
       percentStatus:
-        lengthCharacterPercent +
-        upperLowerwordPercent +
-        numbersPercent +
-        specialCharactersPercent,
+        lengthCharacterPercent + upperLowerwordPercent + numbersPercent,
     });
   };
 
@@ -449,7 +469,10 @@ const Register = (props) => {
                 className={`error_login_incorrect_data ${
                   errorFormulary === false ? "hide" : "visible"
                 }`}
-                style={{ display: "flex", flexDirection: "column" }}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
               >
                 {errorBase.error && (
                   <div>
@@ -485,6 +508,12 @@ const Register = (props) => {
                   <div>
                     <img src={admiration} alt="exclaim" />
                     <span>{errorsRegister.errorPersonType.message}</span>
+                  </div>
+                )}
+                {errorsRegister.errorNationality.error && (
+                  <div>
+                    <img src={admiration} alt="exclaim" />
+                    <span>{errorsRegister.errorNationality.message}</span>
                   </div>
                 )}
                 {errorsRegister.errorUserName.error && (
@@ -534,7 +563,8 @@ const Register = (props) => {
                       })}
                   </Select>
                   {isEmpty(configComponents) === false &&
-                    configComponents.idEndorsement && (
+                    configComponents.idEndorsement &&
+                    selectuserCustomer == 1 && (
                       <Select
                         placeholder="Aval"
                         onChange={(value) => {
@@ -616,6 +646,43 @@ const Register = (props) => {
                     }}
                   />
                 )}
+              </div>
+              <div className="register_row">
+                <Select
+                  showSearch
+                  placeholder={`Nacionalidad ${
+                    isNil(dataForm.idPersonType) === false &&
+                    configComponents.lastName === false
+                      ? "del Representante legal"
+                      : ""
+                  }`}
+                  value={dataForm.idCountryNationality}
+                  onChange={(value, option) => {
+                    setErrorsRegister(copyErrors);
+                    setErrorFormulary(false);
+                    setDataForm({ ...dataForm, idCountryNationality: value });
+                  }}
+                  style={{ width: "100%" }}
+                  filterOption={(input, option) =>
+                    option.children
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  }
+                >
+                  {isEmpty(dataCountries) === false &&
+                    dataCountries.map((row) => {
+                      return (
+                        <Option
+                          value={row.idCountry}
+                          onClick={() => {
+                            return row;
+                          }}
+                        >
+                          {row.text}
+                        </Option>
+                      );
+                    })}
+                </Select>
               </div>
               <label className="fieldset_title">
                 {" "}
@@ -705,13 +772,6 @@ const Register = (props) => {
                 {securePass.numbers === false && (
                   <Alert message="Números" type="warning" showIcon />
                 )}
-                {securePass.specialCharacters === false && (
-                  <Alert
-                    message="Caracteres especiales (@$&!%*?)"
-                    type="warning"
-                    showIcon
-                  />
-                )}
               </div>
               <div>
                 <Checkbox
@@ -757,24 +817,29 @@ const Register = (props) => {
                   type="button"
                   onClick={async () => {
                     try {
-                      const verifyData = await handlerVerifyInformation({
-                        ...dataForm,
-                        verifyPassword,
-                      });
-                      setErrorFormulary(!verifyData);
-                      if (verifyData === true) {
-                        setSpinVisible(true);
-                        const getCaptchaToken =
-                          await recaptchaV3.current.executeAsync();
-                        await handlerCallApiRegister({
+                      if (aceptTerms === true) {
+                        const verifyData = await handlerVerifyInformation({
                           ...dataForm,
-                          idCustomerType: selectuserCustomer,
-                          captchaToken: getCaptchaToken,
+                          verifyPassword,
                         });
-                        setUserType(3);
-                        setSpinVisible(false);
+                        setErrorFormulary(!verifyData);
+                        if (verifyData === true) {
+                          setSpinVisible(true);
+                          const getCaptchaToken =
+                            await recaptchaV3.current.executeAsync();
+                          await handlerCallApiRegister({
+                            ...dataForm,
+                            idCustomerType: selectuserCustomer,
+                            captchaToken: getCaptchaToken,
+                          });
+                          setUserType(3);
+                          setSpinVisible(false);
+                        } else {
+                          window.scrollTo(0, 0);
+                        }
                       }
                     } catch (error) {
+                      window.scrollTo(0, 0);
                       setSpinVisible(false);
                       setErrorFormulary(true);
                       setErrorBase({
@@ -1106,7 +1171,21 @@ const Register = (props) => {
       setUserType(1);
       handlerAsyncCallAppis();
     }
+    handlerCallGetAllCountries();
   }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataCountries) === false) {
+      const defaultValue = dataCountries.find((row) => {
+        return row.isSelected == true;
+      });
+      setDataForm({
+        ...dataForm,
+        idCountryNationality:
+          isNil(defaultValue) === false ? defaultValue.idCountry : null,
+      });
+    }
+  }, [dataCountries]);
 
   return (
     <div className="App">
@@ -1136,6 +1215,7 @@ const mapDispatchToProps = (dispatch) => ({
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
   callGetInvitationUser: (paramId) => dispatch(callGetInvitationUser(paramId)),
+  callGetAllCountries: (data) => dispatch(callGetAllCountries(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Register);

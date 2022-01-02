@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
+import styled from "styled-components";
 import { connect } from "react-redux";
-import { Layout, message, Card, Row, Col } from "antd";
+import { Layout, Pagination } from "antd";
+import { Steps } from "intro.js-react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import {
@@ -9,297 +11,447 @@ import {
   callAddProperty,
   callGetZipCodeAdress,
   callGetPropertyCoincidences,
+  callGlobalActionApi,
 } from "../../utils/actions/actions";
+import { IconVector } from "../../assets/iconSvg";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
-import SectionAddProperty from "../Owner/sections/sectionAddProperty";
+import FrontFunctions from "../../utils/actions/frontFunctions";
+import CustomCardProperty from "../../components/customCardProperty";
+import ComponentAddCandidate from "../../views/Properties/component/componentAddCandidate";
+import ComponentFilter from "./component/componentFilter";
+import SectionViewTicket from "./sectionsDetail/sectionViewTicket";
+import {
+  Container,
+  ContentCards,
+  ContentAddFilter,
+  EmptyData,
+  ButtonIcon,
+} from "./constants/styleDashboardProperties";
 
 const { Content } = Layout;
-const { Meta } = Card;
 
 const PropertiesOwner = (props) => {
-  const {
-    dataProfile,
-    callGetAllCustomerById,
-    callGetPropertyTypes,
-    callAddProperty,
-    callGetZipCodeAdress,
-    callGetPropertyCoincidences,
-  } = props;
-  const [dataCustomer, setDataCustomer] = useState({});
-  const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
+  const { dataProfile, callGlobalActionApi, history } = props;
+  const [isOpenTicket, setIsOpenTicket] = useState(false);
+  const [dataTicket, setDataTicket] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [spinVisible, setSpinVisible] = useState(false);
-  const [dataZipCodeAdress, setDataZipCodeAdress] = useState({});
-  const [dataZipCatalog, setDataZipCatalog] = useState([]);
+  const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
+  const [totalCoincidences, setTotalCoincidences] = useState(0);
+  const [currentPagination, setCurrentPagination] = useState(1);
+  const [isHorizontal, setIsHorizontal] = useState(false);
+  const [enableIntro, setEnableIntro] = useState(false);
+  const [visibleAddUser, setVisibleAddUser] = useState({
+    openModal: false,
+    idApartment: null,
+    idProperty: null,
+  });
+  const [jsonConditionsState, setJsonConditionsState] = useState(
+    JSON.stringify([
+      {
+        queryCondition: 7,
+        compValue: 1,
+      },
+    ])
+  );
+  const [pageSize, setPageSize] = useState(10);
+  const [paginationState, setPaginationState] = useState(
+    JSON.stringify({
+      currentPage: currentPagination,
+      userConfig: pageSize,
+    })
+  );
+  const frontFunctions = new FrontFunctions();
 
-  const showMessageStatusApi = (text, status) => {
-    switch (status) {
-      case "SUCCESS":
-        message.success(text);
-        break;
-      case "ERROR":
-        message.error(text);
-        break;
-      case "WARNING":
-        message.warning(text);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handlerCallGetAllCustomerById = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+  const handlerCallGetPropertyCoincidencesV2 = async (
+    jsonConditions = null,
+    pagination = "{}"
+  ) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      const response = await callGetAllCustomerById({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-      });
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          pagination,
+          jsonConditions,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
+      );
       const responseResult =
-        isNil(response) === false &&
+        isEmpty(response) === false &&
         isNil(response.response) === false &&
         isNil(response.response[0]) === false
           ? response.response[0]
-          : {};
-      setDataCustomer(responseResult);
-    } catch (error) {
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallGetPropertyCoincidences = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGetPropertyCoincidences({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        topIndex: 0,
-      });
-      const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
           : [];
+      const responseResultTotal =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].total) === false
+          ? responseResult[0].total
+          : 0;
       setDataCoincidences(responseResult);
+      setTotalCoincidences(responseResultTotal);
     } catch (error) {
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+      frontFunctions.showMessageStatusApi(
+        error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
-  const handlerCallGetPropertyTypes = async () => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+  const handlerCallUpdateProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
-      const response = await callGetPropertyTypes({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        type: 1,
-      });
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SEND_TENANT_INVITATION,
+        "PUT"
+      );
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&
-        isEmpty(response.response) === false
-          ? response.response
-          : [];
-      setDataPropertyTypes(responseResult);
-    } catch (error) {
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const hanlderCallGetZipCodeAdress = async (data) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
-    try {
-      const response = await callGetZipCodeAdress({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        ...data,
-      });
-      const responseResult1 =
-        isNil(response) === false &&
-        isNil(response.response1) === false &&
-        isNil(response.response1[0]) === false
-          ? response.response1[0]
+        isNil(response.response.message) === false
+          ? response.response.message
           : {};
-      const responseResult2 =
-        isNil(response) === false && isNil(response.response2) === false
-          ? response.response2
-          : [];
-      setDataZipCodeAdress(responseResult1);
-      setDataZipCatalog(responseResult2);
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
-      setSpinVisible(false);
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+      frontFunctions.showMessageStatusApi(
+        error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
-  const handlerCallAddProperty = async (data) => {
-    const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
+  const handlerCallSetFavoriteProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
     try {
-      const response = await callAddProperty({
-        idCustomer,
-        idSystemUser,
-        idLoginHistory,
-        ...data,
-      });
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.SET_FAVORITE_PROPERTY,
+        "PUT"
+      );
       const responseResult =
         isNil(response) === false &&
         isNil(response.response) === false &&
-        isNil(response.response) === false
-          ? response.response
+        isNil(response.response.message) === false
+          ? response.response.message
           : {};
-      setSpinVisible(false);
-      setIsModalVisible(!isModalVisible);
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
-      setSpinVisible(false);
-      showMessageStatusApi(
-        "Error en el sistema, no se pudo ejecutar la petición",
+      frontFunctions.showMessageStatusApi(
+        error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
+    }
+  };
+
+  const handlerCallApplyToProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
     }
   };
 
   useEffect(() => {
-    handlerCallGetAllCustomerById();
-    handlerCallGetPropertyCoincidences();
+    handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
   }, []);
 
   return (
     <Content>
-      <SectionAddProperty
-        dataPropertyTypes={dataPropertyTypes}
-        spinVisible={spinVisible}
-        isModalVisible={isModalVisible}
+      <ComponentAddCandidate
+        isModalVisible={visibleAddUser.openModal}
+        sendInvitation={async (data, id) => {
+          try {
+            await handlerCallUpdateProperty(
+              { ...data, idProperty: visibleAddUser.idProperty },
+              visibleAddUser.idApartment
+            );
+          } catch (error) {
+            throw error;
+          }
+        }}
         onClose={() => {
-          setIsModalVisible(!isModalVisible);
-          handlerCallGetPropertyCoincidences();
-        }}
-        onClickAddProperty={async (data) => {
-          setSpinVisible(true);
-          await handlerCallAddProperty(data);
-          await handlerCallGetAllCustomerById();
-          handlerCallGetPropertyCoincidences();
-        }}
-        dataZipCodeAdress={dataZipCodeAdress}
-        dataZipCatalog={dataZipCatalog}
-        onChangeZipCode={(zipCode) => {
-          hanlderCallGetZipCodeAdress({ type: 1, zipCode });
+          setVisibleAddUser({
+            openModal: false,
+            idApartment: null,
+            idProperty: null,
+          });
         }}
       />
-      <div className="margin-app-main">
-        <div className="top-main-user">
-          <div className="welcome-user-main">
-            <h2>Hola, {dataCustomer.shortName}</h2>
-            <span>
-              Último inicio de sesión:{" "}
-              <strong>{dataCustomer.lastSessionStarted}</strong>
-            </span>
-          </div>
-          <div className="action-buttons-top">
-            {(dataCustomer.canRequestProperty === 1 ||
-              dataCustomer.canRequestProperty === true) && (
-              <div className="button_init_primary">
-                <button
-                  type="button"
-                  onClick={() => {
-                    handlerCallGetPropertyTypes();
-                    setIsModalVisible(!isModalVisible);
-                  }}
-                >
-                  <span>Registrar Propiedad</span>
-                </button>
-              </div>
+      <SectionViewTicket
+        onClose={() => {
+          setIsOpenTicket(false);
+          setDataTicket({});
+        }}
+        isVisibleModal={isOpenTicket}
+        dataTicket={dataTicket}
+      />
+      <Steps
+        enabled={enableIntro}
+        steps={[
+          {
+            title: "Bienvenido",
+            intro:
+              "Esta es la sección de tus propiedades, en la cual te daremos un tour para que conozcas cada una de las acciones que puedes realizar.",
+          },
+          {
+            title: "Agrega",
+            element: "#add-property",
+            intro:
+              "Puedes agregar una propiedad la cual aparecerá en esta pantalla.",
+          },
+          {
+            title: "Busca",
+            element: "#filter-coincidences",
+            intro: "Busca tu propiedad con ayuda de este filtro.",
+          },
+          {
+            title: "Tu propiedad",
+            element: "#property-0",
+            intro:
+              "Esta es tu propiedad, en la cual puedes hacer diferentes acciones.",
+          },
+          {
+            title: "Proceso",
+            element: "#process-property-0",
+            intro: "Aqui puedes ver en que proceso se encuentra tu propiedad.",
+          },
+          {
+            title: "Acciones",
+            element: "#button-top-property-0",
+            intro: "Comparte la propiedad o marcala como favorita.",
+          },
+          {
+            title: "Acciones",
+            element: "#button-bottom-property-0",
+            intro:
+              "Descarga la ficha en formato pdf o invita a un inquilino para que aplique a esta propiedad.",
+          },
+          {
+            title: "Listo",
+            intro: "Ahora puedes continuar con tus procesos.",
+          },
+        ]}
+        initialStep={0}
+        options={{
+          nextLabel: " >> ",
+          prevLabel: " << ",
+          doneLabel: "Finalizar",
+          hideNext: false,
+        }}
+        onComplete={() => {}}
+        onExit={() => {
+          setEnableIntro(false);
+        }}
+      />
+      <Container>
+        <ContentAddFilter owner background="var(--color-primary)">
+          <div className="button-actions-header">
+            <h1></h1>
+            {dataProfile.idUserType !== 2 && (
+              <button
+                onClick={() => {
+                  history.push("/websystem/add-property");
+                }}
+                id="add-property"
+              >
+                Agregar propiedad
+              </button>
             )}
           </div>
-        </div>
-        <div className="main-information-user">
-          <div
-            style={{
-              marginTop: "4em",
-              width: "100%",
-            }}
-          >
-            <Row>
-              {isEmpty(dataCoincidences) === false &&
-                dataCoincidences.map((row) => {
+          <div className="content-filter-dad" id="filter-coincidences">
+            <ComponentFilter
+              owner
+              onSendFilter={async (data) => {
+                try {
+                  const objectConditions = JSON.stringify({
+                    currentPage: 1,
+                    userConfig: 10,
+                  });
+                  await handlerCallGetPropertyCoincidencesV2(
+                    data,
+                    objectConditions
+                  );
+                  setPaginationState(objectConditions);
+                  setCurrentPagination(1);
+                  setPageSize(10);
+                  setJsonConditionsState(data);
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
+          </div>
+        </ContentAddFilter>
+        <ContentCards>
+          {isEmpty(dataCoincidences) === false && (
+            <>
+              <div className="button-actions-header">
+                <h1>Resultados</h1>
+                <div>
+                  <ButtonIcon
+                    onClick={() => {
+                      setIsHorizontal(!isHorizontal);
+                    }}
+                  >
+                    <IconVector
+                      color="var(--color-primary)"
+                      backGround="var(--color-primary)"
+                      size="20px"
+                    />
+                  </ButtonIcon>
+                </div>
+              </div>
+              <div
+                className={
+                  isHorizontal === false
+                    ? "body-cards-property"
+                    : "body-cards-property-x"
+                }
+              >
+                {dataCoincidences.map((row, ix) => {
                   return (
-                    <Col
-                      span={8}
-                      xs={{ span: 24 }}
-                      sm={{ span: 12 }}
-                      md={{ span: 8 }}
-                      style={{ display: "flex", justifyContent: "center" }}
-                    >
-                      <Card
-                        hoverable
-                        style={{
-                          borderRadius: 16,
-                          marginTop: 20,
-                          width: 340,
-                          fontSize: 12,
-                          boxShadow:
-                            " rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset, rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px",
-                        }}
-                        cover={
-                          <img
-                            alt="example"
-                            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
-                          />
+                    <CustomCardProperty
+                      id={`property-${ix}`}
+                      src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
+                      alt={row.identifier}
+                      onClickAddUser={(idApartment, idProperty) => {
+                        setVisibleAddUser({
+                          openModal: true,
+                          idApartment,
+                          idProperty,
+                        });
+                      }}
+                      onClickDetail={() => {
+                        history.push(
+                          `/websystem/detail-property-users/${row.idProperty}`
+                        );
+                      }}
+                      data={row}
+                      idUserType={dataProfile.idUserType}
+                      onClickFavorite={async (data, id) => {
+                        try {
+                          await handlerCallSetFavoriteProperty(data, id);
+                          handlerCallGetPropertyCoincidencesV2(
+                            jsonConditionsState,
+                            paginationState
+                          );
+                        } catch (error) {
+                          throw error;
                         }
-                      >
-                        <Meta
-                          title="Estatus"
-                          description={row.propertyStatus}
-                        />
-
-                        <Meta
-                          title="Dirección"
-                          description={row.fullAddress}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Monto de renta"
-                          description={row.currentRent}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Monto de mantenimiento"
-                          description={row.maintenanceAmount}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Tipo de propiedad"
-                          description={row.propertyType}
-                          style={{ marginTop: 15 }}
-                        />
-                        <Meta
-                          title="Cajones de estacionamiento"
-                          description={row.totalParkingSpots}
-                          style={{ marginTop: 15 }}
-                        />
-                      </Card>
-                    </Col>
+                      }}
+                      onOpenTicket={(data) => {
+                        setIsOpenTicket(true);
+                        setDataTicket(data);
+                      }}
+                      onClickApply={async (data, id) => {
+                        try {
+                          await handlerCallApplyToProperty(data, id);
+                          handlerCallGetPropertyCoincidencesV2(
+                            jsonConditionsState,
+                            paginationState
+                          );
+                        } catch (error) {
+                          throw error;
+                        }
+                      }}
+                    />
                   );
                 })}
-            </Row>
+              </div>
+            </>
+          )}
+
+          {isEmpty(dataCoincidences) === true && (
+            <EmptyData>
+              <img
+                width="150"
+                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296S.png"
+                alt=""
+              />
+              <p>Aún no tienes ninguna propiedad agregada :( </p>
+            </EmptyData>
+          )}
+        </ContentCards>
+        {isEmpty(dataCoincidences) === false && (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginTop: "15px",
+            }}
+          >
+            <Pagination
+              current={currentPagination}
+              total={totalCoincidences}
+              pageSize={pageSize}
+              pageSizeOptions={[10, 20, 50, 100]}
+              onChange={(page, sizePage) => {
+                setCurrentPagination(page);
+                setPageSize(sizePage);
+                const objectConditions = JSON.stringify({
+                  currentPage: page,
+                  userConfig: sizePage,
+                });
+                setPaginationState(objectConditions);
+                handlerCallGetPropertyCoincidencesV2(
+                  jsonConditionsState,
+                  objectConditions
+                );
+              }}
+            />
           </div>
-        </div>
-      </div>
+        )}
+      </Container>
     </Content>
   );
 };
@@ -312,12 +464,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGetAllCustomerById: (data) => dispatch(callGetAllCustomerById(data)),
-  callGetPropertyTypes: (data) => dispatch(callGetPropertyTypes(data)),
-  callAddProperty: (data) => dispatch(callAddProperty(data)),
-  callGetZipCodeAdress: (data) => dispatch(callGetZipCodeAdress(data)),
-  callGetPropertyCoincidences: (data) =>
-    dispatch(callGetPropertyCoincidences(data)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertiesOwner);

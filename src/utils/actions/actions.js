@@ -239,6 +239,41 @@ const callPostPaymentService = (data) => async (dispatch, getState) => {
   }
 };
 
+const callPostPaymentServiceCard = (data) => async (dispatch, getState) => {
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.PAYMENT_SERVICE_CARD,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetAllRegisterUser = (data) => async (dispatch, getState) => {
   try {
     const config = { headers: { ...HEADER } };
@@ -494,43 +529,50 @@ const callGetAllMenuProfile = (data) => async (dispatch, getState) => {
   }
 };
 
-const callSetImageProfile = (data, id) => async (dispatch, getState) => {
-  const state = getState();
-  const { dataProfile } = state;
-  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
-  try {
-    const config = { headers: { ...HEADER } };
-    const response = await RequesterAxios.put(
-      API_CONSTANTS.SET_IMAGE_PROFILE + id,
-      data,
-      config
-    );
-    const responseResultStatus =
-      isNil(response) === false && isNil(response.status) === false
-        ? response.status
-        : null;
-    const responseResultMessage =
-      isNil(response) === false &&
-      isNil(response.data) === false &&
-      isNil(response.data.response) === false &&
-      isNil(response.data.response.message) === false
-        ? response.data.response.message
-        : null;
-    const responseResultData =
-      isNil(response) === false && isNil(response.data) === false
-        ? response.data
-        : null;
-    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
-      return responseResultData;
-    } else {
-      throw isNil(responseResultMessage) === false
-        ? responseResultMessage
-        : null;
+const callSetImageProfile =
+  (file, data, id, callback) => async (dispatch, getState) => {
+    const state = getState();
+    const { dataProfile } = state;
+    HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileProperties", JSON.stringify(data));
+    try {
+      const config = { headers: { ...HEADER } };
+      const response = await RequesterAxios.put(
+        API_CONSTANTS.SET_IMAGE_PROFILE + id,
+        formData,
+        config
+      );
+      const responseResultStatus =
+        isNil(response) === false && isNil(response.status) === false
+          ? response.status
+          : null;
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.data) === false &&
+        isNil(response.data.response) === false &&
+        isNil(response.data.response.message) === false
+          ? response.data.response.message
+          : null;
+      const responseResultData =
+        isNil(response) === false && isNil(response.data) === false
+          ? response.data
+          : null;
+      if (
+        isNil(responseResultStatus) === false &&
+        responseResultStatus === 200
+      ) {
+        return responseResultData;
+      } else {
+        throw isNil(responseResultMessage) === false
+          ? responseResultMessage
+          : null;
+      }
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    throw error;
-  }
-};
+  };
 
 const callSetThemeProfile = (data, id) => async (dispatch, getState) => {
   const state = getState();
@@ -3551,6 +3593,44 @@ const callGetPotentialAgentCoincidences =
     }
   };
 
+const callGetLandingProspectById = (data) => async (dispatch, getState) => {
+  const state = getState();
+  const { dataProfile } = state;
+  HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+  try {
+    const config = { headers: { ...HEADER } };
+    const response = await RequesterAxios.post(
+      API_CONSTANTS.GET_LANDING_PROSPECT_BY_ID,
+      data,
+      config
+    );
+    const responseResultStatus =
+      isNil(response) === false && isNil(response.status) === false
+        ? response.status
+        : null;
+    const responseResultMessage =
+      isNil(response) === false &&
+      isNil(response.data) === false &&
+      isNil(response.data.response) === false &&
+      isNil(response.data.response.message) === false
+        ? response.data.response.message
+        : null;
+    const responseResultData =
+      isNil(response) === false && isNil(response.data) === false
+        ? response.data
+        : null;
+    if (isNil(responseResultStatus) === false && responseResultStatus === 200) {
+      return responseResultData;
+    } else {
+      throw isNil(responseResultMessage) === false
+        ? responseResultMessage
+        : null;
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 const callGetCustomerAgentCoincidences =
   (data) => async (dispatch, getState) => {
     const state = getState();
@@ -4109,6 +4189,78 @@ const callGetRequestExternalDS = (data) => async (dispatch, getState) => {
   }
 };
 
+const getTimeZone = () => {
+  var offset = new Date().getTimezoneOffset(),
+    o = Math.abs(offset);
+  return (
+    (offset < 0 ? "+" : "-") +
+    ("00" + Math.floor(o / 60)).slice(-2) +
+    ":" +
+    ("00" + (o % 60)).slice(-2)
+  );
+};
+
+const callGlobalActionApi =
+  (data, id, CONSTANT, method = "POST", token = true) =>
+  async (dispatch, getState) => {
+    const state = getState();
+    const { dataProfile } = state;
+    let response;
+    if (token === true) {
+      HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+    }
+
+    try {
+      const config = { headers: { ...HEADER } };
+      if (method === "POST") {
+        response = await RequesterAxios.post(
+          CONSTANT,
+          { ...data, offset: getTimeZone() },
+          config
+        );
+      } else if (method === "PUT") {
+        response = await RequesterAxios.put(
+          CONSTANT + id,
+          { ...data, offset: getTimeZone() },
+          config
+        );
+      } else {
+        response = await RequesterAxios.post(
+          CONSTANT,
+          { ...data, offset: getTimeZone() },
+          config
+        );
+      }
+      const responseResultStatus =
+        isNil(response) === false && isNil(response.status) === false
+          ? response.status
+          : null;
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.data) === false &&
+        isNil(response.data.response) === false &&
+        isNil(response.data.response.message) === false
+          ? response.data.response.message
+          : null;
+      const responseResultData =
+        isNil(response) === false && isNil(response.data) === false
+          ? response.data
+          : null;
+      if (
+        isNil(responseResultStatus) === false &&
+        responseResultStatus === 200
+      ) {
+        return responseResultData;
+      } else {
+        throw isNil(responseResultMessage) === false
+          ? responseResultMessage
+          : null;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
 export {
   callApiLogin,
   callGetAllCustomers,
@@ -4218,6 +4370,7 @@ export {
   callGetAllIncidencePaymentsMethods,
   callGetPolicyPaymentMethod,
   callPostPaymentService,
+  callPostPaymentServiceCard,
   callBulkPotentialAgent,
   callGetRequestProviderPropierties,
   callSignRequestForProvider,
@@ -4244,4 +4397,6 @@ export {
   callSetRequestExternalDS,
   callGetRequestExternalDS,
   callGetTransactionsByUser,
+  callGetLandingProspectById,
+  callGlobalActionApi,
 };

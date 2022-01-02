@@ -3,6 +3,7 @@ import socketIOClient from "socket.io-client";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import styled from "styled-components";
 import {
   Layout,
   Menu,
@@ -12,11 +13,13 @@ import {
   notification,
   List,
   Popover,
+  Steps,
 } from "antd";
 import { Redirect, Route, Switch } from "react-router-dom";
 import "antd/dist/antd.css";
 import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
-import IconDashboard from "../../assets/icons/iconDashboard.svg";
+import IconHome from "../../assets/icons/iconDashboard.svg";
+import IconDashboard from "../../assets/icons/iconChart.svg";
 import IconOwner from "../../assets/icons/iconHome.svg";
 import IconRenter from "../../assets/icons/renter.svg";
 import IconDocument from "../../assets/icons/document.svg";
@@ -37,6 +40,9 @@ import IconRequest from "../../assets/icons/IconRequest.svg";
 import IconDeal from "../../assets/icons/IconDeal.svg";
 import IconTicket from "../../assets/icons/IconTicket.svg";
 import IconAgents from "../../assets/icons/agent.svg";
+import IconProfileWhite from "../../assets/icons/Profilewhite.svg";
+import IconSetting from "../../assets/icons/iconSetting.svg";
+import IconLocation from "../../assets/icons/iconLocation.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -44,11 +50,16 @@ import {
   callUpdateNotifications,
   callGetNotifications,
   callSetThemeProfile,
+  callGlobalActionApi,
 } from "../../utils/actions/actions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import ENVIROMENT from "../../utils/constants/enviroments";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 
 const { Header, Sider } = Layout;
+const { Step } = Steps;
 
 const Loading = () => (
   <div className="loader-auth-spiner">
@@ -68,14 +79,16 @@ const DefaultLayout = (props) => {
     callUpdateNotifications,
     callGetNotifications,
   } = props;
-  const [collapsed, setCollapsed] = useState(true);
+  const [collapsed, setCollapsed] = useState(false);
   const [dataNotifications, setDataNotifications] = useState([]);
   const [notificationTopIndex, setNotificationTopIndex] = useState(null);
   const [numberNotifications, setNumberNotifications] = useState(0);
   const [isVisibleAvatarSection, setIsVisibleAvatarSection] = useState(false);
+  const [isVisibleNotification, setIsVisibleNotification] = useState(false);
   const [collapsedButton, setCollapsedButton] = useState(false);
   const arrayIconst = {
     IconDashboard,
+    IconHome,
     IconOwner,
     IconRenter,
     IconDocument,
@@ -91,32 +104,61 @@ const DefaultLayout = (props) => {
     IconDeal,
     IconTicket,
     IconAgents,
+    IconSetting,
+    IconProfileWhite,
+    IconLocation,
   };
 
   const [nameSection, setNameSection] = useState("");
+
+  const frontFunctions = new FrontFunctions();
   const toggle = () => {
     setCollapsed(!collapsed);
   };
 
-  const handlerCallSetImageProfile = async (data) => {
-    const { idCustomer, idLoginHistory, idSystemUser } = dataProfile;
+  const handlerCallSetImageProfile = async (file, data) => {
+    const {
+      idCustomer,
+      idLoginHistory,
+      idSystemUser,
+      idDocument,
+      bucketSource,
+    } = dataProfile;
     try {
-      await callSetImageProfile(
+      const response = await callSetImageProfile(
+        file,
         {
           idCustomer,
           idLoginHistory,
-          documentName: "avatar_image",
-          extension: "png/img",
+          documentName: data.documentName,
+          extension: data.extension,
           preview: null,
-          thumbnail: data,
+          thumbnail: null,
+          idDocument,
+          bucketSource,
         },
-        idSystemUser
+        idSystemUser,
+        () => {}
       );
+      const responseResult =
+        isNil(response.response) === false ? response.response : {};
       await setDataUserProfile({
         ...dataProfile,
-        thumbnail: data,
+        idDocument:
+          isNil(responseResult.idDocument) === false
+            ? responseResult.idDocument
+            : idDocument,
+        bucketSource:
+          isNil(responseResult.bucketSource) === false
+            ? responseResult.bucketSource
+            : bucketSource,
       });
-    } catch (error) {}
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallSetThemeProfile = async (theme) => {
@@ -179,7 +221,7 @@ const DefaultLayout = (props) => {
         },
         id
       );
-      handlerCallGetNotifications(notificationTopIndex);
+      await handlerCallGetNotifications(notificationTopIndex);
     } catch (error) {}
   };
 
@@ -286,7 +328,21 @@ const DefaultLayout = (props) => {
     </Menu>
   );
 
+  const handlerLimitText = (text) => {
+    let textTransform = "";
+    if (isNil(text) === false && isEmpty(text) === false) {
+      const splitText = text.split(" ");
+      if (splitText.length >= 2) {
+        textTransform = `${splitText[0]} ${splitText[1]}`;
+      }
+    }
+    return textTransform;
+  };
+
   useEffect(() => {
+    if (isNil(dataProfile) === true) {
+      return history.push("/");
+    }
     handlerCallGetNotifications();
     const documentHead = document.getElementsByTagName("head");
     const headExtractNode =
@@ -295,9 +351,6 @@ const DefaultLayout = (props) => {
       isNil(documentHead[0]) === false
         ? documentHead[0]
         : [];
-    if (isNil(dataProfile) === true) {
-      history.push("/");
-    }
     const { themeConfig } = dataProfile;
 
     const theme = document.getElementsByTagName("body")[0];
@@ -382,6 +435,18 @@ const DefaultLayout = (props) => {
                   background: "rgba(255,255,255,1)",
                   cursor: "pointer",
                 }}
+                onClick={async () => {
+                  try {
+                    await handlerCallUpdateNotifications(
+                      element.idNotification
+                    );
+                    if (isNil(element.path) === false) {
+                      setIsVisibleNotification(false);
+                      history.push(element.path);
+                    }
+                    notification.destroy();
+                  } catch (error) {}
+                }}
               >
                 <div className="section-circle-description">
                   <div
@@ -420,32 +485,6 @@ const DefaultLayout = (props) => {
       clearInterval(interval);
     };
   }, []);
-
-  useEffect(() => {
-    if (isEmpty(dataProfileMenu) === false) {
-      const name = dataProfileMenu.find((row) => {
-        return row.path === props.location.pathname;
-      });
-      if (isNil(name) === false) {
-        setNameSection(
-          isNil(name.menuName) === false && isNil(name.menuName) === false
-            ? name.menuName
-            : "Dashboard"
-        );
-      } else {
-        const nameRoutes = routes.find((row) => {
-          return props.location.pathname.indexOf(row.path) !== -1;
-        });
-        setNameSection(
-          isNil(nameRoutes) === false &&
-            isNil(nameRoutes.name) === false &&
-            isNil(nameRoutes.name) === false
-            ? nameRoutes.name
-            : "Dashboard"
-        );
-      }
-    }
-  }, [props.location.pathname, dataProfileMenu]);
 
   return (
     <div className="App">
@@ -564,8 +603,12 @@ const DefaultLayout = (props) => {
                 onClose={() => {
                   setIsVisibleAvatarSection(!isVisibleAvatarSection);
                 }}
-                onSelectImage={(preview) => {
-                  handlerCallSetImageProfile(preview);
+                onSelectImage={async (file, data) => {
+                  try {
+                    await handlerCallSetImageProfile(file, data);
+                  } catch (error) {
+                    throw error;
+                  }
                 }}
               />
               <div className="header-title-button">
@@ -579,17 +622,23 @@ const DefaultLayout = (props) => {
                     collapsedButton ? MenuUnfoldOutlined : MenuFoldOutlined
                   )}
                 </button>
-                <h2>{nameSection}</h2>
+                <h2 id="name-screen-hfy">{nameSection}</h2>
               </div>
               <div className="header-info-user">
                 <div className="hi-user-name-type">
-                  <strong>{dataProfile.showName}</strong>
+                  <strong>{handlerLimitText(dataProfile.showName)}</strong>
                   <span>{dataProfile.userType}</span>
                 </div>
                 <Popover
+                  visible={isVisibleNotification}
                   className="popover-list-notification"
                   id="layout-popover-list"
                   placement="bottomRight"
+                  onVisibleChange={(visible) => {
+                    if (visible === false) {
+                      setIsVisibleNotification(false);
+                    }
+                  }}
                   title={
                     <div className="title-notification-small">
                       Notificaciones
@@ -608,10 +657,16 @@ const DefaultLayout = (props) => {
                         renderItem={(item) => (
                           <List.Item
                             style={{ padding: "0px 0px !important" }}
-                            onClick={() => {
-                              handlerCallUpdateNotifications(
-                                item.idNotification
-                              );
+                            onClick={async () => {
+                              try {
+                                await handlerCallUpdateNotifications(
+                                  item.idNotification
+                                );
+                                if (isNil(item.path) === false) {
+                                  setIsVisibleNotification(false);
+                                  history.push(item.path);
+                                }
+                              } catch (error) {}
                             }}
                           >
                             <div
@@ -679,7 +734,9 @@ const DefaultLayout = (props) => {
                   <button
                     className="button-header"
                     style={{ position: "relative" }}
-                    onClick={() => {}}
+                    onClick={() => {
+                      setIsVisibleNotification(!isVisibleNotification);
+                    }}
                   >
                     <div
                       className="notification-header"
@@ -701,8 +758,11 @@ const DefaultLayout = (props) => {
                   trigger="click"
                 >
                   <button className="button-header">
-                    {isNil(dataProfile.thumbnail) === false ? (
-                      <Avatar size={50} src={dataProfile.thumbnail} />
+                    {isNil(dataProfile.idDocument) === false ? (
+                      <Avatar
+                        size={50}
+                        src={`${ENVIROMENT}/api/viewFile/${dataProfile.idDocument}/${dataProfile.bucketSource}`}
+                      />
                     ) : (
                       <img className="icon-header-2" src={IconProfile} />
                     )}
@@ -721,6 +781,15 @@ const DefaultLayout = (props) => {
                       exact={route.exact}
                       name={route.name}
                       render={(prop) => {
+                        const name = dataProfileMenu.find((row) => {
+                          return row.path === route.path;
+                        });
+                        setNameSection(
+                          isNil(name) === false &&
+                            isNil(name.menuName) === false
+                            ? name.menuName
+                            : route.name
+                        );
                         if (authenticated === true) {
                           return (
                             <route.component {...prop} history={history} />
@@ -757,7 +826,10 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callSetImageProfile: (data, id) => dispatch(callSetImageProfile(data, id)),
+  callGlobalActionApi: (data, id, constant) =>
+    dispatch(callGlobalActionApi(data, id, constant)),
+  callSetImageProfile: (file, data, id, callback) =>
+    dispatch(callSetImageProfile(file, data, id, callback)),
   callUpdateNotifications: (data, id) =>
     dispatch(callUpdateNotifications(data, id)),
   setDataUserProfile: (data) => dispatch(setDataUserProfile(data)),

@@ -7,6 +7,7 @@ import Loadable from "react-loadable";
 import { ConfigProvider } from "antd";
 import { Route, Switch } from "react-router-dom";
 import es_ES from "antd/lib/locale-provider/es_ES";
+import "intro.js/introjs.css";
 import "./App.css";
 
 const loading = () => (
@@ -22,6 +23,11 @@ const Login = Loadable({
 
 const Registro = Loadable({
   loader: () => import("./containers/Register/Register"),
+  loading,
+});
+
+const RegistroAgente = Loadable({
+  loader: () => import("./containers/Register/RegisterAgent"),
   loading,
 });
 
@@ -45,6 +51,16 @@ const Signature = Loadable({
   loading,
 });
 
+const Property = Loadable({
+  loader: () => import("./views/Properties/propertyPublicNotSession"),
+  loading,
+});
+
+const ReportInvitation = Loadable({
+  loader: () => import("./containers/Invitation/reporInvitation"),
+  loading,
+});
+
 const App = (props) => {
   const { history, dataProfile } = props;
   const accessDev = false; //window.location.hostname === "localhost";
@@ -56,6 +72,13 @@ const App = (props) => {
           <Route path="/login" name="Login Page" component={Login} />
           <Route path="/index" name="Login Page" component={Login} />
           <Route exact path="/registro" name="Registro" component={Registro} />
+          <Route
+            exact
+            path="/registro-asesor"
+            name="Registro Asesores"
+            component={RegistroAgente}
+          />
+
           <Route
             exact
             path="/recoveryPass"
@@ -74,6 +97,18 @@ const App = (props) => {
             path="/signature/document/:idExternalUserInDC"
             name="Firma de documento"
             component={Signature}
+          />
+          <Route
+            exact
+            path="/property/:idProperty"
+            name="Firma de documento"
+            component={Property}
+          />
+          <Route
+            exact
+            path="/report/:idInvitation"
+            name="Firma de documento"
+            component={ReportInvitation}
           />
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route path="/logout" name="Clean App and Close" component={Auth} />

@@ -29,7 +29,49 @@ const AdvancementRent = React.lazy(() =>
 const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
+const PublicProperties = React.lazy(() =>
+  import("./views/Properties/publicProperties")
+);
 const Transactions = React.lazy(() => import("./views/Payments/payments"));
+const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
+const EditProfileUsers = React.lazy(() =>
+  import("./views/Profile/editProfileUsers")
+);
+const UserDetailInformation = React.lazy(() =>
+  import("./views/Admin/userDetailInformation")
+);
+const Investigations = React.lazy(() => import("./views/Admin/investigations"));
+
+const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
+
+const DetailProperty = React.lazy(() =>
+  import("./views/Properties/detailPropertyPublic")
+);
+
+const DetailPropertyUsers = React.lazy(() =>
+  import("./views/Properties/detailPropertyUsers")
+);
+
+const SelectPolicy = React.lazy(() =>
+  import("./views/Properties/selectPolicy")
+);
+
+const PaymentsService = React.lazy(() =>
+  import("./views/Payment/paymentService")
+);
+
+const ReportInvitation = React.lazy(() =>
+  import("./views/Invitation/reporInvitation")
+);
+
+const VerificationIdentity = React.lazy(() =>
+  import("./views/Verification/verificationIdentity")
+);
+const InvitationProspects = React.lazy(() =>
+  import("./views/Prospects/invitationProspects")
+);
+const AllUsers = React.lazy(() => import("./views/Users/allUsers"));
+const HomeAgent = React.lazy(() => import("./views/Home/homeAgent"));
 
 const routes = [
   {
@@ -190,6 +232,142 @@ const routes = [
     path: "/websystem/dashboard-transactions",
     name: "Transacciones",
     component: Transactions,
+    exact: true,
+  },
+  {
+    key: "19",
+    id: "Perfil de Usuario",
+    path: "/websystem/profile",
+    name: "ProfileUsers",
+    component: ProfileUsers,
+    exact: true,
+  },
+  {
+    key: "20",
+    id: "Información",
+    path: "/websystem/edit-profile",
+    name: "Agregar información",
+    component: EditProfileUsers,
+    exact: true,
+  },
+  {
+    key: "20-1",
+    id: "Información",
+    path: "/websystem/edit-profile/:identifier",
+    name: "Agregar información",
+    component: EditProfileUsers,
+    exact: true,
+  },
+  {
+    key: "21",
+    id: "UserDetail",
+    path: "/websystem/user-detail/:idInvestigationProcess",
+    name: "Detalle de usuario",
+    component: UserDetailInformation,
+    exact: true,
+  },
+  {
+    key: "22",
+    id: "Investigations",
+    path: "/websystem/investigation",
+    name: "Investigación de inquilinos",
+    component: Investigations,
+    exact: true,
+  },
+  {
+    key: "23",
+    id: "addProperty",
+    path: "/websystem/add-property",
+    name: "Agregar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
+    key: "23-1",
+    id: "editProperty",
+    path: "/websystem/edit-property/:idProperty",
+    name: "Editar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
+    key: "24",
+    id: "detailProperty",
+    path: "/websystem/detail-property/:idProperty",
+    name: "Detalle propiedad",
+    component: DetailProperty,
+    exact: true,
+  },
+  {
+    key: "25",
+    id: "detailPropertyUsers",
+    path: "/websystem/detail-property-users/:idProperty",
+    name: "Detalle propiedad",
+    component: DetailPropertyUsers,
+    exact: true,
+  },
+  {
+    key: "26",
+    id: "selectPolicyUser",
+    path: "/websystem/select-policy/:idProperty",
+    name: "Agregar Póliza",
+    component: SelectPolicy,
+    exact: true,
+  },
+  {
+    key: "27",
+    id: "publicProperties",
+    path: "/websystem/catalog-properties",
+    name: "Propiedades",
+    component: PublicProperties,
+    exact: true,
+  },
+  {
+    key: "28",
+    id: "paymentService",
+    path: "/websystem/payment-service/:idOrderPayment",
+    name: "Pago de servicio",
+    component: PaymentsService,
+    exact: true,
+  },
+  {
+    key: "29",
+    id: "reportInvitation",
+    path: "/websystem/report/:idInvitation",
+    name: "Invitación recibida",
+    component: ReportInvitation,
+    exact: true,
+  },
+  {
+    key: "30",
+    id: "verificationIdentity",
+    path: "/websystem/verification",
+    name: "Verificación de identidad",
+    component: VerificationIdentity,
+    exact: true,
+  },
+  {
+    key: "31",
+    id: "invitationProscpect",
+    path: "/websystem/prospects",
+    name: "Prospectos Invitados",
+    component: InvitationProspects,
+    exact: true,
+  },
+  {
+    key: "32",
+    id: "allUsers",
+    path: "/websystem/users",
+    name: "Usuarios",
+    component: AllUsers,
+    exact: true,
+  },
+  {
+    key: "33",
+    id: "home",
+    path: "/websystem/home-asesor",
+    name: "Home",
+    component: HomeAgent,
     exact: true,
   },
 ];

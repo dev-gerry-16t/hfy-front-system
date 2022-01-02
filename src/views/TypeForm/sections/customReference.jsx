@@ -15,6 +15,7 @@ const CustomReferences = (props) => {
   };
   const [dataForm, setDataForm] = useState(initialForm);
   const [isVisibleAdd, setIsVisibleAdd] = useState(true);
+  const [clickAddReference, setClickAddReference] = useState(false);
 
   useEffect(() => {
     if (isEmpty(dataReferences) === false) {
@@ -86,8 +87,12 @@ const CustomReferences = (props) => {
                 type="button"
                 onClick={async () => {
                   try {
-                    await onClickAdd(dataForm);
-                    setIsVisibleAdd(false);
+                    if (clickAddReference === false) {
+                      setClickAddReference(true);
+                      setIsVisibleAdd(false);
+                      await onClickAdd(dataForm);
+                      setClickAddReference(false);
+                    }
                   } catch (error) {}
                 }}
                 className="button_primary"
