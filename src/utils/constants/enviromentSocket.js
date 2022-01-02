@@ -5,7 +5,7 @@ const DOMAIN_WEB_LOCAL = "localhost";
 const INSTANCE_LOCAL = {
   DNS_API: "localhost",
   API_PROTOCOL: "http://",
-  PORT: "3001",
+  PORT: "30000",
 };
 
 const INSTANCE_TEST = {
