@@ -211,7 +211,7 @@ const CustomValidationUser = (props) => {
               <h1>Aquí comienza la verificación de tu cuenta</h1>
               <p>
                 <strong>¡Recuerda!</strong> Este proceso es con el fin de
-                brindarte seguridad contra la implantación de identidad y
+                brindarte seguridad contra la suplantación de identidad y
                 detección de fraudes.
               </p>
             </div>
