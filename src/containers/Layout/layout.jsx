@@ -435,6 +435,18 @@ const DefaultLayout = (props) => {
                   background: "rgba(255,255,255,1)",
                   cursor: "pointer",
                 }}
+                onClick={async () => {
+                  try {
+                    await handlerCallUpdateNotifications(
+                      element.idNotification
+                    );
+                    if (isNil(element.path) === false) {
+                      setIsVisibleNotification(false);
+                      history.push(element.path);
+                    }
+                    notification.destroy();
+                  } catch (error) {}
+                }}
               >
                 <div className="section-circle-description">
                   <div

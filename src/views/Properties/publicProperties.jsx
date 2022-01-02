@@ -358,7 +358,10 @@ const PropertiesPublic = (props) => {
                       onClickFavorite={async (data, id) => {
                         try {
                           await handlerCallSetFavoriteProperty(data, id);
-                          handlerCallGetPropertyCoincidencesV2();
+                          handlerCallGetPropertyCoincidencesV2(
+                            jsonConditionsState,
+                            paginationState
+                          );
                         } catch (error) {
                           throw error;
                         }
@@ -368,7 +371,10 @@ const PropertiesPublic = (props) => {
                       onClickApply={async (data, id) => {
                         try {
                           await handlerCallApplyToProperty(data, id);
-                          handlerCallGetPropertyCoincidencesV2();
+                          handlerCallGetPropertyCoincidencesV2(
+                            jsonConditionsState,
+                            paginationState
+                          );
                         } catch (error) {
                           throw error;
                         }
