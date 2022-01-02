@@ -27,6 +27,9 @@ import ContextProperty from "./context/contextProperty";
 import SectionAssociationProperty from "./sectionsDetail/sectionAssociationProperty";
 import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationApplicant";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
+import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
+import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
+import CustomModalMessage from "../../components/customModalMessage";
 
 const EmptyData = styled.div`
   display: flex;
@@ -60,6 +63,7 @@ const DetailPropertyUsers = (props) => {
   const { match, callGlobalActionApi, dataProfile, history } = props;
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
+  const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [idProperty, setIdProperty] = useState(
     params.idProperty.length > 30 ? params.idProperty : null
   );
@@ -194,6 +198,38 @@ const DetailPropertyUsers = (props) => {
     );
   };
 
+  const handlerCallApplyToProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     setIdProperty(params.idProperty.length > 30 ? params.idProperty : null);
     setIdentifier(params.idProperty.length < 30 ? params.idProperty : null);
@@ -221,6 +257,37 @@ const DetailPropertyUsers = (props) => {
               },
             }}
           >
+            <CustomModalMessage
+              isModalVisible={isOpenComponent === 6}
+              title="Aplicar a la propiedad"
+              subTitle="¿Estás seguro que deseas aplicar a esta propiedad?"
+              mainText="Notificaremos al propietario sobre tu postulación, recibirás mayor información a través de tu correo electrónico una vez que tu propietario evalúe tu petición."
+              icon={<IconProperty width="200px" />}
+              labelLeft="Aceptar"
+              labelRight="Cancelar"
+              onClose={() => {
+                setIsOpenComponent(null);
+              }}
+              onClickRight={() => {
+                setIsOpenComponent(null);
+              }}
+              onClickLeft={async () => {
+                try {
+                  await handlerCallApplyToProperty(
+                    {
+                      idApartment: dataDetail.idApartment,
+                      identifier: dataDetail.identifier,
+                    },
+                    dataDetail.idProperty
+                  );
+                  history.push(
+                    `/websystem/detail-property-users/${dataDetail.idProperty}`
+                  );
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
             <SectionAssociationProperty history={history} />
             <SectionAssociationApplicant history={history} />
             <ContentForm owner>
@@ -344,6 +411,13 @@ const DetailPropertyUsers = (props) => {
               </div>
             </ContentForm>
             <ContentRight>
+              <SectionTimeLine
+                history={history}
+                onOpenComponent={(id) => {
+                  setIsOpenComponent(id);
+                }}
+                isOpenComponent={isOpenComponent}
+              />
               <GeneralCard>
                 <div className="header-title">
                   <h1>Contactar</h1>

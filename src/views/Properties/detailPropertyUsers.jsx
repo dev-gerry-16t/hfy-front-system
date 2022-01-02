@@ -53,6 +53,7 @@ import SectionAssociationApplicant from "./sectionsDetail/sectionAssociationAppl
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
+import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
 
@@ -252,6 +253,38 @@ const DetailPropertyUsers = (props) => {
     return arrayDocuments;
   };
 
+  const handlerCallApplyToProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.APPLY_TO_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
     setIdProperty(params.idProperty);
   }, [params.idProperty]);
@@ -361,6 +394,34 @@ const DetailPropertyUsers = (props) => {
                 ),
               });
               history.push(`/websystem/dashboard-properties`);
+            } catch (error) {
+              throw error;
+            }
+          }}
+        />
+        <CustomModalMessage
+          isModalVisible={isOpenComponent === 6}
+          title="Aplicar a la propiedad"
+          subTitle="¿Estás seguro que deseas aplicar a esta propiedad?"
+          mainText="Notificaremos al propietario sobre tu postulación, recibirás mayor información a través de tu correo electrónico una vez que tu propietario evalúe tu petición."
+          icon={<IconProperty width="200px" />}
+          labelLeft="Aceptar"
+          labelRight="Cancelar"
+          onClose={() => {
+            setIsOpenComponent(null);
+          }}
+          onClickRight={() => {
+            setIsOpenComponent(null);
+          }}
+          onClickLeft={async () => {
+            try {
+              await handlerCallApplyToProperty(
+                {
+                  idApartment: dataDetail.idApartment,
+                  identifier: dataDetail.identifier,
+                },
+                dataDetail.idProperty
+              );
             } catch (error) {
               throw error;
             }
