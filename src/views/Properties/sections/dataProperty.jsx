@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -76,6 +76,7 @@ const SectionDataProperty = (props) => {
     idUserType,
     idProperty,
     onBackTo,
+    onSaveData,
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
@@ -106,6 +107,7 @@ const SectionDataProperty = (props) => {
     ownerGivenName: null,
     ownerLastName: null,
   });
+  const dataFormSaveRef = useRef(dataForm);
 
   const frontFunctions = new FrontFunctions();
 
@@ -226,6 +228,9 @@ const SectionDataProperty = (props) => {
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
     handlerCallSearchCustomer();
+    return () => {
+      onSaveData(dataFormSaveRef.current);
+    };
   }, []);
 
   useEffect(() => {
@@ -256,6 +261,10 @@ const SectionDataProperty = (props) => {
       );
     }
   }, [dataFormSave, dataPropertyTypes]);
+
+  useEffect(() => {
+    dataFormSaveRef.current = dataForm;
+  }, [dataForm]);
 
   return (
     <ContentForm>

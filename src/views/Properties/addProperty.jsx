@@ -119,6 +119,9 @@ const AddProperty = (props) => {
       {current === 0 && (
         <SectionDataProperty
           dataFormSave={dataForm}
+          onSaveData={(data) => {
+            setDataForm({ ...dataForm, ...data });
+          }}
           onclickNext={(data) => {
             setDataForm({ ...dataForm, ...data });
             setCurrent(1);
@@ -137,6 +140,9 @@ const AddProperty = (props) => {
       {current === 1 && (
         <SectionDataLocation
           dataFormSave={dataForm}
+          onSaveData={(data) => {
+            setDataForm({ ...dataForm, ...data });
+          }}
           onClickBack={(data) => {
             setDataForm({ ...dataForm, ...data });
             setCurrent(0);
