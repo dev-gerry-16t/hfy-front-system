@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -49,6 +49,7 @@ const SectionDataLocation = (props) => {
     dataFormSave,
     idProperty,
     onBackTo,
+    onSaveData,
   } = props;
   const [idZipCode, setIdZipCode] = useState(null);
   const [positionCoordenates, setPositionCoordenates] = useState(null);
@@ -69,6 +70,9 @@ const SectionDataLocation = (props) => {
     isExactLocation: true,
     jsonCoordinates: null,
   });
+  const dataFormSaveRef = useRef(dataForm);
+  const dataPositionCoordenatesRef = useRef(positionCoordenates);
+  const dataZipCodeRef = useRef(zipCode);
   const frontFunctions = new FrontFunctions();
 
   const hanlderCallGetZipCodeAdress = async (code, id) => {
@@ -246,24 +250,14 @@ const SectionDataLocation = (props) => {
   useEffect(() => {
     if (isEmpty(dataFormSave) === false) {
       const {
-        street,
-        streetNumber,
-        suite,
         idZipCode,
-        neighborhood,
         isExactLocation = true,
         jsonCoordinates,
         zipCode,
       } = dataFormSave;
       setDataForm({
-        street,
-        streetNumber,
-        suite,
-        idZipCode,
-        neighborhood,
+        ...dataFormSave,
         isExactLocation,
-        jsonCoordinates,
-        zipCode,
       });
       if (isNil(zipCode) === false && isNil(idZipCode) === false) {
         setZipCode(zipCode, idZipCode);
@@ -271,6 +265,22 @@ const SectionDataLocation = (props) => {
       }
     }
   }, [dataFormSave]);
+
+  useEffect(() => {
+    return () => {
+      onSaveData({
+        ...dataFormSaveRef.current,
+        jsonCoordinates: JSON.stringify(dataPositionCoordenatesRef.current),
+        zipCode: dataZipCodeRef.current,
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    dataFormSaveRef.current = dataForm;
+    dataPositionCoordenatesRef.current = positionCoordenates;
+    dataZipCodeRef.current = zipCode;
+  }, [dataForm, positionCoordenates, zipCode]);
 
   return (
     <ContentForm>
