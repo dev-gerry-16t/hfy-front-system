@@ -317,10 +317,10 @@ const SectionPersonalInformation = (props) => {
   useEffect(() => {
     if (
       isEmpty(dataIdTypes) === false &&
-      isNil(dataForm.legalRepIdType) === false
+      isNil(dataCustomerDetail.legalRepIdType) === false
     ) {
       const selectDefaultLegalIdType = dataIdTypes.find((row) => {
-        return dataForm.legalRepIdType === row.idType;
+        return dataCustomerDetail.legalRepIdType === row.idType;
       });
       setLegalRepFieldDescription(
         isNil(selectDefaultLegalIdType) === false
@@ -328,7 +328,7 @@ const SectionPersonalInformation = (props) => {
           : ""
       );
     }
-  }, [dataIdTypes]);
+  }, [dataIdTypes, dataCustomerDetail]);
 
   return (
     <ContentForm>
