@@ -39,7 +39,7 @@ const PropertiesOwner = (props) => {
   const [dataCoincidencesPublic, setDataCoincidencesPublic] = useState([]);
   const [totalCoincidences, setTotalCoincidences] = useState(0);
   const [currentPagination, setCurrentPagination] = useState(1);
-  const [isHorizontal, setIsHorizontal] = useState(false);
+  const [isHorizontal, setIsHorizontal] = useState(true);
   const [enableIntro, setEnableIntro] = useState(false);
   const [visibleAddUser, setVisibleAddUser] = useState({
     openModal: false,
