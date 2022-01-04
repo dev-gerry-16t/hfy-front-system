@@ -480,6 +480,11 @@ const DefaultLayout = (props) => {
       }
     });
 
+    const myChat = document.getElementById("chat-application");
+      if (isNil(myChat) === false) {
+        myChat.style.display = "block";
+      }
+
     return () => {
       socket.disconnect();
       clearInterval(interval);
