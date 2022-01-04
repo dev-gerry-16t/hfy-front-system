@@ -292,9 +292,12 @@ const SectionPersonalInformation = (props) => {
   }, []);
 
   useEffect(() => {
-    if (isEmpty(dataIdTypes) === false && isNil(dataForm.idType) === false) {
+    if (
+      isEmpty(dataIdTypes) === false &&
+      isNil(dataCustomerDetail.idType) === false
+    ) {
       const selectDefaultIdType = dataIdTypes.find((row) => {
-        return dataForm.idType === row.idType;
+        return dataCustomerDetail.idType === row.idType;
       });
       setFieldDescription(
         isNil(selectDefaultIdType) === false
@@ -302,7 +305,7 @@ const SectionPersonalInformation = (props) => {
           : ""
       );
     }
-  }, [dataIdTypes]);
+  }, [dataIdTypes, dataCustomerDetail]);
 
   return (
     <ContentForm>
