@@ -84,6 +84,14 @@ const Auth = (props) => {
     if (window.location.pathname === "/auth") {
       handlerAsyncCallApiis();
     } else if (window.location.pathname === "/logout") {
+      const myobj = document.getElementById("script-make-smartsupp-hfy");
+      const myChat = document.getElementById("chat-application");
+      if (isNil(myChat) === false) {
+        myChat.style.display = "none";
+      }
+      if (isNil(myobj) === false) {
+        myobj.innerHTML = "";
+      }
       notification.destroy();
       handlerFinishSession();
     }

@@ -356,7 +356,11 @@ const DefaultLayout = (props) => {
     const theme = document.getElementsByTagName("body")[0];
     theme.className = themeConfig;
 
-    if (dataProfile.idUserType === 3 || dataProfile.idUserType === 2) {
+    if (
+      dataProfile.idUserType === 3 ||
+      dataProfile.idUserType === 2 ||
+      dataProfile.idUserType === 4
+    ) {
       const scriptCreate = document.createElement("script");
       scriptCreate.id = "script-make-smartsupp-hfy";
       scriptCreate.innerHTML = `
@@ -479,6 +483,16 @@ const DefaultLayout = (props) => {
         });
       }
     });
+
+    const myChat = document.getElementById("chat-application");
+    if (
+      isNil(myChat) === false &&
+      (dataProfile.idUserType === 3 ||
+        dataProfile.idUserType === 2 ||
+        dataProfile.idUserType === 4)
+    ) {
+      myChat.style.display = "block";
+    }
 
     return () => {
       socket.disconnect();
