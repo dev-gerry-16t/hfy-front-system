@@ -43,11 +43,15 @@ const ContainerUp = styled.div`
           ::-webkit-scrollbar {
             display: none;
           }
-          .preview-carousel {
+          span {
             width: 6.75em;
-            height: 4.68em;
+            height: 3.68em;
             border-radius: 0.5em;
+          }
+          .preview-carousel {
+            width: 100%;
             object-fit: contain;
+            height: 100%;
           }
           .select {
             box-shadow: 0px 0px 5px 5px rgba(255, 0, 131, 0.4);
@@ -310,18 +314,20 @@ const SectionCarouselInfo = (props) => {
               {isEmpty(apartmentImages) === false &&
                 apartmentImages.map((row, ix) => {
                   return (
-                    <img
-                      id={`id-image-carousel-${ix}`}
-                      className={`preview-carousel ${
-                        ix === currentSelectImage ? "select" : ""
-                      }`}
-                      src={row.url}
-                      alt="imagen"
-                      onClick={() => {
-                        setCurrentImage(row.url);
-                        setCurrentSelectImage(ix);
-                      }}
-                    />
+                    <span>
+                      <img
+                        id={`id-image-carousel-${ix}`}
+                        className={`preview-carousel ${
+                          ix === currentSelectImage ? "select" : ""
+                        }`}
+                        src={row.url}
+                        alt="imagen"
+                        onClick={() => {
+                          setCurrentImage(row.url);
+                          setCurrentSelectImage(ix);
+                        }}
+                      />
+                    </span>
                   );
                 })}
             </div>
