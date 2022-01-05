@@ -187,7 +187,7 @@ const ReportInvitation = (props) => {
                 <div className="icon-image-send">
                   <IconSendInvitation />
                 </div>
-                <h2>¡Tu reporte se realizó con exito!</h2>
+                <h2>¡Tu reporte se realizó con éxito!</h2>
                 <p
                   style={{
                     padding: "0px 8em",

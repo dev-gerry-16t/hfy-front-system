@@ -262,7 +262,7 @@ const ComponentAddCandidate = (props) => {
                   fontSize: "1em",
                 }}
               >
-                El candidato ha sido notificado, te deseamos mucho exito en tu
+                El candidato ha sido notificado, te deseamos mucho éxito en tu
                 proceso
               </p>
               <div className="button-action">

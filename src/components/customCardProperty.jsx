@@ -261,7 +261,6 @@ const CustomCardProperty = (props) => {
         src={isNil(documentMainPic) === false ? documentMainPic : src}
         alt={alt}
         onClick={onClickDetail}
-        loading="lazy"
       />
       <div className="type-id">
         <span>{propertyType}</span>

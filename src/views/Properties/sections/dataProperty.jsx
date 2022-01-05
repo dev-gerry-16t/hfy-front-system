@@ -10,6 +10,7 @@ import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import CustomSelect from "../../../components/CustomSelect";
 import CustomInputCurrency from "../../../components/customInputCurrency";
+import CustomInputSelectCurrency from "../../../components/customInputSelectCurrency";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import {
   ContentForm,
@@ -106,6 +107,7 @@ const SectionDataProperty = (props) => {
     ownerPhoneNumber: null,
     ownerGivenName: null,
     ownerLastName: null,
+    idCurrency: null,
   });
   const dataFormSaveRef = useRef(dataForm);
 
@@ -354,8 +356,13 @@ const SectionDataProperty = (props) => {
             </Row>
             <Row>
               <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                <CustomInputCurrency
+                <CustomInputSelectCurrency
                   value={dataForm.currentRent}
+                  valueSelect={dataForm.idCurrency}
+                  dataSelect={[]}
+                  onChangeSelect={(value, row) => {
+                    setDataForm({ ...dataForm, idCurrency: value });
+                  }}
                   placeholder=""
                   label={
                     dataForm.idOperationType == 1

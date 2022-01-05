@@ -89,7 +89,7 @@ const ComponentAddAgent = (props) => {
               <p>
                 {dataProfile.idUserType === 3
                   ? "Enviaremos una invitación al agente para vincular la propiedad"
-                  : "Asignaremos permiso al correo electrónico que nos proporciones para ver la ficha técnica de la propiedad y enviar prospectos."}
+                  : "Asignaremos permiso al agente que nos proporciones para ver la ficha técnica de la propiedad y enviar prospectos."}
               </p>
               <div>
                 <Row>
@@ -230,7 +230,7 @@ const ComponentAddAgent = (props) => {
                   fontSize: "1em",
                 }}
               >
-                El agente ha sido notificado, te deseamos mucho exito en tu
+                El agente ha sido notificado, te deseamos mucho éxito en tu
                 proceso
               </p>
               <div className="button-action">

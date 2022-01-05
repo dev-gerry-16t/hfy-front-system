@@ -418,17 +418,21 @@ const Register = (props) => {
               <button
                 type="button"
                 onClick={async () => {
-                  await handlerCallApiPersonTypes(
-                    {
+                  if (selectuserCustomer == 3) {
+                    history.push("/registro-asesor");
+                  } else {
+                    await handlerCallApiPersonTypes(
+                      {
+                        idType: 1,
+                        idCustomerType: selectuserCustomer,
+                      },
+                      dataForm.idPersonType
+                    );
+                    await handlerCallApiEndorsement({
                       idType: 1,
-                      idCustomerType: selectuserCustomer,
-                    },
-                    dataForm.idPersonType
-                  );
-                  await handlerCallApiEndorsement({
-                    idType: 1,
-                  });
-                  setUserType(2);
+                    });
+                    setUserType(2);
+                  }
                 }}
               >
                 <span>Continuar</span>

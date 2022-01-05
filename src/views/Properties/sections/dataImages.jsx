@@ -217,14 +217,15 @@ const SectionDataImages = (props) => {
           const width = event1.target.width;
           const height = event1.target.height;
 
-          const MAX_WIDTH = 578;
-          const scaleSize = MAX_WIDTH / width;
+          // const MAX_WIDTH = 578;
+          // const scaleSize = MAX_WIDTH / width;
 
-          canvas.width = MAX_WIDTH;
-          canvas.height = height * scaleSize;
+          // canvas.width = MAX_WIDTH;
+          // canvas.height = height * scaleSize;
+          // ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
 
           const ctx = canvas.getContext("2d");
-          ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+          ctx.drawImage(event1.target, 0, 0, width, height);
           const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
           resolve({
             id: countPromise,
@@ -329,14 +330,15 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        const MAX_WIDTH = 578;
-        const scaleSize = MAX_WIDTH / width;
+        // const MAX_WIDTH = 578;
+        // const scaleSize = MAX_WIDTH / width;
 
-        canvas.width = MAX_WIDTH;
-        canvas.height = height * scaleSize;
+        // canvas.width = MAX_WIDTH;
+        // canvas.height = height * scaleSize;
+        // ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
 
         const ctx = canvas.getContext("2d");
-        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(event1.target, 0, 0, width, height);
         const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
         const replaceArrayImage = arrayImages.map((row) => {
           let objectImage = row;
@@ -369,14 +371,15 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        const MAX_WIDTH = 578;
-        const scaleSize = MAX_WIDTH / width;
+        // const MAX_WIDTH = 578;
+        // const scaleSize = MAX_WIDTH / width;
 
-        canvas.width = MAX_WIDTH;
-        canvas.height = height * scaleSize;
+        // canvas.width = MAX_WIDTH;
+        // canvas.height = height * scaleSize;
+        // ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
 
         const ctx = canvas.getContext("2d");
-        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+        ctx.drawImage(event1.target, 0, 0, width, height);
         const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
         const replaceArrayImage = arrayImages.map((row) => {
           let objectImage = row;
