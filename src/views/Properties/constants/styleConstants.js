@@ -41,7 +41,8 @@ const GeneralCard = styled.div`
     }
   }
   .content-cards {
-    padding: 2em 2em;
+    font-size: 14px;
+    padding: 2em 10px;
     display: flex;
     flex-direction: column;
     gap: 1.5em;

@@ -92,6 +92,8 @@ const Card = styled.div`
         }
         span {
           color: var(--color-primary);
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

@@ -122,7 +122,7 @@ const SectionAreYouOwner = (props) => {
             <h1>Confirmación de datos</h1>
             <p
               style={{
-                textAlign: "justify",
+                textAlign: "center",
                 margin: "2em 0px 10px 0px",
               }}
             >

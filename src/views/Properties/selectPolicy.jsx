@@ -126,6 +126,7 @@ const CardPolicy = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  position: relative;
   .column-center {
     display: flex;
     flex-direction: column;
@@ -279,6 +280,20 @@ const SectionComision = styled.div`
   }
 `;
 
+const ImportantCard = styled.div`
+  position: absolute;
+  background: var(--color-primary);
+  color: #fff;
+  font-weight: 700;
+  width: 100%;
+  top: -25px;
+  right: 0px;
+  height: 35px;
+  border-radius: 10px 10px 0px 0px;
+  text-align: center;
+  padding-top: 5px;
+`;
+
 const selectIconPolicy = {
   "D074A10F-9E68-48D8-B80E-6EFC634DC77B":
     "data:image/png;base64,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",
@@ -314,6 +329,35 @@ const SelectPolicy = (props) => {
   const [dataAgents, setDataAgents] = useState([]);
   const frontFunctions = new FrontFunctions();
 
+  const handlerCallGetPolicies = async (id = null) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          idProperty,
+          idApartment,
+          idCurrency: id,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_POLICIES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataPolicies(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallGetPropertyById = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -337,36 +381,14 @@ const SelectPolicy = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
-
       setIdApartment(responseResult.idApartment);
       setDataDetail(responseResult);
+      await handlerCallGetPolicies(
+        isNil(responseResult.idCurrency) === false
+          ? responseResult.idCurrency
+          : null
+      );
       setLoadApi(false);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  const handlerCallGetPolicies = async () => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idCustomer,
-          idSystemUser,
-          idLoginHistory,
-          type: 1,
-        },
-        null,
-        API_CONSTANTS.CATALOGS.GET_CATALOG_POLICIES
-      );
-      const responseResult =
-        isNil(response) === false && isNil(response.response) === false
-          ? response.response
-          : [];
-      setDataPolicies(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -497,7 +519,6 @@ const SelectPolicy = (props) => {
 
   useEffect(() => {
     handlerCallGetPropertyById();
-    handlerCallGetPolicies();
     hanlderCallGetPolicyPaymentMethod();
     handlerCallSearchCustomer();
   }, []);
@@ -521,6 +542,7 @@ const SelectPolicy = (props) => {
                 2
               ),
               amount: findPolicySelect.minimunAmount,
+              isoCode: findPolicySelect.ISOCode,
             });
           } else {
             setAmountTotalPolicy({
@@ -533,6 +555,7 @@ const SelectPolicy = (props) => {
                 2
               ),
               amount: dataDetail.currentRent * findPolicySelect.percentBase,
+              isoCode: findPolicySelect.ISOCode,
             });
           }
         }
@@ -593,6 +616,9 @@ const SelectPolicy = (props) => {
                     : [];
                 return (
                   <CardPolicy>
+                    {rowMap.isMostPopular === true && (
+                      <ImportantCard>Más popular</ImportantCard>
+                    )}
                     <div className="size-text column-center">
                       <span>{namePolicy.text1}</span>
                       <strong>{namePolicy.text2}</strong>
@@ -611,7 +637,7 @@ const SelectPolicy = (props) => {
                                 2
                               )
                             : "$0.00"}{" "}
-                          MXN
+                          {rowMap.ISOCode}
                         </h2>
                       ) : (
                         <h2>
@@ -626,7 +652,7 @@ const SelectPolicy = (props) => {
                                 2
                               )
                             : "$0.00"}{" "}
-                          MXN
+                          {rowMap.ISOCode}
                         </h2>
                       )}
                       <span>{rowMap.percentBase * 100}%</span>
@@ -662,6 +688,7 @@ const SelectPolicy = (props) => {
                                 2
                               ),
                               amount: rowMap.minimunAmount,
+                              isoCode: rowMap.ISOCode,
                             });
                           } else {
                             setAmountTotalPolicy({
@@ -675,6 +702,7 @@ const SelectPolicy = (props) => {
                               ),
                               amount:
                                 dataDetail.currentRent * rowMap.percentBase,
+                              isoCode: rowMap.ISOCode,
                             });
                           }
                           setSelectPolicy(rowMap.idPolicy);
@@ -699,7 +727,10 @@ const SelectPolicy = (props) => {
           <div className="header-title">
             <h1>2.- Elige el modo de pago</h1>
             <div className="comision">
-              Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
+              Monto de póliza{" "}
+              <span>
+                {amountTotalPolicy.amountFormat} {amountTotalPolicy.isoCode}
+              </span>
             </div>
           </div>
           <ContentMethod>
@@ -742,7 +773,10 @@ const SelectPolicy = (props) => {
           <div className="header-title">
             <h1>3.- Compartir comisión con asesor</h1>
             <div className="comision">
-              Monto de póliza <span>{amountTotalPolicy.amountFormat} MXN</span>
+              Monto de póliza{" "}
+              <span>
+                {amountTotalPolicy.amountFormat} {amountTotalPolicy.isoCode}
+              </span>
             </div>
           </div>
           <SectionComision>
@@ -755,7 +789,7 @@ const SelectPolicy = (props) => {
                     2,
                     2
                   )}{" "}
-                  MXN
+                  {amountTotalPolicy.isoCode}
                 </span>
               </div>
               <label className="input-checkbox">

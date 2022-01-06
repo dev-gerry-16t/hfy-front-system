@@ -255,9 +255,7 @@ Amenidades:`;
               </h2>
               <p
                 style={{
-                  padding: "0px 4em",
                   textAlign: "center",
-                  fontSize: "1em",
                 }}
               >
                 {isEmpty(detailPublicProperty) === false &&

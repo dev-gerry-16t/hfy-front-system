@@ -40,7 +40,6 @@ const RecoveryPassword = (props) => {
     lengthCharacter: false,
     upperLowerword: false,
     numbers: false,
-    specialCharacters: false,
     percentStatus: 0,
   });
   const [codeVerify, setCodeVerify] = useState({
@@ -136,16 +135,13 @@ const RecoveryPassword = (props) => {
     const lowerInPass = /^(?=\w*[a-z])/;
     const upperInPass = /^(?=\w*[A-Z])/;
     const numberInPass = /^(?=.*\d)/;
-    const specialCharacter = /^(?=.*[$@$!%*?&])/;
 
     let lengthCharacter = false;
     let upperLowerword = false;
     let numbers = false;
-    let specialCharacters = false;
     let lengthCharacterPercent = 0;
     let upperLowerwordPercent = 0;
     let numbersPercent = 0;
-    let specialCharactersPercent = 0;
 
     if (size.test(pass) === true) {
       lengthCharacter = true;
@@ -153,26 +149,19 @@ const RecoveryPassword = (props) => {
     }
     if (lowerInPass.test(pass) === true && upperInPass.test(pass) === true) {
       upperLowerword = true;
-      upperLowerwordPercent = 25;
+      upperLowerwordPercent = 50;
     }
     if (numberInPass.test(pass) === true) {
       numbers = true;
       numbersPercent = 25;
     }
-    if (specialCharacter.test(pass) === true) {
-      specialCharacters = true;
-      specialCharactersPercent = 25;
-    }
+
     setSecurePass({
       lengthCharacter,
       upperLowerword,
       numbers,
-      specialCharacters,
       percentStatus:
-        lengthCharacterPercent +
-        upperLowerwordPercent +
-        numbersPercent +
-        specialCharactersPercent,
+        lengthCharacterPercent + upperLowerwordPercent + numbersPercent,
     });
   };
 
@@ -515,13 +504,6 @@ const RecoveryPassword = (props) => {
                 )}
                 {securePass.numbers === false && (
                   <Alert message="Números" type="warning" showIcon />
-                )}
-                {securePass.specialCharacters === false && (
-                  <Alert
-                    message="Caracteres especiales (@$&!%*?)"
-                    type="warning"
-                    showIcon
-                  />
                 )}
               </div>
 

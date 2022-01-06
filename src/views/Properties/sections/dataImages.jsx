@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
-import { Row, Col } from "antd";
+import { Row, Col, Popconfirm } from "antd";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
@@ -217,7 +217,7 @@ const SectionDataImages = (props) => {
           const width = event1.target.width;
           const height = event1.target.height;
 
-          const MAX_WIDTH = 578;
+          const MAX_WIDTH = 1200;
           const scaleSize = MAX_WIDTH / width;
 
           canvas.width = MAX_WIDTH;
@@ -329,7 +329,7 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        const MAX_WIDTH = 578;
+        const MAX_WIDTH = 1200;
         const scaleSize = MAX_WIDTH / width;
 
         canvas.width = MAX_WIDTH;
@@ -369,7 +369,7 @@ const SectionDataImages = (props) => {
         const width = event1.target.width;
         const height = event1.target.height;
 
-        const MAX_WIDTH = 578;
+        const MAX_WIDTH = 1200;
         const scaleSize = MAX_WIDTH / width;
 
         canvas.width = MAX_WIDTH;
@@ -493,8 +493,10 @@ const SectionDataImages = (props) => {
                 <ContentImage>
                   <img className="image-content" src={row.src} alt={"imagen"} />
                   <div className="button-actions-image">
-                    <ButtonFiles
-                      onClick={async () => {
+                    <Popconfirm
+                      placement="left"
+                      title="¿Estás seguro de eliminar esta imagen?"
+                      onConfirm={async () => {
                         try {
                           if (isNil(idProperty) === true) {
                             handlerOnDeleteImage(row.id);
@@ -516,9 +518,13 @@ const SectionDataImages = (props) => {
                           }
                         } catch (error) {}
                       }}
+                      okText="Si"
+                      cancelText="No"
                     >
-                      <IconDelete color="var(--color-primary)" />
-                    </ButtonFiles>
+                      <ButtonFiles onClick={() => {}}>
+                        <IconDelete color="var(--color-primary)" />
+                      </ButtonFiles>
+                    </Popconfirm>
                     <ButtonFilesLabel
                       className="upload-file"
                       for={`id-file-${row.id}`}
