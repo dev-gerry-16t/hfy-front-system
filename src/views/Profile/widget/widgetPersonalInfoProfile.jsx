@@ -61,7 +61,7 @@ const WidgetPersonalInfoProfile = (props) => {
           </h2>
         </div>
         <div className="label-strong">
-          <span>Nacimiento:</span>
+          <span>Fecha de nacimiento:</span>
           <strong>
             {isNil(dateOfBirth) === false
               ? moment(dateOfBirth, "YYYY-MM-DD").format("DD/MM/YYYY")
