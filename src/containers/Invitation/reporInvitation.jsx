@@ -190,9 +190,7 @@ const ReportInvitation = (props) => {
                 <h2>¡Tu reporte se realizó con éxito!</h2>
                 <p
                   style={{
-                    padding: "0px 8em",
-                    textAlign: "justify",
-                    fontSize: "1em",
+                    textAlign: "center",
                   }}
                 >
                   Lamentamos este error, a partir de ahora no recibiras correos.

@@ -81,6 +81,7 @@ const SectionDataProperty = (props) => {
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
+  const [dataCurrency, setDataCurrency] = useState([]);
   const [nameOwner, setNameOwner] = useState([]);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
@@ -90,7 +91,7 @@ const SectionDataProperty = (props) => {
     idPropertyType: null,
     idCommercialActivity: null,
     currentRent: null,
-    idCurrency: null,
+    idCurrency: "9F5E4F49-1525-4BAA-8C4E-4090A9082B6D",
     priceBasedBy: "1",
     totalBedrooms: null,
     totalBathrooms: null,
@@ -227,9 +228,37 @@ const SectionDataProperty = (props) => {
     }
   };
 
+  const handlerCallGetAllCurrencies = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_CURRENCIES
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataCurrency(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
     handlerCallSearchCustomer();
+    handlerCallGetAllCurrencies();
     return () => {
       onSaveData(dataFormSaveRef.current);
     };
@@ -255,6 +284,7 @@ const SectionDataProperty = (props) => {
       const filterIdProperty = dataPropertyTypes.find((row) => {
         return row.id == dataFormSave.idPropertyType;
       });
+
       setIsOpenFloorDescription(
         isNil(filterIdProperty) === false &&
           isNil(filterIdProperty.requiresFloorDescr) === false
@@ -359,7 +389,7 @@ const SectionDataProperty = (props) => {
                 <CustomInputSelectCurrency
                   value={dataForm.currentRent}
                   valueSelect={dataForm.idCurrency}
-                  dataSelect={[]}
+                  dataSelect={dataCurrency}
                   onChangeSelect={(value, row) => {
                     setDataForm({ ...dataForm, idCurrency: value });
                   }}

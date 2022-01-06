@@ -40,16 +40,16 @@ const ContainerUp = styled.div`
           gap: 0.5em;
           overflow-x: scroll;
           display: flex;
+          padding: 10px 20px;
           ::-webkit-scrollbar {
             display: none;
           }
           span {
+          }
+          .preview-carousel {
             width: 6.75em;
             height: 3.68em;
             border-radius: 0.5em;
-          }
-          .preview-carousel {
-            width: 100%;
             object-fit: contain;
             height: 100%;
           }
@@ -314,20 +314,18 @@ const SectionCarouselInfo = (props) => {
               {isEmpty(apartmentImages) === false &&
                 apartmentImages.map((row, ix) => {
                   return (
-                    <span>
-                      <img
-                        id={`id-image-carousel-${ix}`}
-                        className={`preview-carousel ${
-                          ix === currentSelectImage ? "select" : ""
-                        }`}
-                        src={row.url}
-                        alt="imagen"
-                        onClick={() => {
-                          setCurrentImage(row.url);
-                          setCurrentSelectImage(ix);
-                        }}
-                      />
-                    </span>
+                    <img
+                      id={`id-image-carousel-${ix}`}
+                      className={`preview-carousel ${
+                        ix === currentSelectImage ? "select" : ""
+                      }`}
+                      src={row.url}
+                      alt="imagen"
+                      onClick={() => {
+                        setCurrentImage(row.url);
+                        setCurrentSelectImage(ix);
+                      }}
+                    />
                   );
                 })}
             </div>
@@ -400,7 +398,12 @@ const SectionCarouselInfo = (props) => {
                 }}
               />
               <div className="ant-image-preview-content">
-                <div className="ant-image-preview-body">
+                <div
+                  className="ant-image-preview-body"
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
                   <ul className="ant-image-preview-operations">
                     <li className="ant-image-preview-operations-operation">
                       <span

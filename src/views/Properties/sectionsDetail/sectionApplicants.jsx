@@ -300,7 +300,7 @@ const SectionApplicants = (props) => {
                                 throw error;
                               }
                             }}
-                            okText="Yes"
+                            okText="Si"
                             cancelText="No"
                           >
                             <ButtonDocument onClick={() => {}}>
@@ -346,7 +346,7 @@ const SectionApplicants = (props) => {
                               throw error;
                             }
                           }}
-                          okText="Yes"
+                          okText="Si"
                           cancelText="No"
                         >
                           <ButtonDocument onClick={() => {}}>

@@ -53,7 +53,15 @@ const Info = ({ field, value }) => {
   return (
     <div className="data-information">
       <strong>{field}:</strong>
-      <span>{value}</span>
+      <span>
+        {" "}
+        <div
+          className="section-info-notification"
+          dangerouslySetInnerHTML={{
+            __html: isNil(value) === false ? value : "",
+          }}
+        />
+      </span>
     </div>
   );
 };

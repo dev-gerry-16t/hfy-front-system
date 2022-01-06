@@ -401,7 +401,7 @@ const CustomCardProperty = (props) => {
                 );
               } catch (error) {}
             }}
-            okText="Yes"
+            okText="Si"
             cancelText="No"
           >
             <ButtonPrimary onClick={() => {}}>Desistir</ButtonPrimary>

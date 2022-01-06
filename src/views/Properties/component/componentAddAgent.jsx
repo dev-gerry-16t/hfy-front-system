@@ -225,9 +225,7 @@ const ComponentAddAgent = (props) => {
               <h2>La invitación ha sido enviada</h2>
               <p
                 style={{
-                  padding: "0px 8em",
-                  textAlign: "justify",
-                  fontSize: "1em",
+                  textAlign: "center",
                 }}
               >
                 El agente ha sido notificado, te deseamos mucho éxito en tu
