@@ -82,7 +82,7 @@ const SectionAssociationApplicant = (props) => {
         "PUT"
       );
       frontFunctions.showMessageStatusApi(
-        "Se procesó con exito tu solicitud",
+        "Se procesó con éxito tu solicitud",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
       return response.response;

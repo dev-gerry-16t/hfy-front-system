@@ -159,6 +159,7 @@ const SectionPolicy = (props) => {
     requiresPolicy,
     policyDescription,
     policyAmountFormat,
+    totalPolicyAmountFormat,
     policyPaymentMethod,
     advCommissionAmountFormat,
     canBeEdited,
@@ -211,7 +212,7 @@ const SectionPolicy = (props) => {
                   <div className="info-policy">
                     <h1>{policyDescription}</h1>
                     <div className="price">
-                      <h2>{policyAmountFormat}</h2> {/*<span>35%</span>*/}
+                      <h2>{totalPolicyAmountFormat}</h2> {/*<span>35%</span>*/}
                     </div>
                   </div>
                   {idUserType === 4 && (

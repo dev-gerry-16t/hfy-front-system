@@ -93,6 +93,8 @@ const Card = styled.div`
         }
         span {
           color: var(--color-primary);
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
@@ -298,7 +300,7 @@ const SectionApplicants = (props) => {
                                 throw error;
                               }
                             }}
-                            okText="Yes"
+                            okText="Si"
                             cancelText="No"
                           >
                             <ButtonDocument onClick={() => {}}>
@@ -344,7 +346,7 @@ const SectionApplicants = (props) => {
                               throw error;
                             }
                           }}
-                          okText="Yes"
+                          okText="Si"
                           cancelText="No"
                         >
                           <ButtonDocument onClick={() => {}}>

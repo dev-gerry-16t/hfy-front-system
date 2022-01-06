@@ -57,6 +57,7 @@ const API_CONSTANTS = {
     GET_ALL_APPLICATION_METHODS: `${API.API_SECURE}${API.CATALOGS}/getAllApplicationMethods`,
     GET_ALL_PROPERTIES: `${API.API_SECURE}${API.CATALOGS}/getAllProperties`,
     GET_ALL_PHONE_TYPES: `${API.API_SECURE}${API.CATALOGS}/getAllPhoneTypes`,
+    GET_ALL_CURRENCIES: `${API.API_SECURE}${API.CATALOGS}/getAllCurrencies`,
   },
   CUSTOMER: {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,

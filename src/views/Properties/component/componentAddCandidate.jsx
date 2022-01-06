@@ -257,12 +257,10 @@ const ComponentAddCandidate = (props) => {
               <h2>La invitación ha sido enviada</h2>
               <p
                 style={{
-                  padding: "0px 8em",
-                  textAlign: "justify",
-                  fontSize: "1em",
+                  textAlign: "center",
                 }}
               >
-                El candidato ha sido notificado, te deseamos mucho exito en tu
+                El candidato ha sido notificado, te deseamos mucho éxito en tu
                 proceso
               </p>
               <div className="button-action">

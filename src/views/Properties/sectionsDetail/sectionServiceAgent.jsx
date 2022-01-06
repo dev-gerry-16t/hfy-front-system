@@ -468,7 +468,7 @@ const SectionServiceAgent = (props) => {
                 <div className="line"></div>
                 <div className="info-service">
                   <div className="info">
-                    <strong>Costo de servicio:</strong>
+                    <strong>Costo total a pagar:</strong>
                     <span
                       style={{
                         color: "var(--color-primary)",

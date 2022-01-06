@@ -2,6 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import "antd/dist/antd.css";
 import {
   ContentForm,
   LineSeparator,
@@ -39,14 +40,18 @@ const ContainerUp = styled.div`
           gap: 0.5em;
           overflow-x: scroll;
           display: flex;
+          padding: 10px 20px;
           ::-webkit-scrollbar {
             display: none;
           }
+          span {
+          }
           .preview-carousel {
             width: 6.75em;
-            height: 4.68em;
+            height: 3.68em;
             border-radius: 0.5em;
             object-fit: contain;
+            height: 100%;
           }
           .select {
             box-shadow: 0px 0px 5px 5px rgba(255, 0, 131, 0.4);
@@ -61,6 +66,10 @@ const ContainerUp = styled.div`
       object-fit: contain;
       margin-bottom: 0.5em;
     }
+  }
+  .ant-image-preview-img {
+    width: 80vw;
+    max-width: 1060px;
   }
   @media screen and (max-width: 1500px) {
     flex-direction: column;
@@ -104,6 +113,9 @@ const ContainerUp = styled.div`
           }
         }
       }
+    }
+    .ant-image-preview-img {
+      width: 100%;
     }
   }
   @media screen and (max-width: 420px) {
@@ -219,6 +231,7 @@ const SectionCarouselInfo = (props) => {
   );
   const [currentSelectImage, setCurrentSelectImage] = useState(null);
   const [numberOfImages, setNumberOfImages] = useState(null);
+  const [isVisibleImage, setIsVisibleImage] = useState(false);
   const dataContexProperty = useContext(ContextProperty);
   const { dataDetail } = dataContexProperty;
 
@@ -277,6 +290,9 @@ const SectionCarouselInfo = (props) => {
             className="preview-carousel-img"
             src={currentImage}
             alt="imagen"
+            onClick={() => {
+              setIsVisibleImage(true);
+            }}
           />
           <div className="slide-carousel">
             <ButtonCarousel
@@ -300,7 +316,6 @@ const SectionCarouselInfo = (props) => {
                   return (
                     <img
                       id={`id-image-carousel-${ix}`}
-                      loading="lazy"
                       className={`preview-carousel ${
                         ix === currentSelectImage ? "select" : ""
                       }`}
@@ -357,6 +372,88 @@ const SectionCarouselInfo = (props) => {
           </div>
         </div>
       </ShortDetail>
+      <div>
+        <div
+          className="ant-image-preview-root"
+          style={{
+            display: isVisibleImage === true ? "block" : "none",
+          }}
+        >
+          <div className="ant-image-preview-mask" />
+          <div
+            tabIndex={-1}
+            className="ant-image-preview-wrap"
+            role="dialog"
+            style={{}}
+          >
+            <div role="document" className="ant-image-preview" style={{}}>
+              <div
+                tabIndex={0}
+                aria-hidden="true"
+                style={{
+                  width: "0px",
+                  height: "0px",
+                  overflow: "hidden",
+                  outline: "none",
+                }}
+              />
+              <div className="ant-image-preview-content">
+                <div
+                  className="ant-image-preview-body"
+                  onClick={() => {
+                    console.log("click");
+                  }}
+                >
+                  <ul className="ant-image-preview-operations">
+                    <li className="ant-image-preview-operations-operation">
+                      <span
+                        role="img"
+                        aria-label="close"
+                        className="anticon anticon-close ant-image-preview-operations-icon"
+                        onClick={() => {
+                          setIsVisibleImage(false);
+                        }}
+                      >
+                        <svg
+                          viewBox="64 64 896 896"
+                          focusable="false"
+                          data-icon="close"
+                          width="1em"
+                          height="1em"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z" />
+                        </svg>
+                      </span>
+                    </li>
+                  </ul>
+                  <div
+                    className="ant-image-preview-img-wrapper"
+                    style={{ transform: "translate3d(0px, 0px, 0px)" }}
+                  >
+                    <img
+                      className="ant-image-preview-img"
+                      src={currentImage}
+                      style={{ transform: "scale3d(1, 1, 1) rotate(0deg)" }}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div
+                tabIndex={0}
+                aria-hidden="true"
+                style={{
+                  width: "0px",
+                  height: "0px",
+                  overflow: "hidden",
+                  outline: "none",
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </ContainerUp>
   );
 };
