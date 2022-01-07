@@ -637,9 +637,11 @@ const SectionDataImages = (props) => {
                       okText="Si"
                       cancelText="No"
                     >
-                      <ButtonFiles onClick={() => {}}>
-                        <IconDelete color="var(--color-primary)" />
-                      </ButtonFiles>
+                      {row.isMain !== true && (
+                        <ButtonFiles onClick={() => {}}>
+                          <IconDelete color="var(--color-primary)" />
+                        </ButtonFiles>
+                      )}
                     </Popconfirm>
                     <ButtonFilesLabel
                       className="upload-file"
