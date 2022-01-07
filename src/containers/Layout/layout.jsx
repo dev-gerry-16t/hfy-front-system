@@ -43,6 +43,8 @@ import IconAgents from "../../assets/icons/agent.svg";
 import IconProfileWhite from "../../assets/icons/Profilewhite.svg";
 import IconSetting from "../../assets/icons/iconSetting.svg";
 import IconLocation from "../../assets/icons/iconLocation.svg";
+import IconTwoUser from "../../assets/icons/iconTwoUser.svg";
+import IconPercent from "../../assets/icons/iconPercent.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -107,6 +109,8 @@ const DefaultLayout = (props) => {
     IconSetting,
     IconProfileWhite,
     IconLocation,
+    IconTwoUser,
+    IconPercent,
   };
 
   const [nameSection, setNameSection] = useState("");
