@@ -1745,6 +1745,59 @@ const callAddDocument =
     }
   };
 
+const callAddDocumentThumb =
+  (file, data, callback) => async (dispatch, getState) => {
+    const state = getState();
+    const { dataProfile } = state;
+    HEADER.Authorization = "Bearer " + dataProfile.dataProfile.token;
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("fileProperties", JSON.stringify(data));
+    try {
+      const config = {
+        headers: { ...HEADER },
+        onUploadProgress: (progressEvent) => {
+          var percentCompleted = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total
+          );
+          callback(percentCompleted);
+        },
+      };
+      const response = await RequesterAxios.post(
+        API_CONSTANTS.ADD_DOCUMENT_THUMB,
+        formData,
+        config
+      );
+      const responseResultStatus =
+        isNil(response) === false && isNil(response.status) === false
+          ? response.status
+          : null;
+      const responseResultMessage =
+        isNil(response) === false &&
+        isNil(response.data) === false &&
+        isNil(response.data.response) === false &&
+        isNil(response.data.response.message) === false
+          ? response.data.response.message
+          : null;
+      const responseResultData =
+        isNil(response) === false && isNil(response.data) === false
+          ? response.data
+          : null;
+      if (
+        isNil(responseResultStatus) === false &&
+        responseResultStatus === 200
+      ) {
+        return responseResultData;
+      } else {
+        throw isNil(responseResultMessage) === false
+          ? responseResultMessage
+          : null;
+      }
+    } catch (error) {
+      throw error;
+    }
+  };
+
 const callBulkPotentialAgent = (file, data) => async (dispatch, getState) => {
   const state = getState();
   const { dataProfile } = state;
@@ -4399,4 +4452,5 @@ export {
   callGetTransactionsByUser,
   callGetLandingProspectById,
   callGlobalActionApi,
+  callAddDocumentThumb,
 };

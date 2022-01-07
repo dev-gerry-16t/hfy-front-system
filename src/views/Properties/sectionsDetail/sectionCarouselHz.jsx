@@ -397,12 +397,7 @@ const SectionCarouselInfo = (props) => {
                 }}
               />
               <div className="ant-image-preview-content">
-                <div
-                  className="ant-image-preview-body"
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
+                <div className="ant-image-preview-body" onClick={() => {}}>
                   <ul className="ant-image-preview-operations">
                     <li className="ant-image-preview-operations-operation">
                       <span

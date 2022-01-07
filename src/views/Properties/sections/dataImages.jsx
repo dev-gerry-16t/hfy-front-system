@@ -9,6 +9,7 @@ import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import {
   callAddDocument,
+  callAddDocumentThumb,
   callGlobalActionApi,
 } from "../../../utils/actions/actions";
 import {
@@ -142,9 +143,11 @@ const SectionDataImages = (props) => {
     getById,
     onSaveImages = () => {},
     dataSaveImages,
+    callAddDocumentThumb,
   } = props;
   const [count, setCount] = useState(0);
   const [arrayImages, setArrayImages] = useState([]);
+  const [imageThumb, setImageThumb] = useState({});
   const [isLoadApi, setIsLoadApi] = useState(false);
   const frontFunctions = new FrontFunctions();
 
@@ -190,19 +193,73 @@ const SectionDataImages = (props) => {
         dataDocument,
         (percent) => {}
       );
-      const documentId =
+      const idDocument =
         isNil(response) === false &&
         isNil(response.response) === false &&
         isNil(response.response.idDocument) === false
           ? response.response.idDocument
           : null;
-      return documentId;
+      const bucketSource =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.bucketSource) === false
+          ? response.response.bucketSource
+          : null;
+      return { idDocument, bucketSource };
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
+  };
+
+  const handlerAddDocumentThumb = async (data, info) => {
+    const dataDocument = {
+      idDocument: info.idDocument,
+      bucketSource: info.bucketSource,
+    };
+
+    try {
+      await callAddDocumentThumb(data, dataDocument, (percent) => {});
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const fileReaderPromiseThumb = async (fileIndex, countPromise) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(fileIndex);
+      reader.onload = async (event) => {
+        const imgElement = document.createElement("img");
+        imgElement.src = event.target.result;
+        imgElement.onload = async (event1) => {
+          const canvas = document.createElement("canvas");
+          const width = event1.target.width;
+          const height = event1.target.height;
+
+          const MAX_WIDTH = 320;
+          const scaleSize = MAX_WIDTH / width;
+
+          canvas.width = MAX_WIDTH;
+          canvas.height = height * scaleSize;
+
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+          const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.9);
+          resolve({
+            id: countPromise,
+            src: srcEncoded,
+            contentType: "image/jpeg",
+            name: `homify-image-${countPromise}-thumb`,
+          });
+        };
+      };
+    });
   };
 
   const fileReaderPromise = async (fileIndex, countPromise) => {
@@ -237,35 +294,57 @@ const SectionDataImages = (props) => {
     });
   };
 
-  const handlerOnSendFilesV2 = async (dataImages) => {
+  const handlerOnSendFilesV2 = async (dataImages, thumbFile = {}) => {
     try {
       const arrayDataDocument = [];
       for (let index = 0; index < dataImages.length; index++) {
         const element = dataImages[index];
         const urlObject = await fetch(element.src);
         const blobFile = await urlObject.blob();
-        const idDocument = await handlerAddDocument(blobFile, element.name);
+        const { idDocument, bucketSource } = await handlerAddDocument(
+          blobFile,
+          element.name
+        );
         arrayDataDocument.push({
           idDocument,
-          isMain: false,
+          isMain: isEmpty(arrayImages) === true && index === 0 ? true : false,
         });
+        if (isEmpty(arrayImages) && index === 0) {
+          const urlObjectThumb = await fetch(thumbFile.src);
+          const blobFileThumb = await urlObjectThumb.blob();
+          await handlerAddDocumentThumb(blobFileThumb, {
+            idDocument,
+            bucketSource,
+          });
+        }
       }
       return arrayDataDocument;
     } catch (error) {}
   };
 
-  const handlerOnSendFilesV3 = async (dataImages, ix) => {
+  const handlerOnSendFilesV3 = async (dataImages, ix, thumbFile = {}) => {
     try {
       const arrayDataDocument = [];
       for (let index = 0; index < dataImages.length; index++) {
         const element = dataImages[index];
         const urlObject = await fetch(element.src);
         const blobFile = await urlObject.blob();
-        const idDocument = await handlerAddDocument(blobFile, element.name);
+        const { idDocument, bucketSource } = await handlerAddDocument(
+          blobFile,
+          element.name
+        );
         arrayDataDocument.push({
           idDocument,
-          isMain: ix === 0 ? true : false,
+          isMain: ix,
         });
+        if (ix === true) {
+          const urlObjectThumb = await fetch(thumbFile.src);
+          const blobFileThumb = await urlObjectThumb.blob();
+          await handlerAddDocumentThumb(blobFileThumb, {
+            idDocument,
+            bucketSource,
+          });
+        }
       }
       return arrayDataDocument;
     } catch (error) {}
@@ -280,6 +359,13 @@ const SectionDataImages = (props) => {
       for (let i = 0; i < files.length; i++) {
         const objectPromise = await fileReaderPromise(files[i], newCont);
         newArrayImages.push(objectPromise);
+        if (newCont === 0) {
+          const objectPromiseThumb = await fileReaderPromiseThumb(
+            files[i],
+            newCont
+          );
+          setImageThumb(objectPromiseThumb);
+        }
         newCont = newCont + 1;
       }
       setArrayImages([...arrayImages, ...newArrayImages]);
@@ -287,15 +373,23 @@ const SectionDataImages = (props) => {
       onSaveImages([...arrayImages, ...newArrayImages]);
     } else {
       const newArrayImages = [];
+      let thumbImage = {};
       let newCont = count;
       const files = e.target.files;
       if (!files) return;
       for (let i = 0; i < files.length; i++) {
         const objectPromise = await fileReaderPromise(files[i], newCont);
         newArrayImages.push(objectPromise);
+        if (isEmpty(arrayImages) && i === 0) {
+          thumbImage = await fileReaderPromiseThumb(files[i], newCont);
+        }
+
         newCont = newCont + 1;
       }
-      const responseImages = await handlerOnSendFilesV2(newArrayImages);
+      const responseImages = await handlerOnSendFilesV2(
+        newArrayImages,
+        thumbImage
+      );
       await handlerCallSetPropertyDocument(
         {
           jsonDocument: JSON.stringify(responseImages),
@@ -355,7 +449,7 @@ const SectionDataImages = (props) => {
     };
   };
 
-  const handlerOnEditFileV2 = async (e, id, ix) => {
+  const handlerOnEditFileV2 = async (e, id, isMain = false) => {
     const fileIndex = e.target.files[0];
     if (!fileIndex) return;
 
@@ -365,6 +459,7 @@ const SectionDataImages = (props) => {
       const imgElement = document.createElement("img");
       imgElement.src = event.target.result;
       imgElement.onload = async (event1) => {
+        let objectImageThumb = {};
         const canvas = document.createElement("canvas");
         const width = event1.target.width;
         const height = event1.target.height;
@@ -390,6 +485,9 @@ const SectionDataImages = (props) => {
           }
           return objectImage;
         });
+        if (isMain === true) {
+          objectImageThumb = await fileReaderPromiseThumb(fileIndex, id);
+        }
         const responseImages = await handlerOnSendFilesV3(
           [
             {
@@ -399,7 +497,8 @@ const SectionDataImages = (props) => {
               name: `homify-image-${id}`,
             },
           ],
-          ix
+          isMain,
+          objectImageThumb
         );
 
         await handlerCallSetPropertyDocument(
@@ -422,7 +521,18 @@ const SectionDataImages = (props) => {
         const element = dataImages[index];
         const urlObject = await fetch(element.src);
         const blobFile = await urlObject.blob();
-        const idDocument = await handlerAddDocument(blobFile, element.name);
+        const { idDocument, bucketSource } = await handlerAddDocument(
+          blobFile,
+          element.name
+        );
+        if (index === 0) {
+          const urlObjectThumb = await fetch(imageThumb.src);
+          const blobFileThumb = await urlObjectThumb.blob();
+          await handlerAddDocumentThumb(blobFileThumb, {
+            idDocument,
+            bucketSource,
+          });
+        }
         arrayDataDocument.push({
           idDocument,
           isMain: index === 0 ? true : false,
@@ -447,6 +557,7 @@ const SectionDataImages = (props) => {
           name: `homify-image-${ix}`,
           src: row.url,
           idDocument: row.idDocument,
+          isMain: row.isMain,
         };
       });
       setCount(parseArrayImages.length);
@@ -499,14 +610,19 @@ const SectionDataImages = (props) => {
                       onConfirm={async () => {
                         try {
                           if (isNil(idProperty) === true) {
+                            const newCount = count - 1;
                             handlerOnDeleteImage(row.id);
+                            if (ix === 0) {
+                              setImageThumb({});
+                            }
+                            setCount(newCount);
                           } else {
                             await handlerCallSetPropertyDocument(
                               {
                                 jsonDocument: JSON.stringify([
                                   {
                                     idDocument: row.idDocument,
-                                    isMain: ix === 0 ? true : false,
+                                    isMain: row.isMain,
                                   },
                                 ]),
                                 idApartment,
@@ -545,7 +661,7 @@ const SectionDataImages = (props) => {
                               jsonDocument: JSON.stringify([
                                 {
                                   idDocument: row.idDocument,
-                                  isMain: ix === 0 ? true : false,
+                                  isMain: row.isMain,
                                 },
                               ]),
                               idApartment,
@@ -553,7 +669,7 @@ const SectionDataImages = (props) => {
                             },
                             idProperty
                           );
-                          handlerOnEditFileV2(e, row.id, ix);
+                          handlerOnEditFileV2(e, row.id, row.isMain, ix);
                         }
                       }}
                     />
@@ -657,6 +773,8 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callAddDocument: (file, data, callback) =>
     dispatch(callAddDocument(file, data, callback)),
+  callAddDocumentThumb: (file, data, callback) =>
+    dispatch(callAddDocumentThumb(file, data, callback)),
   callGlobalActionApi: (data, id, constant, method) =>
     dispatch(callGlobalActionApi(data, id, constant, method)),
 });

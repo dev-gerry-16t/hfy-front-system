@@ -247,6 +247,7 @@ const DetailPropertyUsers = (props) => {
         return {
           idDocument: row.idDocument,
           bucketSource: row.bucketSource,
+          isMain: row.isMain,
         };
       });
     }
