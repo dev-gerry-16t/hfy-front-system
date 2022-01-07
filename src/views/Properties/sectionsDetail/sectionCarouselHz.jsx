@@ -51,7 +51,6 @@ const ContainerUp = styled.div`
             height: 3.68em;
             border-radius: 0.5em;
             object-fit: contain;
-            height: 100%;
           }
           .select {
             box-shadow: 0px 0px 5px 5px rgba(255, 0, 131, 0.4);
@@ -398,12 +397,7 @@ const SectionCarouselInfo = (props) => {
                 }}
               />
               <div className="ant-image-preview-content">
-                <div
-                  className="ant-image-preview-body"
-                  onClick={() => {
-                    console.log("click");
-                  }}
-                >
+                <div className="ant-image-preview-body" onClick={() => {}}>
                   <ul className="ant-image-preview-operations">
                     <li className="ant-image-preview-operations-operation">
                       <span

@@ -203,6 +203,11 @@
   height: 100vh;
 }
 
+.ant-menu {
+  max-height: 80vh;
+  overflow-y: scroll;
+}
+
 .ant-layout-sider-children {
   background: var(--color-primary);
 }

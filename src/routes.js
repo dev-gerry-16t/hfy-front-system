@@ -29,8 +29,14 @@ const AdvancementRent = React.lazy(() =>
 const Properties = React.lazy(() =>
   import("./views/Properties/propertiesOwner")
 );
+const PropertiesAdmin = React.lazy(() =>
+  import("./views/Properties/propertiesAdmin")
+);
 const PublicProperties = React.lazy(() =>
   import("./views/Properties/publicProperties")
+);
+const PublicDirectProperties = React.lazy(() =>
+  import("./views/Properties/publicDirectProperty")
 );
 const Transactions = React.lazy(() => import("./views/Payments/payments"));
 const ProfileUsers = React.lazy(() => import("./views/Profile/profileUsers"));
@@ -227,6 +233,15 @@ const routes = [
     exact: true,
   },
   {
+    key: "17-1",
+    id: "Propiedades",
+    path: "/websystem/admin-properties",
+    name: "Propiedades Directas",
+    component: PropertiesAdmin,
+    exact: true,
+  },
+
+  {
     key: "18",
     id: "Transacciones",
     path: "/websystem/dashboard-transactions",
@@ -320,6 +335,14 @@ const routes = [
     path: "/websystem/catalog-properties",
     name: "Propiedades",
     component: PublicProperties,
+    exact: true,
+  },
+  {
+    key: "27-1",
+    id: "publicProperties",
+    path: "/websystem/direct-properties",
+    name: "Propiedades Directas",
+    component: PublicDirectProperties,
     exact: true,
   },
   {
