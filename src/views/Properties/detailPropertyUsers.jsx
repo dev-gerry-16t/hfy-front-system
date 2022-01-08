@@ -73,7 +73,8 @@ const dataTabsProperty = [
 ];
 
 const DetailPropertyUsers = (props) => {
-  const { match, callGlobalActionApi, dataProfile, history } = props;
+  const { match, callGlobalActionApi, dataProfile, history, dataUserRedirect } =
+    props;
   const { params } = match;
   const [idProperty, setIdProperty] = useState(params.idProperty);
   const [isVisibleDelete, setIsVisibleDelete] = useState(false);
@@ -452,7 +453,14 @@ const DetailPropertyUsers = (props) => {
           <div className="back-button">
             <button
               onClick={() => {
-                history.push(`/websystem/dashboard-properties`);
+                if (
+                  isEmpty(dataUserRedirect.backPathDirect) === false &&
+                  isNil(dataUserRedirect.backPathDirect) === false
+                ) {
+                  history.push(dataUserRedirect.backPathDirect);
+                } else {
+                  history.push(`/websystem/dashboard-properties`);
+                }
               }}
             >
               <Arrow width="25px" />
@@ -478,6 +486,19 @@ const DetailPropertyUsers = (props) => {
                 <Dropdown
                   overlay={
                     <Menu>
+                      <Menu.Item>
+                        <span
+                          onClick={() => {
+                            navigator.share({
+                              title: dataDetail.title,
+                              text: dataDetail.description,
+                              url: `${window.location.origin}/property/${dataDetail.identifier}`,
+                            });
+                          }}
+                        >
+                          Compartir
+                        </span>
+                      </Menu.Item>
                       <Menu.Item>
                         <a
                           target="_blank"
@@ -684,9 +705,10 @@ const DetailPropertyUsers = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile, dataProfileMenu, dataUserRedirect } = state;
   return {
     dataProfile: dataProfile.dataProfile,
+    dataUserRedirect: dataUserRedirect.dataUserRedirect,
   };
 };
 

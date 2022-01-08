@@ -60,7 +60,8 @@ const dataTabsProperty = [
 ];
 
 const DetailPropertyUsers = (props) => {
-  const { match, callGlobalActionApi, dataProfile, history } = props;
+  const { match, callGlobalActionApi, dataProfile, history, dataUserRedirect } =
+    props;
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
   const [isOpenComponent, setIsOpenComponent] = useState(null);
@@ -294,7 +295,14 @@ const DetailPropertyUsers = (props) => {
               <div className="back-button">
                 <button
                   onClick={() => {
-                    history.push(`/websystem/catalog-properties`);
+                    if (
+                      isEmpty(dataUserRedirect.backPathAgentDirect) === false &&
+                      isNil(dataUserRedirect.backPathAgentDirect) === false
+                    ) {
+                      history.push(dataUserRedirect.backPathAgentDirect);
+                    } else {
+                      history.push(`/websystem/catalog-properties`);
+                    }
                   }}
                 >
                   <Arrow width="25px" />
@@ -463,9 +471,10 @@ const DetailPropertyUsers = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile, dataProfileMenu, dataUserRedirect } = state;
   return {
     dataProfile: dataProfile.dataProfile,
+    dataUserRedirect: dataUserRedirect.dataUserRedirect,
   };
 };
 
