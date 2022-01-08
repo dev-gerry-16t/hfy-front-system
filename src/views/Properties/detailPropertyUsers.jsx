@@ -489,21 +489,11 @@ const DetailPropertyUsers = (props) => {
                       <Menu.Item>
                         <span
                           onClick={() => {
-                            navigator
-                              .share({
-                                title: dataDetail.title,
-                                text: dataDetail.description,
-                                url: `${window.location.origin}/property/${dataDetail.identifier}`,
-                              })
-                              .then(() =>
-                                frontFunctions.showMessageStatusApi(
-                                  "¡Excelente, compartiste la propiedad!",
-                                  GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-                                )
-                              )
-                              .catch((error) =>
-                                console.log("Error in sharing", error)
-                              );
+                            navigator.share({
+                              title: dataDetail.title,
+                              text: dataDetail.description,
+                              url: `${window.location.origin}/property/${dataDetail.identifier}`,
+                            });
                           }}
                         >
                           Compartir
