@@ -395,7 +395,15 @@ const DetailPropertyUsers = (props) => {
                   dataDetail.apartmentDocuments
                 ),
               });
-              history.push(`/websystem/dashboard-properties`);
+              if (
+                isNil(dataUserRedirect) === false &&
+                isEmpty(dataUserRedirect.backPathDirect) === false &&
+                isNil(dataUserRedirect.backPathDirect) === false
+              ) {
+                history.push(dataUserRedirect.backPathDirect);
+              } else {
+                history.push(`/websystem/dashboard-properties`);
+              }
             } catch (error) {
               throw error;
             }
@@ -454,6 +462,7 @@ const DetailPropertyUsers = (props) => {
             <button
               onClick={() => {
                 if (
+                  isNil(dataUserRedirect) === false &&
                   isEmpty(dataUserRedirect.backPathDirect) === false &&
                   isNil(dataUserRedirect.backPathDirect) === false
                 ) {

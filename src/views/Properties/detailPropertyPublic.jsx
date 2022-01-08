@@ -296,6 +296,7 @@ const DetailPropertyUsers = (props) => {
                 <button
                   onClick={() => {
                     if (
+                      isNil(dataUserRedirect) === false &&
                       isEmpty(dataUserRedirect.backPathAgentDirect) === false &&
                       isNil(dataUserRedirect.backPathAgentDirect) === false
                     ) {
