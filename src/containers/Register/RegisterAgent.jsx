@@ -30,11 +30,13 @@ import LogoHomify from "../../assets/img/logo.png";
 import { ReactComponent as IconInclusive } from "../../assets/iconSvg/svgFile/iconInclusive.svg";
 import { ReactComponent as IconCheck } from "../../assets/iconSvg/svgFile/iconCircleCheck.svg";
 import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
+import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
+import { ReactComponent as IconMinCheck } from "../../assets/iconSvg/svgFile/iconMinCheck.svg";
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: 2fr 1fr;
-  height: 100vh;
+  min-height: 100vh;
   font-family: Poppins;
   font-size: 16px;
   .form-button {
@@ -78,9 +80,12 @@ const Container = styled.div`
     .container-img {
       width: 100%;
       position: absolute;
-      top: 70vh;
+      bottom: 110px;
+      margin-top: 50vh;
+      max-height: 70px;
       img {
         width: 100%;
+        object-fit: cover;
       }
     }
   }
@@ -124,7 +129,6 @@ const Container = styled.div`
   @media screen and (max-width: 360px) {
     .container-form {
       .container-img {
-        top: 40em;
       }
     }
     .container-info {
@@ -198,10 +202,17 @@ const ContainerInfo = styled.div`
 
 const ButtonAction = styled.button`
   color: ${(props) => (props.primary ? "#fff" : "var(--color-primary)")};
-  background: ${(props) => (props.primary ? "var(--color-primary)" : "#fff")};
+  cursor: ${(props) => (props.block ? "no-drop" : "pointer")};
+  background: ${(props) =>
+    props.primary
+      ? props.block === true
+        ? "#D6D8E7"
+        : "var(--color-primary)"
+      : "#fff"};
   border: none;
   border-radius: 16px;
   padding: 5px 3em;
+  transition: all 0.2s ease-in-out;
 `;
 
 const CardIcon = styled.div`
@@ -275,6 +286,54 @@ const ContainerExitRegister = styled.div`
   }
 `;
 
+const ErrorMessage = styled.div`
+  position: fixed;
+  background: #eb5757;
+  color: #fff;
+  left: ${(props) => (props.visible === true ? "0px" : "-269px")};
+  bottom: 50px;
+  z-index: 2;
+  padding: 5px 5px 5px 25px;
+  border-radius: 0px 6px 6px 0px;
+  font-size: 14px;
+  transition: all 0.1s ease-out;
+  display: flex;
+  .message-api {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  button {
+    border: none;
+    background: transparent;
+    margin-left: 20px;
+  }
+`;
+
+const MessagePass = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+  .option-pass {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+`;
+
+const Circle = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: ${(props) => (props.ok === false ? "1px solid #000" : "none")};
+  background: ${(props) =>
+    props.ok === false ? "transparent" : "var(--color-primary)"};
+  transition: all 0.3s ease-in-out;
+`;
+
 const contentPlan = [
   "Crea fichas y comparte con otros asesores.",
   "Solicita Contratos o Pólizas Jurídicas en menos de 1 hora.",
@@ -297,11 +356,15 @@ const RegisterAgent = (props) => {
     mothersMaidenName: null,
     username: null,
     phoneNumber: null,
-    password: null,
+    password: "",
     idCountryNationality: null,
   });
   const [verifyPassword, setVerifyPassword] = useState(null);
   const [idRequestSignUp, setIdRequestSignUp] = useState(null);
+  const [showError, setShowError] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState({
+    errorApi: null,
+  });
   const [errorPass, setErrorPass] = useState(false);
   const [visiblePass, setVisiblePass] = useState(false);
   const [visiblePassConfirm, setVisiblePassConfirm] = useState(false);
@@ -323,6 +386,7 @@ const RegisterAgent = (props) => {
         isEmpty(responseResult) === false ? responseResult.idRequestSignUp : ""
       );
     } catch (error) {
+      setShowErrorMessage({ ...showErrorMessage, errorApi: error });
       throw error;
     }
   };
@@ -342,6 +406,7 @@ const RegisterAgent = (props) => {
     try {
       await callGetAllVerifyCode(data);
     } catch (error) {
+      setShowErrorMessage({ ...showErrorMessage, errorApi: error });
       throw error;
     }
   };
@@ -380,7 +445,7 @@ const RegisterAgent = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.givenName}
                     suffix={<UserOutlined color="#4E4B66" />}
-                    placeholder="Nombre(s)"
+                    placeholder="Nombre(s) *"
                     onChange={(e) => {
                       setDataForm({ ...dataForm, givenName: e });
                     }}
@@ -392,7 +457,7 @@ const RegisterAgent = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.lastName}
                     suffix={<UserOutlined color="#4E4B66" />}
-                    placeholder="Apellido Paterno"
+                    placeholder="Apellido Paterno *"
                     onChange={(e) => {
                       setDataForm({ ...dataForm, lastName: e });
                     }}
@@ -434,7 +499,7 @@ const RegisterAgent = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.username}
                     suffix={<MailOutlined color="#4E4B66" />}
-                    placeholder="Correo electrónico"
+                    placeholder="Correo electrónico *"
                     onChange={(e) => {
                       setDataForm({ ...dataForm, username: e });
                     }}
@@ -488,6 +553,32 @@ const RegisterAgent = (props) => {
                   />
                 </Col>
               </Row>
+              <MessagePass>
+                <span>Tu contraseña debe tener:</span>
+                <div className="option-pass">
+                  <Circle ok={dataForm.password.length >= 8}>
+                    <IconMinCheck />
+                  </Circle>
+                  <span>Mínimo 8 caracteres</span>
+                </div>
+                <div className="option-pass">
+                  <Circle
+                    ok={
+                      /^(?:.*[a-z])/.test(dataForm.password) === true &&
+                      /^(?:.*[A-Z])/.test(dataForm.password) === true
+                    }
+                  >
+                    <IconMinCheck />
+                  </Circle>
+                  <span>Letras mayúsculas y minúsculas</span>
+                </div>
+                <div className="option-pass">
+                  <Circle ok={/^(?=.*\d)/.test(dataForm.password) === true}>
+                    <IconMinCheck />
+                  </Circle>
+                  <span>Al menos un número</span>
+                </div>
+              </MessagePass>
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                   <CustomInputTypeForm
@@ -523,26 +614,43 @@ const RegisterAgent = (props) => {
               </Row>
               <div className="form-button">
                 <ButtonAction
+                  block={
+                    !(
+                      /^(?:.*[a-z])/.test(dataForm.password) === true &&
+                      /^(?:.*[A-Z])/.test(dataForm.password) === true &&
+                      /^(?=.*\d)/.test(dataForm.password) === true &&
+                      dataForm.password.length >= 8
+                    )
+                  }
                   primary
                   onClick={async () => {
                     try {
                       if (
-                        isEmpty(dataForm.password) === false &&
-                        isEmpty(verifyPassword) === false &&
-                        dataForm.password === verifyPassword
+                        /^(?:.*[a-z])/.test(dataForm.password) === true &&
+                        /^(?:.*[A-Z])/.test(dataForm.password) === true &&
+                        /^(?=.*\d)/.test(dataForm.password) === true &&
+                        dataForm.password.length >= 8
                       ) {
-                        const getCaptchaToken =
-                          await recaptchaV3.current.executeAsync();
-                        await handlerCallApiRegister({
-                          ...dataForm,
-                          idCustomerType: 3,
-                          captchaToken: getCaptchaToken,
-                        });
-                        setStepProcess(2);
-                      } else {
-                        setErrorPass(true);
+                        if (
+                          isEmpty(dataForm.password) === false &&
+                          isEmpty(verifyPassword) === false &&
+                          dataForm.password === verifyPassword
+                        ) {
+                          const getCaptchaToken =
+                            await recaptchaV3.current.executeAsync();
+                          await handlerCallApiRegister({
+                            ...dataForm,
+                            idCustomerType: 3,
+                            captchaToken: getCaptchaToken,
+                          });
+                          setStepProcess(2);
+                        } else {
+                          setErrorPass(true);
+                        }
                       }
-                    } catch (error) {}
+                    } catch (error) {
+                      setShowError(true);
+                    }
                   }}
                 >
                   Registrarme
@@ -618,6 +726,7 @@ const RegisterAgent = (props) => {
               </form>
               <div className="form-button-column">
                 <ButtonAction
+                  block={false}
                   primary
                   onClick={async () => {
                     try {
@@ -627,12 +736,31 @@ const RegisterAgent = (props) => {
                         idInvitation: null,
                       });
                       setStepProcess(3);
-                    } catch (error) {}
+                    } catch (error) {
+                      setShowError(true);
+                    }
                   }}
                 >
                   Validar
                 </ButtonAction>
-                <ButtonAction>Reenviar código</ButtonAction>
+                <ButtonAction
+                  block={false}
+                  onClick={async () => {
+                    try {
+                      const getCaptchaToken =
+                        await recaptchaV3.current.executeAsync();
+                      await handlerCallApiRegister({
+                        ...dataForm,
+                        idCustomerType: 3,
+                        captchaToken: getCaptchaToken,
+                      });
+                    } catch (error) {
+                      setShowError(true);
+                    }
+                  }}
+                >
+                  Reenviar código
+                </ButtonAction>
               </div>
             </Spin>
           </ContainerVerifyCode>
@@ -650,6 +778,7 @@ const RegisterAgent = (props) => {
             </p>
             <div className="form-button">
               <ButtonAction
+                block={false}
                 primary
                 onClick={() => {
                   history.push("/login");
@@ -660,7 +789,19 @@ const RegisterAgent = (props) => {
             </div>
           </ContainerExitRegister>
         )}
-
+        <ErrorMessage visible={showError}>
+          <div className="message-api">
+            <IconAlerMessage /> <span>{showErrorMessage.errorApi}</span>{" "}
+          </div>
+          <button
+            onClick={() => {
+              setShowError(false);
+              setShowErrorMessage({ ...showErrorMessage, errorApi: null });
+            }}
+          >
+            X
+          </button>
+        </ErrorMessage>
         <div className="container-img">
           <img src={CityScape} alt="" srcset="" />
         </div>
