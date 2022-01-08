@@ -487,6 +487,19 @@ const DetailPropertyUsers = (props) => {
                   overlay={
                     <Menu>
                       <Menu.Item>
+                        <span
+                          onClick={() => {
+                            navigator.share({
+                              title: dataDetail.title,
+                              text: dataDetail.description,
+                              url: `${window.location.origin}/property/${dataDetail.identifier}`,
+                            });
+                          }}
+                        >
+                          Compartir
+                        </span>
+                      </Menu.Item>
+                      <Menu.Item>
                         <a
                           target="_blank"
                           href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
