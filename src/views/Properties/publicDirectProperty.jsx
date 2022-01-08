@@ -13,6 +13,7 @@ import {
   callGetPropertyCoincidences,
   callGlobalActionApi,
 } from "../../utils/actions/actions";
+import { setDataUserRedirect } from "../../utils/dispatchs/userRedirectDispatch";
 import { IconVector } from "../../assets/iconSvg";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
@@ -32,7 +33,13 @@ import {
 const { Content } = Layout;
 
 const PropertiesPublic = (props) => {
-  const { dataProfile, callGlobalActionApi, history } = props;
+  const {
+    dataProfile,
+    callGlobalActionApi,
+    history,
+    dataUserRedirect,
+    setDataUserRedirect,
+  } = props;
   const [isOpenTicket, setIsOpenTicket] = useState(false);
   const [dataTicket, setDataTicket] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -203,6 +210,10 @@ const PropertiesPublic = (props) => {
 
   useEffect(() => {
     handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
+    setDataUserRedirect({
+      ...dataUserRedirect,
+      backPathAgentDirect: window.location.pathname,
+    });
   }, []);
 
   return (
@@ -432,15 +443,17 @@ const PropertiesPublic = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile, dataProfileMenu, dataUserRedirect } = state;
   return {
     dataProfile: dataProfile.dataProfile,
+    dataUserRedirect: dataUserRedirect.dataUserRedirect,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant, method) =>
     dispatch(callGlobalActionApi(data, id, constant, method)),
+  setDataUserRedirect: (data) => dispatch(setDataUserRedirect(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(PropertiesPublic);
