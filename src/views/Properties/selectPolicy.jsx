@@ -14,6 +14,8 @@ import CustomInputTypeForm from "../../components/CustomInputTypeForm";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import CustomInputSelect from "../../components/customInputSelect";
 import ComponentLoadSection from "../../components/componentLoadSection";
+import { ReactComponent as IconMinCheck } from "../../assets/iconSvg/svgFile/iconMinCheck.svg";
+import { ReactComponent as ArrowUp2 } from "../../assets/iconSvg/svgFile/arrowUp2.svg";
 
 const { Option } = Select;
 
@@ -107,6 +109,7 @@ const NoticePolicy = styled.div`
 const SectionCard = styled.div`
   display: flex;
   justify-content: space-around;
+  align-items: flex-start;
   margin: 3em 0px;
   gap: 20px;
   flex-wrap: wrap;
@@ -117,16 +120,19 @@ const SectionCard = styled.div`
 
 const CardPolicy = styled.div`
   width: 282px;
-  height: 434px;
+  min-height: 434px;
   background: #ffffff;
   box-shadow: 0px 1px 8px 6px #ebebf1;
   border-radius: 16px;
   border-top: 6px solid var(--color-primary);
   padding: 1em;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   position: relative;
+  display: grid;
+  grid-template-rows: 340px auto;
+  .card-info-policy {
+    display: flex;
+    flex-direction: column;
+  }
   .column-center {
     display: flex;
     flex-direction: column;
@@ -135,15 +141,20 @@ const CardPolicy = styled.div`
     line-height: 1%.5em;
   }
   .size-text {
-    font-size: 1.5em;
+    margin-top: 10px;
+    font-size: 1.2em;
+    line-height: 25px;
     strong {
       font-weight: 900;
     }
   }
   .icon-image {
+    margin-top: 30px;
     text-align: center;
   }
   .buttons-action {
+    position: relative;
+    bottom: 0px;
     text-align: center;
   }
   .price {
@@ -177,6 +188,16 @@ const ButtonPolicy = styled.button`
   border-radius: 1em;
   padding: 0px 2em;
   margin-bottom: 5px;
+  svg {
+    position: absolute;
+    opacity: ${(props) => (props.isCollapse === true ? "1" : "0")};
+    transition: all 0.6s ease-in-out;
+  }
+  @media screen and (max-width: 420px) {
+    svg {
+      top: -3px;
+    }
+  }
 `;
 
 const ContentMethod = styled.div`
@@ -292,7 +313,113 @@ const ImportantCard = styled.div`
   border-radius: 10px 10px 0px 0px;
   text-align: center;
   padding-top: 5px;
+  box-shadow: 0px 1px 8px 6px #ebebf1;
+  margin-top: 15px;
 `;
+
+const DiscountPrice = styled.div`
+  margin-top: 10px;
+  .discount-format {
+    position: relative;
+    h3 {
+      color: #200e32;
+      text-decoration: line-through;
+      font-weight: 500;
+    }
+    .discount-percent {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      right: -13px;
+      top: -5px;
+      background: var(--color-primary);
+      filter: drop-shadow(0px 0px 4px #df90b8);
+      transform: rotate(-20.83deg);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      span {
+        color: #fff;
+        font-size: 8px;
+        font-weight: 500;
+      }
+    }
+  }
+`;
+
+const DetailPolicy = styled.div`
+  border-top: ${(props) =>
+    props.collapse === true ? "1px solid #ff0282" : "1px solid #fff"};
+  margin-bottom: 10px;
+  overflow: hidden;
+  max-height: ${(props) => (props.collapse === true ? "500px" : "0px")};
+  transition: all 0.6s ease-in-out;
+  .option-policy {
+    padding: 10px 0px;
+    border-bottom: 0.5px solid #d6d8e7;
+    display: flex;
+    gap: 5px;
+    span {
+      color: #0a3949;
+      font-size: 12px;
+      font-weight: 600;
+      text-align: left;
+    }
+  }
+`;
+
+const Circle = styled.div`
+  margin-top: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: ${(props) => (props.ok === false ? "1px solid #000" : "none")};
+  background: ${(props) =>
+    props.ok === false ? "transparent" : "var(--color-primary)"};
+`;
+
+const SectionDetailPolicy = ({ isCollapse }) => {
+  return (
+    <DetailPolicy collapse={isCollapse}>
+      <div className="option-policy">
+        <div>
+          <Circle ok>
+            <IconMinCheck />
+          </Circle>
+        </div>
+        <span>Investigación buró de crédito del arrendatario</span>
+      </div>
+      <div className="option-policy">
+        <div>
+          <Circle ok>
+            <IconMinCheck />
+          </Circle>
+        </div>
+        <span>Investigación buró de crédito del arrendatario</span>
+      </div>
+      <div className="option-policy">
+        <div>
+          <Circle ok>
+            <IconMinCheck />
+          </Circle>
+        </div>
+        <span>Investigación buró de crédito del arrendatario</span>
+      </div>
+      <div className="option-policy">
+        <div>
+          <Circle ok>
+            <IconMinCheck />
+          </Circle>
+        </div>
+        <span>Investigación buró de crédito del arrendatario</span>
+      </div>
+    </DetailPolicy>
+  );
+};
 
 const selectIconPolicy = {
   "D074A10F-9E68-48D8-B80E-6EFC634DC77B":
@@ -315,6 +442,7 @@ const SelectPolicy = (props) => {
   const [selectPolicy, setSelectPolicy] = useState(null);
   const [idApartment, setIdApartment] = useState(null);
   const [loadApi, setLoadApi] = useState(false);
+  const [viewDetailPolicy, setViewDetailPolicy] = useState({});
   const [commissionAgent, setCommissionAgent] = useState({
     idCustomer: null,
     idInvitation: null,
@@ -563,6 +691,13 @@ const SelectPolicy = (props) => {
         setSelectMethodPolicy(dataDetail.idPolicyPaymentMethod);
       }
     }
+    if (isEmpty(dataPolicies) === false) {
+      const objectState = {};
+      dataPolicies.forEach((element) => {
+        objectState[element.id] = false;
+      });
+      setViewDetailPolicy(objectState);
+    }
   }, [dataPolicies, dataDetail]);
 
   return (
@@ -619,59 +754,97 @@ const SelectPolicy = (props) => {
                     {rowMap.isMostPopular === true && (
                       <ImportantCard>Más popular</ImportantCard>
                     )}
-                    <div className="size-text column-center">
-                      <span>{namePolicy.text1}</span>
-                      <strong>{namePolicy.text2}</strong>
-                    </div>
-                    <div className="price column-center">
-                      {isNil(dataDetail.currentRent) === false &&
-                      rowMap.minimunAmount >
-                        dataDetail.currentRent * rowMap.percentBase ? (
-                        <h2>
-                          {isNil(dataDetail.currentRent) === false &&
-                          isNil(dataDetail.currentRent) === false
-                            ? frontFunctions.parseFormatCurrency(
-                                rowMap.minimunAmount +
-                                  rowMap.minimunAmount * rowMap.taxBase,
-                                2,
-                                2
-                              )
-                            : "$0.00"}{" "}
-                          {rowMap.ISOCode}
-                        </h2>
-                      ) : (
-                        <h2>
-                          {isNil(dataDetail.currentRent) === false &&
-                          isNil(dataDetail.currentRent) === false
-                            ? frontFunctions.parseFormatCurrency(
-                                dataDetail.currentRent * rowMap.percentBase +
-                                  dataDetail.currentRent *
-                                    rowMap.percentBase *
-                                    rowMap.taxBase,
-                                2,
-                                2
-                              )
-                            : "$0.00"}{" "}
-                          {rowMap.ISOCode}
-                        </h2>
+                    <div className="card-info-policy">
+                      <div className="size-text column-center">
+                        <span>{namePolicy.text1}</span>
+                        <strong>{namePolicy.text2}</strong>
+                      </div>
+                      <DiscountPrice className="column-center">
+                        <div className="discount-format">
+                          <div className="discount-percent">
+                            <span>-5%</span>
+                          </div>
+                          <h3>$3,333 MXN</h3>
+                        </div>
+                      </DiscountPrice>
+                      <div className="price column-center">
+                        {isNil(dataDetail.currentRent) === false &&
+                        rowMap.minimunAmount >
+                          dataDetail.currentRent * rowMap.percentBase ? (
+                          <h2>
+                            {isNil(dataDetail.currentRent) === false &&
+                            isNil(dataDetail.currentRent) === false
+                              ? frontFunctions.parseFormatCurrency(
+                                  rowMap.minimunAmount +
+                                    rowMap.minimunAmount * rowMap.taxBase,
+                                  2,
+                                  2
+                                )
+                              : "$0.00"}{" "}
+                            {rowMap.ISOCode}
+                          </h2>
+                        ) : (
+                          <h2>
+                            {isNil(dataDetail.currentRent) === false &&
+                            isNil(dataDetail.currentRent) === false
+                              ? frontFunctions.parseFormatCurrency(
+                                  dataDetail.currentRent * rowMap.percentBase +
+                                    dataDetail.currentRent *
+                                      rowMap.percentBase *
+                                      rowMap.taxBase,
+                                  2,
+                                  2
+                                )
+                              : "$0.00"}{" "}
+                            {rowMap.ISOCode}
+                          </h2>
+                        )}
+                        <span>{rowMap.percentBase * 100}%</span>
+                      </div>
+                      <div className="icon-image">
+                        <img
+                          src={selectIconPolicy[rowMap.idPolicy]}
+                          alt=""
+                          width="86px"
+                          height={"84px"}
+                        />
+                      </div>
+                      {rowMap.idPolicy ===
+                        "54C9414E-3B8E-42B5-8F80-940F2641F888" && (
+                        <span
+                          style={{
+                            textAlign: "center",
+                            fontSize: "0.8em",
+                          }}
+                        >
+                          (No se necesita aval)
+                        </span>
                       )}
-                      <span>{rowMap.percentBase * 100}%</span>
                     </div>
-                    <div className="icon-image">
-                      <img src={selectIconPolicy[rowMap.idPolicy]} alt="" />
-                    </div>
-                    {rowMap.idPolicy ===
-                      "54C9414E-3B8E-42B5-8F80-940F2641F888" && (
-                      <span
-                        style={{
-                          textAlign: "center",
-                          fontSize: "0.8em",
+                    <div className="buttons-action">
+                      <ButtonPolicy
+                        isCollapse={viewDetailPolicy[rowMap.id]}
+                        onClick={() => {
+                          setViewDetailPolicy({
+                            ...viewDetailPolicy,
+                            [rowMap.id]: !viewDetailPolicy[rowMap.id],
+                          });
                         }}
                       >
-                        (No se necesita aval)
-                      </span>
-                    )}
-                    <div className="buttons-action">
+                        <div
+                          display={{
+                            position: "relative",
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span>Ver más detalles</span>
+                          <ArrowUp2 stroke="#200E32" width="1.5em" />
+                        </div>
+                      </ButtonPolicy>
+                      <SectionDetailPolicy
+                        isCollapse={viewDetailPolicy[rowMap.id]}
+                      />
                       <ButtonPolicy
                         primary
                         select={rowMap.idPolicy === selectPolicy}
@@ -711,7 +884,6 @@ const SelectPolicy = (props) => {
                       >
                         Seleccionar póliza
                       </ButtonPolicy>
-                      <ButtonPolicy>Ver más detalles</ButtonPolicy>
                     </div>
                   </CardPolicy>
                 );
