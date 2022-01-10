@@ -392,8 +392,9 @@ const PropertiesOwner = (props) => {
                         });
                       }}
                       onClickDetail={() => {
-                        history.push(
-                          `/websystem/detail-property-users/${row.idProperty}`
+                        window.open(
+                          `/websystem/detail-property-users/${row.idProperty}`,
+                          "_blank"
                         );
                       }}
                       data={row}
