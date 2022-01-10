@@ -97,7 +97,7 @@ const DetailPropertyUsers = (props) => {
         <title>{dataDetail.identifier}</title>
         <meta name="description" content={dataDetail.description} />
         <meta property="og:title" content={dataDetail.title} />
-        <meta property="og:image" content="https://apitest.homify.ai/api/viewFile/F359E314-3402-4042-B208-DDCDA72756B5/db-propertypicturestest" />
+        <meta property="og:image" content={dataDetail.documentMainPic} />
       </MetaTags>
       <div className="ant-layout site-layout">
         <Content>
