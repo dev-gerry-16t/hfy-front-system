@@ -103,6 +103,7 @@ const DetailPropertyUsers = (props) => {
           itemprop="image"
           content={dataDetail.documentMainPic}
         />
+        <meta property="og:image:type" content="image/jpeg"></meta>
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
