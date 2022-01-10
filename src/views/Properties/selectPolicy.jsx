@@ -318,7 +318,7 @@ const ImportantCard = styled.div`
 `;
 
 const DiscountPrice = styled.div`
-visibility: hidden;
+  visibility: hidden;
   margin-top: 10px;
   .discount-format {
     position: relative;
@@ -383,41 +383,22 @@ const Circle = styled.div`
     props.ok === false ? "transparent" : "var(--color-primary)"};
 `;
 
-const SectionDetailPolicy = ({ isCollapse }) => {
+const SectionDetailPolicy = ({ isCollapse, data }) => {
   return (
     <DetailPolicy collapse={isCollapse}>
-      <div className="option-policy">
-        <div>
-          <Circle ok>
-            <IconMinCheck />
-          </Circle>
-        </div>
-        <span>Investigación buró de crédito del arrendatario</span>
-      </div>
-      <div className="option-policy">
-        <div>
-          <Circle ok>
-            <IconMinCheck />
-          </Circle>
-        </div>
-        <span>Investigación buró de crédito del arrendatario</span>
-      </div>
-      <div className="option-policy">
-        <div>
-          <Circle ok>
-            <IconMinCheck />
-          </Circle>
-        </div>
-        <span>Investigación buró de crédito del arrendatario</span>
-      </div>
-      <div className="option-policy">
-        <div>
-          <Circle ok>
-            <IconMinCheck />
-          </Circle>
-        </div>
-        <span>Investigación buró de crédito del arrendatario</span>
-      </div>
+      {isEmpty(data) === false &&
+        data.map((row) => {
+          return (
+            <div className="option-policy">
+              <div>
+                <Circle ok>
+                  <IconMinCheck />
+                </Circle>
+              </div>
+              <span>{row}</span>
+            </div>
+          );
+        })}
     </DetailPolicy>
   );
 };
@@ -845,6 +826,7 @@ const SelectPolicy = (props) => {
                       </ButtonPolicy>
                       <SectionDetailPolicy
                         isCollapse={viewDetailPolicy[rowMap.id]}
+                        data={contentPolicy}
                       />
                       <ButtonPolicy
                         primary
