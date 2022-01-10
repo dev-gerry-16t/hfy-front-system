@@ -386,6 +386,7 @@ const RegisterAgent = (props) => {
         isEmpty(responseResult) === false ? responseResult.idRequestSignUp : ""
       );
     } catch (error) {
+      console.log("error", error);
       setShowErrorMessage({ ...showErrorMessage, errorApi: error });
       throw error;
     }
@@ -755,6 +756,7 @@ const RegisterAgent = (props) => {
                         captchaToken: getCaptchaToken,
                       });
                     } catch (error) {
+                      console.log("error", error);
                       setShowError(true);
                     }
                   }}
@@ -763,6 +765,15 @@ const RegisterAgent = (props) => {
                 </ButtonAction>
               </div>
             </Spin>
+            <div>
+              <ReCAPTCHA
+                sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
+                onChange={(e) => {}}
+                style={{ display: "inline-block", zIndex: "5" }}
+                size="invisible"
+                ref={recaptchaV3}
+              />
+            </div>
           </ContainerVerifyCode>
         )}
         {stepsProcess === 3 && (
