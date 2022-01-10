@@ -249,6 +249,7 @@ const ComponentFilter = (props) => {
     history,
     onSendFilter,
     owner = false,
+    typeCoincidences,
   } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [jsonConditionsProperty, setJsonConditionsProperty] = useState(null);
@@ -265,7 +266,7 @@ const ComponentFilter = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          type: 1,
+          type: typeCoincidences,
           idOperationType,
           value,
           idSystemUser,
