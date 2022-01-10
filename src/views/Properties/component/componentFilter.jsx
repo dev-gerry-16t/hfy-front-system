@@ -266,6 +266,7 @@ const ComponentFilter = (props) => {
       const response = await callGlobalActionApi(
         {
           type: 1,
+          idOperationType,
           value,
           idSystemUser,
           idLoginHistory,
