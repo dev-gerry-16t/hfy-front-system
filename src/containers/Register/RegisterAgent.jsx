@@ -763,6 +763,15 @@ const RegisterAgent = (props) => {
                 </ButtonAction>
               </div>
             </Spin>
+            <div>
+              <ReCAPTCHA
+                sitekey="6LegXpMbAAAAANSPSPVL8QaYBb1g6zw7LzIF3WHg"
+                onChange={(e) => {}}
+                style={{ display: "inline-block", zIndex: "5" }}
+                size="invisible"
+                ref={recaptchaV3}
+              />
+            </div>
           </ContainerVerifyCode>
         )}
         {stepsProcess === 3 && (
