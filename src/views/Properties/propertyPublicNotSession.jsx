@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import MetaTags from "react-meta-tags";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -91,62 +92,70 @@ const DetailPropertyUsers = (props) => {
   }, []);
 
   return (
-    <div className="ant-layout site-layout">
-      <Content>
-        <ContextProperty.Provider
-          value={{
-            dataDetail,
-          }}
-        >
-          {/* <SectionAssociationProperty history={history} /> */}
-          <ContentForm owner>
-            <div className="header-title">
-              <h1 style={{ fontSize: "1.17em" }}>Detalle de inmueble</h1>
-              <ButtonIcon>
-                <IconHeart
-                  backGround="transparent"
-                  color="var(--color-primary)"
-                />
-                {/* <IconShare
+    <>
+      <MetaTags>
+        <title>{dataDetail.identifier}</title>
+        <meta name="description" content={dataDetail.description} />
+        <meta property="og:title" content={dataDetail.title} />
+        <meta property="og:image" content="https://apitest.homify.ai/api/viewFile/F359E314-3402-4042-B208-DDCDA72756B5/db-propertypicturestest" />
+      </MetaTags>
+      <div className="ant-layout site-layout">
+        <Content>
+          <ContextProperty.Provider
+            value={{
+              dataDetail,
+            }}
+          >
+            {/* <SectionAssociationProperty history={history} /> */}
+            <ContentForm owner>
+              <div className="header-title">
+                <h1 style={{ fontSize: "1.17em" }}>Detalle de inmueble</h1>
+                <ButtonIcon>
+                  <IconHeart
+                    backGround="transparent"
+                    color="var(--color-primary)"
+                  />
+                  {/* <IconShare
                 color="var(--color-primary)"
                 backGround="var(--color-primary)"
               /> */}
-              </ButtonIcon>
-            </div>
-            <div>
-              <SectionCarouselInfo
-                apartmentImages={
-                  isNil(dataDetail) === false &&
-                  isNil(dataDetail.apartmentDocuments) === false
-                    ? JSON.parse(dataDetail.apartmentDocuments)
-                    : []
-                }
-              />
-              <ContainerDown>
-                <TabsProperty>
-                  {dataTabsProperty.map((row) => {
-                    return (
-                      <Tab
-                        selected={tabSelect === row.id}
-                        onClick={() => {
-                          setTabSelect(row.id);
-                        }}
-                      >
-                        <h1>{row.text}</h1>
-                        <hr />
-                      </Tab>
-                    );
-                  })}
-                </TabsProperty>
-                {tabSelect === "1" && <SectionFeatures publicProperty />}
-                {tabSelect === "2" && <SectionLocation />}
-                {tabSelect === "3" && <SectionAmenities />}
-              </ContainerDown>
-            </div>
-          </ContentForm>
-        </ContextProperty.Provider>
-      </Content>
-    </div>
+                </ButtonIcon>
+              </div>
+              <div>
+                <SectionCarouselInfo
+                  apartmentImages={
+                    isNil(dataDetail) === false &&
+                    isNil(dataDetail.apartmentDocuments) === false
+                      ? JSON.parse(dataDetail.apartmentDocuments)
+                      : []
+                  }
+                />
+                <ContainerDown>
+                  <TabsProperty>
+                    {dataTabsProperty.map((row) => {
+                      return (
+                        <Tab
+                          selected={tabSelect === row.id}
+                          onClick={() => {
+                            setTabSelect(row.id);
+                          }}
+                        >
+                          <h1>{row.text}</h1>
+                          <hr />
+                        </Tab>
+                      );
+                    })}
+                  </TabsProperty>
+                  {tabSelect === "1" && <SectionFeatures publicProperty />}
+                  {tabSelect === "2" && <SectionLocation />}
+                  {tabSelect === "3" && <SectionAmenities />}
+                </ContainerDown>
+              </div>
+            </ContentForm>
+          </ContextProperty.Provider>
+        </Content>
+      </div>
+    </>
   );
 };
 

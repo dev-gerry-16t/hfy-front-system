@@ -11,6 +11,18 @@ const ButtonIcon = styled.button`
 const Container = styled.div`
   padding: 1em 2em;
   font-size: 16px;
+  .total-coincidences {
+    font-size: 16px;
+    margin: 15px 0px;
+    h1{
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      color: #4F4C66;
+      span{
+        color: var(--color-primary);
+      }
+    }
+  }
   .header-filter {
     h1 {
       font-size: 1.3em;
