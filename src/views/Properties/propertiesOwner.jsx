@@ -61,6 +61,7 @@ const PropertiesOwner = (props) => {
       userConfig: pageSize,
     })
   );
+  const typeCoincidences = 1;
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async (
@@ -76,7 +77,7 @@ const PropertiesOwner = (props) => {
           idLoginHistory,
           pagination,
           jsonConditions,
-          type: 1,
+          type: typeCoincidences,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -311,6 +312,7 @@ const PropertiesOwner = (props) => {
           <div className="content-filter-dad" id="filter-coincidences">
             <ComponentFilter
               owner
+              typeCoincidences={typeCoincidences}
               onSendFilter={async (data) => {
                 try {
                   const objectConditions = JSON.stringify({

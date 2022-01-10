@@ -40,6 +40,7 @@ const PropertiesOwner = (props) => {
     setDataUserRedirect,
     dataUserRedirect,
   } = props;
+  const typeCoincidences = 2;
   const [isOpenTicket, setIsOpenTicket] = useState(false);
   const [dataTicket, setDataTicket] = useState({});
   const [dataCoincidences, setDataCoincidences] = useState([]);
@@ -83,7 +84,7 @@ const PropertiesOwner = (props) => {
           idLoginHistory,
           pagination,
           jsonConditions,
-          type: 2,
+          type: typeCoincidences,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -322,6 +323,7 @@ const PropertiesOwner = (props) => {
           <div className="content-filter-dad" id="filter-coincidences">
             <ComponentFilter
               owner
+              typeCoincidences={typeCoincidences}
               onSendFilter={async (data) => {
                 try {
                   const objectConditions = JSON.stringify({
