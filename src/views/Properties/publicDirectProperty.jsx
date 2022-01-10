@@ -371,8 +371,9 @@ const PropertiesPublic = (props) => {
                       src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
                       alt={row.identifier}
                       onClickDetail={() => {
-                        history.push(
-                          `/websystem/detail-property/${row.idProperty}`
+                        window.open(
+                          `/websystem/detail-property/${row.idProperty}`,
+                          "_blank"
                         );
                       }}
                       onClickFavorite={async (data, id) => {
