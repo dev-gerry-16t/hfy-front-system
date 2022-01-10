@@ -182,13 +182,28 @@ const ShortDetail = styled.div`
   .info-data-property {
     display: flex;
     flex-direction: column;
-    height: 55%;
-    justify-content: space-between;
     .item-description {
       display: flex;
       flex-wrap: wrap;
       justify-content: space-between;
       gap: 10px;
+      margin-bottom: 25px;
+      .price-property {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        .total-property {
+          border: 1px solid var(--color-primary);
+          padding: 5px;
+          border-radius: 10px;
+          font-weight: 700;
+          color: var(--color-primary);
+        }
+        .maintenance-detail {
+          font-size: 10px;
+          color: var(--color-primary);
+        }
+      }
     }
   }
 `;
@@ -242,6 +257,8 @@ const SectionCarouselInfo = (props) => {
     manitenanceAmountFormat,
     priceBasedBy,
     idOperationType,
+    grandTotalForRentFormat,
+    maintenanceAmount,
   } = dataDetail;
 
   const handlerLimitText = (text) => {
@@ -280,7 +297,6 @@ const SectionCarouselInfo = (props) => {
       }
     }
   }, [apartmentImages]);
-
   return (
     <ContainerUp>
       <div className="contain-carousel">
@@ -354,12 +370,23 @@ const SectionCarouselInfo = (props) => {
         <LineSeparator opacity="0.3" />
         <div className="info-data-property">
           <div className="item-description">
-            <span>Tipo de propiedad</span>
-            <strong>{propertyType}</strong>
+            <span>Precio {idOperationType === 1 ? "Renta" : "Venta"}</span>
+            <div className="price-property">
+              <span className="total-property">
+                {isNil(maintenanceAmount) === false && maintenanceAmount > 0
+                  ? grandTotalForRentFormat
+                  : currentRentFormat}
+              </span>
+              {isNil(maintenanceAmount) === false && maintenanceAmount > 0 && (
+                <span className="maintenance-detail">
+                  Incluye mantenimiento
+                </span>
+              )}
+            </div>
           </div>
           <div className="item-description">
-            <span>Precio {idOperationType === 1 ? "Renta" : "Venta"}</span>
-            <strong>{currentRentFormat}</strong>
+            <span>Tipo de propiedad</span>
+            <strong>{propertyType}</strong>
           </div>
           <div className="item-description">
             <span>Mantenimiento Mensual</span>

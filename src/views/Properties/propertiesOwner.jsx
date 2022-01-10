@@ -61,6 +61,7 @@ const PropertiesOwner = (props) => {
       userConfig: pageSize,
     })
   );
+  const typeCoincidences = 1;
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async (
@@ -76,7 +77,7 @@ const PropertiesOwner = (props) => {
           idLoginHistory,
           pagination,
           jsonConditions,
-          type: 1,
+          type: typeCoincidences,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -311,6 +312,7 @@ const PropertiesOwner = (props) => {
           <div className="content-filter-dad" id="filter-coincidences">
             <ComponentFilter
               owner
+              typeCoincidences={typeCoincidences}
               onSendFilter={async (data) => {
                 try {
                   const objectConditions = JSON.stringify({
@@ -332,6 +334,13 @@ const PropertiesOwner = (props) => {
             />
           </div>
         </ContentAddFilter>
+        {isEmpty(dataCoincidences) === false && (
+          <div className="total-coincidences">
+            <h1>
+              Se encontraron <span>{totalCoincidences} propiedades</span>
+            </h1>
+          </div>
+        )}
         <ContentCards>
           {isEmpty(dataCoincidences) === false && (
             <>
@@ -372,8 +381,9 @@ const PropertiesOwner = (props) => {
                         });
                       }}
                       onClickDetail={() => {
-                        history.push(
-                          `/websystem/detail-property-users/${row.idProperty}`
+                        window.open(
+                          `/websystem/detail-property-users/${row.idProperty}`,
+                          "_blank"
                         );
                       }}
                       data={row}

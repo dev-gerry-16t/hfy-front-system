@@ -68,6 +68,7 @@ const PropertiesPublic = (props) => {
       userConfig: pageSize,
     })
   );
+  const typeCoincidences = 2;
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyCoincidencesV2 = async (
@@ -83,7 +84,7 @@ const PropertiesPublic = (props) => {
           idLoginHistory,
           pagination,
           jsonConditions,
-          type: 2,
+          type: typeCoincidences,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROPERTY_COINCIDENCES_V2
@@ -309,6 +310,7 @@ const PropertiesPublic = (props) => {
           <div className="button-actions-header"></div>
           <div className="content-filter-dad" id="filter-coincidences">
             <ComponentFilter
+              typeCoincidences={typeCoincidences}
               onSendFilter={async (data) => {
                 try {
                   const objectConditions = JSON.stringify({
@@ -330,6 +332,13 @@ const PropertiesPublic = (props) => {
             />
           </div>
         </ContentAddFilter>
+        {isEmpty(dataCoincidencesPublic) === false && (
+          <div className="total-coincidences">
+            <h1>
+              Se encontraron <span>{totalCoincidences} propiedades</span>
+            </h1>
+          </div>
+        )}
         <ContentCards>
           {isEmpty(dataCoincidencesPublic) === false && (
             <>
@@ -362,8 +371,9 @@ const PropertiesPublic = (props) => {
                       src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
                       alt={row.identifier}
                       onClickDetail={() => {
-                        history.push(
-                          `/websystem/detail-property/${row.idProperty}`
+                        window.open(
+                          `/websystem/detail-property/${row.idProperty}`,
+                          "_blank"
                         );
                       }}
                       onClickFavorite={async (data, id) => {
