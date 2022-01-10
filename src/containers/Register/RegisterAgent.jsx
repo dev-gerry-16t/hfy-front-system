@@ -386,7 +386,6 @@ const RegisterAgent = (props) => {
         isEmpty(responseResult) === false ? responseResult.idRequestSignUp : ""
       );
     } catch (error) {
-      console.log("error", error);
       setShowErrorMessage({ ...showErrorMessage, errorApi: error });
       throw error;
     }
@@ -756,7 +755,6 @@ const RegisterAgent = (props) => {
                         captchaToken: getCaptchaToken,
                       });
                     } catch (error) {
-                      console.log("error", error);
                       setShowError(true);
                     }
                   }}
