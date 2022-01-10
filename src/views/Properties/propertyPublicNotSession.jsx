@@ -95,9 +95,14 @@ const DetailPropertyUsers = (props) => {
     <>
       <MetaTags>
         <title>{dataDetail.identifier}</title>
+        <meta property="og:site_name" content={dataDetail.shortAddress}></meta>
         <meta name="description" content={dataDetail.description} />
         <meta property="og:title" content={dataDetail.title} />
-        <meta property="og:image" content={dataDetail.documentMainPic} />
+        <meta
+          property="og:image"
+          itemprop="image"
+          content={dataDetail.documentMainPic}
+        />
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
