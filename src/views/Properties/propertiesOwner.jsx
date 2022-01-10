@@ -332,6 +332,13 @@ const PropertiesOwner = (props) => {
             />
           </div>
         </ContentAddFilter>
+        {isEmpty(dataCoincidences) === false && (
+          <div className="total-coincidences">
+            <h1>
+              Se encontraron <span>{totalCoincidences} propiedades</span>
+            </h1>
+          </div>
+        )}
         <ContentCards>
           {isEmpty(dataCoincidences) === false && (
             <>

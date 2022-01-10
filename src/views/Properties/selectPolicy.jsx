@@ -307,7 +307,7 @@ const ImportantCard = styled.div`
   color: #fff;
   font-weight: 700;
   width: 100%;
-  top: -25px;
+  top: -30px;
   right: 0px;
   height: 35px;
   border-radius: 10px 10px 0px 0px;
@@ -318,6 +318,7 @@ const ImportantCard = styled.div`
 `;
 
 const DiscountPrice = styled.div`
+visibility: hidden;
   margin-top: 10px;
   .discount-format {
     position: relative;

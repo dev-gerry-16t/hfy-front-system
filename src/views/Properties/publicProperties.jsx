@@ -319,6 +319,13 @@ const PropertiesPublic = (props) => {
             />
           </div>
         </ContentAddFilter>
+        {isEmpty(dataCoincidencesPublic) === false && (
+          <div className="total-coincidences">
+            <h1>
+              Se encontraron <span>{totalCoincidences} propiedades</span>
+            </h1>
+          </div>
+        )}
         <ContentCards>
           {isEmpty(dataCoincidencesPublic) === false && (
             <>
