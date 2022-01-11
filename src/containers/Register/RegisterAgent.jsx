@@ -290,7 +290,7 @@ const ErrorMessage = styled.div`
   position: fixed;
   background: #eb5757;
   color: #fff;
-  left: ${(props) => (props.visible === true ? "0px" : "-269px")};
+  left: ${(props) => (props.visible === true ? "0px" : "-500px")};
   bottom: 50px;
   z-index: 2;
   padding: 5px 5px 5px 25px;
@@ -436,7 +436,7 @@ const RegisterAgent = (props) => {
         </div>
         {stepsProcess === 1 && (
           <ContainerForm>
-            <Spin indicator={LoadingSpin} spinning={spinVisible} delay={200}>
+            <Spin indicator={LoadingSpin} spinning={spinVisible}>
               <div className="title-form">
                 <h1>Registro</h1>
               </div>
@@ -636,6 +636,7 @@ const RegisterAgent = (props) => {
                           isEmpty(verifyPassword) === false &&
                           dataForm.password === verifyPassword
                         ) {
+                          setSpinVisible(true);
                           const getCaptchaToken =
                             await recaptchaV3.current.executeAsync();
                           await handlerCallApiRegister({
@@ -644,10 +645,13 @@ const RegisterAgent = (props) => {
                             captchaToken: getCaptchaToken,
                           });
                           setStepProcess(2);
+                          setSpinVisible(false);
                         } else {
                           setErrorPass(true);
+                          setSpinVisible(false);
                         }
                       }
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
                     }
@@ -730,14 +734,19 @@ const RegisterAgent = (props) => {
                   primary
                   onClick={async () => {
                     try {
+                      setSpinVisible(true);
+
                       await handlerCallVerifyCode({
                         code: codeVerify,
                         idRequestSignUp,
                         idInvitation: null,
                       });
                       setStepProcess(3);
+                      setSpinVisible(false);
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
+                      setSpinVisible(false);
                     }
                   }}
                 >
@@ -747,6 +756,7 @@ const RegisterAgent = (props) => {
                   block={false}
                   onClick={async () => {
                     try {
+                      setSpinVisible(true);
                       const getCaptchaToken =
                         await recaptchaV3.current.executeAsync();
                       await handlerCallApiRegister({
@@ -754,8 +764,11 @@ const RegisterAgent = (props) => {
                         idCustomerType: 3,
                         captchaToken: getCaptchaToken,
                       });
+                      setSpinVisible(false);
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
+                      setSpinVisible(false);
                     }
                   }}
                 >
