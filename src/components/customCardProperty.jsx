@@ -276,7 +276,7 @@ const CustomCardProperty = (props) => {
                   <Menu.Item>
                     <a
                       target="_blank"
-                      href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${identifier}`}
+                      href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(shortAddress,identifier)}`}
                     >
                       WhatsApp
                     </a>
@@ -285,7 +285,7 @@ const CustomCardProperty = (props) => {
                     <span
                       onClick={() => {
                         copyTextToClipboard(
-                          `${window.location.origin}/property/${identifier}`
+                          `${frontFunctions.parseUrlHomify(shortAddress,identifier)}`
                         );
                       }}
                     >

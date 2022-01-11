@@ -93,7 +93,7 @@ const DetailPropertyUsers = (props) => {
 
   return (
     <>
-      <MetaTags>
+      {/* <MetaTags>
         <title>{dataDetail.identifier}</title>
         <meta property="og:site_name" content={dataDetail.shortAddress}></meta>
         <meta name="description" content={dataDetail.description} />
@@ -103,12 +103,13 @@ const DetailPropertyUsers = (props) => {
           itemprop="image"
           content={dataDetail.documentMainPic}
         />
+        <meta property="og:image:type" content="image/jpeg"></meta>
         <meta property="og:type" content="website" />
         <meta
           property="og:url"
           content={`${window.location.origin}/property/${dataDetail.identifier}`}
         />
-      </MetaTags>
+      </MetaTags> */}
       <div className="ant-layout site-layout">
         <Content>
           <ContextProperty.Provider

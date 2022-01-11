@@ -59,6 +59,32 @@ import ENVIROMENT from "../../utils/constants/enviroments";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
+import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
+
+const ErrorMessage = styled.div`
+  position: relative;
+  padding: 8px 0px;
+  background: #eb5757;
+  color: #fff;
+  left: -400px;
+  z-index: 1001;
+  padding: 5px 5px 5px 25px;
+  border-radius: 0px 6px 6px 0px;
+  font-size: 14px;
+  transition: all 0.5s ease-in;
+  width: fit-content;
+  display: flex;
+  .message-api {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  button {
+    border: none;
+    background: transparent;
+    margin-left: 20px;
+  }
+`;
 
 const { Header, Sider } = Layout;
 const { Step } = Steps;
@@ -788,6 +814,21 @@ const DefaultLayout = (props) => {
                 </Dropdown>
               </div>
             </Header>
+            <div
+              style={{
+                position: "relative",
+                height: "0px",
+              }}
+            >
+              <div>
+                <ErrorMessage id="error-message-api" visible={true}>
+                  <div className="message-api">
+                    <IconAlerMessage /> <span id="error-description"></span>{" "}
+                  </div>
+                  <button id="btn-action-error-message">X</button>
+                </ErrorMessage>
+              </div>
+            </div>
             <Suspense fallback={<Loading />}>
               <Switch>
                 {routes.map((route) => {
