@@ -371,17 +371,26 @@ const SectionDataLocation = (props) => {
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={async (value) => {
-                      if (value.length === 5) {
+                      if (value.length <= 5) {
                         setZipCode(value);
-                        hanlderCallGetZipCodeAdress(value, "");
-                      } else {
-                        setDataForm({
-                          ...dataForm,
-                          jsonCoordinates: null,
-                          zipCode: value,
-                        });
-                        setZipCode(value);
-                        setPositionCoordenates(null);
+                        if (value.length === 5) {
+                          hanlderCallGetZipCodeAdress(value, "");
+                        } else {
+                          setDataForm({
+                            ...dataForm,
+                            jsonCoordinates: null,
+                            zipCode: null,
+                            neighborhood: null,
+                            idZipCode: null,
+                          });
+                          setIdZipCode(null);
+                          setOpenOtherNeighborhood(false);
+                          setPositionCoordenates(null);
+                          setZipCodeStateCity({
+                            state: null,
+                            city: null,
+                          });
+                        }
                       }
                     }}
                     type="number"
@@ -531,7 +540,7 @@ const SectionDataLocation = (props) => {
                 onClickBack({
                   ...dataForm,
                   jsonCoordinates: JSON.stringify(positionCoordenates),
-                  zipCode,
+                  zipCode: isEmpty(zipCode) === false ? zipCode : null,
                 });
               }}
             >
@@ -548,8 +557,11 @@ const SectionDataLocation = (props) => {
                       {
                         ...dataForm,
                         idApartment: dataFormSave.idApartment,
-                        jsonCoordinates: JSON.stringify(positionCoordenates),
-                        zipCode,
+                        jsonCoordinates:
+                          isNil(positionCoordenates) === false
+                            ? JSON.stringify(positionCoordenates)
+                            : null,
+                        zipCode: isEmpty(zipCode) === false ? zipCode : null,
                       },
                       idProperty
                     );
@@ -567,7 +579,10 @@ const SectionDataLocation = (props) => {
               onClick={() => {
                 onclickNext({
                   ...dataForm,
-                  jsonCoordinates: JSON.stringify(positionCoordenates),
+                  jsonCoordinates:
+                    isNil(positionCoordenates) === false
+                      ? JSON.stringify(positionCoordenates)
+                      : null,
                   zipCode,
                 });
               }}
