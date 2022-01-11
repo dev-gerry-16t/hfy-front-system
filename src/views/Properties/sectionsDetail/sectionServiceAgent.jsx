@@ -324,7 +324,7 @@ const SectionServiceAgent = (props) => {
       : [];
 
   return (
-    <ContentServiceAgent>
+    <ContentServiceAgent id="requirement-property-help">
       <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
         {(isNil(idApplicationMethod) === true || isEditService === true) && (
           <>
@@ -338,7 +338,9 @@ const SectionServiceAgent = (props) => {
                       ? JSON.parse(row.applicationMethod)
                       : [];
                   return (
-                    <CardServices>
+                    <CardServices
+                      id={`requirement-property-${row.idApplicationMethod}`}
+                    >
                       <div className="top-card">
                         {row.requiresPolicy === false && (
                           <div className="style-text">{row.costFormat}</div>
@@ -404,6 +406,7 @@ const SectionServiceAgent = (props) => {
               }}
             >
               <ButtonsService1
+                id={`requirement-property-7`}
                 primary
                 onClick={async () => {
                   try {

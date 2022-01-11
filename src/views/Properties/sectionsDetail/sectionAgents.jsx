@@ -177,7 +177,7 @@ const SectionAgents = (props) => {
   };
 
   return (
-    <GeneralCard>
+    <GeneralCard id="section-agents">
       <ComponentAddAgent
         isModalVisible={isVisibleShare}
         onClose={() => {
@@ -194,6 +194,7 @@ const SectionAgents = (props) => {
       <div className="header-title">
         <h1>Agentes</h1>
         <button
+          id="section-agents-add"
           onClick={() => {
             setIsVisibleShare(true);
           }}
@@ -202,11 +203,15 @@ const SectionAgents = (props) => {
         </button>
       </div>
       <ComponentLoadSection isLoadApi={isLoadApi} position="absolute" text="">
-        <div className="content-cards">
+        <div className="content-cards" id="user-agents">
           {isEmpty(agentsArray) === false &&
-            agentsArray.map((row) => {
+            agentsArray.map((row, ix) => {
               return (
-                <Card>
+                <Card
+                  id={`user-agent-${
+                    isNil(row.idCustomer) === false ? row.idCustomer : ix
+                  }`}
+                >
                   <div className="card-user">
                     <div className="top-info">
                       <div className="icon-info">
@@ -229,7 +234,12 @@ const SectionAgents = (props) => {
                         )}
                       </div>
                     </div>
-                    <div className="button-action">
+                    <div
+                      className="button-action"
+                      id={`user-agent-delete-${
+                        isNil(row.idCustomer) === false ? row.idCustomer : ix
+                      }`}
+                    >
                       <ButtonDocument
                         onClick={async () => {
                           try {

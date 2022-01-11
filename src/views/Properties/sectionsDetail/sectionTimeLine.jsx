@@ -171,7 +171,12 @@ const SectionTimeLine = (props) => {
   } = props;
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const {
+    dataDetail,
+    updateProperty,
+    getById,
+    onGetConfigSteps = () => {},
+  } = dataContexProperty;
   const { idProperty, idApartment } = dataDetail;
   const [dataTimeLine, setDataTimeLine] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
@@ -235,6 +240,12 @@ const SectionTimeLine = (props) => {
                     finish={row.isCompleted}
                     select={row.isCurrent}
                     onClick={async () => {
+                      if (isEmpty(row.stepAdditionalConfig) === false) {
+                        const configIntro = JSON.parse(
+                          row.stepAdditionalConfig
+                        );
+                        onGetConfigSteps(configIntro);
+                      }
                       if (isNil(row.path) === false) {
                         await setDataUserRedirect({
                           backPath: window.location.pathname,
