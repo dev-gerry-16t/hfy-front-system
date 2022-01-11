@@ -324,7 +324,10 @@ const DetailPropertyUsers = (props) => {
                           <Menu.Item>
                             <a
                               target="_blank"
-                              href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
+                              href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(
+                                dataDetail.shortAddress,
+                                dataDetail.identifier
+                              )}`}
                             >
                               WhatsApp
                             </a>
@@ -333,7 +336,10 @@ const DetailPropertyUsers = (props) => {
                             <span
                               onClick={() => {
                                 copyTextToClipboard(
-                                  `${window.location.origin}/property/${dataDetail.identifier}`
+                                  `${frontFunctions.parseUrlHomify(
+                                    dataDetail.shortAddress,
+                                    dataDetail.identifier
+                                  )}`
                                 );
                               }}
                             >
