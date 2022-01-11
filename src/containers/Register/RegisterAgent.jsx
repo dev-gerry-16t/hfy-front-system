@@ -290,7 +290,7 @@ const ErrorMessage = styled.div`
   position: fixed;
   background: #eb5757;
   color: #fff;
-  left: ${(props) => (props.visible === true ? "0px" : "-269px")};
+  left: ${(props) => (props.visible === true ? "0px" : "-500px")};
   bottom: 50px;
   z-index: 2;
   padding: 5px 5px 5px 25px;
@@ -651,6 +651,7 @@ const RegisterAgent = (props) => {
                           setSpinVisible(false);
                         }
                       }
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
                     }
@@ -742,6 +743,7 @@ const RegisterAgent = (props) => {
                       });
                       setStepProcess(3);
                       setSpinVisible(false);
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
                       setSpinVisible(false);
@@ -763,6 +765,7 @@ const RegisterAgent = (props) => {
                         captchaToken: getCaptchaToken,
                       });
                       setSpinVisible(false);
+                      setShowError(false);
                     } catch (error) {
                       setShowError(true);
                       setSpinVisible(false);
