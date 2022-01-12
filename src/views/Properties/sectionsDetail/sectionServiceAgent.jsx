@@ -156,7 +156,7 @@ const CardServices = styled.div`
   box-shadow: 0px 1px 8px 6px #ebebf1;
   border-radius: 1em;
   width: auto;
-  height: 270px;
+  height: 310px;
   position: relative;
 
   .top-card {
@@ -200,8 +200,8 @@ const CardServices = styled.div`
   }
   .body-card {
     display: grid;
-    grid-template-rows: 2fr 1fr;
-    height: 215px;
+    grid-template-rows: 180px 65px;
+    height: 245px;
     .content-service {
       display: flex;
       flex-direction: column;
@@ -237,6 +237,7 @@ const CardServices = styled.div`
       display: flex;
       flex-direction: column;
       padding: 0px 10px;
+      justify-content: center;
     }
   }
 `;

@@ -372,6 +372,8 @@ const SectionDataImages = (props) => {
       setCount(newCont);
       onSaveImages([...arrayImages, ...newArrayImages]);
     } else {
+      setIsLoadApi(true);
+
       const newArrayImages = [];
       let thumbImage = {};
       let newCont = count;
@@ -399,6 +401,7 @@ const SectionDataImages = (props) => {
         idProperty
       );
       getById();
+      setIsLoadApi(false);
     }
   };
 
@@ -658,6 +661,7 @@ const SectionDataImages = (props) => {
                         if (isNil(idProperty) === true) {
                           handlerOnEditFile(e, row.id);
                         } else {
+                          setIsLoadApi(true);
                           await handlerCallSetPropertyDocument(
                             {
                               jsonDocument: JSON.stringify([
@@ -671,7 +675,8 @@ const SectionDataImages = (props) => {
                             },
                             idProperty
                           );
-                          handlerOnEditFileV2(e, row.id, row.isMain, ix);
+                          await handlerOnEditFileV2(e, row.id, row.isMain, ix);
+                          setIsLoadApi(false);
                         }
                       }}
                     />
