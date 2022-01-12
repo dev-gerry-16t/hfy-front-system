@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Menu, Dropdown } from "antd";
 import { Steps } from "intro.js-react";
@@ -83,6 +83,7 @@ const DetailPropertyUsers = (props) => {
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [dataEnableIntro, setDataEnableIntro] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
+  const stepsRef = useRef(null);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyById = async () => {
@@ -292,12 +293,31 @@ const DetailPropertyUsers = (props) => {
   }, [params.idProperty]);
 
   useEffect(() => {
-    handlerCallGetPropertyById();
     handlerCallGetAllApplicationMethods();
+    handlerCallGetPropertyById();
   }, [idProperty]);
 
   return (
     <Content>
+      <Steps
+        enabled={isOpenComponent === 7}
+        steps={dataEnableIntro}
+        initialStep={0}
+        options={{
+          nextLabel: " >> ",
+          prevLabel: " << ",
+          doneLabel: "Finalizar",
+          hideNext: false,
+        }}
+        ref={stepsRef}
+        onBeforeChange={(nextStepIndex) => {}}
+        onComplete={() => {
+          setIsOpenComponent(null);
+        }}
+        onExit={() => {
+          setIsOpenComponent(null);
+        }}
+      />
       <ContextProperty.Provider
         value={{
           isOpenComponent,
@@ -320,23 +340,6 @@ const DetailPropertyUsers = (props) => {
           },
         }}
       >
-        <Steps
-          enabled={isOpenComponent === 7}
-          steps={dataEnableIntro}
-          initialStep={0}
-          options={{
-            nextLabel: " >> ",
-            prevLabel: " << ",
-            doneLabel: "Finalizar",
-            hideNext: false,
-          }}
-          onComplete={() => {
-            setIsOpenComponent(null);
-          }}
-          onExit={() => {
-            setIsOpenComponent(null);
-          }}
-        />
         <SectionAreYouOwner
           visibleModal={isOpenComponent == 5}
           onClose={() => {
@@ -615,8 +618,8 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "2" && <SectionLocation />}
               {tabSelect === "3" && <SectionAmenities />}
               {dataDetail.isOwner === true && (
-                <SeparateServices id="requirement-property">
-                  <div className="services-header">
+                <SeparateServices>
+                  <div className="services-header" id="requirement-property">
                     <h1>Requisitos de la Propiedad</h1>
                     <p>
                       Establece los requisitos de tu propiedad, puedes solicitar

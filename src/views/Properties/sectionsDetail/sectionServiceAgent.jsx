@@ -325,175 +325,181 @@ const SectionServiceAgent = (props) => {
 
   return (
     <ContentServiceAgent id="requirement-property-help">
-      <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
-        {(isNil(idApplicationMethod) === true || isEditService === true) && (
-          <>
-            <h1>¡Te ayudamos con tu proceso de renta!</h1>
-            <SectionCard>
-              {isEmpty(dataApplication) === false &&
-                dataApplication.map((row) => {
-                  const methods =
-                    isNil(row.applicationMethod) === false &&
-                    isEmpty(row.applicationMethod) === false
-                      ? JSON.parse(row.applicationMethod)
-                      : [];
-                  return (
-                    <CardServices
-                      id={`requirement-property-${row.idApplicationMethod}`}
-                    >
-                      <div className="top-card">
-                        {row.requiresPolicy === false && (
-                          <div className="style-text">{row.costFormat}</div>
-                        )}
-                        <h3>{row.text}</h3>
-                      </div>
-                      <div className="pick-section">
-                        <div className="pick"></div>
-                      </div>
-                      <div className="body-card">
-                        <div className="content-service">
-                          {isEmpty(methods) === false &&
-                            methods.map((rowMap) => {
-                              return (
-                                <div className="service-hom">
-                                  <span className="check" />{" "}
-                                  <span className="label-check">{rowMap}</span>
-                                </div>
-                              );
-                            })}
+      {(isNil(idApplicationMethod) === true || isEditService === true) && (
+        <>
+          <h1>¡Te ayudamos con tu proceso de renta!</h1>
+          <SectionCard>
+            {isEmpty(dataApplication) === false &&
+              dataApplication.map((row) => {
+                const methods =
+                  isNil(row.applicationMethod) === false &&
+                  isEmpty(row.applicationMethod) === false
+                    ? JSON.parse(row.applicationMethod)
+                    : [];
+                return (
+                  <div id={`requirement-property-${row.idApplicationMethod}`}>
+                    <CardServices>
+                      <ComponentLoadSection
+                        isLoadApi={isLoadApi}
+                        position="absolute"
+                      >
+                        <div className="top-card">
+                          {row.requiresPolicy === false && (
+                            <div className="style-text">{row.costFormat}</div>
+                          )}
+                          <h3>{row.text}</h3>
                         </div>
-                        <div className="button-action">
-                          <ButtonsService
-                            primary={
-                              idApplicationMethod == row.idApplicationMethod ||
-                              isNil(idApplicationMethod) === true
-                            }
-                            onClick={async () => {
-                              try {
-                                if (row.requiresPolicy === false) {
-                                  setIsLoadApi(true);
-                                  await updateProperty({
-                                    idApartment: dataDetail.idApartment,
-                                    idApplicationMethod:
-                                      row.idApplicationMethod,
-                                  });
-                                  getById();
-                                  setIsEditService(false);
-                                  setIsLoadApi(false);
-                                } else if (row.requiresPolicy === true) {
-                                  onClickViewPolicy();
-                                }
-                              } catch (error) {
-                                setIsLoadApi(false);
+                        <div className="pick-section">
+                          <div className="pick"></div>
+                        </div>
+                        <div className="body-card">
+                          <div className="content-service">
+                            {isEmpty(methods) === false &&
+                              methods.map((rowMap) => {
+                                return (
+                                  <div className="service-hom">
+                                    <span className="check" />{" "}
+                                    <span className="label-check">
+                                      {rowMap}
+                                    </span>
+                                  </div>
+                                );
+                              })}
+                          </div>
+                          <div className="button-action">
+                            <ButtonsService
+                              primary={
+                                idApplicationMethod ==
+                                  row.idApplicationMethod ||
+                                isNil(idApplicationMethod) === true
                               }
-                            }}
-                          >
-                            {idApplicationMethod == row.idApplicationMethod
-                              ? "Actual"
-                              : "Seleccionar"}
-                          </ButtonsService>
-                          {/* <ButtonsService>Ver más información</ButtonsService> */}
+                              onClick={async () => {
+                                try {
+                                  if (row.requiresPolicy === false) {
+                                    setIsLoadApi(true);
+                                    await updateProperty({
+                                      idApartment: dataDetail.idApartment,
+                                      idApplicationMethod:
+                                        row.idApplicationMethod,
+                                    });
+                                    getById();
+                                    setIsEditService(false);
+                                    setIsLoadApi(false);
+                                  } else if (row.requiresPolicy === true) {
+                                    onClickViewPolicy();
+                                  }
+                                } catch (error) {
+                                  setIsLoadApi(false);
+                                }
+                              }}
+                            >
+                              {idApplicationMethod == row.idApplicationMethod
+                                ? "Actual"
+                                : "Seleccionar"}
+                            </ButtonsService>
+                            {/* <ButtonsService>Ver más información</ButtonsService> */}
+                          </div>
                         </div>
-                      </div>
+                      </ComponentLoadSection>
                     </CardServices>
-                  );
-                })}
-            </SectionCard>
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
+                  </div>
+                );
+              })}
+          </SectionCard>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <ButtonsService1
+              id={`requirement-property-7`}
+              primary
+              onClick={async () => {
+                try {
+                  setIsLoadApi(true);
+                  await updateProperty({
+                    idApartment: dataDetail.idApartment,
+                    idApplicationMethod: 7,
+                  });
+                  getById();
+                  setIsEditService(false);
+                  setIsLoadApi(false);
+                } catch (error) {
+                  setIsLoadApi(false);
+                }
               }}
             >
-              <ButtonsService1
-                id={`requirement-property-7`}
-                primary
+              No me interesa
+            </ButtonsService1>
+          </div>
+        </>
+      )}
+      {isNil(idApplicationMethod) === false &&
+        isEmpty(dataApplication) === false &&
+        isEditService === false && (
+          <>
+            <div
+              style={{
+                marginBottom: 25,
+                position: "relative",
+              }}
+            >
+              <ButtonIcon
                 onClick={async () => {
-                  try {
-                    setIsLoadApi(true);
-                    await updateProperty({
-                      idApartment: dataDetail.idApartment,
-                      idApplicationMethod: 7,
-                    });
-                    getById();
-                    setIsEditService(false);
-                    setIsLoadApi(false);
-                  } catch (error) {
-                    setIsLoadApi(false);
-                  }
+                  setIsEditService(true);
                 }}
-              >
-                No me interesa
-              </ButtonsService1>
-            </div>
-          </>
-        )}
-        {isNil(idApplicationMethod) === false &&
-          isEmpty(dataApplication) === false &&
-          isEditService === false && (
-            <>
-              <div
                 style={{
-                  marginBottom: 25,
-                  position: "relative",
+                  position: "absolute",
+                  right: "32px",
                 }}
               >
-                <ButtonIcon
-                  onClick={async () => {
-                    setIsEditService(true);
-                  }}
-                  style={{
-                    position: "absolute",
-                    right: "32px",
-                  }}
-                >
-                  <IconEditSquare
-                    backGround="transparent"
-                    color="var(--color-primary)"
-                  />
-                </ButtonIcon>
-                <h1>Servicio adquirido</h1>
-              </div>
-              <CardServiceSelect>
-                <div className="service-options">
-                  <div className="content-service">
-                    {isEmpty(arrayServiceSelect) === false &&
-                      arrayServiceSelect.map((row) => {
-                        return (
-                          <div className="service-hom">
-                            <span className="check" />{" "}
-                            <span className="label-check">{row}</span>
-                          </div>
-                        );
-                      })}
-                  </div>
+                <IconEditSquare
+                  backGround="transparent"
+                  color="var(--color-primary)"
+                />
+              </ButtonIcon>
+              <h1>Servicio adquirido</h1>
+            </div>
+            <CardServiceSelect>
+              <div className="service-options">
+                <div className="content-service">
+                  {isEmpty(arrayServiceSelect) === false &&
+                    arrayServiceSelect.map((row) => {
+                      return (
+                        <div className="service-hom">
+                          <span className="check" />{" "}
+                          <span className="label-check">{row}</span>
+                        </div>
+                      );
+                    })}
                 </div>
-                <div className="line"></div>
-                <div className="info-service">
-                  <div className="info">
-                    <strong>Costo total a pagar:</strong>
-                    <span
-                      style={{
-                        color: "var(--color-primary)",
-                        fontWeight: "700",
-                      }}
-                    >
-                      {costFormat}
-                    </span>
-                  </div>
-                  <div className="info">
-                    <strong>Servicio:</strong>
-                    <span>{applicationMethodTitle}</span>
-                  </div>
-                  {/* <div className="info">
+              </div>
+              <div className="line"></div>
+              <div className="info-service">
+                <div className="info">
+                  <strong>Costo total a pagar:</strong>
+                  <span
+                    style={{
+                      color: "var(--color-primary)",
+                      fontWeight: "700",
+                    }}
+                  >
+                    {costFormat}
+                  </span>
+                </div>
+                <div className="info">
+                  <strong>Servicio:</strong>
+                  <span>{applicationMethodTitle}</span>
+                </div>
+                {/* <div className="info">
                     <strong>Fecha de adquisición:</strong>
                     <span>02/11/2021</span>
                   </div> */}
-                </div>
-              </CardServiceSelect>
-            </>
-          )}
-      </ComponentLoadSection>
+              </div>
+            </CardServiceSelect>
+          </>
+        )}
     </ContentServiceAgent>
   );
 };
