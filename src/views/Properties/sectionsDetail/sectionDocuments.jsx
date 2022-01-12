@@ -254,7 +254,7 @@ const SectionDocuments = (props) => {
 
   if (isEmpty(documentsArray) === false) {
     component = (
-      <GeneralCard>
+      <GeneralCard id="section-view-docments">
         <CustomViewDocument
           isVisibleModal={isVisibleModalDocument}
           dataDocument={dataDocument}
