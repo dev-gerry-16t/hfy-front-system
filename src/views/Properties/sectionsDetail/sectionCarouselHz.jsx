@@ -160,6 +160,7 @@ const ContainerUp = styled.div`
 `;
 
 const ButtonCarousel = styled.button`
+  cursor: ${(props) => (props.block === true ? "not-allowed" : "pointer")};
   background: transparent;
   border: none;
 `;
@@ -311,6 +312,7 @@ const SectionCarouselInfo = (props) => {
           />
           <div className="slide-carousel">
             <ButtonCarousel
+              block={!(1 <= currentSelectImage)}
               onClick={() => {
                 if (1 <= currentSelectImage) {
                   const imageSelect = apartmentImages[currentSelectImage - 1];
@@ -345,6 +347,7 @@ const SectionCarouselInfo = (props) => {
                 })}
             </div>
             <ButtonCarousel
+              block={!(numberOfImages > currentSelectImage)}
               onClick={() => {
                 if (numberOfImages > currentSelectImage) {
                   const imageSelect = apartmentImages[currentSelectImage + 1];
