@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Menu, Dropdown } from "antd";
 import { Steps } from "intro.js-react";
@@ -81,8 +81,9 @@ const DetailPropertyUsers = (props) => {
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
-  const [enableIntro, setEnableIntro] = useState(false);
+  const [dataEnableIntro, setDataEnableIntro] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
+  const stepsRef = useRef(null);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetPropertyById = async () => {
@@ -292,12 +293,31 @@ const DetailPropertyUsers = (props) => {
   }, [params.idProperty]);
 
   useEffect(() => {
-    handlerCallGetPropertyById();
     handlerCallGetAllApplicationMethods();
+    handlerCallGetPropertyById();
   }, [idProperty]);
 
   return (
     <Content>
+      <Steps
+        enabled={isOpenComponent === 7}
+        steps={dataEnableIntro}
+        initialStep={0}
+        options={{
+          nextLabel: " >> ",
+          prevLabel: " << ",
+          doneLabel: "Finalizar",
+          hideNext: false,
+        }}
+        ref={stepsRef}
+        onBeforeChange={(nextStepIndex) => {}}
+        onComplete={() => {
+          setIsOpenComponent(null);
+        }}
+        onExit={() => {
+          setIsOpenComponent(null);
+        }}
+      />
       <ContextProperty.Provider
         value={{
           isOpenComponent,
@@ -309,56 +329,17 @@ const DetailPropertyUsers = (props) => {
               throw error;
             }
           },
+          onCloseComponent: () => {
+            setIsOpenComponent(null);
+          },
+          onGetConfigSteps: (config) => {
+            setDataEnableIntro(config);
+          },
           getById: () => {
             handlerCallGetPropertyById();
           },
         }}
       >
-        <Steps
-          enabled={enableIntro}
-          steps={[
-            {
-              title: "Bienvenido",
-              intro:
-                "Bienvenido al detalle de tu propiedad, te daremos un tour para que conozcas las acciones que puedes realizar con tu propiedad",
-            },
-            {
-              title: "Proceso a seguir",
-              element: "#timeline-process",
-              intro:
-                "En esta sección encontraras los pasos que debes seguir para finalizar un proceso.",
-            },
-            {
-              title: "Agrega un prospecto",
-              element: "#section-prospect",
-              intro:
-                "Aqui aparecerán todos tus prospectos a inquilinos, los cuales tu podrás agregar o bien nuestros usuarios que se postulan a tu propiedad y podrás aceptarlos o rechazarlos.",
-            },
-            {
-              title: "Agrega un prospecto",
-              element: "#add-prospect",
-              intro:
-                "Para agregar un prospecto debes dar clic en este botón, ingresar la información que se te indica y enviar invitación.",
-            },
-            {
-              title: "Acciones",
-              element: "#buttons-action-detail",
-              intro:
-                "Puedes eliminar o editar esta propiedad dando clic a alguno de estos botones, en caso de que tu propiedad sea pública tambien podrás compartirla con cualquier persona.",
-            },
-          ]}
-          initialStep={0}
-          options={{
-            nextLabel: " >> ",
-            prevLabel: " << ",
-            doneLabel: "Finalizar",
-            hideNext: false,
-          }}
-          onComplete={() => {}}
-          onExit={() => {
-            setEnableIntro(false);
-          }}
-        />
         <SectionAreYouOwner
           visibleModal={isOpenComponent == 5}
           onClose={() => {
@@ -638,7 +619,7 @@ const DetailPropertyUsers = (props) => {
               {tabSelect === "3" && <SectionAmenities />}
               {dataDetail.isOwner === true && (
                 <SeparateServices>
-                  <div className="services-header">
+                  <div className="services-header" id="requirement-property">
                     <h1>Requisitos de la Propiedad</h1>
                     <p>
                       Establece los requisitos de tu propiedad, puedes solicitar

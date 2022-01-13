@@ -133,7 +133,12 @@ const EmptyData = styled.div`
 const SectionApplicants = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {}, getById } = dataContexProperty;
+  const {
+    dataDetail = {},
+    getById,
+    isOpenComponent,
+    onCloseComponent,
+  } = dataContexProperty;
   const [isLoadApi, setIsLoadApi] = useState(false);
   const { applicants, idApartment, idProperty, canInviteTenant } = dataDetail;
 
@@ -212,24 +217,27 @@ const SectionApplicants = (props) => {
   };
 
   return (
-    <GeneralCard id="section-prospect">
+    <GeneralCard id="section-applicants">
       <ComponentAddCandidate
-        isModalVisible={visibleAddUser}
+        isModalVisible={visibleAddUser || isOpenComponent === 1}
         sendInvitation={async (data) => {
           try {
             await handlerCallSendTenantInvitation(data);
+            onCloseComponent();
           } catch (error) {
             throw error;
           }
         }}
         onClose={() => {
           setVisibleAddUser(false);
+          onCloseComponent();
         }}
       />
       <div className="header-title">
         <h1>Prospectos</h1>
         {canInviteTenant === true && (
           <button
+            id="section-applicants-add"
             onClick={() => {
               setVisibleAddUser(true);
             }}
@@ -240,11 +248,15 @@ const SectionApplicants = (props) => {
         )}
       </div>
       <ComponentLoadSection isLoadApi={isLoadApi} position="absolute" text="">
-        <div className="content-cards">
+        <div className="content-cards" id="user-applicants">
           {isEmpty(applicantsArray) === false &&
-            applicantsArray.map((row) => {
+            applicantsArray.map((row, ix) => {
               return (
-                <Card>
+                <Card
+                  id={`user-applicant-${
+                    isNil(row.idCustomer) === false ? row.idCustomer : ix
+                  }`}
+                >
                   <div className="card-user">
                     <div className="top-info">
                       <div className="icon-info">
@@ -282,7 +294,14 @@ const SectionApplicants = (props) => {
                     </div>
                     {row.canProcessInvitation === false &&
                       row.canBeProcessed === true && (
-                        <div className="button-action">
+                        <div
+                          className="button-action"
+                          id={`user-applicant-canBeProcessed-${
+                            isNil(row.idCustomer) === false
+                              ? row.idCustomer
+                              : ix
+                          }`}
+                        >
                           <Popconfirm
                             placement="left"
                             title="¿Estás seguro de rechazar a este prospecto?"
@@ -328,7 +347,12 @@ const SectionApplicants = (props) => {
                         </div>
                       )}
                     {row.canProcessInvitation === true && (
-                      <div className="button-action">
+                      <div
+                        className="button-action"
+                        id={`user-applicant-canProcessInvitation-${
+                          isNil(row.idCustomer) === false ? row.idCustomer : ix
+                        }`}
+                      >
                         <Popconfirm
                           placement="left"
                           title="¿Estás seguro de rechazar a este prospecto?"
