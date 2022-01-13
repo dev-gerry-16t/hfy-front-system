@@ -120,7 +120,7 @@ const WidgetDocuments = (props) => {
           }}
         >
           <a
-            href={`${ENVIROMENT}/api/viewFile/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}
+            href={`${ENVIROMENT}/api/viewFileDownload/${dataFile.idDocument}/${dataFile.bucketSource}/${dataFile.extension}`}
             download
             target="_blank"
           >

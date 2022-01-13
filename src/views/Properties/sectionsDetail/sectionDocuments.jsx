@@ -12,6 +12,7 @@ import ContextProperty from "../context/contextProperty";
 import CustomViewDocument from "../../../components/CustomViewDocument";
 import CustomSignatureContractV2 from "../../../components/customSignatureContractv2";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
@@ -393,6 +394,18 @@ const SectionDocuments = (props) => {
                             }}
                           >
                             Ver detalle
+                          </ButtonDocument>
+                        )}
+                        {row.canBeDownload == true && (
+                          <ButtonDocument
+                            onClick={async () => {
+                              window.open(
+                                `${ENVIROMENT}/api/viewFileDownload/${row.idDocument}/${row.bucketSource}/${row.extension}?name=${row.documentType}`,
+                                "_blank"
+                              );
+                            }}
+                          >
+                            Descargar
                           </ButtonDocument>
                         )}
                         {row.canSign == true && (

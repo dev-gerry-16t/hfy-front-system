@@ -51,7 +51,7 @@ const CustomViewDocument = (props) => {
             }}
           >
             <a
-              href={`${ENVIROMENT}/api/viewFile/${dataDocument.newIdDocument}/${dataDocument.newBucketSorce}/${dataDocument.extension}`}
+              href={`${ENVIROMENT}/api/viewFileDownload/${dataDocument.newIdDocument}/${dataDocument.newBucketSorce}/${dataDocument.extension}`}
               download
               target="_blank"
             >
