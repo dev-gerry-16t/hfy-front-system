@@ -310,8 +310,8 @@ const CustomValidationUser = (props) => {
                 No olvides tener a la mano:
                 <ul>
                   <li>
-                    Identificación Oficial, solo son validos IFE/INE o FM3 (Solo
-                    extranjeros).
+                    Identificación Oficial original, solo son validos IFE/INE o FM3 (Solo
+                    extranjeros), <strong>no se aceptan copias</strong>.
                   </li>
                   <li>
                     Comprobante de domicilio (Luz, agua, teléfono no mayor a
