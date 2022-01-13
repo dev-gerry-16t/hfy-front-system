@@ -148,11 +148,16 @@ const SectionReferences = (props) => {
         />
         <div className="label-indicator">
           <Row>
-            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+            <Col span={12} xs={{ span: 24 }} md={{ span: 12 }}>
               <span>
-                Por favor llena todos los campos correspondientes de tus
-                referencias. Recuerda que debes agregar como mínimo 3
-                referencias.
+                Por favor llena todos los campos correspondientes de tu
+                referencia.
+                <br />
+                Recuerda que no deben de vivir en el mismo domicilio.
+                <br />
+                Si la dirección donde actualmente resides es propia, entonces
+                deberás de agregar como mínimo tres referencias, caso contrario
+                deberás de proporcionar un mínimo de dos.
               </span>
             </Col>
           </Row>

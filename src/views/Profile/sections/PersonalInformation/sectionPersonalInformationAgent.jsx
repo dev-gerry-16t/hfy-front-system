@@ -390,6 +390,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -407,6 +408,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -425,6 +427,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -442,6 +445,7 @@ const SectionPersonalInformationAgent = (props) => {
                   //   idCountryNationality: value,
                   // });
                 }}
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -461,6 +465,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                   // setFieldDescription(option.fieldDescription);
                 }}
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -478,6 +483,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -531,6 +537,7 @@ const SectionPersonalInformationAgent = (props) => {
                   // });
                 }}
                 type="date"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />

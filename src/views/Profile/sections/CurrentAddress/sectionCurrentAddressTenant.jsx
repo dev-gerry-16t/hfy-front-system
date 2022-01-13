@@ -305,38 +305,31 @@ const SectionCurrentAddress = (props) => {
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.street}
-                placeholder=""
-                label="Calle"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    street: value,
-                  });
-                }}
-                type="text"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={zipCodeStateCity.city}
-                placeholder=""
-                label="Municipio/Delegación"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {}}
-                type="text"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.street}
+                    placeholder=""
+                    label="Calle"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        street: value,
+                      });
+                    }}
+                    type="text"
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col
+                  span={11}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 11 }}
+                >
                   <CustomInputTypeForm
                     value={dataForm.streetNumber}
                     placeholder=""
@@ -352,8 +345,18 @@ const SectionCurrentAddress = (props) => {
                     type="text"
                   />
                 </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Col
+                  span={2}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 2 }}
+                />
+                <Col
+                  span={11}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 11 }}
+                >
                   <CustomInputTypeForm
                     value={dataForm.suite}
                     placeholder=""
@@ -370,31 +373,13 @@ const SectionCurrentAddress = (props) => {
                   />
                 </Col>
               </Row>
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomSelect
-                value={idZipCode}
-                placeholder=""
-                label="Colonia"
-                data={dataZipCatalog}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value, option) => {
-                  setDataForm({
-                    ...dataForm,
-                    idZipCode: value,
-                  });
-                  setIdZipCode(value);
-                  setOpenOtherNeighborhood(option.isOpen);
-                }}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Col
+                  span={11}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 11 }}
+                >
                   <CustomInputTypeForm
                     value={dataForm.zipCode}
                     placeholder=""
@@ -402,18 +387,38 @@ const SectionCurrentAddress = (props) => {
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
-                      setDataForm({
+                      let stateValue = {
                         ...dataForm,
                         zipCode: value,
-                      });
+                      };
+                      if (value.length < 5) {
+                        setOpenOtherNeighborhood(false);
+                        stateValue = {
+                          ...dataForm,
+                          zipCode: value,
+                          neighborhood: null,
+                        };
+                      }
+                      setDataForm(stateValue);
                       hanlderCallGetZipCodeAdress(value, "");
                     }}
                     type="number"
                   />
                 </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <Col
+                  span={2}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 2 }}
+                />
+                <Col
+                  span={11}
+                  xs={{ span: 24 }}
+                  md={{ span: 24 }}
+                  lg={{ span: 11 }}
+                >
                   <CustomInputTypeForm
+                    isBlock={true}
                     value={zipCodeStateCity.state}
                     placeholder=""
                     label="Estado"
@@ -427,21 +432,59 @@ const SectionCurrentAddress = (props) => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomInputTypeForm
+                    value={zipCodeStateCity.city}
+                    placeholder=""
+                    label="Municipio/Delegación"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {}}
+                    type="text"
+                    isBlock={true}
+                  />
+                </Col>
+              </Row>
+              <Row>
+                <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                  <CustomSelect
+                    value={idZipCode}
+                    placeholder=""
+                    label="Colonia"
+                    data={dataZipCatalog}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value, option) => {
+                      setDataForm({
+                        ...dataForm,
+                        idZipCode: value,
+                      });
+                      setIdZipCode(value);
+                      setOpenOtherNeighborhood(option.isOpen);
+                    }}
+                  />
+                </Col>
+              </Row>
               {openOtherNeighborhood === true && (
-                <CustomInputTypeForm
-                  value={dataForm.neighborhood}
-                  placeholder="Indica la colonia"
-                  label="Otra colonia"
-                  error={false}
-                  errorMessage="Este campo es requerido"
-                  onChange={(value) => {
-                    setDataForm({
-                      ...dataForm,
-                      neighborhood: value,
-                    });
-                  }}
-                  type="text"
-                />
+                <Row>
+                  <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                    <CustomInputTypeForm
+                      value={dataForm.neighborhood}
+                      placeholder="Indica la colonia"
+                      label="Otra colonia"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          neighborhood: value,
+                        });
+                      }}
+                      type="text"
+                    />
+                  </Col>
+                </Row>
               )}
             </Col>
           </Row>
@@ -534,7 +577,12 @@ const SectionCurrentAddress = (props) => {
               <Row>
                 <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                   <Row>
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Col
+                      span={11}
+                      xs={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 11 }}
+                    >
                       <CustomInputTypeForm
                         value={dataForm.currentTime}
                         placeholder=""
@@ -550,8 +598,18 @@ const SectionCurrentAddress = (props) => {
                         type="number"
                       />
                     </Col>
-                    <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                    <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                    <Col
+                      span={2}
+                      xs={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 2 }}
+                    />
+                    <Col
+                      span={11}
+                      xs={{ span: 24 }}
+                      md={{ span: 24 }}
+                      lg={{ span: 11 }}
+                    >
                       <CustomSelect
                         value={dataForm.currentTimeRange}
                         placeholder=""

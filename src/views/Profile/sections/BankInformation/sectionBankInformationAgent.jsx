@@ -274,6 +274,7 @@ const SectionBankInformationAgent = (props) => {
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {}}
                 type="text"
+                isBlock={true}
               />
             </Col>
           </Row>

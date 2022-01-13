@@ -19,7 +19,9 @@ const ContainerInput = styled.div`
 const Input = styled.input`
   padding: 5px 6px;
   border-radius: 5px;
-  background: ${(props) => props.background};
+  background: ${(props) =>
+    props.isBlock === false ? props.background : "#efefef4d"};
+  cursor: ${(props) => (props.isBlock === false ? "auto" : "not-allowed")};
   border: ${(props) =>
     props.error ? "1px solid #DA1414" : "1px solid #d6d8e7"};
   outline: none;
@@ -88,6 +90,7 @@ const CustomInputTypeForm = (props) => {
     onBlur = () => {},
     onKeyEnter = () => {},
     background = "transparent",
+    isBlock = false,
   } = props;
   return (
     <ContainerInput>
@@ -98,6 +101,7 @@ const CustomInputTypeForm = (props) => {
         }}
       >
         <Input
+          isBlock={isBlock}
           background={background}
           id={isNil(id) === false ? id : null}
           value={isNil(value) === true ? "" : value}
@@ -122,6 +126,7 @@ const CustomInputTypeForm = (props) => {
           maxLength={isNil(maxLength) === false ? maxLength : null}
           minLength={isNil(minLength) === false ? minLength : null}
           error={error}
+          disabled={isBlock}
         />
         {isNil(info) === false && (
           <PositionTooltip>
