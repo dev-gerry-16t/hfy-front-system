@@ -162,8 +162,8 @@ const FormProperty = styled.div`
     gap: 3em;
     margin-top: 2em;
   }
-  @media screen and (max-width: 640px) {
-    padding: 2em 3em;
+  @media screen and (max-width: 1175px) {
+    padding: 2em 2em;
   }
   @media screen and (max-width: 420px) {
     padding: 1em 1em;

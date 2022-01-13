@@ -406,6 +406,7 @@ const SectionDataLocation = (props) => {
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {}}
                     type="text"
+                    isBlock={true}
                   />
                 </Col>
               </Row>
@@ -419,6 +420,7 @@ const SectionDataLocation = (props) => {
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {}}
                     type="text"
+                    isBlock={true}
                   />
                 </Col>
                 <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
