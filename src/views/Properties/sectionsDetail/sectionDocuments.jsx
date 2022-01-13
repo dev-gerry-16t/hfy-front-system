@@ -349,7 +349,6 @@ const SectionDocuments = (props) => {
           <div className="content-cards">
             {isEmpty(documentsArray) === false &&
               documentsArray.map((row) => {
-                console.log("row", row);
                 return (
                   <Card
                     colorDocument={
