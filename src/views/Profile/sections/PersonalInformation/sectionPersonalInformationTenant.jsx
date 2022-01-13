@@ -66,6 +66,7 @@ const SectionPersonalInformation = (props) => {
     hasBoundSolidarity: null,
   });
   const [dataNationalities, setDataNationalities] = useState([]);
+  const [dataMaritalStatus, setDataMaritalStatus] = useState([]);
   const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
   const [dataIdTypes, setDataIdTypes] = useState([]);
   const [isOpenVerification, setIsOpenVerification] = useState(false);
@@ -75,6 +76,32 @@ const SectionPersonalInformation = (props) => {
   const dataContexProfile = useContext(ContextProfile);
   const { dataCustomerDetail, matchParams, history, identifier, getById } =
     dataContexProfile;
+
+  const handlerCallGetMaritalStatus = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_MARITAL_STATUS
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+      setDataMaritalStatus(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
 
   const handlerCallUpdateCustomerAccount = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -286,6 +313,7 @@ const SectionPersonalInformation = (props) => {
   const handlerCallInitApis = async () => {
     await hanlderCallGetNationalities();
     await hanlderCallGetIdTypes();
+    await handlerCallGetMaritalStatus();
   };
 
   useEffect(() => {
@@ -496,6 +524,24 @@ const SectionPersonalInformation = (props) => {
                   });
                 }}
                 type="text"
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.idMaritalStatus}
+                placeholder=""
+                label="Estado civil"
+                data={dataMaritalStatus}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idMaritalStatus: value,
+                  });
+                }}
               />
             </Col>
           </Row>
