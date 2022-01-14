@@ -235,6 +235,10 @@ const SectionCurrentWork = (props) => {
       idIncomePeriod,
       idIncomeWay,
     } = data;
+    handlerCallGetCustomerDocument({
+      idIncomeWay,
+      idIncomePeriod,
+    });
     setDataForm({
       idOccupationActivity,
       economicDependents,
