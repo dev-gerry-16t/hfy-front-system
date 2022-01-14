@@ -389,6 +389,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -406,6 +407,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -424,6 +426,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -441,6 +444,7 @@ const SectionPersonalInformation = (props) => {
                   //   idCountryNationality: value,
                   // });
                 }}
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -460,6 +464,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                   // setFieldDescription(option.fieldDescription);
                 }}
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -477,6 +482,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                 }}
                 type="text"
+                isBlock={true}
               />
             </Col>
           </Row>
@@ -530,6 +536,7 @@ const SectionPersonalInformation = (props) => {
                   // });
                 }}
                 type="date"
+                isBlock={true}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />

@@ -18,7 +18,10 @@ const ContainerSelect = styled.div`
 const Select = styled.select`
   padding: 5px 6px;
   border-radius: 5px;
-  background: transparent;
+  background: ${(props) =>
+    props.isBlock === false ? "transparent" : "#efefefd4"};
+  cursor: ${(props) => (props.isBlock === false ? "auto" : "not-allowed")};
+
   border: ${(props) =>
     props.error ? "1px solid #DA1414" : "1px solid #d6d8e7"};
   outline: none;
@@ -67,12 +70,14 @@ const CustomSelect = (props) => {
     onChange,
     error = false,
     errorMessage,
+    isBlock = false,
   } = props;
   return (
     <ContainerSelect>
       <Label error={error}>{label}</Label>
       <div>
         <Select
+          isBlock={isBlock}
           id={isNil(id) === false ? id : null}
           value={isNil(value) === false ? value : ""}
           onChange={(e, a) => {
@@ -82,6 +87,7 @@ const CustomSelect = (props) => {
             onChange(e.target.value, dataOption);
           }}
           error={error}
+          disabled={isBlock}
         >
           <option disabled selected value="">
             {placeholder}

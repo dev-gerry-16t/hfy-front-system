@@ -25,6 +25,10 @@ import {
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
 import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
+import {
+  catalogIncomeWay,
+  catalogIncomePeriod,
+} from "../../constants/staticCatalogs";
 
 const SectionCurrentWork = (props) => {
   const {
@@ -53,6 +57,11 @@ const SectionCurrentWork = (props) => {
     isCCAccepted: null,
     cCDigitalSignature: null,
     childrenNo: null,
+    requiresAdditionalIncomes: null,
+    hasAdditionalIncomes: null,
+    additionalIncomes: null,
+    idIncomePeriod: null,
+    idIncomeWay: null,
   });
   const [dataOccupations, setDataOccupations] = useState([]);
   const [dataDocument, setDataDocument] = useState([]);
@@ -167,7 +176,7 @@ const SectionCurrentWork = (props) => {
     }
   };
 
-  const handlerCallGetCustomerDocument = async () => {
+  const handlerCallGetCustomerDocument = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -176,6 +185,7 @@ const SectionCurrentWork = (props) => {
           idSystemUser,
           idLoginHistory,
           identifier,
+          ...data,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_CUSTOMER_DOCUMENT
@@ -197,7 +207,6 @@ const SectionCurrentWork = (props) => {
 
   const handlerCallInitApis = async () => {
     hanlderCallGetOccupations();
-    handlerCallGetCustomerDocument();
   };
 
   const handlerSetStateDataDetail = (data) => {
@@ -220,7 +229,16 @@ const SectionCurrentWork = (props) => {
       cCDigitalSignature,
       childrenNo,
       hasOtherIncomes,
+      requiresAdditionalIncomes,
+      hasAdditionalIncomes,
+      additionalIncomes,
+      idIncomePeriod,
+      idIncomeWay,
     } = data;
+    handlerCallGetCustomerDocument({
+      idIncomeWay,
+      idIncomePeriod,
+    });
     setDataForm({
       idOccupationActivity,
       economicDependents,
@@ -240,6 +258,11 @@ const SectionCurrentWork = (props) => {
       cCDigitalSignature,
       childrenNo,
       hasOtherIncomes,
+      requiresAdditionalIncomes,
+      hasAdditionalIncomes,
+      additionalIncomes,
+      idIncomePeriod,
+      idIncomeWay,
     });
   };
 
@@ -500,6 +523,64 @@ const SectionCurrentWork = (props) => {
               </Col>
             </Row>
           )}
+          {dataForm.requiresAdditionalIncomes && (
+            <Row style={{ margin: "2em 0px" }}>
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                <ComponentRadio>
+                  <strong>¿Tu cónyuge aporta ingresos adicionales?</strong>
+                  <div className="radio-inputs-options">
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        checked={dataForm.hasAdditionalIncomes == true}
+                        name="other-additional-incomes"
+                        onClick={() => {
+                          setDataForm({
+                            ...dataForm,
+                            hasAdditionalIncomes: true,
+                          });
+                        }}
+                      />
+                      Si
+                    </label>
+                    <label className="input-radio">
+                      <input
+                        type="radio"
+                        name="other-additional-incomes"
+                        checked={dataForm.hasAdditionalIncomes == false}
+                        onClick={() => {
+                          setDataForm({
+                            ...dataForm,
+                            hasAdditionalIncomes: false,
+                          });
+                        }}
+                      />
+                      No
+                    </label>
+                  </div>
+                </ComponentRadio>
+              </Col>
+              <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+              <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                {dataForm.hasAdditionalIncomes == true && (
+                  <CustomInputCurrency
+                    value={dataForm.additionalIncomes}
+                    placeholder=""
+                    label="Monto de ingresos"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        additionalIncomes: value,
+                      });
+                    }}
+                    type="number"
+                  />
+                )}
+              </Col>
+            </Row>
+          )}
         </div>
         <div
           className="label-indicator"
@@ -576,10 +657,68 @@ const SectionCurrentWork = (props) => {
             paddingBottom: "0.5em",
           }}
         />
-        <h1 className="subtitle-header">Documentos</h1>
+        <h1
+          className="subtitle-header"
+          style={{
+            marginBottom: 15,
+          }}
+        >
+          Documentos
+        </h1>
+        <Row>
+          <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            <CustomSelect
+              value={dataForm.idIncomeWay}
+              placeholder=""
+              label="Forma en que compruebas ingresos *"
+              data={catalogIncomeWay}
+              error={false}
+              errorMessage="Este campo es requerido"
+              onChange={(value) => {
+                setDataForm({
+                  ...dataForm,
+                  idIncomeWay: value,
+                  idIncomePeriod: null,
+                });
+                if (value == 1) {
+                  handlerCallGetCustomerDocument({
+                    idIncomeWay: value,
+                    idIncomePeriod: null,
+                  });
+                }
+              }}
+            />
+          </Col>
+          <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+          <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            {dataForm.idIncomeWay == 2 && (
+              <CustomSelect
+                value={dataForm.idIncomePeriod}
+                placeholder=""
+                label="Indica la periodicidad de tus pagos *"
+                data={catalogIncomePeriod}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idIncomePeriod: value,
+                  });
+                  handlerCallGetCustomerDocument({
+                    idIncomePeriod: value,
+                    idIncomeWay: dataForm.idIncomeWay,
+                  });
+                }}
+              />
+            )}
+          </Col>
+        </Row>
         <WidgetUploadDocument
           handlerCallGetCustomerDocument={() => {
-            handlerCallGetCustomerDocument();
+            handlerCallGetCustomerDocument({
+              idIncomePeriod: dataForm.idIncomePeriod,
+              idIncomeWay: dataForm.idIncomeWay,
+            });
           }}
           dataDocument={dataDocument}
           type={type}

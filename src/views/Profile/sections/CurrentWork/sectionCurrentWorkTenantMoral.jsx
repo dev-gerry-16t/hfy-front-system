@@ -309,45 +309,10 @@ const SectionCurrentWork = (props) => {
         <div className="type-property">
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomSelect
-                value={dataForm.idOccupationActivity}
-                placeholder=""
-                label="Puesto/Ocupación"
-                data={dataOccupations}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    idOccupationActivity: value,
-                  });
-                }}
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.economicDependents}
-                placeholder=""
-                label="Número de dependientes económicos"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    economicDependents: value,
-                  });
-                }}
-                type="number"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.companyName}
                 placeholder=""
-                label="Nombre de la empresa"
+                label="Razón Social"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
@@ -361,10 +326,28 @@ const SectionCurrentWork = (props) => {
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <CustomSelect
+                value={dataForm.idOccupationActivity}
+                placeholder=""
+                label="Giro de la empresa"
+                data={dataOccupations}
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  setDataForm({
+                    ...dataForm,
+                    idOccupationActivity: value,
+                  });
+                }}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputCurrency
                 value={dataForm.currentSalary}
                 placeholder=""
-                label="Sueldo mensual"
+                label="Ingreso mensual"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
@@ -376,51 +359,55 @@ const SectionCurrentWork = (props) => {
                 type="number"
               />
             </Col>
-          </Row>
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.antiquity}
-                placeholder=""
-                label="Antigüedad"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    antiquity: value,
-                  });
-                }}
-                type="number"
-              />
-            </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomSelect
-                value={dataForm.antiquityTimeRange}
-                placeholder=""
-                label="Periodo"
-                data={[
-                  {
-                    id: "M",
-                    text: "Meses",
-                  },
-                  {
-                    id: "Y",
-                    text: "Años",
-                  },
-                ]}
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    antiquityTimeRange: value,
-                  });
-                }}
-              />
+              <Row>
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomInputTypeForm
+                    value={dataForm.antiquity}
+                    placeholder=""
+                    label="Antigüedad"
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        antiquity: value,
+                      });
+                    }}
+                    type="number"
+                  />
+                </Col>
+                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomSelect
+                    value={dataForm.antiquityTimeRange}
+                    placeholder=""
+                    label="Periodo"
+                    data={[
+                      {
+                        id: "M",
+                        text: "Meses",
+                      },
+                      {
+                        id: "Y",
+                        text: "Años",
+                      },
+                    ]}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({
+                        ...dataForm,
+                        antiquityTimeRange: value,
+                      });
+                    }}
+                  />
+                </Col>
+              </Row>
             </Col>
           </Row>
+
           <Row style={{ margin: "2em 0px" }}>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <ComponentRadio>
