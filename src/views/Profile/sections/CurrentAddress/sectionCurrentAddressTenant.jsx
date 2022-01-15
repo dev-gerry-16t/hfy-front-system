@@ -55,8 +55,14 @@ const SectionCurrentAddress = (props) => {
   const frontFunctions = new FrontFunctions();
 
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, matchParams, history, identifier, getById } =
-    dataContexProfile;
+  const {
+    dataCustomerDetail,
+    matchParams,
+    history,
+    identifier,
+    getById,
+    idCustomerOwner,
+  } = dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -64,7 +70,8 @@ const SectionCurrentAddress = (props) => {
       const response = await callGlobalActionApi(
         {
           identifier,
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -100,12 +107,13 @@ const SectionCurrentAddress = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.SET_CUSTOMER_ADDRESS,
         "PUT"
       );
@@ -134,7 +142,8 @@ const SectionCurrentAddress = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -186,7 +195,8 @@ const SectionCurrentAddress = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,

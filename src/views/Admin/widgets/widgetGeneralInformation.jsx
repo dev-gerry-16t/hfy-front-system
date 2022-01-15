@@ -8,6 +8,7 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
+import { ButtonNextBackPage } from "../../Profile/constants/styleConstants";
 
 const CardGeneralInformation = styled.div`
   background: #fff;
@@ -72,8 +73,10 @@ const WidgetGeneralInformation = (props) => {
     idCustomer,
     idInvestigationProcess,
     dataProfile,
+    isAdmin = false,
   } = props;
   const [current, setCurrent] = useState(0);
+  const [identifier, setIdentifier] = useState(null);
   const [dataInfo, setDataInfo] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
   const frontFunctions = new FrontFunctions();
@@ -136,6 +139,7 @@ const WidgetGeneralInformation = (props) => {
           ? response.response
           : [];
       setDataInfo(responseResult);
+      setIdentifier(id);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -171,6 +175,22 @@ const WidgetGeneralInformation = (props) => {
             })}
         </div>
       </CardInformation>
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
+        <ButtonNextBackPage
+          onClick={() => {
+            window.open(
+              `/websystem/edit-profile/${identifier}/${idCustomer}`,
+              "_blank"
+            );
+          }}
+        >
+          Editar información
+        </ButtonNextBackPage>
+      </div>
     </CardGeneralInformation>
   );
 };

@@ -8,6 +8,30 @@ import { callGlobalActionApi } from "../../../utils/actions/actions";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { ButtonNextBackPage } from "../../Profile/constants/styleConstants";
+import { IconDelete, IconEditSquare } from "../../../assets/iconSvg";
+
+const CardReference = styled.div`
+  width: 290px;
+  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+  border-radius: 10px;
+  .header-buttons {
+    display: flex;
+    justify-content: right;
+    padding: 10px;
+  }
+  .info-reference {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0px 0.8em 0.8em 0.8em;
+  }
+`;
+
+const ButtonHeader = styled.button`
+  background: transparent;
+  border: none;
+`;
 
 const CardReferences = styled.div`
   display: grid;
@@ -171,6 +195,12 @@ const WidgetReferences = ({
   dataReferenceStatus,
   idInvestigationProcess,
   updateDetailUser,
+  onOpenAddReference = () => {},
+  onDeleteReference = () => {},
+  isAdmin = false,
+  isOwner = false,
+  dataDetailProperty = [],
+  idCustomer = null,
 }) => {
   const [dataForm, setDataForm] = useState({});
   const [dataHistory, setDataHistory] = useState([]);
@@ -233,7 +263,34 @@ const WidgetReferences = ({
 
   return (
     <CardReferences>
-      <h1>Referencias</h1>
+      <div
+        style={{
+          textAlign: "center",
+        }}
+      >
+        {isOwner === false && <h1>Referencias</h1>}
+        {isOwner === true && <h1>Propiedades</h1>}
+        {isAdmin === true && isOwner === false && (
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              onOpenAddReference();
+            }}
+          >
+            {"Agregar referencia +"}
+          </ButtonNextBackPage>
+        )}
+        {isAdmin === true && isOwner === true && (
+          <ButtonNextBackPage
+            block={false}
+            onClick={() => {
+              window.open(`/websystem/add-property/${idCustomer}`, "_blank");
+            }}
+          >
+            {"Agregar propiedad +"}
+          </ButtonNextBackPage>
+        )}
+      </div>
       <WidgetReferenceModal
         isModalVisible={isModalVisible}
         dataForm={dataForm}
@@ -255,18 +312,79 @@ const WidgetReferences = ({
         }}
       />
       <SectionCardInfoReference>
-        {dataReferences.map((row) => {
-          return (
-            <Card
-              {...row}
-              onClick={() => {
-                handlerCallGetAuditReferences(row.idPersonalReference);
-                setDataForm({ ...row });
-                setIsModalVisible(true);
-              }}
-            />
-          );
-        })}
+        {isOwner === false &&
+          isAdmin === false &&
+          dataReferences.map((row) => {
+            return (
+              <Card
+                {...row}
+                onClick={() => {
+                  handlerCallGetAuditReferences(row.idPersonalReference);
+                  setDataForm({ ...row });
+                  setIsModalVisible(true);
+                }}
+              />
+            );
+          })}
+        {isOwner === false &&
+          isAdmin === true &&
+          dataReferences.map((row) => {
+            return (
+              <CardReference>
+                <div className="header-buttons">
+                  <ButtonHeader
+                    onClick={() => {
+                      onOpenAddReference(row);
+                    }}
+                  >
+                    <IconEditSquare color="var(--color-primary)" size="15px" />
+                  </ButtonHeader>
+                  <ButtonHeader
+                    onClick={async () => {
+                      try {
+                        onDeleteReference({
+                          idPersonalReference: row.idPersonalReference,
+                          isActive: false,
+                        });
+                      } catch (error) {}
+                    }}
+                  >
+                    <IconDelete color="var(--color-primary)" size="15px" />
+                  </ButtonHeader>
+                </div>
+                <div className="info-reference">
+                  <strong>{row.fullName}</strong>
+                  <u>{row.emailAddress}</u>
+                  <span>{row.phoneNumber}</span>
+                </div>
+              </CardReference>
+            );
+          })}
+        {isOwner === true &&
+          isAdmin === true &&
+          isEmpty(dataDetailProperty) === false &&
+          dataDetailProperty.map((row) => {
+            return (
+              <CardReference>
+                <div className="header-buttons">
+                  <ButtonHeader
+                    onClick={() => {
+                      window.open(
+                        `/websystem/edit-property/${row.idProperty}`,
+                        "_blank"
+                      );
+                    }}
+                  >
+                    <IconEditSquare color="var(--color-primary)" size="15px" />
+                  </ButtonHeader>
+                </div>
+                <div className="info-reference">
+                  <strong>Dirección</strong>
+                  <span>{row.fullAddress}</span>
+                </div>
+              </CardReference>
+            );
+          })}
       </SectionCardInfoReference>
     </CardReferences>
   );

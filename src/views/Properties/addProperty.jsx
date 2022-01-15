@@ -32,6 +32,8 @@ const AddProperty = (props) => {
   const { params } = match;
   const idProperty =
     isNil(params.idProperty) === false ? params.idProperty : null;
+  const idCustomerOwner =
+    isNil(params.idCustomer) === false ? params.idCustomer : null;
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
@@ -46,12 +48,13 @@ const AddProperty = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.ADD_PROPERTY_V2,
         "PUT"
       );
@@ -73,7 +76,8 @@ const AddProperty = (props) => {
           idProperty,
           idApartment: null,
           identifier: null,
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -132,9 +136,14 @@ const AddProperty = (props) => {
             if (isNil(idProperty) === false && isEmpty(idProperty) === false) {
               history.push(`/websystem/detail-property-users/${idProperty}`);
             } else {
-              history.push(`/websystem/dashboard-properties`);
+              if (isNil(idCustomerOwner) === false) {
+                history.push(`/websystem/userType-detail/${idCustomerOwner}`);
+              } else {
+                history.push(`/websystem/dashboard-properties`);
+              }
             }
           }}
+          params={params}
         />
       )}
       {current === 1 && (
@@ -155,6 +164,7 @@ const AddProperty = (props) => {
           onBackTo={() => {
             history.push(`/websystem/detail-property-users/${idProperty}`);
           }}
+          params={params}
         />
       )}
       {current === 2 && (
@@ -179,10 +189,12 @@ const AddProperty = (props) => {
           onBackTo={() => {
             history.push(`/websystem/detail-property-users/${idProperty}`);
           }}
+          params={params}
         />
       )}
       {current === 3 && (
         <SectionDataImages
+          params={params}
           onClickBack={() => {
             setCurrent(2);
           }}

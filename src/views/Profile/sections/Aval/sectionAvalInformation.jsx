@@ -194,14 +194,16 @@ const SectionAvalInformation = (props) => {
 
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
-  const { dataCustomerDetail, identifier, type, getById } = dataContexProfile;
+  const { dataCustomerDetail, identifier, type, getById, idCustomerOwner } =
+    dataContexProfile;
 
   const handlerCallGetCustomerDocument = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           identifier,
@@ -229,7 +231,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -281,7 +284,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -333,12 +337,13 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.SET_CUSTOMER_ENDORSEMENT,
         "PUT"
       );
@@ -368,7 +373,8 @@ const SectionAvalInformation = (props) => {
       const response = await callGlobalActionApi(
         {
           identifier: null,
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -404,7 +410,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -430,7 +437,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -456,7 +464,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -482,7 +491,8 @@ const SectionAvalInformation = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,

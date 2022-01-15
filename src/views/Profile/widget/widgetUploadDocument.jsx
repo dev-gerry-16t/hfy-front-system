@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { connect } from "react-redux";
 import { Row, Col, Modal } from "antd";
 import Magnifier from "react-magnifier";
@@ -15,6 +15,7 @@ import {
 } from "../../../utils/actions/actions";
 import { ReactComponent as IconActivity } from "../../../assets/iconSvg/svgFile/iconActivity.svg";
 import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
+import ContextProfile from "../context/contextProfile";
 import Arrow from "../../../assets/icons/Arrow.svg";
 
 const UploadSection = styled.div`
@@ -119,6 +120,9 @@ const WidgetUploadDocument = (props) => {
   } = props;
   const [previewVisible, setPreviewVisible] = useState(false);
   const [dataPreviewDocument, setDataPreviewDocument] = useState({});
+  const dataContexProfile = useContext(ContextProfile);
+  const { idCustomerOwner = null } = dataContexProfile;
+
   const frontFunctions = new FrontFunctions();
 
   const handlerCallDeactivateCustomerDocument = async (data, id) => {
@@ -126,7 +130,8 @@ const WidgetUploadDocument = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
@@ -162,7 +167,7 @@ const WidgetUploadDocument = (props) => {
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.ADD_CUSTOMER_DOCUMENT,
         "PUT"
       );
@@ -193,7 +198,8 @@ const WidgetUploadDocument = (props) => {
       preview: null,
       thumbnail: null,
       idDocumentType: infoDoc.idDocumentType,
-      idCustomer,
+      idCustomer:
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
       idSystemUser,
       idLoginHistory,
     };

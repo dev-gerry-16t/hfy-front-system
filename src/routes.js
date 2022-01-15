@@ -46,6 +46,9 @@ const EditProfileUsers = React.lazy(() =>
 const UserDetailInformation = React.lazy(() =>
   import("./views/Admin/userDetailInformation")
 );
+const UserTypeDetailInformation = React.lazy(() =>
+  import("./views/Admin/userTypeDetailInformation")
+);
 const Investigations = React.lazy(() => import("./views/Admin/investigations"));
 
 const AddProperty = React.lazy(() => import("./views/Properties/addProperty"));
@@ -274,11 +277,27 @@ const routes = [
     exact: true,
   },
   {
+    key: "20-2",
+    id: "Información",
+    path: "/websystem/edit-profile/:identifier/:idCustomer",
+    name: "Agregar información",
+    component: EditProfileUsers,
+    exact: true,
+  },
+  {
     key: "21",
     id: "UserDetail",
     path: "/websystem/user-detail/:idInvestigationProcess",
     name: "Detalle de usuario",
     component: UserDetailInformation,
+    exact: true,
+  },
+  {
+    key: "21-2",
+    id: "UserTypeDetail",
+    path: "/websystem/userType-detail/:idCustomer",
+    name: "Detalle de usuario",
+    component: UserTypeDetailInformation,
     exact: true,
   },
   {
@@ -302,6 +321,14 @@ const routes = [
     id: "editProperty",
     path: "/websystem/edit-property/:idProperty",
     name: "Editar propiedad",
+    component: AddProperty,
+    exact: true,
+  },
+  {
+    key: "23-2",
+    id: "addProperty",
+    path: "/websystem/add-property/:idCustomer",
+    name: "Agregar propiedad",
     component: AddProperty,
     exact: true,
   },
