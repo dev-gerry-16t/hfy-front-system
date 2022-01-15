@@ -39,6 +39,9 @@ const Content = styled.div`
 
 const EditProfileUsers = (props) => {
   const { callGlobalActionApi, dataProfile, match, history } = props;
+  const { params } = match;
+  const idCustomerOwner =
+    isNil(params.idCustomer) === false ? params.idCustomer : null;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
@@ -53,12 +56,13 @@ const EditProfileUsers = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.UPDATE_CUSTOMER_ACCOUNT,
         "PUT"
       );
@@ -87,7 +91,8 @@ const EditProfileUsers = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -124,7 +129,8 @@ const EditProfileUsers = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -205,6 +211,7 @@ const EditProfileUsers = (props) => {
           type: dataConfigForm.type,
           matchParams: match.params.identifier,
           history,
+          idCustomerOwner,
         }}
       >
         {/*Inquilino Persona fisica */}

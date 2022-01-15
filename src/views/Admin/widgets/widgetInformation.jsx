@@ -1,5 +1,6 @@
 import React from "react";
 import isNil from "lodash/isNil";
+import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import ENVIROMENT from "../../../utils/constants/enviroments";
 
@@ -92,7 +93,7 @@ const WidgetInformation = (props) => {
   } = props;
 
   const handlerSplitElement = (toSplit) => {
-    const resultSplit = toSplit.split(",");
+    const resultSplit = isEmpty(toSplit) === false ? toSplit.split(",") : "";
     return isNil(resultSplit[0]) === false ? resultSplit[0] : "Dirección";
   };
 
@@ -167,7 +168,9 @@ const WidgetInformation = (props) => {
         </div>
         <div>
           <i className="fa fa-phone" />
-          <span>{number_format(phoneNumber)}</span>
+          <span>
+            {isNil(phoneNumber) === false ? number_format(phoneNumber) : ""}
+          </span>
         </div>
       </MiddleContactUser>
       <BottomCardInformation>
