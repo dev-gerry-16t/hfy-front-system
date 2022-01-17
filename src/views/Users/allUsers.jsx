@@ -81,6 +81,19 @@ const AllUsers = (props) => {
       title: "Nombre",
       dataIndex: "fullName",
       key: "fullName",
+      render: (text, record) => (
+        <div
+          style={{
+            color: "blue",
+            cursor: "pointer",
+          }}
+          onClick={() => {
+            history.push(`/websystem/userType-detail/${record.idCustomer}`);
+          }}
+        >
+          <u>{text}</u>
+        </div>
+      ),
     },
     {
       title: "Tipo de usuario",

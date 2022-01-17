@@ -77,6 +77,7 @@ const SectionCurrentWork = (props) => {
     history,
     matchParams,
     getById,
+    idCustomerOwner,
   } = dataContexProfile;
 
   const handlerCallValidateCustomerPropertiesInTab = async () => {
@@ -85,7 +86,8 @@ const SectionCurrentWork = (props) => {
       const response = await callGlobalActionApi(
         {
           identifier,
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
         },
@@ -121,12 +123,13 @@ const SectionCurrentWork = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           ...data,
         },
-        idCustomer,
+        isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
         API_CONSTANTS.CUSTOMER.SET_CUSTOMER_WORKING_INFO,
         "PUT"
       );
@@ -155,7 +158,8 @@ const SectionCurrentWork = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           type: 1,
@@ -181,7 +185,8 @@ const SectionCurrentWork = (props) => {
     try {
       const response = await callGlobalActionApi(
         {
-          idCustomer,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
           idSystemUser,
           idLoginHistory,
           identifier,
