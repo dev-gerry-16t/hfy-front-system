@@ -175,22 +175,24 @@ const WidgetGeneralInformation = (props) => {
             })}
         </div>
       </CardInformation>
-      <div
-        style={{
-          textAlign: "center",
-        }}
-      >
-        <ButtonNextBackPage
-          onClick={() => {
-            window.open(
-              `/websystem/edit-profile/${identifier}/${idCustomer}`,
-              "_blank"
-            );
+      {identifier != "99" && (
+        <div
+          style={{
+            textAlign: "center",
           }}
         >
-          Editar información
-        </ButtonNextBackPage>
-      </div>
+          <ButtonNextBackPage
+            onClick={() => {
+              window.open(
+                `/websystem/edit-profile/${identifier}/${idCustomer}`,
+                "_blank"
+              );
+            }}
+          >
+            Editar información
+          </ButtonNextBackPage>
+        </div>
+      )}
     </CardGeneralInformation>
   );
 };

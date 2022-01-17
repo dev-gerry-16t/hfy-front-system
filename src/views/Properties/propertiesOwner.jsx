@@ -202,10 +202,6 @@ const PropertiesOwner = (props) => {
     }
   };
 
-  useEffect(() => {
-    handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
-  }, []);
-
   return (
     <Content>
       <ComponentAddCandidate
@@ -313,6 +309,7 @@ const PropertiesOwner = (props) => {
             <ComponentFilter
               owner
               typeCoincidences={typeCoincidences}
+              onFilterOperation={(data) => {}}
               onSendFilter={async (data) => {
                 try {
                   const objectConditions = JSON.stringify({
@@ -337,7 +334,8 @@ const PropertiesOwner = (props) => {
         {isEmpty(dataCoincidences) === false && (
           <div className="total-coincidences">
             <h1>
-              Se encontraron <span>{totalCoincidences} propiedades</span>
+              Se encontraron <span>{totalCoincidences} propiedades</span> en{" "}
+              {frontFunctions.handlerGetOperationType(jsonConditionsState)}
             </h1>
           </div>
         )}
