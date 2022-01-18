@@ -365,6 +365,11 @@ const ComponentFilter = (props) => {
     handlerCallGetAllPropertyTypes();
   }, []);
 
+  useEffect(() => {
+    const jsonCOnditionSend = handlerGetJsonConditions();
+    onSendFilter(JSON.stringify(jsonCOnditionSend));
+  }, [idOperationType]);
+
   return (
     <>
       <div className="filter-actions-components">

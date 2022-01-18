@@ -202,9 +202,7 @@ const PropertiesPublic = (props) => {
     }
   };
 
-  useEffect(() => {
-    handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Content>
@@ -324,7 +322,8 @@ const PropertiesPublic = (props) => {
         {isEmpty(dataCoincidencesPublic) === false && (
           <div className="total-coincidences">
             <h1>
-              Se encontraron <span>{totalCoincidences} propiedades</span>
+              Se encontraron <span>{totalCoincidences} propiedades</span> en{" "}
+              {frontFunctions.handlerGetOperationType(jsonConditionsState)}
             </h1>
           </div>
         )}

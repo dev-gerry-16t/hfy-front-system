@@ -65,6 +65,22 @@ class FrontFunctions {
     const formatUrl = `https://www.homify.ai/propiedad/${addGuion}/${id}`;
     return formatUrl;
   };
+  handlerGetOperationType = (data) => {
+    const arrayData = isEmpty(data) == false ? JSON.parse(data) : [];
+    let message = "";
+    if (isEmpty(arrayData) === false) {
+      const findCondition = arrayData.find((row) => {
+        return row.queryCondition == 7;
+      });
+      if (isEmpty(findCondition) === false && findCondition.compValue == 1) {
+        message = "renta";
+      }
+      if (isEmpty(findCondition) === false && findCondition.compValue == 2) {
+        message = "venta";
+      }
+    }
+    return message;
+  };
 }
 
 export default FrontFunctions;
