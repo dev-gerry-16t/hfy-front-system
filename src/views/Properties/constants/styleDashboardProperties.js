@@ -14,11 +14,11 @@ const Container = styled.div`
   .total-coincidences {
     font-size: 16px;
     margin: 15px 0px;
-    h1{
+    h1 {
       font-weight: bold;
       letter-spacing: 0.5px;
-      color: #4F4C66;
-      span{
+      color: #4f4c66;
+      span {
         color: var(--color-primary);
       }
     }
@@ -183,10 +183,19 @@ const Content = styled.div`
   display: grid;
   grid-template-columns: 3fr 1fr;
   position: relative;
+  .top-timeline-mobile {
+    display: none;
+  }
   @media screen and (max-width: 1160px) {
     display: flex;
     flex-direction: column;
     gap: 25px;
+    .right-timeline-mobile {
+      display: none;
+    }
+    .top-timeline-mobile {
+    display: block;
+  }
   }
   @media screen and (max-width: 500px) {
     padding: 1em 5px;
