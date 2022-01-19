@@ -53,7 +53,7 @@ const ButtonCheck = styled.button`
 
 const catalogAssociation = [
   { id: "1", text: "Vincular con existente" },
-  { id: "2", text: "Vincular y crear" },
+  { id: "2", text: "Aceptar" },
   { id: "3", text: "Rechazar" },
 ];
 
