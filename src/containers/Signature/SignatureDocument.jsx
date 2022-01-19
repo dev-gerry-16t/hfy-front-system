@@ -54,7 +54,7 @@ const ButtonSecondary = styled.div`
 
 const SignatureDocument = (props) => {
   const { callSetRequestExternalDS, callGetRequestExternalDS, match } = props;
-  const [viewContent, setViewContent] = useState(3);
+  const [viewContent, setViewContent] = useState(1);
   const [aceptTerms, setAceptTerms] = useState(false);
   const [visibleModal, setVisibleModal] = useState(false);
   const [signature, setSignature] = useState("");
