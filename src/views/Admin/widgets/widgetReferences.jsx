@@ -171,7 +171,9 @@ const Card = (props) => {
         </div>
         <div>
           <i className="fa fa-phone" />
-          <span>{number_format(phoneNumber)}</span>
+          <span>
+            {isNil(phoneNumber) === false ? number_format(phoneNumber) : ""}
+          </span>
         </div>
         <div>
           <i className="fa fa-envelope-o" />
