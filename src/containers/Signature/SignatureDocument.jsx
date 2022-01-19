@@ -15,6 +15,7 @@ import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import ENVIROMENT from "../../utils/constants/enviroments";
 import logo from "../../assets/img/logo.png";
 import CustomInput from "../../components/CustomInput";
+import CustomDialog from "../../components/CustomDialog";
 
 const FlexCenter = styled.div`
   display: flex;
@@ -53,8 +54,9 @@ const ButtonSecondary = styled.div`
 
 const SignatureDocument = (props) => {
   const { callSetRequestExternalDS, callGetRequestExternalDS, match } = props;
-  const [viewContent, setViewContent] = useState(1);
+  const [viewContent, setViewContent] = useState(3);
   const [aceptTerms, setAceptTerms] = useState(false);
+  const [visibleModal, setVisibleModal] = useState(false);
   const [signature, setSignature] = useState("");
   const [isFinishProcess, setIsFinishProcess] = useState(false);
   const [isSendCommentReject, setIsSendCommentReject] = useState(false);
@@ -421,11 +423,58 @@ const SignatureDocument = (props) => {
                 )}
                 {viewContent === 3 && (
                   <>
+                    <CustomDialog
+                      isVisibleDialog={visibleModal}
+                      onClose={() => {
+                        setVisibleModal(false);
+                      }}
+                      full="xl"
+                    >
+                      <div>
+                        <h2 style={{ textAlign: "center" }}>
+                          {isEmpty(dataForm.documentList) === false
+                            ? dataForm.documentList.documentName
+                            : ""}
+                        </h2>
+                        <div
+                          style={{ display: "flex", justifyContent: "center" }}
+                        >
+                          <div style={{ width: "90%" }}>
+                            <iframe
+                              sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
+                              title="Vista Documento Contrato"
+                              className="iframe-docx-hfy"
+                              src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataForm.url}&embedded=true`}
+                              height={500}
+                            ></iframe>
+                          </div>
+                        </div>
+                        <SectionButtons>
+                          <ButtonPrimary
+                            onClick={() => {
+                              setVisibleModal(false);
+                            }}
+                          >
+                            Cerrar
+                          </ButtonPrimary>
+                        </SectionButtons>
+                      </div>
+                    </CustomDialog>
                     <h2 style={{ textAlign: "center" }}>
                       {isEmpty(dataForm.documentList) === false
                         ? dataForm.documentList.documentName
                         : ""}
                     </h2>
+                    <div style={{ textAlign: "center" }}>
+                      <span
+                        style={{ cursor: "pointer" }}
+                        onClick={() => {
+                          setVisibleModal(true);
+                        }}
+                      >
+                        Ampliar
+                      </span>
+                    </div>
                     <iframe
                       sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
                       title="Vista Documento Contrato"
@@ -454,7 +503,7 @@ const SignatureDocument = (props) => {
                   <>
                     <div style={{ marginBottom: 15 }}>
                       <span>
-                        Si detectaste algún error en tu información, no estas de
+                        Si detectaste algún error en tu información, no estás de
                         acuerdo con lo establecido en el contrato o tienes dudas
                         sobre el proceso, ingresa la siguiente información y
                         pronto estaremos contactándote.

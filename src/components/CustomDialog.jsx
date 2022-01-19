@@ -4,9 +4,9 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { useTheme } from "@material-ui/core/styles";
 
 const CustomDialog = (props) => {
-  const { isVisibleDialog, onClose, children } = props;
+  const { isVisibleDialog, onClose, children, full = "sm" } = props;
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down(full));
   return (
     <Dialog open={isVisibleDialog} onClose={onClose} fullScreen={fullScreen}>
       {children}

@@ -290,7 +290,7 @@ const SectionCardOwners = (props) => {
       {isEmpty(ownerCoincidences) === true && finishCallApis === true && (
         <div className="empty-tenants">
           <img src={EmptyTenant} alt="" />
-          <span>Aún no estas postulado en alguna propiedad</span>
+          <span>Aún no estás postulado en alguna propiedad</span>
         </div>
       )}
     </div>
