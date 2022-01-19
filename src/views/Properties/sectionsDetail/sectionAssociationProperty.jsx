@@ -25,6 +25,13 @@ const MultiSelect = styled.div`
     justify-content: space-around;
     gap: 1em;
   }
+  @media screen and (max-width: 460px) {
+    .button-actions-select {
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: flex-start;
+    }
+  }
 `;
 
 const ButtonCheck = styled.button`
@@ -36,20 +43,30 @@ const ButtonCheck = styled.button`
   color: #000;
   font-weight: 500;
   padding: 0.5em 0.8em;
+  font-size: 14px;
   box-shadow: ${(props) =>
     props.select ? "0px 0px 5px 2px rgba(255, 0, 131, 0.15)" : "none"};
+  @media screen and (max-width: 460px) {
+    font-size: 12px;
+  }
 `;
 
 const catalogAssociation = [
   { id: "1", text: "Vincular con existente" },
-  { id: "2", text: "Aceptar y crear" },
+  { id: "2", text: "Vincular y crear" },
   { id: "3", text: "Rechazar" },
 ];
 
 const SectionAssociationProperty = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const {
+    dataDetail,
+    updateProperty,
+    getById,
+    isOpenComponent,
+    onCloseComponent,
+  } = dataContexProperty;
   const {
     fullAddress,
     idProperty,
@@ -126,12 +143,13 @@ const SectionAssociationProperty = (props) => {
 
   return (
     <Modal
-      visible={visibleModal}
+      visible={visibleModal || isOpenComponent === 8}
       closable={finishProcess === false}
       footer={false}
       style={{ top: 20 }}
       width={600}
       onCancel={() => {
+        onCloseComponent();
         if (finishProcess === false) {
           setVisibleModal(false);
         }
