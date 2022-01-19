@@ -79,7 +79,8 @@ const CardField = ({ onChange }) => (
 );
 
 const SectionOxxoPayment = (props) => {
-  const { dataProfile, callPostPaymentService, dataPayment } = props;
+  const { dataProfile, callPostPaymentService, dataPayment, onClickContinue } =
+    props;
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
@@ -172,9 +173,20 @@ const SectionOxxoPayment = (props) => {
         </div>
         <CardPayment>
           {paymentMethods === true && (
-            <PaymentPoster>
-              <h1>¡Esperamos pronto tu pago!</h1>
-            </PaymentPoster>
+            <>
+              <PaymentPoster>
+                <h1>¡Esperamos pronto tu pago!</h1>
+              </PaymentPoster>
+              <div className="button-payment">
+                <button
+                  onClick={() => {
+                    onClickContinue();
+                  }}
+                >
+                  Continuar
+                </button>
+              </div>
+            </>
           )}
           {paymentMethods !== true && (
             <>
