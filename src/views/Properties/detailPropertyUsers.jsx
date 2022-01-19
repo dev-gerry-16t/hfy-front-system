@@ -438,6 +438,15 @@ const DetailPropertyUsers = (props) => {
         />
         <SectionAssociationProperty history={history} />
         <SectionAssociationApplicant history={history} />
+        <div className="top-timeline-mobile">
+          <SectionTimeLine
+            history={history}
+            onOpenComponent={(id) => {
+              setIsOpenComponent(id);
+            }}
+            isOpenComponent={isOpenComponent}
+          />
+        </div>
         <ContentForm owner>
           <div className="back-button">
             <button
@@ -648,13 +657,15 @@ const DetailPropertyUsers = (props) => {
         </ContentForm>
 
         <ContentRight>
-          <SectionTimeLine
-            history={history}
-            onOpenComponent={(id) => {
-              setIsOpenComponent(id);
-            }}
-            isOpenComponent={isOpenComponent}
-          />
+          <div className="right-timeline-mobile">
+            <SectionTimeLine
+              history={history}
+              onOpenComponent={(id) => {
+                setIsOpenComponent(id);
+              }}
+              isOpenComponent={isOpenComponent}
+            />
+          </div>
           <SectionDocuments
             onReportClose={() => {
               setIsOpenComponent(null);

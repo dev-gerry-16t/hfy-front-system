@@ -210,7 +210,6 @@ const PropertiesOwner = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetPropertyCoincidencesV2(jsonConditionsState, paginationState);
     setDataUserRedirect({
       ...dataUserRedirect,
       backPathDirect: window.location.pathname,
@@ -348,7 +347,8 @@ const PropertiesOwner = (props) => {
         {isEmpty(dataCoincidences) === false && (
           <div className="total-coincidences">
             <h1>
-              Se encontraron <span>{totalCoincidences} propiedades</span>
+              Se encontraron <span>{totalCoincidences} propiedades</span> en{" "}
+              {frontFunctions.handlerGetOperationType(jsonConditionsState)}
             </h1>
           </div>
         )}

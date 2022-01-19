@@ -443,14 +443,18 @@ const DefaultLayout = (props) => {
 
     const socket = socketIOClient(ENVIROMENTSOCKET, {
       reconnectionDelayMax: 60000,
+      reconnectionAttempts: 5,
     });
-
     interval = setInterval(() => {
       socket.emit("user_subscribed", {
         idSystemUser: dataProfile.idSystemUser,
         idLoginHistory: dataProfile.idLoginHistory,
       });
     }, 30000);
+
+    socket.io.on("reconnect_failed", () => {
+      clearInterval(interval);
+    });
 
     socket.on("get_notification", (data) => {
       if (isEmpty(data) === false) {

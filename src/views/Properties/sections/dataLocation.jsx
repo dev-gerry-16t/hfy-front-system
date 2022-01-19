@@ -21,6 +21,7 @@ import CustomTextArea from "../../../components/customTextArea";
 import CustomMapContainer from "../../../components/customGoogleMaps";
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 import ComponentLoadSection from "../../../components/componentLoadSection";
+import ComponentInfoHeader from "../component/componentInfoHeader";
 
 const MultiSelect = styled.div`
   display: flex;
@@ -295,6 +296,7 @@ const SectionDataLocation = (props) => {
         <div className="header-title">
           <h1>Ubicación</h1>
         </div>
+        <ComponentInfoHeader text="Cuando publicas la propiedad solo mostramos código postal, estado, colonia, municipio o delegación y la ubicación en el mapa. La Calle, número exterior e interior son confidenciales y solo se usan para la generación de contratos de arrendamiento." />
         <FormProperty>
           <div className="label-indicator">
             <Row>
