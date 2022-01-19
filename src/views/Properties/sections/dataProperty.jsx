@@ -21,6 +21,7 @@ import {
 import { ReactComponent as Arrow } from "../../../assets/icons/Arrow.svg";
 import CustomInputSelect from "../../../components/customInputSelect";
 import ComponentLoadSection from "../../../components/componentLoadSection";
+import ComponentInfoHeader from "../component/componentInfoHeader";
 
 const { Option } = Select;
 
@@ -309,6 +310,11 @@ const SectionDataProperty = (props) => {
         <div className="header-title">
           <h1>Datos de propiedad</h1>
         </div>
+        <ComponentInfoHeader
+          text="La información de tu propiedad es privada y solo tú o las personas que
+      vincules podrán verla, al final si lo deseas puedes publicar tu propiedad
+      para recibir postulaciones de inquilinos."
+        />
         <FormProperty>
           <div className="label-indicator">
             <Row>
