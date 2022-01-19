@@ -386,7 +386,17 @@ const PaymentsService = (props) => {
                         stripe={stripePromise}
                         options={ELEMENTS_OPTIONS}
                       >
-                        <SectionOxxoPayment dataPayment={dataPayment} />
+                        <SectionOxxoPayment
+                          onClickContinue={() => {
+                            history.push(
+                              isEmpty(dataUserRedirect) === false &&
+                                isNil(dataUserRedirect.backPath) === false
+                                ? dataUserRedirect.backPath
+                                : dataProfile.path
+                            );
+                          }}
+                          dataPayment={dataPayment}
+                        />
                       </Elements>
                     )}
                   </div>
