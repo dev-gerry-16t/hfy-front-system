@@ -450,7 +450,7 @@ const DefaultLayout = (props) => {
         idSystemUser: dataProfile.idSystemUser,
         idLoginHistory: dataProfile.idLoginHistory,
       });
-    }, 30000);
+    }, 15000);
 
     socket.io.on("reconnect_failed", () => {
       clearInterval(interval);
