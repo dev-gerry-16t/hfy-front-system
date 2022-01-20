@@ -288,7 +288,6 @@ const SectionAssociationProperty = (props) => {
                         },
                         idProperty
                       );
-                      getById();
                       setNewInfoProperty(response);
                       setFinishProcess(true);
                       setIsLoadApi(false);
@@ -332,6 +331,7 @@ const SectionAssociationProperty = (props) => {
                   );
                 }
                 setVisibleModal(false);
+                getById();
               }}
             >
               Cerrar

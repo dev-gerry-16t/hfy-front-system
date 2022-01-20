@@ -17,6 +17,7 @@ const CardStepsY = styled.div`
 `;
 
 const Card = styled.div`
+  min-height: 96px;
   display: grid;
   grid-template-columns: 1fr 3fr;
   cursor: pointer;
