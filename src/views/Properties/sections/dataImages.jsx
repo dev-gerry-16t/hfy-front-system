@@ -142,7 +142,9 @@ const SectionDataImages = (props) => {
     idApartment,
     getById,
     onSaveImages = () => {},
+    onSaveImagesThumb = () => {},
     dataSaveImages,
+    dataSaveThumb,
     callAddDocumentThumb,
   } = props;
   const [count, setCount] = useState(0);
@@ -365,6 +367,7 @@ const SectionDataImages = (props) => {
             newCont
           );
           setImageThumb(objectPromiseThumb);
+          onSaveImagesThumb(objectPromiseThumb);
         }
         newCont = newCont + 1;
       }
@@ -576,6 +579,7 @@ const SectionDataImages = (props) => {
         setArrayImages([]);
       } else if (isNil(idProperty) === true) {
         setArrayImages(dataSaveImages);
+        setImageThumb(dataSaveThumb);
       }
     }
   }, [dataFormSave]);

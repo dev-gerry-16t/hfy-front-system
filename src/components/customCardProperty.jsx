@@ -246,7 +246,12 @@ const CustomCardProperty = (props) => {
     <Card id={id}>
       {isNil(currentTimeLine) === false && (
         <Tooltip placement="topLeft" title={dataTimeLine.description}>
-          <ProcessProperty id={`process-${id}`}>
+          <ProcessProperty
+            id={`process-${id}`}
+            onClick={() => {
+              onClickDetail();
+            }}
+          >
             {/* <IconProfile color="#fff" size="1em" /> */}
             <i className={dataTimeLine.style} />
             <span>En proceso de:</span>
@@ -276,7 +281,10 @@ const CustomCardProperty = (props) => {
                   <Menu.Item>
                     <a
                       target="_blank"
-                      href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(shortAddress,identifier)}`}
+                      href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(
+                        shortAddress,
+                        identifier
+                      )}`}
                     >
                       WhatsApp
                     </a>
@@ -285,7 +293,10 @@ const CustomCardProperty = (props) => {
                     <span
                       onClick={() => {
                         copyTextToClipboard(
-                          `${frontFunctions.parseUrlHomify(shortAddress,identifier)}`
+                          `${frontFunctions.parseUrlHomify(
+                            shortAddress,
+                            identifier
+                          )}`
                         );
                       }}
                     >

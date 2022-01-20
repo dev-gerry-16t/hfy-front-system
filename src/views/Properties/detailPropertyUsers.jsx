@@ -57,6 +57,19 @@ import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/ico
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
 
+const EmptyData = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  p {
+    color: rgba(78, 75, 102, 0.45);
+    font-weight: 700;
+    text-align: center;
+  }
+`;
+
 const dataTabsProperty = [
   {
     id: "1",
@@ -298,235 +311,237 @@ const DetailPropertyUsers = (props) => {
   }, [idProperty]);
 
   return (
-    <Content>
-      <Steps
-        enabled={isOpenComponent === 7}
-        steps={dataEnableIntro}
-        initialStep={0}
-        options={{
-          nextLabel: " >> ",
-          prevLabel: " << ",
-          doneLabel: "Finalizar",
-          hideNext: false,
-        }}
-        ref={stepsRef}
-        onBeforeChange={(nextStepIndex) => {}}
-        onComplete={() => {
-          setIsOpenComponent(null);
-        }}
-        onExit={() => {
-          setIsOpenComponent(null);
-        }}
-      />
-      <ContextProperty.Provider
-        value={{
-          isOpenComponent,
-          dataDetail,
-          updateProperty: async (data) => {
-            try {
-              await handlerCallUpdateProperty(data);
-            } catch (error) {
-              throw error;
-            }
-          },
-          onCloseComponent: () => {
-            setIsOpenComponent(null);
-          },
-          onGetConfigSteps: (config) => {
-            setDataEnableIntro(config);
-          },
-          getById: () => {
-            handlerCallGetPropertyById();
-          },
-        }}
-      >
-        <SectionAreYouOwner
-          visibleModal={isOpenComponent == 5}
-          onClose={() => {
-            setIsOpenComponent(null);
-          }}
-        />
-        <CustomModalMessage
-          isModalVisible={isVisibleDelete}
-          title="Eliminar propiedad"
-          subTitle="¿Estás seguro que deseas eliminar la propiedad?"
-          mainText="Al eliminar la propiedad perderás toda la información asociada a ella."
-          icon={
-            <InfoCircleOutlined
-              style={{
-                fontSize: 100,
-                color: "var(--color-primary)",
+    <>
+      {isEmpty(dataDetail) === false && (
+        <Content>
+          <Steps
+            enabled={isOpenComponent === 7}
+            steps={dataEnableIntro}
+            initialStep={0}
+            options={{
+              nextLabel: " >> ",
+              prevLabel: " << ",
+              doneLabel: "Finalizar",
+              hideNext: false,
+            }}
+            ref={stepsRef}
+            onBeforeChange={(nextStepIndex) => {}}
+            onComplete={() => {
+              setIsOpenComponent(null);
+            }}
+            onExit={() => {
+              setIsOpenComponent(null);
+            }}
+          />
+          <ContextProperty.Provider
+            value={{
+              isOpenComponent,
+              dataDetail,
+              updateProperty: async (data) => {
+                try {
+                  await handlerCallUpdateProperty(data);
+                } catch (error) {
+                  throw error;
+                }
+              },
+              onCloseComponent: () => {
+                setIsOpenComponent(null);
+              },
+              onGetConfigSteps: (config) => {
+                setDataEnableIntro(config);
+              },
+              getById: () => {
+                handlerCallGetPropertyById();
+              },
+            }}
+          >
+            <SectionAreYouOwner
+              visibleModal={isOpenComponent == 5}
+              onClose={() => {
+                setIsOpenComponent(null);
               }}
             />
-          }
-          labelLeft="Aceptar"
-          labelRight="Cancelar"
-          onClose={() => {
-            setIsVisibleDelete(false);
-          }}
-          onClickRight={() => {
-            setIsVisibleDelete(false);
-          }}
-          onClickLeft={async () => {
-            try {
-              await handlerCallUpdateProperty({
-                idApartment: dataDetail.idApartment,
-                isActive: false,
-                apartmentDocuments: handlerParseBackArray(
-                  dataDetail.apartmentDocuments
-                ),
-              });
-              if (
-                isNil(dataUserRedirect) === false &&
-                isEmpty(dataUserRedirect.backPathDirect) === false &&
-                isNil(dataUserRedirect.backPathDirect) === false
-              ) {
-                history.push(dataUserRedirect.backPathDirect);
-              } else {
-                history.push(`/websystem/dashboard-properties`);
+            <CustomModalMessage
+              isModalVisible={isVisibleDelete}
+              title="Eliminar propiedad"
+              subTitle="¿Estás seguro que deseas eliminar la propiedad?"
+              mainText="Al eliminar la propiedad perderás toda la información asociada a ella."
+              icon={
+                <InfoCircleOutlined
+                  style={{
+                    fontSize: 100,
+                    color: "var(--color-primary)",
+                  }}
+                />
               }
-            } catch (error) {
-              throw error;
-            }
-          }}
-        />
-        <CustomModalMessage
-          isModalVisible={isOpenComponent === 6}
-          title="Aplicar a la propiedad"
-          subTitle="¿Estás seguro que deseas aplicar a esta propiedad?"
-          mainText="Notificaremos al propietario sobre tu postulación, recibirás mayor información a través de tu correo electrónico una vez que tu propietario evalúe tu petición."
-          icon={<IconProperty width="200px" />}
-          labelLeft="Aceptar"
-          labelRight="Cancelar"
-          onClose={() => {
-            setIsOpenComponent(null);
-          }}
-          onClickRight={() => {
-            setIsOpenComponent(null);
-          }}
-          onClickLeft={async () => {
-            try {
-              await handlerCallApplyToProperty(
-                {
-                  idApartment: dataDetail.idApartment,
-                  identifier: dataDetail.identifier,
-                },
-                dataDetail.idProperty
-              );
-            } catch (error) {
-              throw error;
-            }
-          }}
-        />
-        <CustomValidationUser
-          isVisible={isOpenComponent == 4}
-          onClose={() => {
-            setIsOpenComponent(null);
-          }}
-          finished={() => {
-            setIsOpenComponent(null);
-          }}
-          metadata={{
-            idCustomer: dataProfile.idCustomer,
-          }}
-          clientId={dataProfile.clientId}
-          flowId={dataProfile.flowId}
-          finishedProcess={() => {
-            setIsOpenComponent(null);
-            handlerCallGetPropertyById();
-          }}
-        />
-        <SectionAssociationProperty history={history} />
-        <SectionAssociationApplicant history={history} />
-        <div className="top-timeline-mobile">
-          <SectionTimeLine
-            history={history}
-            onOpenComponent={(id) => {
-              setIsOpenComponent(id);
-            }}
-            isOpenComponent={isOpenComponent}
-          />
-        </div>
-        <ContentForm owner>
-          <div className="back-button">
-            <button
-              onClick={() => {
-                if (
-                  isNil(dataUserRedirect) === false &&
-                  isEmpty(dataUserRedirect.backPathDirect) === false &&
-                  isNil(dataUserRedirect.backPathDirect) === false
-                ) {
-                  history.push(dataUserRedirect.backPathDirect);
-                } else {
-                  history.push(`/websystem/dashboard-properties`);
+              labelLeft="Aceptar"
+              labelRight="Cancelar"
+              onClose={() => {
+                setIsVisibleDelete(false);
+              }}
+              onClickRight={() => {
+                setIsVisibleDelete(false);
+              }}
+              onClickLeft={async () => {
+                try {
+                  await handlerCallUpdateProperty({
+                    idApartment: dataDetail.idApartment,
+                    isActive: false,
+                    apartmentDocuments: handlerParseBackArray(
+                      dataDetail.apartmentDocuments
+                    ),
+                  });
+                  if (
+                    isNil(dataUserRedirect) === false &&
+                    isEmpty(dataUserRedirect.backPathDirect) === false &&
+                    isNil(dataUserRedirect.backPathDirect) === false
+                  ) {
+                    history.push(dataUserRedirect.backPathDirect);
+                  } else {
+                    history.push(`/websystem/dashboard-properties`);
+                  }
+                } catch (error) {
+                  throw error;
                 }
               }}
-            >
-              <Arrow width="25px" />
-            </button>
-          </div>
-          <div className="header-title">
-            <h1>Detalle de inmueble</h1>
-            <div className="shared-by-info">
-              {isNil(dataDetail.sharedBy) === false && (
-                <SharedByUser>
-                  Ficha compartida por {dataDetail.sharedBy}
-                </SharedByUser>
-              )}
-            </div>
-            <div
-              className="buttons-actions"
-              style={{
-                display: "flex",
+            />
+            <CustomModalMessage
+              isModalVisible={isOpenComponent === 6}
+              title="Aplicar a la propiedad"
+              subTitle="¿Estás seguro que deseas aplicar a esta propiedad?"
+              mainText="Notificaremos al propietario sobre tu postulación, recibirás mayor información a través de tu correo electrónico una vez que tu propietario evalúe tu petición."
+              icon={<IconProperty width="200px" />}
+              labelLeft="Aceptar"
+              labelRight="Cancelar"
+              onClose={() => {
+                setIsOpenComponent(null);
               }}
-              id="buttons-action-detail"
-            >
-              {dataDetail.isPublished === true && (
-                <Dropdown
-                  overlay={
-                    <Menu>
-                      <Menu.Item>
-                        <span
-                          onClick={() => {
-                            navigator.share({
-                              title: dataDetail.title,
-                              text: dataDetail.description,
-                              url: `${frontFunctions.parseUrlHomify(
+              onClickRight={() => {
+                setIsOpenComponent(null);
+              }}
+              onClickLeft={async () => {
+                try {
+                  await handlerCallApplyToProperty(
+                    {
+                      idApartment: dataDetail.idApartment,
+                      identifier: dataDetail.identifier,
+                    },
+                    dataDetail.idProperty
+                  );
+                } catch (error) {
+                  throw error;
+                }
+              }}
+            />
+            <CustomValidationUser
+              isVisible={isOpenComponent == 4}
+              onClose={() => {
+                setIsOpenComponent(null);
+              }}
+              finished={() => {
+                setIsOpenComponent(null);
+              }}
+              metadata={{
+                idCustomer: dataProfile.idCustomer,
+              }}
+              clientId={dataProfile.clientId}
+              flowId={dataProfile.flowId}
+              finishedProcess={() => {
+                setIsOpenComponent(null);
+                handlerCallGetPropertyById();
+              }}
+            />
+            <SectionAssociationProperty history={history} />
+            <SectionAssociationApplicant history={history} />
+            <div className="top-timeline-mobile">
+              <SectionTimeLine
+                history={history}
+                onOpenComponent={(id) => {
+                  setIsOpenComponent(id);
+                }}
+                isOpenComponent={isOpenComponent}
+              />
+            </div>
+            <ContentForm owner>
+              <div className="back-button">
+                <button
+                  onClick={() => {
+                    if (
+                      isNil(dataUserRedirect) === false &&
+                      isEmpty(dataUserRedirect.backPathDirect) === false &&
+                      isNil(dataUserRedirect.backPathDirect) === false
+                    ) {
+                      history.push(dataUserRedirect.backPathDirect);
+                    } else {
+                      history.push(`/websystem/dashboard-properties`);
+                    }
+                  }}
+                >
+                  <Arrow width="25px" />
+                </button>
+              </div>
+              <div className="header-title">
+                <h1>Detalle de inmueble</h1>
+                <div className="shared-by-info">
+                  {isNil(dataDetail.sharedBy) === false && (
+                    <SharedByUser>
+                      Ficha compartida por {dataDetail.sharedBy}
+                    </SharedByUser>
+                  )}
+                </div>
+                <div
+                  className="buttons-actions"
+                  style={{
+                    display: "flex",
+                  }}
+                  id="buttons-action-detail"
+                >
+                  {dataDetail.isPublished === true && (
+                    <Dropdown
+                      overlay={
+                        <Menu>
+                          <Menu.Item>
+                            <span
+                              onClick={() => {
+                                navigator.share({
+                                  title: dataDetail.title,
+                                  text: dataDetail.description,
+                                  url: `${frontFunctions.parseUrlHomify(
+                                    dataDetail.shortAddress,
+                                    dataDetail.identifier
+                                  )}`,
+                                });
+                              }}
+                            >
+                              Compartir
+                            </span>
+                          </Menu.Item>
+                          <Menu.Item>
+                            <a
+                              target="_blank"
+                              href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(
                                 dataDetail.shortAddress,
                                 dataDetail.identifier
-                              )}`,
-                            });
-                          }}
-                        >
-                          Compartir
-                        </span>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <a
-                          target="_blank"
-                          href={`https://wa.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${frontFunctions.parseUrlHomify(
-                            dataDetail.shortAddress,
-                            dataDetail.identifier
-                          )}`}
-                        >
-                          WhatsApp
-                        </a>
-                      </Menu.Item>
-                      <Menu.Item>
-                        <span
-                          onClick={() => {
-                            copyTextToClipboard(
-                              `${frontFunctions.parseUrlHomify(
-                                dataDetail.shortAddress,
-                                dataDetail.identifier
-                              )}`
-                            );
-                          }}
-                        >
-                          Copiar link
-                        </span>
-                      </Menu.Item>
-                      {/* <Menu.Item>
+                              )}`}
+                            >
+                              WhatsApp
+                            </a>
+                          </Menu.Item>
+                          <Menu.Item>
+                            <span
+                              onClick={() => {
+                                copyTextToClipboard(
+                                  `${frontFunctions.parseUrlHomify(
+                                    dataDetail.shortAddress,
+                                    dataDetail.identifier
+                                  )}`
+                                );
+                              }}
+                            >
+                              Copiar link
+                            </span>
+                          </Menu.Item>
+                          {/* <Menu.Item>
                       <a
                         target="_blank"
                         href={`http://m.me/?text=Te+invito+a+que+veas+esta+propiedad%0a${window.location.origin}/property/${dataDetail.identifier}`}
@@ -534,183 +549,202 @@ const DetailPropertyUsers = (props) => {
                         Facebook
                       </a>
                     </Menu.Item> */}
-                    </Menu>
-                  }
-                  placement="bottomLeft"
-                  arrow
-                >
-                  <ButtonIcon onClick={() => {}}>
-                    <IconShare
-                      color="var(--color-primary)"
-                      backGround="var(--color-primary)"
-                    />
-                  </ButtonIcon>
-                </Dropdown>
-              )}
-              {dataDetail.canBeFavorite === true && (
-                <ButtonIcon
-                  onClick={async () => {
-                    try {
-                      await handlerCallSetFavoriteProperty(
-                        {
-                          idApartment: dataDetail.idApartment,
-                          identifier: dataDetail.identifier,
-                        },
-                        dataDetail.idProperty
-                      );
-                      handlerCallGetPropertyById();
-                    } catch (error) {}
-                  }}
-                >
-                  <IconHeart
-                    backGround={
-                      dataDetail.isFavorite === true
-                        ? "var(--color-primary)"
-                        : "transparent"
-                    }
-                    color="var(--color-primary)"
-                  />
-                </ButtonIcon>
-              )}
-              {dataDetail.isOwner === true && (
-                <ButtonIcon
-                  onClick={() => {
-                    setIsVisibleDelete(true);
-                  }}
-                >
-                  <IconDelete
-                    backGround="transparent"
-                    color="var(--color-primary)"
-                  />
-                </ButtonIcon>
-              )}
-              {dataDetail.canBeEdited === true && (
-                <ButtonIcon
-                  onClick={async () => {
-                    history.push(`/websystem/edit-property/${idProperty}`);
-                  }}
-                >
-                  <IconEditSquare
-                    backGround="transparent"
-                    color="var(--color-primary)"
-                  />
-                </ButtonIcon>
-              )}
-            </div>
-          </div>
-          <div>
-            <SectionCarouselInfo
-              apartmentImages={
-                isNil(dataDetail) === false &&
-                isNil(dataDetail.apartmentDocuments) === false
-                  ? JSON.parse(dataDetail.apartmentDocuments)
-                  : []
-              }
-            />
-            <ContainerDown>
-              <TabsProperty>
-                {dataTabsProperty.map((row) => {
-                  return (
-                    <Tab
-                      selected={tabSelect === row.id}
-                      onClick={() => {
-                        setTabSelect(row.id);
+                        </Menu>
+                      }
+                      placement="bottomLeft"
+                      arrow
+                    >
+                      <ButtonIcon onClick={() => {}}>
+                        <IconShare
+                          color="var(--color-primary)"
+                          backGround="var(--color-primary)"
+                        />
+                      </ButtonIcon>
+                    </Dropdown>
+                  )}
+                  {dataDetail.canBeFavorite === true && (
+                    <ButtonIcon
+                      onClick={async () => {
+                        try {
+                          await handlerCallSetFavoriteProperty(
+                            {
+                              idApartment: dataDetail.idApartment,
+                              identifier: dataDetail.identifier,
+                            },
+                            dataDetail.idProperty
+                          );
+                          handlerCallGetPropertyById();
+                        } catch (error) {}
                       }}
                     >
-                      <h1>{row.text}</h1>
-                      <hr />
-                    </Tab>
-                  );
-                })}
-              </TabsProperty>
-              {tabSelect === "1" && <SectionFeatures />}
-              {tabSelect === "2" && <SectionLocation />}
-              {tabSelect === "3" && <SectionAmenities />}
-              {dataDetail.isOwner === true && (
-                <SeparateServices>
-                  <div className="services-header" id="requirement-property">
-                    <h1>Requisitos de la Propiedad</h1>
-                    <p>
-                      Establece los requisitos de tu propiedad, puedes solicitar
-                      que tus prospectos apliquen para una de nuestras Pólizas
-                      Jurídicas o bien, puedes establecer cualquiera de los
-                      procesos disponibles para ti.
-                    </p>
-                  </div>
-                  <SectionPolicy
-                    onClickViewPolicy={() => {
-                      history.push(`/websystem/select-policy/${idProperty}`);
-                    }}
-                    idUserType={dataProfile.idUserType}
-                  />
-                  <SectionServiceAgent
-                    dataApplication={dataApplicationMethod}
-                    onClickViewPolicy={() => {
-                      history.push(`/websystem/select-policy/${idProperty}`);
-                    }}
-                  />
-                </SeparateServices>
-              )}
-              {dataProfile.idUserType !== 2 && <SectionPublicProperty />}
-            </ContainerDown>
-          </div>
-        </ContentForm>
-
-        <ContentRight>
-          <div className="right-timeline-mobile">
-            <SectionTimeLine
-              history={history}
-              onOpenComponent={(id) => {
-                setIsOpenComponent(id);
-              }}
-              isOpenComponent={isOpenComponent}
-            />
-          </div>
-          <SectionDocuments
-            onReportClose={() => {
-              setIsOpenComponent(null);
-            }}
-          />
-          {dataProfile.idUserType !== 2 && (
-            <>
-              {((isNil(dataDetail.sharedBy) === false &&
-                isEmpty(dataDetail.sharedBy) === false) ||
-                dataDetail.isOwner === true) && <SectionApplicants />}
-              {dataDetail.isOwner === true && (
-                <SectionAgents idUserType={dataProfile.idUserType} />
-              )}
-            </>
-          )}
-          {isNil(dataDetail.ownerEmailAddress) === false &&
-            dataProfile.idUserType === 4 && (
-              <GeneralCard>
-                <div className="header-title">
-                  <h1>Propietario</h1>
+                      <IconHeart
+                        backGround={
+                          dataDetail.isFavorite === true
+                            ? "var(--color-primary)"
+                            : "transparent"
+                        }
+                        color="var(--color-primary)"
+                      />
+                    </ButtonIcon>
+                  )}
+                  {dataDetail.isOwner === true && (
+                    <ButtonIcon
+                      onClick={() => {
+                        setIsVisibleDelete(true);
+                      }}
+                    >
+                      <IconDelete
+                        backGround="transparent"
+                        color="var(--color-primary)"
+                      />
+                    </ButtonIcon>
+                  )}
+                  {dataDetail.canBeEdited === true && (
+                    <ButtonIcon
+                      onClick={async () => {
+                        history.push(`/websystem/edit-property/${idProperty}`);
+                      }}
+                    >
+                      <IconEditSquare
+                        backGround="transparent"
+                        color="var(--color-primary)"
+                      />
+                    </ButtonIcon>
+                  )}
                 </div>
-                <div className="content-card">
-                  <Card>
-                    <div className="card-user">
-                      <div className="top-info">
-                        <div className="icon-info">
-                          <IconTenant size="100%" color="#4E4B66" />
-                        </div>
-                        <div className="name-info">
-                          <h3>
-                            {dataDetail.ownerGivenName}{" "}
-                            {dataDetail.ownerLastName}
-                          </h3>
-                          <span>{dataDetail.ownerEmailAddress}</span>
-                          <span>{dataDetail.ownerPhoneNumber}</span>
-                        </div>
+              </div>
+              <div>
+                <SectionCarouselInfo
+                  apartmentImages={
+                    isNil(dataDetail) === false &&
+                    isNil(dataDetail.apartmentDocuments) === false
+                      ? JSON.parse(dataDetail.apartmentDocuments)
+                      : []
+                  }
+                />
+                <ContainerDown>
+                  <TabsProperty>
+                    {dataTabsProperty.map((row) => {
+                      return (
+                        <Tab
+                          selected={tabSelect === row.id}
+                          onClick={() => {
+                            setTabSelect(row.id);
+                          }}
+                        >
+                          <h1>{row.text}</h1>
+                          <hr />
+                        </Tab>
+                      );
+                    })}
+                  </TabsProperty>
+                  {tabSelect === "1" && <SectionFeatures />}
+                  {tabSelect === "2" && <SectionLocation />}
+                  {tabSelect === "3" && <SectionAmenities />}
+                  {dataDetail.isOwner === true && (
+                    <SeparateServices>
+                      <div
+                        className="services-header"
+                        id="requirement-property"
+                      >
+                        <h1>Requisitos de la Propiedad</h1>
+                        <p>
+                          Establece los requisitos de tu propiedad, puedes
+                          solicitar que tus prospectos apliquen para una de
+                          nuestras Pólizas Jurídicas o bien, puedes establecer
+                          cualquiera de los procesos disponibles para ti.
+                        </p>
                       </div>
+                      <SectionPolicy
+                        onClickViewPolicy={() => {
+                          history.push(
+                            `/websystem/select-policy/${idProperty}`
+                          );
+                        }}
+                        idUserType={dataProfile.idUserType}
+                      />
+                      <SectionServiceAgent
+                        dataApplication={dataApplicationMethod}
+                        onClickViewPolicy={() => {
+                          history.push(
+                            `/websystem/select-policy/${idProperty}`
+                          );
+                        }}
+                      />
+                    </SeparateServices>
+                  )}
+                  {dataProfile.idUserType !== 2 && <SectionPublicProperty />}
+                </ContainerDown>
+              </div>
+            </ContentForm>
+
+            <ContentRight>
+              <div className="right-timeline-mobile">
+                <SectionTimeLine
+                  history={history}
+                  onOpenComponent={(id) => {
+                    setIsOpenComponent(id);
+                  }}
+                  isOpenComponent={isOpenComponent}
+                />
+              </div>
+              <SectionDocuments
+                onReportClose={() => {
+                  setIsOpenComponent(null);
+                }}
+              />
+              {dataProfile.idUserType !== 2 && (
+                <>
+                  {((isNil(dataDetail.sharedBy) === false &&
+                    isEmpty(dataDetail.sharedBy) === false) ||
+                    dataDetail.isOwner === true) && <SectionApplicants />}
+                  {dataDetail.isOwner === true && (
+                    <SectionAgents idUserType={dataProfile.idUserType} />
+                  )}
+                </>
+              )}
+              {isNil(dataDetail.ownerEmailAddress) === false &&
+                dataProfile.idUserType === 4 && (
+                  <GeneralCard>
+                    <div className="header-title">
+                      <h1>Propietario</h1>
                     </div>
-                  </Card>
-                </div>
-              </GeneralCard>
-            )}
-        </ContentRight>
-      </ContextProperty.Provider>
-    </Content>
+                    <div className="content-card">
+                      <Card>
+                        <div className="card-user">
+                          <div className="top-info">
+                            <div className="icon-info">
+                              <IconTenant size="100%" color="#4E4B66" />
+                            </div>
+                            <div className="name-info">
+                              <h3>
+                                {dataDetail.ownerGivenName}{" "}
+                                {dataDetail.ownerLastName}
+                              </h3>
+                              <span>{dataDetail.ownerEmailAddress}</span>
+                              <span>{dataDetail.ownerPhoneNumber}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </Card>
+                    </div>
+                  </GeneralCard>
+                )}
+            </ContentRight>
+          </ContextProperty.Provider>
+        </Content>
+      )}
+      {isEmpty(dataDetail) === true && (
+        <EmptyData>
+          <img
+            width="150"
+            src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296S.png"
+            alt=""
+          />
+          <p>Oops!, parece que este inmueble ya no está disponible :(</p>
+        </EmptyData>
+      )}
+    </>
   );
 };
 

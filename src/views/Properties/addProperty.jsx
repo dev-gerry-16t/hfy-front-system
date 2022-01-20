@@ -37,6 +37,8 @@ const AddProperty = (props) => {
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
+  const [dataSaveThumb, setDataSaveThumb] = useState({});
+
   const [dataSaveFeatures, setDataSaveFeatures] = useState({
     propertyAmenities: [],
     propertyGeneralCharacteristics: [],
@@ -210,7 +212,11 @@ const AddProperty = (props) => {
           onSaveImages={(arrayImages) => {
             setDataSaveImages(arrayImages);
           }}
+          onSaveImagesThumb={(data) => {
+            setDataSaveThumb(data);
+          }}
           dataSaveImages={dataSaveImages}
+          dataSaveThumb={dataSaveThumb}
           redirect={(id) => {
             history.push(`/websystem/detail-property-users/${id}`);
           }}
