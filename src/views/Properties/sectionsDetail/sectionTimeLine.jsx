@@ -55,7 +55,6 @@ const GeneralCard = styled.div`
 `;
 
 const Card = styled.div`
-  height: 96px;
   display: grid;
   grid-template-columns: 1fr 3fr;
   cursor: pointer;
@@ -63,16 +62,19 @@ const Card = styled.div`
     props.finish === false && props.select === false ? "0.3" : "1"};
   .content-icon {
     display: flex;
-    justify-content: center;
-    position: relative;
+    flex-direction: column;
+    align-items: center;
     cursor: pointer;
-    .line-dashed-y {
-      position: absolute;
-      border: ${(props) =>
-        props.finish === true ? "2px dashed #ff0282" : "2px dashed #FCDDEC"};
-      transform: rotate(90deg);
-      top: 66px;
-      width: 50px;
+    .line-dashed-y-wrap {
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      .line-dashed-y {
+        width: 2px;
+        height: 100%;
+        border-left: ${(props) =>
+          props.finish === true ? "2px dashed #ff0282" : "2px dashed #FCDDEC"};
+      }
     }
   }
   .info-step {
@@ -140,7 +142,9 @@ const CardStep = ({ title, description, finish, select, icon, onClick }) => {
             <i className={finish === true ? "fa fa-check" : icon}></i>
           </div>
         </IconStep>
-        <div className="line-dashed-y"></div>
+        <div className="line-dashed-y-wrap">
+          <div className="line-dashed-y"></div>
+        </div>
       </div>
       <div className="info-step">
         <h1>{title}</h1>

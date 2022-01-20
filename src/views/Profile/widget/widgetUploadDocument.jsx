@@ -303,12 +303,13 @@ const WidgetUploadDocument = (props) => {
                       )}
                       {isNil(row.idDocument) === false && (
                         <div className="content-file-preview">
-                          {row.extension === "jpg" && (
-                            <img
-                              src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
-                              alt="preview"
-                            />
-                          )}
+                          {row.extension !== "pdf" &&
+                            row.extension !== "docx" && (
+                              <img
+                                src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
+                                alt="preview"
+                              />
+                            )}
                           {row.extension === "pdf" && (
                             <i className="fa fa-file-pdf-o" />
                           )}
@@ -382,12 +383,13 @@ const WidgetUploadDocument = (props) => {
                       )}
                       {isNil(row.idDocument) === false && (
                         <div className="content-file-preview">
-                          {row.extension === "jpg" && (
-                            <img
-                              src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
-                              alt="preview"
-                            />
-                          )}
+                          {row.extension !== "pdf" &&
+                            row.extension !== "docx" && (
+                              <img
+                                src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}/${row.extension}`}
+                                alt="preview"
+                              />
+                            )}
                           {row.extension === "pdf" && (
                             <i className="fa fa-file-pdf-o" />
                           )}
