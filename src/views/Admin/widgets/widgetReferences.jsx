@@ -26,6 +26,9 @@ const CardReference = styled.div`
     gap: 5px;
     padding: 0px 0.8em 0.8em 0.8em;
   }
+  @media screen and (max-width: 1320px) {
+    width: 100%;
+  }
 `;
 
 const ButtonHeader = styled.button`
@@ -383,6 +386,7 @@ const WidgetReferences = ({
                 <div className="info-reference">
                   <strong>Dirección</strong>
                   <span>{row.fullAddress}</span>
+                  <span>{row.identifier}</span>
                 </div>
               </CardReference>
             );

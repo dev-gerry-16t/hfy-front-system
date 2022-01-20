@@ -1048,7 +1048,7 @@ const SectionAvalInformation = (props) => {
                                 endorsementStreetNumber: value,
                               });
                             }}
-                            type="number"
+                            type="text"
                           />
                         </Col>
                         <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -1065,7 +1065,7 @@ const SectionAvalInformation = (props) => {
                                 endorsementSuite: value,
                               });
                             }}
-                            type="number"
+                            type="text"
                           />
                         </Col>
                       </Row>
@@ -1267,7 +1267,7 @@ const SectionAvalInformation = (props) => {
                                   collateralPropertyStreetNumber: value,
                                 });
                               }}
-                              type="number"
+                              type="text"
                             />
                           </Col>
                           <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -1284,7 +1284,7 @@ const SectionAvalInformation = (props) => {
                                   collateralPropertySuite: value,
                                 });
                               }}
-                              type="number"
+                              type="text"
                             />
                           </Col>
                         </Row>
