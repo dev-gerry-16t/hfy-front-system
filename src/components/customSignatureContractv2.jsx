@@ -99,10 +99,10 @@ const CustomSignatureContractV2 = ({
                             digitalSignature: signature,
                           });
                           signatureRef.current.clear();
-                          setIsLoadApi(false);
                           setAceptTerms(false);
                           setViewSignatureMovement(false);
                           onClose();
+                          setIsLoadApi(false);
                         }
                       } catch (error) {
                         setIsLoadApi(false);
