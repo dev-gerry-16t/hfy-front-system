@@ -22,6 +22,7 @@ const GeneralCard = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 0.5em;
+  display: ${(props) => (props.visible === true ? "block" : "none")};
   .header-title {
     border-bottom: 0.5px solid #4e4b66;
     display: flex;
@@ -173,6 +174,7 @@ const SectionTimeLine = (props) => {
     setDataUserRedirect,
     onOpenComponent,
     isOpenComponent,
+    dataTimeLine,
   } = props;
   const { dataApplication } = props;
   const dataContexProperty = useContext(ContextProperty);
@@ -183,92 +185,49 @@ const SectionTimeLine = (props) => {
     onGetConfigSteps = () => {},
   } = dataContexProperty;
   const { idProperty, idApartment } = dataDetail;
-  const [dataTimeLine, setDataTimeLine] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
   const frontFunctions = new FrontFunctions();
 
-  // const icons = {
-  //   IconIn,
-  //   IconOut,
-  // };
-
-  const handlerCallGetCustomerTimeLine = async () => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
-    try {
-      const response = await callGlobalActionApi(
-        {
-          idCustomer,
-          idSystemUser,
-          idLoginHistory,
-          idProperty,
-          idApartment,
-        },
-        null,
-        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TIME_LINE
-      );
-      const responseResult =
-        isEmpty(response) === false &&
-        isNil(response.response) === false &&
-        isEmpty(response.response) === false
-          ? response.response
-          : [];
-      setDataTimeLine(responseResult);
-    } catch (error) {
-      frontFunctions.showMessageStatusApi(
-        error,
-        GLOBAL_CONSTANTS.STATUS_API.ERROR
-      );
-    }
-  };
-
-  useEffect(() => {
-    if (isEmpty(dataDetail) === false && isNil(isOpenComponent) === true) {
-      handlerCallGetCustomerTimeLine();
-    }
-  }, [dataDetail, isOpenComponent]);
-
   return (
-    <>
-      {isEmpty(dataTimeLine) === false && (
-        <GeneralCard id="timeline-process">
-          <div className="header-title">
-            <h1>Proceso</h1>
-          </div>
-          <div className="content-card">
-            <CardStepsY>
-              {dataTimeLine.map((row) => {
-                return (
-                  <CardStep
-                    title={row.title}
-                    description={row.description}
-                    icon={row.style}
-                    finish={row.isCompleted}
-                    select={row.isCurrent}
-                    onClick={async () => {
-                      if (isEmpty(row.stepAdditionalConfig) === false) {
-                        const configIntro = JSON.parse(
-                          row.stepAdditionalConfig
-                        );
-                        onGetConfigSteps(configIntro);
-                      }
-                      if (isNil(row.path) === false) {
-                        await setDataUserRedirect({
-                          backPath: window.location.pathname,
-                        });
-                        history.push(row.path);
-                      }
-                      if (row.isCurrent === true) {
-                        onOpenComponent(row.idComponent);
-                      }
-                    }}
-                  />
-                );
-              })}
-            </CardStepsY>
-          </div>
-        </GeneralCard>
-      )}
-    </>
+    <GeneralCard
+      visible={isEmpty(dataTimeLine) === false}
+      id="timeline-process"
+    >
+      <div className="header-title">
+        <h1>Proceso</h1>
+      </div>
+      <div className="content-card">
+        <CardStepsY>
+          {isEmpty(dataTimeLine) === false &&
+            dataTimeLine.map((row) => {
+              return (
+                <CardStep
+                  title={row.title}
+                  description={row.description}
+                  icon={row.style}
+                  finish={row.isCompleted}
+                  select={row.isCurrent}
+                  onClick={async () => {
+                    if (isEmpty(row.stepAdditionalConfig) === false) {
+                      const configIntro = JSON.parse(row.stepAdditionalConfig);
+                      onGetConfigSteps(configIntro);
+                    }
+                    if (isNil(row.path) === false) {
+                      await setDataUserRedirect({
+                        backPath: window.location.pathname,
+                      });
+                      history.push(row.path);
+                    }
+                    if (row.isCurrent === true) {
+                      onOpenComponent(row.idComponent);
+                    }
+                  }}
+                />
+              );
+            })}
+        </CardStepsY>
+      </div>
+    </GeneralCard>
   );
 };
 

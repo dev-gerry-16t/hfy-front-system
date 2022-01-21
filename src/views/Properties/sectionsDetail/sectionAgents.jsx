@@ -194,7 +194,7 @@ const SectionAgents = (props) => {
         }}
       />
       <div className="header-title">
-        <h1>Agentes</h1>
+        <h1>Asesores</h1>
         <button
           id="section-agents-add"
           onClick={() => {
