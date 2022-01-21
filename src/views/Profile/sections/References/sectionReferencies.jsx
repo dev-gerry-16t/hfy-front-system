@@ -153,11 +153,7 @@ const SectionReferences = (props) => {
                 Por favor llena todos los campos correspondientes de tu
                 referencia.
                 <br />
-                Recuerda que no deben de vivir en el mismo domicilio.
-                <br />
-                Si la dirección donde actualmente resides es propia, entonces
-                deberás de agregar como mínimo tres referencias, caso contrario
-                deberás de proporcionar un mínimo de dos.
+                Recuerda que debes de agregar un mínimo de dos referencias.
               </span>
             </Col>
           </Row>
