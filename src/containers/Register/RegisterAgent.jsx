@@ -806,7 +806,7 @@ const RegisterAgent = (props) => {
                   history.push("/login");
                 }}
               >
-                Ir al login
+                Iniciar sesión
               </ButtonAction>
             </div>
           </ContainerExitRegister>

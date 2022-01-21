@@ -288,6 +288,31 @@ const SectionComision = styled.div`
       input[type="checkbox"]:checked::before {
         transform: scale(1);
       }
+      input[type="radio"] {
+        appearance: none;
+        background-color: #fff;
+        margin-right: 5px;
+        font: inherit;
+        color: var(--color-primary);
+        width: 1.15em;
+        height: 1.15em;
+        border: 1px solid var(--color-primary);
+        border-radius: 50%;
+        display: inline-grid;
+        place-content: center;
+      }
+      input[type="radio"]::before {
+        content: "";
+        width: 0.65em;
+        height: 0.65em;
+        border-radius: 50%;
+        transform: scale(0);
+        transition: 120ms transform ease-in-out;
+        box-shadow: inset 1em 1em var(--color-primary);
+      }
+      input[type="radio"]:checked::before {
+        transform: scale(1);
+      }
     }
   }
   @media screen and (max-width: 420px) {
@@ -890,7 +915,7 @@ const SelectPolicy = (props) => {
           </div>
           <ContentMethod>
             <div className="section-method">
-              <h3>Elige cómo se pagara la póliza</h3>
+              <h3>Elige cómo se pagará la póliza</h3>
               {isEmpty(dataPolicyMethods) === false &&
                 dataPolicyMethods.map((row) => {
                   return (
@@ -937,7 +962,7 @@ const SelectPolicy = (props) => {
           <SectionComision>
             <div className="section-comision">
               <div className="comision">
-                <strong>Comisión para el asesor</strong>{" "}
+                <strong>Comisión para el asesor (Póliza jurídica)</strong>{" "}
                 <span>
                   {frontFunctions.parseFormatCurrency(
                     amountTotalPolicy.amount * dataDetail.adviserCommissionBase,
@@ -947,17 +972,38 @@ const SelectPolicy = (props) => {
                   {amountTotalPolicy.isoCode}
                 </span>
               </div>
-              <label className="input-checkbox">
-                <input
-                  type="checkbox"
-                  id="cbox1"
-                  value="first_checkbox"
-                  onChange={(e) => {
-                    setShareCommission(e.target.checked);
-                  }}
-                />{" "}
-                Compartir comisión
-              </label>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "10px",
+                }}
+              >
+                <label className="input-checkbox">
+                  <input
+                    type="radio"
+                    id="cbox1"
+                    name="commision"
+                    value="first_checkbox"
+                    onChange={(e) => {
+                      setShareCommission(false);
+                    }}
+                  />{" "}
+                  No compartir comisión
+                </label>
+                <label className="input-checkbox">
+                  <input
+                    type="radio"
+                    id="cbox2"
+                    name="commision"
+                    value="second_checkbox"
+                    onChange={(e) => {
+                      setShareCommission(e.target.checked);
+                    }}
+                  />{" "}
+                  Compartir comisión
+                </label>
+              </div>
             </div>
           </SectionComision>
           <Slide left collapse when={shareCommission === true}>

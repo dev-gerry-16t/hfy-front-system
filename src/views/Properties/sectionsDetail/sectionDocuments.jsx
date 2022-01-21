@@ -393,7 +393,7 @@ const SectionDocuments = (props) => {
                               }
                             }}
                           >
-                            Ver detalle
+                            Ver documento
                           </ButtonDocument>
                         )}
                         {row.canBeDownload == true && (
