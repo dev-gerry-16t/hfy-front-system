@@ -12,6 +12,8 @@ import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 import { GeneralCard } from "../constants/styleConstants";
+import { ReactComponent as IconAgent } from "../../../assets/iconSvg/svgFile/iconAgent.svg";
+
 
 const Card = styled.div`
   background: #ffffff;
@@ -215,7 +217,7 @@ const SectionAgents = (props) => {
                   <div className="card-user">
                     <div className="top-info">
                       <div className="icon-info">
-                        <IconTenant size="100%" color="#4E4B66" />
+                        <IconAgent size="100%" color="#4E4B66" />
                       </div>
                       <div className="name-info">
                         <h3>

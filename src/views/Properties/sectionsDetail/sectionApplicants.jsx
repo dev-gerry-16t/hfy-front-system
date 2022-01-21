@@ -9,6 +9,7 @@ import ContextProperty from "../context/contextProperty";
 import ComponentAddCandidate from "../component/componentAddCandidate";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import ENVIROMENT from "../../../utils/constants/enviroments";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import ComponentLoadSection from "../../../components/componentLoadSection";
@@ -19,9 +20,10 @@ import { useEffect } from "react";
 
 const CardStatus = styled.div`
   position: relative;
-  background: #ff0606;
+  background: ${(props) =>
+    isNil(props.color) === false ? props.color : "#A0A3BD"};
   width: 16px;
-  border-radius: 4px 0px 0px 4px;
+  border-radius: 4px 0px 0px 0px;
   height: 150px;
   display: flex;
   flex-direction: column;
@@ -101,6 +103,12 @@ const Card = styled.div`
         margin-right: 20px;
         border-radius: 5px;
         position: relative;
+        img {
+          width: 60px;
+          height: 60px;
+          object-fit: contain;
+          border-radius: 5px;
+        }
         .score {
           position: absolute;
           width: 40px;
@@ -188,7 +196,7 @@ const ContentDetail = styled.div`
   max-height: ${(props) => (props.visible === true ? "500px" : "0px")};
   overflow: hidden;
   font-size: 12px;
-  padding: ${(props) => (props.visible === true ? "15px" : "0px")};
+  padding: ${(props) => (props.visible === true ? "15px 25px" : "0px")};
   border-top: 0.3px solid #bdbdbd;
   transition: all 0.4s ease-in-out;
   .title-desc {
@@ -343,7 +351,7 @@ const SectionApplicants = (props) => {
                   }`}
                 >
                   <div className="all-content-pre-info">
-                    <CardStatus>
+                    <CardStatus color={row.style}>
                       <div className="status-prospect">
                         <span>{row.applicantStatus}</span>
                       </div>
@@ -351,7 +359,14 @@ const SectionApplicants = (props) => {
                     <div className="card-user">
                       <div className="top-info">
                         <div className="icon-info">
-                          <IconTenant size="100%" color="#4E4B66" />
+                          {isNil(row.idDocument) === false &&
+                          isNil(row.bucketSource) === false ? (
+                            <img
+                              src={`${ENVIROMENT}/api/viewFile/${row.idDocument}/${row.bucketSource}`}
+                            />
+                          ) : (
+                            <IconTenant size="100%" color="#4E4B66" />
+                          )}
                           {isNil(row.score) === false && (
                             <div className="score">
                               <span>Score</span>

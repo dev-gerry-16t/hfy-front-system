@@ -54,6 +54,7 @@ import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
+import { ReactComponent as IconOwner } from "../../assets/iconSvg/svgFile/iconOwner.svg";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
 
@@ -714,7 +715,7 @@ const DetailPropertyUsers = (props) => {
                         <div className="card-user">
                           <div className="top-info">
                             <div className="icon-info">
-                              <IconTenant size="100%" color="#4E4B66" />
+                              <IconOwner size="100%" color="#4E4B66" />
                             </div>
                             <div className="name-info">
                               <h3>
