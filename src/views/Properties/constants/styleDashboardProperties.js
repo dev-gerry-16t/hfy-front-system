@@ -194,8 +194,8 @@ const Content = styled.div`
       display: none;
     }
     .top-timeline-mobile {
-    display: block;
-  }
+      display: block;
+    }
   }
   @media screen and (max-width: 500px) {
     padding: 1em 5px;

@@ -65,6 +65,7 @@ const DetailPropertyUsers = (props) => {
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
   const [isOpenComponent, setIsOpenComponent] = useState(null);
+  const [dataTimeLine, setDataTimeLine] = useState([]);
   const [idProperty, setIdProperty] = useState(
     params.idProperty.length > 30 ? params.idProperty : null
   );
@@ -73,6 +74,35 @@ const DetailPropertyUsers = (props) => {
   );
   const [tabSelect, setTabSelect] = useState("1");
   const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetCustomerTimeLine = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          idProperty: data.idProperty,
+          idApartment: data.idApartment,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TIME_LINE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataTimeLine(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
 
   const handlerCallGetPropertyById = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -97,6 +127,10 @@ const DetailPropertyUsers = (props) => {
           ? response.response[0][0]
           : {};
       setDataDetail(responseResult);
+      handlerCallGetCustomerTimeLine({
+        idProperty: responseResult.idProperty,
+        idApartment: responseResult.idApartment,
+      });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -239,6 +273,16 @@ const DetailPropertyUsers = (props) => {
   useEffect(() => {
     handlerCallGetPropertyById();
   }, [identifier, idProperty]);
+
+  useEffect(() => {
+    if (isEmpty(dataDetail) === false && isNil(isOpenComponent) === true) {
+      handlerCallGetCustomerTimeLine({
+        idProperty: dataDetail.idProperty,
+        idApartment: dataDetail.idApartment,
+      });
+    }
+  }, [isOpenComponent]);
+
   return (
     <>
       {isEmpty(dataDetail) === false && (
@@ -432,6 +476,7 @@ const DetailPropertyUsers = (props) => {
                   setIsOpenComponent(id);
                 }}
                 isOpenComponent={isOpenComponent}
+                dataTimeLine={dataTimeLine}
               />
               <GeneralCard>
                 <div className="header-title">

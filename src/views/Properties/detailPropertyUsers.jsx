@@ -54,8 +54,10 @@ import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
 import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
+import { ReactComponent as IconOwner } from "../../assets/iconSvg/svgFile/iconOwner.svg";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
+import { stepAgent, stepAgentTop } from "./constants/stepsProperty";
 
 const EmptyData = styled.div`
   display: flex;
@@ -92,12 +94,43 @@ const DetailPropertyUsers = (props) => {
   const [idProperty, setIdProperty] = useState(params.idProperty);
   const [isVisibleDelete, setIsVisibleDelete] = useState(false);
   const [isOpenComponent, setIsOpenComponent] = useState(null);
+  const [isVisibleIntro, setIsVisibleIntro] = useState(false);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [dataEnableIntro, setDataEnableIntro] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
+  const [dataTimeLine, setDataTimeLine] = useState([]);
   const stepsRef = useRef(null);
   const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetCustomerTimeLine = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          idProperty: data.idProperty,
+          idApartment: data.idApartment,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_TIME_LINE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataTimeLine(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
 
   const handlerCallGetPropertyById = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -121,7 +154,20 @@ const DetailPropertyUsers = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
+      handlerCallGetCustomerTimeLine({
+        idProperty: responseResult.idProperty,
+        idApartment: responseResult.idApartment,
+      });
       setDataDetail(responseResult);
+      if (
+        responseResult.hasRegisteredProperty === false &&
+        dataProfile.idUserType === 4
+      ) {
+        setDataEnableIntro(
+          window.screen.width >= 1160 ? stepAgent : stepAgentTop
+        );
+        setIsVisibleIntro(true);
+      }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -310,12 +356,21 @@ const DetailPropertyUsers = (props) => {
     handlerCallGetPropertyById();
   }, [idProperty]);
 
+  useEffect(() => {
+    if (isEmpty(dataDetail) === false && isNil(isOpenComponent) === true) {
+      handlerCallGetCustomerTimeLine({
+        idProperty: dataDetail.idProperty,
+        idApartment: dataDetail.idApartment,
+      });
+    }
+  }, [isOpenComponent]);
+
   return (
     <>
       {isEmpty(dataDetail) === false && (
-        <Content>
+        <Content id="detail-property-user">
           <Steps
-            enabled={isOpenComponent === 7}
+            enabled={isOpenComponent === 7 || isVisibleIntro === true}
             steps={dataEnableIntro}
             initialStep={0}
             options={{
@@ -328,9 +383,19 @@ const DetailPropertyUsers = (props) => {
             onBeforeChange={(nextStepIndex) => {}}
             onComplete={() => {
               setIsOpenComponent(null);
+              setIsVisibleIntro(false);
+              const elementDad = document.getElementById(
+                "detail-property-user"
+              );
+              elementDad.scrollTop = 0;
             }}
             onExit={() => {
               setIsOpenComponent(null);
+              setIsVisibleIntro(false);
+              const elementDad = document.getElementById(
+                "detail-property-user"
+              );
+              elementDad.scrollTop = 0;
             }}
           />
           <ContextProperty.Provider
@@ -453,13 +518,14 @@ const DetailPropertyUsers = (props) => {
             />
             <SectionAssociationProperty history={history} />
             <SectionAssociationApplicant history={history} />
-            <div className="top-timeline-mobile">
+            <div className="top-timeline-mobile" id="process-timeline-top">
               <SectionTimeLine
                 history={history}
                 onOpenComponent={(id) => {
                   setIsOpenComponent(id);
                 }}
                 isOpenComponent={isOpenComponent}
+                dataTimeLine={dataTimeLine}
               />
             </div>
             <ContentForm owner>
@@ -679,13 +745,17 @@ const DetailPropertyUsers = (props) => {
             </ContentForm>
 
             <ContentRight>
-              <div className="right-timeline-mobile">
+              <div
+                className="right-timeline-mobile"
+                id="process-timeline-right"
+              >
                 <SectionTimeLine
                   history={history}
                   onOpenComponent={(id) => {
                     setIsOpenComponent(id);
                   }}
                   isOpenComponent={isOpenComponent}
+                  dataTimeLine={dataTimeLine}
                 />
               </div>
               <SectionDocuments
@@ -714,7 +784,7 @@ const DetailPropertyUsers = (props) => {
                         <div className="card-user">
                           <div className="top-info">
                             <div className="icon-info">
-                              <IconTenant size="100%" color="#4E4B66" />
+                              <IconOwner size="100%" color="#4E4B66" />
                             </div>
                             <div className="name-info">
                               <h3>

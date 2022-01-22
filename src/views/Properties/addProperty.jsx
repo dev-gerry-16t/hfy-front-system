@@ -108,8 +108,13 @@ const AddProperty = (props) => {
     }
   }, []);
 
+  useEffect(() => {
+    const elementDad = document.getElementById("add-property-user");
+    elementDad.scrollTop = 0;
+  }, [current]);
+
   return (
-    <Content>
+    <Content id="add-property-user">
       <CustomStepsHomify
         steps={[
           { style: "fa fa-home", tab: "Datos de propiedad" },

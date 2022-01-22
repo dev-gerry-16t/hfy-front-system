@@ -170,8 +170,13 @@ const EditProfileUsers = (props) => {
     handlerCallGetCustomerTabById();
   }, []);
 
+  useEffect(() => {
+    const elementDad = document.getElementById("edit-profile-user");
+    elementDad.scrollTop = 0;
+  }, [current]);
+
   return (
-    <Content>
+    <Content id="edit-profile-user">
       <CustomStepsHomify
         steps={dataTabs}
         onClick={(ix, record) => {

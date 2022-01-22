@@ -57,6 +57,11 @@ const catalogAssociation = [
   { id: "3", text: "Rechazar" },
 ];
 
+const catalogAssociationV2 = [
+  { id: "2", text: "Aceptar" },
+  { id: "3", text: "Rechazar" },
+];
+
 const SectionAssociationProperty = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const dataContexProperty = useContext(ContextProperty);
@@ -176,28 +181,52 @@ const SectionAssociationProperty = (props) => {
                   <MultiSelect>
                     <span>¿Qué deseas hacer con esta propiedad?</span>
                     <div className="button-actions-select">
-                      {catalogAssociation.map((row) => {
-                        return (
-                          <ButtonCheck
-                            select={row.id === selectAssociation}
-                            onClick={() => {
-                              if (row.id !== "1") {
-                                setSelectProperty(null);
-                                setDataPropertyParent({});
-                                setMethodAssociation(null);
-                              }
-                              if (row.id === "3") {
-                                setAcceptProperty(false);
-                              } else {
-                                setAcceptProperty(true);
-                              }
-                              setSelectAssociation(row.id);
-                            }}
-                          >
-                            {row.text}
-                          </ButtonCheck>
-                        );
-                      })}
+                      {isEmpty(dataProperty) === false &&
+                        catalogAssociation.map((row) => {
+                          return (
+                            <ButtonCheck
+                              select={row.id === selectAssociation}
+                              onClick={() => {
+                                if (row.id !== "1") {
+                                  setSelectProperty(null);
+                                  setDataPropertyParent({});
+                                  setMethodAssociation(null);
+                                }
+                                if (row.id === "3") {
+                                  setAcceptProperty(false);
+                                } else {
+                                  setAcceptProperty(true);
+                                }
+                                setSelectAssociation(row.id);
+                              }}
+                            >
+                              {row.text}
+                            </ButtonCheck>
+                          );
+                        })}
+                      {isEmpty(dataProperty) === true &&
+                        catalogAssociationV2.map((row) => {
+                          return (
+                            <ButtonCheck
+                              select={row.id === selectAssociation}
+                              onClick={() => {
+                                if (row.id !== "1") {
+                                  setSelectProperty(null);
+                                  setDataPropertyParent({});
+                                  setMethodAssociation(null);
+                                }
+                                if (row.id === "3") {
+                                  setAcceptProperty(false);
+                                } else {
+                                  setAcceptProperty(true);
+                                }
+                                setSelectAssociation(row.id);
+                              }}
+                            >
+                              {row.text}
+                            </ButtonCheck>
+                          );
+                        })}
                     </div>
                   </MultiSelect>
                 </Col>
@@ -314,6 +343,16 @@ const SectionAssociationProperty = (props) => {
           <div className="icon-image-send">
             {selectAssociation === "3" ? <IconRejected /> : <IconAssociate />}
           </div>
+          <p>
+            Recuerda estar al pendiente de tu correo en donde estaremos
+            informándote de los pasos a seguir.
+          </p>
+          {dataProfile.idUserType === 3 && (
+            <p>
+              Si aún no has ingresado la información de tu cuenta puedes hacerlo
+              dando clic <a href="/websystem/profile">aquí</a>.
+            </p>
+          )}
           <div
             className="button-action"
             style={{

@@ -166,9 +166,15 @@ const CardServices = styled.div`
     box-shadow: 0px 1px 8px 6px #ebebf1;
     border-radius: 1em 1em 0px 0px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    span {
+      color: #fff;
+      margin: 0px;
+      font-size: 10px;
+    }
     h3 {
       color: #fff;
       margin: 0px;
@@ -349,6 +355,7 @@ const SectionServiceAgent = (props) => {
                             <div className="style-text">{row.costFormat}</div>
                           )}
                           <h3>{row.text}</h3>
+                          <span>{row.subtitle}</span>
                         </div>
                         <div className="pick-section">
                           <div className="pick"></div>
@@ -415,7 +422,7 @@ const SectionServiceAgent = (props) => {
           >
             <ButtonsService1
               id={`requirement-property-7`}
-              primary
+              primary={false}
               onClick={async () => {
                 try {
                   setIsLoadApi(true);

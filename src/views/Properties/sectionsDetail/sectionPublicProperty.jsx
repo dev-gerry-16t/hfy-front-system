@@ -265,18 +265,6 @@ const SectionPublicProperty = (props) => {
         <NoticeProperty>
           <h1>Ayuda a un inquilino a encontrar su nuevo hogar</h1>
           <div className="section-select-option">
-            {canInviteTenant === true && (
-              <div className="option-select" id="public-property-add-candidate">
-                <span>Ya tengo un candidato</span>
-                <ButtonAction
-                  onClick={() => {
-                    setVisibleAddUser(true);
-                  }}
-                >
-                  <IconAgreement size="51px" color="##4E4B66" />
-                </ButtonAction>
-              </div>
-            )}
             {isOwner === true && (
               <div className="option-select" id="public-property-add-post">
                 <span>Quiero publicar el inmueble</span>
@@ -286,6 +274,18 @@ const SectionPublicProperty = (props) => {
                   }}
                 >
                   <IconSpeakChat size="51px" color="##4E4B66" />
+                </ButtonAction>
+              </div>
+            )}
+            {canInviteTenant === true && (
+              <div className="option-select" id="public-property-add-candidate">
+                <span>Ya tengo un candidato</span>
+                <ButtonAction
+                  onClick={() => {
+                    setVisibleAddUser(true);
+                  }}
+                >
+                  <IconAgreement size="51px" color="##4E4B66" />
                 </ButtonAction>
               </div>
             )}

@@ -68,6 +68,10 @@ const SectionChangeImage = (props) => {
             ref={refAvatar}
             cropRadius={50}
             maxCropRadius={60}
+            exportAsSquare={true}
+            exportSize={60}
+            exportMimeType="image/jpeg"
+            exportQuality={0.9}
           />
         </div>
         <div className="button_init_primary">

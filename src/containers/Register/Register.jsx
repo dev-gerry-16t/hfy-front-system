@@ -1131,7 +1131,7 @@ const Register = (props) => {
                 history.push("/login");
               }}
             >
-              <span>Ir al Login</span>
+              <span>Iniciar sesión</span>
             </button>
           </div>
         </div>
