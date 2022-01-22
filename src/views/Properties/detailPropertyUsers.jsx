@@ -57,7 +57,7 @@ import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/ico
 import { ReactComponent as IconOwner } from "../../assets/iconSvg/svgFile/iconOwner.svg";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
-import { stepAgent } from "./constants/stepsProperty";
+import { stepAgent, stepAgentTop } from "./constants/stepsProperty";
 
 const EmptyData = styled.div`
   display: flex;
@@ -163,7 +163,9 @@ const DetailPropertyUsers = (props) => {
         responseResult.hasRegisteredProperty === false &&
         dataProfile.idUserType === 4
       ) {
-        setDataEnableIntro(stepAgent);
+        setDataEnableIntro(
+          window.screen.width >= 1160 ? stepAgent : stepAgentTop
+        );
         setIsVisibleIntro(true);
       }
     } catch (error) {
@@ -366,7 +368,7 @@ const DetailPropertyUsers = (props) => {
   return (
     <>
       {isEmpty(dataDetail) === false && (
-        <Content>
+        <Content id="detail-property-user">
           <Steps
             enabled={isOpenComponent === 7 || isVisibleIntro === true}
             steps={dataEnableIntro}
@@ -382,10 +384,18 @@ const DetailPropertyUsers = (props) => {
             onComplete={() => {
               setIsOpenComponent(null);
               setIsVisibleIntro(false);
+              const elementDad = document.getElementById(
+                "detail-property-user"
+              );
+              elementDad.scrollTop = 0;
             }}
             onExit={() => {
               setIsOpenComponent(null);
               setIsVisibleIntro(false);
+              const elementDad = document.getElementById(
+                "detail-property-user"
+              );
+              elementDad.scrollTop = 0;
             }}
           />
           <ContextProperty.Provider
@@ -508,7 +518,7 @@ const DetailPropertyUsers = (props) => {
             />
             <SectionAssociationProperty history={history} />
             <SectionAssociationApplicant history={history} />
-            <div className="top-timeline-mobile">
+            <div className="top-timeline-mobile" id="process-timeline-top">
               <SectionTimeLine
                 history={history}
                 onOpenComponent={(id) => {
