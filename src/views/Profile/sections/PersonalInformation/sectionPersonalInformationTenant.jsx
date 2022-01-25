@@ -651,26 +651,6 @@ const SectionPersonalInformation = (props) => {
               </Col>
             </Row>
           )}
-
-          {/* <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <ComponentCheck>
-                <strong>¿Cuentas con Aval?</strong>
-                <div className="radio-check-option">
-                  <label className="input-checkbox">
-                    <input
-                      type="checkbox"
-                      id="cbox1"
-                      value="first_checkbox"
-                      onChange={(e) => {}}
-                    />
-                  </label>
-                </div>
-              </ComponentCheck>
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}></Col>
-          </Row> */}
         </div>
         <div
           className="label-indicator"

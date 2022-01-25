@@ -20,6 +20,7 @@ import {
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadImageProfile from "../../widget/widgetUploadImageProfile";
 import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
+import ComponentContactInformation from "./componentContactInformation";
 
 const SectionPersonalInformation = (props) => {
   const { callGlobalActionApi, dataProfile, onclickNext } = props;
@@ -76,6 +77,8 @@ const SectionPersonalInformation = (props) => {
     identifier,
     getById,
     idCustomerOwner,
+    dataEmail,
+    dataPhoneNumber,
   } = dataContexProfile;
 
   const handlerCallUpdateCustomerAccount = async (data) => {
@@ -369,6 +372,11 @@ const SectionPersonalInformation = (props) => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <span>Por favor llena todos los campos correspondientes.</span>
+              <br />
+              <span>
+                Los campos que se encuentran bloqueado son llenados
+                automáticamente después de la verificación de identidad.
+              </span>
             </Col>
           </Row>
         </div>
@@ -841,6 +849,38 @@ const SectionPersonalInformation = (props) => {
                 }}
                 type="text"
               />
+            </Col>
+          </Row>
+        </div>
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        ></div>
+        <ComponentContactInformation
+          dataEmail={dataEmail}
+          dataPhoneNumber={dataPhoneNumber}
+          getById={() => {
+            getById();
+          }}
+        />
+        <div
+          className="label-indicator"
+          style={{
+            margin: "3em 0px",
+            borderBottom: "1px solid var(--color-primary)",
+            paddingBottom: "0.5em",
+          }}
+        >
+          <Row>
+            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+              <span>
+                Antes de continuar por favor verifica que tus datos sean
+                correctos.
+              </span>
             </Col>
           </Row>
         </div>
