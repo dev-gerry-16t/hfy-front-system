@@ -170,7 +170,6 @@ const CustomAddPhoneNumber = (props) => {
                       error={false}
                       errorMessage="Este campo es requerido"
                       onChange={(value, option) => {
-                        console.log("value", value);
                         setDataForm({
                           ...dataForm,
                           idPhoneType: value,
