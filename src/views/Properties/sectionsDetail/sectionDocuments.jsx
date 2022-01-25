@@ -385,9 +385,11 @@ const SectionDocuments = (props) => {
                                       row.canGenerateDocument,
                                     type: row.type,
                                   });
-                                setIsVisibleModalDocument(true);
                                 setDataDocument({ ...row, url: response.url });
-                                setIsLoadApi(false);
+                                setTimeout(() => {
+                                  setIsLoadApi(false);
+                                  setIsVisibleModalDocument(true);
+                                }, 3000);
                               } catch (error) {
                                 setIsLoadApi(false);
                               }
