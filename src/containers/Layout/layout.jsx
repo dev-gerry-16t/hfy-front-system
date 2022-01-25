@@ -45,6 +45,8 @@ import IconSetting from "../../assets/icons/iconSetting.svg";
 import IconLocation from "../../assets/icons/iconLocation.svg";
 import IconTwoUser from "../../assets/icons/iconTwoUser.svg";
 import IconPercent from "../../assets/icons/iconPercent.svg";
+import IconTimesShield from "../../assets/icons/IconTimesShield.svg";
+import IconEditSquare from "../../assets/icons/iconEditSquare.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -137,6 +139,8 @@ const DefaultLayout = (props) => {
     IconLocation,
     IconTwoUser,
     IconPercent,
+    IconTimesShield,
+    IconEditSquare,
   };
 
   const [nameSection, setNameSection] = useState("");

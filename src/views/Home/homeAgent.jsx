@@ -143,9 +143,9 @@ const catalogHome = [
     icon: IconHomeDashboard,
     path: "/websystem/dashboard-adviser",
   },
-  { text: "Generar contrato de arrendamiento", icon: IconNote, path: null },
-  { text: "Investigar inquilino", icon: IconSearchUser, path: null },
-  { text: "Solicita póliza juridica", icon: IconHomePolicy, path: null },
+  // { text: "Generar contrato de arrendamiento", icon: IconNote, path: null },
+  // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
+  // { text: "Solicita póliza juridica", icon: IconHomePolicy, path: null },
 ];
 
 const HomeAgent = (props) => {
