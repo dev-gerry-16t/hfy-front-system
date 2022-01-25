@@ -153,6 +153,9 @@ const ContentAddFilter = styled.div`
     .button-actions-header {
       flex-direction: column;
       align-items: center;
+      button {
+        padding: 0.6em 2em;
+      }
     }
   }
   @media screen and (max-width: 420px) {
