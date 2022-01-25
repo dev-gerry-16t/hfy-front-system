@@ -44,6 +44,10 @@ const AddFormContact = styled.div`
     border-radius: 16px;
     color: #fff;
   }
+  @media screen and (max-width: 460px) {
+    min-width: auto;
+    width: 100%;
+  }
 `;
 
 const CustomAddPhoneNumber = (props) => {

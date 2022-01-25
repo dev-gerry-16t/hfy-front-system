@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
+import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { Row, Col } from "antd";
@@ -7,10 +8,19 @@ import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../../utils/actions/frontFunctions";
 import { callGlobalActionApi } from "../../../../utils/actions/actions";
-import { ButtonNextBackPage } from "../../constants/styleConstants";
 import CustomInputTypeForm from "../../../../components/CustomInputTypeForm";
 import CustomAddPhoneNumber from "./customAddPhoneNumber";
 import CustomAddEmailAddress from "./customAddEmailAddress";
+
+const ButtonNextBackPage = styled.button`
+  background: transparent;
+  border: none;
+  color: ${(props) =>
+    props.block === true ? "#6E7191" : "var(--color-primary)"};
+  font-weight: 500;
+  cursor: ${(props) => (props.block === true ? "no-drop" : "pointer")};
+  margin-bottom: 25px;
+`;
 
 const ComponentContactInformation = ({
   dataEmail,
