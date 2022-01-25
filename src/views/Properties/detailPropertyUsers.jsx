@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
 import { Menu, Dropdown } from "antd";
-import { Steps } from "intro.js-react";
+import { Steps, Hints } from "intro.js-react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
@@ -95,6 +95,7 @@ const DetailPropertyUsers = (props) => {
   const [isVisibleDelete, setIsVisibleDelete] = useState(false);
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [isVisibleIntro, setIsVisibleIntro] = useState(false);
+  const [isVisibleHints, setIsVisibleHints] = useState(false);
   const [dataDetail, setDataDetail] = useState({});
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [dataEnableIntro, setDataEnableIntro] = useState([]);
@@ -164,9 +165,13 @@ const DetailPropertyUsers = (props) => {
         dataProfile.idUserType === 4
       ) {
         setDataEnableIntro(
-          window.screen.width >= 1160 ? stepAgent : stepAgentTop
+          window.screen.width > 1160 ? stepAgent : stepAgentTop
         );
-        setIsVisibleIntro(true);
+        if (window.screen.width > 1160) {
+          setIsVisibleIntro(true);
+        } else {
+          setIsVisibleHints(true);
+        }
       }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -396,6 +401,13 @@ const DetailPropertyUsers = (props) => {
                 "detail-property-user"
               );
               elementDad.scrollTop = 0;
+            }}
+          />
+          <Hints
+            enabled={isVisibleHints}
+            hints={dataEnableIntro}
+            options={{
+              hintButtonLabel: "Entendido",
             }}
           />
           <ContextProperty.Provider
