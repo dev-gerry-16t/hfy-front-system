@@ -44,6 +44,8 @@ const EditProfileUsers = (props) => {
     isNil(params.idCustomer) === false ? params.idCustomer : null;
   const [dataCustomerDetail, setDataCustomerDetail] = useState({});
   const [dataDetailReference, setDataDetailReference] = useState([]);
+  const [dataEmail, setDataEmail] = useState([]);
+  const [dataPhoneNumber, setDataPhoneNumber] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
   const [isConfirmInfo, setIsConfirmInfo] = useState(false);
@@ -114,8 +116,24 @@ const EditProfileUsers = (props) => {
         isEmpty(response.response[3]) === false
           ? response.response[3]
           : [];
+      const responseResultPhoneNumber =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[1]) === false &&
+        isEmpty(response.response[1]) === false
+          ? response.response[1]
+          : [];
+      const responseResultEmail =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[2]) === false &&
+        isEmpty(response.response[2]) === false
+          ? response.response[2]
+          : [];
       setDataCustomerDetail(responseResult);
       setDataDetailReference(responseResultReference);
+      setDataPhoneNumber(responseResultPhoneNumber);
+      setDataEmail(responseResultEmail);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -217,6 +235,8 @@ const EditProfileUsers = (props) => {
           matchParams: match.params.identifier,
           history,
           idCustomerOwner,
+          dataEmail,
+          dataPhoneNumber,
         }}
       >
         {/*Inquilino Persona fisica */}
