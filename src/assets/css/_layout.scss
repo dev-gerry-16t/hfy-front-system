@@ -63,6 +63,7 @@
 
 .ant-list-item {
   padding: 0px !important;
+  margin-bottom: 10px;
 }
 
 .title-body-description-1 {
@@ -88,11 +89,11 @@
     color: rgb(78, 75, 102);
     font-style: normal;
     font-weight: normal;
-    font-size: 13px;
     align-self: center;
+    padding: 0px 5px;
     .title-notification-child {
       font-style: normal;
-      font-size: 12px;
+      font-size: 0.8em;
       color: rgb(78, 75, 102);
       display: flex;
       justify-content: space-between;
