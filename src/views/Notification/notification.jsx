@@ -40,6 +40,7 @@ import IconEditSquare from "../../assets/icons/iconEditSquare.svg";
 import { useEffect } from "react";
 
 const Content = styled.div`
+  position: relative;
   overflow-y: scroll;
   font-size: 16px;
   font-family: Poppins;
@@ -55,13 +56,24 @@ const Content = styled.div`
       height: 100%;
       box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
       background: #fff;
+      min-width: 276px;
     }
   }
-  @media screen and (max-width: 640px) {
+  .content-notification {
+  }
+  @media screen and (max-width: 780px) {
     font-size: 12px;
   }
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 560px) {
+    display: block;
     padding: 1em 0px;
+    .content-notification {
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      z-index: 2px;
+      height: 100%;
+    }
   }
 `;
 
@@ -86,7 +98,7 @@ const TabNotification = styled.div`
 const ContentNotifications = styled.div`
   width: 100%;
   padding: 5px;
-  max-height: 90vh;
+  max-height: 80vh;
   overflow-y: scroll;
 `;
 
@@ -95,6 +107,32 @@ const InfoNotification = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   margin-top: 20px;
   padding: 15px;
+  .go-to-it {
+    margin-top: 10px;
+    text-align: center;
+    button {
+      background: var(--color-primary);
+      padding: 5px 10px;
+      border: none;
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+    }
+  }
+  .close-btn {
+    display: none;
+    text-align: right;
+    font-size: 16px;
+    font-weight: 700;
+    button {
+      background: transparent;
+      border: none;
+    }
+  }
+  .content-body {
+    max-height: 390px;
+    overflow-y: scroll;
+  }
   .time-at {
     text-align: right;
   }
@@ -102,11 +140,30 @@ const InfoNotification = styled.div`
     color: var(--color-primary);
     font-weight: 800;
   }
+  @media screen and (max-width: 560px) {
+    box-shadow: rgba(78, 75, 102, 0.3) 0px 0px 1px 2px,
+      rgba(78, 75, 102, 0.3) 0px 0px 0px 5000px;
+    backdrop-filter: blur(10px);
+    margin-top: 20px;
+    padding: 15px;
+    .content-body {
+      max-height: 90%;
+    }
+
+    .close-btn {
+      display: block;
+    }
+  }
 `;
 
 const Notifications = (props) => {
-  const { dataProfile, callGetNotifications, callUpdateNotifications, match } =
-    props;
+  const {
+    dataProfile,
+    callGetNotifications,
+    callUpdateNotifications,
+    match,
+    history,
+  } = props;
   const [tabsSelect, setTabsSelect] = useState(1);
   const [dataNotifications, setDataNotifications] = useState([]);
   const [infoNotification, setInfoNotification] = useState({});
@@ -175,10 +232,6 @@ const Notifications = (props) => {
           ? responseResult[0].totalToBeRead
           : 0
       );
-      const filterNotification = responseResult.find((row) => {
-        return row.idNotification == params.idNotification;
-      });
-      setInfoNotification(filterNotification);
     } catch (error) {}
   };
 
@@ -199,6 +252,15 @@ const Notifications = (props) => {
   useEffect(() => {
     handlerCallGetNotifications();
   }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataNotifications) === false) {
+      const filterNotification = dataNotifications.find((row) => {
+        return row.idNotification == params.idNotification;
+      });
+      setInfoNotification(filterNotification);
+    }
+  }, [dataNotifications]);
 
   return (
     <Content>
@@ -287,16 +349,37 @@ const Notifications = (props) => {
                 );
               })}
           </ContentNotifications>
+          {notificationTopIndex !== -1 && (
+            <div style={{ padding: "5px 0px", textAlign: "center" }}>
+              <a
+                onClick={() => {
+                  handlerCallGetNotifications(notificationTopIndex, tabsSelect);
+                }}
+              >
+                Mostrar más
+              </a>
+            </div>
+          )}
         </div>
       </div>
       <div className="content-notification">
         {isEmpty(infoNotification) === false && (
           <InfoNotification>
+            <div className="close-btn">
+              <button
+                onClick={() => {
+                  setInfoNotification({});
+                }}
+              >
+                X
+              </button>
+            </div>
             <div className="time-at">
               <span>{infoNotification.sentAtFormat}</span>
             </div>
             <h1 className="subject-notification">{infoNotification.subject}</h1>
             <div
+              className="content-body"
               dangerouslySetInnerHTML={{
                 __html:
                   isNil(infoNotification.content) === false
@@ -304,6 +387,17 @@ const Notifications = (props) => {
                     : "",
               }}
             />
+            {isNil(infoNotification.path) === false && (
+              <div className="go-to-it">
+                <button
+                  onClick={() => {
+                    history.push(infoNotification.path);
+                  }}
+                >
+                  Ver
+                </button>
+              </div>
+            )}
           </InfoNotification>
         )}
       </div>

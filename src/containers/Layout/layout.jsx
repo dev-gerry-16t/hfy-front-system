@@ -761,7 +761,11 @@ const DefaultLayout = (props) => {
                         >
                           <a
                             onClick={() => {
-                              handlerCallGetNotifications(notificationTopIndex);
+                              setIsVisibleNotification(false);
+                              history.push(
+                                `/websystem/notificaciones/1`
+                              );
+                              // handlerCallGetNotifications(notificationTopIndex);
                             }}
                           >
                             Mostrar más
