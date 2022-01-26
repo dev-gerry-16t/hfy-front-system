@@ -37,7 +37,21 @@ import IconTwoUser from "../../assets/icons/iconTwoUser.svg";
 import IconPercent from "../../assets/icons/iconPercent.svg";
 import IconTimesShield from "../../assets/icons/IconTimesShield.svg";
 import IconEditSquare from "../../assets/icons/iconEditSquare.svg";
+import { ReactComponent as EmptyDocument } from "../../assets/icons/EmptyDocument.svg";
 import { useEffect } from "react";
+
+const EmptyData = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  p {
+    color: rgba(78, 75, 102, 0.45);
+    font-weight: 700;
+    text-align: center;
+  }
+`;
 
 const Content = styled.div`
   position: relative;
@@ -399,6 +413,12 @@ const Notifications = (props) => {
                   </div>
                 );
               })}
+            {isEmpty(dataNotifications) === true && (
+              <EmptyData>
+                <EmptyDocument />
+                <p>Aún no hay nada</p>
+              </EmptyData>
+            )}
           </ContentNotifications>
           {notificationTopIndex !== -1 && (
             <div style={{ padding: "5px 0px", textAlign: "center" }}>
