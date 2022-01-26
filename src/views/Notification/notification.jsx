@@ -163,6 +163,7 @@ const Notifications = (props) => {
     callUpdateNotifications,
     match,
     history,
+    onGetNotifications,
   } = props;
   const [tabsSelect, setTabsSelect] = useState(1);
   const [dataNotifications, setDataNotifications] = useState([]);
@@ -351,6 +352,7 @@ const Notifications = (props) => {
                             item.idNotification,
                             tabsSelect
                           );
+                          onGetNotifications();
                         }
                         setInfoNotification(item);
                       } catch (error) {}
