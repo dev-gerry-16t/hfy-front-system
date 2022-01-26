@@ -197,6 +197,48 @@ const Notifications = (props) => {
     IconEditSquare,
   };
 
+  const handlerCallGetNotificationsInit = async (
+    top = null,
+    type = 1,
+    id = null
+  ) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGetNotifications({
+        idSystemUser,
+        idLoginHistory,
+        type,
+        idNotification: id,
+        topIndex: top,
+      });
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataNotifications(responseResult);
+      setNotificationTopIndex(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult[0]) === false &&
+          isNil(responseResult[0].topIndex) === false
+          ? responseResult[0].topIndex
+          : null
+      );
+      setNumberNotifications(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult[0]) === false &&
+          isNil(responseResult[0].totalToBeRead) === false
+          ? responseResult[0].totalToBeRead
+          : 0
+      );
+      const filterNotification = responseResult.find((row) => {
+        return row.idNotification == params.idNotification;
+      });
+      setInfoNotification(filterNotification);
+    } catch (error) {}
+  };
+
   const handlerCallGetNotifications = async (
     top = null,
     type = 1,
@@ -250,17 +292,8 @@ const Notifications = (props) => {
   };
 
   useEffect(() => {
-    handlerCallGetNotifications();
+    handlerCallGetNotificationsInit();
   }, []);
-
-  useEffect(() => {
-    if (isEmpty(dataNotifications) === false) {
-      const filterNotification = dataNotifications.find((row) => {
-        return row.idNotification == params.idNotification;
-      });
-      setInfoNotification(filterNotification);
-    }
-  }, [dataNotifications]);
 
   return (
     <Content>
@@ -280,6 +313,7 @@ const Notifications = (props) => {
               onClick={() => {
                 handlerCallGetNotifications(null, 2);
                 setTabsSelect(2);
+                setInfoNotification({});
               }}
               select={tabsSelect === 2}
             >
@@ -289,6 +323,7 @@ const Notifications = (props) => {
               onClick={() => {
                 handlerCallGetNotifications(null, 3);
                 setTabsSelect(3);
+                setInfoNotification({});
               }}
               select={tabsSelect === 3}
             >
