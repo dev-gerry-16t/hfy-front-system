@@ -198,6 +198,19 @@ const Notifications = (props) => {
     IconEditSquare,
   };
 
+  const handlerCallUpdateNotificationsInit = async (id, tab) => {
+    const { idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callUpdateNotifications(
+        {
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {}
+  };
+
   const handlerCallGetNotificationsInit = async (
     top = null,
     type = 1,
@@ -236,7 +249,9 @@ const Notifications = (props) => {
       const filterNotification = responseResult.find((row) => {
         return row.idNotification == params.idNotification;
       });
+      await handlerCallUpdateNotificationsInit(params.idNotification);
       setInfoNotification(filterNotification);
+      onGetNotifications();
     } catch (error) {}
   };
 
