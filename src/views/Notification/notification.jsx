@@ -163,6 +163,7 @@ const Notifications = (props) => {
     callUpdateNotifications,
     match,
     history,
+    onGetNotifications,
   } = props;
   const [tabsSelect, setTabsSelect] = useState(1);
   const [dataNotifications, setDataNotifications] = useState([]);
@@ -195,6 +196,19 @@ const Notifications = (props) => {
     IconPercent,
     IconTimesShield,
     IconEditSquare,
+  };
+
+  const handlerCallUpdateNotificationsInit = async (id, tab) => {
+    const { idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callUpdateNotifications(
+        {
+          idSystemUser,
+          idLoginHistory,
+        },
+        id
+      );
+    } catch (error) {}
   };
 
   const handlerCallGetNotificationsInit = async (
@@ -235,7 +249,9 @@ const Notifications = (props) => {
       const filterNotification = responseResult.find((row) => {
         return row.idNotification == params.idNotification;
       });
+      await handlerCallUpdateNotificationsInit(params.idNotification);
       setInfoNotification(filterNotification);
+      onGetNotifications();
     } catch (error) {}
   };
 
@@ -346,14 +362,14 @@ const Notifications = (props) => {
                     }}
                     onClick={async () => {
                       try {
-                        await handlerCallUpdateNotifications(
-                          item.idNotification,
-                          tabsSelect
-                        );
-                        setInfoNotification(item);
-                        if (isNil(item.path) === false) {
-                          //   history.push(item.path);
+                        if (item.isRead === false) {
+                          await handlerCallUpdateNotifications(
+                            item.idNotification,
+                            tabsSelect
+                          );
+                          onGetNotifications();
                         }
+                        setInfoNotification(item);
                       } catch (error) {}
                     }}
                   >

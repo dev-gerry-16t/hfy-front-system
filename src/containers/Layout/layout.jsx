@@ -762,9 +762,7 @@ const DefaultLayout = (props) => {
                           <a
                             onClick={() => {
                               setIsVisibleNotification(false);
-                              history.push(
-                                `/websystem/notificaciones/1`
-                              );
+                              history.push(`/websystem/notificaciones/1`);
                               // handlerCallGetNotifications(notificationTopIndex);
                             }}
                           >
@@ -852,7 +850,13 @@ const DefaultLayout = (props) => {
                         );
                         if (authenticated === true) {
                           return (
-                            <route.component {...prop} history={history} />
+                            <route.component
+                              {...prop}
+                              history={history}
+                              onGetNotifications={() => {
+                                handlerCallGetNotifications();
+                              }}
+                            />
                           );
                         } else {
                           return (
