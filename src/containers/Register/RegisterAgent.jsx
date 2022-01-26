@@ -234,6 +234,7 @@ const ContainerVerifyCode = styled.div`
   position: relative;
   width: 360px;
   font-size: 16px;
+  z-index: 2;
   #code-verification {
     position: absolute;
     opacity: 0;
