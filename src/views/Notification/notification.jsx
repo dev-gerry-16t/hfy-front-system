@@ -346,14 +346,13 @@ const Notifications = (props) => {
                     }}
                     onClick={async () => {
                       try {
-                        await handlerCallUpdateNotifications(
-                          item.idNotification,
-                          tabsSelect
-                        );
-                        setInfoNotification(item);
-                        if (isNil(item.path) === false) {
-                          //   history.push(item.path);
+                        if (item.isRead === false) {
+                          await handlerCallUpdateNotifications(
+                            item.idNotification,
+                            tabsSelect
+                          );
                         }
+                        setInfoNotification(item);
                       } catch (error) {}
                     }}
                   >
