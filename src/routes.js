@@ -81,6 +81,9 @@ const InvitationProspects = React.lazy(() =>
 );
 const AllUsers = React.lazy(() => import("./views/Users/allUsers"));
 const HomeAgent = React.lazy(() => import("./views/Home/homeAgent"));
+const Notifications = React.lazy(() =>
+  import("./views/Notification/notification")
+);
 
 const routes = [
   {
@@ -418,6 +421,14 @@ const routes = [
     path: "/websystem/home-asesor",
     name: "Home",
     component: HomeAgent,
+    exact: true,
+  },
+  {
+    key: "34",
+    id: "norifications",
+    path: "/websystem/notificaciones/:idNotification",
+    name: "Notificaciones",
+    component: Notifications,
     exact: true,
   },
 ];

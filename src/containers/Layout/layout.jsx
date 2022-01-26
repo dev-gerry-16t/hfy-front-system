@@ -476,6 +476,7 @@ const DefaultLayout = (props) => {
                 style={{
                   background: "rgba(255,255,255,1)",
                   cursor: "pointer",
+                  width: "100%",
                 }}
                 onClick={async () => {
                   try {
@@ -709,16 +710,11 @@ const DefaultLayout = (props) => {
                         renderItem={(item) => (
                           <List.Item
                             style={{ padding: "0px 0px !important" }}
-                            onClick={async () => {
-                              try {
-                                await handlerCallUpdateNotifications(
-                                  item.idNotification
-                                );
-                                if (isNil(item.path) === false) {
-                                  setIsVisibleNotification(false);
-                                  history.push(item.path);
-                                }
-                              } catch (error) {}
+                            onClick={() => {
+                              setIsVisibleNotification(false);
+                              history.push(
+                                `/websystem/notificaciones/${item.idNotification}`
+                              );
                             }}
                           >
                             <div
@@ -729,6 +725,7 @@ const DefaultLayout = (props) => {
                                     ? "rgba(255,255,255,1)"
                                     : "rgba(223, 144, 184, 0.2)",
                                 cursor: "pointer",
+                                width: "100%",
                               }}
                             >
                               <div className="section-circle-description">
@@ -753,14 +750,6 @@ const DefaultLayout = (props) => {
                                   <span>{item.subject}</span>
                                   <span>{item.sentAtFormat}</span>
                                 </div>
-                                <div
-                                  dangerouslySetInnerHTML={{
-                                    __html:
-                                      isNil(item.content) === false
-                                        ? item.content
-                                        : "",
-                                  }}
-                                />
                               </div>
                             </div>
                           </List.Item>
