@@ -37,7 +37,7 @@ const TabsProperty = styled.div`
   max-width: 100%;
   overflow-x: scroll;
   ::-webkit-scrollbar {
-    display: none;
+    height: 3px;
   }
   @media screen and (max-width: 1400px) {
     font-size: 14px;

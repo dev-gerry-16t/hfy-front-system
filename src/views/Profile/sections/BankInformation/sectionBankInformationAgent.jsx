@@ -200,6 +200,12 @@ const SectionBankInformationAgent = (props) => {
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <span>Por favor llena todos los campos correspondientes.</span>
+              <br />
+              <span>
+                Esta información se usará para realizarte depósitos de
+                comisiones de forma automática, te recomendamos mantenerla
+                actualizada.
+              </span>
             </Col>
           </Row>
         </div>
