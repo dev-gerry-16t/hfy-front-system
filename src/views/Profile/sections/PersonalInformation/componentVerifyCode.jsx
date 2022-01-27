@@ -81,6 +81,7 @@ const ComponentVerifyCode = ({
     <ContainerVerifyCode>
       <p>
         Enviamos un código de confirmación al {type} <strong>{userData}</strong>
+        , te recomendamos revisar tu correo no deseado.
       </p>
       <div
         id="input-ref-div"

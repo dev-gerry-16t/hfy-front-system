@@ -136,7 +136,11 @@ const catalogHome = [
     icon: IconHousePlus,
     path: "/websystem/add-property",
   },
-  { text: "Bandeja de entrada", icon: IconInMessage, path: null },
+  {
+    text: "Bandeja de entrada",
+    icon: IconInMessage,
+    path: "/websystem/notificaciones/1",
+  },
   { text: "Contactos", icon: IconSchedule, path: null },
   {
     text: "Dashboard",
