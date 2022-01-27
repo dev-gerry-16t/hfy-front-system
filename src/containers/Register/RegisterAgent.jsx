@@ -681,7 +681,8 @@ const RegisterAgent = (props) => {
               </div>
               <p>
                 Enviamos un código de confirmación al correo{" "}
-                <strong>{dataForm.username}</strong>
+                <strong>{dataForm.username}</strong>, te recomendamos revisar tu
+                correo no deseado.
               </p>
               <div
                 id="input-ref-div"
