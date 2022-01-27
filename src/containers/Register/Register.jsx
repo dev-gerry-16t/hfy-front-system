@@ -902,7 +902,8 @@ const Register = (props) => {
             </div>
             <p className="recoverInstructions">
               Enviamos un código de confirmación al correo{" "}
-              <strong>{dataForm.username}</strong>
+              <strong>{dataForm.username}</strong>, te recomendamos revisar tu
+              correo no deseado.
             </p>
             <div className="codeForm">
               <div className="codeFormItem">
