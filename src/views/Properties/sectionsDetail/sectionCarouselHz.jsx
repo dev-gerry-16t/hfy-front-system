@@ -16,6 +16,7 @@ import {
   IconBid,
 } from "../../../assets/iconSvg";
 import ContextProperty from "../context/contextProperty";
+import { ReactComponent as Close } from "../../../assets/icons/close.svg";
 
 const ContainerUp = styled.div`
   margin-top: 3em;
@@ -178,6 +179,43 @@ const ShortDetail = styled.div`
       color: #9295ad;
       font-size: 1em;
     }
+    .status-property {
+      right: 0px;
+      top: 0px;
+      position: absolute;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .tooltiptext {
+        visibility: hidden;
+        width: 300px;
+        background-color: #4f4c66;
+        color: #fff;
+        text-align: center;
+        border-radius: 15px;
+        padding: 10px 20px;
+        position: absolute;
+        z-index: 1;
+        bottom: 100%;
+        left: 50%;
+        margin-left: -150px;
+        font-size: 12px;
+        .link-public-property {
+          font-weight: 800;
+          color: #ff0282;
+          cursor: pointer;
+        }
+      }
+    }
+    .status-property:hover {
+      .tooltiptext {
+        visibility: visible;
+      }
+    }
   }
 
   .info-data-property {
@@ -203,6 +241,29 @@ const ShortDetail = styled.div`
         .maintenance-detail {
           font-size: 10px;
           color: var(--color-primary);
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 1160px) {
+    .header-title-short {
+      .status-property {
+        .tooltiptext {
+          margin-left: -320px;
+          bottom: -100%;
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: 360px) {
+    .header-title-short {
+      .status-property {
+        .tooltiptext {
+          width: 220px;
+          margin-left: -250px;
+          bottom: -100%;
         }
       }
     }
@@ -240,7 +301,7 @@ const catalogPrice = [
 ];
 
 const SectionCarouselInfo = (props) => {
-  const { apartmentImages } = props;
+  const { apartmentImages, idUserType = 1 } = props;
   const [currentImage, setCurrentImage] = useState(
     "https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296E.png"
   );
@@ -260,6 +321,8 @@ const SectionCarouselInfo = (props) => {
     idOperationType,
     grandTotalForRentFormat,
     maintenanceAmount,
+    isPublished,
+    isOwner,
   } = dataDetail;
 
   const handlerLimitText = (text) => {
@@ -298,6 +361,7 @@ const SectionCarouselInfo = (props) => {
       }
     }
   }, [apartmentImages]);
+
   return (
     <ContainerUp>
       <div className="contain-carousel">
@@ -369,6 +433,28 @@ const SectionCarouselInfo = (props) => {
         <div className="header-title-short">
           <h1>{handlerLimitText(shortAddress)}</h1>
           <div className="identifier-property">{identifier}</div>
+          {isPublished === false &&
+            (idUserType === 4 || idUserType === 3) &&
+            isOwner === true && (
+              <div className="status-property">
+                <>
+                  <Close strokeWidth={5} />
+                  <span class="tooltiptext">
+                    Tu propiedad actualmente se encuentra como{" "}
+                    <strong>privada</strong>. Podrás hacerla pública de forma
+                    gratuita desde la sección <br />
+                    <span
+                      className="link-public-property"
+                      onClick={() => {
+                        window.location.href = "#public-property";
+                      }}
+                    >
+                      Publica tu propiedad
+                    </span>
+                  </span>
+                </>
+              </div>
+            )}
         </div>
         <LineSeparator opacity="0.3" />
         <div className="info-data-property">

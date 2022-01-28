@@ -2,7 +2,7 @@ const GLOBAL_CONSTANTS = {
   secretKey: "",
   tokenSecretKey: "",
   ROOT_NAME: "system",
-  VERSION: "v0.1.232",
+  VERSION: "v0.1.233",
   STATUS_API: {
     WARNING: "WARNING",
     SUCCESS: "SUCCESS",

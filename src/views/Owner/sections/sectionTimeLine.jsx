@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import { Skeleton } from "antd";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import EmptyMovement from "../../../assets/icons/EmptyMovement.svg";
 import IconIn from "../../../assets/icons/IconIn.svg";
 import IconOut from "../../../assets/icons/IconOut.svg";
@@ -65,7 +65,47 @@ const Card = styled.div`
   }
 `;
 
+const translate = keyframes`
+  0% {
+    transform: translate(0px);
+  }
+
+  10%{
+
+    transform: translate(-2px);
+
+  }
+
+  20%{
+    transform: translate(-5px);
+
+  }
+  40%{
+    transform: translate(-8px);
+
+  }
+  80%{
+    transform: translate(-5px);
+
+  }
+
+  100% {
+    transform: translate(0px);
+  }
+`;
+
+const nonTranslate = keyframes`
+  from{
+    transform: translate(0px);
+  }
+
+  to{
+    transform: translate(0px);    
+  }
+`;
+
 const IconStep = styled.div`
+  position: relative;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -77,6 +117,7 @@ const IconStep = styled.div`
       : props.select === true
       ? "1px solid var(--color-primary)"
       : "none"};
+  padding: 2px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -92,6 +133,19 @@ const IconStep = styled.div`
     color: ${(props) =>
       props.finish === true ? "#fff" : "var(--color-primary)"};
     font-size: 20px;
+  }
+  &::before {
+    content: "";
+    right: 50px;
+    position: absolute;
+    border-style: solid;
+    border-width: 7px 0px 7px 7px;
+    border-color: ${(props) =>
+      props.select === true
+        ? "transparent transparent transparent var(--color-primary)"
+        : "transparent transparent transparent transparent"};
+    animation: ${(props) => (props.select === true ? translate : nonTranslate)}
+      0.9s linear infinite;
   }
 `;
 
