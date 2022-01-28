@@ -699,6 +699,7 @@ const DetailPropertyUsers = (props) => {
                       ? JSON.parse(dataDetail.apartmentDocuments)
                       : []
                   }
+                  idUserType={dataProfile.idUserType}
                 />
                 <ContainerDown>
                   <TabsProperty>
