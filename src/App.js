@@ -31,6 +31,11 @@ const RegistroAgente = Loadable({
   loading,
 });
 
+const RegistroPropietario = Loadable({
+  loader: () => import("./containers/Register/RegisterOwner"),
+  loading,
+});
+
 const RecoveryPassword = Loadable({
   loader: () => import("./containers/Recovery/RecoveryPass"),
   loading,
@@ -72,13 +77,19 @@ const App = (props) => {
           <Route path="/login" name="Login Page" component={Login} />
           <Route path="/index" name="Login Page" component={Login} />
           <Route exact path="/registro" name="Registro" component={Registro} />
+
+          <Route
+            exact
+            path="/registro-propietario"
+            name="Registro Propietarios"
+            component={RegistroPropietario}
+          />
           <Route
             exact
             path="/registro-asesor"
             name="Registro Asesores"
             component={RegistroAgente}
           />
-
           <Route
             exact
             path="/recoveryPass"
