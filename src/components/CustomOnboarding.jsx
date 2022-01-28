@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useRef } from "react";
+import isNil from "lodash/isNil";
 import { useEffect } from "react";
 import styled, { keyframes } from "styled-components";
 import CustomDialog from "./CustomDialog";
@@ -13,11 +14,11 @@ to {
 }
 `;
 
-const Wrapper = styled.main`
+const Wrapper = styled.div`
   position: relative;
   width: 100%;
   max-width: var(--main-width);
-  background-color: var(--color-dark);
+  background-color: rgb(34, 31, 30);
   border-radius: 1.25rem;
   padding: 3.125rem 0;
   text-align: center;
@@ -32,11 +33,26 @@ const Wrapper = styled.main`
     font-size: 1.15rem;
     margin: 1.25rem 0;
   }
+  .paginations-area {
+    pointer-events: none;
+    .paginations-area__item {
+      display: inline-block;
+      width: 0.5rem;
+      height: 0.375rem;
+      background-color: rgb(255, 255, 255, 20%);
+      border-radius: 1.5625rem;
+    }
+
+    .paginations-area__item:not(:last-child) {
+      margin-right: 0.25rem;
+    }
+  }
 `;
 
 const SlidesArea = styled.section`
   display: flex;
   transition: margin 500ms ease-in-out;
+  width: ${(props) => props.width};
 `;
 
 const SlideArea = styled.article`
@@ -78,10 +94,19 @@ const stepOnboarding = [
 ];
 
 const CustomOnboarding = (props) => {
+  const refWrapper = useRef(null);
+  console.log("refWrapper", refWrapper);
   return (
     <CustomDialog isVisibleDialog={true} onClose={() => {}}>
-      <Wrapper id="wrapper">
-        <SlidesArea id="slides-area">
+      <Wrapper id="wrapper" ref={refWrapper}>
+        <SlidesArea
+          id="slides-area"
+          width={
+            isNil(refWrapper) === false
+              ? `${refWrapper.current.offsetWidth * stepOnboarding.length}px`
+              : "0px"
+          }
+        >
           {stepOnboarding.map((row) => {
             return (
               <SlideArea>
@@ -101,7 +126,11 @@ const CustomOnboarding = (props) => {
         <button className="button button-next" aria-label="to get next slide">
           Next
         </button>
-        <section className="paginations-area" />
+        <section className="paginations-area">
+          {stepOnboarding.map(() => {
+            return <span className="paginations-area__item"></span>;
+          })}
+        </section>
       </Wrapper>
     </CustomDialog>
   );

@@ -610,13 +610,10 @@ const SectionDataProperty = (props) => {
               <LineSeparator />
               <div className="type-form-property">
                 <div className="subtitle-form">
-                  <h1>Datos de inmobiliaria / Propietario</h1>
+                  <h1>Datos de inmobiliaria / Propietario (Opcional)</h1>
                   <span>
-                    Si la propiedad no es tuya, puedes proporcionar el correo
-                    del propietario, enviaremos una invitación para que también
-                    este informad@ sobre los prospectos que recibe. La
-                    información que ingreses es confidencial y solo tu podrás
-                    verla.
+                    La siguiente información te ayudará a identificar a tu
+                    cliente.
                   </span>
                 </div>
                 <Row>
@@ -625,7 +622,7 @@ const SectionDataProperty = (props) => {
                       value={dataForm.ownerEmailAddress}
                       type="text"
                       placeholder="Busca o agrega un usuario"
-                      label="Correo electrónico *"
+                      label="Correo electrónico"
                       error={false}
                       data={dataOwners}
                       onChange={(value) => {
