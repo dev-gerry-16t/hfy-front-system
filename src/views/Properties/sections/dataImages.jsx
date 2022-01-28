@@ -456,9 +456,9 @@ const SectionDataImages = (props) => {
   };
 
   const handlerOnEditFileV2 = async (e, id, isMain = false) => {
+    console.log("e, id, isMain", e, id, isMain);
     const fileIndex = e.target.files[0];
     if (!fileIndex) return;
-
     const reader = new FileReader();
     reader.readAsDataURL(fileIndex);
     reader.onload = async (event) => {
@@ -485,6 +485,7 @@ const SectionDataImages = (props) => {
             objectImage = {
               id: id,
               src: srcEncoded,
+              isMain: row.isMain,
               contentType: "image/jpeg",
               name: `homify-image-${id}`,
             };
