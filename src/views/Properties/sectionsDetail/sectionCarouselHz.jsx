@@ -322,6 +322,7 @@ const SectionCarouselInfo = (props) => {
     grandTotalForRentFormat,
     maintenanceAmount,
     isPublished,
+    isOwner,
   } = dataDetail;
 
   const handlerLimitText = (text) => {
@@ -432,26 +433,28 @@ const SectionCarouselInfo = (props) => {
         <div className="header-title-short">
           <h1>{handlerLimitText(shortAddress)}</h1>
           <div className="identifier-property">{identifier}</div>
-          {isPublished === false && (idUserType === 4 || idUserType === 3) && (
-            <div className="status-property">
-              <>
-                <Close strokeWidth={5} />
-                <span class="tooltiptext">
-                  Tu propiedad actualmente se encuentra como{" "}
-                  <strong>privada</strong>. Podrás hacerla pública de forma
-                  gratuita desde la sección <br />
-                  <span
-                    className="link-public-property"
-                    onClick={() => {
-                      window.location.href = "#public-property";
-                    }}
-                  >
-                    Publica tu propiedad
+          {isPublished === false &&
+            (idUserType === 4 || idUserType === 3) &&
+            isOwner === true && (
+              <div className="status-property">
+                <>
+                  <Close strokeWidth={5} />
+                  <span class="tooltiptext">
+                    Tu propiedad actualmente se encuentra como{" "}
+                    <strong>privada</strong>. Podrás hacerla pública de forma
+                    gratuita desde la sección <br />
+                    <span
+                      className="link-public-property"
+                      onClick={() => {
+                        window.location.href = "#public-property";
+                      }}
+                    >
+                      Publica tu propiedad
+                    </span>
                   </span>
-                </span>
-              </>
-            </div>
-          )}
+                </>
+              </div>
+            )}
         </div>
         <LineSeparator opacity="0.3" />
         <div className="info-data-property">
