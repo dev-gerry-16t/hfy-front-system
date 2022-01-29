@@ -18,6 +18,7 @@ import isEmpty from "lodash/isEmpty";
 import {
   callGetAllRegisterUser,
   callGetAllVerifyCode,
+  callGetAllPersons,
 } from "../../utils/actions/actions";
 import { callGetAllCountries } from "../../utils/actions/catalogActions";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -336,20 +337,24 @@ const Circle = styled.div`
 `;
 
 const contentPlan = [
-  "Crea fichas y comparte con otros asesores.",
-  "Solicita Contratos o Pólizas Jurídicas en menos de 1 hora.",
-  "Califica a tus inquilinos.",
-  "Acceso a prospección homify (80% comisión para ti).",
+  "Sube tus propiedades a la plataforma sin costo",
+  "Promoción en principales portales de inmuebles",
+  "Conexión con asesores inmobiliarios para promocionar tu propiedad",
+  "Invitar a más de un inquilino como prospecto para tu propiedad o recibe prospectos a través de Homify",
+  "Investigación de inquilinos",
+  "Protección de inmueble con garantía en rentas ",
+  "Adelantó de rentas, hasta por 6 meses* ",
 ];
 const LoadingSpin = <SyncOutlined spin />;
 
-const RegisterAgent = (props) => {
+const RegisterOwner = (props) => {
   const {
     callGlobalActionApi,
     callGetAllCountries,
     history,
     callGetAllRegisterUser,
     callGetAllVerifyCode,
+    callGetAllPersons,
   } = props;
   const [dataForm, setDataForm] = useState({
     givenName: null,
@@ -373,6 +378,8 @@ const RegisterAgent = (props) => {
   const [spinVisible, setSpinVisible] = useState(false);
   const [dataCountries, setDataCountries] = useState([]);
   const [codeVerify, setCodeVerify] = useState("");
+  const [userPerson, setUserPerson] = useState([]);
+  const [configComponents, setConfigComponents] = useState({});
   const refInput = useRef(null);
   const recaptchaV3 = useRef(null);
 
@@ -412,8 +419,23 @@ const RegisterAgent = (props) => {
     }
   };
 
+  const handlerCallApiPersonTypes = async (data) => {
+    try {
+      const response = await callGetAllPersons({
+        idType: 1,
+        idCustomerType: 2,
+      });
+      const responseResult =
+        isNil(response) === false && isNil(response.result) === false
+          ? response.result
+          : [];
+      setUserPerson(responseResult);
+    } catch (error) {}
+  };
+
   useEffect(() => {
     handlerCallGetAllCountries();
+    handlerCallApiPersonTypes();
   }, []);
 
   useEffect(() => {
@@ -443,39 +465,74 @@ const RegisterAgent = (props) => {
               </div>
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.givenName}
-                    suffix={<UserOutlined color="#4E4B66" />}
-                    placeholder="Nombre(s) *"
-                    onChange={(e) => {
-                      setDataForm({ ...dataForm, givenName: e });
+                  <CustomSelect
+                    value={dataForm.idPersonType}
+                    placeholder="-- Tipo de persona --"
+                    label=""
+                    data={userPerson}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value, option) => {
+                      const configureVisibleComponents =
+                        isNil(option) === false &&
+                        isNil(option.jsonProperties) === false &&
+                        isEmpty(option.jsonProperties) === false
+                          ? JSON.parse(option.jsonProperties)
+                          : {};
+                      setDataForm({
+                        ...dataForm,
+                        idPersonType: value,
+                      });
+                      setConfigComponents(configureVisibleComponents);
                     }}
                   />
                 </Col>
               </Row>
-              <Row>
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.lastName}
-                    suffix={<UserOutlined color="#4E4B66" />}
-                    placeholder="Apellido Paterno *"
-                    onChange={(e) => {
-                      setDataForm({ ...dataForm, lastName: e });
-                    }}
-                  />
-                </Col>
-                <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-                  <CustomInputTypeForm
-                    value={dataForm.mothersMaidenName}
-                    suffix={<UserOutlined color="#4E4B66" />}
-                    placeholder="Apellido Materno"
-                    onChange={(e) => {
-                      setDataForm({ ...dataForm, mothersMaidenName: e });
-                    }}
-                  />
-                </Col>
-              </Row>
+              {isEmpty(configComponents) === false && (
+                <>
+                  <Row>
+                    <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
+                      <CustomInputTypeForm
+                        value={dataForm.givenName}
+                        suffix={<UserOutlined color="#4E4B66" />}
+                        placeholder={
+                          dataForm.idPersonType == 1
+                            ? "Nombre(s) *"
+                            : "Razón social"
+                        }
+                        onChange={(e) => {
+                          setDataForm({ ...dataForm, givenName: e });
+                        }}
+                      />
+                    </Col>
+                  </Row>
+                  {configComponents.lastName === true && (
+                    <Row>
+                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                        <CustomInputTypeForm
+                          value={dataForm.lastName}
+                          suffix={<UserOutlined color="#4E4B66" />}
+                          placeholder="Apellido Paterno *"
+                          onChange={(e) => {
+                            setDataForm({ ...dataForm, lastName: e });
+                          }}
+                        />
+                      </Col>
+                      <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+                      <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                        <CustomInputTypeForm
+                          value={dataForm.mothersMaidenName}
+                          suffix={<UserOutlined color="#4E4B66" />}
+                          placeholder="Apellido Materno"
+                          onChange={(e) => {
+                            setDataForm({ ...dataForm, mothersMaidenName: e });
+                          }}
+                        />
+                      </Col>
+                    </Row>
+                  )}
+                </>
+              )}
               <Row>
                 <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
                   <CustomSelect
@@ -642,7 +699,7 @@ const RegisterAgent = (props) => {
                             await recaptchaV3.current.executeAsync();
                           await handlerCallApiRegister({
                             ...dataForm,
-                            idCustomerType: 3,
+                            idCustomerType: 2,
                             captchaToken: getCaptchaToken,
                           });
                           setStepProcess(2);
@@ -654,8 +711,8 @@ const RegisterAgent = (props) => {
                       }
                       setShowError(false);
                     } catch (error) {
-                      setShowError(true);
                       setSpinVisible(false);
+                      setShowError(true);
                     }
                   }}
                 >
@@ -764,7 +821,7 @@ const RegisterAgent = (props) => {
                         await recaptchaV3.current.executeAsync();
                       await handlerCallApiRegister({
                         ...dataForm,
-                        idCustomerType: 3,
+                        idCustomerType: 2,
                         captchaToken: getCaptchaToken,
                       });
                       setSpinVisible(false);
@@ -853,7 +910,7 @@ const RegisterAgent = (props) => {
             })}
           </div>
           <div className="promo">
-            <span>Por lanzamiento la suscripción es gratis</span>
+            <span></span>
           </div>
         </ContainerInfo>
       </div>
@@ -864,9 +921,10 @@ const RegisterAgent = (props) => {
 const mapStateToProps = (state) => ({});
 
 const mapDispatchToProps = (dispatch) => ({
+  callGetAllPersons: (data) => dispatch(callGetAllPersons(data)),
   callGetAllRegisterUser: (data) => dispatch(callGetAllRegisterUser(data)),
   callGetAllVerifyCode: (data) => dispatch(callGetAllVerifyCode(data)),
   callGetAllCountries: (data) => dispatch(callGetAllCountries(data)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(RegisterAgent);
+export default connect(mapStateToProps, mapDispatchToProps)(RegisterOwner);

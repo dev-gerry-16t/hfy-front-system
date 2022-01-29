@@ -418,7 +418,9 @@ const Register = (props) => {
               <button
                 type="button"
                 onClick={async () => {
-                  if (selectuserCustomer == 3) {
+                  if (selectuserCustomer == 2) {
+                    history.push("/registro-propietario");
+                  } else if (selectuserCustomer == 3) {
                     history.push("/registro-asesor");
                   } else {
                     await handlerCallApiPersonTypes(

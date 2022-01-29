@@ -10,6 +10,7 @@ import { ReactComponent as IconHomeDashboard } from "../../assets/iconSvg/svgFil
 import { ReactComponent as IconNote } from "../../assets/iconSvg/svgFile/iconNote.svg";
 import { ReactComponent as IconSearchUser } from "../../assets/iconSvg/svgFile/iconSearchUser.svg";
 import { ReactComponent as IconHomePolicy } from "../../assets/iconSvg/svgFile/iconHomePolicy.svg";
+import CustomOnboarding from "../../components/CustomOnboarding";
 
 const ContentHome = styled.div`
   font-size: 16px;
@@ -169,6 +170,7 @@ const HomeAgent = (props) => {
         </div>
       </div>
       <div className="bottom-home">
+        {/* <CustomOnboarding /> */}
         <div className="main-cards">
           {catalogHome.map((row) => {
             return (
