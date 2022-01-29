@@ -8,7 +8,7 @@ const CustomDialog = (props) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down(full));
   return (
-    <Dialog open={isVisibleDialog} onClose={onClose} fullScreen={fullScreen}>
+    <Dialog className="onboarding-dialog" open={isVisibleDialog} onClose={onClose} fullScreen={fullScreen}>
       {children}
     </Dialog>
   );
