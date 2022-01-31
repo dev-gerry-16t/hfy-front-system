@@ -529,7 +529,7 @@ const SectionDataProperty = (props) => {
                 <CustomInputTypeForm
                   value={dataForm.totalFloors}
                   placeholder=""
-                  label="Cantidad de pisos en el inmueble *"
+                  label="Cantidad de pisos en el inmueble"
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {
@@ -548,7 +548,7 @@ const SectionDataProperty = (props) => {
                   <CustomInputTypeForm
                     value={dataForm.floorDescription}
                     placeholder=""
-                    label="Piso en el que se encuentra *"
+                    label="Piso en el que se encuentra"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {

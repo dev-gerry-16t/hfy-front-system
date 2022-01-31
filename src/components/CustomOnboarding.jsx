@@ -277,12 +277,19 @@ const CustomOnboarding = (props) => {
   const [renderWidth, setRenderWidth] = useState(0);
 
   useEffect(() => {
-    window.addEventListener("resize", () => {
+    const updateResize = () => {
       const widthOutput = document.getElementById("wrapper");
-      setRenderWidth(widthOutput.clientWidth);
-    });
+      setRenderWidth(
+        isNil(widthOutput) === false && isNil(widthOutput.clientWidth) === false
+          ? widthOutput.clientWidth
+          : 0
+      );
+    };
+    window.addEventListener("resize", updateResize, false);
     setRenderWidth(window.innerWidth > 959 ? 600 : window.innerWidth);
-    return window.removeEventListener("resize", () => {});
+    return () => {
+      window.removeEventListener("resize", updateResize, false);
+    };
   }, []);
 
   return (
