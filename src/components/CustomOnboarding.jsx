@@ -38,6 +38,13 @@ const Wrapper = styled.div`
   animation: ${fadeInContent} 1000ms ease-in-out;
   transition: all 500ms ease-in-out;
   transition-property: opacity, visibility;
+  .logo-homify {
+    margin-bottom: 35px;
+    img {
+      width: 150px;
+    }
+  }
+
   .paginations-area {
     pointer-events: none;
     .paginations-area__item {
@@ -62,6 +69,17 @@ const Wrapper = styled.div`
     opacity: 0.8;
     pointer-events: none;
     filter: blur(2px);
+  }
+
+  @media screen and (max-width: 380px) {
+    padding: 0px;
+    .logo-homify {
+      margin-bottom: 10px;
+
+      img {
+        width: 100px;
+      }
+    }
   }
 `;
 
@@ -120,6 +138,20 @@ const SlideArea = styled.article`
       margin-top: 0.3125rem;
     }
   }
+
+  @media screen and (max-width: 380px) {
+    .slide__text {
+      .slide__title {
+        font-size: 1.2em;
+      }
+      .slide__paragraph {
+        font-size: 0.8em;
+        font-weight: 400;
+        margin-top: 0.3125rem;
+      }
+    }
+  }
+
   @media screen and (max-width: 350px) {
     .slide__image {
       width: 100%;
@@ -266,12 +298,8 @@ const CustomOnboarding = (props) => {
         </span>
       </div>
       <Wrapper id="wrapper">
-        <div
-          style={{
-            marginBottom: "35px",
-          }}
-        >
-          {count === 0 && <img width="150" src={LogoHomify} alt="" srcset="" />}
+        <div className="logo-homify" style={{}}>
+          {count === 0 && <img src={LogoHomify} alt="" srcset="" />}
         </div>
         <SlidesArea
           id="slides-area"
@@ -321,9 +349,9 @@ const CustomOnboarding = (props) => {
               <ButtonOnboarding
                 id="next-button"
                 onClick={() => {
-                  const wraperScroll=document.getElementById("wrapper");
+                  const wraperScroll = document.getElementById("wrapper");
                   const nextButton = document.getElementById("next-button");
-                  wraperScroll.scrollTop=0;
+                  wraperScroll.scrollTop = 0;
                   nextButton.classList.add("button-next--fade");
                   setTimeout(() => {
                     nextButton.classList.remove("button-next--fade");
