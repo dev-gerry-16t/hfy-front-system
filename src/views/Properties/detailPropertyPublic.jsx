@@ -265,6 +265,51 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallRequestPropertyContact = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          idCustomer,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.REQUEST_PROPERTY_CONTACT,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const SectionButtonContact = styled.div`
+    padding: 10px 0px;
+    text-align: center;
+    button {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: 800;
+    }
+  `;
+
   useEffect(() => {
     setIdProperty(params.idProperty.length > 30 ? params.idProperty : null);
     setIdentifier(params.idProperty.length < 30 ? params.idProperty : null);
@@ -504,6 +549,25 @@ const DetailPropertyUsers = (props) => {
                           <span>{dataDetail.contactPhoneNumberFormat}</span>
                         </div>
                       </div>
+                      {dataDetail.canBeContacted === true && (
+                        <SectionButtonContact>
+                          <button
+                            onClick={async () => {
+                              try {
+                                await handlerCallRequestPropertyContact(
+                                  {
+                                    idApartment: dataDetail.idApartment,
+                                  },
+                                  dataDetail.idProperty
+                                );
+                                handlerCallGetPropertyById();
+                              } catch (error) {}
+                            }}
+                          >
+                            Contactar
+                          </button>
+                        </SectionButtonContact>
+                      )}
                     </div>
                   </Card>
                 </div>
