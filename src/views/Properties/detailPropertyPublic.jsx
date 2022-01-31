@@ -289,10 +289,14 @@ const DetailPropertyUsers = (props) => {
         <Content>
           <ContextProperty.Provider
             value={{
+              isOpenComponent,
               getById: () => {
                 handlerCallGetPropertyById();
               },
               dataDetail,
+              onCloseComponent: () => {
+                setIsOpenComponent(null);
+              },
               updateProperty: async (data) => {
                 try {
                   await handlerCallUpdateProperty(data);

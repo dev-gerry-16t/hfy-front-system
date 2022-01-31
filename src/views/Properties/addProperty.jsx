@@ -12,6 +12,7 @@ import SectionDataFeatures from "./sections/dataFeatures";
 import SectionDataImages from "./sections/dataImages";
 import SectionDataLocation from "./sections/dataLocation";
 import SectionDataProperty from "./sections/dataProperty";
+import ComponentPublicAddProperty from "./component/componentPublicAddProperty";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -38,12 +39,46 @@ const AddProperty = (props) => {
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
   const [dataSaveThumb, setDataSaveThumb] = useState({});
+  const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
 
   const [dataSaveFeatures, setDataSaveFeatures] = useState({
     propertyAmenities: [],
     propertyGeneralCharacteristics: [],
   });
   const frontFunctions = new FrontFunctions();
+
+  const handlerCallUpdateProperty = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallAddPropertyV2 = async (data) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -70,12 +105,12 @@ const AddProperty = (props) => {
     }
   };
 
-  const handlerCallGetPropertyById = async () => {
+  const handlerCallGetPropertyById = async (id = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
-          idProperty,
+          idProperty: isNil(id) === false ? id : idProperty,
           idApartment: null,
           identifier: null,
           idCustomer:
@@ -115,6 +150,24 @@ const AddProperty = (props) => {
 
   return (
     <Content id="add-property-user">
+      <ComponentPublicAddProperty
+        isModalVisible={visiblePublicProperty}
+        onPublicProperty={async (data, id) => {
+          try {
+            await handlerCallUpdateProperty(data, id);
+          } catch (error) {
+            throw error;
+          }
+        }}
+        detailPublicProperty={{}}
+        onClose={() => {
+          setVisiblePublicProperty(false);
+          history.push(
+            `/websystem/detail-property-users/${dataForm.idProperty}`
+          );
+        }}
+        dataDetail={dataForm}
+      />
       <CustomStepsHomify
         steps={[
           { style: "fa fa-home", tab: "Datos de propiedad" },
@@ -222,8 +275,11 @@ const AddProperty = (props) => {
           }}
           dataSaveImages={dataSaveImages}
           dataSaveThumb={dataSaveThumb}
-          redirect={(id) => {
-            history.push(`/websystem/detail-property-users/${id}`);
+          redirect={async (id) => {
+            try {
+              await handlerCallGetPropertyById(id);
+              setVisiblePublicProperty(true);
+            } catch (error) {}
           }}
           idProperty={idProperty}
           idApartment={
