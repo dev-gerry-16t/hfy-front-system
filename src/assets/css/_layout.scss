@@ -16,6 +16,14 @@
   }
 }
 
+@media screen and (max-width: 960px) {
+  .onboarding-dialog {
+    .MuiPaper-root {
+      border-radius: 0px;
+    }
+  }
+}
+
 .ant-dropdown {
   font-family: Poppins;
 }

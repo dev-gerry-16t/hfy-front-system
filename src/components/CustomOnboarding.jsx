@@ -91,6 +91,10 @@ const BorderButton = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  @media screen and (max-width: 380px) {
+    width: 60px;
+    height: 60px;
+  }
 `;
 
 const ButtonOnboarding = styled.button`
@@ -103,6 +107,10 @@ const ButtonOnboarding = styled.button`
   justify-content: center;
   align-items: center;
   transition: all 0.3s ease-in;
+  @media screen and (max-width: 380px) {
+    width: 40px;
+    height: 40px;
+  }
 `;
 
 const SlidesArea = styled.section`
@@ -245,7 +253,7 @@ const stepOnboarding = [
     title2: "clientes",
     text: (
       <p className="slide__paragraph">
-        Solicita una póliza jurídica y <br />
+        Solicita una póliza jurídica y{" "}
         <strong>obtén una comisión del 20%</strong>.
       </p>
     ),
@@ -256,9 +264,8 @@ const stepOnboarding = [
     title2: "contratos de arrendamiento",
     text: (
       <p className="slide__paragraph">
-        Contratos, pagarés y recibos de pago
-        <br />
-        personalizados <strong>en menos de 1 hora</strong>.
+        Contratos, pagarés y recibos de pago personalizados{" "}
+        <strong>en menos de 1 hora</strong>.
       </p>
     ),
   },
@@ -279,7 +286,11 @@ const CustomOnboarding = (props) => {
   }, []);
 
   return (
-    <CustomDialog isVisibleDialog={visibleOnboard} onClose={() => {}}>
+    <CustomDialog
+      isVisibleDialog={visibleOnboard}
+      onClose={() => {}}
+      classNameDialog="onboarding-dialog"
+    >
       <div
         style={{
           textAlign: "right",
