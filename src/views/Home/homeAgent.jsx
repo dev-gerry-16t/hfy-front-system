@@ -1,4 +1,4 @@
-import React, { createElement } from "react";
+import React, { createElement, useState } from "react";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { ReactComponent as IconProperties } from "../../assets/iconSvg/svgFile/iconProperties.svg";
@@ -155,12 +155,24 @@ const catalogHome = [
 
 const HomeAgent = (props) => {
   const { history } = props;
+  const [visibleOnboard, setVisibleOnboard] = useState(true);
+
   return (
     <ContentHome>
       <div className="top-home">
         <div className="title">
           <h1>
-            Comienza <span>aquí</span>
+            Comienza{" "}
+            <span
+              onClick={() => {
+                setVisibleOnboard(true);
+              }}
+              style={{
+                cursor: "pointer",
+              }}
+            >
+              aquí
+            </span>
           </h1>
         </div>
         <div className="subtitle">
@@ -170,7 +182,16 @@ const HomeAgent = (props) => {
         </div>
       </div>
       <div className="bottom-home">
-        {/* <CustomOnboarding /> */}
+        <CustomOnboarding
+          visibleOnboard={visibleOnboard}
+          onClose={() => {
+            setVisibleOnboard(false);
+          }}
+          onClickFinish={() => {
+            setVisibleOnboard(false);
+            history.push("/websystem/add-property");
+          }}
+        />
         <div className="main-cards">
           {catalogHome.map((row) => {
             return (
