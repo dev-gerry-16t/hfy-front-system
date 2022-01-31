@@ -284,7 +284,6 @@ const CustomOnboarding = (props) => {
           ? widthOutput.clientWidth
           : 0
       );
-      console.log("resize");
     };
     window.addEventListener("resize", updateResize, false);
     setRenderWidth(window.innerWidth > 959 ? 600 : window.innerWidth);
