@@ -30,6 +30,7 @@ import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
+import ComponentLoadSection from "../../components/componentLoadSection";
 
 const EmptyData = styled.div`
   display: flex;
@@ -64,6 +65,7 @@ const DetailPropertyUsers = (props) => {
     props;
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataTimeLine, setDataTimeLine] = useState([]);
   const [idProperty, setIdProperty] = useState(
@@ -529,47 +531,57 @@ const DetailPropertyUsers = (props) => {
               />
               <GeneralCard>
                 <div className="header-title">
-                  <h1>Contactar</h1>
+                  <h1>Datos de contacto</h1>
                 </div>
                 <div className="content-card">
-                  <Card>
-                    <div className="card-user">
-                      <div className="top-info">
-                        <div className="icon-info-circle">
-                          <div>
-                            <span>
-                              {frontFunctions.letterInitialName(
-                                dataDetail.contactName
-                              )}
-                            </span>
+                  <ComponentLoadSection
+                    isLoadApi={isLoadApi}
+                    position="absolute"
+                    text="Contactando.."
+                  >
+                    <Card>
+                      <div className="card-user">
+                        <div className="top-info">
+                          <div className="icon-info-circle">
+                            <div>
+                              <span>
+                                {frontFunctions.letterInitialName(
+                                  dataDetail.contactName
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="name-info">
+                            <h3>{dataDetail.contactName}</h3>
+                            <span>{dataDetail.contactPhoneNumberFormat}</span>
                           </div>
                         </div>
-                        <div className="name-info">
-                          <h3>{dataDetail.contactName}</h3>
-                          <span>{dataDetail.contactPhoneNumberFormat}</span>
-                        </div>
+                        {dataDetail.canBeContacted === true && (
+                          <SectionButtonContact>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  setIsLoadApi(true);
+                                  await handlerCallRequestPropertyContact(
+                                    {
+                                      idApartment: dataDetail.idApartment,
+                                    },
+                                    dataDetail.idProperty
+                                  );
+                                  handlerCallGetPropertyById();
+                                  setIsLoadApi(false);
+                                } catch (error) {
+                                  setIsLoadApi(false);
+                                }
+                              }}
+                            >
+                              Contactar
+                            </button>
+                          </SectionButtonContact>
+                        )}
                       </div>
-                      {dataDetail.canBeContacted === true && (
-                        <SectionButtonContact>
-                          <button
-                            onClick={async () => {
-                              try {
-                                await handlerCallRequestPropertyContact(
-                                  {
-                                    idApartment: dataDetail.idApartment,
-                                  },
-                                  dataDetail.idProperty
-                                );
-                                handlerCallGetPropertyById();
-                              } catch (error) {}
-                            }}
-                          >
-                            Contactar
-                          </button>
-                        </SectionButtonContact>
-                      )}
-                    </div>
-                  </Card>
+                    </Card>
+                  </ComponentLoadSection>
                 </div>
               </GeneralCard>
               <GeneralCard>
