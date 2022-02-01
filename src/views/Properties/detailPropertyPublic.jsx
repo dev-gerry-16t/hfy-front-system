@@ -30,6 +30,7 @@ import { ReactComponent as Arrow } from "../../assets/icons/Arrow.svg";
 import { ReactComponent as IconProperty } from "../../assets/iconSvg/svgFile/iconProperties.svg";
 import SectionTimeLine from "./sectionsDetail/sectionTimeLine";
 import CustomModalMessage from "../../components/customModalMessage";
+import ComponentLoadSection from "../../components/componentLoadSection";
 
 const EmptyData = styled.div`
   display: flex;
@@ -64,6 +65,7 @@ const DetailPropertyUsers = (props) => {
     props;
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataTimeLine, setDataTimeLine] = useState([]);
   const [idProperty, setIdProperty] = useState(
@@ -265,6 +267,51 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallRequestPropertyContact = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          idCustomer,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.CUSTOMER.REQUEST_PROPERTY_CONTACT,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
+  const SectionButtonContact = styled.div`
+    padding: 10px 0px;
+    text-align: center;
+    button {
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-weight: 800;
+    }
+  `;
+
   useEffect(() => {
     setIdProperty(params.idProperty.length > 30 ? params.idProperty : null);
     setIdentifier(params.idProperty.length < 30 ? params.idProperty : null);
@@ -289,10 +336,14 @@ const DetailPropertyUsers = (props) => {
         <Content>
           <ContextProperty.Provider
             value={{
+              isOpenComponent,
               getById: () => {
                 handlerCallGetPropertyById();
               },
               dataDetail,
+              onCloseComponent: () => {
+                setIsOpenComponent(null);
+              },
               updateProperty: async (data) => {
                 try {
                   await handlerCallUpdateProperty(data);
@@ -480,26 +531,82 @@ const DetailPropertyUsers = (props) => {
               />
               <GeneralCard>
                 <div className="header-title">
-                  <h1>Contactar</h1>
+                  <h1>Datos de contacto</h1>
+                </div>
+                <div className="content-card">
+                  <ComponentLoadSection
+                    isLoadApi={isLoadApi}
+                    position="absolute"
+                    text="Contactando.."
+                  >
+                    <Card>
+                      <div className="card-user">
+                        <div className="top-info">
+                          <div className="icon-info-circle">
+                            <div>
+                              <span>
+                                {frontFunctions.letterInitialName(
+                                  dataDetail.contactName
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="name-info">
+                            <h3>{dataDetail.contactName}</h3>
+                            <span>{dataDetail.contactPhoneNumberFormat}</span>
+                          </div>
+                        </div>
+                        {dataDetail.canBeContacted === true && (
+                          <SectionButtonContact>
+                            <button
+                              onClick={async () => {
+                                try {
+                                  setIsLoadApi(true);
+                                  await handlerCallRequestPropertyContact(
+                                    {
+                                      idApartment: dataDetail.idApartment,
+                                    },
+                                    dataDetail.idProperty
+                                  );
+                                  handlerCallGetPropertyById();
+                                  setIsLoadApi(false);
+                                } catch (error) {
+                                  setIsLoadApi(false);
+                                }
+                              }}
+                            >
+                              Contactar
+                            </button>
+                          </SectionButtonContact>
+                        )}
+                      </div>
+                    </Card>
+                  </ComponentLoadSection>
+                </div>
+              </GeneralCard>
+              <GeneralCard>
+                <div className="header-title">
+                  <h1>Publicación</h1>
                 </div>
                 <div className="content-card">
                   <Card>
                     <div className="card-user">
-                      <div className="top-info">
-                        <div className="icon-info-circle">
-                          <div>
-                            <span>
-                              {frontFunctions.letterInitialName(
-                                dataDetail.contactName
-                              )}
-                            </span>
-                          </div>
-                        </div>
-                        <div className="name-info">
-                          <h3>{dataDetail.contactName}</h3>
-                          <span>{dataDetail.contactPhoneNumberFormat}</span>
-                        </div>
-                      </div>
+                      <h1 className="title-publication">{dataDetail.title}</h1>
+                      <br />
+                      <p>
+                        <div
+                          className="description-publication"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              isNil(dataDetail.description) === false
+                                ? dataDetail.description.replace(
+                                    /\n/g,
+                                    "<br />"
+                                  )
+                                : "",
+                          }}
+                        />
+                      </p>
                     </div>
                   </Card>
                 </div>

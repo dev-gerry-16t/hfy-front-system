@@ -389,18 +389,18 @@ const DetailPropertyUsers = (props) => {
             onComplete={() => {
               setIsOpenComponent(null);
               setIsVisibleIntro(false);
-              const elementDad = document.getElementById(
-                "detail-property-user"
-              );
-              elementDad.scrollTop = 0;
+              // const elementDad = document.getElementById(
+              //   "detail-property-user"
+              // );
+              // elementDad.scrollTop = 0;
             }}
             onExit={() => {
               setIsOpenComponent(null);
               setIsVisibleIntro(false);
-              const elementDad = document.getElementById(
-                "detail-property-user"
-              );
-              elementDad.scrollTop = 0;
+              // const elementDad = document.getElementById(
+              //   "detail-property-user"
+              // );
+              // elementDad.scrollTop = 0;
             }}
           />
           <Hints

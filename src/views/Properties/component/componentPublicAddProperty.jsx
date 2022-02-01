@@ -9,7 +9,7 @@ import CustomTextArea from "../../../components/customTextArea";
 import { ReactComponent as IconStyleCheck } from "../../../assets/iconSvg/svgFile/iconStyleCheck.svg";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 
-const ComponentPublicProperty = (props) => {
+const ComponentPublicAddProperty = (props) => {
   const {
     isModalVisible,
     onClose,
@@ -107,6 +107,8 @@ Amenidades:`;
     setDataForm({
       title: title.toUpperCase(),
       description: description.toUpperCase(),
+      idApartment: data.idApartment,
+      identifier: data.identifier,
     });
   };
 
@@ -211,33 +213,26 @@ Amenidades:`;
                   primary
                   onClick={async () => {
                     try {
-                      if (
-                        isEmpty(detailPublicProperty) === true &&
-                        dataForm.isPublished == false
-                      ) {
-                        return false;
+                      if (dataForm.isPublished == true) {
+                        setIsLoadApi(true);
+                        await onPublicProperty(dataForm, dataDetail.idProperty);
+                        setDataForm(initialForm);
+                        setFinishInvitation(true);
+                        setIsLoadApi(false);
                       }
-                      setIsLoadApi(true);
-                      await onPublicProperty(dataForm);
-                      setDataForm(initialForm);
-                      setFinishInvitation(true);
-                      setIsLoadApi(false);
                     } catch (error) {
                       setIsLoadApi(false);
                     }
                   }}
                 >
-                  {dataForm.isPublished === true ||
-                  isEmpty(detailPublicProperty) === true
-                    ? "Publicar"
-                    : "Quitar publicación"}
+                  Publicar inmueble
                 </ButtonsModal>
                 <ButtonsModal
                   onClick={() => {
                     onClose();
                   }}
                 >
-                  Cancelar
+                  Mantener privado
                 </ButtonsModal>
               </div>
             </>
@@ -248,21 +243,14 @@ Amenidades:`;
               <div className="icon-image-send">
                 <IconStyleCheck />
               </div>
-              <h2>
-                {isEmpty(detailPublicProperty) === false &&
-                dataForm.isPublished === false
-                  ? "Se retiró la publicación"
-                  : "¡El inmueble ha sido publicado!"}
-              </h2>
+              <h2>¡El inmueble ha sido publicado!</h2>
               <p
                 style={{
                   textAlign: "center",
                 }}
               >
-                {isEmpty(detailPublicProperty) === false &&
-                dataForm.isPublished === false
-                  ? "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos"
-                  : " Ahora podrás ver tu inmueble publicado en las siguientes plataformas"}
+                Ahora podrás ver tu inmueble publicado en las siguientes
+                plataformas
               </p>
               <div
                 style={{
@@ -295,4 +283,4 @@ Amenidades:`;
   );
 };
 
-export default ComponentPublicProperty;
+export default ComponentPublicAddProperty;

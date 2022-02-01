@@ -48,7 +48,13 @@ const catalogAssociation = [
 const SectionAssociationApplicant = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const {
+    dataDetail,
+    updateProperty,
+    getById,
+    isOpenComponent,
+    onCloseComponent,
+  } = dataContexProperty;
   const {
     fullAddress,
     idProperty,
@@ -103,7 +109,7 @@ const SectionAssociationApplicant = (props) => {
 
   return (
     <Modal
-      visible={visibleModal}
+      visible={visibleModal || isOpenComponent === 9}
       closable={finishProcess === false}
       footer={false}
       style={{ top: 20 }}
@@ -111,6 +117,7 @@ const SectionAssociationApplicant = (props) => {
       onCancel={() => {
         if (finishProcess === false) {
           setVisibleModal(false);
+          onCloseComponent();
         }
       }}
     >

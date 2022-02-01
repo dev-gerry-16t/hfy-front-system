@@ -135,7 +135,7 @@ const SectionDataLocation = (props) => {
         state,
         city,
       });
-      setPositionCoordenates(geolocation);
+      setPositionCoordenates(isNil(geolocation) === false ? geolocation : null);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -183,7 +183,9 @@ const SectionDataLocation = (props) => {
         setOpenOtherNeighborhood(true);
       }
       if (isNil(coordinates) === false) {
-        setPositionCoordenates(JSON.parse(coordinates));
+        setPositionCoordenates(
+          isNil(coordinates) === false ? JSON.parse(coordinates) : null
+        );
       } else {
         const responseMaps = await fetch(
           `https://maps.googleapis.com/maps/api/geocode/json?&address=${code}+${state}+${city}&key=AIzaSyBwWOmV2W9QVm7lN3EBK4wCysj2sLzPhiQ`,
@@ -198,7 +200,9 @@ const SectionDataLocation = (props) => {
           isNil(responseResultMaps.results[0]) === false
             ? responseResultMaps.results[0].geometry.location
             : {};
-        setPositionCoordenates(geolocation);
+        setPositionCoordenates(
+          isNil(geolocation) === false ? geolocation : null
+        );
       }
 
       setIdZipCode(isEmpty(responseResult2) ? "" : id);
@@ -271,7 +275,10 @@ const SectionDataLocation = (props) => {
     return () => {
       onSaveData({
         ...dataFormSaveRef.current,
-        jsonCoordinates: JSON.stringify(dataPositionCoordenatesRef.current),
+        jsonCoordinates:
+          isNil(dataPositionCoordenatesRef.current) === false
+            ? JSON.stringify(dataPositionCoordenatesRef.current)
+            : null,
         zipCode: dataZipCodeRef.current,
       });
     };
@@ -543,7 +550,10 @@ const SectionDataLocation = (props) => {
               onClick={() => {
                 onClickBack({
                   ...dataForm,
-                  jsonCoordinates: JSON.stringify(positionCoordenates),
+                  jsonCoordinates:
+                    isNil(positionCoordenates) === false
+                      ? JSON.stringify(positionCoordenates)
+                      : null,
                   zipCode: isEmpty(zipCode) === false ? zipCode : null,
                 });
               }}
