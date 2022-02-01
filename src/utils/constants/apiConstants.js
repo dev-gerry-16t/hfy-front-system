@@ -100,6 +100,7 @@ const API_CONSTANTS = {
     GET_VERIFICATION_IDENTITY_COINCIDENCES: `${API.CUSTOMER}/verificationIdentity/getVerificationIdentityCoincidences`,
     SET_CONTRACT_APPROVEMENT: `${API.CUSTOMER}/contract/setContractApprovement/`,
     GET_CUSTOMER_DETAIL_BY_ID: `${API.CUSTOMER}/customer/getCustomerDetailById`,
+    REQUEST_PROPERTY_CONTACT: `${API.CUSTOMER}/property/requestPropertyContact/`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

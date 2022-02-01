@@ -336,6 +336,9 @@ const Card = styled.div`
 
   .card-user {
     padding: 1em;
+    .title-publication {
+      font-weight: 700;
+    }
     .top-info {
       display: flex;
       gap: 10px;
