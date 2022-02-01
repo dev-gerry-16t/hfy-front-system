@@ -572,6 +572,33 @@ const DetailPropertyUsers = (props) => {
                   </Card>
                 </div>
               </GeneralCard>
+              <GeneralCard>
+                <div className="header-title">
+                  <h1>Publicación</h1>
+                </div>
+                <div className="content-card">
+                  <Card>
+                    <div className="card-user">
+                      <h1 className="title-publication">{dataDetail.title}</h1>
+                      <br />
+                      <p>
+                        <div
+                          className="description-publication"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              isNil(dataDetail.description) === false
+                                ? dataDetail.description.replace(
+                                    /\n/g,
+                                    "<br />"
+                                  )
+                                : "",
+                          }}
+                        />
+                      </p>
+                    </div>
+                  </Card>
+                </div>
+              </GeneralCard>
             </ContentRight>
           </ContextProperty.Provider>
         </Content>
