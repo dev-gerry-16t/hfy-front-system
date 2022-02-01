@@ -207,7 +207,7 @@ const stepOnboarding = [
     title2: "con otros asesores",
     text: (
       <p className="slide__paragraph">
-        Mas de 1000 asesores tendrán acceso a tus propiedades que compartes para
+        Mas de 1000 asesores tendrán acceso a tus propiedades públicas para{" "}
         promocionarlas y encontrar al mejor inquilino.
       </p>
     ),
@@ -243,7 +243,8 @@ const stepOnboarding = [
       <p className="slide__paragraph">
         Se parte de la{" "}
         <strong>comunidad exclusiva de asesores inmobiliarios</strong>.
-        Recuerda, un usuario verificado brinda confianza en otros asesores.
+        Recuerda, un usuario verificado brinda confianza en otros{" "}
+        <strong>asesores y propietarios</strong>.
       </p>
     ),
   },
