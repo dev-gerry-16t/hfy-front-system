@@ -17,7 +17,7 @@ import IconChat from "../../assets/icons/chat.svg";
 import IconEdit from "../../assets/icons/edit.svg";
 import IconShortLogo from "../../assets/icons/logoShortWhite.svg";
 import IconLongtLogo from "../../assets/icons/logoLongWhite.svg";
-import IconNotification from "../../assets/icons/Notification.svg";
+import IconNotificationWhite from "../../assets/icons/NotificationWhite.svg";
 import IconProfile from "../../assets/icons/Profile.svg";
 import IconClose from "../../assets/icons/LogoutWhite.svg";
 import IconCloseLogout from "../../assets/icons/Logout.svg";
@@ -210,6 +210,7 @@ const Notifications = (props) => {
     IconPercent,
     IconTimesShield,
     IconEditSquare,
+    IconNotificationWhite,
   };
 
   const handlerCallUpdateNotificationsInit = async (id, tab) => {
