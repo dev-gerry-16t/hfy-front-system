@@ -84,6 +84,7 @@ const HomeAgent = React.lazy(() => import("./views/Home/homeAgent"));
 const Notifications = React.lazy(() =>
   import("./views/Notification/notification")
 );
+const Statistics = React.lazy(() => import("./views/Statistics/statistics"));
 
 const routes = [
   {
@@ -429,6 +430,14 @@ const routes = [
     path: "/websystem/notificaciones/:idNotification",
     name: "Notificaciones",
     component: Notifications,
+    exact: true,
+  },
+  {
+    key: "35",
+    id: "statistics",
+    path: "/websystem/estadisticas",
+    name: "Estadísticas",
+    component: Statistics,
     exact: true,
   },
 ];
