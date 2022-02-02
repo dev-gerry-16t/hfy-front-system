@@ -433,7 +433,7 @@ const routes = [
     exact: true,
   },
   {
-    key: "34",
+    key: "35",
     id: "statistics",
     path: "/websystem/estadisticas",
     name: "Estadísticas",
