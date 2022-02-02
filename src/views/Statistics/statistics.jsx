@@ -77,8 +77,8 @@ const Content = styled.div`
   padding: 1em;
   display: grid;
   grid-template-areas:
-    "graph1 graph1 graph3"
-    "graph4 graph4 graph2"
+    "graph1 graph1 graph2"
+    "graph4 graph4 graph3"
     "graph5 graph5 graph5"
     "graph6 graph6 graph6"
     "graph7 graph7 graph7";
@@ -121,6 +121,25 @@ const Content = styled.div`
   }
   .graph-7 {
     grid-area: graph7;
+  }
+  @media screen and (max-width: 1825px) {
+    grid-template-areas:
+    "graph1 graph1 graph1"
+    "graph2 graph2 graph3"
+    "graph4 graph4 graph4"
+    "graph5 graph5 graph5"
+    "graph6 graph6 graph6"
+    "graph7 graph7 graph7";
+  }
+  @media screen and (max-width: 750px) {
+    grid-template-areas:
+    "graph1 graph1 graph1"
+    "graph2 graph2 graph2"
+    "graph3 graph3 graph3"
+    "graph4 graph4 graph4"
+    "graph5 graph5 graph5"
+    "graph6 graph6 graph6"
+    "graph7 graph7 graph7";
   }
 `;
 
