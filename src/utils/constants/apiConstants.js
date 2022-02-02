@@ -101,6 +101,8 @@ const API_CONSTANTS = {
     SET_CONTRACT_APPROVEMENT: `${API.CUSTOMER}/contract/setContractApprovement/`,
     GET_CUSTOMER_DETAIL_BY_ID: `${API.CUSTOMER}/customer/getCustomerDetailById`,
     REQUEST_PROPERTY_CONTACT: `${API.CUSTOMER}/property/requestPropertyContact/`,
+    GET_ADVISER_STATS: `${API.CUSTOMER}/customer/getAdviserStats`,
+    GET_USER_STATS: `${API.CUSTOMER}/loginHistory/getUserStats`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,
