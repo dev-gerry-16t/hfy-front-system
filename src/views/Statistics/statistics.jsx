@@ -25,48 +25,7 @@ const ChartStateColumn = ({ dataStats }) => {
 };
 
 const ChartActiveUsers = ({ dataStats }) => {
-  const [dataChart, setDataChart] = useState({});
-
-  useEffect(() => {
-    if (isEmpty(dataStats) === false) {
-      const periodTime = dataStats.map((row) => {
-        return row.descriptionPeriod;
-      });
-      const dataParse = dataStats.map((row) => {
-        return row.totalInPeriod;
-      });
-      const dataChartOptions = {
-        chart: {
-          type: "area",
-        },
-        title: {
-          text: "",
-        },
-        xAxis: {
-          categories: periodTime,
-        },
-        yAxis: {
-          labels: {
-            format: "{value}%",
-          },
-          title: {
-            text: "Porcentaje total",
-          },
-        },
-        credits: {
-          enabled: false,
-        },
-        series: [
-          {
-            name: "Total",
-            data: dataParse,
-          },
-        ],
-      };
-      setDataChart(dataChartOptions);
-    }
-  }, [dataStats]);
-  return <HighchartsReact highcharts={Highcharts} options={dataChart} />;
+  return <HighchartsReact highcharts={Highcharts} options={dataStats} />;
 };
 
 const Content = styled.div`
@@ -77,8 +36,8 @@ const Content = styled.div`
   padding: 1em;
   display: grid;
   grid-template-areas:
-    "graph1 graph1 graph3"
-    "graph4 graph4 graph2"
+    "graph1 graph1 graph2"
+    "graph4 graph4 graph3"
     "graph5 graph5 graph5"
     "graph6 graph6 graph6"
     "graph7 graph7 graph7";
@@ -121,6 +80,25 @@ const Content = styled.div`
   }
   .graph-7 {
     grid-area: graph7;
+  }
+  @media screen and (max-width: 1825px) {
+    grid-template-areas:
+      "graph1 graph1 graph1"
+      "graph2 graph2 graph3"
+      "graph4 graph4 graph4"
+      "graph5 graph5 graph5"
+      "graph6 graph6 graph6"
+      "graph7 graph7 graph7";
+  }
+  @media screen and (max-width: 750px) {
+    grid-template-areas:
+      "graph1 graph1 graph1"
+      "graph2 graph2 graph2"
+      "graph3 graph3 graph3"
+      "graph4 graph4 graph4"
+      "graph5 graph5 graph5"
+      "graph6 graph6 graph6"
+      "graph7 graph7 graph7";
   }
 `;
 
@@ -212,6 +190,7 @@ const StatisticsHomify = (props) => {
         const parseData = responseResult.map((row) => {
           return {
             fullName: row.fullName,
+            username: row.username,
             name: "Propiedades",
             y: row.percentPerAdviser,
             totalUserProperties: row.totalUserProperties,
@@ -228,7 +207,8 @@ const StatisticsHomify = (props) => {
             text: "",
           },
           tooltip: {
-            pointFormat: "Total: <b>{point.totalUserProperties}</b>",
+            pointFormat:
+              "Total: <b>{point.totalUserProperties}</b><br/> Correo: <b>{point.username}</b>",
           },
           accessibility: {
             point: {
@@ -282,6 +262,9 @@ const StatisticsHomify = (props) => {
             type: "category",
           },
           yAxis: {
+            labels: {
+              format: "{value}%",
+            },
             title: {
               text: "Porcentaje total",
             },
@@ -378,6 +361,9 @@ const StatisticsHomify = (props) => {
             crosshair: true,
           },
           yAxis: {
+            labels: {
+              format: "{value}%",
+            },
             title: {
               text: "Porcentaje total",
             },
@@ -455,9 +441,118 @@ const StatisticsHomify = (props) => {
         isNil(response.response[2]) === false
           ? response.response[2]
           : [];
-      setStatsPerDay(responseResult);
-      setStatsPerWeek(responseResult1);
-      setStatsPerMonth(responseResult2);
+
+      if (isEmpty(responseResult) === false) {
+        const periodTime = responseResult.map((row) => {
+          return row.descriptionPeriod;
+        });
+        const dataParse = responseResult.map((row) => {
+          return row.totalInPeriod;
+        });
+        const dataChartOptions = {
+          chart: {
+            type: "area",
+          },
+          title: {
+            text: "",
+          },
+          xAxis: {
+            categories: periodTime,
+          },
+          yAxis: {
+            title: {
+              text: "Porcentaje total",
+            },
+          },
+          credits: {
+            enabled: false,
+          },
+          tooltip: {
+            pointFormat: "Activos: <b>{point.y}</b>",
+          },
+          series: [
+            {
+              name: "Total",
+              data: dataParse,
+            },
+          ],
+        };
+        setStatsPerDay(dataChartOptions);
+      }
+      if (isEmpty(responseResult1) === false) {
+        const periodTime = responseResult1.map((row) => {
+          return row.descriptionPeriod;
+        });
+        const dataParse = responseResult1.map((row) => {
+          return row.totalInPeriod;
+        });
+        const dataChartOptions = {
+          chart: {
+            type: "area",
+          },
+          title: {
+            text: "",
+          },
+          xAxis: {
+            categories: periodTime,
+          },
+          yAxis: {
+            title: {
+              text: "Porcentaje total",
+            },
+          },
+          credits: {
+            enabled: false,
+          },
+          tooltip: {
+            pointFormat: "Activos: <b>{point.y}</b>",
+          },
+          series: [
+            {
+              name: "Total",
+              data: dataParse,
+            },
+          ],
+        };
+        setStatsPerWeek(dataChartOptions);
+      }
+      if (isEmpty(responseResult2) === false) {
+        const periodTime = responseResult2.map((row) => {
+          return row.descriptionPeriod;
+        });
+        const dataParse = responseResult2.map((row) => {
+          return row.totalInPeriod;
+        });
+        const dataChartOptions = {
+          chart: {
+            type: "area",
+          },
+          title: {
+            text: "",
+          },
+          xAxis: {
+            categories: periodTime,
+          },
+          yAxis: {
+            title: {
+              text: "Porcentaje total",
+            },
+          },
+          credits: {
+            enabled: false,
+          },
+          tooltip: {
+            pointFormat: "Activos: <b>{point.y}</b>",
+          },
+          series: [
+            {
+              name: "Total",
+              data: dataParse,
+            },
+          ],
+        };
+        setStatsPerMonth(dataChartOptions);
+      }
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -536,7 +631,9 @@ const StatisticsHomify = (props) => {
           <h1>Actividad diaria de asesores</h1>
         </div>
         <div className="graph" id="graph-per-day">
-          <ChartActiveUsers dataStats={statsPerDay} />
+          {isEmpty(statsPerDay) === false && (
+            <ChartActiveUsers dataStats={statsPerDay} />
+          )}
         </div>
       </div>
       <div className="container-graph graph-6">
@@ -544,7 +641,9 @@ const StatisticsHomify = (props) => {
           <h1>Actividad semanal de asesores</h1>
         </div>
         <div className="graph">
-          <ChartActiveUsers dataStats={statsPerWeek} />
+          {isEmpty(statsPerWeek) === false && (
+            <ChartActiveUsers dataStats={statsPerWeek} />
+          )}
         </div>
       </div>
       <div className="container-graph graph-7">
@@ -552,7 +651,9 @@ const StatisticsHomify = (props) => {
           <h1>Actividad mensual de asesores</h1>
         </div>
         <div className="graph">
-          <ChartActiveUsers dataStats={statsPerMonth} />
+          {isEmpty(statsPerMonth) === false && (
+            <ChartActiveUsers dataStats={statsPerMonth} />
+          )}
         </div>
       </div>
     </Content>

@@ -1,4 +1,5 @@
 import React from "react";
+import isEmpty from "lodash/isEmpty";
 import Arrow from "../assets/icons/Arrow.svg";
 import Magnifier from "react-magnifier";
 import { Modal } from "antd";
@@ -39,42 +40,44 @@ const CustomViewDocument = (props) => {
       className="modal-signature-contract"
       width={matchedScreen(window.matchMedia("(max-width: 900px)"))}
     >
-      <div className="form-modal">
-        <div className="title-head-modal">
-          <h1>{dataDocument.documentType}</h1>
-        </div>
-        {downloadDoc === true && (
-          <div
-            style={{
-              textAlign: "center",
-              marginBottom: 10,
-            }}
-          >
-            <a
-              href={`${ENVIROMENT}/api/viewFileDownload/${dataDocument.newIdDocument}/${dataDocument.newBucketSorce}/${dataDocument.extension}`}
-              download
-              target="_blank"
-            >
-              Descargar
-            </a>
+      {isEmpty(dataDocument) === false && (
+        <div className="form-modal">
+          <div className="title-head-modal">
+            <h1>{dataDocument.documentType}</h1>
           </div>
-        )}
-        <div className="contract-children-information">
-          {dataDocument.extension === "docx" ||
-          dataDocument.extension === "pdf" ? (
-            <iframe
-              sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
-              title="Vista documento"
-              className="iframe-docx-hfy"
-              src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataDocument.url}&embedded=true`}
-            />
-          ) : (
-            <Magnifier
-              src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
-            />
+          {downloadDoc === true && (
+            <div
+              style={{
+                textAlign: "center",
+                marginBottom: 10,
+              }}
+            >
+              <a
+                href={`${ENVIROMENT}/api/viewFileDownload/${dataDocument.newIdDocument}/${dataDocument.newBucketSorce}/${dataDocument.extension}`}
+                download
+                target="_blank"
+              >
+                Descargar
+              </a>
+            </div>
           )}
+          <div className="contract-children-information">
+            {dataDocument.extension === "docx" ||
+            dataDocument.extension === "pdf" ? (
+              <iframe
+                sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-presentation allow-same-origin allow-scripts allow-top-navigation allow-top-navigation-by-user-activation"
+                title="Vista documento"
+                className="iframe-docx-hfy"
+                src={`https://docs.google.com/gview?url=${ENVIROMENT}${dataDocument.url}&embedded=true`}
+              />
+            ) : (
+              <Magnifier
+                src={`${ENVIROMENT}/api/viewFile/${dataDocument.idDocument}/${dataDocument.bucketSource}`}
+              />
+            )}
+          </div>
         </div>
-      </div>
+      )}
       <div
         style={{
           textAlign: "center",
