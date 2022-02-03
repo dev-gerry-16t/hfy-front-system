@@ -389,7 +389,7 @@ const SectionDocuments = (props) => {
                                 setTimeout(() => {
                                   setIsLoadApi(false);
                                   setIsVisibleModalDocument(true);
-                                }, 3000);
+                                }, 4000);
                               } catch (error) {
                                 setIsLoadApi(false);
                               }

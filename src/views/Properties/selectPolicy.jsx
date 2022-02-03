@@ -667,7 +667,8 @@ const SelectPolicy = (props) => {
         if (isNil(findPolicySelect) === false) {
           if (
             findPolicySelect.minimunAmount >
-            dataDetail.currentRent * findPolicySelect.percentBase
+            (dataDetail.currentRent + dataDetail.maintenanceAmount) *
+              findPolicySelect.percentBase
           ) {
             setAmountTotalPolicy({
               amountFormat: frontFunctions.parseFormatCurrency(
@@ -682,14 +683,17 @@ const SelectPolicy = (props) => {
           } else {
             setAmountTotalPolicy({
               amountFormat: frontFunctions.parseFormatCurrency(
-                dataDetail.currentRent * findPolicySelect.percentBase +
-                  dataDetail.currentRent *
+                (dataDetail.currentRent + dataDetail.maintenanceAmount) *
+                  findPolicySelect.percentBase +
+                  (dataDetail.currentRent + dataDetail.maintenanceAmount) *
                     findPolicySelect.percentBase *
                     findPolicySelect.taxBase,
                 2,
                 2
               ),
-              amount: dataDetail.currentRent * findPolicySelect.percentBase,
+              amount:
+                (dataDetail.currentRent + dataDetail.maintenanceAmount) *
+                findPolicySelect.percentBase,
               isoCode: findPolicySelect.ISOCode,
             });
           }
@@ -740,7 +744,12 @@ const SelectPolicy = (props) => {
             </span>
             <div className="comision">
               <strong>Monto de renta</strong>{" "}
-              <span>{dataDetail.currentRentFormat}</span>
+              <span>
+                {isNil(dataDetail.maintenanceAmount) === false &&
+                dataDetail.maintenanceAmount > 0
+                  ? dataDetail.grandTotalForRentFormat
+                  : dataDetail.currentRentFormat}
+              </span>
             </div>
           </NoticePolicy>
           <SectionCard>
@@ -777,7 +786,9 @@ const SelectPolicy = (props) => {
                       <div className="price column-center">
                         {isNil(dataDetail.currentRent) === false &&
                         rowMap.minimunAmount >
-                          dataDetail.currentRent * rowMap.percentBase ? (
+                          (dataDetail.currentRent +
+                            dataDetail.maintenanceAmount) *
+                            rowMap.percentBase ? (
                           <h2>
                             {isNil(dataDetail.currentRent) === false &&
                             isNil(dataDetail.currentRent) === false
@@ -795,8 +806,11 @@ const SelectPolicy = (props) => {
                             {isNil(dataDetail.currentRent) === false &&
                             isNil(dataDetail.currentRent) === false
                               ? frontFunctions.parseFormatCurrency(
-                                  dataDetail.currentRent * rowMap.percentBase +
-                                    dataDetail.currentRent *
+                                  (dataDetail.currentRent +
+                                    dataDetail.maintenanceAmount) *
+                                    rowMap.percentBase +
+                                    (dataDetail.currentRent +
+                                      dataDetail.maintenanceAmount) *
                                       rowMap.percentBase *
                                       rowMap.taxBase,
                                   2,
@@ -874,15 +888,20 @@ const SelectPolicy = (props) => {
                           } else {
                             setAmountTotalPolicy({
                               amountFormat: frontFunctions.parseFormatCurrency(
-                                dataDetail.currentRent * rowMap.percentBase +
-                                  dataDetail.currentRent *
+                                (dataDetail.currentRent +
+                                  dataDetail.maintenanceAmount) *
+                                  rowMap.percentBase +
+                                  (dataDetail.currentRent +
+                                    dataDetail.maintenanceAmount) *
                                     rowMap.percentBase *
                                     rowMap.taxBase,
                                 2,
                                 2
                               ),
                               amount:
-                                dataDetail.currentRent * rowMap.percentBase,
+                                (dataDetail.currentRent +
+                                  dataDetail.maintenanceAmount) *
+                                rowMap.percentBase,
                               isoCode: rowMap.ISOCode,
                             });
                           }
