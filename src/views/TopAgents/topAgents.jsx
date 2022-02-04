@@ -11,6 +11,8 @@ import FrontFunctions from "../../utils/actions/frontFunctions";
 import { ReactComponent as IconKing } from "../../assets/iconSvg/svgFile/iconKingAgent.svg";
 import { ReactComponent as IconCertificate } from "../../assets/iconSvg/svgFile/iconCertificateHomify.svg";
 import { ReactComponent as IconTimes } from "../../assets/iconSvg/svgFile/iconRedSquareTimes.svg";
+import { ReactComponent as ArrowUp2 } from "../../assets/iconSvg/svgFile/arrowUp2.svg";
+import { ReactComponent as ArrowDown2 } from "../../assets/iconSvg/svgFile/arrowDown2.svg";
 
 const Content = styled.div`
   position: relative;
@@ -48,7 +50,24 @@ const Content = styled.div`
     .content-table-agents {
       width: 100%;
       padding: 0.5em 2em;
+      .table-desktop {
+      }
     }
+  }
+
+  @media screen and (max-width: 1060px) {
+    .content-table-agents {
+      .table-desktop {
+        display: none;
+      }
+    }
+  }
+  @media screen and (max-width: 920px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 460px) {
+    font-size: 12px;
+    padding: 1em 0px;
   }
 `;
 
@@ -96,6 +115,9 @@ const Ribbon = styled.div`
     border: 2px solid var(--color-primary);
     transform: rotate(45deg);
   }
+  @media screen and (max-width: 360px) {
+    font-size: 10px;
+  }
 `;
 
 const RankingAgents = styled.div`
@@ -103,6 +125,13 @@ const RankingAgents = styled.div`
   flex-direction: row;
   justify-content: center;
   align-items: end;
+  font-size: 16px;
+  @media screen and (max-width: 920px) {
+    font-size: 14px;
+  }
+  @media screen and (max-width: 620px) {
+    font-size: 10px;
+  }
 `;
 
 const CardRankingAgents = styled.div`
@@ -115,6 +144,7 @@ const CardRankingAgents = styled.div`
     position: relative;
     box-shadow: 0px 6px 13px -3px rgba(255, 0, 131, 0.22);
     background: ${(props) => props.backGround};
+    width: 15em;
     .section-face {
       width: 100%;
       display: flex;
@@ -164,13 +194,17 @@ const CardRankingAgents = styled.div`
         font-weight: 800;
         font-size: 1.3em;
         margin: 0px;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
       .detail-info {
         display: flex;
         flex-direction: column;
         align-items: center;
         .policy-sell {
-          font-size: 1.2em;
+          font-size: 1em;
+          text-align: center;
           span,
           strong {
             color: var(--color-primary);
@@ -178,9 +212,39 @@ const CardRankingAgents = styled.div`
         }
         .detail-closure {
           font-weight: 500;
+          text-align: center;
           strong {
             color: var(--color-primary);
           }
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 620px) {
+    .content-ranking {
+      width: 12em;
+      .section-face {
+        .certificate-icon {
+          position: absolute;
+          bottom: -1.2em;
+          left: 3.6em;
+          z-index: 1;
+          svg {
+            width: 3em;
+          }
+        }
+        .king-icon {
+          position: absolute;
+          top: -4.2em;
+          right: -0.4em;
+          z-index: 1;
+        }
+      }
+      .info-agent {
+        h1 {
+          font-size: 3em;
+        }
+        h2 {
         }
       }
     }
@@ -240,6 +304,94 @@ const TableRanking = styled.table`
       }
     }
   }
+
+  @media screen and (max-width: 1120px) {
+    font-size: 14px;
+  }
+`;
+
+const TableRankingResponsive = styled.div`
+  display: none;
+  .top-table-responsive {
+    display: flex;
+    width: 100%;
+    padding: 10px 0px;
+    background: #f9e9f1;
+    border-radius: 15px 15px 0px 0px;
+    margin-bottom: 15px;
+    div {
+      padding: 0px 1em;
+    }
+  }
+  .card-content-responsive {
+    margin-bottom: 20px;
+    .top-info-resp {
+      display: flex;
+      background: #f9e9f1;
+      min-height: 45px;
+      align-items: center;
+      padding: 0px 1em;
+      .icon-collapse {
+        flex: 1 1 auto;
+        text-align: right;
+      }
+      .section-icon-agent {
+        position: relative;
+        .image-icon-agent {
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          border: 2px solid var(--color-primary);
+          position: absolute;
+          overflow: hidden;
+          top: -45px;
+          left: 50px;
+          img {
+            width: 100%;
+          }
+        }
+      }
+    }
+    .collapse-info-resp {
+      .content-collapse-info-resp {
+        border-top: 1px solid var(--color-primary);
+        padding: 2px 1em 1em 1em;
+        display: flex;
+        justify-content: space-between;
+        background: #f9e9f1;
+        min-height: 100px;
+        .content-row {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+        }
+      }
+    }
+  }
+  @media screen and (max-width: 1060px) {
+    display: block;
+  }
+  @media screen and (max-width: 620px) {
+    .card-content-responsive {
+      .collapse-info-resp {
+        .content-collapse-info-resp {
+          flex-direction: column;
+          align-items: start;
+          .content-row {
+            flex-direction: row;
+            gap: 1em;
+          }
+        }
+      }
+    }
+  }
+`;
+
+const CollapseSection = styled.div`
+  max-height: ${(props) => (props.visible === true ? "500px" : "0px")};
+  overflow: hidden;
+  transition: all 0.6s ease-in-out;
 `;
 
 const CardAgent = (props) => {
@@ -258,6 +410,23 @@ const CardAgent = (props) => {
     verified,
     order,
   } = props;
+
+  const shortFullName = (text) => {
+    let newText = isEmpty(text) === false ? text.toUpperCase() : "";
+    if (isEmpty(text) === false) {
+      const splitText = newText.split(" ");
+      const lengthText = splitText.length;
+      if (lengthText > 2) {
+        if (lengthText === 3) {
+          newText = `${splitText[0]} ${splitText[1]}`;
+        }
+        if (lengthText > 3) {
+          newText = `${splitText[0]} ${splitText[lengthText - 2]}`;
+        }
+      }
+    }
+    return newText;
+  };
 
   return (
     <CardRankingAgents
@@ -290,7 +459,7 @@ const CardAgent = (props) => {
           >
             <h1>{position}</h1>
           </div>
-          <h2>{name}</h2>
+          <h2>{shortFullName(name)}</h2>
           <div>
             <Rate
               style={{
@@ -316,6 +485,106 @@ const CardAgent = (props) => {
         </div>
       </div>
     </CardRankingAgents>
+  );
+};
+
+const CardCollapseResponsive = (props) => {
+  const {
+    rating,
+    position,
+    name,
+    imageProfile,
+    policies,
+    closures,
+    properties,
+    verified,
+  } = props;
+  const [visibleInformation, setVisibleInformation] = useState(false);
+
+  return (
+    <div className="card-content-responsive">
+      <div className="top-info-resp">
+        <div
+          className="td-div"
+          style={{
+            justifyContent: "space-around",
+            minWidth: 150,
+          }}
+        >
+          <strong className="number-ranking">#{position}</strong>{" "}
+          <div className="section-icon-agent">
+            <div className="image-icon-agent">
+              <img src={imageProfile} alt="agent" />
+            </div>
+          </div>
+        </div>
+        <div>
+          <strong>{name}</strong>
+        </div>
+        <div className="icon-collapse">
+          {visibleInformation === false ? (
+            <ArrowDown2
+              stroke="#200E32"
+              width="1.5em"
+              onClick={() => {
+                setVisibleInformation(true);
+              }}
+            />
+          ) : (
+            <ArrowUp2
+              stroke="#200E32"
+              width="1.5em"
+              onClick={() => {
+                setVisibleInformation(false);
+              }}
+            />
+          )}
+        </div>
+      </div>
+      <CollapseSection
+        visible={visibleInformation}
+        className="collapse-info-resp"
+      >
+        <div className="content-collapse-info-resp">
+          <div className="content-row">
+            <strong>Verificación</strong>
+            <div>
+              {verified === true ? (
+                <IconCertificate width={30} />
+              ) : (
+                <IconTimes width={30} />
+              )}
+            </div>
+          </div>
+          <div className="content-row">
+            <strong>Calificación</strong>
+            <div>
+              <Rate
+                style={{
+                  fontSize: "1em",
+                  color: "#F3BF3A",
+                }}
+                tooltips={[]}
+                onChange={() => {}}
+                value={rating}
+              />
+            </div>
+          </div>
+          <div className="content-row">
+            <strong>Publicaciones</strong>
+            <div>{properties}</div>
+          </div>
+          <div className="content-row">
+            <strong>Cierres</strong>
+            <div>{closures}</div>
+          </div>
+          <div className="content-row">
+            <strong>Ventas</strong>
+            <div>{policies}</div>
+          </div>
+        </div>
+      </CollapseSection>
+    </div>
   );
 };
 
@@ -427,10 +696,10 @@ const TopAgents = (props) => {
           : [];
       if (isEmpty(responseResult) === false) {
         const arrayTopAgent = responseResult.filter((row) => {
-          return row.rankingNo < 6;
+          return row.rankingNo < 4;
         });
         const arrayLowAgent = responseResult.filter((row) => {
-          return row.rankingNo > 5;
+          return row.rankingNo > 3;
         });
         setTopAgents(arrayTopAgent);
         setTopLowAgents(arrayLowAgent);
@@ -469,25 +738,25 @@ const TopAgents = (props) => {
   };
 
   const handlerGetSize = (key) => {
-    let sizeOrder = "16px";
+    let sizeOrder = "1em";
     switch (key) {
       case 1:
-        sizeOrder = "16px";
+        sizeOrder = "1em";
         break;
       case 2:
-        sizeOrder = "14px";
+        sizeOrder = "0.875em";
         break;
       case 3:
-        sizeOrder = "14px";
+        sizeOrder = "0.875em";
         break;
       case 4:
-        sizeOrder = "12px";
+        sizeOrder = "0.75em";
         break;
       case 5:
-        sizeOrder = "12px";
+        sizeOrder = "0.75em";
         break;
       default:
-        sizeOrder = "16px";
+        sizeOrder = "1em";
         break;
     }
     return sizeOrder;
@@ -563,64 +832,95 @@ const TopAgents = (props) => {
           </p>
         </div>
         <div className="content-table-agents">
-          <TableRanking>
-            <tr>
-              <th
+          <div className="table-desktop">
+            <TableRanking>
+              <tr>
+                <th
+                  style={{
+                    textAlign: "center",
+                    minWidth: 150,
+                  }}
+                >
+                  <div className="th-div th-div-first">Ranking</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className="th-div">Asesor</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className="th-div">Verificación</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className="th-div">Calificación</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className="th-div">Publicaciones</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className="th-div">Cierres</div>
+                </th>
+                <th
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  <div className=" th-div th-div-last">Ventas</div>
+                </th>
+              </tr>
+              {isEmpty(topLowAgents) === false &&
+                topLowAgents.map((row) => {
+                  return (
+                    <TrTable
+                      rating={row.rating}
+                      position={row.rankingNo}
+                      name={row.fullName}
+                      imageProfile={row.profilePath}
+                      policies={row.policiesTotal}
+                      closures={row.closingTotal}
+                      properties={row.propertiesPublished}
+                      verified={row.isVerified}
+                    />
+                  );
+                })}
+            </TableRanking>
+          </div>
+          <TableRankingResponsive>
+            <div className="top-table-responsive">
+              <div
                 style={{
-                  textAlign: "center",
                   minWidth: 150,
                 }}
               >
-                <div className="th-div th-div-first">Ranking</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className="th-div">Asesor</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className="th-div">Verificación</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className="th-div">Calificación</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className="th-div">Publicaciones</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className="th-div">Cierres</div>
-              </th>
-              <th
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                <div className=" th-div th-div-last">Ventas</div>
-              </th>
-            </tr>
+                <strong>Ranking</strong>
+              </div>
+              <div>
+                <strong>Asesor</strong>
+              </div>
+            </div>
             {isEmpty(topLowAgents) === false &&
               topLowAgents.map((row) => {
                 return (
-                  <TrTable
-                    rating={4}
+                  <CardCollapseResponsive
+                    rating={row.rating}
                     position={row.rankingNo}
                     name={row.fullName}
                     imageProfile={row.profilePath}
@@ -631,7 +931,7 @@ const TopAgents = (props) => {
                   />
                 );
               })}
-          </TableRanking>
+          </TableRankingResponsive>
         </div>
       </div>
     </Content>
