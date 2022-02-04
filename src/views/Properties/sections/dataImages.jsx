@@ -179,7 +179,7 @@ const SectionDataImages = (props) => {
     const { idCustomer, idSystemUser, idLoginHistory } = dataProfile;
 
     const dataDocument = {
-      documentName: name,
+      documentName: `${name}.jpeg`,
       extension: "jpeg",
       preview: null,
       thumbnail: null,

@@ -74,6 +74,14 @@ const SectionChangeImage = (props) => {
             exportQuality={0.9}
           />
         </div>
+        <div style={{ textAlign: "center" }}>
+          <p
+            style={{ textAlign: "center", fontFamily: "Poppins", fontSize: 12 }}
+          >
+            Tu imagen de perfil es pública y podrá ser compartida con otros
+            usuarios.
+          </p>
+        </div>
         <div className="button_init_primary">
           <button
             type="button"
