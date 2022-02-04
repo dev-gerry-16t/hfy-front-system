@@ -130,8 +130,46 @@ const EditProfileUsers = (props) => {
         isEmpty(response.response[2]) === false
           ? response.response[2]
           : [];
+      setDataPhoneNumber(responseResultPhoneNumber);
+      setDataEmail(responseResultEmail);
       setDataCustomerDetail(responseResult);
       setDataDetailReference(responseResultReference);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetCustomerDataV2 = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_CUSTOMER_DATA
+      );
+
+      const responseResultPhoneNumber =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[1]) === false &&
+        isEmpty(response.response[1]) === false
+          ? response.response[1]
+          : [];
+      const responseResultEmail =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[2]) === false &&
+        isEmpty(response.response[2]) === false
+          ? response.response[2]
+          : [];
       setDataPhoneNumber(responseResultPhoneNumber);
       setDataEmail(responseResultEmail);
     } catch (error) {
@@ -228,6 +266,9 @@ const EditProfileUsers = (props) => {
           dataCustomerDetail,
           getById: () => {
             handlerCallGetCustomerData();
+          },
+          getByIdV2: () => {
+            handlerCallGetCustomerDataV2();
           },
           dataDetailReference,
           identifier: dataConfigForm.identifier,
