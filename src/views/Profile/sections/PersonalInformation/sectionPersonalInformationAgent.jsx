@@ -77,6 +77,7 @@ const SectionPersonalInformationAgent = (props) => {
     history,
     identifier,
     getById,
+    getByIdV2,
     idCustomerOwner,
     dataEmail,
     dataPhoneNumber,
@@ -590,7 +591,7 @@ const SectionPersonalInformationAgent = (props) => {
           dataEmail={dataEmail}
           dataPhoneNumber={dataPhoneNumber}
           getById={() => {
-            getById();
+            getByIdV2();
           }}
         />
         <div
