@@ -48,6 +48,7 @@ import IconTwoUser from "../../assets/icons/iconTwoUser.svg";
 import IconPercent from "../../assets/icons/iconPercent.svg";
 import IconTimesShield from "../../assets/icons/IconTimesShield.svg";
 import IconEditSquare from "../../assets/icons/iconEditSquare.svg";
+import IconStar from "../../assets/icons/iconStar.svg";
 import routes from "../../routes";
 import SectionChangeImage from "./section/sectionChangeImage";
 import {
@@ -143,6 +144,7 @@ const DefaultLayout = (props) => {
     IconTimesShield,
     IconEditSquare,
     IconNotificationWhite,
+    IconStar,
   };
 
   const [nameSection, setNameSection] = useState("");
@@ -376,6 +378,12 @@ const DefaultLayout = (props) => {
   };
 
   useEffect(() => {
+    const eventListenerSession = (event) => {
+      if (event.url == window.location.origin + "/logout") {
+        return history.push("/logout");
+      }
+    };
+    window.addEventListener("storage", eventListenerSession, false);
     if (isNil(dataProfile) === true) {
       return history.push("/");
     }
@@ -538,6 +546,7 @@ const DefaultLayout = (props) => {
     return () => {
       socket.disconnect();
       clearInterval(interval);
+      window.removeEventListener("storage", eventListenerSession);
     };
   }, []);
 

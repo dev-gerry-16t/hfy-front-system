@@ -103,6 +103,7 @@ const API_CONSTANTS = {
     REQUEST_PROPERTY_CONTACT: `${API.CUSTOMER}/property/requestPropertyContact/`,
     GET_ADVISER_STATS: `${API.CUSTOMER}/customer/getAdviserStats`,
     GET_USER_STATS: `${API.CUSTOMER}/loginHistory/getUserStats`,
+    GET_ADVISER_RANKING: `${API.CUSTOMER}/customer/getAdviserRanking`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

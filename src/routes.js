@@ -85,6 +85,7 @@ const Notifications = React.lazy(() =>
   import("./views/Notification/notification")
 );
 const Statistics = React.lazy(() => import("./views/Statistics/statistics"));
+const TopAgents = React.lazy(() => import("./views/TopAgents/topAgents"));
 
 const routes = [
   {
@@ -438,6 +439,14 @@ const routes = [
     path: "/websystem/estadisticas",
     name: "Estadísticas",
     component: Statistics,
+    exact: true,
+  },
+  {
+    key: "36",
+    id: "topAgents",
+    path: "/websystem/top-asesores",
+    name: "Top Asesores",
+    component: TopAgents,
     exact: true,
   },
 ];
