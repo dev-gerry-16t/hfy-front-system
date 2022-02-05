@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import "antd/dist/antd.css";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -86,6 +86,13 @@ const Login = (props) => {
       setErrorsLogin({ ...errorsLogin, error: true, message: error });
     }
   };
+
+  useEffect(() => {
+    const { dataProfile } = props;
+    if (isNil(dataProfile) === false && isEmpty(dataProfile) === false) {
+      history.push(dataProfile.path);
+    }
+  }, []);
 
   return (
     <div className="App">
@@ -234,7 +241,10 @@ const Login = (props) => {
 };
 
 const mapStateToProps = (state) => {
-  return {};
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
 };
 
 const mapDispatchToProps = (dispatch) => ({

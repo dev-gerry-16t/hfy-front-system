@@ -378,6 +378,12 @@ const DefaultLayout = (props) => {
   };
 
   useEffect(() => {
+    const eventListenerSession = (event) => {
+      if (event.url == window.location.origin + "/logout") {
+        return history.push("/logout");
+      }
+    };
+    window.addEventListener("storage", eventListenerSession, false);
     if (isNil(dataProfile) === true) {
       return history.push("/");
     }
@@ -540,6 +546,7 @@ const DefaultLayout = (props) => {
     return () => {
       socket.disconnect();
       clearInterval(interval);
+      window.removeEventListener("storage", eventListenerSession);
     };
   }, []);
 
