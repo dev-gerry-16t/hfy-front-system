@@ -167,6 +167,7 @@ const CardRankingAgents = styled.div`
         z-index: 1;
       }
       .avatar-agent {
+        background: #fff;
         width: 7em;
         height: 7em;
         border-radius: 50%;
@@ -326,6 +327,7 @@ const TableRankingResponsive = styled.div`
   .card-content-responsive {
     margin-bottom: 20px;
     .top-info-resp {
+      cursor: pointer;
       display: flex;
       background: #f9e9f1;
       min-height: 45px;
@@ -503,7 +505,12 @@ const CardCollapseResponsive = (props) => {
 
   return (
     <div className="card-content-responsive">
-      <div className="top-info-resp">
+      <div
+        className="top-info-resp"
+        onClick={() => {
+          setVisibleInformation(!visibleInformation);
+        }}
+      >
         <div
           className="td-div"
           style={{
@@ -523,21 +530,9 @@ const CardCollapseResponsive = (props) => {
         </div>
         <div className="icon-collapse">
           {visibleInformation === false ? (
-            <ArrowDown2
-              stroke="#200E32"
-              width="1.5em"
-              onClick={() => {
-                setVisibleInformation(true);
-              }}
-            />
+            <ArrowDown2 stroke="#200E32" width="1.5em" />
           ) : (
-            <ArrowUp2
-              stroke="#200E32"
-              width="1.5em"
-              onClick={() => {
-                setVisibleInformation(false);
-              }}
-            />
+            <ArrowUp2 stroke="#200E32" width="1.5em" />
           )}
         </div>
       </div>
@@ -579,7 +574,7 @@ const CardCollapseResponsive = (props) => {
             <div>{closures}</div>
           </div>
           <div className="content-row">
-            <strong>Ventas</strong>
+            <strong>Pólizas</strong>
             <div>{policies}</div>
           </div>
         </div>
@@ -715,19 +710,19 @@ const TopAgents = (props) => {
   const handlerGetOrder = (key) => {
     let orderCard = 0;
     switch (key) {
-      case 1:
+      case "1":
         orderCard = 3;
         break;
-      case 2:
+      case "2":
         orderCard = 2;
         break;
-      case 3:
+      case "3":
         orderCard = 4;
         break;
-      case 4:
+      case "4":
         orderCard = 1;
         break;
-      case 5:
+      case "5":
         orderCard = 5;
         break;
       default:
@@ -740,19 +735,19 @@ const TopAgents = (props) => {
   const handlerGetSize = (key) => {
     let sizeOrder = "1em";
     switch (key) {
-      case 1:
+      case "1":
         sizeOrder = "1em";
         break;
-      case 2:
+      case "2":
         sizeOrder = "0.875em";
         break;
-      case 3:
+      case "3":
         sizeOrder = "0.875em";
         break;
-      case 4:
+      case "4":
         sizeOrder = "0.75em";
         break;
-      case 5:
+      case "5":
         sizeOrder = "0.75em";
         break;
       default:
@@ -765,19 +760,19 @@ const TopAgents = (props) => {
   const handlerGetIndex = (key) => {
     let zIndexOrder = 2;
     switch (key) {
-      case 1:
+      case "1":
         zIndexOrder = 2;
         break;
-      case 2:
+      case "2":
         zIndexOrder = 1;
         break;
-      case 3:
+      case "3":
         zIndexOrder = 1;
         break;
-      case 4:
+      case "4":
         zIndexOrder = 0;
         break;
-      case 5:
+      case "5":
         zIndexOrder = 0;
         break;
       default:
@@ -808,9 +803,9 @@ const TopAgents = (props) => {
                     rating={row.rating}
                     position={row.rankingNo}
                     zIndex={handlerGetIndex(row.rankingNo)}
-                    isFirst={row.rankingNo === 1}
+                    isFirst={row.rankingNo == 1}
                     fontSize={handlerGetSize(row.rankingNo)}
-                    backGround={row.rankingNo === 1 ? "#F9E9F1" : "#fff"}
+                    backGround={row.rankingNo == 1 ? "#F9E9F1" : "#fff"}
                     name={row.fullName}
                     imageProfile={row.profilePath}
                     policies={row.policiesTotal}
@@ -883,7 +878,7 @@ const TopAgents = (props) => {
                     textAlign: "center",
                   }}
                 >
-                  <div className=" th-div th-div-last">Ventas</div>
+                  <div className=" th-div th-div-last">Pólizas</div>
                 </th>
               </tr>
               {isEmpty(topLowAgents) === false &&
