@@ -103,10 +103,12 @@ const SectionDataFeatures = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          ...data,
+          propertyAmenities: data.propertyAmenities,
+          propertyGeneralCharacteristics: data.propertyGeneralCharacteristics,
+          idApartment: data.idApartment,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY_CHAR_AND_AMEN,
         "PUT"
       );
       const responseResult =
