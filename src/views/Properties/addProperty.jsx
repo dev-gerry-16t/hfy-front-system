@@ -58,7 +58,7 @@ const AddProperty = (props) => {
           ...data,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY,
         "PUT"
       );
       const responseResult =
@@ -92,7 +92,7 @@ const AddProperty = (props) => {
           ...data,
         },
         isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
-        API_CONSTANTS.CUSTOMER.ADD_PROPERTY_V2,
+        API_CONSTANTS.PROPERTY.ADD_PROPERTY_V2,
         "PUT"
       );
       return response.response;
@@ -119,7 +119,7 @@ const AddProperty = (props) => {
           idLoginHistory,
         },
         null,
-        API_CONSTANTS.CUSTOMER.GET_PROPERTY_BY_ID
+        API_CONSTANTS.PROPERTY.GET_PROPERTY_BY_ID
       );
       const responseResult =
         isEmpty(response) === false &&
