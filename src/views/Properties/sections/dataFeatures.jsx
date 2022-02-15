@@ -30,6 +30,7 @@ const SectionDataFeatures = (props) => {
     onBackTo,
     onSaveData,
     dataSaveFeatures,
+    getById,
   } = props;
   const [dataAmenities, setDataAmenities] = useState([]);
   const [dataCharacteristics, setDataCharacteristics] = useState([]);
@@ -117,6 +118,7 @@ const SectionDataFeatures = (props) => {
         isNil(response.response.message) === false
           ? response.response.message
           : {};
+      getById();
       frontFunctions.showMessageStatusApi(
         responseResult,
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
