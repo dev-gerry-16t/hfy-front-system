@@ -28,6 +28,7 @@ import WidgetDataBankProfile from "./widget/widgetDataBankProfile";
 import WidgetCurrentAddressProfile from "./widget/widgetCurrentAddressProfile";
 import WidgetPersonalInfoProfile from "./widget/widgetPersonalInfoProfile";
 import WidgetDataContactProfile from "./widget/widgetDataContactProfile";
+import CustomValidationUser from "../../components/CustomValidationUser";
 
 const DetailProfileContent = styled.div`
   padding: 2em 3em;
@@ -227,6 +228,22 @@ const Content = styled.div`
   }
 `;
 
+const ButtonVerify = styled.button`
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  padding: 5px 1.1em;
+  border-radius: 1em;
+  font-weight: 600;
+  @media screen and (max-width: 420px) {
+    position: absolute;
+    right: 0px;
+    bottom: 0px;
+    padding: 2px 0.8em;
+    font-size: 10px;
+  }
+`;
+
 const ProfileUsers = (props) => {
   const {
     callGlobalActionApi,
@@ -241,6 +258,7 @@ const ProfileUsers = (props) => {
   const [dataEmail, setDataEmail] = useState([]);
   const [dataPhoneNumber, setDataPhoneNumber] = useState([]);
   const [dataTabs, setDataTabs] = useState([]);
+  const [isVisibleVerification, setIsVisibleVerification] = useState(false);
 
   const frontFunctions = new FrontFunctions();
 
@@ -374,9 +392,42 @@ const ProfileUsers = (props) => {
           },
         }}
       >
+        <CustomValidationUser
+          isVisible={isVisibleVerification}
+          onClose={() => {
+            setIsVisibleVerification(false);
+            handlerCallGetCustomerData();
+          }}
+          finished={() => {
+            handlerCallGetCustomerData();
+          }}
+          metadata={{
+            idCustomer: dataProfile.idCustomer,
+          }}
+          clientId={dataProfile.clientId}
+          flowId={dataProfile.flowId}
+          finishedProcess={() => {
+            handlerCallGetCustomerData();
+            setIsVisibleVerification(false);
+          }}
+        />
         <ContentForm>
-          <div className="header-title">
+          <div
+            className="header-title"
+            style={{
+              position: "relative",
+            }}
+          >
             <h1>Detalle de perfil</h1>
+            {dataCustomerDetail.canBeVerified === true && (
+              <ButtonVerify
+                onClick={() => {
+                  setIsVisibleVerification(true);
+                }}
+              >
+                Verificarme
+              </ButtonVerify>
+            )}
           </div>
           <DetailProfileContent>
             <div className="column-grid-1">
