@@ -439,7 +439,7 @@ const SectionDataProperty = (props) => {
                 <CustomInputTypeForm
                   value={dataForm.totalBedrooms}
                   placeholder=""
-                  label="Recamaras *"
+                  label="Recámaras *"
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {

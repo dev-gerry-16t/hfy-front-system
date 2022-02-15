@@ -78,7 +78,7 @@ caracteristicas:`;
     }
     if (isNil(data.totalBedrooms) === false) {
       description = `${description}
-- ${data.totalBedrooms} recamaras`;
+- ${data.totalBedrooms} recámaras`;
     }
     if (isNil(data.totalBathrooms) === false) {
       description = `${description}
