@@ -207,7 +207,7 @@ const SectionDataProperty = (props) => {
           ...data,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY,
         "PUT"
       );
       const responseResult =

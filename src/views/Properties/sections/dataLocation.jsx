@@ -51,6 +51,7 @@ const SectionDataLocation = (props) => {
     idProperty,
     onBackTo,
     onSaveData,
+    getById,
   } = props;
   const [idZipCode, setIdZipCode] = useState(null);
   const [positionCoordenates, setPositionCoordenates] = useState(null);
@@ -246,6 +247,7 @@ const SectionDataLocation = (props) => {
         isNil(response.response.message) === false
           ? response.response.message
           : {};
+      getById();
       frontFunctions.showMessageStatusApi(
         responseResult,
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS

@@ -225,6 +225,9 @@ const AddProperty = (props) => {
             history.push(`/websystem/detail-property-users/${idProperty}`);
           }}
           params={params}
+          getById={() => {
+            handlerCallGetPropertyById();
+          }}
         />
       )}
       {current === 2 && (
@@ -250,6 +253,9 @@ const AddProperty = (props) => {
             history.push(`/websystem/detail-property-users/${idProperty}`);
           }}
           params={params}
+          getById={() => {
+            handlerCallGetPropertyById();
+          }}
         />
       )}
       {current === 3 && (
