@@ -489,7 +489,7 @@ const ComponentFilter = (props) => {
               <div className="group-input">
                 <IconBed width="25px" height="25px" fill="#4E4B66" />
                 <input
-                  placeholder="Recamaras"
+                  placeholder="Recámaras"
                   className="input-type-property"
                   type="number"
                   onChange={(e) => {
@@ -593,7 +593,7 @@ const ComponentFilter = (props) => {
               <div className="group-input">
                 <IconBed width="25px" height="25px" fill="#4E4B66" />
                 <input
-                  placeholder="Recamaras"
+                  placeholder="Recámaras"
                   className="input-type-property"
                   type="number"
                   onChange={(e) => {
