@@ -51,6 +51,7 @@ const SectionDataLocation = (props) => {
     idProperty,
     onBackTo,
     onSaveData,
+    getById,
   } = props;
   const [idZipCode, setIdZipCode] = useState(null);
   const [positionCoordenates, setPositionCoordenates] = useState(null);
@@ -227,10 +228,17 @@ const SectionDataLocation = (props) => {
           idCustomer,
           idSystemUser,
           idLoginHistory,
-          ...data,
+          idApartment: data.idApartment,
+          street: data.street,
+          streetNumber: data.streetNumber,
+          suite: data.suite,
+          idZipCode: data.idZipCode,
+          neighborhood: data.neighborhood,
+          isExactLocation: data.isExactLocation,
+          jsonCoordinates: data.jsonCoordinates,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY_ADDRESS,
         "PUT"
       );
       const responseResult =
@@ -239,6 +247,7 @@ const SectionDataLocation = (props) => {
         isNil(response.response.message) === false
           ? response.response.message
           : {};
+      getById();
       frontFunctions.showMessageStatusApi(
         responseResult,
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS

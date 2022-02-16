@@ -207,7 +207,7 @@ const SectionDataProperty = (props) => {
           ...data,
         },
         id,
-        API_CONSTANTS.CUSTOMER.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY,
         "PUT"
       );
       const responseResult =
@@ -439,7 +439,7 @@ const SectionDataProperty = (props) => {
                 <CustomInputTypeForm
                   value={dataForm.totalBedrooms}
                   placeholder=""
-                  label="Recamaras *"
+                  label="Recámaras *"
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {

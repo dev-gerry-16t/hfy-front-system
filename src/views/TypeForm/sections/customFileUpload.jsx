@@ -169,30 +169,6 @@ const CustomFileUpload = (props) => {
           isEmpty(dataDocument) === false &&
           isNil(dataDocument.idDocument) === true && (
             <>
-              {/* <Dragger
-              action="/"
-              onChange={({ file }) => {
-                // if (isNil(file.originFileObj) === false) {
-                //   const reader = new FileReader();
-                //   reader.readAsDataURL(file.originFileObj);
-                //   reader.onload = (event) => {
-                //     if (file.type !== "application/pdf" && file.type !== "") {
-                //       setPreview(event.target.result);
-                //     } else {
-                //       setPreview("");
-                //     }
-                //   };
-                //   // setFileList(file);
-                //   //setFileName(file.name);
-                //   // handlerAddDocument(file, dataDocument);
-                // }
-                console.log('hola',file);
-              }}
-              method="get"
-              showUploadList={false}
-              accept={acceptFile}
-              beforeUpload={beforeUpload}
-            > */}
               <label for={`id-file-${dataDocument.idDocumentType}`}>
                 Haz Clic aquí para subir tu documento
               </label>
@@ -346,30 +322,6 @@ const CustomFileUpload = (props) => {
             )}
         </Modal>
       </div>
-      {/* {isNil(preview) === false &&
-        isEmpty(dataDocument) === false &&
-        isNil(dataDocument.idDocument) === true &&
-        spinVisibleUpload === true && (
-          <div className="confirm-upload-document button_actions">
-            <button
-              className="button_primary"
-              type="button"
-              onClick={() => {
-                console.log("entro", isEmpty(dataDocument) === false);
-                console.log("entro1", isEmpty(fileList));
-                if (isEmpty(dataDocument) === false) {
-                  console.log("entro al if");
-                  setSpinVisible(true);
-                  handlerAddDocument(fileList, dataDocument);
-                }
-              }}
-            >
-              <span>
-                <i className="fa fa-upload" /> Subir
-              </span>
-            </button>
-          </div>
-        )} */}
     </Spin>
   );
 };

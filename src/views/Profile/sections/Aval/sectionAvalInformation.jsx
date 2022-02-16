@@ -1375,7 +1375,7 @@ const SectionAvalInformation = (props) => {
                     <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                       <ComponentRadio>
                         <strong>
-                          ¿Cuentas con Certificado de Libertad de Gravamen?
+                          ¿Cuentas con Certificado de Libertad de Gravamen? (Opcional)
                         </strong>
                         <div className="radio-inputs-options">
                           <label className="input-radio">
