@@ -92,6 +92,12 @@ const App = (props) => {
           />
           <Route
             exact
+            path="/registro-asesor/:idContact"
+            name="Registro Asesores"
+            component={RegistroAgente}
+          />
+          <Route
+            exact
             path="/recoveryPass"
             name="Recuperar contraseña"
             component={RecoveryPassword}

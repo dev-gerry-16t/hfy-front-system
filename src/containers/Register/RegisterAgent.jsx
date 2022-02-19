@@ -350,7 +350,16 @@ const RegisterAgent = (props) => {
     history,
     callGetAllRegisterUser,
     callGetAllVerifyCode,
+    match,
   } = props;
+  const { params } = match;
+  const idContact =
+    isEmpty(params) === false &&
+    isNil(params.idContact) === false &&
+    isEmpty(params.idContact) === false
+      ? window.atob(params.idContact)
+      : null;
+      
   const [dataForm, setDataForm] = useState({
     givenName: null,
     lastName: null,
@@ -644,6 +653,7 @@ const RegisterAgent = (props) => {
                             ...dataForm,
                             idCustomerType: 3,
                             captchaToken: getCaptchaToken,
+                            idContact,
                           });
                           setStepProcess(2);
                           setSpinVisible(false);
