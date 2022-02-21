@@ -137,7 +137,30 @@ const AddProperty = (props) => {
     }
   };
 
+  const handlerCallSetUserConfig = async (data) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          codeId: "TG-62103bce7dfe03001a68145c-1076872505",
+          idLoginHistory,
+          idSystemUser,
+        },
+        idSystemUser,
+        API_CONSTANTS.PROPERTY.SET_USER_CONFIG,
+        "PUT"
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   useEffect(() => {
+    handlerCallSetUserConfig();
     if (isNil(idProperty) === false) {
       handlerCallGetPropertyById();
     }
