@@ -315,7 +315,8 @@ const CardServiceSelect = styled.div`
 const SectionServiceAgent = (props) => {
   const { dataApplication, onClickViewPolicy } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const { dataDetail, updatePropertyApplicationMethod, getById } =
+    dataContexProperty;
   const {
     idApplicationMethod,
     applicationMethod,
@@ -385,7 +386,7 @@ const SectionServiceAgent = (props) => {
                                 try {
                                   if (row.requiresPolicy === false) {
                                     setIsLoadApi(true);
-                                    await updateProperty({
+                                    await updatePropertyApplicationMethod({
                                       idApartment: dataDetail.idApartment,
                                       idApplicationMethod:
                                         row.idApplicationMethod,
@@ -426,7 +427,7 @@ const SectionServiceAgent = (props) => {
               onClick={async () => {
                 try {
                   setIsLoadApi(true);
-                  await updateProperty({
+                  await updatePropertyApplicationMethod({
                     idApartment: dataDetail.idApartment,
                     idApplicationMethod: 7,
                   });

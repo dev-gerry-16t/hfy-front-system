@@ -754,7 +754,7 @@ const SectionDataImages = (props) => {
                       },
                       response.idProperty
                     );
-                    redirect(response.idProperty);
+                    redirect(response.idProperty, response.idApartment);
                   } else {
                     onBackTo();
                   }

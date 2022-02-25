@@ -59,6 +59,8 @@ const API_CONSTANTS = {
     GET_ALL_PROPERTIES: `${API.API_SECURE}${API.CATALOGS}/getAllProperties`,
     GET_ALL_PHONE_TYPES: `${API.API_SECURE}${API.CATALOGS}/getAllPhoneTypes`,
     GET_ALL_CURRENCIES: `${API.API_SECURE}${API.CATALOGS}/getAllCurrencies`,
+    GET_ALL_SITES: `${API.API_SECURE}${API.CATALOGS}/getAllSites`,
+    GET_ALL_LAND_ACCESS: `${API.API_SECURE}${API.CATALOGS}/getAllLandAccess`,
   },
   CUSTOMER: {
     GET_CUSTOMER_TIME_LINE: `${API.CUSTOMER}/timeLine/getCustomerTimeLine`,
@@ -113,6 +115,8 @@ const API_CONSTANTS = {
     UPDATE_PROPERTY_CHAR_AND_AMEN: `${API.PROPERTY}/updatePropertyCharAndAmen/`,
     SET_USER_CONFIG: `${API.PROPERTY}/setUserConfig/`,
     GET_PROPERTY_BY_ID: `${API.PROPERTY}/getPropertyById`,
+    VALIDATE_CLASSIFIED: `${API.PROPERTY}/validateClassified`,
+    UPDATE_PROPERTY_IN_APPLICATION_METHOD: `${API.PROPERTY}/updatePropertyInApplicationMethod/`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

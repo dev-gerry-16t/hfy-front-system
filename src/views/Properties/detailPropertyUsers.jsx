@@ -241,6 +241,39 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallUpdatePropertyApplicationMethod = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        idProperty,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY_IN_APPLICATION_METHOD,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerCallSetFavoriteProperty = async (data, id) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -417,6 +450,13 @@ const DetailPropertyUsers = (props) => {
               updateProperty: async (data) => {
                 try {
                   await handlerCallUpdateProperty(data);
+                } catch (error) {
+                  throw error;
+                }
+              },
+              updatePropertyApplicationMethod: async (data) => {
+                try {
+                  await handlerCallUpdatePropertyApplicationMethod(data);
                 } catch (error) {
                   throw error;
                 }

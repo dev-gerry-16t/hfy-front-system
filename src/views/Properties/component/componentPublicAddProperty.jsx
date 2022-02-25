@@ -16,11 +16,12 @@ const ComponentPublicAddProperty = (props) => {
     onPublicProperty,
     detailPublicProperty,
     dataDetail = {},
+    dataSites = [],
   } = props;
   const initialForm = {
-    isPublished: false,
     title: null,
     description: null,
+    sites: [],
   };
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
@@ -37,7 +38,7 @@ const ComponentPublicAddProperty = (props) => {
     return textTransform;
   };
 
-  const handlerDefaultTitleDescription = (data) => {
+  const handlerDefaultTitleDescription = (data, data1) => {
     let title = "";
     let description = "";
     const amenities =
@@ -104,11 +105,19 @@ Amenidades:`;
 - ${element.text}`;
       }
     }
+    const arraySites = data1.map((row) => {
+      return {
+        idSite: row.id,
+        isPublished: false,
+      };
+    });
+
     setDataForm({
       title: title.toUpperCase(),
       description: description.toUpperCase(),
       idApartment: data.idApartment,
       identifier: data.identifier,
+      sites: arraySites,
     });
   };
 
@@ -123,12 +132,13 @@ Amenidades:`;
       if (
         isEmpty(detailPublicProperty.title) === true &&
         isEmpty(detailPublicProperty.description) === true &&
-        isEmpty(dataDetail) === false
+        isEmpty(dataDetail) === false &&
+        isEmpty(dataSites) === false
       ) {
-        handlerDefaultTitleDescription(dataDetail);
+        handlerDefaultTitleDescription(dataDetail, dataSites);
       }
     }
-  }, [detailPublicProperty, dataDetail]);
+  }, [detailPublicProperty, dataDetail, dataSites]);
 
   return (
     <Modal
@@ -188,38 +198,52 @@ Amenidades:`;
               </div>
               <p>Selecciona una opción</p>
               <div className="image-platforms">
-                <label className="input-checkbox">
-                  <input
-                    type="checkbox"
-                    id="cbox1"
-                    value="first_checkbox"
-                    checked={dataForm.isPublished === true}
-                    onChange={(e) => {
-                      setDataForm({
-                        ...dataForm,
-                        isPublished: e.target.checked,
-                      });
-                    }}
-                  />{" "}
-                  <img
-                    height="30"
-                    src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296D.jpg"
-                    alt=""
-                  />
-                </label>
+                {isEmpty(dataSites) === false &&
+                  dataSites.map((row) => {
+                    return (
+                      <label className="input-checkbox">
+                        <input
+                          type="checkbox"
+                          id={`check-sites-${row.id}`}
+                          value={`value-sites-${row.id}`}
+                          onChange={(e) => {
+                            const objectAdd = dataForm.sites.find((rowFind) => {
+                              return rowFind.idSite === row.id;
+                            });
+                            const arrayFilter = dataForm.sites.filter(
+                              (rowFilter) => {
+                                return rowFilter.idSite != row.id;
+                              }
+                            );
+                            objectAdd.isPublished = e.target.checked;
+                            arrayFilter.push(objectAdd);
+                            setDataForm({
+                              ...dataForm,
+                              sites: arrayFilter,
+                            });
+                          }}
+                        />{" "}
+                        <img height="30" src={row.source} alt="" />
+                      </label>
+                    );
+                  })}
               </div>
               <div className="button-action">
                 <ButtonsModal
                   primary
                   onClick={async () => {
                     try {
-                      if (dataForm.isPublished == true) {
-                        setIsLoadApi(true);
-                        await onPublicProperty(dataForm, dataDetail.idProperty);
-                        setDataForm(initialForm);
-                        setFinishInvitation(true);
-                        setIsLoadApi(false);
-                      }
+                      setIsLoadApi(true);
+                      await onPublicProperty(
+                        {
+                          ...dataForm,
+                          sites: JSON.stringify(dataForm.sites),
+                        },
+                        dataDetail.idProperty
+                      );
+                      setDataForm(initialForm);
+                      setFinishInvitation(true);
+                      setIsLoadApi(false);
                     } catch (error) {
                       setIsLoadApi(false);
                     }

@@ -38,6 +38,7 @@ const AddProperty = (props) => {
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
+  const [dataSites, setDataSites] = useState([]);
   const [dataSaveThumb, setDataSaveThumb] = useState({});
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
 
@@ -137,6 +138,35 @@ const AddProperty = (props) => {
     }
   };
 
+  const handlerCallGetAllSites = async (id = null, id2 = null) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty: id,
+          idApartment: id2,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_SITES
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataSites(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   const handlerCallSetUserConfig = async (data) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
@@ -160,7 +190,7 @@ const AddProperty = (props) => {
   };
 
   useEffect(() => {
-    handlerCallSetUserConfig();
+    //handlerCallSetUserConfig();
     if (isNil(idProperty) === false) {
       handlerCallGetPropertyById();
     }
@@ -175,6 +205,7 @@ const AddProperty = (props) => {
     <Content id="add-property-user">
       <ComponentPublicAddProperty
         isModalVisible={visiblePublicProperty}
+        dataSites={dataSites}
         onPublicProperty={async (data, id) => {
           try {
             await handlerCallUpdateProperty(data, id);
@@ -304,8 +335,9 @@ const AddProperty = (props) => {
           }}
           dataSaveImages={dataSaveImages}
           dataSaveThumb={dataSaveThumb}
-          redirect={async (id) => {
+          redirect={async (id, id1) => {
             try {
+              await handlerCallGetAllSites(id, id1);
               await handlerCallGetPropertyById(id);
               setVisiblePublicProperty(true);
             } catch (error) {}

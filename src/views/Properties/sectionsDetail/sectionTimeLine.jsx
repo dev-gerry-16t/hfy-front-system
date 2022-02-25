@@ -188,6 +188,10 @@ const IconStep = styled.div`
     animation: ${(props) => (props.select === true ? translate : nonTranslate)}
       0.9s linear infinite;
   }
+
+  &:hover::before {
+    animation-play-state: paused;
+  }
 `;
 
 const CardStep = ({ title, description, finish, select, icon, onClick }) => {
