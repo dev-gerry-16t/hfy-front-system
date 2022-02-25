@@ -290,7 +290,11 @@ const FormModal = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1em;
     .input-checkbox {
+      width: 160px;
+      display: flex;
+      justify-content: space-between;
       input[type="checkbox"] {
         appearance: none;
         background-color: #fff;

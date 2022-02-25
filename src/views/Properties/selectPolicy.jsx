@@ -569,7 +569,7 @@ const SelectPolicy = (props) => {
           ...data,
         },
         idProperty,
-        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY,
+        API_CONSTANTS.PROPERTY.UPDATE_PROPERTY_IN_APPLICATION_METHOD,
         "PUT"
       );
       const responseResult =
