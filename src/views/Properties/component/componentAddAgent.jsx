@@ -69,10 +69,6 @@ const ComponentAddAgent = (props) => {
     }
   };
 
-  useEffect(() => {
-    handlerCallSearchCustomer();
-  }, []);
-
   return (
     <Modal
       visible={isModalVisible}

@@ -124,10 +124,6 @@ const ComponentAddCandidate = (props) => {
     }
   };
 
-  useEffect(() => {
-    handlerCallSearchCustomer();
-  }, []);
-
   return (
     <Modal
       visible={isModalVisible}

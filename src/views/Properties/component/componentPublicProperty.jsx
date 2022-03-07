@@ -192,12 +192,12 @@ Amenidades:`;
         isNil(validData.attributesRequired) === true
       ) {
         if (validData.hasSubscription === true) {
-          // await onPublicProperty({
-          //   ...dataForm,
-          //   sites: JSON.stringify(dataForm.sites),
-          // });
-          // setDataForm(initialForm);
-          // setFinishInvitation(true);
+          await onPublicProperty({
+            ...dataForm,
+            sites: JSON.stringify(dataForm.sites),
+          });
+          setDataForm(initialForm);
+          setFinishInvitation(true);
           setIsVisibleSuscription(false);
         } else {
           setIsVisibleSuscription(true);
@@ -316,7 +316,6 @@ Amenidades:`;
               <div className="image-platforms">
                 {isEmpty(dataSites) === false &&
                   dataSites.map((row) => {
-                    console.log("row", row);
                     return (
                       <label
                         className="input-checkbox"
