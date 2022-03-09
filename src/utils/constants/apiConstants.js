@@ -114,7 +114,6 @@ const API_CONSTANTS = {
     UPDATE_PROPERTY: `${API.PROPERTY}/updateProperty/`,
     UPDATE_PROPERTY_ADDRESS: `${API.PROPERTY}/updatePropertyAddress/`,
     UPDATE_PROPERTY_CHAR_AND_AMEN: `${API.PROPERTY}/updatePropertyCharAndAmen/`,
-    SET_USER_CONFIG: `${API.PROPERTY}/setUserConfig/`,
     GET_PROPERTY_BY_ID: `${API.PROPERTY}/getPropertyById`,
     VALIDATE_CLASSIFIED: `${API.PROPERTY}/validateClassified`,
     UPDATE_PROPERTY_IN_APPLICATION_METHOD: `${API.PROPERTY}/updatePropertyInApplicationMethod/`,
