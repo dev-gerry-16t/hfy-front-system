@@ -655,7 +655,6 @@ const SelectPolicy = (props) => {
   useEffect(() => {
     handlerCallGetPropertyById();
     hanlderCallGetPolicyPaymentMethod();
-    handlerCallSearchCustomer();
   }, []);
 
   useEffect(() => {

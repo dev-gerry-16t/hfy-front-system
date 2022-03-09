@@ -114,6 +114,9 @@ const SectionCandidate = styled.div`
       display: flex;
       flex-direction: column;
       gap: 1em;
+      img {
+        cursor: pointer;
+      }
     }
     .score-user {
       position: absolute;
@@ -383,7 +386,14 @@ const SectionPublicProperty = (props) => {
               {isEmpty(dataSites) === false &&
                 dataSites.map((row) => {
                   return row.isPublished === true ? (
-                    <img width="100px" src={row.source} alt={row.text} />
+                    <img
+                      width="100px"
+                      src={row.source}
+                      alt={row.text}
+                      onClick={() => {
+                        window.open(row.path, "_blank");
+                      }}
+                    />
                   ) : (
                     <></>
                   );

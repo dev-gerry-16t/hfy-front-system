@@ -14,6 +14,11 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 
+const ImgPlatform = styled.img`
+  filter: ${(props) =>
+    props.requiresSubscription === true ? "grayscale(100%)" : "grayscale(0%)"};
+`;
+
 const ComponentPublicProperty = (props) => {
   const {
     isModalVisible,
@@ -33,6 +38,9 @@ const ComponentPublicProperty = (props) => {
   };
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
+  const [isVisibleSuscription, setIsVisibleSuscription] = useState(false);
+  const [isVisibleDataRequired, setIsVisibleDataRequired] = useState(false);
+  const [dataRequired, setDataRequired] = useState({});
   const [dataForm, setDataForm] = useState(initialForm);
   const [statesPlatformSelect, setStatesPlatformSelect] = useState({});
   const frontFunctions = new FrontFunctions();
@@ -153,6 +161,9 @@ Amenidades:`;
 
     data1.forEach((element) => {
       objectStates[element.id] = element.isPublished;
+      if (element.requiresSubscription === true) {
+        setIsVisibleSuscription(true);
+      }
       arraySites.push({
         idSite: element.id,
         isPublished: element.isPublished,
@@ -166,6 +177,48 @@ Amenidades:`;
     });
   };
 
+  const handlerOnPublicProperty = async () => {
+    try {
+      if (
+        isEmpty(detailPublicProperty) === true &&
+        dataForm.isPublished == false
+      ) {
+        return false;
+      }
+      setIsLoadApi(true);
+      const validData = await handlerCallValidateClassified(dataDetail);
+      if (
+        isEmpty(validData.attributesRequired) === true ||
+        isNil(validData.attributesRequired) === true
+      ) {
+        if (validData.hasSubscription === true) {
+          await onPublicProperty({
+            ...dataForm,
+            sites: JSON.stringify(dataForm.sites),
+          });
+          setDataForm(initialForm);
+          setFinishInvitation(true);
+          setIsVisibleSuscription(false);
+        } else {
+          setIsVisibleSuscription(true);
+        }
+      } else {
+        const parseAttributesRequired = JSON.parse(
+          validData.attributesRequired
+        );
+        setIsVisibleDataRequired(true);
+        setDataRequired({
+          ...validData,
+          attributesRequired: parseAttributesRequired,
+        });
+      }
+
+      setIsLoadApi(false);
+    } catch (error) {
+      setIsLoadApi(false);
+    }
+  };
+
   useEffect(() => {
     if (
       isEmpty(detailPublicProperty) === false &&
@@ -176,6 +229,9 @@ Amenidades:`;
 
       dataSites.forEach((element) => {
         objectStates[element.id] = element.isPublished;
+        if (element.requiresSubscription === true) {
+          setIsVisibleSuscription(true);
+        }
         arraySites.push({
           idSite: element.id,
           isPublished: element.isPublished,
@@ -261,9 +317,25 @@ Amenidades:`;
                 {isEmpty(dataSites) === false &&
                   dataSites.map((row) => {
                     return (
-                      <label className="input-checkbox">
+                      <label
+                        className="input-checkbox"
+                        style={{
+                          position: "relative",
+                        }}
+                      >
+                        {row.requiresSubscription === false && (
+                          <div className="limit-to-public">
+                            <span>{row.limit}</span>
+                          </div>
+                        )}
+                        {row.requiresSubscription === true && (
+                          <div className="pay-publication">
+                            <button>Pagar publicación</button>
+                          </div>
+                        )}
                         <input
                           type="checkbox"
+                          disabled={row.requiresSubscription}
                           id={`check-sites-${row.id}`}
                           value={`value-sites-${row.id}`}
                           checked={statesPlatformSelect[row.id]}
@@ -288,42 +360,33 @@ Amenidades:`;
                             });
                           }}
                         />{" "}
-                        <img height="30" src={row.source} alt="" />
+                        <ImgPlatform
+                          requiresSubscription={row.requiresSubscription}
+                          height="30"
+                          src={row.source}
+                          alt=""
+                        />
                       </label>
                     );
                   })}
               </div>
+              {isVisibleSuscription === true && (
+                <div className="button-action-subscription">
+                  <p>
+                    **Agotaste las publicaciones en algunas plataformas, si
+                    quieres continuar publicando haz clic en suscribirme
+                  </p>
+                  <button
+                    onClick={() => {
+                      window.open("/websystem/subscription", "_blank");
+                    }}
+                  >
+                    Suscribirme
+                  </button>
+                </div>
+              )}
               <div className="button-action">
-                <button>Suscribirme</button>
-                <ButtonsModal
-                  primary
-                  onClick={async () => {
-                    try {
-                      if (
-                        isEmpty(detailPublicProperty) === true &&
-                        dataForm.isPublished == false
-                      ) {
-                        return false;
-                      }
-                      setIsLoadApi(true);
-                      const validData = await handlerCallValidateClassified(
-                        dataDetail
-                      );
-                      if (validData.canPublish === true) {
-                        await onPublicProperty({
-                          ...dataForm,
-                          sites: JSON.stringify(dataForm.sites),
-                        });
-                        setDataForm(initialForm);
-                        setFinishInvitation(true);
-                      } else {
-                      }
-                      setIsLoadApi(false);
-                    } catch (error) {
-                      setIsLoadApi(false);
-                    }
-                  }}
-                >
+                <ButtonsModal primary onClick={handlerOnPublicProperty}>
                   {dataForm.isPublished === true ||
                   isEmpty(detailPublicProperty) === true
                     ? "Publicar"

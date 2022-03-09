@@ -288,7 +288,6 @@ const SectionDataProperty = (props) => {
 
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
-    handlerCallSearchCustomer();
     handlerCallGetAllCurrencies();
     handlerCallGetAllLandAccess();
     return () => {

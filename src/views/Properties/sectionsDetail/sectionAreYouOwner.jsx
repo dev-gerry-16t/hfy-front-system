@@ -101,10 +101,6 @@ const SectionAreYouOwner = (props) => {
     }
   };
 
-  useEffect(() => {
-    handlerCallSearchCustomer();
-  }, []);
-
   return (
     <Modal
       visible={visibleModal}
