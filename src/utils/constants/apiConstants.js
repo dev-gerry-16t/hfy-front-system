@@ -119,6 +119,7 @@ const API_CONSTANTS = {
     UPDATE_PROPERTY_IN_APPLICATION_METHOD: `${API.PROPERTY}/updatePropertyInApplicationMethod/`,
     SET_SUBSCRIPTION: `${API.PROPERTY}/setSubscription/`,
     GET_SUSCRIPTION_DETAIL: `${API.PROPERTY}/getSuscriptionDetail`,
+    SET_ANSWER_TO_ML: `${API.PROPERTY}/setAnswerToML`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,

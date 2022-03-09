@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -38,7 +38,10 @@ import IconPercent from "../../assets/icons/iconPercent.svg";
 import IconTimesShield from "../../assets/icons/IconTimesShield.svg";
 import IconEditSquare from "../../assets/icons/iconEditSquare.svg";
 import { ReactComponent as EmptyDocument } from "../../assets/icons/EmptyDocument.svg";
-import { useEffect } from "react";
+import CustomTextArea from "../../components/customTextArea";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import FrontFunctions from "../../utils/actions/frontFunctions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 
 const EmptyData = styled.div`
   display: flex;
@@ -170,6 +173,31 @@ const InfoNotification = styled.div`
   }
 `;
 
+const AnswerResponse = styled.div`
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  .text-area-answer {
+  }
+  .send-response-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      background: var(--color-primary);
+      padding: 5px 10px;
+      border: none;
+      color: #fff;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 14px;
+    }
+  }
+  @media screen and (max-width: 360px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
 const Notifications = (props) => {
   const {
     dataProfile,
@@ -178,13 +206,16 @@ const Notifications = (props) => {
     match,
     history,
     onGetNotifications,
+    callGlobalActionApi,
   } = props;
   const [tabsSelect, setTabsSelect] = useState(1);
+  const [dataForm, setDataForm] = useState({ answer: null });
   const [dataNotifications, setDataNotifications] = useState([]);
   const [infoNotification, setInfoNotification] = useState({});
   const [notificationTopIndex, setNotificationTopIndex] = useState(null);
   const [numberNotifications, setNumberNotifications] = useState(0);
   const { params } = match;
+  const frontFunctions = new FrontFunctions();
   const arrayIconst = {
     IconDashboard,
     IconHome,
@@ -224,6 +255,33 @@ const Notifications = (props) => {
         id
       );
     } catch (error) {}
+  };
+
+  const handlerSetAnswerToML = async (question, answer) => {
+    const { idLoginHistory, idSystemUser } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          question_id: isEmpty(question) === false ? Number(question) : null,
+          answer,
+        },
+        null,
+        API_CONSTANTS.PROPERTY.SET_ANSWER_TO_ML
+      );
+      frontFunctions.showMessageStatusApi(
+        "Respuesta enviada exitosamente",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error == "not_unanswered_question"
+          ? "Ya se ha respondido a esta pregunta"
+          : error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const handlerCallGetNotificationsInit = async (
@@ -459,6 +517,54 @@ const Notifications = (props) => {
                     : "",
               }}
             />
+            {infoNotification.canAnswer === false &&
+              isNil(infoNotification.answer) === false &&
+              isEmpty(infoNotification.answer) === false && (
+                <div
+                  style={{
+                    marginTop: 20,
+                  }}
+                >
+                  <strong>Respondiste: </strong>
+                  <span>{infoNotification.answer}</span>
+                </div>
+              )}
+            {isNil(infoNotification.canAnswer) === false &&
+              infoNotification.canAnswer === true && (
+                <AnswerResponse>
+                  <div className="text-area-answer">
+                    <CustomTextArea
+                      value={dataForm.rejectionReason}
+                      label="Responder"
+                      placeholder="Escribe una respuesta"
+                      onChange={(value) => {
+                        setDataForm({ ...dataForm, answer: value });
+                      }}
+                      type="text"
+                      error={false}
+                    />
+                  </div>
+                  <div className="send-response-action">
+                    <button
+                      onClick={async () => {
+                        try {
+                          await handlerSetAnswerToML(
+                            infoNotification.question_id,
+                            dataForm.answer
+                          );
+                          history.push(
+                            "/websystem/notificaciones/" +
+                              infoNotification.idNotification
+                          );
+                          await handlerCallGetNotificationsInit();
+                        } catch (error) {}
+                      }}
+                    >
+                      Enviar
+                    </button>
+                  </div>
+                </AnswerResponse>
+              )}
             {isNil(infoNotification.path) === false && (
               <div className="go-to-it">
                 <button
