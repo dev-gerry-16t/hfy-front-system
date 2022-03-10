@@ -12,7 +12,7 @@ import SectionDataFeatures from "./sections/dataFeatures";
 import SectionDataImages from "./sections/dataImages";
 import SectionDataLocation from "./sections/dataLocation";
 import SectionDataProperty from "./sections/dataProperty";
-import ComponentPublicAddProperty from "./component/componentPublicAddProperty";
+import ComponentPublicProperty from "./component/componentPublicProperty";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -180,7 +180,7 @@ const AddProperty = (props) => {
 
   return (
     <Content id="add-property-user">
-      <ComponentPublicAddProperty
+      <ComponentPublicProperty
         isModalVisible={visiblePublicProperty}
         dataSites={dataSites}
         onPublicProperty={async (data, id) => {
@@ -198,6 +198,7 @@ const AddProperty = (props) => {
           );
         }}
         dataDetail={dataForm}
+        history={history}
       />
       <CustomStepsHomify
         steps={[

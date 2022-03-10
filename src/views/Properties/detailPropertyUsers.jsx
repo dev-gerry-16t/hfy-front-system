@@ -447,6 +447,7 @@ const DetailPropertyUsers = (props) => {
             value={{
               isOpenComponent,
               dataDetail,
+              history,
               updateProperty: async (data) => {
                 try {
                   await handlerCallUpdateProperty(data);
