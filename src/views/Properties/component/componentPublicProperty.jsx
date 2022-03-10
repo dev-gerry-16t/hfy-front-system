@@ -19,6 +19,19 @@ const ImgPlatform = styled.img`
     props.requiresSubscription === true ? "grayscale(100%)" : "grayscale(0%)"};
 `;
 
+const SectionRequired = styled.div`
+  border: 1px solid var(--color-primary);
+  border-radius: 16px;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  .info-required {
+    display: flex;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+`;
+
 const ComponentPublicProperty = (props) => {
   const {
     isModalVisible,
@@ -29,6 +42,7 @@ const ComponentPublicProperty = (props) => {
     dataDetail = {},
     dataProfile,
     callGlobalActionApi,
+    history,
   } = props;
   const initialForm = {
     isPublished: false,
@@ -36,6 +50,7 @@ const ComponentPublicProperty = (props) => {
     description: null,
     sites: [],
   };
+
   const [finishInvitation, setFinishInvitation] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [isVisibleSuscription, setIsVisibleSuscription] = useState(false);
@@ -167,6 +182,8 @@ Amenidades:`;
       arraySites.push({
         idSite: element.id,
         isPublished: element.isPublished,
+        url: element.path,
+        src: element.source,
       });
     });
     setStatesPlatformSelect(objectStates);
@@ -192,10 +209,14 @@ Amenidades:`;
         isNil(validData.attributesRequired) === true
       ) {
         if (validData.hasSubscription === true) {
-          await onPublicProperty({
-            ...dataForm,
-            sites: JSON.stringify(dataForm.sites),
-          });
+          await onPublicProperty(
+            {
+              ...dataForm,
+              idApartment: dataDetail.idApartment,
+              sites: JSON.stringify(dataForm.sites),
+            },
+            dataDetail.idProperty
+          );
           setDataForm(initialForm);
           setFinishInvitation(true);
           setIsVisibleSuscription(false);
@@ -235,6 +256,8 @@ Amenidades:`;
         arraySites.push({
           idSite: element.id,
           isPublished: element.isPublished,
+          url: element.path,
+          src: element.source,
         });
       });
       setStatesPlatformSelect(objectStates);
@@ -266,185 +289,302 @@ Amenidades:`;
     >
       <FormModal>
         <ComponentLoadSection isLoadApi={isLoadApi} position="absolute">
-          {finishInvitation === false && (
+          {isVisibleDataRequired === false && (
             <>
-              <h1>Pública tu inmueble</h1>
-              <p>
-                Tu inmueble será publicado en las plataformas que elijas con la
-                información que ingreses en los siguientes campos
-              </p>
-              <div>
-                <Row>
-                  <Col span={24}>
-                    <CustomInputTypeForm
-                      value={dataForm.title}
-                      placeholder=""
-                      label="Titulo del anuncio"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          title: value,
-                        });
-                      }}
-                      type="text"
-                    />
-                  </Col>
-                </Row>
-                <Row>
-                  <Col span={24}>
-                    <CustomTextArea
-                      value={dataForm.description}
-                      placeholder=""
-                      label="Descripción"
-                      error={false}
-                      errorMessage="Este campo es requerido"
-                      onChange={(value) => {
-                        setDataForm({
-                          ...dataForm,
-                          description: value,
-                        });
-                      }}
-                      type="text"
-                      height="200px"
-                    />
-                  </Col>
-                </Row>
-              </div>
-              <p>Selecciona una opción</p>
-              <div className="image-platforms">
-                {isEmpty(dataSites) === false &&
-                  dataSites.map((row) => {
-                    return (
-                      <label
-                        className="input-checkbox"
-                        style={{
-                          position: "relative",
-                        }}
-                      >
-                        {row.requiresSubscription === false && (
-                          <div className="limit-to-public">
-                            <span>{row.limit}</span>
-                          </div>
-                        )}
-                        {row.requiresSubscription === true && (
-                          <div className="pay-publication">
-                            <button>Pagar publicación</button>
-                          </div>
-                        )}
-                        <input
-                          type="checkbox"
-                          disabled={row.requiresSubscription}
-                          id={`check-sites-${row.id}`}
-                          value={`value-sites-${row.id}`}
-                          checked={statesPlatformSelect[row.id]}
-                          onChange={(e) => {
-                            const objectAdd = dataForm.sites.find((rowFind) => {
-                              return rowFind.idSite === row.id;
-                            });
-                            const arrayFilter = dataForm.sites.filter(
-                              (rowFilter) => {
-                                return rowFilter.idSite != row.id;
-                              }
-                            );
-                            objectAdd.isPublished = e.target.checked;
-                            setStatesPlatformSelect({
-                              ...statesPlatformSelect,
-                              [row.id]: e.target.checked,
-                            });
-                            arrayFilter.push(objectAdd);
+              {finishInvitation === false && (
+                <>
+                  <h1>Pública tu inmueble</h1>
+                  <p>
+                    Tu inmueble será publicado en las plataformas que elijas con
+                    la información que ingreses en los siguientes campos
+                  </p>
+                  <div>
+                    <Row>
+                      <Col span={24}>
+                        <CustomInputTypeForm
+                          value={dataForm.title}
+                          placeholder=""
+                          label="Titulo del anuncio"
+                          error={false}
+                          errorMessage="Este campo es requerido"
+                          onChange={(value) => {
                             setDataForm({
                               ...dataForm,
-                              sites: arrayFilter,
+                              title: value,
                             });
                           }}
-                        />{" "}
-                        <ImgPlatform
-                          requiresSubscription={row.requiresSubscription}
-                          height="30"
-                          src={row.source}
-                          alt=""
+                          type="text"
                         />
-                      </label>
-                    );
-                  })}
-              </div>
-              {isVisibleSuscription === true && (
-                <div className="button-action-subscription">
-                  <p>
-                    **Agotaste las publicaciones en algunas plataformas, si
-                    quieres continuar publicando haz clic en suscribirme
-                  </p>
-                  <button
-                    onClick={() => {
-                      window.open("/websystem/subscription", "_blank");
+                      </Col>
+                    </Row>
+                    <Row>
+                      <Col span={24}>
+                        <CustomTextArea
+                          value={dataForm.description}
+                          placeholder=""
+                          label="Descripción"
+                          error={false}
+                          errorMessage="Este campo es requerido"
+                          onChange={(value) => {
+                            setDataForm({
+                              ...dataForm,
+                              description: value,
+                            });
+                          }}
+                          type="text"
+                          height="200px"
+                        />
+                      </Col>
+                    </Row>
+                  </div>
+                  <p>Selecciona una opción</p>
+                  <div className="image-platforms">
+                    {isEmpty(dataSites) === false &&
+                      dataSites.map((row) => {
+                        return (
+                          <label
+                            className="input-checkbox"
+                            style={{
+                              position: "relative",
+                            }}
+                          >
+                            {row.requiresSubscription === false && (
+                              <div className="limit-to-public">
+                                <span>{row.limit}</span>
+                              </div>
+                            )}
+                            {row.requiresSubscription === true && (
+                              <div className="pay-publication">
+                                <button>Pagar publicación</button>
+                              </div>
+                            )}
+                            <input
+                              type="checkbox"
+                              disabled={row.requiresSubscription}
+                              id={`check-sites-${row.id}`}
+                              value={`value-sites-${row.id}`}
+                              checked={statesPlatformSelect[row.id]}
+                              onChange={(e) => {
+                                const objectAdd = dataForm.sites.find(
+                                  (rowFind) => {
+                                    return rowFind.idSite === row.id;
+                                  }
+                                );
+                                const arrayFilter = dataForm.sites.filter(
+                                  (rowFilter) => {
+                                    return rowFilter.idSite != row.id;
+                                  }
+                                );
+                                objectAdd.isPublished = e.target.checked;
+                                setStatesPlatformSelect({
+                                  ...statesPlatformSelect,
+                                  [row.id]: e.target.checked,
+                                });
+                                arrayFilter.push(objectAdd);
+                                setDataForm({
+                                  ...dataForm,
+                                  sites: arrayFilter,
+                                });
+                              }}
+                            />{" "}
+                            <ImgPlatform
+                              requiresSubscription={row.requiresSubscription}
+                              height="30"
+                              src={row.source}
+                              alt=""
+                            />
+                          </label>
+                        );
+                      })}
+                  </div>
+                  {isVisibleSuscription === true && (
+                    <div className="button-action-subscription">
+                      <p>
+                        **Agotaste las publicaciones en algunas plataformas, si
+                        quieres continuar publicando haz clic en suscribirme
+                      </p>
+                      <button
+                        onClick={() => {
+                          window.open("/websystem/subscription", "_blank");
+                        }}
+                      >
+                        Suscribirme
+                      </button>
+                    </div>
+                  )}
+                  <div className="button-action">
+                    <ButtonsModal primary onClick={handlerOnPublicProperty}>
+                      {dataForm.isPublished === true ||
+                      isEmpty(detailPublicProperty) === true
+                        ? "Publicar inmueble"
+                        : "Quitar publicación"}
+                    </ButtonsModal>
+                    <ButtonsModal
+                      onClick={() => {
+                        onClose();
+                      }}
+                    >
+                      Cancelar
+                    </ButtonsModal>
+                  </div>
+                </>
+              )}
+              {finishInvitation === true && (
+                <>
+                  <h1>¡Todo está listo!</h1>
+                  <div className="icon-image-send">
+                    <IconStyleCheck />
+                  </div>
+                  <h2>
+                    {isEmpty(detailPublicProperty) === false &&
+                    dataForm.isPublished === false
+                      ? "Se retiró la publicación"
+                      : "¡El inmueble ha sido publicado!"}
+                  </h2>
+                  <p
+                    style={{
+                      textAlign: "center",
                     }}
                   >
-                    Suscribirme
-                  </button>
-                </div>
+                    {isEmpty(detailPublicProperty) === false &&
+                    dataForm.isPublished === false
+                      ? "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos"
+                      : " Ahora podrás ver tu inmueble publicado en las siguientes plataformas"}
+                  </p>
+                  <div
+                    style={{
+                      textAlign: "center",
+                      marginBottom: "25px",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 10,
+                      alignItems: "center",
+                    }}
+                  >
+                    {isEmpty(dataForm.sites) === false &&
+                      dataForm.sites.map((row) => {
+                        return row.isPublished === true ? (
+                          <img
+                            style={{
+                              cursor: "pointer",
+                            }}
+                            height="30"
+                            src={row.src}
+                            alt=""
+                            onClick={() => {
+                              window.open(row.url, "_blank");
+                            }}
+                          />
+                        ) : (
+                          <></>
+                        );
+                      })}
+                  </div>
+                  <div className="button-action">
+                    <ButtonsModal
+                      onClick={() => {
+                        onClose();
+                        setFinishInvitation(false);
+                      }}
+                      primary
+                    >
+                      Cerrar
+                    </ButtonsModal>
+                  </div>
+                </>
               )}
+            </>
+          )}
+          {isVisibleDataRequired === true && (
+            <>
+              <h1>¡Información incompleta!</h1>
+              <SectionRequired>
+                {isEmpty(dataRequired) === false &&
+                  isEmpty(dataRequired.attributesRequired) === false &&
+                  dataRequired.attributesRequired.map((row) => {
+                    return (
+                      <div className="info-required">
+                        <span>{row.label}</span>
+                        <u
+                          onClick={() => {
+                            history.push(
+                              `/websystem/edit-property/${dataDetail.idProperty}`
+                            );
+                          }}
+                        >
+                          Completar
+                        </u>
+                      </div>
+                    );
+                  })}
+                {dataRequired.isPropertyTypeValid === false && (
+                  <div className="info-required">
+                    <span>El tipo de propiedad no es valido</span>
+                    <u
+                      onClick={() => {
+                        history.push(
+                          `/websystem/edit-property/${dataDetail.idProperty}`
+                        );
+                      }}
+                    >
+                      Cambiar
+                    </u>
+                  </div>
+                )}
+                {dataRequired.isCurrencyValid === false && (
+                  <div className="info-required">
+                    <span>El tipo de moneda es invalido</span>
+                    <u
+                      onClick={() => {
+                        history.push(
+                          `/websystem/edit-property/${dataDetail.idProperty}`
+                        );
+                      }}
+                    >
+                      Cambiar
+                    </u>
+                  </div>
+                )}
+                {dataRequired.isSellerContactValid === false && (
+                  <div className="info-required">
+                    <span>Información de contacto incompleta</span>
+                    <u
+                      onClick={() => {
+                        history.push(`/websystem/edit-profile`);
+                      }}
+                    >
+                      Completar
+                    </u>
+                  </div>
+                )}
+                {dataRequired.hasSubscription === false && (
+                  <div className="info-required">
+                    <span>No tienes una suscripción activa</span>
+                    <u
+                      onClick={() => {
+                        history.push(`/websystem/subscription`);
+                      }}
+                    >
+                      Activar
+                    </u>
+                  </div>
+                )}
+                {dataRequired.hasPromotionPackage === false && (
+                  <div className="info-required">
+                    <span>En las próximas horas se publicara tu inmueble</span>
+                  </div>
+                )}
+              </SectionRequired>
+              <div style={{ textAlign: "center", marginTop: 10 }}>
+                <span>{dataRequired.message}</span>
+              </div>
               <div className="button-action">
-                <ButtonsModal primary onClick={handlerOnPublicProperty}>
-                  {dataForm.isPublished === true ||
-                  isEmpty(detailPublicProperty) === true
-                    ? "Publicar"
-                    : "Quitar publicación"}
-                </ButtonsModal>
                 <ButtonsModal
                   onClick={() => {
                     onClose();
                   }}
                 >
                   Cancelar
-                </ButtonsModal>
-              </div>
-            </>
-          )}
-          {finishInvitation === true && (
-            <>
-              <h1>¡Todo está listo!</h1>
-              <div className="icon-image-send">
-                <IconStyleCheck />
-              </div>
-              <h2>
-                {isEmpty(detailPublicProperty) === false &&
-                dataForm.isPublished === false
-                  ? "Se retiró la publicación"
-                  : "¡El inmueble ha sido publicado!"}
-              </h2>
-              <p
-                style={{
-                  textAlign: "center",
-                }}
-              >
-                {isEmpty(detailPublicProperty) === false &&
-                dataForm.isPublished === false
-                  ? "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos"
-                  : " Ahora podrás ver tu inmueble publicado en las siguientes plataformas"}
-              </p>
-              <div
-                style={{
-                  textAlign: "center",
-                  marginBottom: "25px",
-                }}
-              >
-                <img
-                  height="30"
-                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296D.jpg"
-                  alt=""
-                />
-              </div>
-              <div className="button-action">
-                <ButtonsModal
-                  onClick={() => {
-                    onClose();
-                    setFinishInvitation(false);
-                  }}
-                  primary
-                >
-                  Cerrar
                 </ButtonsModal>
               </div>
             </>

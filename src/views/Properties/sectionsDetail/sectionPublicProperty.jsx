@@ -171,7 +171,7 @@ const SectionCandidate = styled.div`
 const SectionPublicProperty = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const { dataDetail, updateProperty, getById, history } = dataContexProperty;
   const {
     applicants,
     isPublished,
@@ -305,6 +305,7 @@ const SectionPublicProperty = (props) => {
           setDetailPublicProperty({});
         }}
         dataDetail={dataDetail}
+        history={history}
       />
 
       {isNil(infoTenant) === true && isPublished === false && (
