@@ -552,11 +552,13 @@ const Notifications = (props) => {
                             infoNotification.question_id,
                             dataForm.answer
                           );
-                          history.push(
-                            "/websystem/notificaciones/" +
-                              infoNotification.idNotification
-                          );
-                          await handlerCallGetNotificationsInit();
+                          setTimeout(() => {
+                            history.push(
+                              "/websystem/notificaciones/" +
+                                infoNotification.idNotification
+                            );
+                            handlerCallGetNotificationsInit();
+                          }, 3000);
                         } catch (error) {}
                       }}
                     >
