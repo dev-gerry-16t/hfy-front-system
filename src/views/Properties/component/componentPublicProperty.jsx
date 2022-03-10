@@ -217,7 +217,6 @@ Amenidades:`;
             },
             dataDetail.idProperty
           );
-          setDataForm(initialForm);
           setFinishInvitation(true);
           setIsVisibleSuscription(false);
         } else {
@@ -484,7 +483,9 @@ Amenidades:`;
                     <ButtonsModal
                       onClick={() => {
                         onClose();
+                        setIsVisibleDataRequired(false);
                         setFinishInvitation(false);
+                        setDataForm(initialForm);
                       }}
                       primary
                     >
