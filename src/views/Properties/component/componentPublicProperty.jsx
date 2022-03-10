@@ -508,7 +508,7 @@ Amenidades:`;
                         <u
                           onClick={() => {
                             history.push(
-                              `/websystem/detail-property-users/${dataForm.idProperty}`
+                              `/websystem/edit-property/${dataDetail.idProperty}`
                             );
                           }}
                         >
@@ -523,7 +523,7 @@ Amenidades:`;
                     <u
                       onClick={() => {
                         history.push(
-                          `/websystem/detail-property-users/${dataForm.idProperty}`
+                          `/websystem/edit-property/${dataDetail.idProperty}`
                         );
                       }}
                     >
@@ -537,7 +537,7 @@ Amenidades:`;
                     <u
                       onClick={() => {
                         history.push(
-                          `/websystem/detail-property-users/${dataForm.idProperty}`
+                          `/websystem/edit-property/${dataDetail.idProperty}`
                         );
                       }}
                     >
@@ -577,6 +577,15 @@ Amenidades:`;
               </SectionRequired>
               <div style={{ textAlign: "center", marginTop: 10 }}>
                 <span>{dataRequired.message}</span>
+              </div>
+              <div className="button-action">
+                <ButtonsModal
+                  onClick={() => {
+                    onClose();
+                  }}
+                >
+                  Cancelar
+                </ButtonsModal>
               </div>
             </>
           )}
