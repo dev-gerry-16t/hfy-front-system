@@ -30,14 +30,11 @@ import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const TabsProperty = styled.div`
   display: flex;
-  align-items: center;
-  justify-content: space-between;
   margin-bottom: 2em;
+  flex-wrap: wrap;
   gap: 20px;
-  max-width: 100%;
-  overflow-x: scroll;
   ::-webkit-scrollbar {
-    height: 3px;
+    height: 10px;
   }
   @media screen and (max-width: 1400px) {
     font-size: 14px;
@@ -59,8 +56,8 @@ const Tab = styled.div`
   line-height: 15px;
   cursor: pointer;
   h1 {
+    font-size: 1em;
     font-weight: bold;
-    min-width: 225px;
     color: ${(props) =>
       props.selected === true ? "var(--color-primary)" : "#4e4b66"};
   }
@@ -73,7 +70,7 @@ const Tab = styled.div`
   }
   @media screen and (max-width: 420px) {
     h1 {
-      min-width: 180px;
+      //min-width: 180px;
     }
   }
 `;
@@ -1375,7 +1372,8 @@ const SectionAvalInformation = (props) => {
                     <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
                       <ComponentRadio>
                         <strong>
-                          ¿Cuentas con Certificado de Libertad de Gravamen? (Opcional)
+                          ¿Cuentas con Certificado de Libertad de Gravamen?
+                          (Opcional)
                         </strong>
                         <div className="radio-inputs-options">
                           <label className="input-radio">
