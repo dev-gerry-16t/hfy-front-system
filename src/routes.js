@@ -460,6 +460,14 @@ const routes = [
     component: Subscription,
     exact: true,
   },
+  {
+    key: "37-1",
+    id: "susbscription-homify",
+    path: "/websystem/subscription/:status",
+    name: "Suscripción",
+    component: Subscription,
+    exact: true,
+  },
 ];
 
 export default routes;
