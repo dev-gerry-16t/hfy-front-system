@@ -32,6 +32,7 @@ const TabsProperty = styled.div`
   display: flex;
   margin-bottom: 2em;
   flex-wrap: wrap;
+  justify-content: space-around;
   gap: 20px;
   ::-webkit-scrollbar {
     height: 10px;
