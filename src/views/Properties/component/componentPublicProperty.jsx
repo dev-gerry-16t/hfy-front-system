@@ -4,6 +4,7 @@ import { Modal, Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
+import { setDataUserRedirect } from "../../../utils/dispatchs/userRedirectDispatch";
 import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomTextArea from "../../../components/customTextArea";
@@ -43,6 +44,8 @@ const ComponentPublicProperty = (props) => {
     dataProfile,
     callGlobalActionApi,
     history,
+    setDataUserRedirect,
+    dataUserRedirect,
   } = props;
   const initialForm = {
     isPublished: false,
@@ -195,44 +198,52 @@ Amenidades:`;
   };
 
   const handlerOnPublicProperty = async () => {
+    const selectPublished =
+      isEmpty(dataForm.sites) === false
+        ? dataForm.sites.filter((row) => {
+            return row.isPublished === true;
+          })
+        : null;
     try {
-      if (
-        isEmpty(detailPublicProperty) === true &&
-        dataForm.isPublished == false
-      ) {
+      if (isEmpty(selectPublished) === true) {
+        frontFunctions.showMessageStatusApi(
+          "No has seleccionado una opción",
+          GLOBAL_CONSTANTS.STATUS_API.ERROR
+        );
         return false;
       }
       setIsLoadApi(true);
-      const validData = await handlerCallValidateClassified(dataDetail);
-      if (
-        isEmpty(validData.attributesRequired) === true ||
-        isNil(validData.attributesRequired) === true
-      ) {
-        if (validData.hasSubscription === true) {
-          await onPublicProperty(
-            {
-              ...dataForm,
-              idApartment: dataDetail.idApartment,
-              sites: JSON.stringify(dataForm.sites),
-            },
-            dataDetail.idProperty
+      const isSelectMLM = selectPublished.find((row) => {
+        return row.idSite == "MLM";
+      });
+      if (isNil(isSelectMLM) === false) {
+        const validData = await handlerCallValidateClassified(dataDetail);
+        if (
+          isNil(validData.attributesRequired) === false &&
+          isEmpty(validData.attributesRequired) === false
+        ) {
+          const parseAttributesRequired = JSON.parse(
+            validData.attributesRequired
           );
-          setFinishInvitation(true);
-          setIsVisibleSuscription(false);
-        } else {
-          setIsVisibleSuscription(true);
+          setIsVisibleDataRequired(true);
+          setDataRequired({
+            ...validData,
+            attributesRequired: parseAttributesRequired,
+          });
+          setIsLoadApi(false);
+          return true;
         }
-      } else {
-        const parseAttributesRequired = JSON.parse(
-          validData.attributesRequired
-        );
-        setIsVisibleDataRequired(true);
-        setDataRequired({
-          ...validData,
-          attributesRequired: parseAttributesRequired,
-        });
       }
-
+      await onPublicProperty(
+        {
+          ...dataForm,
+          idApartment: dataDetail.idApartment,
+          sites: JSON.stringify(dataForm.sites),
+        },
+        dataDetail.idProperty
+      );
+      setFinishInvitation(true);
+      setIsVisibleSuscription(false);
       setIsLoadApi(false);
     } catch (error) {
       setIsLoadApi(false);
@@ -352,11 +363,11 @@ Amenidades:`;
                                 <span>{row.limit}</span>
                               </div>
                             )}
-                            {row.requiresSubscription === true && (
+                            {/* {row.requiresSubscription === true && (
                               <div className="pay-publication">
                                 <button>Pagar publicación</button>
                               </div>
-                            )}
+                            )} */}
                             <input
                               type="checkbox"
                               disabled={row.requiresSubscription}
@@ -403,8 +414,12 @@ Amenidades:`;
                         quieres continuar publicando haz clic en suscribirme
                       </p>
                       <button
-                        onClick={() => {
-                          window.open("/websystem/subscription", "_blank");
+                        onClick={async () => {
+                          await setDataUserRedirect({
+                            ...dataUserRedirect,
+                            backPathOfSubscription: `/websystem/detail-property-users/${dataDetail.idProperty}`,
+                          });
+                          history.push(`/websystem/subscription`);
                         }}
                       >
                         Suscribirme
@@ -423,7 +438,7 @@ Amenidades:`;
                         onClose();
                       }}
                     >
-                      Cancelar
+                      Mantener privado
                     </ButtonsModal>
                   </div>
                 </>
@@ -562,7 +577,11 @@ Amenidades:`;
                   <div className="info-required">
                     <span>No tienes una suscripción activa</span>
                     <u
-                      onClick={() => {
+                      onClick={async () => {
+                        await setDataUserRedirect({
+                          ...dataUserRedirect,
+                          backPathOfSubscription: `/websystem/detail-property-users/${dataDetail.idProperty}`,
+                        });
                         history.push(`/websystem/subscription`);
                       }}
                     >
@@ -583,9 +602,12 @@ Amenidades:`;
                 <ButtonsModal
                   onClick={() => {
                     onClose();
+                    setIsVisibleDataRequired(false);
+                    setFinishInvitation(false);
+                    setDataForm(initialForm);
                   }}
                 >
-                  Cancelar
+                  Continuar
                 </ButtonsModal>
               </div>
             </>
@@ -597,15 +619,17 @@ Amenidades:`;
 };
 
 const mapStateToProps = (state) => {
-  const { dataProfile, dataProfileMenu } = state;
+  const { dataProfile, dataProfileMenu, dataUserRedirect } = state;
   return {
     dataProfile: dataProfile.dataProfile,
+    dataUserRedirect: dataUserRedirect.dataUserRedirect,
   };
 };
 
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant, method) =>
     dispatch(callGlobalActionApi(data, id, constant, method)),
+  setDataUserRedirect: (data) => dispatch(setDataUserRedirect(data)),
 });
 
 export default connect(
