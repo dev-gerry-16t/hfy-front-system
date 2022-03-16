@@ -11,6 +11,7 @@ import { callGlobalActionApi } from "../../utils/actions/actions";
 import { ReactComponent as ArrowPromotion } from "../../assets/iconSvg/svgFile/arrowPromotion.svg";
 import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
 import { ReactComponent as IconPaymentTimes } from "../../assets/iconSvg/svgFile/iconPaymentTimes.svg";
+import ComponentLoadSection from "../../components/componentLoadSection";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -54,8 +55,10 @@ const ContentForm = styled.div`
   .catalog-subscription {
     margin-top: 15px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     padding-bottom: 1em;
+    gap: 1em;
   }
   .back-button {
     position: absolute;
@@ -270,6 +273,9 @@ const DetailSubscription = styled.div`
   padding: 10px 15px;
   .info-subscription {
     .data-info-subscription {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 5px;
       .type-plan {
         color: var(--color-primary);
       }
@@ -294,14 +300,30 @@ const DetailSubscription = styled.div`
       }
     }
   }
+  @media screen and (max-width: 538px) {
+    grid-template-columns: 1fr;
+    .info-subscription {
+      .data-info-subscription {
+        justify-content: space-between;
+      }
+    }
+  }
 `;
 
 const Subscription = (props) => {
-  const { callGlobalActionApi, dataProfile, match } = props;
+  const {
+    callGlobalActionApi,
+    dataProfile,
+    match,
+    dataUserRedirect,
+    history,
+    onGetSubscription,
+  } = props;
   const [dataSubscription, setDataSubscription] = useState([]);
   const [detailSubscription, setDetailSubscription] = useState({});
   const [subscriptionMethod, setSubscriptionMethod] = useState(1);
   const [statusSubscription, setStatusSubscription] = useState(null);
+  const [loadApi, setLoadApi] = useState(false);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetAllSubscriptionTypes = async (id) => {
@@ -423,188 +445,218 @@ const Subscription = (props) => {
 
   return (
     <Content>
-      <ContentForm>
-        {statusSubscription === "cancel" && (
-          <PaidService>
-            <h1>
-              Pago <span>Fallido</span>
-            </h1>
-            <IconPaymentTimes />
-            <h2>¡Oh no!</h2>
-            <span className="label-success-pay">
-              No se pudo realizar la suscripción, intentalo más tarde.
-            </span>
-            <div className="button-payment">
-              <button
-                onClick={() => {
-                  window.location.href = "/websystem/subscription";
-                }}
-              >
-                Continuar
-              </button>
-            </div>
-          </PaidService>
-        )}
-        {statusSubscription === "success" && (
-          <PaidService>
-            <h1>
-              Pago <span>Exitoso</span>
-            </h1>
-            <IconPaymentCheck />
-            <h2>¡Felicidades!</h2>
-            <span className="label-success-pay">
-              Ya puedes disfrutar los beneficios de tu paquete.
-            </span>
-            <div className="button-payment">
-              <button
-                onClick={() => {
-                  window.location.href = "/websystem/subscription";
-                }}
-              >
-                Continuar
-              </button>
-            </div>
-          </PaidService>
-        )}
-        {isNil(statusSubscription) === true && (
-          <>
-            <div className="header-title">
-              <h1>Selecciona tu paquete</h1>
-            </div>
-            <div
-              style={{
-                padding: "0px 1em",
-                marginTop: "1em",
-              }}
-            >
-              {isNil(detailSubscription.subscriptionType) === false &&
-                isEmpty(detailSubscription.subscriptionType) === false && (
-                  <DetailSubscription>
-                    <div className="info-subscription">
-                      <div className="data-info-subscription">
-                        <strong>Tu plan actual: </strong>
-                        <strong className="type-plan">
-                          {detailSubscription.subscriptionType}
-                        </strong>
-                      </div>
-                      <div className="data-info-subscription">
-                        <span>Costo: </span>
-                        <span className="price-detail">
-                          {detailSubscription.subscriptionAmount}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="info-subscription">
-                      <div className="data-info-subscription">
-                        <span>Inicio: </span>
-                        <span className="price-detail">
-                          {detailSubscription.activeSince}
-                        </span>
-                      </div>
-                      <div className="data-info-subscription">
-                        <span>fecha de pago: </span>
-                        <span className="price-detail">
-                          {detailSubscription.nextPymtScheduleAt}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="info-subscription">
-                      <div className="button-action">
-                        <button>Cancelar suscripción</button>
-                      </div>
-                    </div>
-                  </DetailSubscription>
-                )}
-            </div>
-            <NoticePolicy>
+      <ComponentLoadSection isLoadApi={loadApi}>
+        <ContentForm>
+          {statusSubscription === "cancel" && (
+            <PaidService>
               <h1>
-                ¡
-                <span
-                  style={{
-                    color: "#FF0282",
-                  }}
-                >
-                  Potencia tu negocio
-                </span>{" "}
-                con el paquete apropiado!
+                Suscripción <span>Fallida</span>
               </h1>
-            </NoticePolicy>
-            <div className="select-subscription">
-              <ToggleSubscription>
-                <div
-                  className="type-subscription"
+              <IconPaymentTimes />
+              <h2>¡Oh no!</h2>
+              <span className="label-success-pay">
+                No se pudo realizar la suscripción, intentalo más tarde o
+                contáctanos por el chat.
+              </span>
+              <div className="button-payment">
+                <button
                   onClick={() => {
-                    setSubscriptionMethod(1);
-                    if (subscriptionMethod !== 1) {
-                      handlerCallGetAllSubscriptionTypes(1);
-                    }
+                    setStatusSubscription(null);
                   }}
                 >
-                  <span>Mensual</span>
-                </div>
-                <div
-                  className="type-subscription"
-                  onClick={() => {
-                    setSubscriptionMethod(2);
-                    if (subscriptionMethod !== 2) {
-                      handlerCallGetAllSubscriptionTypes(2);
-                    }
-                  }}
-                >
-                  <span>Anual</span>
-                </div>
-                <Toggle mode={subscriptionMethod}>
-                  <span>{subscriptionMethod === 1 ? "Mensual" : "Anual"}</span>
-                </Toggle>
-              </ToggleSubscription>
-              <div className="offert-subscription">
-                <span>2 meses gratis</span>
-                <ArrowPromotion />
+                  Continuar
+                </button>
               </div>
-            </div>
-            <div className="catalog-subscription">
-              {isEmpty(dataSubscription) === false &&
-                dataSubscription.map((row) => {
-                  return (
-                    <CardSubscription>
-                      <h1>{row.subscriptionType}</h1>
-                      <p>{row.content}Alguna descripción</p>
-                      <div className="price-subscription">
-                        <h1>{row.priceDescription} </h1>
-                        {/* /
-                    <span>siempre</span> */}
+            </PaidService>
+          )}
+          {statusSubscription === "success" && (
+            <PaidService>
+              <h1>
+                Suscripción <span>Exitosa</span>
+              </h1>
+              <IconPaymentCheck />
+              <h2>¡Felicidades!</h2>
+              <span className="label-success-pay">
+                Ya puedes disfrutar los beneficios de tu paquete.
+              </span>
+              <div className="button-payment">
+                <button
+                  onClick={() => {
+                    if (isNil(dataUserRedirect) === false) {
+                      history.push(dataUserRedirect.backPathOfSubscription);
+                    } else {
+                      history.push(dataProfile.path);
+                    }
+                    setStatusSubscription(null);
+                  }}
+                >
+                  Continuar
+                </button>
+              </div>
+            </PaidService>
+          )}
+          {isNil(statusSubscription) === true && (
+            <>
+              <div className="header-title">
+                <h1>Selecciona tu paquete</h1>
+              </div>
+              <div
+                style={{
+                  padding: "0px 1em",
+                  marginTop: "1em",
+                }}
+              >
+                {isNil(detailSubscription.subscriptionType) === false &&
+                  isEmpty(detailSubscription.subscriptionType) === false && (
+                    <DetailSubscription>
+                      <div className="info-subscription">
+                        <div className="data-info-subscription">
+                          <strong>Tu plan actual: </strong>
+                          <strong className="type-plan">
+                            {detailSubscription.subscriptionType}
+                          </strong>
+                        </div>
+                        <div className="data-info-subscription">
+                          <span>Costo: </span>
+                          <span className="price-detail">
+                            {detailSubscription.subscriptionAmount}
+                          </span>
+                        </div>
                       </div>
-                      <div className="button-actions">
-                        <ButtonSelect
-                          onClick={async () => {
-                            try {
-                              await handlerCallSetSubscription({
-                                idSubscriptionType: row.idSubscriptionType,
-                                idMethod: subscriptionMethod,
-                                isTrial: row.canStartTrial,
-                                isCanceled: false,
-                              });
-                              handlerGetDetailInformation();
-                            } catch (error) {}
+                      <div className="info-subscription">
+                        <div className="data-info-subscription">
+                          <span>Inicio: </span>
+                          <span className="price-detail">
+                            {detailSubscription.activeSince}
+                          </span>
+                        </div>
+                        <div className="data-info-subscription">
+                          <span>fecha de pago: </span>
+                          <span className="price-detail">
+                            {detailSubscription.nextPymtScheduleAt}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="info-subscription">
+                        {detailSubscription.canBeCanceled === true && (
+                          <div className="button-action">
+                            <button>Cancelar suscripción</button>
+                          </div>
+                        )}
+                      </div>
+                    </DetailSubscription>
+                  )}
+              </div>
+              <NoticePolicy>
+                <h1
+                  style={{
+                    textAlign: "center",
+                  }}
+                >
+                  ¡
+                  <span
+                    style={{
+                      color: "#FF0282",
+                    }}
+                  >
+                    Potencia tu negocio
+                  </span>{" "}
+                  con el paquete apropiado!
+                </h1>
+              </NoticePolicy>
+              <div className="select-subscription">
+                <ToggleSubscription>
+                  <div
+                    className="type-subscription"
+                    onClick={() => {
+                      setSubscriptionMethod(1);
+                      if (subscriptionMethod !== 1) {
+                        handlerCallGetAllSubscriptionTypes(1);
+                      }
+                    }}
+                  >
+                    <span>Mensual</span>
+                  </div>
+                  <div
+                    className="type-subscription"
+                    onClick={() => {
+                      setSubscriptionMethod(2);
+                      if (subscriptionMethod !== 2) {
+                        handlerCallGetAllSubscriptionTypes(2);
+                      }
+                    }}
+                  >
+                    <span>Anual</span>
+                  </div>
+                  <Toggle mode={subscriptionMethod}>
+                    <span>
+                      {subscriptionMethod === 1 ? "Mensual" : "Anual"}
+                    </span>
+                  </Toggle>
+                </ToggleSubscription>
+                <div className="offert-subscription">
+                  <span>2 meses gratis</span>
+                  <ArrowPromotion />
+                </div>
+              </div>
+              <div className="catalog-subscription">
+                {isEmpty(dataSubscription) === false &&
+                  dataSubscription.map((row) => {
+                    return (
+                      <CardSubscription>
+                        <h1>{row.subscriptionType}</h1>
+                        <p>{row.content}Alguna descripción</p>
+                        <div
+                          className="price-subscription"
+                          dangerouslySetInnerHTML={{
+                            __html:
+                              isNil(row.priceDescription) === false
+                                ? row.priceDescription
+                                : "",
                           }}
-                          select={row.isCurrent === true}
-                        >
-                          {row.canStartTrial === true &&
-                            row.isCurrent === false &&
-                            "Prueba gratis"}
-                          {row.isCurrent === true && "En uso"}
-                        </ButtonSelect>
-                        <button className="view-info">
-                          Ver características
-                        </button>
-                      </div>
-                    </CardSubscription>
-                  );
-                })}
-            </div>
-          </>
-        )}
-      </ContentForm>
+                        />
+                        <div className="button-actions">
+                          <ButtonSelect
+                            onClick={async () => {
+                              try {
+                                setLoadApi(true);
+                                await handlerCallSetSubscription({
+                                  idSubscriptionType: row.idSubscriptionType,
+                                  idMethod: subscriptionMethod,
+                                  isTrial: row.canStartTrial,
+                                  isCanceled: false,
+                                });
+                                handlerGetDetailInformation();
+                                setLoadApi(false);
+                                setStatusSubscription("success");
+                                onGetSubscription();
+                              } catch (error) {
+                                setStatusSubscription("cancel");
+                                setLoadApi(false);
+                              }
+                            }}
+                            select={row.isCurrent === true}
+                          >
+                            {row.canStartTrial === true &&
+                              row.isCurrent === false &&
+                              "Prueba gratis"}
+                            {row.canStartTrial === false &&
+                              row.isCurrent === false &&
+                              "Seleccionar"}
+                            {row.isCurrent === true && "En uso"}
+                          </ButtonSelect>
+                          <button className="view-info">
+                            Ver características
+                          </button>
+                        </div>
+                      </CardSubscription>
+                    );
+                  })}
+              </div>
+            </>
+          )}
+        </ContentForm>
+      </ComponentLoadSection>
     </Content>
   );
 };
