@@ -24,6 +24,7 @@ import SectionPersonalInformationAgent from "./sections/PersonalInformation/sect
 import CustomStepsHomify from "../../components/customStepsHomifyV2";
 import SectionAvalInformation from "./sections/Aval/sectionAvalInformation";
 import WidgetModalConfirmInformation from "./widget/widgetModalConfirmInformation";
+import CustomValidationUser from "../../components/CustomValidationUser";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -49,6 +50,7 @@ const EditProfileUsers = (props) => {
   const [dataTabs, setDataTabs] = useState([]);
   const [dataConfigForm, setDataConfigForm] = useState({});
   const [isConfirmInfo, setIsConfirmInfo] = useState(false);
+  const [isVisibleVerification, setIsVisibleVerification] = useState(false);
   const [current, setCurrent] = useState(0);
   const [maxTabs, setMaxTabs] = useState(0);
   const frontFunctions = new FrontFunctions();
@@ -73,12 +75,18 @@ const EditProfileUsers = (props) => {
         isNil(response.response.message) === false
           ? response.response.message
           : "";
+      const responseResultVerify =
+        isNil(response.response) === false &&
+        isNil(response.response.requiresIdentiyVer) === false
+          ? response.response.requiresIdentiyVer
+          : "";
       frontFunctions.showMessageStatusApi(
         isEmpty(responseResult) === false
           ? responseResult
           : "Se ejecutó correctamente la solicitud",
         GLOBAL_CONSTANTS.STATUS_API.SUCCESS
       );
+      return responseResultVerify;
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -250,11 +258,17 @@ const EditProfileUsers = (props) => {
         }}
         onSendConfirmation={async () => {
           try {
-            await handlerCallUpdateCustomerAccount({ isDataConfirmed: true });
-            if (dataProfile.idUserType === 4) {
-              history.push("/websystem/dashboard-adviser");
-            } else {
-              history.push(dataProfile.path);
+            const hasVerify = await handlerCallUpdateCustomerAccount({
+              isDataConfirmed: true,
+            });
+            if (isNil(hasVerify) === true || hasVerify === false) {
+              if (dataProfile.idUserType === 4) {
+                history.push("/websystem/dashboard-adviser");
+              } else {
+                history.push(dataProfile.path);
+              }
+            } else if (hasVerify === true) {
+              setIsVisibleVerification(true);
             }
           } catch (error) {
             throw error;
@@ -280,6 +294,27 @@ const EditProfileUsers = (props) => {
           dataPhoneNumber,
         }}
       >
+        <CustomValidationUser
+          isVisible={isVisibleVerification}
+          onClose={() => {}}
+          finished={() => {
+            handlerCallGetCustomerData();
+          }}
+          metadata={{
+            idCustomer: dataProfile.idCustomer,
+          }}
+          clientId={dataProfile.clientId}
+          flowId={dataProfile.flowId}
+          finishedProcess={() => {
+            handlerCallGetCustomerData();
+            setIsVisibleVerification(false);
+            if (dataProfile.idUserType === 4) {
+              history.push("/websystem/dashboard-adviser");
+            } else {
+              history.push(dataProfile.path);
+            }
+          }}
+        />
         {/*Inquilino Persona fisica */}
         {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 1 && (
           <SectionPersonalInformationTenant
