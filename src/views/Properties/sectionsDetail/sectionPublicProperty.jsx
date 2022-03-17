@@ -306,6 +306,7 @@ const SectionPublicProperty = (props) => {
         }}
         dataDetail={dataDetail}
         history={history}
+        labelButton="Cancelar"
       />
 
       {isNil(infoTenant) === true && isPublished === false && (

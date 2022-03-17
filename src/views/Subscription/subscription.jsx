@@ -365,10 +365,8 @@ const Subscription = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : [];
-      console.log("responseResult", responseResult);
       setDataSubscription(responseResult);
     } catch (error) {
-      console.log("error", error);
       frontFunctions.showMessageStatusApi(
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
@@ -431,7 +429,6 @@ const Subscription = (props) => {
         isEmpty(response.response[0][0]) === false
           ? response.response[0][0]
           : [];
-      console.log("responseResult1", responseResult);
       setDetailSubscription(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
