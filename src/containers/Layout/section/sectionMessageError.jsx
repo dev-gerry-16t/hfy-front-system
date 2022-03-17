@@ -42,7 +42,7 @@ const SectionMessageError = (props) => {
           <span>Ingresa tu método de pago para continuar tu suscripción</span>
           <u
             onClick={() => {
-              window.location.href = detailSubscription.hosted_invoice_url;
+              window.open(detailSubscription.hosted_invoice_url, "_blank");
             }}
           >
             ingresar

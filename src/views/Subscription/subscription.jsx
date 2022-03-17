@@ -11,7 +11,10 @@ import { callGlobalActionApi } from "../../utils/actions/actions";
 import { ReactComponent as ArrowPromotion } from "../../assets/iconSvg/svgFile/arrowPromotion.svg";
 import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
 import { ReactComponent as IconPaymentTimes } from "../../assets/iconSvg/svgFile/iconPaymentTimes.svg";
+import { ReactComponent as IconMinCheck } from "../../assets/iconSvg/svgFile/iconMinCheck.svg";
 import ComponentLoadSection from "../../components/componentLoadSection";
+import SectionConfirmChangeSubscription from "./sections/sectionConfirmChangeSubscription";
+import { DetailInfoSubscription, Circle } from "./constants/styleConstants";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -206,6 +209,7 @@ const Toggle = styled.div`
 const CardSubscription = styled.div`
   display: flex;
   width: 245px;
+  height: fit-content;
   flex-direction: column;
   border-top: 5px solid var(--color-primary);
   background: #ffffff;
@@ -267,44 +271,57 @@ const DetailSubscription = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 8px;
   border-top: 5px solid #4e4b66;
-  display: grid;
-  grid-template-columns: 2fr 3fr 2fr;
   font-size: 12px;
-  padding: 10px 15px;
-  .info-subscription {
-    .data-info-subscription {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: 5px;
-      .type-plan {
-        color: var(--color-primary);
+  .info-general-subscription {
+    display: grid;
+    grid-template-columns: 2fr 3fr 2fr;
+    padding: 10px 15px;
+    .info-subscription {
+      .data-info-subscription {
+        display: flex;
+        flex-wrap: wrap;
+        column-gap: 5px;
+        .type-plan {
+          color: var(--color-primary);
+        }
+        .price-detail {
+          font-weight: 600;
+          color: #6e7191;
+        }
       }
-      .price-detail {
-        font-weight: 600;
-        color: #6e7191;
-      }
-    }
-    .button-action {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 10px;
-      button {
-        border-radius: 1em;
-        border: 1px solid var(--color-primary);
-        background: #fff;
-        color: var(--color-primary);
-        font-weight: 600;
+      .button-action {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 10px;
+
+        .secondary-button {
+          border-radius: 1em;
+          border: 1px solid var(--color-primary);
+          background: #fff;
+          color: var(--color-primary);
+          font-weight: 600;
+        }
+        .primary-button {
+          border-radius: 1em;
+          border: 1px solid var(--color-primary);
+          background: var(--color-primary);
+          color: #fff;
+          font-weight: 600;
+        }
       }
     }
   }
+
   @media screen and (max-width: 538px) {
-    grid-template-columns: 1fr;
-    .info-subscription {
-      .data-info-subscription {
-        justify-content: space-between;
+    .info-general-subscription {
+      grid-template-columns: 1fr;
+      .info-subscription {
+        .data-info-subscription {
+          justify-content: space-between;
+        }
       }
     }
   }
@@ -320,6 +337,9 @@ const Subscription = (props) => {
     onGetSubscription,
   } = props;
   const [dataSubscription, setDataSubscription] = useState([]);
+  const [dataSelectSubscription, setDataSelectSubscription] = useState({});
+  const [isOpenConfChangeSubscription, setIsOpenConfChangeSubscription] =
+    useState(false);
   const [detailSubscription, setDetailSubscription] = useState({});
   const [subscriptionMethod, setSubscriptionMethod] = useState(1);
   const [statusSubscription, setStatusSubscription] = useState(null);
@@ -345,8 +365,43 @@ const Subscription = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : [];
-
+      console.log("responseResult", responseResult);
       setDataSubscription(responseResult);
+    } catch (error) {
+      console.log("error", error);
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallCancelSubscription = async (data) => {
+    const { fullName, email, userType } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          name: fullName,
+          email,
+          userType,
+          reason: "",
+          comment: "",
+          ...data,
+        },
+        null,
+        API_CONSTANTS.PROPERTY.CANCEL_SUBSCRIPTION
+      );
+      const message =
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : "";
+      frontFunctions.showMessageStatusApi(
+        isEmpty(message) === false
+          ? message
+          : "Se ejecutó correctamente la solicitud",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -376,6 +431,7 @@ const Subscription = (props) => {
         isEmpty(response.response[0][0]) === false
           ? response.response[0][0]
           : [];
+      console.log("responseResult1", responseResult);
       setDetailSubscription(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -391,7 +447,6 @@ const Subscription = (props) => {
       const response = await callGlobalActionApi(
         {
           ...data,
-          acceptedCode: null,
           idLoginHistory,
         },
         idSystemUser,
@@ -411,12 +466,21 @@ const Subscription = (props) => {
       if (isEmpty(urlRedirect) === false) {
         window.location.href = urlRedirect;
       }
-      frontFunctions.showMessageStatusApi(
-        isEmpty(message) === false
-          ? message
-          : "Se ejecutó correctamente la solicitud",
-        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
-      );
+      if (
+        message !== "C0" &&
+        message !== "C1" &&
+        message !== "C2" &&
+        message !== "C3"
+      ) {
+        frontFunctions.showMessageStatusApi(
+          isEmpty(message) === false
+            ? message
+            : "Se ejecutó correctamente la solicitud",
+          GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+        );
+        return false;
+      }
+      return message;
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -446,6 +510,32 @@ const Subscription = (props) => {
   return (
     <Content>
       <ComponentLoadSection isLoadApi={loadApi}>
+        <SectionConfirmChangeSubscription
+          onCancel={() => {
+            setIsOpenConfChangeSubscription(false);
+            setDataSelectSubscription({});
+          }}
+          onAccept={async () => {
+            try {
+              setIsOpenConfChangeSubscription(false);
+              setLoadApi(true);
+              await handlerCallSetSubscription({
+                ...dataSelectSubscription,
+              });
+              handlerGetDetailInformation();
+              setStatusSubscription("success");
+              onGetSubscription();
+              setLoadApi(false);
+              setDataSelectSubscription({});
+            } catch (error) {}
+          }}
+          onclose={() => {
+            setIsOpenConfChangeSubscription(false);
+            setDataSelectSubscription({});
+          }}
+          isVisibleModal={isOpenConfChangeSubscription}
+          dataDetail={dataSelectSubscription}
+        />
         <ContentForm>
           {statusSubscription === "cancel" && (
             <PaidService>
@@ -506,44 +596,96 @@ const Subscription = (props) => {
                   marginTop: "1em",
                 }}
               >
-                {isNil(detailSubscription.subscriptionType) === false &&
+                {isEmpty(detailSubscription) === false &&
+                  isNil(detailSubscription.subscriptionType) === false &&
                   isEmpty(detailSubscription.subscriptionType) === false && (
                     <DetailSubscription>
-                      <div className="info-subscription">
-                        <div className="data-info-subscription">
-                          <strong>Tu plan actual: </strong>
-                          <strong className="type-plan">
-                            {detailSubscription.subscriptionType}
+                      <div className="info-general-subscription">
+                        <div className="info-subscription">
+                          <div className="data-info-subscription">
+                            <strong>Tu plan actual: </strong>
+                            <strong className="type-plan">
+                              {detailSubscription.subscriptionType}
+                            </strong>
+                          </div>
+                          <div className="data-info-subscription">
+                            <span>Costo: </span>
+                            <span className="price-detail">
+                              {detailSubscription.subscriptionAmount}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="info-subscription">
+                          <div className="data-info-subscription">
+                            <span>Activo desde: </span>
+                            <span className="price-detail">
+                              {detailSubscription.activeSince}
+                            </span>
+                          </div>
+                          <div className="data-info-subscription">
+                            <span>Próximo pago: </span>
+                            <span className="price-detail">
+                              {detailSubscription.nextPymtScheduleAt}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="info-subscription">
+                          {detailSubscription.canBeCanceled === true && (
+                            <div className="button-action">
+                              <button
+                                className="secondary-button"
+                                onClick={async () => {
+                                  try {
+                                    await handlerCallCancelSubscription({
+                                      idSubscription: detailSubscription.id,
+                                      cancel_at: detailSubscription.cancel_at,
+                                    });
+                                    handlerGetDetailInformation();
+                                    onGetSubscription();
+                                  } catch (error) {}
+                                }}
+                              >
+                                Cancelar suscripción
+                              </button>
+                            </div>
+                          )}
+                          {detailSubscription.isCanceled === true && (
+                            <div className="button-action">
+                              <button
+                                className="primary-button"
+                                onClick={async () => {
+                                  try {
+                                    await handlerCallCancelSubscription({
+                                      idSubscription: detailSubscription.id,
+                                      cancel_at: detailSubscription.cancel_at,
+                                      reactive: true,
+                                    });
+                                    handlerGetDetailInformation();
+                                    onGetSubscription();
+                                  } catch (error) {}
+                                }}
+                              >
+                                Reactivar suscripción
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                      {detailSubscription.isCanceled === true && (
+                        <div
+                          style={{
+                            padding: "0px 15px",
+                            textAlign: "center",
+                            color: "var(--color-primary)",
+                          }}
+                        >
+                          <strong>
+                            Ya has cancelado tu suscripción y tus beneficios
+                            permanecerán activos hasta el termino de tu ciclo de
+                            facturación
                           </strong>
                         </div>
-                        <div className="data-info-subscription">
-                          <span>Costo: </span>
-                          <span className="price-detail">
-                            {detailSubscription.subscriptionAmount}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="info-subscription">
-                        <div className="data-info-subscription">
-                          <span>Inicio: </span>
-                          <span className="price-detail">
-                            {detailSubscription.activeSince}
-                          </span>
-                        </div>
-                        <div className="data-info-subscription">
-                          <span>fecha de pago: </span>
-                          <span className="price-detail">
-                            {detailSubscription.nextPymtScheduleAt}
-                          </span>
-                        </div>
-                      </div>
-                      <div className="info-subscription">
-                        {detailSubscription.canBeCanceled === true && (
-                          <div className="button-action">
-                            <button>Cancelar suscripción</button>
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </DetailSubscription>
                   )}
               </div>
@@ -602,10 +744,14 @@ const Subscription = (props) => {
               <div className="catalog-subscription">
                 {isEmpty(dataSubscription) === false &&
                   dataSubscription.map((row) => {
+                    const contentParse =
+                      isEmpty(row.content) === false
+                        ? JSON.parse(row.content)
+                        : [];
                     return (
                       <CardSubscription>
                         <h1>{row.subscriptionType}</h1>
-                        <p>{row.content}Alguna descripción</p>
+                        <p>{row.description}Alguna descripción</p>
                         <div
                           className="price-subscription"
                           dangerouslySetInnerHTML={{
@@ -615,21 +761,54 @@ const Subscription = (props) => {
                                 : "",
                           }}
                         />
+                        <div
+                          style={{
+                            padding: "0px 10px",
+                          }}
+                        >
+                          <DetailInfoSubscription>
+                            {isEmpty(contentParse) === false &&
+                              contentParse.map((rowMap) => {
+                                return (
+                                  <div className="option-subs">
+                                    <div>
+                                      <Circle ok>
+                                        <IconMinCheck />
+                                      </Circle>
+                                    </div>
+                                    <span>{rowMap}</span>
+                                  </div>
+                                );
+                              })}
+                          </DetailInfoSubscription>
+                        </div>
                         <div className="button-actions">
                           <ButtonSelect
                             onClick={async () => {
                               try {
                                 setLoadApi(true);
-                                await handlerCallSetSubscription({
-                                  idSubscriptionType: row.idSubscriptionType,
-                                  idMethod: subscriptionMethod,
-                                  isTrial: row.canStartTrial,
-                                  isCanceled: false,
-                                });
-                                handlerGetDetailInformation();
+                                const isOpenConfirm =
+                                  await handlerCallSetSubscription({
+                                    idSubscriptionType: row.idSubscriptionType,
+                                    idMethod: subscriptionMethod,
+                                    isTrial: row.canStartTrial,
+                                    isCanceled: false,
+                                  });
+                                if (isOpenConfirm === false) {
+                                  handlerGetDetailInformation();
+                                  setStatusSubscription("success");
+                                  onGetSubscription();
+                                } else {
+                                  setIsOpenConfChangeSubscription(true);
+                                  setDataSelectSubscription({
+                                    idSubscriptionType: row.idSubscriptionType,
+                                    idMethod: subscriptionMethod,
+                                    isTrial: row.canStartTrial,
+                                    isCanceled: false,
+                                    acceptedCode: isOpenConfirm,
+                                  });
+                                }
                                 setLoadApi(false);
-                                setStatusSubscription("success");
-                                onGetSubscription();
                               } catch (error) {
                                 setStatusSubscription("cancel");
                                 setLoadApi(false);
@@ -645,9 +824,9 @@ const Subscription = (props) => {
                               "Seleccionar"}
                             {row.isCurrent === true && "En uso"}
                           </ButtonSelect>
-                          <button className="view-info">
+                          {/* <button className="view-info">
                             Ver características
-                          </button>
+                          </button> */}
                         </div>
                       </CardSubscription>
                     );
