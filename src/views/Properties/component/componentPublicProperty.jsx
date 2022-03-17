@@ -46,6 +46,7 @@ const ComponentPublicProperty = (props) => {
     history,
     setDataUserRedirect,
     dataUserRedirect,
+    labelButton = "",
   } = props;
   const initialForm = {
     isPublished: false,
@@ -55,6 +56,10 @@ const ComponentPublicProperty = (props) => {
   };
 
   const [finishInvitation, setFinishInvitation] = useState(false);
+  const [messagesCondition, setMessagesCondition] = useState({
+    title: null,
+    subTitle: null,
+  });
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [isVisibleSuscription, setIsVisibleSuscription] = useState(false);
   const [isVisibleDataRequired, setIsVisibleDataRequired] = useState(false);
@@ -197,6 +202,40 @@ Amenidades:`;
     });
   };
 
+  const handlerGetMessagesFinish = (data, arraySite) => {
+    const wasPublished =
+      isEmpty(arraySite) === false
+        ? arraySite.find((row) => {
+            return isNil(row.path) === false;
+          })
+        : null;
+    if (isEmpty(data) === false && isNil(wasPublished) === true) {
+      setMessagesCondition({
+        title: "¡El inmueble ha sido publicado!",
+        subTitle:
+          "Ahora podrás ver tu inmueble publicado en las siguientes plataformas",
+      });
+    } else if (isEmpty(data) === false && isNil(wasPublished) === false) {
+      setMessagesCondition({
+        title: "Se retiró una o mas publicaciones",
+        subTitle:
+          "Podrás ver tu inmueble publicado en las siguientes plataformas",
+      });
+    } else if (isEmpty(data) === true && isNil(wasPublished) === false) {
+      setMessagesCondition({
+        title: "Se retiró una o mas publicaciones",
+        subTitle:
+          "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos",
+      });
+    } else if (isEmpty(data) === true && isNil(wasPublished) === true) {
+      setMessagesCondition({
+        title: "Inmueble sin publicar",
+        subTitle:
+          "Tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos",
+      });
+    }
+  };
+
   const handlerOnPublicProperty = async () => {
     const selectPublished =
       isEmpty(dataForm.sites) === false
@@ -205,17 +244,21 @@ Amenidades:`;
           })
         : null;
     try {
-      if (isEmpty(selectPublished) === true) {
-        frontFunctions.showMessageStatusApi(
-          "No has seleccionado una opción",
-          GLOBAL_CONSTANTS.STATUS_API.ERROR
-        );
-        return false;
-      }
+      // if (isEmpty(selectPublished) === true) {
+      //   frontFunctions.showMessageStatusApi(
+      //     "No has seleccionado una opción",
+      //     GLOBAL_CONSTANTS.STATUS_API.ERROR
+      //   );
+      //   return false;
+      // }
       setIsLoadApi(true);
-      const isSelectMLM = selectPublished.find((row) => {
-        return row.idSite == "MLM";
-      });
+      handlerGetMessagesFinish(selectPublished, dataSites);
+      const isSelectMLM =
+        isEmpty(selectPublished) === false && isNil(selectPublished) === false
+          ? selectPublished.find((row) => {
+              return row.idSite == "MLM";
+            })
+          : null;
       if (isNil(isSelectMLM) === false) {
         const validData = await handlerCallValidateClassified(dataDetail);
         if (
@@ -438,7 +481,7 @@ Amenidades:`;
                         onClose();
                       }}
                     >
-                      Mantener privado
+                      {labelButton}
                     </ButtonsModal>
                   </div>
                 </>
@@ -449,21 +492,13 @@ Amenidades:`;
                   <div className="icon-image-send">
                     <IconStyleCheck />
                   </div>
-                  <h2>
-                    {isEmpty(detailPublicProperty) === false &&
-                    dataForm.isPublished === false
-                      ? "Se retiró la publicación"
-                      : "¡El inmueble ha sido publicado!"}
-                  </h2>
+                  <h2>{messagesCondition.title}</h2>
                   <p
                     style={{
                       textAlign: "center",
                     }}
                   >
-                    {isEmpty(detailPublicProperty) === false &&
-                    dataForm.isPublished === false
-                      ? "Ahora tu inmueble se encuentra privado, esperamos pronto lo publiques para recibir prospectos"
-                      : " Ahora podrás ver tu inmueble publicado en las siguientes plataformas"}
+                    {messagesCondition.subTitle}
                   </p>
                   <div
                     style={{
@@ -504,7 +539,7 @@ Amenidades:`;
                       }}
                       primary
                     >
-                      Cerrar
+                      Continuar
                     </ButtonsModal>
                   </div>
                 </>

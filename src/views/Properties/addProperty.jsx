@@ -199,6 +199,7 @@ const AddProperty = (props) => {
         }}
         dataDetail={dataForm}
         history={history}
+        labelButton="Mantener privado"
       />
       <CustomStepsHomify
         steps={[

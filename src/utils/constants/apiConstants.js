@@ -120,6 +120,7 @@ const API_CONSTANTS = {
     SET_SUBSCRIPTION: `${API.PROPERTY}/setSubscription/`,
     GET_SUSCRIPTION_DETAIL: `${API.PROPERTY}/getSuscriptionDetail`,
     SET_ANSWER_TO_ML: `${API.PROPERTY}/setAnswerToML`,
+    CANCEL_SUBSCRIPTION: `${API.PROPERTY}/cancelSubscription`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,
