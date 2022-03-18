@@ -149,6 +149,7 @@ const DefaultLayout = (props) => {
     IconEditSquare,
     IconNotificationWhite,
     IconStar,
+    IconSubscription: IconTicket,
   };
 
   const [nameSection, setNameSection] = useState("");

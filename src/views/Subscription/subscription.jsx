@@ -15,6 +15,7 @@ import { ReactComponent as IconMinCheck } from "../../assets/iconSvg/svgFile/ico
 import ComponentLoadSection from "../../components/componentLoadSection";
 import SectionConfirmChangeSubscription from "./sections/sectionConfirmChangeSubscription";
 import { DetailInfoSubscription, Circle } from "./constants/styleConstants";
+import SectionConfirmCancelAcceptSubscription from "./sections/sectionConfirmCancelAcceptSubscription";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -306,9 +307,11 @@ const DetailSubscription = styled.div`
         }
         .primary-button {
           border-radius: 1em;
+          padding: 5px 1em;
           border: 1px solid var(--color-primary);
           background: var(--color-primary);
           color: #fff;
+          font-size: 1.3em;
           font-weight: 600;
         }
       }
@@ -338,6 +341,12 @@ const Subscription = (props) => {
   } = props;
   const [dataSubscription, setDataSubscription] = useState([]);
   const [dataSelectSubscription, setDataSelectSubscription] = useState({});
+  const [isOpenCancelAcSubscription, setIsOpenCancelAcSubscription] = useState({
+    title: "",
+    subTitle: "",
+    isOpen: false,
+    reactive: null,
+  });
   const [isOpenConfChangeSubscription, setIsOpenConfChangeSubscription] =
     useState(false);
   const [detailSubscription, setDetailSubscription] = useState({});
@@ -507,6 +516,50 @@ const Subscription = (props) => {
   return (
     <Content>
       <ComponentLoadSection isLoadApi={loadApi}>
+        <SectionConfirmCancelAcceptSubscription
+          onCancel={() => {
+            setIsOpenCancelAcSubscription({
+              title: "",
+              subTitle: "",
+              isOpen: false,
+              reactive: null,
+            });
+          }}
+          onAccept={async () => {
+            try {
+              setLoadApi(true);
+              await handlerCallCancelSubscription({
+                idSubscription: detailSubscription.id,
+                cancel_at: detailSubscription.cancel_at,
+                reactive: null,
+              });
+              setIsOpenCancelAcSubscription({
+                title: "",
+                subTitle: "",
+                isOpen: false,
+                reactive: null,
+              });
+              setTimeout(() => {
+                handlerGetDetailInformation();
+                onGetSubscription();
+                setLoadApi(false);
+              }, 5000);
+            } catch (error) {
+              setLoadApi(false);
+            }
+          }}
+          onclose={() => {
+            setIsOpenCancelAcSubscription({
+              title: "",
+              subTitle: "",
+              isOpen: false,
+              reactive: null,
+            });
+          }}
+          isVisibleModal={isOpenCancelAcSubscription.isOpen}
+          title={isOpenCancelAcSubscription.title}
+          subTitleMessage={isOpenCancelAcSubscription.subTitle}
+        />
         <SectionConfirmChangeSubscription
           onCancel={() => {
             setIsOpenConfChangeSubscription(false);
@@ -600,7 +653,7 @@ const Subscription = (props) => {
                       <div className="info-general-subscription">
                         <div className="info-subscription">
                           <div className="data-info-subscription">
-                            <strong>Tu plan actual: </strong>
+                            <strong>Paquete actual: </strong>
                             <strong className="type-plan">
                               {detailSubscription.subscriptionType}
                             </strong>
@@ -631,15 +684,14 @@ const Subscription = (props) => {
                             <div className="button-action">
                               <button
                                 className="secondary-button"
-                                onClick={async () => {
-                                  try {
-                                    await handlerCallCancelSubscription({
-                                      idSubscription: detailSubscription.id,
-                                      cancel_at: detailSubscription.cancel_at,
-                                    });
-                                    handlerGetDetailInformation();
-                                    onGetSubscription();
-                                  } catch (error) {}
+                                onClick={() => {
+                                  setIsOpenCancelAcSubscription({
+                                    title: "Cancelación de suscripción",
+                                    subTitle:
+                                      "Si cancelas ahora mantendremos todos tus beneficios hasta el termino de tu suscripción y después de ello pasarás a una suscripción gratuita.",
+                                    isOpen: true,
+                                    reactive: null,
+                                  });
                                 }}
                               >
                                 Cancelar suscripción
@@ -652,14 +704,20 @@ const Subscription = (props) => {
                                 className="primary-button"
                                 onClick={async () => {
                                   try {
+                                    setLoadApi(true);
                                     await handlerCallCancelSubscription({
                                       idSubscription: detailSubscription.id,
                                       cancel_at: detailSubscription.cancel_at,
                                       reactive: true,
                                     });
-                                    handlerGetDetailInformation();
-                                    onGetSubscription();
-                                  } catch (error) {}
+                                    setTimeout(() => {
+                                      handlerGetDetailInformation();
+                                      onGetSubscription();
+                                      setLoadApi(false);
+                                    }, 5000);
+                                  } catch (error) {
+                                    setLoadApi(false);
+                                  }
                                 }}
                               >
                                 Reactivar suscripción
@@ -748,7 +806,7 @@ const Subscription = (props) => {
                     return (
                       <CardSubscription>
                         <h1>{row.subscriptionType}</h1>
-                        <p>{row.description}Alguna descripción</p>
+                        {/* <p>{row.description}Alguna descripción</p> */}
                         <div
                           className="price-subscription"
                           dangerouslySetInnerHTML={{
@@ -819,7 +877,7 @@ const Subscription = (props) => {
                             {row.canStartTrial === false &&
                               row.isCurrent === false &&
                               "Seleccionar"}
-                            {row.isCurrent === true && "En uso"}
+                            {row.isCurrent === true && "Paquete activo"}
                           </ButtonSelect>
                           {/* <button className="view-info">
                             Ver características
