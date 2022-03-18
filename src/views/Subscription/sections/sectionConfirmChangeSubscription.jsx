@@ -15,11 +15,11 @@ const SectionConfirmChangeSubscription = (props) => {
         break;
       case "C1":
         message =
-          "Si actualizas ahora aplicaremos un prorrateo, por lo que es posible que el monto que veas en tu próximo ciclo de facturación sea menor.";
+          "Si actualizas ahora aplicaremos un ajuste, por lo que es posible que el monto que veas en tu próximo ciclo de facturación sea menor.";
         break;
       case "C2":
         message =
-          "Si actualizas ahora aplicaremos un prorrateo, por lo que es posible que el monto que veas en tu próximo ciclo de facturación sea mayor.";
+          "Si actualizas ahora aplicaremos un ajuste, por lo que es posible que el monto que veas en tu próximo ciclo de facturación sea mayor.";
         break;
       case "C3":
         message =
