@@ -850,7 +850,7 @@ const RegisterAgent = (props) => {
           </CardIcon>
           <div className="title-include">
             <h1>
-              Tu plan <span>incluye</span>
+              Tu plan gratuito<span>incluye</span>
             </h1>
           </div>
           <div className="content-plan-info">

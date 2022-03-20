@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -110,6 +110,14 @@ const SectionCandidate = styled.div`
     color: #4e4b66;
     margin-top: 3em;
     padding: 0px 10px;
+    .app-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+      img {
+        cursor: pointer;
+      }
+    }
     .score-user {
       position: absolute;
       width: 58px;
@@ -163,7 +171,7 @@ const SectionCandidate = styled.div`
 const SectionPublicProperty = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail, updateProperty, getById } = dataContexProperty;
+  const { dataDetail, updateProperty, getById, history } = dataContexProperty;
   const {
     applicants,
     isPublished,
@@ -178,6 +186,8 @@ const SectionPublicProperty = (props) => {
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
   const [detailPublicProperty, setDetailPublicProperty] = useState({});
+  const [dataSites, setDataSites] = useState([]);
+
   const applicantsParse =
     isNil(infoTenant) === false && isEmpty(infoTenant) === false
       ? JSON.parse(infoTenant)
@@ -228,6 +238,41 @@ const SectionPublicProperty = (props) => {
     return textTransform;
   };
 
+  const handlerCallGetAllSites = async (id = null, id2 = null) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty: id,
+          idApartment: id2,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_SITES
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataSites(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    if (isEmpty(dataDetail) === false) {
+      handlerCallGetAllSites(dataDetail.idProperty, dataDetail.idApartment);
+    }
+  }, [dataDetail]);
+
   return (
     <ContentPublicProperty id="public-property">
       <ComponentAddCandidate
@@ -245,6 +290,7 @@ const SectionPublicProperty = (props) => {
       />
       <ComponentPublicProperty
         isModalVisible={visiblePublicProperty}
+        dataSites={dataSites}
         onPublicProperty={async (data) => {
           try {
             await updateProperty({ ...data, idApartment });
@@ -259,6 +305,8 @@ const SectionPublicProperty = (props) => {
           setDetailPublicProperty({});
         }}
         dataDetail={dataDetail}
+        history={history}
+        labelButton="Cancelar"
       />
 
       {isNil(infoTenant) === true && isPublished === false && (
@@ -337,11 +385,21 @@ const SectionPublicProperty = (props) => {
           <h1>Inmueble publicado en:</h1>
           <div className="info-user-select">
             <div className="app-list">
-              <img
-                width="100px"
-                src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296D.png"
-                alt="homify"
-              />
+              {isEmpty(dataSites) === false &&
+                dataSites.map((row) => {
+                  return row.isPublished === true ? (
+                    <img
+                      width="100px"
+                      src={row.source}
+                      alt={row.text}
+                      onClick={() => {
+                        window.open(row.path, "_blank");
+                      }}
+                    />
+                  ) : (
+                    <></>
+                  );
+                })}
             </div>
             <div className="content-info-public">
               <div className="info">

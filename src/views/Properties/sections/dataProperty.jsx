@@ -83,14 +83,17 @@ const SectionDataProperty = (props) => {
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataOwners, setDataOwners] = useState([]);
   const [dataCurrency, setDataCurrency] = useState([]);
+  const [dataLandAccess, setDataLandAccess] = useState([]);
   const [nameOwner, setNameOwner] = useState([]);
   const [isOpenFloorDescription, setIsOpenFloorDescription] = useState(false);
+  const [isOpenLandAccess, setIsOpenLandAccess] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataForm, setDataForm] = useState({
     idOperationType: 1,
     idPropertyType: null,
     idCommercialActivity: null,
+    idLandAccess: null,
     currentRent: null,
     idCurrency: "9F5E4F49-1525-4BAA-8C4E-4090A9082B6D",
     priceBasedBy: "1",
@@ -256,10 +259,37 @@ const SectionDataProperty = (props) => {
     }
   };
 
+  const handlerCallGetAllLandAccess = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idApartment: null,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_LAND_ACCESS
+      );
+      const responseResult =
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataLandAccess(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     handlerCallGetAllPropertyTypes();
-    handlerCallSearchCustomer();
     handlerCallGetAllCurrencies();
+    handlerCallGetAllLandAccess();
     return () => {
       onSaveData(dataFormSaveRef.current);
     };
@@ -290,6 +320,12 @@ const SectionDataProperty = (props) => {
         isNil(filterIdProperty) === false &&
           isNil(filterIdProperty.requiresFloorDescr) === false
           ? filterIdProperty.requiresFloorDescr
+          : false
+      );
+      setIsOpenLandAccess(
+        isNil(filterIdProperty) === false &&
+          isNil(filterIdProperty.requiresLandAccess) === false
+          ? filterIdProperty.requiresLandAccess
           : false
       );
     }
@@ -370,6 +406,7 @@ const SectionDataProperty = (props) => {
                     }
                     setDataForm({ ...dataForm, idPropertyType: value });
                     setIsOpenFloorDescription(row.requiresFloorDescr);
+                    setIsOpenLandAccess(row.requiresLandAccess);
                   }}
                 />
               </Col>
@@ -385,6 +422,21 @@ const SectionDataProperty = (props) => {
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
                       setDataForm({ ...dataForm, idCommercialActivity: value });
+                    }}
+                  />
+                </Col>
+              )}
+              {isOpenLandAccess === true && (
+                <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+                  <CustomSelect
+                    value={dataForm.idLandAccess}
+                    placeholder=""
+                    label="Tipo de acceso *"
+                    data={dataLandAccess}
+                    error={false}
+                    errorMessage="Este campo es requerido"
+                    onChange={(value) => {
+                      setDataForm({ ...dataForm, idLandAccess: value });
                     }}
                   />
                 </Col>

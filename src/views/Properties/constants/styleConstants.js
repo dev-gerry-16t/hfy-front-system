@@ -290,7 +290,41 @@ const FormModal = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1em;
     .input-checkbox {
+      width: 160px;
+      display: flex;
+      justify-content: space-between;
+      .limit-to-public {
+        border: 1px solid var(--color-primary);
+        border-radius: 5px;
+        color: var(--color-primary);
+        width: 40px;
+        height: 19px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        right: -50px;
+        top: 0px;
+        position: absolute;
+        span {
+          font-size: 14px;
+        }
+      }
+      .pay-publication {
+        position: absolute;
+        right: -100px;
+        top: -10px;
+        button {
+          width: 90px;
+          background: var(--color-primary);
+          font-size: 10px;
+          color: #fff;
+          border: none;
+          border-radius: 10px;
+          padding: 0px 5px;
+        }
+      }
       input[type="checkbox"] {
         appearance: none;
         background-color: #fff;
@@ -319,6 +353,22 @@ const FormModal = styled.div`
       input[type="checkbox"]:checked::before {
         transform: scale(1);
       }
+      input[type="checkbox"]:disabled {
+        background: #d6d8e7;
+        border: 1px solid #d6d8e7;
+      }
+    }
+  }
+  .button-action-subscription {
+    text-align: center;
+    border-bottom: 1px solid #4e4b66;
+    padding-bottom: 30px;
+    margin-bottom: 30px;
+    button {
+      border: 1px solid var(--color-primary);
+      background: #fff;
+      color: var(--color-primary);
+      border-radius:10px;
     }
   }
   .button-action {

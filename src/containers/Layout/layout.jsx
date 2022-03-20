@@ -64,6 +64,8 @@ import FrontFunctions from "../../utils/actions/frontFunctions";
 import { setDataUserProfile } from "../../utils/dispatchs/userProfileDispatch";
 import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
+import SectionMessageError from "./section/sectionMessageError";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 
 const ErrorMessage = styled.div`
   position: relative;
@@ -110,7 +112,9 @@ const DefaultLayout = (props) => {
     setDataUserProfile,
     callUpdateNotifications,
     callGetNotifications,
+    callGlobalActionApi,
   } = props;
+  const [detailSubscription, setDetailSubscription] = useState({});
   const [collapsed, setCollapsed] = useState(false);
   const [dataNotifications, setDataNotifications] = useState([]);
   const [notificationTopIndex, setNotificationTopIndex] = useState(null);
@@ -145,6 +149,7 @@ const DefaultLayout = (props) => {
     IconEditSquare,
     IconNotificationWhite,
     IconStar,
+    IconSubscription: IconTicket,
   };
 
   const [nameSection, setNameSection] = useState("");
@@ -261,6 +266,36 @@ const DefaultLayout = (props) => {
       );
       await handlerCallGetNotifications(notificationTopIndex);
     } catch (error) {}
+  };
+
+  const handlerCallGetSubscriptionDetail = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.PROPERTY.GET_SUSCRIPTION_DETAIL
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isEmpty(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isEmpty(response.response[0][0]) === false
+          ? response.response[0][0]
+          : [];
+      setDetailSubscription(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
   };
 
   const menu = (
@@ -387,6 +422,7 @@ const DefaultLayout = (props) => {
     if (isNil(dataProfile) === true) {
       return history.push("/");
     }
+    handlerCallGetSubscriptionDetail();
     handlerCallGetNotifications();
     const documentHead = document.getElementsByTagName("head");
     const headExtractNode =
@@ -830,7 +866,11 @@ const DefaultLayout = (props) => {
                 height: "0px",
               }}
             >
-              <div>
+              <div
+                style={{
+                  width: "fit-content",
+                }}
+              >
                 <ErrorMessage id="error-message-api" visible={true}>
                   <div className="message-api">
                     <IconAlerMessage /> <span id="error-description"></span>{" "}
@@ -840,6 +880,7 @@ const DefaultLayout = (props) => {
               </div>
             </div>
             <Suspense fallback={<Loading />}>
+              <SectionMessageError detailSubscription={detailSubscription} />
               <Switch>
                 {routes.map((route) => {
                   return (
@@ -866,6 +907,9 @@ const DefaultLayout = (props) => {
                               history={history}
                               onGetNotifications={() => {
                                 handlerCallGetNotifications();
+                              }}
+                              onGetSubscription={() => {
+                                handlerCallGetSubscriptionDetail();
                               }}
                             />
                           );

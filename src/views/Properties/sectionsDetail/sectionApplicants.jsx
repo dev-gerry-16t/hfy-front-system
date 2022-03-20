@@ -517,11 +517,41 @@ const SectionApplicants = (props) => {
                     </div>
                   </div>
                   <ContentDetail visible={toggleCard[row.prospectNo]}>
-                    <p>
-                      <span className="title-desc">Invitado por:</span>
-                      <br />
-                      <span className="value-desc">{row.origin}</span>
-                    </p>
+                    {isNil(row.origin) === false && (
+                      <p>
+                        <span className="title-desc">Invitado por:</span>
+                        <br />
+                        <span className="value-desc">{row.origin}</span>
+                      </p>
+                    )}
+                    {isNil(row.originService) === false && (
+                      <p>
+                        <span className="title-desc">Proceso:</span>
+                        <br />
+                        <span className="value-desc">{row.originService}</span>
+                      </p>
+                    )}
+                    {isNil(row.originPolicy) === false && (
+                      <p>
+                        <span className="title-desc">Póliza Jurídica:</span>
+                        <br />
+                        <span className="value-desc">{row.originPolicy}</span>
+                      </p>
+                    )}
+                    {isNil(row.originPolicyAmountFormat) === false && (
+                      <p>
+                        <span className="title-desc">Costo de póliza:</span>
+                        <br />
+                        <span className="value-desc">{row.originPolicyAmountFormat}</span>
+                      </p>
+                    )}
+                    {isNil(row.originPolicyPymtMethod) === false && (
+                      <p>
+                        <span className="title-desc">Forma de pago de póliza:</span>
+                        <br />
+                        <span className="value-desc">{row.originPolicyPymtMethod}</span>
+                      </p>
+                    )}
                     <p>
                       <span className="title-desc">Descripción:</span>
                       <br />

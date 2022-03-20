@@ -86,6 +86,9 @@ const Notifications = React.lazy(() =>
 );
 const Statistics = React.lazy(() => import("./views/Statistics/statistics"));
 const TopAgents = React.lazy(() => import("./views/TopAgents/topAgents"));
+const Subscription = React.lazy(() =>
+  import("./views/Subscription/subscription")
+);
 
 const routes = [
   {
@@ -447,6 +450,22 @@ const routes = [
     path: "/websystem/top-asesores",
     name: "Top Asesores",
     component: TopAgents,
+    exact: true,
+  },
+  {
+    key: "37",
+    id: "susbscription-homify",
+    path: "/websystem/subscription",
+    name: "Suscripción",
+    component: Subscription,
+    exact: true,
+  },
+  {
+    key: "37-1",
+    id: "susbscription-homify",
+    path: "/websystem/subscription/:status/:method",
+    name: "Suscripción",
+    component: Subscription,
     exact: true,
   },
 ];

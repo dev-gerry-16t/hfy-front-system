@@ -12,7 +12,7 @@ import SectionDataFeatures from "./sections/dataFeatures";
 import SectionDataImages from "./sections/dataImages";
 import SectionDataLocation from "./sections/dataLocation";
 import SectionDataProperty from "./sections/dataProperty";
-import ComponentPublicAddProperty from "./component/componentPublicAddProperty";
+import ComponentPublicProperty from "./component/componentPublicProperty";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -38,6 +38,7 @@ const AddProperty = (props) => {
   const [current, setCurrent] = useState(0);
   const [dataForm, setDataForm] = useState({});
   const [dataSaveImages, setDataSaveImages] = useState([]);
+  const [dataSites, setDataSites] = useState([]);
   const [dataSaveThumb, setDataSaveThumb] = useState({});
   const [visiblePublicProperty, setVisiblePublicProperty] = useState(false);
 
@@ -137,6 +138,35 @@ const AddProperty = (props) => {
     }
   };
 
+  const handlerCallGetAllSites = async (id = null, id2 = null) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty: id,
+          idApartment: id2,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_ALL_SITES
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isEmpty(response.response) === false
+          ? response.response
+          : [];
+      setDataSites(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
     if (isNil(idProperty) === false) {
       handlerCallGetPropertyById();
@@ -150,8 +180,9 @@ const AddProperty = (props) => {
 
   return (
     <Content id="add-property-user">
-      <ComponentPublicAddProperty
+      <ComponentPublicProperty
         isModalVisible={visiblePublicProperty}
+        dataSites={dataSites}
         onPublicProperty={async (data, id) => {
           try {
             await handlerCallUpdateProperty(data, id);
@@ -167,6 +198,8 @@ const AddProperty = (props) => {
           );
         }}
         dataDetail={dataForm}
+        history={history}
+        labelButton="Mantener privado"
       />
       <CustomStepsHomify
         steps={[
@@ -281,8 +314,9 @@ const AddProperty = (props) => {
           }}
           dataSaveImages={dataSaveImages}
           dataSaveThumb={dataSaveThumb}
-          redirect={async (id) => {
+          redirect={async (id, id1) => {
             try {
+              await handlerCallGetAllSites(id, id1);
               await handlerCallGetPropertyById(id);
               setVisiblePublicProperty(true);
             } catch (error) {}

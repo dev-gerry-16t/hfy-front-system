@@ -694,7 +694,7 @@ const SectionCurrentAddress = (props) => {
                   <CustomInputCurrency
                     value={dataForm.currentRent}
                     placeholder=""
-                    label="Monto de renta"
+                    label="Monto que pagas:"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
