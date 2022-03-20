@@ -8,6 +8,7 @@ import ENVIROMENT from "../../utils/constants/enviroments";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import { callGlobalActionApi } from "../../utils/actions/actions";
+import { setDataUserRedirect } from "../../utils/dispatchs/userRedirectDispatch";
 import { ReactComponent as ArrowPromotion } from "../../assets/iconSvg/svgFile/arrowPromotion.svg";
 import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
 import { ReactComponent as IconPaymentTimes } from "../../assets/iconSvg/svgFile/iconPaymentTimes.svg";
@@ -16,6 +17,7 @@ import ComponentLoadSection from "../../components/componentLoadSection";
 import SectionConfirmChangeSubscription from "./sections/sectionConfirmChangeSubscription";
 import { DetailInfoSubscription, Circle } from "./constants/styleConstants";
 import SectionConfirmCancelAcceptSubscription from "./sections/sectionConfirmCancelAcceptSubscription";
+import SectionConfirmPaymentMethod from "./sections/sectionConfirmPaymentMethod";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -338,6 +340,7 @@ const Subscription = (props) => {
     dataUserRedirect,
     history,
     onGetSubscription,
+    setDataUserRedirect,
   } = props;
   const [dataSubscription, setDataSubscription] = useState([]);
   const [dataSelectSubscription, setDataSelectSubscription] = useState({});
@@ -353,6 +356,10 @@ const Subscription = (props) => {
   const [subscriptionMethod, setSubscriptionMethod] = useState(1);
   const [statusSubscription, setStatusSubscription] = useState(null);
   const [loadApi, setLoadApi] = useState(false);
+  const [isVisiblePaymentRequired, setIsVisiblePaymentRequired] = useState({
+    url: null,
+    isVisible: false,
+  });
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetAllSubscriptionTypes = async (id) => {
@@ -447,7 +454,7 @@ const Subscription = (props) => {
     }
   };
 
-  const handlerCallSetSubscription = async (data) => {
+  const handlerCallSetSubscription = async (data, load = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
       const response = await callGlobalActionApi(
@@ -470,7 +477,11 @@ const Subscription = (props) => {
           ? response.response.message
           : "";
       if (isEmpty(urlRedirect) === false) {
-        window.location.href = urlRedirect;
+        setIsVisiblePaymentRequired({
+          isVisible: true,
+          url: urlRedirect,
+        });
+        return false;
       }
       if (
         message !== "C0" &&
@@ -485,6 +496,19 @@ const Subscription = (props) => {
           GLOBAL_CONSTANTS.STATUS_API.SUCCESS
         );
         return false;
+      } else {
+        if (load === true) {
+          await callGlobalActionApi(
+            {
+              ...data,
+              idLoginHistory,
+              acceptedCode: message,
+            },
+            idSystemUser,
+            API_CONSTANTS.PROPERTY.SET_SUBSCRIPTION,
+            "PUT"
+          );
+        }
       }
       return message;
     } catch (error) {
@@ -501,12 +525,43 @@ const Subscription = (props) => {
     handlerCallGetSuscriptionDetail();
   };
 
+  const handlerTrackerFlow = async (subscription, method) => {
+    handlerCallSetSubscription(
+      {
+        idSubscriptionType: subscription,
+        idMethod: method,
+        isTrial: false,
+        isCanceled: false,
+        requiresPymt: false,
+        idCustomerStripe: null,
+        returnToUrl: null,
+      },
+      true
+    );
+    setDataUserRedirect({
+      ...dataUserRedirect,
+      urlBlock: true,
+    });
+  };
+
   useEffect(() => {
     const { params } = match;
     if (params.status === "cancel") {
       setStatusSubscription("cancel");
     } else if (isEmpty(params.status) === false) {
       setStatusSubscription("success");
+      if (isNaN(Number(params.status)) === false) {
+        if (
+          isNil(dataUserRedirect) === false &&
+          dataUserRedirect.urlBlock === true
+        ) {
+          window.location.href = dataProfile.path;
+          return true;
+        }
+        const idSubscription = Number(params.status);
+        const idMethod = Number(params.method);
+        handlerTrackerFlow(idSubscription, idMethod);
+      }
     } else {
       setStatusSubscription(null);
     }
@@ -516,6 +571,24 @@ const Subscription = (props) => {
   return (
     <Content>
       <ComponentLoadSection isLoadApi={loadApi}>
+        <SectionConfirmPaymentMethod
+          onCancel={() => {
+            setIsVisiblePaymentRequired({
+              url: null,
+              isVisible: false,
+            });
+          }}
+          onAccept={() => {
+            window.location.href = isVisiblePaymentRequired.url;
+          }}
+          onclose={() => {
+            setIsVisiblePaymentRequired({
+              url: null,
+              isVisible: false,
+            });
+          }}
+          isVisibleModal={isVisiblePaymentRequired.isVisible}
+        />
         <SectionConfirmCancelAcceptSubscription
           onCancel={() => {
             setIsOpenCancelAcSubscription({
@@ -628,6 +701,7 @@ const Subscription = (props) => {
                       history.push(dataProfile.path);
                     }
                     setStatusSubscription(null);
+                    handlerGetDetailInformation();
                   }}
                 >
                   Continuar
@@ -848,20 +922,32 @@ const Subscription = (props) => {
                                     idMethod: subscriptionMethod,
                                     isTrial: row.canStartTrial,
                                     isCanceled: false,
+                                    requiresPymt: row.requiresPymt,
+                                    idCustomerStripe:
+                                      row.requiresPymt === true
+                                        ? row.customer
+                                        : null,
+                                    returnToUrl:
+                                      row.requiresPymt === true
+                                        ? `/websystem/subscription/${row.idSubscriptionType}/${subscriptionMethod}`
+                                        : null,
                                   });
-                                if (isOpenConfirm === false) {
-                                  handlerGetDetailInformation();
-                                  setStatusSubscription("success");
-                                  onGetSubscription();
-                                } else {
-                                  setIsOpenConfChangeSubscription(true);
-                                  setDataSelectSubscription({
-                                    idSubscriptionType: row.idSubscriptionType,
-                                    idMethod: subscriptionMethod,
-                                    isTrial: row.canStartTrial,
-                                    isCanceled: false,
-                                    acceptedCode: isOpenConfirm,
-                                  });
+                                if (row.requiresPymt !== true) {
+                                  if (isOpenConfirm === false) {
+                                    handlerGetDetailInformation();
+                                    setStatusSubscription("success");
+                                    onGetSubscription();
+                                  } else {
+                                    setIsOpenConfChangeSubscription(true);
+                                    setDataSelectSubscription({
+                                      idSubscriptionType:
+                                        row.idSubscriptionType,
+                                      idMethod: subscriptionMethod,
+                                      isTrial: row.canStartTrial,
+                                      isCanceled: false,
+                                      acceptedCode: isOpenConfirm,
+                                    });
+                                  }
                                 }
                                 setLoadApi(false);
                               } catch (error) {
@@ -906,6 +992,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   callGlobalActionApi: (data, id, constant, method) =>
     dispatch(callGlobalActionApi(data, id, constant, method)),
+  setDataUserRedirect: (data) => dispatch(setDataUserRedirect(data)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Subscription);

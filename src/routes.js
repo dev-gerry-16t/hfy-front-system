@@ -463,7 +463,7 @@ const routes = [
   {
     key: "37-1",
     id: "susbscription-homify",
-    path: "/websystem/subscription/:status",
+    path: "/websystem/subscription/:status/:method",
     name: "Suscripción",
     component: Subscription,
     exact: true,
