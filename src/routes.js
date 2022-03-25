@@ -65,6 +65,10 @@ const SelectPolicy = React.lazy(() =>
   import("./views/Properties/selectPolicy")
 );
 
+const SelectPolicyUser = React.lazy(() =>
+  import("./views/Properties/selectPolicyUser")
+);
+
 const PaymentsService = React.lazy(() =>
   import("./views/Payment/paymentService")
 );
@@ -364,6 +368,14 @@ const routes = [
     component: SelectPolicy,
     exact: true,
   },
+  {
+    key: "26-1",
+    id: "selectPolicyUser",
+    path: "/websystem/select-policy-user",
+    name: "Solicitud de Póliza",
+    component: SelectPolicyUser,
+    exact: true,
+  },  
   {
     key: "27",
     id: "publicProperties",
