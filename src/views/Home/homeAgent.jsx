@@ -209,11 +209,11 @@ const HomeAgent = (props) => {
           visibleOnboard={visibleOnboard}
           onClose={() => {
             setVisibleOnboard(false);
-            document.cookie = "onboarding=success";
+            document.cookie = "onboarding=success; expires=Fri, 31 Dec 9999 23:59:59 GMT";
           }}
           onClickFinish={() => {
             setVisibleOnboard(false);
-            document.cookie = "onboarding=success";
+            document.cookie = "onboarding=success; expires=Fri, 31 Dec 9999 23:59:59 GMT";
             history.push("/websystem/add-property");
           }}
         />
