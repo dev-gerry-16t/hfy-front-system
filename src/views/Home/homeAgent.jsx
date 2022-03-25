@@ -1,4 +1,4 @@
-import React, { createElement, useState } from "react";
+import React, { createElement, useEffect, useState } from "react";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { ReactComponent as IconProperties } from "../../assets/iconSvg/svgFile/iconProperties.svg";
@@ -10,6 +10,7 @@ import { ReactComponent as IconHomeDashboard } from "../../assets/iconSvg/svgFil
 import { ReactComponent as IconNote } from "../../assets/iconSvg/svgFile/iconNote.svg";
 import { ReactComponent as IconSearchUser } from "../../assets/iconSvg/svgFile/iconSearchUser.svg";
 import { ReactComponent as IconHomePolicy } from "../../assets/iconSvg/svgFile/iconHomePolicy.svg";
+import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomOnboarding from "../../components/CustomOnboarding";
 
 const ContentHome = styled.div`
@@ -41,25 +42,31 @@ const ContentHome = styled.div`
     justify-content: center;
     width: 100%;
     .main-cards {
-      width: 70%;
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
       gap: 4em;
     }
   }
 
   @media screen and (max-width: 1280px) {
+    font-size: 14px;
     .bottom-home {
       .main-cards {
-        width: 90%;
         gap: 2em;
       }
     }
   }
 
+  @media screen and (max-width: 1024px) {
+    .bottom-home {
+      .main-cards {
+        grid-template-columns: repeat(2, 1fr);
+        justify-items: center;
+      }
+    }
+  }
+
   @media screen and (max-width: 870px) {
-    font-size: 14px;
     .bottom-home {
       .main-cards {
         padding: 10px;
@@ -69,8 +76,14 @@ const ContentHome = styled.div`
     }
   }
 
-  @media screen and (max-width: 420px) {
+  @media screen and (max-width: 460px) {
     font-size: 12px;
+    .bottom-home {
+      .main-cards {
+        grid-template-columns: 1fr;
+        justify-items: center;
+      }
+    }
   }
 `;
 
@@ -111,7 +124,7 @@ const CardHome = styled.div`
     }
   }
   @media screen and (max-width: 420px) {
-    width: 10.5em;
+    width: 90%;
     height: 8.625em;
     gap: 5px;
     span {
@@ -150,12 +163,22 @@ const catalogHome = [
   },
   // { text: "Generar contrato de arrendamiento", icon: IconNote, path: null },
   // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
-  // { text: "Solicita póliza juridica", icon: IconHomePolicy, path: null },
+  { text: "Solicita una póliza jurídica", icon: IconHomePolicy, path: "/websystem/select-policy-user" },
 ];
 
 const HomeAgent = (props) => {
   const { history } = props;
-  const [visibleOnboard, setVisibleOnboard] = useState(true);
+  const [visibleOnboard, setVisibleOnboard] = useState(false);
+  const frontFunctions = new FrontFunctions();
+
+  useEffect(() => {
+    const cookieOnboarding = frontFunctions.getCookie("onboarding");
+    if (isNil(cookieOnboarding) === true) {
+      setVisibleOnboard(true);
+    } else {
+      setVisibleOnboard(false);
+    }
+  }, []);
 
   return (
     <ContentHome>
@@ -186,9 +209,11 @@ const HomeAgent = (props) => {
           visibleOnboard={visibleOnboard}
           onClose={() => {
             setVisibleOnboard(false);
+            document.cookie = "onboarding=success";
           }}
           onClickFinish={() => {
             setVisibleOnboard(false);
+            document.cookie = "onboarding=success";
             history.push("/websystem/add-property");
           }}
         />
