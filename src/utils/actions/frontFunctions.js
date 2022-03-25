@@ -65,6 +65,11 @@ class FrontFunctions {
     const formatUrl = `https://www.homify.ai/propiedad/${addGuion}/${id}`;
     return formatUrl;
   };
+  getCookie = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(";").shift();
+  };
   handlerGetOperationType = (data) => {
     const arrayData = isEmpty(data) == false ? JSON.parse(data) : [];
     let message = "";
