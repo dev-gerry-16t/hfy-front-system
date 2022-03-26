@@ -155,7 +155,7 @@ const catalogHome = [
     icon: IconInMessage,
     path: "/websystem/notificaciones/1",
   },
-  { text: "Contactos", icon: IconSchedule, path: null },
+  // { text: "Contactos", icon: IconSchedule, path: null },
   {
     text: "Dashboard",
     icon: IconHomeDashboard,
