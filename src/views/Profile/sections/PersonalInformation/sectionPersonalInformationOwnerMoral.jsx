@@ -459,52 +459,6 @@ const SectionPersonalInformation = (props) => {
             paddingBottom: "0.5em",
           }}
         ></div>
-        <h1 className="subtitle-header">Contacto</h1>
-        <div className="type-property">
-          <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.phoneNumber}
-                placeholder=""
-                label="Teléfono"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    phoneNumber: value,
-                  });
-                }}
-                type="number"
-              />
-            </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
-              <CustomInputTypeForm
-                value={dataForm.email}
-                placeholder=""
-                label="Correo"
-                error={false}
-                errorMessage="Este campo es requerido"
-                onChange={(value) => {
-                  setDataForm({
-                    ...dataForm,
-                    email: value,
-                  });
-                }}
-                type="email"
-              />
-            </Col>
-          </Row>
-        </div>
-        <div
-          className="label-indicator"
-          style={{
-            margin: "3em 0px",
-            borderBottom: "1px solid var(--color-primary)",
-            paddingBottom: "0.5em",
-          }}
-        ></div>
         <h1 className="subtitle-header">Información acta constitutiva</h1>
         <div className="type-property">
           <Row>
