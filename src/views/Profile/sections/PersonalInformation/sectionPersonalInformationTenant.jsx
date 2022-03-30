@@ -398,7 +398,7 @@ const SectionPersonalInformation = (props) => {
         />
         <WidgetUploadImageProfile />
         <div className="type-property">
-          <Row>
+          {/* <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.givenName}
@@ -511,7 +511,7 @@ const SectionPersonalInformation = (props) => {
                 />
               </Col>
             )}
-          </Row>
+          </Row> */}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
