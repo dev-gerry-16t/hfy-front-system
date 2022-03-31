@@ -363,14 +363,12 @@ const SectionAssociationProperty = (props) => {
               primary
               onClick={() => {
                 if (selectAssociation === "3") {
-                  history.push(`/websystem/dashboard-properties`);
+                  window.location.href = "/websystem/dashboard-properties";
                 } else {
-                  history.push(
-                    `/websystem/detail-property-users/${newInfoProperty.idProperty}`
-                  );
+                  window.location.href = `/websystem/detail-property-users/${newInfoProperty.idProperty}`;
                 }
                 setVisibleModal(false);
-                getById();
+                // getById();
               }}
             >
               Cerrar

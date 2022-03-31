@@ -395,7 +395,7 @@ const SectionPersonalInformationAgent = (props) => {
         />
         <WidgetUploadImageProfile />
         <div className="type-property">
-          <Row>
+          {/* <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.givenName}
@@ -506,7 +506,7 @@ const SectionPersonalInformationAgent = (props) => {
                 isBlock={true}
               />
             </Col>
-          </Row>
+          </Row> */}
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
@@ -543,7 +543,7 @@ const SectionPersonalInformationAgent = (props) => {
             </Col>
           </Row>
           <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            {/* <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.dateOfBirth}
                 placeholder="dd-mm-yy"
@@ -560,7 +560,7 @@ const SectionPersonalInformationAgent = (props) => {
                 isBlock={true}
               />
             </Col>
-            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
+            <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} /> */}
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomSelect
                 value={dataForm.idMaritalStatus}
