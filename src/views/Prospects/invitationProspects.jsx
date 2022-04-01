@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Table } from "antd";
+import { Table, Pagination } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -70,6 +70,25 @@ const InvitationProspects = (props) => {
   const [dataAdviserSearch, setDataAdviserSearch] = useState({
     idCustomerAgent: null,
   });
+  const [valueSearch, setValueSearch] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalCoincidences, setTotalCoincidences] = useState(0);
+  const [currentPagination, setCurrentPagination] = useState(1);
+  const [paginationState, setPaginationState] = useState(
+    JSON.stringify({
+      currentPage: currentPagination,
+      userConfig: pageSize,
+    })
+  );
+  const [jsonConditionsState, setJsonConditionsState] = useState(
+    JSON.stringify([
+      {
+        queryCondition: 1,
+        compValue: null,
+      },
+    ])
+  );
+
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetAddProspect = async (data) => {
@@ -195,14 +214,15 @@ const InvitationProspects = (props) => {
     }
   };
 
-  const handlerCallGetProspectCoincidences = async () => {
+  const handlerCallGetProspectCoincidences = async (condition, pag) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
           idSystemUser,
           idLoginHistory,
-          topIndex: 0,
+          jsonConditions: condition,
+          pagination: pag,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_PROSPECT_COINCIDENCES
@@ -216,6 +236,12 @@ const InvitationProspects = (props) => {
       const arrayKeys = responseResult.map((rowMap) => {
         return { ...rowMap, key: rowMap.idInvitation };
       });
+      const responseResultTotal =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].total) === false
+          ? responseResult[0].total
+          : 0;
       const newArray = [];
       arrayKeys.forEach((element) => {
         if (isNil(element.idProspectParent) === true) {
@@ -227,6 +253,7 @@ const InvitationProspects = (props) => {
           newArray.push({ ...element, children: childrens });
         }
       });
+      setTotalCoincidences(responseResultTotal);
       setDataInvestigations(newArray);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -275,7 +302,7 @@ const InvitationProspects = (props) => {
   ];
 
   useEffect(() => {
-    handlerCallGetProspectCoincidences();
+    handlerCallGetProspectCoincidences(jsonConditionsState, paginationState);
   }, []);
 
   return (
@@ -288,7 +315,10 @@ const InvitationProspects = (props) => {
         dataSecondTenant={dataSecondTenant}
         onClose={() => {
           setIsVisibleAddUser(!isVisibleAddUser);
-          handlerCallGetProspectCoincidences();
+          handlerCallGetProspectCoincidences(
+            jsonConditionsState,
+            paginationState
+          );
         }}
         spinVisible={false}
         onSearchOwner={(data) => {
@@ -306,12 +336,55 @@ const InvitationProspects = (props) => {
         onSendInformation={async (data) => {
           try {
             await handlerCallGetAddProspect(data);
-            handlerCallGetProspectCoincidences();
+            handlerCallGetProspectCoincidences(
+              jsonConditionsState,
+              paginationState
+            );
           } catch (error) {
             throw error;
           }
         }}
       />
+      <div
+        style={{
+          margin: "10px 0px",
+        }}
+      >
+        <input
+          style={{
+            border: "1px solid var(--color-primary)",
+            borderRadius: "16px",
+            padding: "5px 10px",
+            width: "300px",
+          }}
+          placeholder="Busca por Nombre o Folio de contrato"
+          type="text"
+          value={valueSearch}
+          onChange={(e) => {
+            setValueSearch(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            if (e.charCode === 13) {
+              const conditional = JSON.stringify([
+                {
+                  queryCondition: 1,
+                  compValue:
+                    isEmpty(valueSearch) === false ? valueSearch : null,
+                },
+              ]);
+              const pagination = JSON.stringify({
+                currentPage: 1,
+                userConfig: 10,
+              });
+              setCurrentPagination(1);
+              setPageSize(10);
+              setPaginationState(pagination);
+              setJsonConditionsState(conditional);
+              handlerCallGetProspectCoincidences(conditional, pagination);
+            }
+          }}
+        />
+      </div>
       <SectionButton>
         <button
           type="button"
@@ -328,7 +401,35 @@ const InvitationProspects = (props) => {
         className="table-users-hfy"
         size="small"
         bordered
+        pagination={false}
       />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "15px",
+        }}
+      >
+        <Pagination
+          current={currentPagination}
+          total={totalCoincidences}
+          pageSize={pageSize}
+          pageSizeOptions={[10, 20, 50, 100]}
+          onChange={(page, sizePage) => {
+            setCurrentPagination(page);
+            setPageSize(sizePage);
+            const objectConditions = JSON.stringify({
+              currentPage: page,
+              userConfig: sizePage,
+            });
+            setPaginationState(objectConditions);
+            handlerCallGetProspectCoincidences(
+              jsonConditionsState,
+              objectConditions
+            );
+          }}
+        />
+      </div>
     </Content>
   );
 };

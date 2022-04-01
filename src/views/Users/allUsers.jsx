@@ -114,7 +114,10 @@ const AllUsers = (props) => {
             cursor: "pointer",
           }}
           onClick={() => {
-            history.push(`/websystem/userType-detail/${record.idCustomer}`);
+            window.open(
+              `/websystem/userType-detail/${record.idCustomer}`,
+              "_blank"
+            );
           }}
         >
           <u>{text}</u>

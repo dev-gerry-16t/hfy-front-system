@@ -366,8 +366,9 @@ const Attorney = (props) => {
               }}
               onClick={() => {
                 if (isNil(record.idCustomer) === false) {
-                  history.push(
-                    `/websystem/userType-detail/${record.idCustomer}`
+                  window.open(
+                    `/websystem/userType-detail/${record.idCustomer}`,
+                    "_blank"
                   );
                 }
               }}
@@ -389,8 +390,9 @@ const Attorney = (props) => {
               }}
               onClick={() => {
                 if (isNil(record.idCustomerTenant) === false) {
-                  history.push(
-                    `/websystem/userType-detail/${record.idCustomerTenant}`
+                  window.open(
+                    `/websystem/userType-detail/${record.idCustomerTenant}`,
+                    "_blank"
                   );
                 }
               }}
@@ -412,8 +414,9 @@ const Attorney = (props) => {
               }}
               onClick={() => {
                 if (isNil(record.idCustomerTenantBoundSolidarity) === false) {
-                  history.push(
-                    `/websystem/userType-detail/${record.idCustomerTenantBoundSolidarity}`
+                  window.open(
+                    `/websystem/userType-detail/${record.idCustomerTenantBoundSolidarity}`,
+                    "_blank"
                   );
                 }
               }}
