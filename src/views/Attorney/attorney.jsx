@@ -15,6 +15,7 @@ import {
   Tooltip,
   Timeline,
   Spin,
+  Pagination,
 } from "antd";
 import {
   CheckSquareOutlined,
@@ -73,6 +74,24 @@ const Attorney = (props) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [isVisibleModalDocument, setIsVisibleModalDocument] = useState(false);
   const [dataDocument, setDataDocument] = useState({});
+  const [valueSearch, setValueSearch] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalCoincidences, setTotalCoincidences] = useState(0);
+  const [currentPagination, setCurrentPagination] = useState(1);
+  const [paginationState, setPaginationState] = useState(
+    JSON.stringify({
+      currentPage: currentPagination,
+      userConfig: pageSize,
+    })
+  );
+  const [jsonConditionsState, setJsonConditionsState] = useState(
+    JSON.stringify([
+      {
+        queryCondition: 1,
+        compValue: null,
+      },
+    ])
+  );
 
   const frontFunctions = new FrontFunctions();
 
@@ -166,18 +185,26 @@ const Attorney = (props) => {
     }
   };
 
-  const handlerCallGetLegalContractCoincidences = async () => {
+  const handlerCallGetLegalContractCoincidences = async (condition, pag) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGetLegalContractCoincidences({
         idSystemUser,
         idLoginHistory,
-        topIndex: 0,
+        jsonConditions: condition,
+        pagination: pag,
       });
       const responseResult =
         isNil(response) === false && isNil(response.response) === false
           ? response.response
           : [];
+      const responseResultTotal =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].total) === false
+          ? responseResult[0].total
+          : 0;
+      setTotalCoincidences(responseResultTotal);
       setDataCoincidences(responseResult);
     } catch (error) {
       showMessageStatusApi(
@@ -331,174 +358,73 @@ const Attorney = (props) => {
           dataIndex: "customerFullName",
           key: "customerFullName",
           width: 200,
-          render: (name, record) => {
-            const catalogProperties =
-              isNil(record.customerTypeFormProperties) === false
-                ? JSON.parse(record.customerTypeFormProperties)
-                : [];
-            return (
-              <Dropdown
-                overlay={
-                  <Menu
-                    onClick={async (value) => {
-                      await setDataUserProfile({
-                        ...dataProfile,
-                        idCustomerTenant: null,
-                        idCustomerTF: record.idCustomer,
-                        idCustomer: record.idCustomer,
-                        idContract: record.idContract,
-                      });
-                      history.push(`/websystem/typeform-owner/${value.key}`);
-                    }}
-                  >
-                    {isEmpty(catalogProperties) === false &&
-                      catalogProperties.map((rowMap) => {
-                        return (
-                          <Menu.Item
-                            key={`${rowMap.idStepIn}`}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <a style={{ marginRight: 2 }}>{rowMap.stepIn}</a>
-                            {rowMap.isCompleted === true ? (
-                              <CheckCircleFilled style={{ color: "green" }} />
-                            ) : (
-                              <CloseCircleFilled style={{ color: "red" }} />
-                            )}
-                          </Menu.Item>
-                        );
-                      })}
-                  </Menu>
+          render: (text, record) => (
+            <div
+              style={{
+                color: "blue",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (isNil(record.idCustomer) === false) {
+                  history.push(
+                    `/websystem/userType-detail/${record.idCustomer}`
+                  );
                 }
-                trigger={["click"]}
-              >
-                <a>{name}</a>
-              </Dropdown>
-            );
-          },
+              }}
+            >
+              <u>{text}</u>
+            </div>
+          ),
         },
         {
           title: "Arrendatario",
           dataIndex: "customerTenantFullName",
           key: "customerTenantFullName",
           width: 200,
-          render: (name, record) => {
-            const catalogProperties =
-              isNil(record.customerTenantTypeFormProperties) === false
-                ? JSON.parse(record.customerTenantTypeFormProperties)
-                : [];
-            return (
-              <Dropdown
-                overlay={
-                  <Menu
-                    onClick={async (value) => {
-                      await setDataUserProfile({
-                        ...dataProfile,
-                        idCustomerTenantTF: record.idCustomerTenant,
-                        idCustomerTF: record.idCustomer,
-                        idContract: record.idContract,
-                      });
-                      history.push(`/websystem/typeform-user/${value.key}`);
-                    }}
-                  >
-                    {isEmpty(catalogProperties) === false &&
-                      catalogProperties.map((rowMap) => {
-                        return (
-                          <Menu.Item
-                            key={`${rowMap.idStepIn}`}
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "space-between",
-                            }}
-                          >
-                            <a style={{ marginRight: 2 }}>{rowMap.stepIn}</a>
-                            {rowMap.isCompleted === true ? (
-                              <CheckCircleFilled style={{ color: "green" }} />
-                            ) : (
-                              <CloseCircleFilled style={{ color: "red" }} />
-                            )}
-                          </Menu.Item>
-                        );
-                      })}
-                  </Menu>
+          render: (text, record) => (
+            <div
+              style={{
+                color: "blue",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (isNil(record.idCustomerTenant) === false) {
+                  history.push(
+                    `/websystem/userType-detail/${record.idCustomerTenant}`
+                  );
                 }
-                trigger={["click"]}
-              >
-                <a>{name}</a>
-              </Dropdown>
-            );
-          },
+              }}
+            >
+              <u>{text}</u>
+            </div>
+          ),
         },
         {
           title: "Obligado Solidario",
           dataIndex: "customerTenantBoundSolidarityFullName",
           key: "customerTenantBoundSolidarityFullName",
           width: 200,
-          render: (name, record) => {
-            const catalogProperties =
-              isNil(record.customerTenantBoundSolidarityTypeFormProperties) ===
-              false
-                ? JSON.parse(
-                    record.customerTenantBoundSolidarityTypeFormProperties
-                  )
-                : [];
-            return (
-              <>
-                {record.hasBoundSolidarity === true ? (
-                  <Dropdown
-                    overlay={
-                      <Menu
-                        onClick={async (value) => {
-                          await setDataUserProfile({
-                            ...dataProfile,
-                            idCustomerTenantTF:
-                              record.idCustomerTenantBoundSolidarity,
-                            idCustomerTF: record.idCustomer,
-                            idContract: record.idContract,
-                          });
-                          history.push(`/websystem/typeform-user/${value.key}`);
-                        }}
-                      >
-                        {isEmpty(catalogProperties) === false &&
-                          catalogProperties.map((rowMap) => {
-                            return (
-                              <Menu.Item
-                                key={`${rowMap.idStepIn}`}
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "space-between",
-                                }}
-                              >
-                                <a style={{ marginRight: 2 }}>
-                                  {rowMap.stepIn}
-                                </a>
-                                {rowMap.isCompleted === true ? (
-                                  <CheckCircleFilled
-                                    style={{ color: "green" }}
-                                  />
-                                ) : (
-                                  <CloseCircleFilled style={{ color: "red" }} />
-                                )}
-                              </Menu.Item>
-                            );
-                          })}
-                      </Menu>
-                    }
-                    trigger={["click"]}
-                  >
-                    <a>{name}</a>
-                  </Dropdown>
-                ) : (
-                  <>{name}</>
-                )}
-              </>
-            );
-          },
+          render: (text, record) => (
+            <div
+              style={{
+                color: "blue",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (isNil(record.idCustomerTenantBoundSolidarity) === false) {
+                  history.push(
+                    `/websystem/userType-detail/${record.idCustomerTenantBoundSolidarity}`
+                  );
+                }
+              }}
+            >
+              {isNil(record.idCustomerTenantBoundSolidarity) === false ? (
+                <u>{text}</u>
+              ) : (
+                <span>{text}</span>
+              )}
+            </div>
+          ),
         },
         {
           title: "Conversaciones",
@@ -806,7 +732,10 @@ const Attorney = (props) => {
   ];
 
   useEffect(() => {
-    handlerCallGetLegalContractCoincidences();
+    handlerCallGetLegalContractCoincidences(
+      jsonConditionsState,
+      paginationState
+    );
   }, []);
 
   return (
@@ -959,6 +888,49 @@ const Attorney = (props) => {
             </span>
           </div>
         </div>
+        <div
+          style={{
+            margin: "10px 0px",
+          }}
+        >
+          <input
+            style={{
+              border: "1px solid var(--color-primary)",
+              borderRadius: "16px",
+              padding: "5px 10px",
+              width: "300px",
+            }}
+            placeholder="Busca por Nombre o Folio de contrato"
+            type="text"
+            value={valueSearch}
+            onChange={(e) => {
+              setValueSearch(e.target.value);
+            }}
+            onKeyPress={(e) => {
+              if (e.charCode === 13) {
+                const conditional = JSON.stringify([
+                  {
+                    queryCondition: 1,
+                    compValue:
+                      isEmpty(valueSearch) === false ? valueSearch : null,
+                  },
+                ]);
+                const pagination = JSON.stringify({
+                  currentPage: 1,
+                  userConfig: 10,
+                });
+                setCurrentPagination(1);
+                setPageSize(10);
+                setPaginationState(pagination);
+                setJsonConditionsState(conditional);
+                handlerCallGetLegalContractCoincidences(
+                  conditional,
+                  pagination
+                );
+              }
+            }}
+          />
+        </div>
         <div className="main-information-user-admin">
           <div className="renter-card-information total-width">
             <div className="title-cards flex-title-card">
@@ -973,11 +945,39 @@ const Attorney = (props) => {
                   size="small"
                   bordered
                   scroll={{ x: 3700 }}
+                  pagination={false}
                 />
               </Spin>
             </div>
           </div>
         </div>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "15px",
+        }}
+      >
+        <Pagination
+          current={currentPagination}
+          total={totalCoincidences}
+          pageSize={pageSize}
+          pageSizeOptions={[10, 20, 50, 100]}
+          onChange={(page, sizePage) => {
+            setCurrentPagination(page);
+            setPageSize(sizePage);
+            const objectConditions = JSON.stringify({
+              currentPage: page,
+              userConfig: sizePage,
+            });
+            setPaginationState(objectConditions);
+            handlerCallGetLegalContractCoincidences(
+              jsonConditionsState,
+              objectConditions
+            );
+          }}
+        />
       </div>
     </Content>
   );
