@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Table, Progress } from "antd";
+import { Table, Progress, Pagination } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -46,17 +46,36 @@ const DataPipeline = styled.div`
 const AllUsers = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const [dataInvestigations, setDataInvestigations] = useState([]);
+  const [valueSearch, setValueSearch] = useState(null);
+  const [pageSize, setPageSize] = useState(10);
+  const [totalCoincidences, setTotalCoincidences] = useState(0);
+  const [currentPagination, setCurrentPagination] = useState(1);
+  const [paginationState, setPaginationState] = useState(
+    JSON.stringify({
+      currentPage: currentPagination,
+      userConfig: pageSize,
+    })
+  );
+  const [jsonConditionsState, setJsonConditionsState] = useState(
+    JSON.stringify([
+      {
+        queryCondition: 1,
+        compValue: null,
+      },
+    ])
+  );
 
   const frontFunctions = new FrontFunctions();
 
-  const handlerCallGetUserCoincidences = async () => {
+  const handlerCallGetUserCoincidences = async (condition, pag) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
           idSystemUser,
           idLoginHistory,
-          topIndex: 0,
+          jsonConditions: condition,
+          pagination: pag,
         },
         null,
         API_CONSTANTS.CUSTOMER.GET_USER_COINCIDENCES
@@ -67,6 +86,13 @@ const AllUsers = (props) => {
         isEmpty(response.response) === false
           ? response.response
           : [];
+      const responseResultTotal =
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isNil(responseResult[0].total) === false
+          ? responseResult[0].total
+          : 0;
+      setTotalCoincidences(responseResultTotal);
       setDataInvestigations(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -153,18 +179,86 @@ const AllUsers = (props) => {
   ];
 
   useEffect(() => {
-    handlerCallGetUserCoincidences();
+    handlerCallGetUserCoincidences(jsonConditionsState, paginationState);
   }, []);
 
   return (
     <Content>
+      <div
+        style={{
+          marginBottom: "10px",
+        }}
+      >
+        <input
+          style={{
+            border: "1px solid var(--color-primary)",
+            borderRadius: "16px",
+            padding: "5px 10px",
+            width: "300px",
+          }}
+          placeholder="Busca por Nombre o Folio de contrato"
+          type="text"
+          value={valueSearch}
+          onChange={(e) => {
+            setValueSearch(e.target.value);
+          }}
+          onKeyPress={(e) => {
+            if (e.charCode === 13) {
+              const conditional = JSON.stringify([
+                {
+                  queryCondition: 1,
+                  compValue:
+                    isEmpty(valueSearch) === false ? valueSearch : null,
+                },
+              ]);
+              const pagination = JSON.stringify({
+                currentPage: 1,
+                userConfig: 10,
+              });
+              setCurrentPagination(1);
+              setPageSize(10);
+              setPaginationState(pagination);
+              setJsonConditionsState(conditional);
+              handlerCallGetUserCoincidences(conditional, pagination);
+            }
+          }}
+        />
+      </div>
       <Table
         columns={columns}
         dataSource={dataInvestigations}
         className="table-users-hfy"
         size="small"
         bordered
+        pagination={false}
       />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "15px",
+        }}
+      >
+        <Pagination
+          current={currentPagination}
+          total={totalCoincidences}
+          pageSize={pageSize}
+          pageSizeOptions={[10, 20, 50, 100]}
+          onChange={(page, sizePage) => {
+            setCurrentPagination(page);
+            setPageSize(sizePage);
+            const objectConditions = JSON.stringify({
+              currentPage: page,
+              userConfig: sizePage,
+            });
+            setPaginationState(objectConditions);
+            handlerCallGetUserCoincidences(
+              jsonConditionsState,
+              objectConditions
+            );
+          }}
+        />
+      </div>
     </Content>
   );
 };
