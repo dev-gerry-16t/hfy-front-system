@@ -194,7 +194,7 @@ const AllUsers = (props) => {
             border: "1px solid var(--color-primary)",
             borderRadius: "16px",
             padding: "5px 10px",
-            width:"300px"
+            width: "300px",
           }}
           placeholder="Busca por Nombre o Folio de contrato"
           type="text"
@@ -215,6 +215,8 @@ const AllUsers = (props) => {
                 currentPage: 1,
                 userConfig: 10,
               });
+              setCurrentPagination(1);
+              setPageSize(10);
               setPaginationState(pagination);
               setJsonConditionsState(conditional);
               handlerCallGetUserCoincidences(conditional, pagination);
