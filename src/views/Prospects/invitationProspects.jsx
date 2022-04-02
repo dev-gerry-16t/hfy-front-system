@@ -357,7 +357,7 @@ const InvitationProspects = (props) => {
             padding: "5px 10px",
             width: "300px",
           }}
-          placeholder="Busca por Nombre o Folio de contrato"
+          placeholder="Busca por Nombre o Correo"
           type="text"
           value={valueSearch}
           onChange={(e) => {
