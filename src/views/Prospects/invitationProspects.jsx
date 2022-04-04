@@ -322,6 +322,14 @@ const InvitationProspects = (props) => {
       title: "Correo",
       dataIndex: "emailAddress",
       key: "emailAddress",
+      width: 250,
+      render: (text, record) => {
+        return (
+          <div>
+            {text} ({record.emailStatus})
+          </div>
+        );
+      },
     },
     {
       title: "Fecha de invitación",
@@ -346,9 +354,13 @@ const InvitationProspects = (props) => {
     {
       title: () => {
         return (
-          <div>
-            Editar <i className="fa fa-pencil"></i>/Eliminar{" "}
-            <i className="fa fa-trash"></i>/Reenviar{" "}
+          <div
+            style={{
+              textAlign: "center",
+            }}
+          >
+            Editar <i className="fa fa-pencil"></i> / Eliminar{" "}
+            <i className="fa fa-trash"></i> / Reenviar{" "}
             <i className="fa fa-arrow-right"></i>
           </div>
         );
@@ -433,29 +445,34 @@ const InvitationProspects = (props) => {
                 </button>
               </Popconfirm>
             )}
-            <Popconfirm
-              placement="top"
-              title="¿Estás seguro de reenviar la invitación?"
-              onConfirm={() => {
-                handlerCallUpdateProspect(
-                  {
-                    requestResend: true,
-                    idProspectParent: record.idProspectParent,
-                  },
-                  record.idInvitation
-                );
-              }}
-              okText="Si"
-              cancelText="No"
-            >
-              <button
-                style={{
-                  color: "green",
+            {record.canBeEdited === true && (
+              <Popconfirm
+                placement="top"
+                title="¿Estás seguro de reenviar la invitación?"
+                onConfirm={() => {
+                  handlerCallUpdateProspect(
+                    {
+                      requestResend: true,
+                      idProspectParent: record.idProspectParent,
+                    },
+                    record.idInvitation
+                  );
                 }}
+                okText="Si"
+                cancelText="No"
               >
-                <i className="fa fa-arrow-right"></i>
-              </button>
-            </Popconfirm>
+                <button
+                  style={{
+                    color: "green",
+                  }}
+                >
+                  <i className="fa fa-arrow-right"></i>
+                </button>
+              </Popconfirm>
+            )}
+            {record.canBeEdited === false && record.canBeDeleted === false && (
+              <div>Invitación completa</div>
+            )}
           </ActionButtons>
         );
       },
@@ -563,7 +580,7 @@ const InvitationProspects = (props) => {
         size="small"
         bordered
         pagination={false}
-        scroll={{ x: 1550 }}
+        scroll={{ x: 1600 }}
       />
       <div
         style={{
