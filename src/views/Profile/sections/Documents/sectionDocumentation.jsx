@@ -15,14 +15,55 @@ import {
 } from "../../constants/styleConstants";
 import { ReactComponent as Arrow } from "../../../../assets/icons/Arrow.svg";
 import WidgetUploadDocument from "../../widget/widgetUploadDocument";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const SectionDocumentation = (props) => {
   const { callGlobalActionApi, dataProfile, onclickBack, onclickNext } = props;
   const [dataDocument, setDataDocument] = useState([]);
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
   const frontFunctions = new FrontFunctions();
   const dataContexProfile = useContext(ContextProfile);
   const { identifier, type, matchParams, history, idCustomerOwner } =
     dataContexProfile;
+
+  const handlerCallValidateCustomerPropertiesInTab = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          identifier,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   const handlerCallGetCustomerDocument = async () => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
@@ -81,6 +122,16 @@ const SectionDocumentation = (props) => {
             </Col>
           </Row>
         </div>
+        <WidgetModalConfirmation
+          data={dataVerificationInfo}
+          isVisibleModal={isOpenVerification}
+          onNextStep={() => {
+            onclickNext(); //verifica que sea next o finish
+          }}
+          onClose={() => {
+            setIsOpenVerification(false);
+          }}
+        />
         <WidgetUploadDocument
           handlerCallGetCustomerDocument={() => {
             handlerCallGetCustomerDocument();
@@ -118,6 +169,7 @@ const SectionDocumentation = (props) => {
             block={false}
             onClick={async () => {
               try {
+                await handlerCallValidateCustomerPropertiesInTab();
                 onclickNext();
               } catch (error) {}
             }}
