@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { Table, Pagination } from "antd";
+import { Table, Pagination, Popconfirm } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
@@ -33,6 +33,16 @@ const SectionButton = styled.div`
   }
 `;
 
+const ActionButtons = styled.div`
+  display: flex;
+  justify-content: space-around;
+  button {
+    background: none;
+    border: none;
+    font-size: 16px;
+  }
+`;
+
 const InvitationProspects = (props) => {
   const {
     callGlobalActionApi,
@@ -42,6 +52,7 @@ const InvitationProspects = (props) => {
     callGetAddProspect,
   } = props;
   const [dataInvestigations, setDataInvestigations] = useState([]);
+  const [dataEmail, setDataEmail] = useState(null);
   const [isVisibleAddUser, setIsVisibleAddUser] = useState(false);
   const [dataOwnerSearch, setDataOwnerSearch] = useState({
     idPersonType: 1,
@@ -263,6 +274,39 @@ const InvitationProspects = (props) => {
     }
   };
 
+  const handlerCallUpdateProspect = async (data, id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          ...data,
+        },
+        id,
+        API_CONSTANTS.UPDATE_PROSPECT,
+        "PUT"
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response.message) === false
+          ? response.response.message
+          : {};
+      frontFunctions.showMessageStatusApi(
+        responseResult,
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+      handlerCallGetProspectCoincidences(jsonConditionsState, paginationState);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const columns = [
     {
       title: "Nombre",
@@ -298,6 +342,123 @@ const InvitationProspects = (props) => {
       title: "Estatus de invitación",
       dataIndex: "invitationStatus",
       key: "invitationStatus",
+    },
+    {
+      title: () => {
+        return (
+          <div>
+            Editar <i className="fa fa-pencil"></i>/Eliminar{" "}
+            <i className="fa fa-trash"></i>/Reenviar{" "}
+            <i className="fa fa-arrow-right"></i>
+          </div>
+        );
+      },
+      dataIndex: "actions",
+      key: "actions",
+      fixed: "right",
+      width: 250,
+      render: (text, record) => {
+        return (
+          <ActionButtons>
+            {record.canBeEdited === true && (
+              <Popconfirm
+                placement="top"
+                title={
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                    }}
+                  >
+                    <strong>Correo</strong>
+                    <input
+                      style={{
+                        borderRadius: "10px",
+                        border: "1px solid var(--color-primary)",
+                      }}
+                      value={dataEmail}
+                      onChange={(e) => {
+                        setDataEmail(e.target.value);
+                      }}
+                    />
+                  </div>
+                }
+                onConfirm={() => {
+                  handlerCallUpdateProspect(
+                    {
+                      emailAddress: dataEmail,
+                      idProspectParent: record.idProspectParent,
+                    },
+                    record.idInvitation
+                  );
+                }}
+                okText="Listo"
+                cancelText="Cancelar"
+                icon={<></>}
+              >
+                <button
+                  style={{
+                    color: "blue",
+                  }}
+                  onClick={() => {
+                    setDataEmail(record.emailAddress);
+                  }}
+                >
+                  <i className="fa fa-pencil"></i>
+                </button>
+              </Popconfirm>
+            )}
+            {record.canBeDeleted === true && (
+              <Popconfirm
+                placement="top"
+                title="¿Estás seguro de eliminar la invitación?"
+                onConfirm={() => {
+                  handlerCallUpdateProspect(
+                    {
+                      isActive: false,
+                      idProspectParent: record.idProspectParent,
+                    },
+                    record.idInvitation
+                  );
+                }}
+                okText="Si"
+                cancelText="No"
+              >
+                <button
+                  style={{
+                    color: "red",
+                  }}
+                >
+                  <i className="fa fa-trash"></i>
+                </button>
+              </Popconfirm>
+            )}
+            <Popconfirm
+              placement="top"
+              title="¿Estás seguro de reenviar la invitación?"
+              onConfirm={() => {
+                handlerCallUpdateProspect(
+                  {
+                    requestResend: true,
+                    idProspectParent: record.idProspectParent,
+                  },
+                  record.idInvitation
+                );
+              }}
+              okText="Si"
+              cancelText="No"
+            >
+              <button
+                style={{
+                  color: "green",
+                }}
+              >
+                <i className="fa fa-arrow-right"></i>
+              </button>
+            </Popconfirm>
+          </ActionButtons>
+        );
+      },
     },
   ];
 
@@ -402,6 +563,7 @@ const InvitationProspects = (props) => {
         size="small"
         bordered
         pagination={false}
+        scroll={{ x: 1550 }}
       />
       <div
         style={{
@@ -442,8 +604,8 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant) =>
-    dispatch(callGlobalActionApi(data, id, constant)),
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
   callGetSearchProspect: (data) => dispatch(callGetSearchProspect(data)),
   callGetAddProspect: (data) => dispatch(callGetAddProspect(data)),
 });
