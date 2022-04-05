@@ -25,6 +25,7 @@ import CustomStepsHomify from "../../components/customStepsHomifyV2";
 import SectionAvalInformation from "./sections/Aval/sectionAvalInformation";
 import WidgetModalConfirmInformation from "./widget/widgetModalConfirmInformation";
 import CustomValidationUser from "../../components/CustomValidationUser";
+import SectionDocumentation from "./sections/Documents/sectionDocumentation";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -423,6 +424,16 @@ const EditProfileUsers = (props) => {
         {/*Propietario Persona moral */}
         {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 9 && (
           <SectionPersonalInformationOwnerMoral
+            onclickNext={() => {
+              setCurrent(current + 1);
+            }}
+          />
+        )}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 15 && (
+          <SectionDocumentation
+            onclickBack={() => {
+              setCurrent(current - 1);
+            }}
             onclickNext={() => {
               setCurrent(current + 1);
             }}
