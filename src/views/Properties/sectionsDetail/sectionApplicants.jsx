@@ -217,17 +217,19 @@ const SectionApplicants = (props) => {
   const dataContexProperty = useContext(ContextProperty);
   const {
     dataDetail = {},
+    dataDetailApplicants = [],
     getById,
     isOpenComponent,
     onCloseComponent,
   } = dataContexProperty;
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [toggleCard, setToggleCard] = useState(false);
-  const { applicants, idApartment, idProperty, canInviteTenant } = dataDetail;
+  const { idApartment, idProperty, canInviteTenant } = dataDetail;
 
   const applicantsArray =
-    isNil(applicants) === false && isEmpty(applicants) === false
-      ? JSON.parse(applicants)
+    isNil(dataDetailApplicants) === false &&
+    isEmpty(dataDetailApplicants) === false
+      ? dataDetailApplicants
       : [];
   const [visibleAddUser, setVisibleAddUser] = useState(false);
   const frontFunctions = new FrontFunctions();
@@ -300,14 +302,14 @@ const SectionApplicants = (props) => {
   };
 
   useEffect(() => {
-    if (isEmpty(applicants) === false) {
+    if (isEmpty(dataDetailApplicants) === false) {
       const objectState = {};
       applicantsArray.forEach((element) => {
         objectState[element.prospectNo] = false;
       });
       setToggleCard(objectState);
     }
-  }, [applicants]);
+  }, [dataDetailApplicants]);
 
   return (
     <GeneralCard id="section-applicants">
@@ -542,14 +544,20 @@ const SectionApplicants = (props) => {
                       <p>
                         <span className="title-desc">Costo de póliza:</span>
                         <br />
-                        <span className="value-desc">{row.originPolicyAmountFormat}</span>
+                        <span className="value-desc">
+                          {row.originPolicyAmountFormat}
+                        </span>
                       </p>
                     )}
                     {isNil(row.originPolicyPymtMethod) === false && (
                       <p>
-                        <span className="title-desc">Forma de pago de póliza:</span>
+                        <span className="title-desc">
+                          Forma de pago de póliza:
+                        </span>
                         <br />
-                        <span className="value-desc">{row.originPolicyPymtMethod}</span>
+                        <span className="value-desc">
+                          {row.originPolicyPymtMethod}
+                        </span>
                       </p>
                     )}
                     <p>

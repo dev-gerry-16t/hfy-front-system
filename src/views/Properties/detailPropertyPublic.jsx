@@ -65,6 +65,8 @@ const DetailPropertyUsers = (props) => {
     props;
   const { params } = match;
   const [dataDetail, setDataDetail] = useState({});
+  const [dataDetailAmenities, setDataDetailAmenities] = useState([]);
+  const [dataDetailImages, setDataDetailImages] = useState([]);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [isOpenComponent, setIsOpenComponent] = useState(null);
   const [dataTimeLine, setDataTimeLine] = useState([]);
@@ -133,6 +135,64 @@ const DetailPropertyUsers = (props) => {
         idProperty: responseResult.idProperty,
         idApartment: responseResult.idApartment,
       });
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAmenitiesByProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_AMENITIES_BY_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDetailAmenities(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetPropertyPictures = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_PICTURES
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDetailImages(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -319,6 +379,8 @@ const DetailPropertyUsers = (props) => {
 
   useEffect(() => {
     handlerCallGetPropertyById();
+    handlerCallGetAmenitiesByProperty();
+    handlerCallGetPropertyPictures();
   }, [identifier, idProperty]);
 
   useEffect(() => {
@@ -341,6 +403,7 @@ const DetailPropertyUsers = (props) => {
                 handlerCallGetPropertyById();
               },
               dataDetail,
+              dataDetailAmenities,
               onCloseComponent: () => {
                 setIsOpenComponent(null);
               },
@@ -492,9 +555,9 @@ const DetailPropertyUsers = (props) => {
               <div>
                 <SectionCarouselInfo
                   apartmentImages={
-                    isNil(dataDetail) === false &&
-                    isNil(dataDetail.apartmentDocuments) === false
-                      ? JSON.parse(dataDetail.apartmentDocuments)
+                    isNil(dataDetailImages) === false &&
+                    isEmpty(dataDetailImages) === false
+                      ? dataDetailImages
                       : []
                   }
                 />

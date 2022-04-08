@@ -97,6 +97,11 @@ const DetailPropertyUsers = (props) => {
   const [isVisibleIntro, setIsVisibleIntro] = useState(false);
   const [isVisibleHints, setIsVisibleHints] = useState(false);
   const [dataDetail, setDataDetail] = useState({});
+  const [dataDetailApplicants, setDataDetailApplicants] = useState([]);
+  const [dataDetailAdvisers, setDataDetailAdvisers] = useState([]);
+  const [dataDetailAmenities, setDataDetailAmenities] = useState([]);
+  const [dataDetailDocuments, setDataDetailDocuments] = useState([]);
+  const [dataDetailImages, setDataDetailImages] = useState([]);
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [dataEnableIntro, setDataEnableIntro] = useState([]);
   const [tabSelect, setTabSelect] = useState("1");
@@ -173,6 +178,156 @@ const DetailPropertyUsers = (props) => {
           setIsVisibleHints(true);
         }
       }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetPropertyPictures = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_PICTURES
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDetailImages(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetApplicantsByProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_APPLICANTS_BY_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDetailApplicants(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAmenitiesByProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_AMENITIES_BY_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataDetailAmenities(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDocumentsByProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_DOCUMENTS_BY_PROPERTY
+      );
+
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataDetailDocuments(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetAdvisersInProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_ADVISERS_IN_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+      setDataDetailAdvisers(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -385,13 +540,29 @@ const DetailPropertyUsers = (props) => {
     }
   };
 
+  const handlerCallAsyncApis = () => {
+    handlerCallGetPropertyById();
+    handlerCallGetApplicantsByProperty();
+    handlerCallGetDocumentsByProperty();
+    handlerCallGetAdvisersInProperty();
+  };
+
+  const handlerCallAsyncApisInit = () => {
+    handlerCallGetAllApplicationMethods();
+    handlerCallGetPropertyById();
+    handlerCallGetPropertyPictures();
+    handlerCallGetApplicantsByProperty();
+    handlerCallGetAmenitiesByProperty();
+    handlerCallGetDocumentsByProperty();
+    handlerCallGetAdvisersInProperty();
+  };
+
   useEffect(() => {
     setIdProperty(params.idProperty);
   }, [params.idProperty]);
 
   useEffect(() => {
-    handlerCallGetAllApplicationMethods();
-    handlerCallGetPropertyById();
+    handlerCallAsyncApisInit();
   }, [idProperty]);
 
   useEffect(() => {
@@ -447,6 +618,10 @@ const DetailPropertyUsers = (props) => {
             value={{
               isOpenComponent,
               dataDetail,
+              dataDetailApplicants,
+              dataDetailAdvisers,
+              dataDetailAmenities,
+              dataDetailDocuments,
               history,
               updateProperty: async (data) => {
                 try {
@@ -469,7 +644,7 @@ const DetailPropertyUsers = (props) => {
                 setDataEnableIntro(config);
               },
               getById: () => {
-                handlerCallGetPropertyById();
+                handlerCallAsyncApis();
               },
             }}
           >
@@ -566,7 +741,7 @@ const DetailPropertyUsers = (props) => {
               flowId={dataProfile.flowId}
               finishedProcess={() => {
                 setIsOpenComponent(null);
-                handlerCallGetPropertyById();
+                handlerCallAsyncApis();
               }}
             />
             <SectionAssociationProperty history={history} />
@@ -692,7 +867,7 @@ const DetailPropertyUsers = (props) => {
                             },
                             dataDetail.idProperty
                           );
-                          handlerCallGetPropertyById();
+                          handlerCallAsyncApis();
                         } catch (error) {}
                       }}
                     >
@@ -735,9 +910,9 @@ const DetailPropertyUsers = (props) => {
               <div>
                 <SectionCarouselInfo
                   apartmentImages={
-                    isNil(dataDetail) === false &&
-                    isNil(dataDetail.apartmentDocuments) === false
-                      ? JSON.parse(dataDetail.apartmentDocuments)
+                    isNil(dataDetailImages) === false &&
+                    isEmpty(dataDetailImages) === false
+                      ? dataDetailImages
                       : []
                   }
                   idUserType={dataProfile.idUserType}

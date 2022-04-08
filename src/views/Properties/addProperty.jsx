@@ -106,6 +106,86 @@ const AddProperty = (props) => {
     }
   };
 
+  const handlerCallGetPropertyPictures = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_PICTURES
+      );
+      const apartmentDocuments =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+
+      return { apartmentDocuments: JSON.stringify(apartmentDocuments) };
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      return {};
+    }
+  };
+
+  const handlerCallGetAmenitiesByProperty = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_AMENITIES_BY_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      const propertyAmenities =
+        isNil(responseResult) === false &&
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isEmpty(responseResult[0]) === false
+          ? responseResult[0]
+          : [];
+      const propertyGeneralCharacteristics =
+        isNil(responseResult) === false &&
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[1]) === false &&
+        isEmpty(responseResult[1]) === false
+          ? responseResult[1]
+          : [];
+      return {
+        propertyAmenities: JSON.stringify(propertyAmenities),
+        propertyGeneralCharacteristics: JSON.stringify(
+          propertyGeneralCharacteristics
+        ),
+      };
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      return {};
+    }
+  };
+
   const handlerCallGetPropertyById = async (id = null) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -129,7 +209,9 @@ const AddProperty = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
-      setDataForm(responseResult);
+      const amenities = await handlerCallGetAmenitiesByProperty();
+      const apartmentDocuments = await handlerCallGetPropertyPictures();
+      setDataForm({ ...responseResult, ...amenities, ...apartmentDocuments });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,

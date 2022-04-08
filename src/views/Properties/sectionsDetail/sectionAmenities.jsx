@@ -78,18 +78,21 @@ const Title = styled.h2`
 
 const SectionAmenities = () => {
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {} } = dataContexProperty;
-  const { propertyAmenities, propertyGeneralCharacteristics } = dataDetail;
-
+  const { dataDetail = {}, dataDetailAmenities = [] } = dataContexProperty;
+  
   const amenities =
-    isNil(propertyAmenities) === false && isEmpty(propertyAmenities) === false
-      ? JSON.parse(propertyAmenities)
+    isNil(dataDetailAmenities) === false &&
+    isEmpty(dataDetailAmenities) === false &&
+    isNil(dataDetailAmenities[0]) === false &&
+    isEmpty(dataDetailAmenities[0]) === false
+      ? dataDetailAmenities[0]
       : [];
-
   const general =
-    isNil(propertyGeneralCharacteristics) === false &&
-    isEmpty(propertyGeneralCharacteristics) === false
-      ? JSON.parse(propertyGeneralCharacteristics)
+    isNil(dataDetailAmenities) === false &&
+    isEmpty(dataDetailAmenities) === false &&
+    isNil(dataDetailAmenities[1]) === false &&
+    isEmpty(dataDetailAmenities[1]) === false
+      ? dataDetailAmenities[1]
       : [];
 
   return (
