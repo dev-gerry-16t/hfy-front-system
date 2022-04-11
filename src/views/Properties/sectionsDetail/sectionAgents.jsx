@@ -14,7 +14,6 @@ import ComponentLoadSection from "../../../components/componentLoadSection";
 import { GeneralCard } from "../constants/styleConstants";
 import { ReactComponent as IconAgent } from "../../../assets/iconSvg/svgFile/iconAgent.svg";
 
-
 const Card = styled.div`
   background: #ffffff;
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
@@ -134,14 +133,18 @@ const EmptyData = styled.div`
 const SectionAgents = (props) => {
   const { idUserType, callGlobalActionApi, dataProfile } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {}, getById } = dataContexProperty;
-  const { propertySharedWith, idProperty, idApartment } = dataDetail;
+  const {
+    dataDetail = {},
+    getById,
+    dataDetailAdvisers = [],
+  } = dataContexProperty;
+  const { idProperty, idApartment } = dataDetail;
   const [isVisibleShare, setIsVisibleShare] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const frontFunctions = new FrontFunctions();
   const agentsArray =
-    isNil(propertySharedWith) === false && isEmpty(propertySharedWith) === false
-      ? JSON.parse(propertySharedWith)
+    isNil(dataDetailAdvisers) === false && isEmpty(dataDetailAdvisers) === false
+      ? dataDetailAdvisers
       : [];
 
   const handlerCallSetAdviserInProperty = async (data) => {
