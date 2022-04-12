@@ -301,6 +301,84 @@ const SectionViewTicket = (props) => {
 
   const frontFunctions = new FrontFunctions();
 
+  const handlerCallGetPropertyPictures = async (idProperty) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_PROPERTY_PICTURES
+      );
+      const apartmentDocuments =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : [];
+
+      return { apartmentDocuments };
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      return {};
+    }
+  };
+
+  const handlerCallGetAmenitiesByProperty = async (idProperty) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty,
+          idApartment: null,
+          identifier: null,
+          idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_AMENITIES_BY_PROPERTY
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      const propertyAmenities =
+        isNil(responseResult) === false &&
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[0]) === false &&
+        isEmpty(responseResult[0]) === false
+          ? responseResult[0]
+          : [];
+      const propertyGeneralCharacteristics =
+        isNil(responseResult) === false &&
+        isEmpty(responseResult) === false &&
+        isNil(responseResult[1]) === false &&
+        isEmpty(responseResult[1]) === false
+          ? responseResult[1]
+          : [];
+      return {
+        propertyAmenities: propertyAmenities,
+        propertyGeneralCharacteristics: propertyGeneralCharacteristics,
+      };
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      return {};
+    }
+  };
+
   const handlerCallGetPropertyById = async (id) => {
     const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
     try {
@@ -323,12 +401,9 @@ const SectionViewTicket = (props) => {
         isNil(response.response[0][0]) === false
           ? response.response[0][0]
           : {};
-      const parseDocument =
-        isEmpty(responseResult) === false &&
-        isNil(responseResult.apartmentDocuments) === false
-          ? JSON.parse(responseResult.apartmentDocuments)
-          : [];
-      setDataDetail({ ...responseResult, apartmentDocuments: parseDocument });
+      const amenities = await handlerCallGetAmenitiesByProperty(id);
+      const apartmentDocuments = await handlerCallGetPropertyPictures(id);
+      setDataDetail({ ...responseResult, ...apartmentDocuments, ...amenities });
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -688,11 +763,9 @@ const SectionViewTicket = (props) => {
                       <Title>AMENIDADES</Title>
                       <div className="chips">
                         {isEmpty(dataDetail.propertyAmenities) === false &&
-                          JSON.parse(dataDetail.propertyAmenities).map(
-                            (row) => {
-                              return <Chip>{row.text}</Chip>;
-                            }
-                          )}
+                          dataDetail.propertyAmenities.map((row) => {
+                            return <Chip>{row.text}</Chip>;
+                          })}
                       </div>
                     </div>
                     <div className="section-chips border-2">
@@ -700,11 +773,11 @@ const SectionViewTicket = (props) => {
                       <div className="chips">
                         {isEmpty(dataDetail.propertyGeneralCharacteristics) ===
                           false &&
-                          JSON.parse(
-                            dataDetail.propertyGeneralCharacteristics
-                          ).map((row) => {
-                            return <Chip>{row.text}</Chip>;
-                          })}
+                          dataDetail.propertyGeneralCharacteristics.map(
+                            (row) => {
+                              return <Chip>{row.text}</Chip>;
+                            }
+                          )}
                       </div>
                     </div>
                   </div>
