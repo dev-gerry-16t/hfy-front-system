@@ -791,24 +791,25 @@ const Register = (props) => {
                   style={{
                     marginLeft: 5,
                     textAlign: "center",
-                    fontSize: 10,
+                    fontSize: 12,
                     color: "gray",
                   }}
                 >
-                  Acepto el{" "}
-                  <a
-                    href="https://www.homify.ai/aviso-de-privacidad"
-                    target="_blank"
-                  >
-                    Aviso de privacidad
-                  </a>{" "}
-                  y los{" "}
+                  Acepto los{" "}
                   <a
                     href="https://www.homify.ai/terminos-y-condiciones"
                     target="_blank"
                   >
-                    Términos y Condiciones
-                  </a>
+                    Términos y condiciones
+                  </a>{" "}
+                  de uso de Homify a si como el{" "}
+                  <a
+                    href="https://www.homify.ai/aviso-de-privacidad"
+                    target="_blank"
+                  >
+                    Aviso de Privacidad
+                  </a>{" "}
+                  publicados en la pagina oficial de Homify.
                 </span>
               </div>
               <div

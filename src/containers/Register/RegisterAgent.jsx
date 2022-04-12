@@ -359,7 +359,7 @@ const RegisterAgent = (props) => {
     isEmpty(params.idContact) === false
       ? window.atob(params.idContact)
       : null;
-      
+
   const [dataForm, setDataForm] = useState({
     givenName: null,
     lastName: null,
@@ -622,6 +622,31 @@ const RegisterAgent = (props) => {
                   />
                 </Col>
               </Row>
+              <div
+                style={{
+                  fontSize: 12,
+                }}
+              >
+                <span>
+                  Al hacer clic en Registrarme, aceptas los{" "}
+                  <a
+                    href="https://www.homify.ai/terminos-y-condiciones"
+                    target="_blank"
+                  >
+                    Términos y condiciones
+                  </a>{" "}
+                  de uso de Homify. Para obtener más información acerca de cómo
+                  Homify recopila, utiliza, comparte y protege tus datos
+                  personales, consulta el{" "}
+                  <a
+                    href="https://www.homify.ai/aviso-de-privacidad"
+                    target="_blank"
+                  >
+                    aviso de privacidad
+                  </a>{" "}
+                  de Homify.
+                </span>
+              </div>
               <div className="form-button">
                 <ButtonAction
                   block={
