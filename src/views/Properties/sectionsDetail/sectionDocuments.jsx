@@ -355,16 +355,21 @@ const SectionDocuments = (props) => {
           <div className="content-cards">
             {isEmpty(documentsArray) === false &&
               documentsArray.map((row) => {
+                const style =
+                  isNil(row.style) === false && isEmpty(row.style) === false
+                    ? JSON.parse(row.style)
+                    : {};
+
                 return (
                   <Card
                     colorDocument={
-                      row.canSign == true ? "#eff0f6" : row.style.color
+                      row.canSign == true ? "#eff0f6" : style.color
                     }
                   >
                     <div className="card-document">
                       <div className="top-info">
                         <div className="icon-info">
-                          {handlerSelectIcon(row.style.icon, row.canSign)}
+                          {handlerSelectIcon(style.icon, row.canSign)}
                         </div>
                         <div className="name-info">
                           <h3>{row.documentType}</h3>
