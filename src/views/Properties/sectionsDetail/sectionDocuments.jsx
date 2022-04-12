@@ -135,11 +135,17 @@ const ButtonDocument = styled.button`
 const SectionDocuments = (props) => {
   const { callGlobalActionApi, dataProfile, onReportClose = () => {} } = props;
   const dataContexProperty = useContext(ContextProperty);
-  const { dataDetail = {}, getById, isOpenComponent } = dataContexProperty;
-  const { jsonDocuments, isInContract, idContract } = dataDetail;
+  const {
+    dataDetail = {},
+    getById,
+    isOpenComponent,
+    dataDetailDocuments = [],
+  } = dataContexProperty;
+  const { isInContract, idContract } = dataDetail;
   const documentsArray =
-    isNil(jsonDocuments) === false && isEmpty(jsonDocuments) === false
-      ? JSON.parse(jsonDocuments)
+    isNil(dataDetailDocuments) === false &&
+    isEmpty(dataDetailDocuments) === false
+      ? dataDetailDocuments
       : [];
   const [isVisibleModalDocument, setIsVisibleModalDocument] = useState(false);
   const [isVisibleModalContract, setIsVisibleModalContract] = useState(false);
