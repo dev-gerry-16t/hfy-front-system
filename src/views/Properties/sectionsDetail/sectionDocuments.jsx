@@ -359,7 +359,7 @@ const SectionDocuments = (props) => {
                   isNil(row.style) === false && isEmpty(row.style) === false
                     ? JSON.parse(row.style)
                     : {};
-                console.log("style", style);
+
                 return (
                   <Card
                     colorDocument={
