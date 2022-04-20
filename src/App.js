@@ -9,6 +9,13 @@ import { Route, Switch } from "react-router-dom";
 import es_ES from "antd/lib/locale-provider/es_ES";
 import "intro.js/introjs.css";
 import "./App.css";
+import TagManager from "react-gtm-module";
+
+const tagManagerArgs = {
+  gtmId: "GTM-NLSZG2W",
+};
+
+TagManager.initialize(tagManagerArgs);
 
 const loading = () => (
   <div className="animated fadeIn pt-3 text-center">
