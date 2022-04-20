@@ -66,6 +66,7 @@ import ENVIROMENTSOCKET from "../../utils/constants/enviromentSocket";
 import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
 import SectionMessageError from "./section/sectionMessageError";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import SectionMessageInformation from "./section/sectionMessageInformation";
 
 const ErrorMessage = styled.div`
   position: relative;
@@ -881,6 +882,10 @@ const DefaultLayout = (props) => {
             </div>
             <Suspense fallback={<Loading />}>
               <SectionMessageError detailSubscription={detailSubscription} />
+              <SectionMessageInformation
+                dataProfile={dataProfile}
+                cookie={frontFunctions.getCookie("freePublicPropertyMLM")}
+              />
               <Switch>
                 {routes.map((route) => {
                   return (

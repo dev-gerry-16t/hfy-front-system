@@ -1,6 +1,7 @@
 import React, { createElement, useEffect, useState } from "react";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
+import TagManager from "react-gtm-module";
 import { ReactComponent as IconProperties } from "../../assets/iconSvg/svgFile/iconProperties.svg";
 import { ReactComponent as IconBagHouse } from "../../assets/iconSvg/svgFile/iconBagHouse.svg";
 import { ReactComponent as IconHousePlus } from "../../assets/iconSvg/svgFile/iconHousePlus.svg";
@@ -138,39 +139,46 @@ const catalogHome = [
     text: "Mis propiedades",
     icon: IconProperties,
     path: "/websystem/dashboard-properties",
+    page: "mis_propiedades",
   },
   {
     text: "Bolsa inmobiliaria",
     icon: IconBagHouse,
     path: "/websystem/catalog-properties",
+    page: "bolsa_inmobiliaria",
   },
   {
     text: "Agregar Propiedad",
     icon: IconHousePlus,
     path: "/websystem/add-property",
+    page: "agregar_propiedad",
   },
   {
     text: "Bandeja de entrada",
     icon: IconInMessage,
     path: "/websystem/notificaciones/1",
+    page: "bandeja_de_entrada",
   },
   // { text: "Contactos", icon: IconSchedule, path: null },
   {
     text: "Dashboard",
     icon: IconHomeDashboard,
     path: "/websystem/dashboard-adviser",
+    page: "dashboard",
   },
   {
     text: "Generar contrato de arrendamiento",
     icon: IconNote,
     path: null,
     openComponent: 1,
+    page: "genera_contrato_arrendamiento",
   },
   // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
   {
     text: "Solicita una póliza jurídica",
     icon: IconHomePolicy,
     path: "/websystem/select-policy-user",
+    page: "Solicita_una_poliza_juridica",
   },
 ];
 
@@ -240,6 +248,12 @@ const HomeAgent = (props) => {
               <CardHome
                 key={`card-home-${ix}`}
                 onClick={() => {
+                  TagManager.dataLayer({
+                    dataLayer: {
+                      event: "clicHome",
+                      term: row.page,
+                    },
+                  });
                   if (isNil(row.path) === false) {
                     history.push(row.path);
                   }
