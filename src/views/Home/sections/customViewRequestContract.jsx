@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col } from "antd";
+import { Row, Col, message } from "antd";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -22,6 +22,7 @@ import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const CustomViewRequestContract = ({
   visibleDialog,
@@ -73,6 +74,9 @@ const CustomViewRequestContract = ({
   const [dataProperty, setDataProperty] = useState([]);
   const [dataAddress, setDataAddress] = useState({});
   const [selectProperty, setSelectProperty] = useState({ id: null });
+  const [isLoadApi, setIsLoadApi] = useState(false);
+  const [finishForm, setFinishForm] = useState(false);
+
   const frontFunctions = new FrontFunctions();
 
   const handlerCallGetAllProperties = async () => {
@@ -99,6 +103,32 @@ const CustomViewRequestContract = ({
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
     }
+  };
+
+  const handlerOnClickForm = () => {
+    setIsLoadApi(true);
+    const channelName = "form_users_contract";
+    const channel = new BroadcastChannel(channelName);
+    const openForm = window.open("/formUser/1/2/3", "_blank");
+    let intervalWindow = setInterval(() => {
+      console.log("openForm", openForm);
+      if (openForm.closed === true) {
+        setIsLoadApi(false);
+        channel.close();
+        clearInterval(intervalWindow);
+      }
+    }, 2000);
+    channel.onmessage = (message) => {
+      console.log(message);
+      if (message.data === "close_form_contract") {
+        clearInterval(intervalWindow);
+        openForm.close();
+        setTimeout(() => {
+          setIsLoadApi(false);
+          setFinishForm(true);
+        }, 1500);
+      }
+    };
   };
 
   useEffect(() => {
@@ -310,7 +340,7 @@ const CustomViewRequestContract = ({
         <Container>
           <HeaderContainer>
             <h1>
-              Información de <span>Arrendador</span>
+              Información del <span>Propietario</span>
             </h1>
           </HeaderContainer>
           <MainContainer>
@@ -357,7 +387,7 @@ const CustomViewRequestContract = ({
         <Container>
           <HeaderContainer>
             <h1>
-              Información de <span>Arrendatario</span>
+              Información del <span>Inquilino</span>
             </h1>
           </HeaderContainer>
           <MainContainer>
@@ -804,15 +834,26 @@ const CustomViewRequestContract = ({
                   requiresLegalAdvice: dataForm.requiresLegalAdvice,
                 };
 
-                if (dataOwner.isInfoProvidedByRequester === false) {
-                  setVisibleSection(9);
-                } else if (dataTenant.isInfoProvidedByRequester === false) {
-                  setVisibleSection(10);
-                } else if (
-                  dataTenant.isInfoProvidedByRequester === true &&
-                  dataOwner.isInfoProvidedByRequester === true
+                if (
+                  dataOwner.isInfoProvidedByRequester === false &&
+                  dataTenant.isInfoProvidedByRequester === false
                 ) {
                   setVisibleSection(11);
+                } else if (
+                  dataOwner.isInfoProvidedByRequester === true &&
+                  dataTenant.isInfoProvidedByRequester === false
+                ) {
+                  setVisibleSection(9);
+                } else if (
+                  dataOwner.isInfoProvidedByRequester === false &&
+                  dataTenant.isInfoProvidedByRequester === true
+                ) {
+                  setVisibleSection(10);
+                } else if (
+                  dataOwner.isInfoProvidedByRequester === true &&
+                  dataTenant.isInfoProvidedByRequester === true
+                ) {
+                  setVisibleSection(9);
                 }
               }}
             >
@@ -829,8 +870,98 @@ const CustomViewRequestContract = ({
           </MainButtons>
         </Container>
       )}
-      {visibleSection === 9 && <Container>Formulario Propietario</Container>}
-      {visibleSection === 10 && <Container>Formulario Inquilino</Container>}
+      {visibleSection === 9 && (
+        <Container>
+          <ComponentLoadSection
+            isLoadApi={isLoadApi}
+            text="LLenando información"
+          >
+            <HeaderContainer>
+              <h1>
+                Información personal del <span>Propietario</span>
+              </h1>
+            </HeaderContainer>
+            <MainContainer>
+              <span>
+                Elegiste ingresar la información del propietario, esta
+                información es fundamental para la correcta elaboración del
+                contrato de arrendamiento automatizado, a continuación te
+                redirigiremos al formulario
+              </span>
+            </MainContainer>
+            {finishForm === false && (
+              <MainButtons>
+                <button
+                  className="hfy-primary-button"
+                  onClick={handlerOnClickForm}
+                >
+                  Abrir Formulario
+                </button>
+              </MainButtons>
+            )}
+            {finishForm === true && (
+              <MainButtons>
+                <button
+                  className="hfy-primary-button"
+                  onClick={() => {
+                    if (dataTenant.isInfoProvidedByRequester === false) {
+                      setVisibleSection(11);
+                    } else if (dataTenant.isInfoProvidedByRequester === true) {
+                      setVisibleSection(10);
+                    }
+                    setFinishForm(false);
+                  }}
+                >
+                  Continuar
+                </button>
+              </MainButtons>
+            )}
+          </ComponentLoadSection>
+        </Container>
+      )}
+      {visibleSection === 10 && (
+        <Container>
+          <ComponentLoadSection
+            isLoadApi={isLoadApi}
+            text="LLenando información"
+          >
+            <HeaderContainer>
+              <h1>
+                Información personal del <span>Inquilino</span>
+              </h1>
+            </HeaderContainer>
+            <MainContainer>
+              <span>
+                Elegiste ingresar la información del inquilino, esta información
+                es fundamental para la correcta elaboración del contrato de
+                arrendamiento automatizado, a continuación te redirigiremos al
+                formulario
+              </span>
+            </MainContainer>
+            <MainButtons>
+              {finishForm === false && (
+                <button
+                  className="hfy-primary-button"
+                  onClick={handlerOnClickForm}
+                >
+                  Abrir Formulario
+                </button>
+              )}
+              {finishForm === true && (
+                <button
+                  className="hfy-primary-button"
+                  onClick={() => {
+                    setVisibleSection(11);
+                    setFinishForm(false);
+                  }}
+                >
+                  Continuar
+                </button>
+              )}
+            </MainButtons>
+          </ComponentLoadSection>
+        </Container>
+      )}
       {visibleSection === 11 && <Container>Listo para Pagar</Container>}
     </CustomDialog>
   );
