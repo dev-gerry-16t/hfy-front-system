@@ -73,6 +73,11 @@ const ReportInvitation = Loadable({
   loading,
 });
 
+const FormularyContract = Loadable({
+  loader: () => import("./containers/FormularyContract/FormUsersContract"),
+  loading,
+});
+
 const App = (props) => {
   const { history, dataProfile } = props;
   const accessDev = false; //window.location.hostname === "localhost";
@@ -133,6 +138,12 @@ const App = (props) => {
             path="/report/:idInvitation"
             name="Firma de documento"
             component={ReportInvitation}
+          />
+          <Route
+            exact
+            path="/formUser/:idRequest/:idUserInRequest/:idCustomerType"
+            name="Formulario de contrato"
+            component={FormularyContract}
           />
           <Route path="/auth" name="Autorizacion" component={Auth} />
           <Route path="/logout" name="Clean App and Close" component={Auth} />

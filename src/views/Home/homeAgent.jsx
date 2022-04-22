@@ -13,6 +13,7 @@ import { ReactComponent as IconSearchUser } from "../../assets/iconSvg/svgFile/i
 import { ReactComponent as IconHomePolicy } from "../../assets/iconSvg/svgFile/iconHomePolicy.svg";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomOnboarding from "../../components/CustomOnboarding";
+import CustomViewRequestContract from "./sections/customViewRequestContract";
 
 const ContentHome = styled.div`
   font-size: 16px;
@@ -113,9 +114,7 @@ const CardHome = styled.div`
   &:hover {
     transform: scale(1.1);
   }
-  &:last-child {
-    visibility: hidden;
-  }
+
   @media screen and (max-width: 870px) {
     width: 15.5em;
     height: 8.625em;
@@ -167,7 +166,13 @@ const catalogHome = [
     path: "/websystem/dashboard-adviser",
     page: "dashboard",
   },
-  // { text: "Generar contrato de arrendamiento", icon: IconNote, path: null },
+  {
+    text: "Generar contrato de arrendamiento",
+    icon: IconNote,
+    path: null,
+    openComponent: 1,
+    page: "genera_contrato_arrendamiento",
+  },
   // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
   {
     text: "Solicita una póliza jurídica",
@@ -180,6 +185,7 @@ const catalogHome = [
 const HomeAgent = (props) => {
   const { history } = props;
   const [visibleOnboard, setVisibleOnboard] = useState(false);
+  const [visibleComponent, setVisibleComponent] = useState(null);
   const frontFunctions = new FrontFunctions();
 
   useEffect(() => {
@@ -230,10 +236,17 @@ const HomeAgent = (props) => {
             history.push("/websystem/add-property");
           }}
         />
+        <CustomViewRequestContract
+          visibleDialog={visibleComponent === 1}
+          onClose={() => {
+            setVisibleComponent(null);
+          }}
+        />
         <div className="main-cards">
-          {catalogHome.map((row) => {
+          {catalogHome.map((row, ix) => {
             return (
               <CardHome
+                key={`card-home-${ix}`}
                 onClick={() => {
                   TagManager.dataLayer({
                     dataLayer: {
@@ -244,6 +257,9 @@ const HomeAgent = (props) => {
                   if (isNil(row.path) === false) {
                     history.push(row.path);
                   }
+                  if (isNil(row.openComponent) === false) {
+                    setVisibleComponent(row.openComponent);
+                  }
                 }}
               >
                 {createElement(row.icon, null, null)}
@@ -251,7 +267,6 @@ const HomeAgent = (props) => {
               </CardHome>
             );
           })}
-          <CardHome></CardHome>
         </div>
       </div>
     </ContentHome>

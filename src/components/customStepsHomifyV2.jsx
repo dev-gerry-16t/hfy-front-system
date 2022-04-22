@@ -28,6 +28,7 @@ const CustomStepsHomify = (props) => {
               onClick={() => {
                 onClick(index, row);
               }}
+              key={`tabs-form-${index}`}
             >
               <div
                 className={
