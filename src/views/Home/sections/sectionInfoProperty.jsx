@@ -4,6 +4,7 @@ import isNil from "lodash/isNil";
 import { connect } from "react-redux";
 import { Row, Col } from "antd";
 import styled from "styled-components";
+import saqareX from "../../../assets/icons/saqareX.svg";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -11,7 +12,7 @@ import FrontFunctions from "../../../utils/actions/frontFunctions";
 import CustomSelect from "../../../components/CustomSelect";
 import CustomInputSelectCurrency from "../../../components/customInputSelectCurrency";
 import CustomInputCurrency from "../../../components/customInputCurrency";
-import { ComponentRadio, MainButtons } from "../constants/styles";
+import { ComponentRadio, MainButtons, ErrorMessage } from "../constants/styles";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 
 const Title = styled.h2`
@@ -67,6 +68,7 @@ const SectionInfoProperty = (props) => {
     city: null,
   });
   const [openOtherNeighborhood, setOpenOtherNeighborhood] = useState(false);
+  const [isVisibleError, setIsVisibleError] = useState(false);
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
 
   const frontFunctions = new FrontFunctions();
@@ -268,7 +270,7 @@ const SectionInfoProperty = (props) => {
                 });
               }}
               placeholder=""
-              label={"Precio de renta"}
+              label={"Precio de renta *"}
               error={false}
               errorMessage="Este campo es requerido"
               onChange={(value, valueS, valueFormat) => {
@@ -287,7 +289,7 @@ const SectionInfoProperty = (props) => {
             <CustomInputCurrency
               value={dataForm.maintenanceAmount}
               placeholder=""
-              label="Mantenimiento mensual"
+              label="Mantenimiento mensual *"
               error={false}
               errorMessage="Este campo es requerido"
               onChange={(value, valueS, valueFormat) => {
@@ -309,7 +311,7 @@ const SectionInfoProperty = (props) => {
             <CustomInputTypeForm
               value={dataForm.totalParkingSpots}
               placeholder=""
-              label="Cajones de Estacionamiento"
+              label="Cajones de Estacionamiento *"
               error={false}
               errorMessage="Este campo es requerido"
               onChange={(value) => {
@@ -326,7 +328,7 @@ const SectionInfoProperty = (props) => {
         <Row>
           <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
             <ComponentRadio>
-              <strong>¿El inmueble está amueblado?</strong>
+              <strong>¿El inmueble está amueblado? *</strong>
               <div className="radio-inputs-options">
                 <label className="input-radio">
                   <input
@@ -545,24 +547,82 @@ const SectionInfoProperty = (props) => {
           )}
         </Row>
       </div>
+      <ErrorMessage error={isVisibleError}>
+        <img src={saqareX} alt="exclaim" />
+        <span>Revisa que la información este completa</span>
+      </ErrorMessage>
       <MainButtons>
         <button
           className="hfy-primary-button"
           onClick={() => {
-            const jsonProperty = {
-              ...dataForm,
-              address: JSON.stringify({
-                ...dataAddress,
-              }),
-            };
-            onNext(
-              {
-                ...dataAddressInfo,
-                state: zipCodeStateCity.state,
-                city: zipCodeStateCity.city,
-              },
-              jsonProperty
-            );
+            const {
+              idPropertyType,
+              idCommercialActivity,
+              currentRent,
+              idCurrency,
+              maintenanceAmount,
+              totalParkingSpots,
+              isFurnished,
+            } = dataForm;
+            const { street, streetNumber, idZipCode, neighborhood } =
+              dataAddress;
+            if (
+              isNil(idPropertyType) === false &&
+              isNil(currentRent) === false &&
+              isNil(idCurrency) === false &&
+              isNil(maintenanceAmount) === false &&
+              isNil(totalParkingSpots) === false &&
+              isEmpty(totalParkingSpots) === false &&
+              isNil(isFurnished) === false &&
+              isNil(street) === false &&
+              isEmpty(street) === false &&
+              isNil(streetNumber) === false &&
+              isEmpty(streetNumber) === false &&
+              isNil(idZipCode) === false &&
+              isNil(zipCode) === false &&
+              isEmpty(zipCode) === false
+            ) {
+              if (
+                idPropertyType === "4" &&
+                isNil(idCommercialActivity) === true
+              ) {
+                setIsVisibleError(true);
+                setTimeout(() => {
+                  setIsVisibleError(false);
+                }, 5000);
+              } else {
+                if (
+                  openOtherNeighborhood === true &&
+                  isNil(neighborhood) === true &&
+                  isEmpty(neighborhood) === true
+                ) {
+                  setIsVisibleError(true);
+                  setTimeout(() => {
+                    setIsVisibleError(false);
+                  }, 5000);
+                } else {
+                  const jsonProperty = {
+                    ...dataForm,
+                    address: JSON.stringify({
+                      ...dataAddress,
+                    }),
+                  };
+                  onNext(
+                    {
+                      ...dataAddressInfo,
+                      state: zipCodeStateCity.state,
+                      city: zipCodeStateCity.city,
+                    },
+                    jsonProperty
+                  );
+                }
+              }
+            } else {
+              setIsVisibleError(true);
+              setTimeout(() => {
+                setIsVisibleError(false);
+              }, 5000);
+            }
           }}
         >
           Siguiente

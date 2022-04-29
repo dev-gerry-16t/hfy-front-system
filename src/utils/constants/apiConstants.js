@@ -9,6 +9,7 @@ const API = {
   REGISTER: "/requestSignUp",
   CUSTOMER_TYPE: "/customerType",
   CUSTOMER: "/customer",
+  EXTERNAL: "/external",
   PERSON: "/personType",
   ENDORSEMENT: "/endorsement",
   TYPEFORM: "/typeForm",
@@ -113,6 +114,11 @@ const API_CONSTANTS = {
     GET_ADVISER_STATS: `${API.CUSTOMER}/customer/getAdviserStats`,
     GET_USER_STATS: `${API.CUSTOMER}/loginHistory/getUserStats`,
     GET_ADVISER_RANKING: `${API.CUSTOMER}/customer/getAdviserRanking`,
+  },
+  EXTERNAL: {
+    SET_REQUEST: `${API.EXTERNAL}/request/setRequest/`,
+    GET_REQUEST_BY_ID: `${API.EXTERNAL}/request/getRequestById`,
+    GET_REQUEST_COINCIDENCES: `${API.EXTERNAL}/request/getRequestCoincidences`,
   },
   PROPERTY: {
     ADD_PROPERTY_V2: `${API.PROPERTY}/addPropertyV2/`,
@@ -235,7 +241,7 @@ const API_CONSTANTS = {
   SET_PERSONAL_REFERENCE_FORM: `${API.API_SECURE}${API.ADMIN}/setPersonalReferenceForm/`,
   UPDATE_REQUEST_ADVANCE_PYM: `${API.API_SECURE}${API.ADMIN}/updateRequestAdvancePym/`,
   UPDATE_PROSPECT_INVITATION: `${API.API_SECURE}${API.ADMIN}/updateProspectInvitation/`,
-  UPDATE_PROSPECT: `${API.API_SECURE}${API.ADMIN}/updateProspect/`,  
+  UPDATE_PROSPECT: `${API.API_SECURE}${API.ADMIN}/updateProspect/`,
   GET_TRANSACTIONS: `${API.API_SECURE}${API.ADMIN}/getTransactions`,
   GET_LANDING_PROSPECT_COINCIDENECES: `${API.API_SECURE}${API.LEADS}/getLandingProspectCoincidences`,
   GET_LANDING_PROSPECT_STATS: `${API.API_SECURE}${API.LEADS}/getLandingProspectStats`,

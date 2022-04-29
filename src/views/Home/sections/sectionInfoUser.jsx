@@ -1,5 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import { connect } from "react-redux";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import CustomSelect from "../../../components/CustomSelect";
 import {
@@ -11,13 +18,15 @@ import {
   MainButtons,
   ComponentRadio,
 } from "../constants/styles";
-import { isNil } from "lodash";
 
 const SectionInfoUser = (props) => {
   const {
+    dataProfile,
+    callGlobalActionApi,
     idUserInRequest,
     idCustomerType,
     idPersonType,
+    idCountryNationality,
     givenName,
     lastName,
     mothersMaidenName,
@@ -26,9 +35,43 @@ const SectionInfoUser = (props) => {
     idPhoneType,
     phoneNumber,
     isInfoProvidedByRequester,
-    requiresVerfication,
+    requiresVerification,
     onSaveState,
+    isFaceToFace,
   } = props;
+  const [dataNationalities, setDataNationalities] = useState([]);
+
+  const frontFunctions = new FrontFunctions();
+
+  const hanlderCallGetNationalities = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idCustomer: idCustomer,
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CATALOGS.GET_CATALOG_NATIONALITIES
+      );
+      const responseResult =
+        isNil(response) === false && isNil(response.response) === false
+          ? response.response
+          : [];
+      setDataNationalities(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  useEffect(() => {
+    hanlderCallGetNationalities();
+  }, []);
 
   return (
     <div>
@@ -54,6 +97,25 @@ const SectionInfoUser = (props) => {
                 />
               </Col>
             </Row> */}
+      <Row>
+        <Col span={24}>
+          <CustomSelect
+            value={idCountryNationality}
+            placeholder=""
+            label="Nacionalidad *"
+            data={dataNationalities}
+            error={false}
+            errorMessage="Este campo es requerido"
+            onChange={(value, option) => {
+              onSaveState({
+                idCountryNationality: value,
+                idCountryNationalityText: option.text,
+              });
+            }}
+            isBlock={false}
+          />
+        </Col>
+      </Row>
       <Row>
         <Col span={24}>
           <CustomInputTypeForm
@@ -106,6 +168,46 @@ const SectionInfoUser = (props) => {
           />
         </Col>
       </Row>
+      {isNil(isFaceToFace) === false && isFaceToFace === "2" && (
+        <>
+          <Row>
+            <Col span={24}>
+              <CustomInputTypeForm
+                value={emailAddress}
+                placeholder=""
+                label="Correo"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  onSaveState({
+                    emailAddress: value,
+                  });
+                }}
+                type="email"
+                isBlock={false}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col span={24}>
+              <CustomInputTypeForm
+                value={phoneNumber}
+                placeholder=""
+                label="Teléfono WhatsApp"
+                error={false}
+                errorMessage="Este campo es requerido"
+                onChange={(value) => {
+                  onSaveState({
+                    phoneNumber: value,
+                  });
+                }}
+                type="tel"
+                isBlock={false}
+              />
+            </Col>
+          </Row>
+        </>
+      )}
       <Row>
         <Col span={24}>
           <ComponentRadio>
@@ -145,7 +247,8 @@ const SectionInfoUser = (props) => {
         </Col>
       </Row>
       {isNil(isInfoProvidedByRequester) === false &&
-        isInfoProvidedByRequester === false && (
+        isInfoProvidedByRequester === false &&
+        isFaceToFace === "1" && (
           <>
             <Row>
               <Col span={24}>
@@ -196,11 +299,11 @@ const SectionInfoUser = (props) => {
               <label className="input-radio">
                 <input
                   type="radio"
-                  checked={requiresVerfication === true}
+                  checked={requiresVerification === true}
                   name="verify-information"
                   onClick={() => {
                     onSaveState({
-                      requiresVerfication: true,
+                      requiresVerification: true,
                     });
                   }}
                 />
@@ -210,10 +313,10 @@ const SectionInfoUser = (props) => {
                 <input
                   type="radio"
                   name="verify-information"
-                  checked={requiresVerfication === false}
+                  checked={requiresVerification === false}
                   onClick={() => {
                     onSaveState({
-                      requiresVerfication: false,
+                      requiresVerification: false,
                     });
                   }}
                 />
@@ -227,4 +330,16 @@ const SectionInfoUser = (props) => {
   );
 };
 
-export default SectionInfoUser;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionInfoUser);

@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { Popconfirm } from "antd";
 import isEmpty from "lodash/isEmpty";
@@ -16,7 +16,6 @@ import ComponentLoadSection from "../../../components/componentLoadSection";
 import { GeneralCard } from "../constants/styleConstants";
 import { ReactComponent as ArrowUp2 } from "../../../assets/iconSvg/svgFile/arrowUp2.svg";
 import { ReactComponent as ArrowDown2 } from "../../../assets/iconSvg/svgFile/arrowDown2.svg";
-import { useEffect } from "react";
 
 const CardStatus = styled.div`
   position: relative;
@@ -223,7 +222,7 @@ const SectionApplicants = (props) => {
     onCloseComponent,
   } = dataContexProperty;
   const [isLoadApi, setIsLoadApi] = useState(false);
-  const [toggleCard, setToggleCard] = useState(false);
+  const [toggleCard, setToggleCard] = useState({});
   const { idApartment, idProperty, canInviteTenant } = dataDetail;
 
   const applicantsArray =
