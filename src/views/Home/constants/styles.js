@@ -4,6 +4,50 @@ const Container = styled.div`
   font-size: 16px;
   padding: 1.5em 1em;
   font-family: Poppins;
+  .subTitle-confirm-info {
+    font-weight: 700;
+    font-size: 1.3em;
+    color: var(--color-primary);
+    cursor: pointer;
+  }
+`;
+
+const InfoPayment = styled.div`
+  .header-card-payment {
+    display: flex;
+    justify-content: center;
+    padding: 2em 0px;
+    .amount-to-pay {
+      position: relative;
+      span {
+        border: 1px solid var(--color-primary);
+        padding: 0.5em;
+        border-radius: 7px;
+        font-weight: 600;
+        color: var(--color-primary);
+      }
+      p {
+        position: absolute;
+      }
+      @media screen and (max-width: 320px) {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+    }
+  }
+
+  .inclusive-payment {
+    border: 1px solid #4e4b66;
+    box-sizing: border-box;
+    border-radius: 10px;
+    padding: 1em;
+    .inclusive-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+  }
 `;
 
 const HeaderContainer = styled.div`
@@ -20,6 +64,10 @@ const HeaderContainer = styled.div`
 const MainContainer = styled.div`
   text-align: center;
   margin: 1em 0px;
+  h1 {
+    font-size: 1.2em;
+    font-weight: 600;
+  }
 `;
 
 const MainInfo = styled.div`
@@ -132,6 +180,22 @@ const ComponentRadio = styled.div`
   }
 `;
 
+const ErrorMessage = styled.div`
+  display: flex;
+  align-items: center;
+  visibility: ${(props) => (props.error ? "visible" : "hidden")};
+  opacity: ${(props) => (props.error ? "1" : "0")};
+  background: #feefef;
+  color: #da1414;
+  border-radius: 5px;
+  font-size: 1em;
+  padding: 3px 0px 3px 5px;
+  transition: visibility 0.1s linear, opacity 0.1s linear;
+  span {
+    margin-left: 3px;
+  }
+`;
+
 export {
   Container,
   HeaderContainer,
@@ -140,4 +204,6 @@ export {
   InfoVerify,
   MainButtons,
   ComponentRadio,
+  ErrorMessage,
+  InfoPayment,
 };

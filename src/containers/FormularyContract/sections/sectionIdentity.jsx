@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import isNil from "lodash/isNil";
 import styled from "styled-components";
 import { Row, Col } from "antd";
 import {
@@ -8,6 +9,19 @@ import {
   ComponentRadio,
 } from "../constants/styleConstants";
 import CustomDialog from "../../../components/CustomDialog";
+import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
+
+const ButtonFiles = styled.button`
+  width: 2em;
+  height: 2em;
+  border-radius: 0.5em;
+  background: rgba(214, 216, 231, 0.64);
+  border: none;
+  margin-right: 0.3em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const ContentFile = styled.div`
   font-size: 16px;
@@ -93,6 +107,41 @@ const UploadSection = styled.div`
 `;
 
 const SectionIdentity = ({ onClickNext }) => {
+  const [dataSelfieSrc, setDataSelifeSrc] = useState(null);
+  const [dataOfficialIdFrontSrc, setDataOfficialIdFrontSrc] = useState(null);
+  const [dataOfficialIdBackSrc, setDataOfficialIdBackSrc] = useState(null);
+
+  const handlerAddDocument = async (fileIndex, file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(fileIndex);
+    reader.onload = async (event) => {
+      const imgElement = document.createElement("img");
+      imgElement.src = event.target.result;
+      imgElement.onload = async (event1) => {
+        const canvas = document.createElement("canvas");
+        const width = event1.target.width;
+        const height = event1.target.height;
+
+        const MAX_WIDTH = 1000;
+        const scaleSize = MAX_WIDTH / width;
+
+        canvas.width = MAX_WIDTH;
+        canvas.height = height * scaleSize;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(event1.target, 0, 0, canvas.width, canvas.height);
+        const srcEncoded = ctx.canvas.toDataURL("image/jpeg", 0.8);
+        if (file === "selfie") {
+          setDataSelifeSrc(srcEncoded);
+        } else if (file === "id-front") {
+          setDataOfficialIdFrontSrc(srcEncoded);
+        } else if (file === "id-back") {
+          setDataOfficialIdBackSrc(srcEncoded);
+        }
+      };
+    };
+  };
+
   return (
     <ContentForm>
       <div className="header-title">
@@ -118,41 +167,140 @@ const SectionIdentity = ({ onClickNext }) => {
           <AlignItems>
             <ContentFile>
               <UploadSection>
-                <label className="upload-file" for="selfie-user-form">
-                  <i
-                    className="fa fa-camera"
-                    style={{ fontSize: "2em", color: "#A0A3BD" }}
-                  ></i>
-                  <span>Tomate una foto (Solo la cara)</span>
-                </label>
-                <input
-                  style={{ display: "none" }}
-                  type="file"
-                  accept="image/*;capture=camera"
-                  id="selfie-user-form"
-                />
+                {isNil(dataSelfieSrc) === true && (
+                  <>
+                    <label className="upload-file" for="selfie-user-form">
+                      <i
+                        className="fa fa-camera"
+                        style={{ fontSize: "2em", color: "#A0A3BD" }}
+                      ></i>
+                      <span>Tomate una foto (Solo la cara)</span>
+                    </label>
+                    <input
+                      style={{ display: "none" }}
+                      type="file"
+                      accept="image/*;capture=camera"
+                      id="selfie-user-form"
+                      onChange={(e) => {
+                        const fileIndex = e.target.files[0];
+                        handlerAddDocument(fileIndex, "selfie");
+                      }}
+                    />
+                  </>
+                )}
+                {isNil(dataSelfieSrc) === false && (
+                  <div className="content-file-preview">
+                    <img src={dataSelfieSrc} alt="preview" />
+                  </div>
+                )}
+                {isNil(dataSelfieSrc) === false && (
+                  <div className="content-buttons-file">
+                    {/* <ButtonFiles onClick={() => {}}>
+                      <IconEye color="var(--color-primary)" />
+                    </ButtonFiles> */}
+                    <ButtonFiles
+                      onClick={async () => {
+                        try {
+                          setDataSelifeSrc(null);
+                        } catch (error) {}
+                      }}
+                    >
+                      <IconDelete color="var(--color-primary)" />
+                    </ButtonFiles>
+                  </div>
+                )}
               </UploadSection>
             </ContentFile>
             <ContentFile>
               <UploadSection>
-                <div className="upload-file">
-                  <i
-                    className="fa fa-camera"
-                    style={{ fontSize: "2em", color: "#A0A3BD" }}
-                  ></i>
-                  <span>Identificación Oficial (Frontal)</span>
-                </div>
+                {isNil(dataOfficialIdFrontSrc) === true && (
+                  <>
+                    <label className="upload-file" for="id-front-user-form">
+                      <i
+                        className="fa fa-camera"
+                        style={{ fontSize: "2em", color: "#A0A3BD" }}
+                      ></i>
+                      <span>Identificación Oficial (Frontal)</span>
+                    </label>
+                    <input
+                      style={{ display: "none" }}
+                      type="file"
+                      accept="image/*;capture=camera"
+                      id="id-front-user-form"
+                      onChange={(e) => {
+                        const fileIndex = e.target.files[0];
+                        handlerAddDocument(fileIndex, "id-front");
+                      }}
+                    />
+                  </>
+                )}
+                {isNil(dataOfficialIdFrontSrc) === false && (
+                  <div className="content-file-preview">
+                    <img src={dataOfficialIdFrontSrc} alt="preview" />
+                  </div>
+                )}
+                {isNil(dataOfficialIdFrontSrc) === false && (
+                  <div className="content-buttons-file">
+                    {/* <ButtonFiles onClick={() => {}}>
+                      <IconEye color="var(--color-primary)" />
+                    </ButtonFiles> */}
+                    <ButtonFiles
+                      onClick={async () => {
+                        try {
+                          setDataOfficialIdFrontSrc(null);
+                        } catch (error) {}
+                      }}
+                    >
+                      <IconDelete color="var(--color-primary)" />
+                    </ButtonFiles>
+                  </div>
+                )}
               </UploadSection>
             </ContentFile>
             <ContentFile>
               <UploadSection>
-                <div className="upload-file">
-                  <i
-                    className="fa fa-camera"
-                    style={{ fontSize: "2em", color: "#A0A3BD" }}
-                  ></i>
-                  <span>Identificación Oficial (Trasera)</span>
-                </div>
+                {isNil(dataOfficialIdBackSrc) === true && (
+                  <>
+                    <label className="upload-file" for="id-back-user-form">
+                      <i
+                        className="fa fa-camera"
+                        style={{ fontSize: "2em", color: "#A0A3BD" }}
+                      ></i>
+                      <span>Identificación Oficial (Trasera)</span>
+                    </label>
+                    <input
+                      style={{ display: "none" }}
+                      type="file"
+                      accept="image/*;capture=camera"
+                      id="id-back-user-form"
+                      onChange={(e) => {
+                        const fileIndex = e.target.files[0];
+                        handlerAddDocument(fileIndex, "id-back");
+                      }}
+                    />
+                  </>
+                )}
+                {isNil(dataOfficialIdBackSrc) === false && (
+                  <div className="content-file-preview">
+                    <img src={dataOfficialIdBackSrc} alt="preview" />
+                  </div>
+                )}
+                {isNil(dataOfficialIdBackSrc) === false && (
+                  <div className="content-buttons-file">
+                    {/* <ButtonFiles onClick={() => {}}>
+                      <IconEye color="var(--color-primary)" />
+                    </ButtonFiles> */}
+                    <ButtonFiles
+                      onClick={async () => {
+                        try {
+                          setDataOfficialIdBackSrc(null);
+                        } catch (error) {}
+                      }}
+                    >
+                      <IconDelete color="var(--color-primary)" />
+                    </ButtonFiles>
+                  </div>
+                )}
               </UploadSection>
             </ContentFile>
           </AlignItems>

@@ -58,7 +58,7 @@ const TabsProperty = styled.div`
 `;
 
 const Tab = styled.div`
-  line-height: 5px;
+  line-height: 15px;
   cursor: pointer;
   h1 {
     font-weight: bold;
@@ -178,22 +178,22 @@ const PaidService = styled.div`
 const dataTabsPaymentMethod = [
   {
     id: "1",
-    text: "Transferencia SPEI",
+    text: "Transferencia",
   },
   {
     id: "2",
-    text: "Pago con Tarjeta",
+    text: "Con Tarjeta",
   },
   {
     id: "3",
-    text: "Pago con OXXO",
+    text: "OXXO",
   },
 ];
 
 const dataTabsPaymentMethodMobile = [
   {
     id: "1",
-    text: "SPEI",
+    text: "Transferencia",
   },
   {
     id: "2",
@@ -204,6 +204,8 @@ const dataTabsPaymentMethodMobile = [
     text: "OXXO",
   },
 ];
+
+let channel = null;
 
 const PaymentsService = (props) => {
   const {
@@ -299,6 +301,8 @@ const PaymentsService = (props) => {
   };
 
   useEffect(() => {
+    const channelName = "form_users_contract";
+    channel = new BroadcastChannel(channelName);
     handlerCallGetOrderPaymentById();
     handlerGetCatalogGWtransaction();
     if (window.screen.width <= 720) {

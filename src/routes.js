@@ -93,6 +93,12 @@ const TopAgents = React.lazy(() => import("./views/TopAgents/topAgents"));
 const Subscription = React.lazy(() =>
   import("./views/Subscription/subscription")
 );
+const GenerateContracts = React.lazy(() =>
+  import("./views/GenerateContracts/genarateContracts")
+);
+const DetailGenerateContracts = React.lazy(() =>
+  import("./views/GenerateContracts/detailGenerateContracts")
+);
 
 const routes = [
   {
@@ -375,7 +381,7 @@ const routes = [
     name: "Solicitud de Póliza",
     component: SelectPolicyUser,
     exact: true,
-  },  
+  },
   {
     key: "27",
     id: "publicProperties",
@@ -478,6 +484,22 @@ const routes = [
     path: "/websystem/subscription/:status/:method",
     name: "Suscripción",
     component: Subscription,
+    exact: true,
+  },
+  {
+    key: "38",
+    id: "contratos-generados",
+    path: "/websystem/contratos-generados",
+    name: "Contratos generados",
+    component: GenerateContracts,
+    exact: true,
+  },
+  {
+    key: "39",
+    id: "detail-contract",
+    path: "/websystem/detalle-contrato-generado/:idRequest",
+    name: "Detalle de contrato",
+    component: DetailGenerateContracts,
     exact: true,
   },
 ];
