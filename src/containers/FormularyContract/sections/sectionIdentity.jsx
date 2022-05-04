@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useContext, useState } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Row, Col } from "antd";
 import {
   ContentForm,
@@ -8,8 +10,21 @@ import {
   FormProperty,
   ComponentRadio,
 } from "../constants/styleConstants";
+import ContextForm from "../context/contextForm";
 import CustomDialog from "../../../components/CustomDialog";
 import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
+import CustomSelect from "../../../components/CustomSelect";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../utils/actions/frontFunctions";
+import { callGlobalActionApi } from "../../../utils/actions/actions";
+import CustomReactMati from "../../../components/customReactMati";
+
+const rotate360 = keyframes`
+0% { transform: rotate(0) }
+50%{transform: rotate(200deg)}
+100% { transform: rotate(360deg) }
+`;
 
 const ButtonFiles = styled.button`
   width: 2em;
@@ -106,10 +121,72 @@ const UploadSection = styled.div`
   }
 `;
 
-const SectionIdentity = ({ onClickNext }) => {
+const LoadSquare = styled.div`
+  position: relative;
+  overflow: hidden;
+  width: 300px;
+  height: 270px;
+  box-shadow: 0 10px 40px -10px rgb(0 64 128 / 20%);
+  border-radius: 1em;
+  .load-border {
+    width: 100%;
+    height: 100%;
+    animation: ${rotate360} linear 4s infinite;
+    span {
+      display: block;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform: translate(-50%, -50%);
+    }
+    span:first-child {
+      background: var(--color-primary);
+    }
+    span:last-child:after {
+      background: var(--color-primary);
+    }
+
+    span:after {
+      display: block;
+      content: "";
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      left: 100%;
+    }
+  }
+  .content-identity {
+    position: absolute;
+    width: 290px;
+    height: 260px;
+    background: #fff;
+    top: 50%;
+    left: 50%;
+    border-radius: 1em;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    padding: 0.5em;
+    text-align: center;
+    h1 {
+      font-weight: 700;
+    }
+  }
+`;
+
+const SectionIdentity = (props) => {
+  const { callGlobalActionApi, onClickNext } = props;
+
   const [dataSelfieSrc, setDataSelifeSrc] = useState(null);
   const [dataOfficialIdFrontSrc, setDataOfficialIdFrontSrc] = useState(null);
   const [dataOfficialIdBackSrc, setDataOfficialIdBackSrc] = useState(null);
+  const [dataForm, setDataForm] = useState({});
+  const [finishVerification, setFinishVerification] = useState(false);
+
+  const dataContextForm = useContext(ContextForm);
+  const { dataFormSave, idUserInRequest } = dataContextForm;
+
+  const frontFunctions = new FrontFunctions();
 
   const handlerAddDocument = async (fileIndex, file) => {
     const reader = new FileReader();
@@ -145,15 +222,20 @@ const SectionIdentity = ({ onClickNext }) => {
   return (
     <ContentForm>
       <div className="header-title">
-        <h1>Documentos de identidad</h1>
+        {isEmpty(dataFormSave) === false && (
+          <h1>
+            {dataFormSave.requiresVerification === true ||
+            dataFormSave.requiresVerification === 1
+              ? "Identidad"
+              : "Documentos de identidad"}
+          </h1>
+        )}
       </div>
       <FormProperty>
         <div className="label-indicator">
           <Row>
             <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <span>
-                Comenzaremos con la verificación de tu documento de identidad
-              </span>
+              <span>Comenzaremos con la validación de tu identidad</span>
               <br />
               <span>
                 Para evitar errores en la información personal que aparecerá en
@@ -164,53 +246,111 @@ const SectionIdentity = ({ onClickNext }) => {
           </Row>
         </div>
         <div className="type-property">
-          <AlignItems>
-            <ContentFile>
-              <UploadSection>
-                {isNil(dataSelfieSrc) === true && (
-                  <>
-                    <label className="upload-file" for="selfie-user-form">
-                      <i
-                        className="fa fa-camera"
-                        style={{ fontSize: "2em", color: "#A0A3BD" }}
-                      ></i>
-                      <span>Tomate una foto (Solo la cara)</span>
-                    </label>
-                    <input
-                      style={{ display: "none" }}
-                      type="file"
-                      accept="image/*;capture=camera"
-                      id="selfie-user-form"
-                      onChange={(e) => {
-                        const fileIndex = e.target.files[0];
-                        handlerAddDocument(fileIndex, "selfie");
-                      }}
-                    />
-                  </>
-                )}
-                {isNil(dataSelfieSrc) === false && (
-                  <div className="content-file-preview">
-                    <img src={dataSelfieSrc} alt="preview" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            {isEmpty(dataFormSave) === false &&
+              dataFormSave.hasMatiFlow === true && (
+                <LoadSquare>
+                  <div className="load-border">
+                    <span></span>
+                    <span></span>
                   </div>
-                )}
-                {isNil(dataSelfieSrc) === false && (
-                  <div className="content-buttons-file">
-                    {/* <ButtonFiles onClick={() => {}}>
-                      <IconEye color="var(--color-primary)" />
-                    </ButtonFiles> */}
-                    <ButtonFiles
-                      onClick={async () => {
-                        try {
-                          setDataSelifeSrc(null);
-                        } catch (error) {}
+                  <div className="content-identity">
+                    <h1>
+                      {dataFormSave.requiresVerification === true ||
+                      dataFormSave.requiresVerification === 1
+                        ? "Identidad"
+                        : "Documentos"}
+                    </h1>
+                    <span>
+                      {dataFormSave.requiresVerification === true ||
+                      dataFormSave.requiresVerification === 1
+                        ? "Haz clic en el botón para iniciar con el proceso de verificación de identidad"
+                        : "Haz clic en el botón para subir los documentos de identidad necesarios para el proceso"}
+                    </span>
+                    <div
+                      style={{
+                        marginTop: "20px",
                       }}
                     >
-                      <IconDelete color="var(--color-primary)" />
-                    </ButtonFiles>
+                      <CustomReactMati
+                        clientId={dataFormSave.clientId}
+                        flowId={dataFormSave.matiFlowId}
+                        country="mx"
+                        loaded={() => {}}
+                        product="kyc"
+                        color={
+                          document.getElementsByTagName("body")[0].className
+                        }
+                        metadata={{
+                          idUserInRequest,
+                          idCustomer: dataFormSave.idCustomer,
+                        }}
+                        exited={() => {}}
+                        finished={() => {
+                          setFinishVerification(true);
+                        }}
+                      />
+                    </div>
                   </div>
-                )}
-              </UploadSection>
-            </ContentFile>
+                </LoadSquare>
+              )}
+          </div>
+          {/* <AlignItems>
+            {isEmpty(dataFormSave) === false &&
+              (dataFormSave.requiresVerification === 1 ||
+                dataFormSave.requiresVerification === true) && (
+                <ContentFile>
+                  <UploadSection>
+                    {isNil(dataSelfieSrc) === true && (
+                      <>
+                        <label className="upload-file" for="selfie-user-form">
+                          <i
+                            className="fa fa-camera"
+                            style={{ fontSize: "2em", color: "#A0A3BD" }}
+                          ></i>
+                          <span>Tomate una foto (Solo la cara)</span>
+                        </label>
+                        <input
+                          style={{ display: "none" }}
+                          type="file"
+                          accept="image/*;capture=camera"
+                          id="selfie-user-form"
+                          onChange={(e) => {
+                            const fileIndex = e.target.files[0];
+                            handlerAddDocument(fileIndex, "selfie");
+                          }}
+                        />
+                      </>
+                    )}
+                    {isNil(dataSelfieSrc) === false && (
+                      <div className="content-file-preview">
+                        <img src={dataSelfieSrc} alt="preview" />
+                      </div>
+                    )}
+                    {isNil(dataSelfieSrc) === false && (
+                      <div className="content-buttons-file">
+                        {/* <ButtonFiles onClick={() => {}}>
+                      <IconEye color="var(--color-primary)" />
+                    </ButtonFiles> }
+                        <ButtonFiles
+                          onClick={async () => {
+                            try {
+                              setDataSelifeSrc(null);
+                            } catch (error) {}
+                          }}
+                        >
+                          <IconDelete color="var(--color-primary)" />
+                        </ButtonFiles>
+                      </div>
+                    )}
+                  </UploadSection>
+                </ContentFile>
+              )}
             <ContentFile>
               <UploadSection>
                 {isNil(dataOfficialIdFrontSrc) === true && (
@@ -241,9 +381,9 @@ const SectionIdentity = ({ onClickNext }) => {
                 )}
                 {isNil(dataOfficialIdFrontSrc) === false && (
                   <div className="content-buttons-file">
-                    {/* <ButtonFiles onClick={() => {}}>
+                    {<ButtonFiles onClick={() => {}}>
                       <IconEye color="var(--color-primary)" />
-                    </ButtonFiles> */}
+                    </ButtonFiles>}
                     <ButtonFiles
                       onClick={async () => {
                         try {
@@ -287,9 +427,9 @@ const SectionIdentity = ({ onClickNext }) => {
                 )}
                 {isNil(dataOfficialIdBackSrc) === false && (
                   <div className="content-buttons-file">
-                    {/* <ButtonFiles onClick={() => {}}>
+                    {<ButtonFiles onClick={() => {}}>
                       <IconEye color="var(--color-primary)" />
-                    </ButtonFiles> */}
+                    </ButtonFiles>}
                     <ButtonFiles
                       onClick={async () => {
                         try {
@@ -303,7 +443,7 @@ const SectionIdentity = ({ onClickNext }) => {
                 )}
               </UploadSection>
             </ContentFile>
-          </AlignItems>
+          </AlignItems> */}
         </div>
         <div className="next-back-buttons">
           <ButtonNextBackPage block={true} onClick={() => {}}>
@@ -311,9 +451,13 @@ const SectionIdentity = ({ onClickNext }) => {
             <u>{"Atrás"}</u>
           </ButtonNextBackPage>
           <ButtonNextBackPage
-            block={false}
+            block={finishVerification === false}
             onClick={async () => {
-              onClickNext();
+              try {
+                if (finishVerification === true) {
+                  onClickNext();
+                }
+              } catch (error) {}
             }}
           >
             <u>{"Siguiente"}</u>
@@ -325,4 +469,11 @@ const SectionIdentity = ({ onClickNext }) => {
   );
 };
 
-export default SectionIdentity;
+const mapStateToProps = (state) => {};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method, token) =>
+    dispatch(callGlobalActionApi(data, id, constant, method, token)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionIdentity);

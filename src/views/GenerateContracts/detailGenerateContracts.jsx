@@ -54,6 +54,9 @@ const Content = styled.div`
 
 const DetailGenerateContracts = (props) => {
   const { callGlobalActionApi, dataProfile, history, match } = props;
+  const { params } = match;
+  const idRequest = params.idRequest;
+
   const [dataInfoRequest, setDataInfoRequest] = useState({
     request: {},
     payment: {},
@@ -106,15 +109,19 @@ const DetailGenerateContracts = (props) => {
   };
 
   useEffect(() => {
-    const { params } = match;
-    handlerCallGetRequestById(params.idRequest);
+    handlerCallGetRequestById(idRequest);
   }, []);
 
   return (
     <Content>
-      <div className="section-payment">
-        <SectionPaymentInfo dataInfoPayment={dataInfoRequest.payment} />
-      </div>
+      {isEmpty(dataInfoRequest) === false &&
+        isEmpty(dataInfoRequest.payment) === false &&
+        isNil(dataInfoRequest.payment.requiresPymt) === false &&
+        dataInfoRequest.payment.requiresPymt === true && (
+          <div className="section-payment">
+            <SectionPaymentInfo dataInfoPayment={dataInfoRequest.payment} />
+          </div>
+        )}
       <div className="section-document">
         <GeneralCard>
           <div className="header-title">
@@ -139,6 +146,10 @@ const DetailGenerateContracts = (props) => {
       </div>
       <div className="section-implicated">
         <SectionInvolved
+          onGetDetail={() => {
+            handlerCallGetRequestById(idRequest);
+          }}
+          idRequest={idRequest}
           dataInvolved={
             isEmpty(dataInfoRequest) === false &&
             isEmpty(dataInfoRequest.request) === false &&

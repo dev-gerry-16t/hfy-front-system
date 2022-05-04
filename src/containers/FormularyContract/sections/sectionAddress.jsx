@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import { connect } from "react-redux";
@@ -10,6 +10,7 @@ import {
   FormProperty,
   ComponentRadio,
 } from "../constants/styleConstants";
+import ContextForm from "../context/contextForm";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
 import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
@@ -43,6 +44,9 @@ const SectionAddress = (props) => {
   const [openOtherNeighborhood, setOpenOtherNeighborhood] = useState(false);
   const [dataZipCatalog, setDataZipCatalog] = useState([]);
 
+  const dataContextForm = useContext(ContextForm);
+  const { dataFormSave, onSetInformation, idCustomerType } = dataContextForm;
+
   const frontFunctions = new FrontFunctions();
 
   const hanlderCallGetZipCodeAdress = async (code, id) => {
@@ -56,7 +60,9 @@ const SectionAddress = (props) => {
           zipCode: code,
         },
         null,
-        API_CONSTANTS.GET_ZIP_CODE_ADRESS
+        API_CONSTANTS.ANONYMOUS.GET_ZIP_CODE_ADRESS,
+        "POST",
+        false
       );
 
       const responseResult1 =
@@ -98,15 +104,37 @@ const SectionAddress = (props) => {
     }
   };
 
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      const { street, streetNumber, suite, idZipCode, neighborhood, zipCode } =
+        dataFormSave;
+      setDataAddress({
+        ...dataAddress,
+        street,
+        streetNumber,
+        suite,
+        idZipCode,
+        neighborhood,
+      });
+      if (isNil(zipCode) === false && isNil(idZipCode) === false) {
+        setZipCode(zipCode, idZipCode);
+        hanlderCallGetZipCodeAdress(zipCode, idZipCode);
+      }
+    }
+  }, [dataFormSave]);
+
   return (
     <ContentForm>
       <div className="header-title">
-        <h1>Domicilio Actual Propietario</h1>
+        <h1>
+          Domicilio Actual{" "}
+          {idCustomerType === "2" ? "Propietario" : "Inquilino"}
+        </h1>
       </div>
       <FormProperty>
         <div className="label-indicator">
           <Row>
-            <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
+            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
               <span>Por favor llena todos los campos correspondientes.</span>
               <br />
               <span>Ingresa el domicilio en donde vive actualmente</span>
@@ -277,10 +305,13 @@ const SectionAddress = (props) => {
           <ButtonNextBackPage
             block={false}
             onClick={async () => {
-              onClickNext();
+              try {
+                await onSetInformation(dataAddress);
+                onClickNext();
+              } catch (error) {}
             }}
           >
-            <u>{"Siguiente"}</u>
+            <u>{idCustomerType === "2" ? "Siguiente" : "Finalizar"}</u>
             {" >>"}
           </ButtonNextBackPage>
         </div>
@@ -292,8 +323,8 @@ const SectionAddress = (props) => {
 const mapStateToProps = (state) => {};
 
 const mapDispatchToProps = (dispatch) => ({
-  callGlobalActionApi: (data, id, constant, method) =>
-    dispatch(callGlobalActionApi(data, id, constant, method)),
+  callGlobalActionApi: (data, id, constant, method, token) =>
+    dispatch(callGlobalActionApi(data, id, constant, method, token)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SectionAddress);
