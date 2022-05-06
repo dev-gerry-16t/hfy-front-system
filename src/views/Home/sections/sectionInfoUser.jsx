@@ -99,29 +99,10 @@ const SectionInfoUser = (props) => {
             </Row> */}
       <Row>
         <Col span={24}>
-          <CustomSelect
-            value={idCountryNationality}
-            placeholder=""
-            label="Nacionalidad *"
-            data={dataNationalities}
-            error={false}
-            errorMessage="Este campo es requerido"
-            onChange={(value, option) => {
-              onSaveState({
-                idCountryNationality: value,
-                idCountryNationalityText: option.text,
-              });
-            }}
-            isBlock={false}
-          />
-        </Col>
-      </Row>
-      <Row>
-        <Col span={24}>
           <CustomInputTypeForm
             value={givenName}
             placeholder=""
-            label="Nombre"
+            label="Nombre *"
             error={false}
             errorMessage="Este campo es requerido"
             onChange={(value) => {
@@ -139,7 +120,7 @@ const SectionInfoUser = (props) => {
           <CustomInputTypeForm
             value={lastName}
             placeholder=""
-            label="Apellido Paterno"
+            label="Apellido Paterno *"
             error={false}
             errorMessage="Este campo es requerido"
             onChange={(value) => {
@@ -208,6 +189,25 @@ const SectionInfoUser = (props) => {
           </Row>
         </>
       )}
+      <Row>
+        <Col span={24}>
+          <CustomSelect
+            value={idCountryNationality}
+            placeholder=""
+            label="Nacionalidad"
+            data={dataNationalities}
+            error={false}
+            errorMessage="Este campo es requerido"
+            onChange={(value, option) => {
+              onSaveState({
+                idCountryNationality: value,
+                idCountryNationalityText: option.text,
+              });
+            }}
+            isBlock={false}
+          />
+        </Col>
+      </Row>
       <Row>
         <Col span={24}>
           <ComponentRadio>

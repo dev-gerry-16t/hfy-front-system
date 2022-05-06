@@ -48,7 +48,7 @@ const InfoPayment = styled.div`
   }
 `;
 
-const SectionPaymentInfo = ({ dataInfoPayment }) => {
+const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
 
   const handlerOnClickPayment = () => {
@@ -81,6 +81,14 @@ const SectionPaymentInfo = ({ dataInfoPayment }) => {
           setIsLoadApi(false);
         }, 1500);
       }
+      if (message.data === "payment_succesed") {
+        clearInterval(intervalWindow);
+        openPayment.close();
+        setTimeout(() => {
+          setIsLoadApi(false);
+          onUpdateInfo();
+        }, 1500);
+      }
     };
   };
 
@@ -99,7 +107,11 @@ const SectionPaymentInfo = ({ dataInfoPayment }) => {
 
   return (
     <GeneralCard>
-      <ComponentLoadSection isLoadApi={isLoadApi} text="Realizando Pago" position="absolute">
+      <ComponentLoadSection
+        isLoadApi={isLoadApi}
+        text="Realizando Pago"
+        position="absolute"
+      >
         <div className="header-title">
           <h1>Información de pago</h1>
         </div>

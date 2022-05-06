@@ -94,7 +94,9 @@ const SectionDetailContract = ({
           <ShortDetail>
             <div className="header-title-short">
               <h1>Información de contrato</h1>
-          <div className="identifier-property">{dataInfoRequest.requestStatus}</div>
+              <div className="identifier-property">
+                {dataInfoRequest.requestStatus}
+              </div>
             </div>
             <LineSeparator opacity="0.3" />
             <div className="info-data-property">
@@ -105,6 +107,14 @@ const SectionDetailContract = ({
               <div className="item-description">
                 <span>Firma de contrato</span>
                 <strong>{dataInfoRequest.scheduleAt}</strong>
+              </div>
+              <div className="item-description">
+                <span>Modo de firma</span>
+                <strong>
+                  {dataInfoRequest.isFaceToFace === false
+                    ? "Firma electrónica"
+                    : "Presencial"}
+                </strong>
               </div>
               <div className="item-description">
                 <span>Expira el</span>

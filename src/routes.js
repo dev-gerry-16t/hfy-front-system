@@ -498,7 +498,7 @@ const routes = [
     key: "39",
     id: "detail-contract",
     path: "/websystem/detalle-contrato-generado/:idRequest",
-    name: "Detalle de contrato",
+    name: "Detalle de contrato generado",
     component: DetailGenerateContracts,
     exact: true,
   },

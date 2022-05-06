@@ -4,7 +4,7 @@ import { FormModal, ButtonsModal } from "../constants/styleConstants";
 import { ReactComponent as IconForm } from "../../../assets/iconSvg/svgFile/iconForm.svg";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 
-const WidgetModalConfirmInformation = (props) => {
+const ComponentConfirmInformation = (props) => {
   const { isModalVisible, onClose, onSendConfirmation } = props;
   const [isLoadApi, setIsLoadApi] = useState(false);
 
@@ -28,7 +28,8 @@ const WidgetModalConfirmInformation = (props) => {
           <h2>¿Deseas confirmar tu información?</h2>
           <p>
             Por favor considera que una vez que confirmes tu información no
-            podrás realizar cambios.
+            podrás realizar cambios, a excepción de tu información bancaria y de
+            contacto
           </p>
           <div className="button-action">
             <ButtonsModal
@@ -53,4 +54,4 @@ const WidgetModalConfirmInformation = (props) => {
   );
 };
 
-export default WidgetModalConfirmInformation;
+export default ComponentConfirmInformation;

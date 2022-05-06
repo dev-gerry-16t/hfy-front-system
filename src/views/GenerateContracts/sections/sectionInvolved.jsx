@@ -6,6 +6,7 @@ import { IconTenant } from "../../../assets/iconSvg";
 import { GeneralCard } from "../constants/styles";
 import { ReactComponent as ArrowUp2 } from "../../../assets/iconSvg/svgFile/arrowUp2.svg";
 import { ReactComponent as ArrowDown2 } from "../../../assets/iconSvg/svgFile/arrowDown2.svg";
+import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const CardStatus = styled.div`
   position: relative;
@@ -190,6 +191,8 @@ const LoadingProcess = styled.div`
   background: ${(props) =>
     props.load === 0
       ? `linear-gradient(90deg,#ff0282 0%,rgba(255, 2, 130, 0.58) 0%,rgba(255, 2, 130, 0) 0%);`
+      : props.load === 100
+      ? `linear-gradient(90deg,#ff0282 0%,rgba(255, 2, 130, 0.58) ${props.load}%,rgba(255, 2, 130, 0) ${props.load}%);`
       : `linear-gradient(90deg,#ff0282 0%,rgba(255, 2, 130, 0.58) ${
           props.load / 2
         }%,rgba(255, 2, 130, 0) ${props.load}%);`} 
@@ -200,19 +203,266 @@ const LoadingProcess = styled.div`
   }
 `;
 
-const SectionInvolved = ({ dataInvolved }) => {
-  const [toggleCard, setToggleCard] = useState({});
+const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
+  const [toggleCard, setToggleCard] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
+  const [messageLoad, setMessageLoad] = useState("En formulario");
 
-  useEffect(() => {
-    if (isEmpty(dataInvolved) === false) {
-      const objectState = {};
-      dataInvolved.forEach((element) => {
-        objectState[element.idUserInRequest] = false;
-      });
-      setToggleCard(objectState);
-    }
-  }, [dataInvolved]);
+  const handlerOnClickForm = (path) => {
+    setIsLoadApi(true);
+    const channelName = "form_users_contract";
+    const channel = new BroadcastChannel(channelName);
+    const openForm = window.open(path, "_blank");
 
+    let intervalWindow = setInterval(() => {
+      if (openForm.closed === true) {
+        setIsLoadApi(false);
+        channel.close();
+        clearInterval(intervalWindow);
+        onGetDetail();
+      }
+    }, 2000);
+
+    channel.onmessage = (message) => {
+      if (message.data === "close_form_contract") {
+        clearInterval(intervalWindow);
+        openForm.close();
+        onGetDetail();
+        setTimeout(() => {
+          setIsLoadApi(false);
+        }, 1500);
+      }
+    };
+  };
+
+  return (
+    <Card>
+      <ComponentLoadSection
+        isLoadApi={isLoadApi}
+        text={messageLoad}
+        position="absolute"
+      >
+        <div className="all-content-pre-info">
+          <CardStatus color={row.idCustomerType === 1 ? "#46E6FD" : "#F3BF3A"}>
+            <div className="status-prospect">
+              <span>{row.customerType}</span>
+            </div>
+          </CardStatus>
+          <div className="card-user">
+            <div className="top-info">
+              <div className="icon-info">
+                <IconTenant size="100%" color="#4E4B66" />
+                <div className="score">
+                  <span>Score</span>
+                  <strong>N/A</strong>
+                </div>
+              </div>
+              <div className="name-info">
+                <h3>{row.fullName}</h3>
+                <u>{row.emailAddress}</u>
+                <span>{row.phoneNumber}</span>
+              </div>
+            </div>
+            {toggleCard === false && (
+              <div
+                className="button-action"
+                id={`user-applicant-canProcessInvitation-${
+                  isNil(row.idCustomer) === false ? row.idCustomer : ix
+                }`}
+              >
+                <ButtonDocument
+                  onClick={() => {
+                    setMessageLoad("En formulario");
+                    handlerOnClickForm(
+                      `/formUser/${idRequest}/${row.idUserInRequest}/${row.idCustomerType}`
+                    );
+                  }}
+                >
+                  Formulario
+                </ButtonDocument>
+                {row.canRequireResend === true && (
+                  <ButtonDocument
+                    onClick={async () => {
+                      const {
+                        idUserInRequest,
+                        idCustomerType,
+                        idPersonType,
+                        givenName,
+                        lastName,
+                        mothersMaidenName,
+                        idCountryNationality,
+                        emailAddress,
+                        idCountryPhoneNumber,
+                        idPhoneType,
+                        phoneNumber,
+                        isInfoProvidedByRequester,
+                        requiresVerification,
+                        isActive,
+                      } = row;
+                      try {
+                        setMessageLoad("Reenviando");
+                        setIsLoadApi(true);
+                        await onResend({
+                          idUserInRequest,
+                          idCustomerType,
+                          idPersonType,
+                          givenName,
+                          lastName,
+                          mothersMaidenName,
+                          idCountryNationality,
+                          emailAddress,
+                          idCountryPhoneNumber,
+                          idPhoneType,
+                          phoneNumber,
+                          isInfoProvidedByRequester,
+                          requiresVerification,
+                          isActive,
+                          requiresResend: true,
+                        });
+                        setIsLoadApi(false);
+                      } catch (error) {
+                        setIsLoadApi(false);
+                      }
+                    }}
+                  >
+                    Reenviar
+                  </ButtonDocument>
+                )}
+              </div>
+            )}
+            <div className="toggle-card">
+              {toggleCard === false ? (
+                <ArrowDown2
+                  stroke="#200E32"
+                  width="1.5em"
+                  onClick={() => {
+                    setToggleCard(!toggleCard);
+                  }}
+                />
+              ) : (
+                <ArrowUp2
+                  stroke="#200E32"
+                  width="1.5em"
+                  onClick={() => {
+                    setToggleCard(!toggleCard);
+                  }}
+                />
+              )}
+            </div>
+          </div>
+        </div>
+        <ContentDetail visible={toggleCard}>
+          <p>
+            <strong>Proceso al:</strong>
+            <LoadingProcess load={row.percentDataCompleted}>
+              <span>{row.percentDataCompleted}%</span>
+            </LoadingProcess>
+          </p>
+          <p>
+            <span className="title-desc">Tipo de persona:</span>
+            <br />
+            <span className="value-desc">{row.personType}</span>
+          </p>
+          <p>
+            <span className="title-desc">Ingreso de información:</span>
+            <br />
+            <span className="value-desc">
+              {row.isInfoProvidedByRequester === true
+                ? "Elegiste ingresar la información"
+                : "Elegiste enviar formulario al usuario"}
+            </span>
+          </p>
+          <p>
+            <span className="title-desc">Información:</span>
+            <br />
+            <span className="value-desc">
+              {row.isConfirmed === true ? "Confirmada" : "Sin confirmar"}
+            </span>
+          </p>
+          <p>
+            <span className="title-desc">Estatus de correo enviado:</span>
+            <br />
+            <span className="value-desc">{row.emailStatus}</span>
+          </p>
+          {toggleCard === true && (
+            <div
+              className="button-action"
+              id={`user-applicant-canProcessInvitation-${
+                isNil(row.idCustomer) === false ? row.idCustomer : ix
+              }`}
+            >
+              <ButtonDocument
+                onClick={() => {
+                  setMessageLoad("En formulario");
+                  handlerOnClickForm(
+                    `/formUser/${idRequest}/${row.idUserInRequest}/${row.idCustomerType}`
+                  );
+                }}
+              >
+                Formulario
+              </ButtonDocument>
+              {row.canRequireResend === true && (
+                <ButtonDocument
+                  onClick={async () => {
+                    const {
+                      idUserInRequest,
+                      idCustomerType,
+                      idPersonType,
+                      givenName,
+                      lastName,
+                      mothersMaidenName,
+                      idCountryNationality,
+                      emailAddress,
+                      idCountryPhoneNumber,
+                      idPhoneType,
+                      phoneNumber,
+                      isInfoProvidedByRequester,
+                      requiresVerification,
+                      isActive,
+                    } = row;
+                    try {
+                      setMessageLoad("Reenviando");
+                      setIsLoadApi(true);
+                      await onResend({
+                        idUserInRequest,
+                        idCustomerType,
+                        idPersonType,
+                        givenName,
+                        lastName,
+                        mothersMaidenName,
+                        idCountryNationality,
+                        emailAddress,
+                        idCountryPhoneNumber,
+                        idPhoneType,
+                        phoneNumber,
+                        isInfoProvidedByRequester,
+                        requiresVerification,
+                        isActive,
+                        requiresResend: true,
+                      });
+                      setIsLoadApi(false);
+                    } catch (error) {
+                      setIsLoadApi(false);
+                    }
+                  }}
+                >
+                  Reenviar
+                </ButtonDocument>
+              )}
+            </div>
+          )}
+        </ContentDetail>
+      </ComponentLoadSection>
+    </Card>
+  );
+};
+
+const SectionInvolved = ({
+  dataInvolved,
+  idRequest,
+  onGetDetail,
+  onResend,
+}) => {
   return (
     <GeneralCard>
       <div className="header-title">
@@ -222,121 +472,13 @@ const SectionInvolved = ({ dataInvolved }) => {
         {isEmpty(dataInvolved) === false &&
           dataInvolved.map((row, ix) => {
             return (
-              <Card>
-                <div className="all-content-pre-info">
-                  <CardStatus
-                    color={row.idCustomerType === 1 ? "#46E6FD" : "#F3BF3A"}
-                  >
-                    <div className="status-prospect">
-                      <span>{row.customerType}</span>
-                    </div>
-                  </CardStatus>
-                  <div className="card-user">
-                    <div className="top-info">
-                      <div className="icon-info">
-                        <IconTenant size="100%" color="#4E4B66" />
-                        <div className="score">
-                          <span>Score</span>
-                          <strong>N/A</strong>
-                        </div>
-                      </div>
-                      <div className="name-info">
-                        <h3>{row.fullName}</h3>
-                        <u>{row.emailAddress}</u>
-                        <span>{row.phoneNumber}</span>
-                      </div>
-                    </div>
-                    {toggleCard[row.idUserInRequest] === false && (
-                      <div
-                        className="button-action"
-                        id={`user-applicant-canProcessInvitation-${
-                          isNil(row.idCustomer) === false ? row.idCustomer : ix
-                        }`}
-                      >
-                        <ButtonDocument onClick={() => {}}>
-                          Eliminar
-                        </ButtonDocument>
-                        <ButtonDocument
-                          onClick={async () => {
-                            try {
-                            } catch (error) {}
-                          }}
-                        >
-                          Reenviar
-                        </ButtonDocument>
-                      </div>
-                    )}
-                    <div className="toggle-card">
-                      {toggleCard[row.idUserInRequest] === false ? (
-                        <ArrowDown2
-                          stroke="#200E32"
-                          width="1.5em"
-                          onClick={() => {
-                            setToggleCard({
-                              ...toggleCard,
-                              [row.idUserInRequest]:
-                                !toggleCard[row.idUserInRequest],
-                            });
-                          }}
-                        />
-                      ) : (
-                        <ArrowUp2
-                          stroke="#200E32"
-                          width="1.5em"
-                          onClick={() => {
-                            setToggleCard({
-                              ...toggleCard,
-                              [row.idUserInRequest]:
-                                !toggleCard[row.idUserInRequest],
-                            });
-                          }}
-                        />
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <ContentDetail visible={toggleCard[row.idUserInRequest]}>
-                  <p>
-                    <span className="title-desc">Tipo de persona:</span>
-                    <br />
-                    <span className="value-desc">{row.personType}</span>
-                  </p>
-                  <p>
-                    <span className="title-desc">
-                      Estatus de correo enviado:
-                    </span>
-                    <br />
-                    <span className="value-desc">{row.emailStatus}</span>
-                  </p>
-                  <p>
-                    <strong>Proceso al:</strong>
-                    <LoadingProcess load={row.percentDataCompleted}>
-                      <span>{row.percentDataCompleted}%</span>
-                    </LoadingProcess>
-                  </p>
-
-                  {toggleCard[row.idUserInRequest] === true && (
-                    <div
-                      className="button-action"
-                      id={`user-applicant-canProcessInvitation-${
-                        isNil(row.idCustomer) === false ? row.idCustomer : ix
-                      }`}
-                    >
-                      <ButtonDocument onClick={() => {}}>
-                        Eliminar
-                      </ButtonDocument>
-                      <ButtonDocument
-                        onClick={async () => {
-                          try {
-                          } catch (error) {}
-                        }}
-                      >
-                        Reenviar
-                      </ButtonDocument>
-                    </div>
-                  )}
-                </ContentDetail>
-              </Card>
+              <CardInvolved
+                idRequest={idRequest}
+                row={row}
+                ix={ix}
+                onGetDetail={onGetDetail}
+                onResend={onResend}
+              />
             );
           })}
       </div>

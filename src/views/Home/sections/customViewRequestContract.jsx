@@ -33,10 +33,14 @@ import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const CustomViewRequestContract = ({
   visibleDialog,
+  idRequest = null,
   onClose,
   dataProfile,
   callGlobalActionApi,
+  isEditable = false,
+  dataDetail = {},
   onConfirmOk = () => {},
+  history,
 }) => {
   const stepInit = 1;
   const stepContractInfo = 2;
@@ -87,9 +91,12 @@ const CustomViewRequestContract = ({
     isInfoProvidedByRequester: null,
     requiresVerification: null,
   };
-  const [visibleSection, setVisibleSection] = useState(stepInit);
+  const [visibleSection, setVisibleSection] = useState(
+    isEditable === false ? stepInit : stepContractInfo
+  );
   const [hasProperty, setHasProperty] = useState(null);
   const [dataForm, setDataForm] = useState(initState);
+  const [requestId, setRequestId] = useState(null);
   const [dataOwner, setDataOwner] = useState(initStateOwner);
   const [dataTenant, setDataTenant] = useState(initStateTenant);
   const [dataProperty, setDataProperty] = useState([]);
@@ -156,6 +163,7 @@ const CustomViewRequestContract = ({
         request: responseInfoRequest,
         payment: responseInfoPayment,
       });
+      setRequestId(id);
     } catch (error) {
       throw error;
     }
@@ -183,6 +191,7 @@ const CustomViewRequestContract = ({
         isNil(responseResult.idRequest) === false
           ? responseResult.idRequest
           : null;
+
       await handlerCallGetRequestById(idRequest);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
@@ -275,6 +284,47 @@ const CustomViewRequestContract = ({
           setIsLoadApi(false);
         }, 1500);
       }
+      if (message.data === "payment_succesed") {
+        clearInterval(intervalWindow);
+        openPayment.close();
+        setTimeout(() => {
+          setIsLoadApi(false);
+        }, 1500);
+
+        if (
+          dataOwner.isInfoProvidedByRequester === false &&
+          dataTenant.isInfoProvidedByRequester === false
+        ) {
+          history.push(`/websystem/detalle-contrato-generado/${requestId}`);
+        } else if (
+          dataOwner.isInfoProvidedByRequester === true &&
+          dataTenant.isInfoProvidedByRequester === false
+        ) {
+          setIsVisibleSection(false);
+          setTimeout(() => {
+            setVisibleSection(stepFormOwner);
+            setIsVisibleSection(true);
+          }, 1000);
+        } else if (
+          dataOwner.isInfoProvidedByRequester === false &&
+          dataTenant.isInfoProvidedByRequester === true
+        ) {
+          setIsVisibleSection(false);
+          setTimeout(() => {
+            setVisibleSection(stepFormTenant);
+            setIsVisibleSection(true);
+          }, 1000);
+        } else if (
+          dataOwner.isInfoProvidedByRequester === true &&
+          dataTenant.isInfoProvidedByRequester === true
+        ) {
+          setIsVisibleSection(false);
+          setTimeout(() => {
+            setVisibleSection(stepFormOwner);
+            setIsVisibleSection(true);
+          }, 1000);
+        }
+      }
     };
   };
 
@@ -289,7 +339,6 @@ const CustomViewRequestContract = ({
       requiresVerification,
     } = data;
     if (
-      isNil(idCountryNationality) === false &&
       isNil(givenName) === false &&
       isEmpty(givenName) === false &&
       isNil(lastName) === false &&
@@ -298,7 +347,7 @@ const CustomViewRequestContract = ({
       isNil(requiresVerification) === false
     ) {
       if (
-        dataForm.isFaceToFace === "1" &&
+        (dataForm.isFaceToFace === "1" || dataForm.isFaceToFace === true) &&
         isInfoProvidedByRequester === false
       ) {
         if (isNil(emailAddress) === false && isEmpty(emailAddress) === false) {
@@ -318,7 +367,7 @@ const CustomViewRequestContract = ({
           }, 5000);
         }
       } else if (
-        dataForm.isFaceToFace === "1" &&
+        (dataForm.isFaceToFace === "1" || dataForm.isFaceToFace === true) &&
         isInfoProvidedByRequester === true
       ) {
         setDataForm({
@@ -330,7 +379,10 @@ const CustomViewRequestContract = ({
           setVisibleSection(goTo);
           setIsVisibleSection(true);
         }, 1000);
-      } else if (dataForm.isFaceToFace === "2") {
+      } else if (
+        dataForm.isFaceToFace === "2" ||
+        dataForm.isFaceToFace === false
+      ) {
         if (isNil(emailAddress) === false && isEmpty(emailAddress) === false) {
           setDataForm({
             ...dataForm,
@@ -359,10 +411,13 @@ const CustomViewRequestContract = ({
   const handlerConfirmInformation = async () => {
     try {
       const dataRequest = {
-        idRequest: null,
+        idRequest,
         startedAt: dataForm.startedAt,
         scheduleAt: dataForm.scheduleAt,
-        isFaceToFace: dataForm.isFaceToFace === "1" ? true : false,
+        isFaceToFace:
+          dataForm.isFaceToFace === "1" || dataForm.isFaceToFace === true
+            ? true
+            : false,
         jsonUserImplicated: JSON.stringify(dataForm.jsonUserImplicated),
         idProperty:
           hasProperty === true && isNil(selectProperty.id) === false
@@ -384,46 +439,15 @@ const CustomViewRequestContract = ({
       setIsLoadApi(false);
       setIsVisibleSection(false);
       setTimeout(() => {
-        setVisibleSection(stepPayment);
-        setIsVisibleSection(true);
+        if (isEditable === false) {
+          setVisibleSection(stepPayment);
+          setIsVisibleSection(true);
+        } else {
+          setVisibleSection(stepContractInfo);
+          onClose();
+          setIsVisibleSection(true);
+        }
       }, 1000);
-      // if (
-      //   dataOwner.isInfoProvidedByRequester === false &&
-      //   dataTenant.isInfoProvidedByRequester === false
-      // ) {
-      //   setIsVisibleSection(false);
-      //   setTimeout(() => {
-      //     setVisibleSection(stepPayment);
-      //     setIsVisibleSection(true);
-      //   }, 1000);
-      // } else if (
-      //   dataOwner.isInfoProvidedByRequester === true &&
-      //   dataTenant.isInfoProvidedByRequester === false
-      // ) {
-      //   setIsVisibleSection(false);
-      //   setTimeout(() => {
-      //     setVisibleSection(stepFormOwner);
-      //     setIsVisibleSection(true);
-      //   }, 1000);
-      // } else if (
-      //   dataOwner.isInfoProvidedByRequester === false &&
-      //   dataTenant.isInfoProvidedByRequester === true
-      // ) {
-      //   setIsVisibleSection(false);
-      //   setTimeout(() => {
-      //     setVisibleSection(stepFormTenant);
-      //     setIsVisibleSection(true);
-      //   }, 1000);
-      // } else if (
-      //   dataOwner.isInfoProvidedByRequester === true &&
-      //   dataTenant.isInfoProvidedByRequester === true
-      // ) {
-      //   setIsVisibleSection(false);
-      //   setTimeout(() => {
-      //     setVisibleSection(stepFormOwner);
-      //     setIsVisibleSection(true);
-      //   }, 1000);
-      // }
     } catch (error) {
       setIsLoadApi(false);
     }
@@ -432,6 +456,91 @@ const CustomViewRequestContract = ({
   useEffect(() => {
     handlerCallGetAllProperties();
   }, []);
+
+  useEffect(() => {
+    if (isEmpty(dataDetail) === false && isEditable === true) {
+      const {
+        startedAt,
+        scheduleAt,
+        isFaceToFace,
+        jsonUserImplicated,
+        requiresLegalAdvice,
+      } = dataDetail;
+      let infoOwner = {};
+      let infoTenant = {};
+      const userImplicated =
+        isEmpty(jsonUserImplicated) === false
+          ? JSON.parse(jsonUserImplicated)
+          : [];
+      userImplicated.forEach((element) => {
+        const {
+          idCountryNationality,
+          idUserInRequest,
+          idCustomerType,
+          idPersonType,
+          givenName,
+          lastName,
+          mothersMaidenName,
+          emailAddress,
+          idCountryPhoneNumber,
+          idPhoneType,
+          phoneNumber,
+          isInfoProvidedByRequester,
+          requiresVerification,
+        } = element;
+        if (element.idCustomerType === 2) {
+          infoOwner = {
+            idCountryNationality,
+            idUserInRequest,
+            idCustomerType,
+            idPersonType,
+            givenName,
+            lastName,
+            mothersMaidenName,
+            emailAddress,
+            idCountryPhoneNumber,
+            idPhoneType,
+            phoneNumber,
+            isInfoProvidedByRequester,
+            requiresVerification,
+          };
+        }
+        if (element.idCustomerType === 1) {
+          infoTenant = {
+            idCountryNationality,
+            idUserInRequest,
+            idCustomerType,
+            idPersonType,
+            givenName,
+            lastName,
+            mothersMaidenName,
+            emailAddress,
+            idCountryPhoneNumber,
+            idPhoneType,
+            phoneNumber,
+            isInfoProvidedByRequester,
+            requiresVerification,
+          };
+        }
+      });
+
+      setDataOwner(infoOwner);
+      setDataTenant(infoTenant);
+      setDataForm({
+        ...dataForm,
+        startedAt:
+          isEmpty(startedAt) === false && isNil(startedAt) === false
+            ? moment(startedAt).format("YYYY-MM-DD")
+            : null,
+        scheduleAt:
+          isEmpty(scheduleAt) === false && isNil(scheduleAt) === false
+            ? moment(scheduleAt, "YYYY-MM-DDThh:mm").format("YYYY-MM-DDThh:mm")
+            : null,
+        isFaceToFace,
+        requiresLegalAdvice,
+      });
+    }
+  }, [dataDetail]);
   return (
     <CustomDialog
       isVisibleDialog={visibleDialog}
@@ -443,12 +552,14 @@ const CustomViewRequestContract = ({
           position: "absolute",
           right: "1em",
           top: "5px",
+          zIndex: "2",
         }}
       >
         <button
           style={{
             background: "transparent",
             border: "none",
+            cursor: "pointer",
           }}
           onClick={onClose}
         >
@@ -1101,7 +1212,10 @@ const CustomViewRequestContract = ({
                 <div>
                   <span>Firma: </span>
                   <strong>
-                    {dataForm.isFaceToFace == "1" ? "Presencial" : "En linea"}
+                    {dataForm.isFaceToFace == "1" ||
+                    dataForm.isFaceToFace == true
+                      ? "Presencial"
+                      : "En linea"}
                   </strong>
                 </div>
               </p>
