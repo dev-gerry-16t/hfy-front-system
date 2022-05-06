@@ -241,6 +241,7 @@ const HomeAgent = (props) => {
           onClose={() => {
             setVisibleComponent(null);
           }}
+          history={history}
         />
         <div className="main-cards">
           {catalogHome.map((row, ix) => {

@@ -11,6 +11,7 @@ import { callGlobalActionApi } from "../../utils/actions/actions";
 import { IconEditSquare } from "../../assets/iconSvg";
 import { ReactComponent as IconSearch } from "../../assets/iconSvg/svgFile/Search.svg";
 import CustomViewRequestContract from "../Home/sections/customViewRequestContract";
+import ComponentLoadSection from "../../components/componentLoadSection";
 
 const Content = styled.div`
   font-size: 16px;
@@ -100,6 +101,7 @@ const ButtonAdd = styled.button`
 
 const GenerateContracts = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
+  const [isLoadApi, setIsLoadApi] = useState(false);
   const [visibleComponent, setVisibleComponent] = useState(false);
   const [dataCoincidences, setDataCoincidences] = useState([]);
   const [valueSearch, setValueSearch] = useState(null);
@@ -158,6 +160,50 @@ const GenerateContracts = (props) => {
     }
   };
 
+  const handlerOnClickPayment = (idOrder) => {
+    setIsLoadApi(true);
+    const channelName = "payment_users_contract";
+    const channel = new BroadcastChannel(channelName);
+
+    const openPayment = window.open(
+      `/websystem/payment-service/${idOrder}`,
+      "targetWindow",
+      `scrollbars=yes,
+    resizable=yes,
+    width=360,
+    height=900`
+    );
+
+    let intervalWindow = setInterval(() => {
+      if (openPayment.closed === true) {
+        setIsLoadApi(false);
+        channel.close();
+        clearInterval(intervalWindow);
+      }
+    }, 2000);
+
+    channel.onmessage = (message) => {
+      if (message.data === "close_payment_contract") {
+        clearInterval(intervalWindow);
+        openPayment.close();
+        setTimeout(() => {
+          setIsLoadApi(false);
+        }, 1500);
+      }
+      if (message.data === "payment_succesed") {
+        clearInterval(intervalWindow);
+        openPayment.close();
+        setTimeout(() => {
+          setIsLoadApi(false);
+          handlerCallGetRequestCoincidences(
+            jsonConditionsState,
+            paginationState
+          );
+        }, 1500);
+      }
+    };
+  };
+
   useEffect(() => {
     handlerCallGetRequestCoincidences(jsonConditionsState, paginationState);
   }, []);
@@ -175,6 +221,7 @@ const GenerateContracts = (props) => {
         onClose={() => {
           setVisibleComponent(false);
         }}
+        history={history}
       />
       <ContentFilter>
         <div className="filter-search">
@@ -241,105 +288,100 @@ const GenerateContracts = (props) => {
           </ButtonAdd>
         </div>
       </ContentFilter>
-      <ContentTable>
-        <div className="content-table">
-          <table>
-            <thead>
-              <tr>
-                <th>Propietario</th>
-                <th>Inquilino</th>
-                <th>Vigencia de contrato</th>
-                <th>Fecha de Firma</th>
-                <th>Estatus</th>
-                <th>Detalle</th>
-              </tr>
-            </thead>
-            <tbody>
-              {isEmpty(dataCoincidences) === false &&
-                dataCoincidences.map((row) => {
-                  return (
-                    <tr>
-                      <td>{row.ownerShortName}</td>
-                      <td>{row.tenantShortName}</td>
-                      <td>{row.contractTerm}</td>
-                      <td>
-                        {row.scheduleAtFormatted}{" "}
-                        <strong>
-                          {row.isFaceToFace === true
-                            ? "Presencial"
-                            : "En linea"}
-                        </strong>
-                      </td>
-                      <td style={{ textAlign: "center" }}>
-                        <div
+      <ComponentLoadSection isLoadApi={isLoadApi} text="Realizando pago">
+        <ContentTable>
+          <div className="content-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Propietario</th>
+                  <th>Inquilino</th>
+                  <th>Vigencia de contrato</th>
+                  <th>Fecha de Firma</th>
+                  <th>Estatus</th>
+                  <th>Detalle</th>
+                </tr>
+              </thead>
+              <tbody>
+                {isEmpty(dataCoincidences) === false &&
+                  dataCoincidences.map((row) => {
+                    return (
+                      <tr>
+                        <td>{row.ownerShortName}</td>
+                        <td>{row.tenantShortName}</td>
+                        <td>{row.contractTerm}</td>
+                        <td>
+                          {row.scheduleAtFormatted}{" "}
+                          <strong>
+                            {row.isFaceToFace === true
+                              ? "Presencial"
+                              : "En linea"}
+                          </strong>
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <div
+                            style={{
+                              background: row.style,
+                              color: "#fff",
+                              borderRadius: "5px",
+                              padding: "5px",
+                              width: "100%",
+                              cursor: "pointer",
+                            }}
+                            onClick={() => {
+                              if (row.requiresPymt === true) {
+                                handlerOnClickPayment(row.idOrderPayment);
+                              }
+                            }}
+                          >
+                            {row.requestStatus}
+                          </div>
+                        </td>
+                        <td
                           style={{
-                            background: row.style,
-                            color: "#fff",
-                            borderRadius: "5px",
-                            padding: "5px",
-                            width: "100%",
-                            cursor: "pointer",
+                            textAlign: "center",
                           }}
-                          onClick={() => {
-                            if (row.requiresPymt === true) {
-                              const openPayment = window.open(
-                                `/websystem/payment-service/${row.idOrderPayment}`,
-                                "targetWindow",
-                                `scrollbars=yes,
-                                resizable=yes,
-                                width=360,
-                                height=900`
+                        >
+                          <ButtonDetail
+                            onClick={() => {
+                              history.push(
+                                `/websystem/detalle-contrato-generado/${row.idRequest}`
                               );
-                            }
-                          }}
-                        >
-                          {row.requestStatus}
-                        </div>
-                      </td>
-                      <td
-                        style={{
-                          textAlign: "center",
-                        }}
-                      >
-                        <ButtonDetail
-                          onClick={() => {
-                            history.push(
-                              `/websystem/detalle-contrato-generado/${row.idRequest}`
-                            );
-                          }}
-                        >
-                          <IconEditSquare color="#000" size="16px" />
-                        </ButtonDetail>
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
-        </div>
-        <div className="content-pagination">
-          <Pagination
-            size="small"
-            current={currentPagination}
-            total={totalCoincidences}
-            pageSize={pageSize}
-            pageSizeOptions={[10, 20, 50, 100]}
-            onChange={(page, sizePage) => {
-              setCurrentPagination(page);
-              setPageSize(sizePage);
-              const objectConditions = JSON.stringify({
-                currentPage: page,
-                userConfig: sizePage,
-              });
-              setPaginationState(objectConditions);
-              handlerCallGetRequestCoincidences(
-                jsonConditionsState,
-                objectConditions
-              );
-            }}
-          />
-        </div>
-      </ContentTable>
+                            }}
+                          >
+                            <IconEditSquare color="#000" size="16px" />
+                          </ButtonDetail>
+                        </td>
+                      </tr>
+                    );
+                  })}
+              </tbody>
+            </table>
+          </div>
+          <div className="content-pagination">
+            <Pagination
+              size="small"
+              current={currentPagination}
+              total={totalCoincidences}
+              pageSize={pageSize}
+              pageSizeOptions={[10, 20, 50, 100]}
+              onChange={(page, sizePage) => {
+                setCurrentPagination(page);
+                setPageSize(sizePage);
+                const objectConditions = JSON.stringify({
+                  currentPage: page,
+                  userConfig: sizePage,
+                });
+                setPaginationState(objectConditions);
+                handlerCallGetRequestCoincidences(
+                  jsonConditionsState,
+                  objectConditions
+                );
+              }}
+            />
+          </div>
+        </ContentTable>
+      </ComponentLoadSection>
     </Content>
   );
 };

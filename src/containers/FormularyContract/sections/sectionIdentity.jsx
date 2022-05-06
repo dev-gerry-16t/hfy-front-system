@@ -174,8 +174,16 @@ const LoadSquare = styled.div`
   }
 `;
 
+const ButtonContinue = styled.button`
+  background: var(--color-primary);
+  color: #fff;
+  padding: 5px 1em;
+  border: none;
+  border-radius: 5px;
+`;
+
 const SectionIdentity = (props) => {
-  const { callGlobalActionApi, onClickNext } = props;
+  const { callGlobalActionApi, onClickNext, onUpdateInformation } = props;
 
   const [dataSelfieSrc, setDataSelifeSrc] = useState(null);
   const [dataOfficialIdFrontSrc, setDataOfficialIdFrontSrc] = useState(null);
@@ -219,6 +227,12 @@ const SectionIdentity = (props) => {
     };
   };
 
+  useEffect(() => {
+    if (isEmpty(dataFormSave) === false) {
+      setFinishVerification(!dataFormSave.hasMatiFlow);
+    }
+  }, [dataFormSave]);
+
   return (
     <ContentForm>
       <div className="header-title">
@@ -253,52 +267,77 @@ const SectionIdentity = (props) => {
             }}
           >
             {isEmpty(dataFormSave) === false &&
-              dataFormSave.hasMatiFlow === true && (
-                <LoadSquare>
-                  <div className="load-border">
-                    <span></span>
-                    <span></span>
+            dataFormSave.hasMatiFlow === true ? (
+              <LoadSquare>
+                <div className="load-border">
+                  <span></span>
+                  <span></span>
+                </div>
+                <div className="content-identity">
+                  <h1>
+                    {dataFormSave.requiresVerification === true ||
+                    dataFormSave.requiresVerification === 1
+                      ? "Identidad"
+                      : "Documentos"}
+                  </h1>
+                  <span>
+                    {dataFormSave.requiresVerification === true ||
+                    dataFormSave.requiresVerification === 1
+                      ? "Haz clic en el botón para iniciar con el proceso de verificación de identidad"
+                      : "Haz clic en el botón para subir los documentos de identidad necesarios para el proceso"}
+                  </span>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                    }}
+                  >
+                    <CustomReactMati
+                      clientId={dataFormSave.clientId}
+                      flowId={dataFormSave.matiFlowId}
+                      country="mx"
+                      loaded={() => {}}
+                      product="kyc"
+                      color={document.getElementsByTagName("body")[0].className}
+                      metadata={{
+                        idUserInRequest,
+                        idCustomer: dataFormSave.idCustomer,
+                      }}
+                      exited={() => {}}
+                      finished={() => {
+                        onUpdateInformation();
+                      }}
+                    />
                   </div>
-                  <div className="content-identity">
-                    <h1>
-                      {dataFormSave.requiresVerification === true ||
-                      dataFormSave.requiresVerification === 1
-                        ? "Identidad"
-                        : "Documentos"}
-                    </h1>
-                    <span>
-                      {dataFormSave.requiresVerification === true ||
-                      dataFormSave.requiresVerification === 1
-                        ? "Haz clic en el botón para iniciar con el proceso de verificación de identidad"
-                        : "Haz clic en el botón para subir los documentos de identidad necesarios para el proceso"}
-                    </span>
-                    <div
-                      style={{
-                        marginTop: "20px",
+                </div>
+              </LoadSquare>
+            ) : (
+              <LoadSquare>
+                <div className="load-border">
+                  <span></span>
+                  <span></span>
+                </div>
+                <div className="content-identity">
+                  <h1>Concluido</h1>
+                  <span>
+                    Haz clic en Continuar o Siguiente para continuar con tu
+                    proceso
+                  </span>
+                  <div
+                    style={{
+                      marginTop: "20px",
+                    }}
+                  >
+                    <ButtonContinue
+                      onClick={() => {
+                        onClickNext();
                       }}
                     >
-                      <CustomReactMati
-                        clientId={dataFormSave.clientId}
-                        flowId={dataFormSave.matiFlowId}
-                        country="mx"
-                        loaded={() => {}}
-                        product="kyc"
-                        color={
-                          document.getElementsByTagName("body")[0].className
-                        }
-                        metadata={{
-                          idUserInRequest,
-                          idCustomer: dataFormSave.idCustomer,
-                        }}
-                        exited={() => {}}
-                        finished={() => {
-                          setFinishVerification(true);
-                        }}
-                      />
-                    </div>
+                      Continuar
+                    </ButtonContinue>
                   </div>
-                </LoadSquare>
-              )}
+                </div>
+              </LoadSquare>
+            )}
           </div>
           {/* <AlignItems>
             {isEmpty(dataFormSave) === false &&

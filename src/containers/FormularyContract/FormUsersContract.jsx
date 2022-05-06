@@ -25,6 +25,34 @@ import SectionAddress from "./sections/sectionAddress";
 import SectionBankInfo from "./sections/sectionBankInfo";
 import ComponentPropsIncomplete from "./components/componentPropsIncomplete";
 import ComponentConfirmInformation from "./components/componentConfirmInformation";
+import ComponentLoadSection from "../../components/componentLoadSection";
+import SectionSignature from "./sections/sectionSignature";
+import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
+
+const ErrorMessage = styled.div`
+  position: absolute;
+  padding: 8px 0px;
+  background: #eb5757;
+  color: #fff;
+  left: -400px;
+  z-index: 1001;
+  padding: 5px 5px 5px 25px;
+  border-radius: 0px 6px 6px 0px;
+  font-size: 14px;
+  transition: all 0.5s ease-in;
+  width: fit-content;
+  display: flex;
+  .message-api {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  button {
+    border: none;
+    background: transparent;
+    margin-left: 20px;
+  }
+`;
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -69,6 +97,8 @@ const FormUsersContract = (props) => {
   const [dataIncomplete, setDataIncomplete] = useState([]);
   const [isOpenIncomplete, setIsOpenIncomplete] = useState(false);
   const [isOpenConfirm, setIsOpenConfirm] = useState(false);
+  const [isLoadApi, setIsLoadApi] = useState(false);
+  const [isVisibleSignature, setIsVisibleSignature] = useState(true);
 
   const frontFunctions = new FrontFunctions();
 
@@ -289,6 +319,12 @@ const FormUsersContract = (props) => {
 
   return (
     <Content>
+      <ErrorMessage id="error-message-api" visible={true}>
+        <div className="message-api">
+          <IconAlerMessage /> <span id="error-description"></span>{" "}
+        </div>
+        <button id="btn-action-error-message">X</button>
+      </ErrorMessage>
       <div
         style={{
           display: "flex",
@@ -296,7 +332,16 @@ const FormUsersContract = (props) => {
           marginBottom: "20px",
         }}
       >
-        <img src={LogoHomify} alt="" srcset="" width={100} />
+        <h1
+          style={{
+            fontWeight: "700",
+            fontSize: "1.5em",
+          }}
+        >
+          {dataForm.isDocAvail === false
+            ? "Formulario para Contrato de Arrendamiento"
+            : "Firma digital"}
+        </h1>
       </div>
       <ComponentPropsIncomplete
         data={dataIncomplete}
@@ -320,17 +365,7 @@ const FormUsersContract = (props) => {
           }
         }}
       />
-      <CustomStepsHomify
-        clickAble={false}
-        steps={dataTabs}
-        onClick={(ix, record) => {
-          setCurrent(ix);
-        }}
-        callBackFind={(record) => {
-          setDataConfigForm(record);
-        }}
-        current={current}
-      />
+
       <ContextForm.Provider
         value={{
           dataFormSave: dataForm,
@@ -352,60 +387,97 @@ const FormUsersContract = (props) => {
           },
         }}
       >
-        {dataConfigForm.identifier === 1 && (
-          <SectionIdentity
-            onClickNext={() => {
-              setCurrent(current + 1);
-            }}
-          />
+        {dataForm.isDocAvail === false && (
+          <>
+            <CustomStepsHomify
+              clickAble={false}
+              steps={dataTabs}
+              onClick={(ix, record) => {
+                setCurrent(ix);
+              }}
+              callBackFind={(record) => {
+                setDataConfigForm(record);
+              }}
+              current={current}
+            />
+            {dataConfigForm.identifier === 1 && (
+              <ComponentLoadSection
+                isLoadApi={isLoadApi}
+                text="Obteniendo información"
+                position="absolute"
+              >
+                <SectionIdentity
+                  onUpdateInformation={() => {
+                    setIsLoadApi(true);
+                    setTimeout(() => {
+                      if (idCustomerType === "2") {
+                        handlerCallGetOwnerById();
+                      }
+                      if (idCustomerType === "1") {
+                        handlerCallGetTenantById();
+                      }
+                      setIsLoadApi(false);
+                    }, 5000);
+                  }}
+                  onClickNext={() => {
+                    setCurrent(current + 1);
+                  }}
+                />
+              </ComponentLoadSection>
+            )}
+            {dataConfigForm.identifier === 2 && (
+              <SectionInfoOwner
+                onClickBack={() => {
+                  setCurrent(current - 1);
+                }}
+                onClickNext={() => {
+                  setCurrent(current + 1);
+                }}
+              />
+            )}
+            {dataConfigForm.identifier === 3 && (
+              <SectionAddress
+                onClickBack={() => {
+                  setCurrent(current - 1);
+                }}
+                onClickNext={() => {
+                  if (idCustomerType === "2") {
+                    setCurrent(current + 1);
+                  } else {
+                    handlerCallValidateProperties();
+                  }
+                }}
+              />
+            )}
+            {dataConfigForm.identifier === 4 && (
+              <SectionBankInfo
+                onClickBack={() => {
+                  setCurrent(current - 1);
+                }}
+                onClickNext={() => {
+                  handlerCallValidateProperties();
+                }}
+              />
+            )}
+          </>
         )}
-        {dataConfigForm.identifier === 2 && (
-          <SectionInfoOwner
-            onClickBack={() => {
-              setCurrent(current - 1);
-            }}
-            onClickNext={() => {
-              setCurrent(current + 1);
-            }}
-          />
-        )}
-        {dataConfigForm.identifier === 3 && (
-          <SectionAddress
-            onClickBack={() => {
-              setCurrent(current - 1);
-            }}
-            onClickNext={() => {
-              if (idCustomerType === "2") {
-                setCurrent(current + 1);
-              } else {
-                handlerCallValidateProperties();
-              }
-            }}
-          />
-        )}
-        {dataConfigForm.identifier === 4 && (
-          <SectionBankInfo
-            onClickBack={() => {
-              setCurrent(current - 1);
-            }}
-            onClickNext={() => {
-              handlerCallValidateProperties();
-            }}
-          />
-        )}
+        {dataForm.isDocAvail === true && <SectionSignature />}
       </ContextForm.Provider>
       <div
         style={{
           display: "flex",
           justifyContent: "center",
+          flexDirection: "column",
+          alignItems: "center",
+          marginTop: "2em",
         }}
       >
+        <img src={LogoHomify} alt="" srcset="" width={100} />
         <div
           style={{
             paddingTop: "20px",
             fontSize: 12,
             textAlign: "center",
-            width: "60%",
           }}
         >
           <span>

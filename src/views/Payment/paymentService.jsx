@@ -300,11 +300,53 @@ const PaymentsService = (props) => {
     }
   };
 
+  const handlerCallIsOPPaid = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    const { params } = match;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          idOrderPayment: params.idOrderPayment,
+        },
+        null,
+        API_CONSTANTS.EXTERNAL.IS_OP_PAID
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false
+          ? response.response[0][0]
+          : {};
+
+      return isEmpty(responseResult) === false &&
+        isNil(responseResult.isPaid) === false
+        ? responseResult.isPaid
+        : false;
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      return false;
+    }
+  };
+
   useEffect(() => {
-    const channelName = "form_users_contract";
+    const channelName = "payment_users_contract";
     channel = new BroadcastChannel(channelName);
     handlerCallGetOrderPaymentById();
     handlerGetCatalogGWtransaction();
+    let intervalPayment = setInterval(async () => {
+      const response = await handlerCallIsOPPaid();
+      if (response === true) {
+        clearInterval(intervalPayment);
+        channel.postMessage("payment_succesed");
+        channel.close();
+      }
+    }, 3000);
     if (window.screen.width <= 720) {
       setDataTab(dataTabsPaymentMethodMobile);
     }

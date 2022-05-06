@@ -31,7 +31,7 @@ const getEnviroment = () => {
   } else if (window.location.hostname === DOMAIN_WEB_LOCAL) {
     location = `${INSTANCE_LOCAL.API_PROTOCOL}${INSTANCE_LOCAL.DNS_API}:${INSTANCE_LOCAL.PORT}`;
   } else {
-    location = `${INSTANCE_TEST.API_PROTOCOL}${INSTANCE_TEST.DNS_API}`;
+    location = `${INSTANCE_LOCAL.API_PROTOCOL}${window.location.hostname}:${INSTANCE_LOCAL.PORT}`;
   }
 
   return location;

@@ -203,9 +203,10 @@ const LoadingProcess = styled.div`
   }
 `;
 
-const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
+const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
+  const [messageLoad, setMessageLoad] = useState("En formulario");
 
   const handlerOnClickForm = (path) => {
     setIsLoadApi(true);
@@ -238,7 +239,7 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
     <Card>
       <ComponentLoadSection
         isLoadApi={isLoadApi}
-        text="En formulario"
+        text={messageLoad}
         position="absolute"
       >
         <div className="all-content-pre-info">
@@ -271,6 +272,7 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
               >
                 <ButtonDocument
                   onClick={() => {
+                    setMessageLoad("En formulario");
                     handlerOnClickForm(
                       `/formUser/${idRequest}/${row.idUserInRequest}/${row.idCustomerType}`
                     );
@@ -278,14 +280,54 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
                 >
                   Formulario
                 </ButtonDocument>
-                <ButtonDocument
-                  onClick={async () => {
-                    try {
-                    } catch (error) {}
-                  }}
-                >
-                  Reenviar
-                </ButtonDocument>
+                {row.canRequireResend === true && (
+                  <ButtonDocument
+                    onClick={async () => {
+                      const {
+                        idUserInRequest,
+                        idCustomerType,
+                        idPersonType,
+                        givenName,
+                        lastName,
+                        mothersMaidenName,
+                        idCountryNationality,
+                        emailAddress,
+                        idCountryPhoneNumber,
+                        idPhoneType,
+                        phoneNumber,
+                        isInfoProvidedByRequester,
+                        requiresVerification,
+                        isActive,
+                      } = row;
+                      try {
+                        setMessageLoad("Reenviando");
+                        setIsLoadApi(true);
+                        await onResend({
+                          idUserInRequest,
+                          idCustomerType,
+                          idPersonType,
+                          givenName,
+                          lastName,
+                          mothersMaidenName,
+                          idCountryNationality,
+                          emailAddress,
+                          idCountryPhoneNumber,
+                          idPhoneType,
+                          phoneNumber,
+                          isInfoProvidedByRequester,
+                          requiresVerification,
+                          isActive,
+                          requiresResend: true,
+                        });
+                        setIsLoadApi(false);
+                      } catch (error) {
+                        setIsLoadApi(false);
+                      }
+                    }}
+                  >
+                    Reenviar
+                  </ButtonDocument>
+                )}
               </div>
             )}
             <div className="toggle-card">
@@ -311,22 +353,37 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
         </div>
         <ContentDetail visible={toggleCard}>
           <p>
+            <strong>Proceso al:</strong>
+            <LoadingProcess load={row.percentDataCompleted}>
+              <span>{row.percentDataCompleted}%</span>
+            </LoadingProcess>
+          </p>
+          <p>
             <span className="title-desc">Tipo de persona:</span>
             <br />
             <span className="value-desc">{row.personType}</span>
+          </p>
+          <p>
+            <span className="title-desc">Ingreso de información:</span>
+            <br />
+            <span className="value-desc">
+              {row.isInfoProvidedByRequester === true
+                ? "Elegiste ingresar la información"
+                : "Elegiste enviar formulario al usuario"}
+            </span>
+          </p>
+          <p>
+            <span className="title-desc">Información:</span>
+            <br />
+            <span className="value-desc">
+              {row.isConfirmed === true ? "Confirmada" : "Sin confirmar"}
+            </span>
           </p>
           <p>
             <span className="title-desc">Estatus de correo enviado:</span>
             <br />
             <span className="value-desc">{row.emailStatus}</span>
           </p>
-          <p>
-            <strong>Proceso al:</strong>
-            <LoadingProcess load={row.percentDataCompleted}>
-              <span>{row.percentDataCompleted}%</span>
-            </LoadingProcess>
-          </p>
-
           {toggleCard === true && (
             <div
               className="button-action"
@@ -336,6 +393,7 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
             >
               <ButtonDocument
                 onClick={() => {
+                  setMessageLoad("En formulario");
                   handlerOnClickForm(
                     `/formUser/${idRequest}/${row.idUserInRequest}/${row.idCustomerType}`
                   );
@@ -343,14 +401,54 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
               >
                 Formulario
               </ButtonDocument>
-              <ButtonDocument
-                onClick={async () => {
-                  try {
-                  } catch (error) {}
-                }}
-              >
-                Reenviar
-              </ButtonDocument>
+              {row.canRequireResend === true && (
+                <ButtonDocument
+                  onClick={async () => {
+                    const {
+                      idUserInRequest,
+                      idCustomerType,
+                      idPersonType,
+                      givenName,
+                      lastName,
+                      mothersMaidenName,
+                      idCountryNationality,
+                      emailAddress,
+                      idCountryPhoneNumber,
+                      idPhoneType,
+                      phoneNumber,
+                      isInfoProvidedByRequester,
+                      requiresVerification,
+                      isActive,
+                    } = row;
+                    try {
+                      setMessageLoad("Reenviando");
+                      setIsLoadApi(true);
+                      await onResend({
+                        idUserInRequest,
+                        idCustomerType,
+                        idPersonType,
+                        givenName,
+                        lastName,
+                        mothersMaidenName,
+                        idCountryNationality,
+                        emailAddress,
+                        idCountryPhoneNumber,
+                        idPhoneType,
+                        phoneNumber,
+                        isInfoProvidedByRequester,
+                        requiresVerification,
+                        isActive,
+                        requiresResend: true,
+                      });
+                      setIsLoadApi(false);
+                    } catch (error) {
+                      setIsLoadApi(false);
+                    }
+                  }}
+                >
+                  Reenviar
+                </ButtonDocument>
+              )}
             </div>
           )}
         </ContentDetail>
@@ -359,7 +457,12 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail }) => {
   );
 };
 
-const SectionInvolved = ({ dataInvolved, idRequest, onGetDetail }) => {
+const SectionInvolved = ({
+  dataInvolved,
+  idRequest,
+  onGetDetail,
+  onResend,
+}) => {
   return (
     <GeneralCard>
       <div className="header-title">
@@ -374,6 +477,7 @@ const SectionInvolved = ({ dataInvolved, idRequest, onGetDetail }) => {
                 row={row}
                 ix={ix}
                 onGetDetail={onGetDetail}
+                onResend={onResend}
               />
             );
           })}
