@@ -20,6 +20,9 @@ const Content = styled.div`
   min-height: 90vh;
   overflow-y: scroll;
   padding: 1em;
+  @media screen and (max-width: 360px) {
+    padding: 1em 2px;
+  }
 `;
 
 const ContentFilter = styled.div`
@@ -57,6 +60,16 @@ const ContentFilter = styled.div`
     display: flex;
     justify-content: flex-end;
   }
+  @media screen and (max-width: 560px) {
+    grid-template-columns: 1fr;
+    row-gap: 1em;
+    .filter-search {
+      justify-content: center;
+    }
+    .filter-add-new {
+      justify-content: center;
+    }
+  }
 `;
 
 const ContentTable = styled.div`
@@ -64,6 +77,7 @@ const ContentTable = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 0.5em;
   .content-table {
+    overflow-x: scroll;
     table {
       width: 100%;
       tr,

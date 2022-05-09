@@ -46,6 +46,16 @@ const GeneralCard = styled.div`
       }
     }
   }
+  @media screen and (max-width: 420px) {
+    width: 100%;
+    min-width: auto;
+    .content-cards {
+    padding: 2em 5px;
+
+  }
+
+  }
+
 `;
 
 const Card = styled.div`
