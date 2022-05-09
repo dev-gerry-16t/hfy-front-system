@@ -28,6 +28,7 @@ import ComponentConfirmInformation from "./components/componentConfirmInformatio
 import ComponentLoadSection from "../../components/componentLoadSection";
 import SectionSignature from "./sections/sectionSignature";
 import { ReactComponent as IconAlerMessage } from "../../assets/iconSvg/svgFile/iconAlertMessage.svg";
+import { ReactComponent as IconPaymentCheck } from "../../assets/iconSvg/svgFile/iconPaymentCheck.svg";
 
 const ErrorMessage = styled.div`
   position: absolute;
@@ -65,6 +66,23 @@ const Content = styled.div`
   @media screen and (max-width: 420px) {
     font-size: 12px;
     padding: 1em 5px;
+  }
+`;
+
+const ConfirmedInformation = styled.div`
+  background: #fff;
+  text-align: center;
+  box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
+  padding: 1em 0px;
+
+  .icon-success-Info{}
+
+  h1 {
+    font-size: 1.2em;
+    font-weight: 700;
+    span {
+      color: var(--color-primary);
+    }
   }
 `;
 
@@ -317,6 +335,11 @@ const FormUsersContract = (props) => {
     }
   }, []);
 
+  //   isConfirmed===true isDocAvail===false  -> Muestro pantalla de finalización
+  // isConfirmed===false isDocAvail===true -> No se muestra nada
+  // isConfirmed===false isDocAvail===false -> Fomulario
+  // isConfirmed===true  isDocAvail===true -> Documentos
+
   return (
     <Content>
       <ErrorMessage id="error-message-api" visible={true}>
@@ -387,7 +410,7 @@ const FormUsersContract = (props) => {
           },
         }}
       >
-        {dataForm.isDocAvail === false && (
+        {dataForm.isDocAvail === false && dataForm.isConfirmed === false && (
           <>
             <CustomStepsHomify
               clickAble={false}
@@ -460,6 +483,20 @@ const FormUsersContract = (props) => {
               />
             )}
           </>
+        )}
+        {dataForm.isDocAvail === false && dataForm.isConfirmed === true && (
+          <ConfirmedInformation>
+            <h1>
+              Información <span>completada con éxito</span>
+            </h1>
+            <div className="icon-success-Info">
+              <IconPaymentCheck />
+            </div>
+            <span>
+              Pronto podrás ver tus documentos disponibles, te avisaremos por
+              medio de un correo cuando estén listos.
+            </span>
+          </ConfirmedInformation>
         )}
         {dataForm.isDocAvail === true && <SectionSignature />}
       </ContextForm.Provider>

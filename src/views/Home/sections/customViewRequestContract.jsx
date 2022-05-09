@@ -711,25 +711,6 @@ const CustomViewRequestContract = ({
               </Row>
               <Row>
                 <Col span={24}>
-                  <CustomInputTypeForm
-                    value={dataForm.scheduleAt}
-                    placeholder="dd-mm-yy"
-                    label="¿Cuando se firma el contrato de arrendamiento?"
-                    error={false}
-                    errorMessage="Este campo es requerido"
-                    onChange={(value) => {
-                      setDataForm({
-                        ...dataForm,
-                        scheduleAt: isEmpty(value) === false ? value : null,
-                      });
-                    }}
-                    type="datetime-local"
-                    isBlock={false}
-                  />
-                </Col>
-              </Row>
-              <Row>
-                <Col span={24}>
                   <CustomSelect
                     value={dataForm.isFaceToFace}
                     placeholder=""
@@ -750,6 +731,28 @@ const CustomViewRequestContract = ({
                   />
                 </Col>
               </Row>
+              {(dataForm.isFaceToFace === true ||
+                dataForm.isFaceToFace == "1") && (
+                <Row>
+                  <Col span={24}>
+                    <CustomInputTypeForm
+                      value={dataForm.scheduleAt}
+                      placeholder="dd-mm-yy"
+                      label="¿Cuando se firma el contrato de arrendamiento?"
+                      error={false}
+                      errorMessage="Este campo es requerido"
+                      onChange={(value) => {
+                        setDataForm({
+                          ...dataForm,
+                          scheduleAt: isEmpty(value) === false ? value : null,
+                        });
+                      }}
+                      type="datetime-local"
+                      isBlock={false}
+                    />
+                  </Col>
+                </Row>
+              )}
             </div>
             <ErrorMessage error={isVisibleError}>
               <img src={saqareX} alt="exclaim" />
@@ -759,10 +762,9 @@ const CustomViewRequestContract = ({
               <button
                 className="hfy-primary-button"
                 onClick={() => {
-                  const { startedAt, scheduleAt, isFaceToFace } = dataForm;
+                  const { startedAt, isFaceToFace } = dataForm;
                   if (
                     isNil(startedAt) === false &&
-                    isNil(scheduleAt) === false &&
                     isNil(isFaceToFace) === false
                   ) {
                     setIsVisibleSection(false);
