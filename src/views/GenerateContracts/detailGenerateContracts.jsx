@@ -64,6 +64,19 @@ const Content = styled.div`
   .agent-legal {
     grid-area: agent;
   }
+
+  @media screen and (max-width: 1024px) {
+    grid-template-areas:
+      "edit edit edit edit"
+      "payment payment payment payment"
+      "detail detail detail detail"
+      "users users users users"
+      "documents documents documents documents"
+      "agent agent agent agent";
+  }
+  @media screen and (max-width: 420px) {
+    padding: 1em 5px;
+  }
 `;
 
 const ContentEdit = styled.div`
@@ -291,7 +304,6 @@ const DetailGenerateContracts = (props) => {
           }}
         />
       </div>
-      <div></div>
       <div className="detail-property">
         <SectionDetailContract
           frontFunctions={frontFunctions}
