@@ -79,7 +79,7 @@ const Card = styled.div`
       .name-info {
         font-size: 0.9em;
         line-height: 1.4em;
-        max-width: 192px;
+        max-width: 250px;
 
         h3 {
           margin: 0px;

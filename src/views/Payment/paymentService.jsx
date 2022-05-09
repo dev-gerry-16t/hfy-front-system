@@ -346,7 +346,7 @@ const PaymentsService = (props) => {
         channel.postMessage("payment_succesed");
         channel.close();
       }
-    }, 3000);
+    }, 5000);
     if (window.screen.width <= 720) {
       setDataTab(dataTabsPaymentMethodMobile);
     }
