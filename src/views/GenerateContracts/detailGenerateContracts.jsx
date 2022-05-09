@@ -219,7 +219,7 @@ const DetailGenerateContracts = (props) => {
   };
 
   const getDataInfoLegalUser = (data) => {
-    const dataUser = JSON.parse(data);
+    const dataUser = JSON.parse(data)[0];
     return (
       <Card>
         <div className="card-user">
@@ -229,6 +229,7 @@ const DetailGenerateContracts = (props) => {
             </div>
             <div className="name-info">
               <h3>{dataUser.attorney}</h3>
+              <span>Cód. de Serv. {dataUser.codeId}</span>
               <span>{dataUser.email}</span>
               <span>{dataUser.phoneFormatted}</span>
               <span>

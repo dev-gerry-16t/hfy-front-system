@@ -98,6 +98,7 @@ const SectionInfoOwner = ({
         taxId,
         citizenId,
         idTypeNumber,
+        idType,
       } = dataFormSave;
       setDataForm({
         ...dataForm,
@@ -108,6 +109,7 @@ const SectionInfoOwner = ({
         taxId,
         citizenId,
         idTypeNumber,
+        idType,
       });
     }
   }, [dataFormSave]);
