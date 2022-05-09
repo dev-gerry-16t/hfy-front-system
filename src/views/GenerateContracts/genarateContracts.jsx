@@ -8,7 +8,7 @@ import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import { callGlobalActionApi } from "../../utils/actions/actions";
-import { IconEditSquare } from "../../assets/iconSvg";
+import { IconEditSquare, IconDelete } from "../../assets/iconSvg";
 import { ReactComponent as IconSearch } from "../../assets/iconSvg/svgFile/Search.svg";
 import CustomViewRequestContract from "../Home/sections/customViewRequestContract";
 import ComponentLoadSection from "../../components/componentLoadSection";
@@ -174,6 +174,41 @@ const GenerateContracts = (props) => {
     }
   };
 
+  const handlerCallSetRequest = async (data, id) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idRequest: id,
+          idCustomer,
+          idLoginHistory,
+          ...data,
+        },
+        idSystemUser,
+        API_CONSTANTS.EXTERNAL.SET_REQUEST,
+        "PUT"
+      );
+      const responseResult =
+        isEmpty(response) === false && isNil(response.response) === false
+          ? response.response
+          : {};
+
+      frontFunctions.showMessageStatusApi(
+        isEmpty(responseResult) === false &&
+          isNil(responseResult.message) === false
+          ? responseResult.message
+          : "Petición ejecutada con éxito",
+        GLOBAL_CONSTANTS.STATUS_API.SUCCESS
+      );
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
+
   const handlerOnClickPayment = (idOrder) => {
     setIsLoadApi(true);
     const channelName = "payment_users_contract";
@@ -314,6 +349,7 @@ const GenerateContracts = (props) => {
                   <th>Fecha de Firma</th>
                   <th>Estatus</th>
                   <th>Detalle</th>
+                  <th>Eliminar</th>
                 </tr>
               </thead>
               <tbody>
@@ -364,6 +400,30 @@ const GenerateContracts = (props) => {
                             }}
                           >
                             <IconEditSquare color="#000" size="16px" />
+                          </ButtonDetail>
+                        </td>
+                        <td
+                          style={{
+                            textAlign: "center",
+                          }}
+                        >
+                          <ButtonDetail
+                            onClick={async () => {
+                              try {
+                                await handlerCallSetRequest(
+                                  {
+                                    isActive: false,
+                                  },
+                                  row.idRequest
+                                );
+                                handlerCallGetRequestCoincidences(
+                                  jsonConditionsState,
+                                  paginationState
+                                );
+                              } catch (error) {}
+                            }}
+                          >
+                            <IconDelete color="#000" size="16px" />
                           </ButtonDetail>
                         </td>
                       </tr>
