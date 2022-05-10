@@ -122,8 +122,8 @@ const CardHome = styled.div`
     transform: scale(1.1);
   }
   .price-card {
-    left: 75px;
-    bottom: 90px;
+    left: 5.6875em;
+    bottom: 6.625em;
     text-align: center;
     background: var(--color-primary);
     color: #fff;
@@ -131,6 +131,7 @@ const CardHome = styled.div`
     transform: rotate(45deg);
     width: 100%;
     font-weight: 600;
+    font-size: 1em;
   }
   @media screen and (max-width: 870px) {
     width: 15.5em;
@@ -138,6 +139,10 @@ const CardHome = styled.div`
     padding: 10px 0px;
     svg {
       width: 5.3em;
+    }
+    .price-card {
+      left: 5.6875em;
+      bottom: 4.625em;
     }
   }
   @media screen and (max-width: 420px) {
@@ -147,6 +152,10 @@ const CardHome = styled.div`
     span {
       font-size: 12px;
       width: 100%;
+    }
+    .price-card {
+      left: 7.6875em;
+      bottom: 4.625em;
     }
   }
 `;
