@@ -113,6 +113,10 @@ const ButtonAdd = styled.button`
   padding: 5px 1em;
 `;
 
+let channel = null;
+let intervalWindow = null;
+let openPayment = null;
+
 const GenerateContracts = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const [isLoadApi, setIsLoadApi] = useState(false);
@@ -212,7 +216,7 @@ const GenerateContracts = (props) => {
   const handlerOnClickPayment = (idOrder) => {
     setIsLoadApi(true);
     const channelName = "payment_users_contract";
-    const channel = new BroadcastChannel(channelName);
+    channel = new BroadcastChannel(channelName);
 
     const openPayment = window.open(
       `/websystem/payment-service/${idOrder}`,
@@ -223,7 +227,7 @@ const GenerateContracts = (props) => {
     height=900`
     );
 
-    let intervalWindow = setInterval(() => {
+    intervalWindow = setInterval(() => {
       if (openPayment.closed === true) {
         setIsLoadApi(false);
         channel.close();
@@ -255,6 +259,17 @@ const GenerateContracts = (props) => {
 
   useEffect(() => {
     handlerCallGetRequestCoincidences(jsonConditionsState, paginationState);
+    return () => {
+      if (
+        isNil(channel) === false &&
+        isNil(intervalWindow) === false &&
+        isNil(openPayment) === false
+      ) {
+        openPayment.close();
+        clearInterval(intervalWindow);
+        channel.close();
+      }
+    };
   }, []);
 
   return (
