@@ -571,7 +571,7 @@ const CustomViewRequestContract = ({
           <Container>
             <HeaderContainer>
               <h1>
-                Contrato de arrendamiento <span>Automatizado</span>
+                Contrato de arrendamiento <span>Personalizado</span>
               </h1>
             </HeaderContainer>
             <MainContainer>

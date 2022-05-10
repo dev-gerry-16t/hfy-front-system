@@ -75,7 +75,8 @@ const ConfirmedInformation = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   padding: 1em 0px;
 
-  .icon-success-Info{}
+  .icon-success-Info {
+  }
 
   h1 {
     font-size: 1.2em;
@@ -362,7 +363,9 @@ const FormUsersContract = (props) => {
           }}
         >
           {dataForm.isDocAvail === false
-            ? "Formulario para Contrato de Arrendamiento"
+            ? `Formulario para Contrato de arrendamiento ${
+                idCustomerType == "2" ? "(Propietario)" : "(Inquilino)"
+              }`
             : "Firma digital"}
         </h1>
       </div>

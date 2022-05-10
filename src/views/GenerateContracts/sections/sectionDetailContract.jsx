@@ -102,11 +102,11 @@ const SectionDetailContract = ({
             <div className="info-data-property">
               <div className="item-description">
                 <span>Inicio de contrato</span>
-                <strong>{dataInfoRequest.startedAt}</strong>
+                <strong>{dataInfoRequest.startedAtFormatted}</strong>
               </div>
               <div className="item-description">
                 <span>Firma de contrato</span>
-                <strong>{dataInfoRequest.scheduleAt}</strong>
+                <strong>{dataInfoRequest.scheduleAtFormatted}</strong>
               </div>
               <div className="item-description">
                 <span>Modo de firma</span>
@@ -118,7 +118,7 @@ const SectionDetailContract = ({
               </div>
               <div className="item-description">
                 <span>Expira el</span>
-                <strong>{dataInfoRequest.expireAt}</strong>
+                <strong>{dataInfoRequest.expireAtFormatted}</strong>
               </div>
               <div className="item-description">
                 <span>Asesoria Legal</span>

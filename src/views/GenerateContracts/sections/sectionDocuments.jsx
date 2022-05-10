@@ -17,6 +17,7 @@ import { GeneralCard } from "../constants/styles";
 import CustomViewDocument from "../../../components/CustomViewDocument";
 import CustomSignatureContractV2 from "../../../components/customSignatureContractv2";
 import ComponentLoadSection from "../../../components/componentLoadSection";
+import CustomViewDocumentV3 from "../../../components/customViewDocumentV3";
 
 const EmptyData = styled.div`
   width: 100%;
@@ -245,13 +246,22 @@ const SectionDocuments = (props) => {
 
   return (
     <GeneralCard>
-      <CustomViewDocument
+      {/* <CustomViewDocument
         isVisibleModal={isVisibleModalDocument}
         dataDocument={dataDocument}
         onClose={() => {
           setIsVisibleModalDocument(false);
           setDataDocument({});
         }}
+      /> */}
+      <CustomViewDocumentV3
+        isVisibleModal={isVisibleModalDocument}
+        dataDocument={dataDocument}
+        onClose={() => {
+          setIsVisibleModalDocument(false);
+          setDataDocument({});
+        }}
+        downloadDoc={true}
       />
       <CustomSignatureContractV2
         isModalVisible={isVisibleModalSignature}
@@ -350,11 +360,16 @@ const SectionDocuments = (props) => {
                                   canGenerateDocument: row.canGenerateDocument,
                                   type: row.type,
                                 });
-                              setDataDocument({ ...row, url: response.url });
+                              setDataDocument({
+                                ...row,
+                                url: response.url,
+                                newBucketSorce: response.newBucketSorce,
+                                newIdDocument: response.newIdDocument,
+                              });
                               setTimeout(() => {
                                 setIsLoadApi(false);
                                 setIsVisibleModalDocument(true);
-                              }, 4000);
+                              }, 3000);
                             } catch (error) {
                               setIsLoadApi(false);
                             }

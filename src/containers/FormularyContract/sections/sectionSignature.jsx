@@ -25,6 +25,7 @@ import {
 import CustomSignature from "../../../components/customSignature";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 import CustomViewDocument from "../../../components/CustomViewDocument";
+import CustomViewDocumentV3 from "../../../components/customViewDocumentV3";
 
 const Card = styled.div`
   background: #ffffff;
@@ -309,13 +310,22 @@ const SectionSignature = ({ callGlobalActionApi, dataProfile }) => {
 
   return (
     <ContentForm>
-      <CustomViewDocument
+      {/* <CustomViewDocument
         isVisibleModal={isVisibleModalDocument}
         dataDocument={dataDocument}
         onClose={() => {
           setIsVisibleModalDocument(false);
           setDataDocument({});
         }}
+      /> */}
+      <CustomViewDocumentV3
+        isVisibleModal={isVisibleModalDocument}
+        dataDocument={dataDocument}
+        onClose={() => {
+          setIsVisibleModalDocument(false);
+          setDataDocument({});
+        }}
+        downloadDoc={true}
       />
       <CustomSignature
         fullName={`${dataFormSave.givenName} ${dataFormSave.lastName} ${dataFormSave.mothersMaidenName}`}
@@ -434,6 +444,8 @@ const SectionSignature = ({ callGlobalActionApi, dataProfile }) => {
                                     setDataDocument({
                                       ...row,
                                       url: response.url,
+                                      newBucketSorce: response.newBucketSorce,
+                                      newIdDocument: response.newIdDocument,
                                     });
                                     setTimeout(() => {
                                       setIsLoadApi(false);
