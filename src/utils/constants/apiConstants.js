@@ -106,6 +106,7 @@ const API_CONSTANTS = {
     ADD_CUSTOMER_DOCUMENT: `${API.CUSTOMER}/customerDocument/addCustomerDocument/`,
     GET_LOCATION_FILTER: `${API.CUSTOMER}/zipCode/getLocationFilter`,
     GET_ORDER_PAYMENT_BY_ID: `${API.CUSTOMER}/orderPayment/getOrderPaymentById`,
+    GET_SERVICE_FEE: `${API.CUSTOMER}/payment/getServiceFee`,
     PROCESS_INVITATION: `${API.CUSTOMER}/invitation/processInvitation/`,
     GET_VERIFICATION_IDENTITY_COINCIDENCES: `${API.CUSTOMER}/verificationIdentity/getVerificationIdentityCoincidences`,
     SET_CONTRACT_APPROVEMENT: `${API.CUSTOMER}/contract/setContractApprovement/`,

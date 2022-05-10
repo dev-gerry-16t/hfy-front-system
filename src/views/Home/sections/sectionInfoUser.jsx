@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Row, Col } from "antd";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
+import styled from "styled-components";
 import { connect } from "react-redux";
 import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 import { callGlobalActionApi } from "../../../utils/actions/actions";
@@ -18,6 +19,13 @@ import {
   MainButtons,
   ComponentRadio,
 } from "../constants/styles";
+
+const SpanPrice = styled.span`
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+`;
 
 const SectionInfoUser = (props) => {
   const {
@@ -38,6 +46,7 @@ const SectionInfoUser = (props) => {
     requiresVerification,
     onSaveState,
     isFaceToFace,
+    dataFee = {},
   } = props;
   const [dataNationalities, setDataNationalities] = useState([]);
 
@@ -156,7 +165,7 @@ const SectionInfoUser = (props) => {
               <CustomInputTypeForm
                 value={emailAddress}
                 placeholder=""
-                label="Correo"
+                label="Correo *"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
@@ -212,7 +221,7 @@ const SectionInfoUser = (props) => {
         <Col span={24}>
           <ComponentRadio>
             <strong>
-              ¿Quien ingresará la información personal para la elaboración del
+              ¿Quién ingresará la información personal para la elaboración del
               contrato?
             </strong>
             <div className="radio-inputs-options">
@@ -255,7 +264,7 @@ const SectionInfoUser = (props) => {
                 <CustomInputTypeForm
                   value={emailAddress}
                   placeholder=""
-                  label="Correo"
+                  label="Correo *"
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {
@@ -293,7 +302,9 @@ const SectionInfoUser = (props) => {
           <ComponentRadio>
             <strong>
               ¿Deseas que el usuario sea verificado para evitar una suplantación
-              de identidad?
+              de identidad? * <br />
+              <SpanPrice>* Costo adicional: {dataFee.userIdentity}</SpanPrice>
+              <br />
             </strong>
             <div className="radio-inputs-options">
               <label className="input-radio">

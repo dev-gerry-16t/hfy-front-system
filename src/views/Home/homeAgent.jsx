@@ -1,4 +1,6 @@
 import React, { createElement, useEffect, useState } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 import styled from "styled-components";
 import TagManager from "react-gtm-module";
@@ -11,9 +13,12 @@ import { ReactComponent as IconHomeDashboard } from "../../assets/iconSvg/svgFil
 import { ReactComponent as IconNote } from "../../assets/iconSvg/svgFile/iconNote.svg";
 import { ReactComponent as IconSearchUser } from "../../assets/iconSvg/svgFile/iconSearchUser.svg";
 import { ReactComponent as IconHomePolicy } from "../../assets/iconSvg/svgFile/iconHomePolicy.svg";
-import FrontFunctions from "../../utils/actions/frontFunctions";
 import CustomOnboarding from "../../components/CustomOnboarding";
 import CustomViewRequestContract from "./sections/customViewRequestContract";
+import { API_CONSTANTS } from "../../utils/constants/apiConstants";
+import FrontFunctions from "../../utils/actions/frontFunctions";
+import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
+import { callGlobalActionApi } from "../../utils/actions/actions";
 
 const ContentHome = styled.div`
   font-size: 16px;
@@ -90,6 +95,7 @@ const ContentHome = styled.div`
 `;
 
 const CardHome = styled.div`
+  position: relative;
   width: 17.5em;
   height: 10.625em;
   background: #fff;
@@ -102,6 +108,7 @@ const CardHome = styled.div`
   justify-content: center;
   align-items: center;
   transition: all 0.2s ease-in;
+  overflow: hidden;
   svg {
     width: 7.3em;
   }
@@ -114,7 +121,17 @@ const CardHome = styled.div`
   &:hover {
     transform: scale(1.1);
   }
-
+  .price-card {
+    left: 75px;
+    bottom: 90px;
+    text-align: center;
+    background: var(--color-primary);
+    color: #fff;
+    position: absolute;
+    transform: rotate(45deg);
+    width: 100%;
+    font-weight: 600;
+  }
   @media screen and (max-width: 870px) {
     width: 15.5em;
     height: 8.625em;
@@ -140,24 +157,28 @@ const catalogHome = [
     icon: IconProperties,
     path: "/websystem/dashboard-properties",
     page: "mis_propiedades",
+    price: false,
   },
   {
     text: "Bolsa inmobiliaria",
     icon: IconBagHouse,
     path: "/websystem/catalog-properties",
     page: "bolsa_inmobiliaria",
+    price: false,
   },
   {
     text: "Agregar Propiedad",
     icon: IconHousePlus,
     path: "/websystem/add-property",
     page: "agregar_propiedad",
+    price: false,
   },
   {
     text: "Bandeja de entrada",
     icon: IconInMessage,
     path: "/websystem/notificaciones/1",
     page: "bandeja_de_entrada",
+    price: false,
   },
   // { text: "Contactos", icon: IconSchedule, path: null },
   {
@@ -165,6 +186,7 @@ const catalogHome = [
     icon: IconHomeDashboard,
     path: "/websystem/dashboard-adviser",
     page: "dashboard",
+    price: false,
   },
   {
     text: "Generar contrato de arrendamiento",
@@ -172,6 +194,7 @@ const catalogHome = [
     path: null,
     openComponent: 1,
     page: "genera_contrato_arrendamiento",
+    price: true,
   },
   // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
   {
@@ -179,16 +202,50 @@ const catalogHome = [
     icon: IconHomePolicy,
     path: "/websystem/select-policy-user",
     page: "Solicita_una_poliza_juridica",
+    price: false,
   },
 ];
 
 const HomeAgent = (props) => {
-  const { history } = props;
+  const { history, callGlobalActionApi, dataProfile } = props;
   const [visibleOnboard, setVisibleOnboard] = useState(false);
   const [visibleComponent, setVisibleComponent] = useState(null);
+  const [dataFee, setDataFee] = useState({});
+
   const frontFunctions = new FrontFunctions();
 
+  const handlerCallGetServiceFee = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_SERVICE_FEE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].serviceFee) === false &&
+        isEmpty(response.response[0][0].serviceFee) === false
+          ? JSON.parse(response.response[0][0].serviceFee)
+          : {};
+      setDataFee(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
   useEffect(() => {
+    handlerCallGetServiceFee();
     const cookieOnboarding = frontFunctions.getCookie("onboarding");
     if (isNil(cookieOnboarding) === true) {
       setVisibleOnboard(true);
@@ -237,6 +294,7 @@ const HomeAgent = (props) => {
           }}
         />
         <CustomViewRequestContract
+          dataFee={dataFee}
           visibleDialog={visibleComponent === 1}
           onClose={() => {
             setVisibleComponent(null);
@@ -263,6 +321,9 @@ const HomeAgent = (props) => {
                   }
                 }}
               >
+                {row.price === true && (
+                  <div className="price-card">{dataFee.contract}</div>
+                )}
                 {createElement(row.icon, null, null)}
                 <span>{row.text}</span>
               </CardHome>
@@ -274,4 +335,16 @@ const HomeAgent = (props) => {
   );
 };
 
-export default HomeAgent;
+const mapStateToProps = (state) => {
+  const { dataProfile } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeAgent);

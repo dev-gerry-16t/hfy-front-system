@@ -137,7 +137,7 @@ const SectionDetailContract = ({
                 <strong>{dataProperty.address.fullAddress}</strong>
               </div>
               <div className="item-description">
-                <span>Precio Renta</span>
+                <span>Precio Renta (no incluyas mantenimiento)</span>
                 <div className="price-property">
                   <span className="total-property">
                     {frontFunctions.parseFormatCurrency(
