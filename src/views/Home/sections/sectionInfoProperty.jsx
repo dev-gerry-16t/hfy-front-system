@@ -24,7 +24,14 @@ const Title = styled.h2`
 `;
 
 const SectionInfoProperty = (props) => {
-  const { dataProfile, callGlobalActionApi, onNext, onBack } = props;
+  const {
+    dataProfile,
+    callGlobalActionApi,
+    onNext,
+    onBack,
+    dataSaveAddress,
+    dataAddressInfoSave,
+  } = props;
   const [dataPropertyTypes, setDataPropertyTypes] = useState([]);
   const [dataCommercialActivity, setDataCommercialActivity] = useState([]);
   const [dataCurrency, setDataCurrency] = useState([]);
@@ -103,7 +110,7 @@ const SectionInfoProperty = (props) => {
       const city =
         isEmpty(responseResult1) === false ? responseResult1.municipality : "";
       const neighborhood = responseResult2.find((row) => {
-        return row.idZipCode === id;
+        return row.idZipCode == id;
       });
       if (
         isNil(neighborhood) === false &&
@@ -212,6 +219,19 @@ const SectionInfoProperty = (props) => {
     handlerCallGetAllCurrencies();
   }, []);
 
+  useEffect(() => {
+    if (isEmpty(dataSaveAddress) === false) {
+      setDataForm({ ...dataForm, ...dataSaveAddress.dataForm });
+      setDataAddress({ ...dataAddress, ...dataSaveAddress.dataAddress });
+      hanlderCallGetZipCodeAdress(
+        dataSaveAddress.dataAddress.zipCode,
+        dataSaveAddress.dataAddress.idZipCode
+      );
+      setZipCode(dataSaveAddress.dataAddress.zipCode);
+      setDataAddressInfo(dataAddressInfoSave);
+    }
+  }, [dataSaveAddress, dataAddressInfoSave]);
+
   return (
     <>
       <div>
@@ -270,7 +290,7 @@ const SectionInfoProperty = (props) => {
                 });
               }}
               placeholder=""
-              label={"Precio de renta *"}
+              label={"Precio de renta (no incluyas mantenimiento)*"}
               error={false}
               errorMessage="Este campo es requerido"
               onChange={(value, valueS, valueFormat) => {
@@ -613,7 +633,11 @@ const SectionInfoProperty = (props) => {
                       state: zipCodeStateCity.state,
                       city: zipCodeStateCity.city,
                     },
-                    jsonProperty
+                    jsonProperty,
+                    {
+                      dataForm,
+                      dataAddress: { ...dataAddress, zipCode: zipCode },
+                    }
                   );
                 }
               }
@@ -642,7 +666,11 @@ const SectionInfoProperty = (props) => {
                 state: zipCodeStateCity.state,
                 city: zipCodeStateCity.city,
               },
-              jsonProperty
+              jsonProperty,
+              {
+                dataForm,
+                dataAddress: { ...dataAddress, zipCode: zipCode },
+              }
             );
           }}
         >

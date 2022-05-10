@@ -109,6 +109,7 @@ const DetailGenerateContracts = (props) => {
     request: {},
     payment: {},
   });
+  const [dataFee, setDataFee] = useState({});
 
   const frontFunctions = new FrontFunctions();
 
@@ -175,6 +176,37 @@ const DetailGenerateContracts = (props) => {
           ? response.response[0]
           : [];
       setDataDocuments(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetServiceFee = async (id) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+          filterBy: id,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_SERVICE_FEE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].serviceFee) === false &&
+        isEmpty(response.response[0][0].serviceFee) === false
+          ? JSON.parse(response.response[0][0].serviceFee)
+          : {};
+      setDataFee(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -254,11 +286,13 @@ const DetailGenerateContracts = (props) => {
   useEffect(() => {
     handlerCallGetRequestById(idRequest);
     handlerCallGetRequestDocuments(idRequest);
+    handlerCallGetServiceFee(idRequest);
   }, []);
 
   return (
     <Content>
       <CustomViewRequestContract
+        dataFee={dataFee}
         isEditable={true}
         idRequest={idRequest}
         dataDetail={dataInfoRequest.request}

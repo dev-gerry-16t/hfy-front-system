@@ -259,7 +259,7 @@ const SectionInfoOwner = ({
               <CustomInputTypeForm
                 value={dataForm.idTypeNumber}
                 placeholder=""
-                label="Numero de identificación"
+                label="Número de identificación"
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {

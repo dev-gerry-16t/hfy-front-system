@@ -203,6 +203,9 @@ const LoadingProcess = styled.div`
   }
 `;
 
+let channel = null;
+let intervalWindow = null;
+
 const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
@@ -211,10 +214,10 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
   const handlerOnClickForm = (path) => {
     setIsLoadApi(true);
     const channelName = "form_users_contract";
-    const channel = new BroadcastChannel(channelName);
+    channel = new BroadcastChannel(channelName);
     const openForm = window.open(path, "_blank");
 
-    let intervalWindow = setInterval(() => {
+    intervalWindow = setInterval(() => {
       if (openForm.closed === true) {
         setIsLoadApi(false);
         channel.close();
@@ -234,6 +237,15 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
       }
     };
   };
+
+  useEffect(() => {
+    return () => {
+      if (isNil(channel) === false && isNil(intervalWindow) === false) {
+        clearInterval(intervalWindow);
+        channel.close();
+      }
+    };
+  }, []);
 
   return (
     <Card>

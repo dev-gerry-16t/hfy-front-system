@@ -113,6 +113,10 @@ const ButtonAdd = styled.button`
   padding: 5px 1em;
 `;
 
+let channel = null;
+let intervalWindow = null;
+let openPayment = null;
+
 const GenerateContracts = (props) => {
   const { callGlobalActionApi, dataProfile, history } = props;
   const [isLoadApi, setIsLoadApi] = useState(false);
@@ -122,6 +126,7 @@ const GenerateContracts = (props) => {
   const [pageSize, setPageSize] = useState(10);
   const [totalCoincidences, setTotalCoincidences] = useState(0);
   const [currentPagination, setCurrentPagination] = useState(1);
+  const [dataFee, setDataFee] = useState({});
   const [paginationState, setPaginationState] = useState(
     JSON.stringify({
       currentPage: currentPagination,
@@ -138,6 +143,36 @@ const GenerateContracts = (props) => {
   );
 
   const frontFunctions = new FrontFunctions();
+
+  const handlerCallGetServiceFee = async () => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type: 1,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_SERVICE_FEE
+      );
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].serviceFee) === false &&
+        isEmpty(response.response[0][0].serviceFee) === false
+          ? JSON.parse(response.response[0][0].serviceFee)
+          : {};
+      setDataFee(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
 
   const handlerCallGetRequestCoincidences = async (condition, pag) => {
     const { idSystemUser, idLoginHistory } = dataProfile;
@@ -212,7 +247,7 @@ const GenerateContracts = (props) => {
   const handlerOnClickPayment = (idOrder) => {
     setIsLoadApi(true);
     const channelName = "payment_users_contract";
-    const channel = new BroadcastChannel(channelName);
+    channel = new BroadcastChannel(channelName);
 
     const openPayment = window.open(
       `/websystem/payment-service/${idOrder}`,
@@ -223,7 +258,7 @@ const GenerateContracts = (props) => {
     height=900`
     );
 
-    let intervalWindow = setInterval(() => {
+    intervalWindow = setInterval(() => {
       if (openPayment.closed === true) {
         setIsLoadApi(false);
         channel.close();
@@ -254,12 +289,25 @@ const GenerateContracts = (props) => {
   };
 
   useEffect(() => {
+    handlerCallGetServiceFee();
     handlerCallGetRequestCoincidences(jsonConditionsState, paginationState);
+    return () => {
+      if (
+        isNil(channel) === false &&
+        isNil(intervalWindow) === false &&
+        isNil(openPayment) === false
+      ) {
+        openPayment.close();
+        clearInterval(intervalWindow);
+        channel.close();
+      }
+    };
   }, []);
 
   return (
     <Content>
       <CustomViewRequestContract
+        dataFee={dataFee}
         visibleDialog={visibleComponent}
         onConfirmOk={() => {
           handlerCallGetRequestCoincidences(

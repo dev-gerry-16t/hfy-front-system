@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import "moment/locale/es";
 import Fade from "react-reveal/Fade";
+import styled from "styled-components";
 import { Row, Col, message } from "antd";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
@@ -31,6 +32,13 @@ import GLOBAL_CONSTANTS from "../../../utils/constants/globalConstants";
 import FrontFunctions from "../../../utils/actions/frontFunctions";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 
+const SpanPrice = styled.span`
+  color: var(--color-primary);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: underline;
+`;
+
 const CustomViewRequestContract = ({
   visibleDialog,
   idRequest = null,
@@ -41,6 +49,7 @@ const CustomViewRequestContract = ({
   dataDetail = {},
   onConfirmOk = () => {},
   history,
+  dataFee = {},
 }) => {
   const stepInit = 1;
   const stepContractInfo = 2;
@@ -111,6 +120,7 @@ const CustomViewRequestContract = ({
   const [isVisibleError, setIsVisibleError] = useState(false);
   const [isVisibleSection, setIsVisibleSection] = useState(true);
   const [isInConfirmInfo, setIsInConfirmInfo] = useState(false);
+  const [dataSaveAddress, setDataSaveAddress] = useState({});
 
   const frontFunctions = new FrontFunctions();
 
@@ -571,12 +581,12 @@ const CustomViewRequestContract = ({
           <Container>
             <HeaderContainer>
               <h1>
-                Contrato de arrendamiento <span>Automatizado</span>
+                Contrato de arrendamiento <span>Personalizado</span>
               </h1>
             </HeaderContainer>
             <MainContainer>
               <span>
-                Bienvenido a uno de nuestros productos mas solicitados por la
+                Bienvenido a uno de nuestros productos más solicitados por la
                 comunidad Homify
               </span>
             </MainContainer>
@@ -600,20 +610,16 @@ const CustomViewRequestContract = ({
                       </li>
                       <li>
                         Puedes elegir ingresar la información personal de las
-                        partes involucrada o cada parte ingresará su información
-                        de forma independiente.
+                        partes involucradas o cada parte puede ingresar su
+                        información de forma independiente, en este último
+                        enviaremos un link único del formulario a llenar vía
+                        correo electrónico.
                       </li>
                       <li>
-                        Si ingresas la información de las partes involucradas te
-                        recomendamos tener a la mano la identificación oficial
-                        (INE ambos lados, Pasaporte o FM3) original o copia de
-                        cada parte involucrada.
-                      </li>
-                      <li>
-                        Si eliges que cada usuario ingrese su información
-                        personal de forma independiente les enviaremos un link
-                        del formulario a llenar via WhatsApp o Correo
-                        electrónico.
+                        Si eliges ingresar la información de las partes
+                        involucradas te recomendamos contar con copia o foto de
+                        identificación oficial (INE, Pasaporte o FM3) de cada
+                        involucrado.
                       </li>
                       <li>
                         En el menu "Contratos" puedes monitorear el avance del
@@ -636,17 +642,17 @@ const CustomViewRequestContract = ({
                         >
                           Términos y condiciones
                         </a>{" "}
-                        de uso de los servicios. Si quieres más información
+                        de uso de los servicios. Si deseas mayor información
                         acerca de cómo Homify recopila, utiliza y{" "}
                         <strong>protege tus datos</strong> personales, consulta
-                        el{" "}
+                        nuestro{" "}
                         <a
                           href="https://www.homify.ai/aviso-de-privacidad"
                           target="_blank"
                         >
                           aviso de privacidad
-                        </a>{" "}
-                        de Homify.
+                        </a>
+                        .
                       </span>
                     </div>
                   </p>
@@ -695,7 +701,7 @@ const CustomViewRequestContract = ({
                   <CustomInputTypeForm
                     value={dataForm.startedAt}
                     placeholder="dd-mm-yy"
-                    label="¿Cuando inicia el contrato de arrendamiento?"
+                    label="¿Cuándo inicia el contrato de arrendamiento? *"
                     error={false}
                     errorMessage="Este campo es requerido"
                     onChange={(value) => {
@@ -714,7 +720,7 @@ const CustomViewRequestContract = ({
                   <CustomSelect
                     value={dataForm.isFaceToFace}
                     placeholder=""
-                    label="¿Cómo se firmará el contrato?"
+                    label="¿Cómo se firmará el contrato? *"
                     data={[
                       { id: "1", text: "Presencial" },
                       { id: "2", text: "En linea" },
@@ -738,7 +744,7 @@ const CustomViewRequestContract = ({
                     <CustomInputTypeForm
                       value={dataForm.scheduleAt}
                       placeholder="dd-mm-yy"
-                      label="¿Cuando se firma el contrato de arrendamiento?"
+                      label="¿Cuando se firma el contrato de arrendamiento? *"
                       error={false}
                       errorMessage="Este campo es requerido"
                       onChange={(value) => {
@@ -767,16 +773,27 @@ const CustomViewRequestContract = ({
                     isNil(startedAt) === false &&
                     isNil(isFaceToFace) === false
                   ) {
-                    setIsVisibleSection(false);
-                    setTimeout(() => {
-                      setVisibleSection(
-                        isInConfirmInfo === false
-                          ? stepInfoOwner
-                          : stepConfirmInformation
-                      );
-                      setIsVisibleSection(true);
-                      setIsVisibleError(false);
-                    }, 1000);
+                    if (
+                      dataForm.isFaceToFace === true ||
+                      (dataForm.isFaceToFace == "1" &&
+                        isNil(dataForm.scheduleAt) === true)
+                    ) {
+                      setIsVisibleError(true);
+                      setTimeout(() => {
+                        setIsVisibleError(false);
+                      }, 5000);
+                    } else {
+                      setIsVisibleSection(false);
+                      setTimeout(() => {
+                        setVisibleSection(
+                          isInConfirmInfo === false
+                            ? stepInfoOwner
+                            : stepConfirmInformation
+                        );
+                        setIsVisibleSection(true);
+                        setIsVisibleError(false);
+                      }, 1000);
+                    }
                   } else {
                     setIsVisibleError(true);
                     setTimeout(() => {
@@ -812,6 +829,7 @@ const CustomViewRequestContract = ({
             </MainContainer>
             <SectionInfoUser
               {...dataOwner}
+              dataFee={dataFee}
               isFaceToFace={dataForm.isFaceToFace}
               onSaveState={(data) => {
                 setDataOwner({
@@ -869,6 +887,7 @@ const CustomViewRequestContract = ({
             </MainContainer>
             <SectionInfoUser
               {...dataTenant}
+              dataFee={dataFee}
               isFaceToFace={dataForm.isFaceToFace}
               onSaveState={(data) => {
                 setDataTenant({
@@ -931,7 +950,7 @@ const CustomViewRequestContract = ({
                   <ComponentRadio>
                     <strong>
                       ¿Deseas utilizar los datos de una de tus propiedades
-                      agregadas?
+                      agregadas? *
                     </strong>
                     <div className="radio-inputs-options">
                       <label className="input-radio">
@@ -1047,21 +1066,25 @@ const CustomViewRequestContract = ({
               </span>
             </MainContainer>
             <SectionInfoProperty
-              onNext={(data, property) => {
+              dataSaveAddress={dataSaveAddress}
+              dataAddressInfoSave={dataAddress}
+              onNext={(data, property, dataSave) => {
                 setDataAddress(data);
                 setDataForm({
                   ...dataForm,
                   jsonProperty: property,
                 });
+                setDataSaveAddress(dataSave);
                 setIsVisibleSection(false);
                 setTimeout(() => {
                   setVisibleSection(stepLegalAdvice);
                   setIsVisibleSection(true);
                 }, 1000);
               }}
-              onBack={(data, property) => {
+              onBack={(data, property, dataSave) => {
                 setVisibleSection(stepProperty);
                 setDataAddress(data);
+                setDataSaveAddress(dataSave);
                 setDataForm({
                   ...dataForm,
                   jsonProperty: property,
@@ -1076,12 +1099,12 @@ const CustomViewRequestContract = ({
           <Container>
             <HeaderContainer>
               <h1>
-                Asesoría <span>Jurídica</span>
+                Asesoría <span>Legal</span>
               </h1>
             </HeaderContainer>
             <MainContainer>
               <span>
-                Contamos con servicio de asesoría jurídica que puede ayudarte a
+                Contamos con servicio de asesoría legal que puede ayudarte a
                 realizar cambios personalizados en tu contrato de arrendamiento,
                 de esta manera podrás tener un documento blindado.
               </span>
@@ -1091,7 +1114,11 @@ const CustomViewRequestContract = ({
                 <Col span={24}>
                   <ComponentRadio>
                     <strong>
-                      ¿Deseas contratar el servicio de asesoría jurídica?
+                      ¿Deseas contratar el servicio de asesoría Legal? *<br />
+                      <SpanPrice>
+                        Costo adicional: {dataFee.legalAdvice}
+                      </SpanPrice>
+                      <br />
                     </strong>
                     <div className="radio-inputs-options">
                       <label className="input-radio">
@@ -1155,7 +1182,11 @@ const CustomViewRequestContract = ({
               <button
                 className="hfy-secondary-button"
                 onClick={() => {
-                  setVisibleSection(stepPropertyInfo);
+                  if (hasProperty == true) {
+                    setVisibleSection(stepProperty);
+                  } else {
+                    setVisibleSection(stepPropertyInfo);
+                  }
                 }}
               >
                 Regresar
@@ -1180,7 +1211,7 @@ const CustomViewRequestContract = ({
               <MainContainer>
                 <span>
                   Asegurate de que la información este correcta y no tenga
-                  errores, si todo esta bien haz clic en Confirmar
+                  errores, si todo está bien haz clic en Confirmar
                 </span>
               </MainContainer>
               <p>
@@ -1492,7 +1523,9 @@ const CustomViewRequestContract = ({
                 <button
                   className="hfy-secondary-button"
                   onClick={() => {
-                    window.open(`/websystem`, "_blank");
+                    history.push(
+                      `/websystem/detalle-contrato-generado/${requestId}`
+                    );
                   }}
                 >
                   Modificar información
@@ -1583,7 +1616,9 @@ const CustomViewRequestContract = ({
                 <button
                   className="hfy-primary-button"
                   onClick={() => {
-                    setVisibleSection(stepPayment);
+                    history.push(
+                      `/websystem/detalle-contrato-generado/${requestId}`
+                    );
                     setFinishForm(false);
                   }}
                 >

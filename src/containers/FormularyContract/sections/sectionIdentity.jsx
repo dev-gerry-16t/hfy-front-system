@@ -170,6 +170,7 @@ const LoadSquare = styled.div`
     text-align: center;
     h1 {
       font-weight: 700;
+      font-size: 1.5em;
     }
   }
 `;
@@ -253,8 +254,9 @@ const SectionIdentity = (props) => {
               <br />
               <span>
                 Para evitar errores en la información personal que aparecerá en
-                el contrato de arrendamiento es necesario capturar una foto de
-                tu identificación oficial y de ser necesario una selfie.
+                el contrato de arrendamiento es necesario{" "}
+                <strong>tener a la mano una identificación oficial</strong> y de
+                ser necesario una selfie.
               </span>
             </Col>
           </Row>
@@ -275,15 +277,13 @@ const SectionIdentity = (props) => {
                 </div>
                 <div className="content-identity">
                   <h1>
-                    {dataFormSave.requiresVerification === true ||
-                    dataFormSave.requiresVerification === 1
-                      ? "Identidad"
+                    {isNil(dataFormSave.verificationStatus) === false
+                      ? dataFormSave.verificationStatus
                       : "Documentos"}
                   </h1>
                   <span>
-                    {dataFormSave.requiresVerification === true ||
-                    dataFormSave.requiresVerification === 1
-                      ? "Haz clic en el botón para iniciar con el proceso de verificación de identidad"
+                    {isNil(dataFormSave.verificationDesc) === false
+                      ? dataFormSave.verificationDesc
                       : "Haz clic en el botón para subir los documentos de identidad necesarios para el proceso"}
                   </span>
                   <div
