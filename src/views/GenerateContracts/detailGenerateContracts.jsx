@@ -55,6 +55,7 @@ const Content = styled.div`
     grid-template-areas:
       "payment payment payment payment"
       "detail detail detail detail"
+      "contract contract contract contract"
       "users users users users"
       "documents documents documents documents"
       "agent agent agent agent";
