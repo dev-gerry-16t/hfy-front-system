@@ -744,7 +744,7 @@ const CustomViewRequestContract = ({
                     <CustomInputTypeForm
                       value={dataForm.scheduleAt}
                       placeholder="dd-mm-yy"
-                      label="¿Cuando se firma el contrato de arrendamiento? *"
+                      label="¿Cuándo se firma el contrato de arrendamiento? *"
                       error={false}
                       errorMessage="Este campo es requerido"
                       onChange={(value) => {
@@ -1210,8 +1210,8 @@ const CustomViewRequestContract = ({
               </HeaderContainer>
               <MainContainer>
                 <span>
-                  Asegurate de que la información este correcta y no tenga
-                  errores, si todo está bien haz clic en Confirmar
+                  Asegúrate de que la información este correcta y no tenga
+                  errores, si todo está bien has clic en Confirmar
                 </span>
               </MainContainer>
               <p>
