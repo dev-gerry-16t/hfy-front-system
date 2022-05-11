@@ -774,9 +774,9 @@ const CustomViewRequestContract = ({
                     isNil(isFaceToFace) === false
                   ) {
                     if (
-                      dataForm.isFaceToFace === true ||
-                      (dataForm.isFaceToFace == "1" &&
-                        isNil(dataForm.scheduleAt) === true)
+                      (dataForm.isFaceToFace === true ||
+                        dataForm.isFaceToFace == "1") &&
+                      isNil(dataForm.scheduleAt) === true
                     ) {
                       setIsVisibleError(true);
                       setTimeout(() => {
