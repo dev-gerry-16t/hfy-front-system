@@ -8,6 +8,7 @@ import { ReactComponent as ArrowUp2 } from "../../../assets/iconSvg/svgFile/arro
 import { ReactComponent as ArrowDown2 } from "../../../assets/iconSvg/svgFile/arrowDown2.svg";
 import { IconEditSquare } from "../../../assets/iconSvg";
 import ComponentLoadSection from "../../../components/componentLoadSection";
+import ComponentDetailUser from "../components/componentDetailUser";
 
 const CardStatus = styled.div`
   position: relative;
@@ -215,7 +216,14 @@ const LoadingProcess = styled.div`
 let channel = null;
 let intervalWindow = null;
 
-const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
+const CardInvolved = ({
+  row,
+  ix,
+  idRequest,
+  onGetDetail,
+  onResend,
+  onViewDetail,
+}) => {
   const [toggleCard, setToggleCard] = useState(false);
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [messageLoad, setMessageLoad] = useState("En formulario");
@@ -264,7 +272,12 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
         position="absolute"
       >
         <div className="all-content-pre-info">
-          <button className="button-edit-involved">
+          <button
+            className="button-edit-involved"
+            onClick={async () => {
+              onViewDetail(row);
+            }}
+          >
             <IconEditSquare color="var(--color-primary)" size="16px" />
           </button>
           <CardStatus color={row.idCustomerType === 1 ? "#46E6FD" : "#F3BF3A"}>
@@ -486,9 +499,26 @@ const SectionInvolved = ({
   idRequest,
   onGetDetail,
   onResend,
+  onSaveInfo,
+  dataFee,
 }) => {
+  const [isVisibleEdit, setIsVisibleEdit] = useState(false);
+  const [dataDetail, setDataDetail] = useState({});
+
   return (
     <GeneralCard>
+      <ComponentDetailUser
+        visibleDialog={isVisibleEdit}
+        dataInfoRequest={dataDetail}
+        onSaveInfo={async (data) => {
+          await onSaveInfo(data);
+        }}
+        dataFee={dataFee}
+        onClose={() => {
+          setDataDetail({});
+          setIsVisibleEdit(false);
+        }}
+      />
       <div className="header-title">
         <h1>Involucrados</h1>
       </div>
@@ -502,6 +532,10 @@ const SectionInvolved = ({
                 ix={ix}
                 onGetDetail={onGetDetail}
                 onResend={onResend}
+                onViewDetail={() => {
+                  setDataDetail(row);
+                  setIsVisibleEdit(true);
+                }}
               />
             );
           })}

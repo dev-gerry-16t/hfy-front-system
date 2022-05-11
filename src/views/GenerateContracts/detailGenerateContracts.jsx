@@ -308,6 +308,7 @@ const DetailGenerateContracts = (props) => {
       </div>
       <div className="section-implicated">
         <SectionInvolved
+          dataFee={dataFee}
           onGetDetail={() => {
             handlerCallGetRequestById(idRequest);
             handlerCallGetRequestDocuments(idRequest);
@@ -330,6 +331,11 @@ const DetailGenerateContracts = (props) => {
               ? JSON.parse(dataInfoRequest.request.jsonUserImplicated)
               : []
           }
+          onSaveInfo={async (data) => {
+            await handlerCallSetRequest(data);
+            handlerCallGetRequestById(idRequest);
+            handlerCallGetRequestDocuments(idRequest);
+          }}
         />
       </div>
       <div className="agent-legal">

@@ -36,7 +36,7 @@ const EmptyData = styled.div`
 
 const SectionLegalInformation = ({ dataInfoRequest, dataFee, onSaveInfo }) => {
   const [isVisibleEdit, setIsVisibleEdit] = useState(false);
-  
+
   const getDataInfoLegalUser = (data) => {
     const dataUser = JSON.parse(data)[0];
     return (
@@ -105,7 +105,11 @@ const SectionLegalInformation = ({ dataInfoRequest, dataFee, onSaveInfo }) => {
               src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
               alt=""
             />
-            <p>Proceso de asesoría legal no disponible</p>
+            <p>
+              {dataInfoRequest.request.requiresLegalAdvice === false
+                ? "Asesoría legal no contratada"
+                : "Asesoría legal disponible después del pago"}
+            </p>
             {dataInfoRequest.request.requiresLegalAdvice === false && (
               <>
                 <span>
