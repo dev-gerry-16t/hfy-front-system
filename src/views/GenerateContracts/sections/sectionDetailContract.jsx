@@ -3,6 +3,8 @@ import isNil from "lodash/isNil";
 import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import { GeneralCard } from "../constants/styles";
+import { IconDelete, IconEditSquare, IconEye } from "../../../assets/iconSvg";
+import ComponentDetailContract from "../components/componentDetailContract";
 
 const ShortDetail = styled.div`
   padding: 0px 10px;
@@ -83,105 +85,61 @@ const SectionDetailContract = ({
   dataProperty,
   dataInfoRequest,
   frontFunctions,
+  onSaveInfo,
 }) => {
+  const [isVisibleEdit, setIsVisibleEdit] = useState(false);
   return (
     <GeneralCard>
+      <ComponentDetailContract
+        visibleDialog={isVisibleEdit}
+        dataInfoRequest={dataInfoRequest}
+        onSaveInfo={async (data) => {
+          await onSaveInfo(data);
+        }}
+        onClose={() => {
+          setIsVisibleEdit(false);
+        }}
+      />
       <div className="header-title">
-        <h1>Detalle</h1>
+        <h1>Contrato</h1>
+        <button
+          onClick={() => {
+            setIsVisibleEdit(true);
+          }}
+        >
+          <IconEditSquare color="var(--color-primary)" size="21px" />
+        </button>
       </div>
-      {isEmpty(dataProperty) === false && (
-        <div className="content-cards">
-          <ShortDetail>
-            <div className="header-title-short">
-              <h1>Información de contrato</h1>
-              <div className="identifier-property">
-                {dataInfoRequest.requestStatus}
-              </div>
+      <div className="content-cards">
+        <ShortDetail>
+          <div className="info-data-property">
+            <div className="item-description">
+              <span>Estatus</span>
+              <strong>{dataInfoRequest.requestStatus}</strong>
             </div>
-            <LineSeparator opacity="0.3" />
-            <div className="info-data-property">
-              <div className="item-description">
-                <span>Inicio de contrato</span>
-                <strong>{dataInfoRequest.startedAtFormatted}</strong>
-              </div>
-              <div className="item-description">
-                <span>Firma de contrato</span>
-                <strong>{dataInfoRequest.scheduleAtFormatted}</strong>
-              </div>
-              <div className="item-description">
-                <span>Modo de firma</span>
-                <strong>
-                  {dataInfoRequest.isFaceToFace === false
-                    ? "Firma electrónica"
-                    : "Presencial"}
-                </strong>
-              </div>
-              <div className="item-description">
-                <span>Expira el</span>
-                <strong>{dataInfoRequest.expireAtFormatted}</strong>
-              </div>
-              <div className="item-description">
-                <span>Asesoria Legal</span>
-                <strong>
-                  {dataInfoRequest.requiresLegalAdvice === true ? "Si" : "No"}
-                </strong>
-              </div>
+            <div className="item-description">
+              <span>Inicio de contrato</span>
+              <strong>{dataInfoRequest.startedAtFormatted}</strong>
             </div>
-            <div className="header-title-short">
-              <h1>Información de la propiedad</h1>
+            <div className="item-description">
+              <span>Firma de contrato</span>
+              <strong>{dataInfoRequest.scheduleAtFormatted}</strong>
             </div>
-            <LineSeparator opacity="0.3" />
-            <div className="info-data-property">
-              <div className="item-description">
-                <span>Dirección</span>
-                <strong>{dataProperty.address.fullAddress}</strong>
-              </div>
-              <div className="item-description">
-                <span>Precio Renta (no incluyas mantenimiento)</span>
-                <div className="price-property">
-                  <span className="total-property">
-                    {frontFunctions.parseFormatCurrency(
-                      dataProperty.currentRent
-                    )}{" "}
-                    {dataProperty.currency}
-                  </span>
-                </div>
-              </div>
-              <div className="item-description">
-                <span>Mantenimiento Mensual</span>
-                <strong>
-                  {frontFunctions.parseFormatCurrency(
-                    dataProperty.maintenanceAmount
-                  )}{" "}
-                  {dataProperty.currency}
-                </strong>
-              </div>
-              <div className="item-description">
-                <span>Tipo de propiedad</span>
-                <strong>{dataProperty.propertyType}</strong>
-              </div>
-              <div className="item-description">
-                <span>Actividad comercial</span>
-                <strong>
-                  {isNil(dataProperty.commercialActivity) === false
-                    ? dataProperty.commercialActivity
-                    : "N/A"}
-                </strong>
-              </div>
-              <div className="item-description">
-                <span>Cajas de estacionamiento</span>
-                <strong>{dataProperty.totalParkingSpots}</strong>
-              </div>
-              <div className="item-description">
-                <span>Amueblado</span>
-                <strong>
-                  {dataProperty.isFurnished === true ? "Si" : "No"}
-                </strong>
-              </div>
+            <div className="item-description">
+              <span>Modo de firma</span>
+              <strong>
+                {dataInfoRequest.isFaceToFace === false
+                  ? "Firma electrónica"
+                  : "Presencial"}
+              </strong>
             </div>
-          </ShortDetail>
-        </div>
-      )}
+            <div className="item-description">
+              <span>Expira el</span>
+              <strong>{dataInfoRequest.expireAtFormatted}</strong>
+            </div>
+          </div>
+        </ShortDetail>
+      </div>
     </GeneralCard>
   );
 };

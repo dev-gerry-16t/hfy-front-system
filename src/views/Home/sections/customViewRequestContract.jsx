@@ -744,7 +744,7 @@ const CustomViewRequestContract = ({
                     <CustomInputTypeForm
                       value={dataForm.scheduleAt}
                       placeholder="dd-mm-yy"
-                      label="¿Cuando se firma el contrato de arrendamiento? *"
+                      label="¿Cuándo se firma el contrato de arrendamiento? *"
                       error={false}
                       errorMessage="Este campo es requerido"
                       onChange={(value) => {
@@ -774,9 +774,9 @@ const CustomViewRequestContract = ({
                     isNil(isFaceToFace) === false
                   ) {
                     if (
-                      dataForm.isFaceToFace === true ||
-                      (dataForm.isFaceToFace == "1" &&
-                        isNil(dataForm.scheduleAt) === true)
+                      (dataForm.isFaceToFace === true ||
+                        dataForm.isFaceToFace == "1") &&
+                      isNil(dataForm.scheduleAt) === true
                     ) {
                       setIsVisibleError(true);
                       setTimeout(() => {
@@ -1210,8 +1210,8 @@ const CustomViewRequestContract = ({
               </HeaderContainer>
               <MainContainer>
                 <span>
-                  Asegurate de que la información este correcta y no tenga
-                  errores, si todo está bien haz clic en Confirmar
+                  Asegúrate de que la información este correcta y no tenga
+                  errores, si todo está bien has clic en Confirmar
                 </span>
               </MainContainer>
               <p>

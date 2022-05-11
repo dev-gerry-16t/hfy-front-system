@@ -6,6 +6,7 @@ import { IconTenant } from "../../../assets/iconSvg";
 import { GeneralCard } from "../constants/styles";
 import { ReactComponent as ArrowUp2 } from "../../../assets/iconSvg/svgFile/arrowUp2.svg";
 import { ReactComponent as ArrowDown2 } from "../../../assets/iconSvg/svgFile/arrowDown2.svg";
+import { IconEditSquare } from "../../../assets/iconSvg";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 
 const CardStatus = styled.div`
@@ -42,7 +43,15 @@ const Card = styled.div`
   box-shadow: 0px 6px 22px 12px rgba(205, 213, 219, 0.6);
   border-radius: 4px;
   .all-content-pre-info {
+    position: relative;
     display: flex;
+    .button-edit-involved {
+      position: absolute;
+      background: transparent;
+      border: none;
+      right: 0px;
+      top: 5px;
+    }
   }
   .card-document {
     padding: 1em;
@@ -255,6 +264,9 @@ const CardInvolved = ({ row, ix, idRequest, onGetDetail, onResend }) => {
         position="absolute"
       >
         <div className="all-content-pre-info">
+          <button className="button-edit-involved">
+            <IconEditSquare color="var(--color-primary)" size="16px" />
+          </button>
           <CardStatus color={row.idCustomerType === 1 ? "#46E6FD" : "#F3BF3A"}>
             <div className="status-prospect">
               <span>{row.customerType}</span>

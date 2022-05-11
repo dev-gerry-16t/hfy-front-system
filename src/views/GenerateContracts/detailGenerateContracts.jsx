@@ -3,34 +3,16 @@ import { connect } from "react-redux";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
-import { Pagination } from "antd";
 import { API_CONSTANTS } from "../../utils/constants/apiConstants";
 import FrontFunctions from "../../utils/actions/frontFunctions";
 import GLOBAL_CONSTANTS from "../../utils/constants/globalConstants";
 import { callGlobalActionApi } from "../../utils/actions/actions";
-import { IconEditSquare } from "../../assets/iconSvg";
-import { ReactComponent as IconSearch } from "../../assets/iconSvg/svgFile/Search.svg";
-import CustomViewRequestContract from "../Home/sections/customViewRequestContract";
-import { GeneralCard, Card } from "./constants/styles";
 import SectionInvolved from "./sections/sectionInvolved";
 import SectionDetailContract from "./sections/sectionDetailContract";
 import SectionPaymentInfo from "./sections/sectionPaymentInfo";
 import SectionDocuments from "./sections/sectionDocuments";
-import { ReactComponent as IconOwner } from "../../assets/iconSvg/svgFile/iconOwner.svg";
-
-const EmptyData = styled.div`
-  width: 100%;
-  height: 30em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  p {
-    color: rgba(78, 75, 102, 0.45);
-    font-weight: 700;
-    text-align: center;
-  }
-`;
+import SectionDetailProperty from "./sections/sectionDetailProperty";
+import SectionLegalInformation from "./sections/sectionLegalInformation";
 
 const Content = styled.div`
   font-size: 16px;
@@ -44,8 +26,9 @@ const Content = styled.div`
   grid-template-areas:
     "edit edit edit edit"
     "payment payment payment payment"
-    "detail detail detail users"
-    "documents documents documents agent";
+    "contract contract contract users"
+    "detail detail detail agent"
+    "documents documents documents documents";
   .section-edit {
     grid-area: edit;
   }
@@ -54,6 +37,9 @@ const Content = styled.div`
   }
   .section-document {
     grid-area: documents;
+  }
+  .detail-contract {
+    grid-area: contract;
   }
   .detail-property {
     grid-area: detail;
@@ -67,9 +53,9 @@ const Content = styled.div`
 
   @media screen and (max-width: 1024px) {
     grid-template-areas:
-      "edit edit edit edit"
       "payment payment payment payment"
       "detail detail detail detail"
+      "contract contract contract contract"
       "users users users users"
       "documents documents documents documents"
       "agent agent agent agent";
@@ -250,39 +236,6 @@ const DetailGenerateContracts = (props) => {
     }
   };
 
-  const getDataInfoLegalUser = (data) => {
-    const dataUser = JSON.parse(data)[0];
-    return (
-      <Card>
-        <div className="card-user">
-          <div className="top-info">
-            <div className="icon-info">
-              <IconOwner size="100%" color="#4E4B66" />
-            </div>
-            <div className="name-info">
-              <h3>{dataUser.attorney}</h3>
-              <span>Cód. de Serv. {dataUser.codeId}</span>
-              <span>{dataUser.email}</span>
-              <span>{dataUser.phoneFormatted}</span>
-              <span>
-                <a
-                  href={
-                    isNil(dataUser.wap) === false
-                      ? `https://api.whatsapp.com/send?phone=52${dataUser.wap}`
-                      : "#"
-                  }
-                  target="_blank"
-                >
-                  WhatsApp
-                </a>
-              </span>
-            </div>
-          </div>
-        </div>
-      </Card>
-    );
-  };
-
   useEffect(() => {
     handlerCallGetRequestById(idRequest);
     handlerCallGetRequestDocuments(idRequest);
@@ -291,22 +244,7 @@ const DetailGenerateContracts = (props) => {
 
   return (
     <Content>
-      <CustomViewRequestContract
-        dataFee={dataFee}
-        isEditable={true}
-        idRequest={idRequest}
-        dataDetail={dataInfoRequest.request}
-        visibleDialog={visibleComponent}
-        onConfirmOk={() => {
-          handlerCallGetRequestById(idRequest);
-          handlerCallGetRequestDocuments(idRequest);
-        }}
-        onClose={() => {
-          setVisibleComponent(false);
-        }}
-        history={history}
-      />
-      <ContentEdit className="section-edit">
+      {/* <ContentEdit className="section-edit">
         <button
           onClick={() => {
             setVisibleComponent(true);
@@ -314,7 +252,7 @@ const DetailGenerateContracts = (props) => {
         >
           Editar
         </button>
-      </ContentEdit>
+      </ContentEdit> */}
       {isEmpty(dataInfoRequest) === false &&
         isEmpty(dataInfoRequest.payment) === false &&
         isNil(dataInfoRequest.payment.requiresPymt) === false &&
@@ -339,10 +277,20 @@ const DetailGenerateContracts = (props) => {
           }}
         />
       </div>
-      <div className="detail-property">
+      <div className="detail-contract">
         <SectionDetailContract
           frontFunctions={frontFunctions}
           dataInfoRequest={dataInfoRequest.request}
+          onSaveInfo={async (data) => {
+            await handlerCallSetRequest(data);
+            handlerCallGetRequestById(idRequest);
+            handlerCallGetRequestDocuments(idRequest);
+          }}
+        />
+      </div>
+      <div className="detail-property">
+        <SectionDetailProperty
+          frontFunctions={frontFunctions}
           dataProperty={
             isEmpty(dataInfoRequest) === false &&
             isEmpty(dataInfoRequest.request) === false &&
@@ -351,6 +299,11 @@ const DetailGenerateContracts = (props) => {
               ? JSON.parse(dataInfoRequest.request.jsonProperty)
               : {}
           }
+          onSaveInfo={async (data) => {
+            await handlerCallSetRequest(data);
+            handlerCallGetRequestById(idRequest);
+            handlerCallGetRequestDocuments(idRequest);
+          }}
         />
       </div>
       <div className="section-implicated">
@@ -380,27 +333,15 @@ const DetailGenerateContracts = (props) => {
         />
       </div>
       <div className="agent-legal">
-        <GeneralCard>
-          <div className="header-title">
-            <h1>Asesor Legal Asignado</h1>
-          </div>
-          <div className="content-cards">
-            {isEmpty(dataInfoRequest) === false &&
-            isEmpty(dataInfoRequest.request) === false &&
-            isNil(dataInfoRequest.request.jsonLegalAdvice) === false ? (
-              getDataInfoLegalUser(dataInfoRequest.request.jsonLegalAdvice)
-            ) : (
-              <EmptyData>
-                <img
-                  width="150"
-                  src="https://homify-docs-users.s3.us-east-2.amazonaws.com/8A7198C9-AE07-4ADD-AF34-60E84758296R.png"
-                  alt=""
-                />
-                <p>Proceso sin asesoría legal disponible</p>
-              </EmptyData>
-            )}
-          </div>
-        </GeneralCard>
+        <SectionLegalInformation
+          dataInfoRequest={dataInfoRequest}
+          dataFee={dataFee}
+          onSaveInfo={async (data) => {
+            await handlerCallSetRequest(data);
+            handlerCallGetRequestById(idRequest);
+            handlerCallGetRequestDocuments(idRequest);
+          }}
+        />
       </div>
     </Content>
   );
