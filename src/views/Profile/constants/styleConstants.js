@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 const ComponentRadio = styled.div`
+  position: relative;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   height: 100%;
   .radio-inputs-options {
     display: flex;
@@ -189,7 +189,7 @@ const ButtonIcon = styled.button`
 `;
 
 const FormModal = styled.div`
-font-size: 16px;
+  font-size: 16px;
   font-family: Poppins;
   padding: 1em 2em;
   h1 {

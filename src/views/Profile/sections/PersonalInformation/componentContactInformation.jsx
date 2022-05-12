@@ -28,13 +28,14 @@ const ComponentContactInformation = ({
   dataProfile,
   callGlobalActionApi,
   getById,
+  idCustomer,
 }) => {
   const [isVisibleAddPhone, setIsVisibleAdPhone] = useState(false);
   const [isVisibleAddEmail, setIsVisibleAdEmail] = useState(false);
   const frontFunctions = new FrontFunctions();
 
   const handlerCallSetCustomerPhoneNumber = async (data) => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
@@ -57,7 +58,7 @@ const ComponentContactInformation = ({
   };
 
   const handlerCallSetCustomerEmailAddress = async (data) => {
-    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    const { idSystemUser, idLoginHistory } = dataProfile;
     try {
       const response = await callGlobalActionApi(
         {
