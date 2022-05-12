@@ -355,109 +355,116 @@ const PaymentsService = (props) => {
     <Content>
       <ContentForm>
         {isNil(isOkPayment) === true &&
-          isNil(dataPayment.isPaid) === false &&
-          dataPayment.isPaid === false && (
-            <>
-              <div className="header-title">
-                <h1>
-                  {isNil(dataPayment.isPaid) === false &&
-                  dataPayment.isPaid === false
-                    ? "Elige un método de pago"
-                    : "Proceso pagado"}
-                </h1>
-                {isNil(dataPayment.hfInvoice) === false && (
-                  <div>
-                    Folio: <strong>{dataPayment.hfInvoice}</strong>
+        isNil(dataPayment.isPaid) === false &&
+        dataPayment.isPaid === false ? (
+          <>
+            <div className="header-title">
+              <h1>Elige un método de pago</h1>
+              {isNil(dataPayment.hfInvoice) === false && (
+                <div>
+                  Folio: <strong>{dataPayment.hfInvoice}</strong>
+                </div>
+              )}
+            </div>
+            <div className="info-payment-detail">
+              {isNil(dataPayment.fullAddress) === false && (
+                <div>Propiedad: {dataPayment.fullAddress}</div>
+              )}
+              {isNil(dataPayment.orderPaymentConcept) === false && (
+                <div>Concepto: {dataPayment.orderPaymentConcept}</div>
+              )}
+            </div>
+            <div className="section-payment-method">
+              <TabsProperty>
+                {dataTab.map((row) => {
+                  return (
+                    <Tab
+                      selected={tabSelect === row.id}
+                      onClick={() => {
+                        setTabSelect(row.id);
+                      }}
+                    >
+                      <h1>
+                        {row.text} {row.id === "1" && <span>Sin comisión</span>}
+                      </h1>
+                      <hr />
+                    </Tab>
+                  );
+                })}
+              </TabsProperty>
+              <CardPaymentMethod>
+                <div className="header-card-payment">
+                  <div className="amount-to-pay">
+                    <strong>Monto a pagar</strong>{" "}
+                    <span>
+                      {tabSelect === "1"
+                        ? dataPayment.formattedAmount
+                        : amountTaxes}
+                    </span>
                   </div>
-                )}
-              </div>
-              <div className="info-payment-detail">
-                {isNil(dataPayment.fullAddress) === false && (
-                  <div>Propiedad: {dataPayment.fullAddress}</div>
-                )}
-                {isNil(dataPayment.orderPaymentConcept) === false && (
-                  <div>Concepto: {dataPayment.orderPaymentConcept}</div>
-                )}
-              </div>
-              <div className="section-payment-method">
-                <TabsProperty>
-                  {dataTab.map((row) => {
-                    return (
-                      <Tab
-                        selected={tabSelect === row.id}
-                        onClick={() => {
-                          setTabSelect(row.id);
+                </div>
+                <div className="card-body-payment">
+                  {tabSelect === "1" && (
+                    <SectionSpeiPayment dataPayment={dataPayment} />
+                  )}
+                  {tabSelect === "2" && (
+                    <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                      <SectionCardPayment
+                        dataPayment={dataPayment}
+                        onOkPayment={(estatus, label) => {
+                          setIsOkPayment(estatus);
+                          setLabelErrorPayment(label);
                         }}
-                      >
-                        <h1>
-                          {row.text}{" "}
-                          {row.id === "1" && <span>Sin comisión</span>}
-                        </h1>
-                        <hr />
-                      </Tab>
-                    );
-                  })}
-                </TabsProperty>
-                <CardPaymentMethod>
-                  <div className="header-card-payment">
-                    <div className="amount-to-pay">
-                      <strong>Monto a pagar</strong>{" "}
-                      <span>
-                        {tabSelect === "1"
-                          ? dataPayment.formattedAmount
-                          : amountTaxes}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="card-body-payment">
-                    {tabSelect === "1" && (
-                      <SectionSpeiPayment dataPayment={dataPayment} />
-                    )}
-                    {tabSelect === "2" && (
-                      <Elements
-                        stripe={stripePromise}
-                        options={ELEMENTS_OPTIONS}
-                      >
-                        <SectionCardPayment
-                          dataPayment={dataPayment}
-                          onOkPayment={(estatus, label) => {
-                            setIsOkPayment(estatus);
-                            setLabelErrorPayment(label);
-                          }}
-                        />
-                      </Elements>
-                    )}
-                    {tabSelect === "3" && (
-                      <Elements
-                        stripe={stripePromise}
-                        options={ELEMENTS_OPTIONS}
-                      >
-                        <SectionOxxoPayment
-                          onClickContinue={() => {
-                            history.push(
-                              isEmpty(dataUserRedirect) === false &&
-                                isNil(dataUserRedirect.backPath) === false
-                                ? dataUserRedirect.backPath
-                                : dataProfile.path
-                            );
-                          }}
-                          dataPayment={dataPayment}
-                        />
-                      </Elements>
-                    )}
-                  </div>
-                </CardPaymentMethod>
-              </div>
-            </>
-          )}
-        {(isNil(isOkPayment) === false ||
-          (isNil(dataPayment.isPaid) === false &&
-            dataPayment.isPaid === true)) && (
+                      />
+                    </Elements>
+                  )}
+                  {tabSelect === "3" && (
+                    <Elements stripe={stripePromise} options={ELEMENTS_OPTIONS}>
+                      <SectionOxxoPayment
+                        onClickContinue={() => {
+                          history.push(
+                            isEmpty(dataUserRedirect) === false &&
+                              isNil(dataUserRedirect.backPath) === false
+                              ? dataUserRedirect.backPath
+                              : dataProfile.path
+                          );
+                        }}
+                        dataPayment={dataPayment}
+                      />
+                    </Elements>
+                  )}
+                </div>
+              </CardPaymentMethod>
+            </div>
+          </>
+        ) : isNil(isOkPayment) === true ? (
+          <PaidService>
+            <h1>
+              Proceso <span>Pagado</span>
+            </h1>
+            <IconPaymentCheck />
+            <h2>¡Felicidades!</h2>
+            <span className="label-success-pay">
+              Disfruta de los beneficios que Homify tiene para ti.
+            </span>
+            <div className="button-payment">
+              <button
+                onClick={() => {
+                  history.push(dataProfile.path);
+                }}
+              >
+                Continuar
+              </button>
+            </div>
+          </PaidService>
+        ) : (
+          <></>
+        )}
+        {isNil(isOkPayment) === false && (
           <PaidService>
             <h1>
               Pago <span>{isOkPayment === true ? "Exitoso" : "Fallido"}</span>
             </h1>
-
             {isOkPayment === true ? <IconPaymentCheck /> : <IconPaymentTimes />}
             <h2>{isOkPayment === true ? "¡Felicidades!" : "¡Oh no!"}</h2>
             <span className="label-success-pay">
