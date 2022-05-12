@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import { connect } from "react-redux";
-import { Row, Col, Avatar } from "antd";
+import { Row, Col, Avatar, Tooltip } from "antd";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 import moment from "moment";
 import styled from "styled-components";
 import isEmpty from "lodash/isEmpty";
@@ -578,7 +579,17 @@ const SectionPersonalInformation = (props) => {
                 </span>
               ) : (
                 <ComponentRadio>
-                  <strong>¿Tienes un obligado solidario?</strong>
+                  <strong>
+                    ¿Tienes un obligado solidario?{" "}
+                    <Tooltip
+                      placement="top"
+                      title={
+                        "Persona física o moral que se obliga en los mismos términos del contrato de arrendamiento que el inquilino principal, el obligado no es un aval, indicar un obligado aumenta las posibilidades de ser aprobado durante un proceso de investigación."
+                      }
+                    >
+                      <QuestionCircleOutlined />
+                    </Tooltip>
+                  </strong>
                   <div className="radio-inputs-options">
                     <label className="input-radio">
                       <input
