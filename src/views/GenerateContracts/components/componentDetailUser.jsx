@@ -39,6 +39,7 @@ const ComponentDetailUser = (props) => {
     onClose,
     dataInfoRequest,
     onSaveInfo,
+    dataRequest,
     dataFee,
   } = props;
   const initState = {
@@ -110,7 +111,6 @@ const ComponentDetailUser = (props) => {
         isInfoProvidedByRequester,
         requiresVerification,
       } = dataInfoRequest;
-      console.log("dataInfoRequest", dataInfoRequest);
       setDataForm({
         idCountryNationality,
         idUserInRequest,
@@ -223,8 +223,9 @@ const ComponentDetailUser = (props) => {
                 />
               </Col>
             </Row>
-            {isNil(dataForm.isFaceToFace) === false &&
-              dataForm.isFaceToFace === "2" && (
+            {isNil(dataRequest.isFaceToFace) === false &&
+              (dataRequest.isFaceToFace === "2" ||
+                dataRequest.isFaceToFace === false) && (
                 <>
                   <Row>
                     <Col span={24}>
@@ -328,7 +329,8 @@ const ComponentDetailUser = (props) => {
             </Row>
             {isNil(dataForm.isInfoProvidedByRequester) === false &&
               dataForm.isInfoProvidedByRequester === false &&
-              dataForm.isFaceToFace === "1" && (
+              (dataRequest.isFaceToFace === "1" ||
+                dataRequest.isFaceToFace === true) && (
                 <>
                   <Row>
                     <Col span={24}>
@@ -425,9 +427,15 @@ const ComponentDetailUser = (props) => {
               onClick={async () => {
                 const {
                   idCountryNationality,
+                  idUserInRequest,
+                  idCustomerType,
+                  idPersonType,
                   givenName,
                   lastName,
+                  mothersMaidenName,
                   emailAddress,
+                  idCountryPhoneNumber,
+                  idPhoneType,
                   phoneNumber,
                   isInfoProvidedByRequester,
                   requiresVerification,
@@ -441,8 +449,8 @@ const ComponentDetailUser = (props) => {
                   isNil(requiresVerification) === false
                 ) {
                   if (
-                    (dataForm.isFaceToFace === "1" ||
-                      dataForm.isFaceToFace === true) &&
+                    (dataRequest.isFaceToFace === "1" ||
+                      dataRequest.isFaceToFace === true) &&
                     isInfoProvidedByRequester === false
                   ) {
                     if (
@@ -450,7 +458,25 @@ const ComponentDetailUser = (props) => {
                       isEmpty(emailAddress) === false
                     ) {
                       setIsLoadApi(true);
-                      await onSaveInfo({});
+                      await onSaveInfo({
+                        jsonUserImplicated: JSON.stringify([
+                          {
+                            idCountryNationality,
+                            idUserInRequest,
+                            idCustomerType,
+                            idPersonType,
+                            givenName,
+                            lastName,
+                            mothersMaidenName,
+                            emailAddress,
+                            idCountryPhoneNumber,
+                            idPhoneType,
+                            phoneNumber,
+                            isInfoProvidedByRequester,
+                            requiresVerification,
+                          },
+                        ]),
+                      });
                       setIsLoadApi(false);
                     } else {
                       setIsVisibleError(true);
@@ -459,23 +485,59 @@ const ComponentDetailUser = (props) => {
                       }, 5000);
                     }
                   } else if (
-                    (dataForm.isFaceToFace === "1" ||
-                      dataForm.isFaceToFace === true) &&
+                    (dataRequest.isFaceToFace === "1" ||
+                      dataRequest.isFaceToFace === true) &&
                     isInfoProvidedByRequester === true
                   ) {
                     setIsLoadApi(true);
-                    await onSaveInfo({});
+                    await onSaveInfo({
+                      jsonUserImplicated: JSON.stringify([
+                        {
+                          idCountryNationality,
+                          idUserInRequest,
+                          idCustomerType,
+                          idPersonType,
+                          givenName,
+                          lastName,
+                          mothersMaidenName,
+                          emailAddress,
+                          idCountryPhoneNumber,
+                          idPhoneType,
+                          phoneNumber,
+                          isInfoProvidedByRequester,
+                          requiresVerification,
+                        },
+                      ]),
+                    });
                     setIsLoadApi(false);
                   } else if (
-                    dataForm.isFaceToFace === "2" ||
-                    dataForm.isFaceToFace === false
+                    dataRequest.isFaceToFace === "2" ||
+                    dataRequest.isFaceToFace === false
                   ) {
                     if (
                       isNil(emailAddress) === false &&
                       isEmpty(emailAddress) === false
                     ) {
                       setIsLoadApi(true);
-                      await onSaveInfo({});
+                      await onSaveInfo({
+                        jsonUserImplicated: JSON.stringify([
+                          {
+                            idCountryNationality,
+                            idUserInRequest,
+                            idCustomerType,
+                            idPersonType,
+                            givenName,
+                            lastName,
+                            mothersMaidenName,
+                            emailAddress,
+                            idCountryPhoneNumber,
+                            idPhoneType,
+                            phoneNumber,
+                            isInfoProvidedByRequester,
+                            requiresVerification,
+                          },
+                        ]),
+                      });
                       setIsLoadApi(false);
                     } else {
                       setIsVisibleError(true);

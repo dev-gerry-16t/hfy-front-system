@@ -841,6 +841,11 @@ const SectionPersonalInformationAgentMoral = (props) => {
           }}
         ></div>
         <ComponentContactInformation
+          idCustomer={
+            isNil(idCustomerOwner) === false
+              ? idCustomerOwner
+              : dataProfile.idCustomer
+          }
           dataEmail={dataEmail}
           dataPhoneNumber={dataPhoneNumber}
           getById={() => {

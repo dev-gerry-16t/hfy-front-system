@@ -501,6 +501,7 @@ const SectionInvolved = ({
   onResend,
   onSaveInfo,
   dataFee,
+  dataRequest,
 }) => {
   const [isVisibleEdit, setIsVisibleEdit] = useState(false);
   const [dataDetail, setDataDetail] = useState({});
@@ -510,8 +511,11 @@ const SectionInvolved = ({
       <ComponentDetailUser
         visibleDialog={isVisibleEdit}
         dataInfoRequest={dataDetail}
+        dataRequest={dataRequest}
         onSaveInfo={async (data) => {
           await onSaveInfo(data);
+          setDataDetail({});
+          setIsVisibleEdit(false);
         }}
         dataFee={dataFee}
         onClose={() => {

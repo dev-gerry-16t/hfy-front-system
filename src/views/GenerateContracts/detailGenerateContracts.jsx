@@ -331,6 +331,12 @@ const DetailGenerateContracts = (props) => {
               ? JSON.parse(dataInfoRequest.request.jsonUserImplicated)
               : []
           }
+          dataRequest={
+            isEmpty(dataInfoRequest) === false &&
+            isEmpty(dataInfoRequest.request) === false
+              ? dataInfoRequest.request
+              : []
+          }
           onSaveInfo={async (data) => {
             await handlerCallSetRequest(data);
             handlerCallGetRequestById(idRequest);
