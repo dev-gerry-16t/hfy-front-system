@@ -4,6 +4,7 @@ import isEmpty from "lodash/isEmpty";
 import styled from "styled-components";
 import { GeneralCard } from "../constants/styles";
 import ComponentLoadSection from "../../../components/componentLoadSection";
+import CustomPaymentMessage from "../../../components/customPaymentMessage";
 
 const InfoPayment = styled.div`
   .title-concept {
@@ -50,6 +51,7 @@ const InfoPayment = styled.div`
 
 const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
   const handlerOnClickPayment = () => {
     setIsLoadApi(true);
@@ -84,10 +86,11 @@ const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
       if (message.data === "payment_succesed") {
         clearInterval(intervalWindow);
         openPayment.close();
+        setPaymentSuccess(true);
         setTimeout(() => {
           setIsLoadApi(false);
           onUpdateInfo();
-        }, 1500);
+        }, 3000);
       }
     };
   };
@@ -107,6 +110,12 @@ const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
 
   return (
     <GeneralCard>
+      <CustomPaymentMessage
+        onClose={() => {
+          setPaymentSuccess(false);
+        }}
+        visibleOnboard={paymentSuccess}
+      />
       <ComponentLoadSection
         isLoadApi={isLoadApi}
         text="Realizando Pago"
