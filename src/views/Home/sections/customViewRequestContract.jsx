@@ -71,7 +71,7 @@ const CustomViewRequestContract = ({
     requiresLegalAdvice: null,
   };
   const initStateOwner = {
-    idCountryNationality: null,
+    idCountryNationality: "1",
     idUserInRequest: null,
     idCustomerType: 2,
     idPersonType: 1,
@@ -86,7 +86,7 @@ const CustomViewRequestContract = ({
     requiresVerification: null,
   };
   const initStateTenant = {
-    idCountryNationality: null,
+    idCountryNationality: "1",
     idUserInRequest: null,
     idCustomerType: 1,
     idPersonType: 1,
@@ -238,11 +238,11 @@ const CustomViewRequestContract = ({
     }
   };
 
-  const handlerOnClickForm = () => {
+  const handlerOnClickForm = (url) => {
     setIsLoadApi(true);
     const channelName = "form_users_contract";
     const channel = new BroadcastChannel(channelName);
-    const openForm = window.open("/formUser/1/2/1", "_blank");
+    const openForm = window.open(url, "_blank");
 
     let intervalWindow = setInterval(() => {
       if (openForm.closed === true) {
@@ -1237,9 +1237,11 @@ const CustomViewRequestContract = ({
                   <span>Fecha de firma: </span>
                   <strong>
                     {" "}
-                    {moment(dataForm.scheduleAt, "YYYY-MM-DD").format(
-                      "DD MMMM YYYY"
-                    )}
+                    {isNil(dataForm.scheduleAt) === false
+                      ? moment(dataForm.scheduleAt, "YYYY-MM-DD").format(
+                          "DD MMMM YYYY"
+                        )
+                      : "N/A"}
                   </strong>
                 </div>
                 <div>
@@ -1558,7 +1560,25 @@ const CustomViewRequestContract = ({
               <MainButtons>
                 <button
                   className="hfy-primary-button"
-                  onClick={handlerOnClickForm}
+                  onClick={() => {
+                    const dataUser =
+                      isEmpty(dataInfoRequest) === false &&
+                      isEmpty(dataInfoRequest.request) === false &&
+                      isEmpty(dataInfoRequest.request.jsonUserImplicated) ===
+                        false
+                        ? JSON.parse(dataInfoRequest.request.jsonUserImplicated)
+                        : [];
+                    if (isEmpty(dataUser) === false) {
+                      const idUser = dataUser.find((row) => {
+                        return row.idCustomerType === 2;
+                      });
+                      if (isNil(idUser) === false) {
+                        handlerOnClickForm(
+                          `/formUser/${requestId}/${idUser.idUserInRequest}/2`
+                        );
+                      }
+                    }
+                  }}
                 >
                   Abrir Formulario
                 </button>
@@ -1607,7 +1627,25 @@ const CustomViewRequestContract = ({
               {finishForm === false && (
                 <button
                   className="hfy-primary-button"
-                  onClick={handlerOnClickForm}
+                  onClick={() => {
+                    const dataUser =
+                      isEmpty(dataInfoRequest) === false &&
+                      isEmpty(dataInfoRequest.request) === false &&
+                      isEmpty(dataInfoRequest.request.jsonUserImplicated) ===
+                        false
+                        ? JSON.parse(dataInfoRequest.request.jsonUserImplicated)
+                        : [];
+                    if (isEmpty(dataUser) === false) {
+                      const idUser = dataUser.find((row) => {
+                        return row.idCustomerType === 1;
+                      });
+                      if (isNil(idUser) === false) {
+                        handlerOnClickForm(
+                          `/formUser/${requestId}/${idUser.idUserInRequest}/1`
+                        );
+                      }
+                    }
+                  }}
                 >
                   Abrir Formulario
                 </button>
