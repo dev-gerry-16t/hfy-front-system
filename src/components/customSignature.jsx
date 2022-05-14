@@ -195,14 +195,15 @@ const CustomSignature = ({
             entiendo que Homify utilizará mi nombre, dirección de correo
             electrónico o cualquier otro medio de comunicación e información
             limitada para completar el proceso de firma y mejorar la experiencia
-            de usuario. Consulta nuestra{" "}
+            de usuario. Si deseas mayor información acerca de cómo Homify
+            recopila, utiliza y <strong>protege tus datos</strong> personales,
+            consulta nuestro{" "}
             <a href="https://www.homify.ai/aviso-de-privacidad" target="_blank">
-              Política de privacidad
-            </a>{" "}
-            para obtener más información. Al añadir la firma digital a este
-            documento, acepto que dicha firma será tan válida como las firmas
-            manuscritas y se considerará original en la medida permitida por la
-            ley aplicable.
+              aviso de privacidad
+            </a>
+            . Al añadir la firma digital a este documento, acepto que dicha
+            firma será tan válida como las firmas manuscritas y se considerará
+            original en la medida permitida por la ley aplicable.
           </div>
           <div className="buttons-firm-section">
             <button

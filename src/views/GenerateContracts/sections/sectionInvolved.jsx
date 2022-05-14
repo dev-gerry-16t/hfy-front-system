@@ -205,11 +205,12 @@ const LoadingProcess = styled.div`
       ? `linear-gradient(90deg,#ff0282 0%,rgba(255, 2, 130, 0.58) ${props.load}%,rgba(255, 2, 130, 0) ${props.load}%);`
       : `linear-gradient(90deg,#ff0282 0%,rgba(255, 2, 130, 0.58) ${
           props.load / 2
-        }%,rgba(255, 2, 130, 0) ${props.load}%);`} 
+        }%,rgba(255, 2, 130, 0) ${props.load}%);`};
   border-radius: 20px;
-  padding: 0.5em;
+  padding: 0.2em 0.5em;
   span {
-    color:  ${(props) => (props.load === 0 ? "#000" : "#fff")};
+    font-size: 12px !important;
+    color:  ${(props) => (props.load === 0 ? "#000" : "#fff!important")};
   }
 `;
 
@@ -298,6 +299,11 @@ const CardInvolved = ({
                 <h3>{row.fullName}</h3>
                 <u>{row.emailAddress}</u>
                 <span>{row.phoneNumber}</span>
+              <p>
+                <LoadingProcess load={row.percentDataCompleted}>
+                  <span>Formulario al {row.percentDataCompleted}%</span>
+                </LoadingProcess>
+              </p>
               </div>
             </div>
             {toggleCard === false && (
@@ -389,12 +395,6 @@ const CardInvolved = ({
           </div>
         </div>
         <ContentDetail visible={toggleCard}>
-          <p>
-            <strong>Proceso al:</strong>
-            <LoadingProcess load={row.percentDataCompleted}>
-              <span>{row.percentDataCompleted}%</span>
-            </LoadingProcess>
-          </p>
           <p>
             <span className="title-desc">Tipo de persona:</span>
             <br />
