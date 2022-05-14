@@ -15,6 +15,24 @@ import { Payment } from "../constants/styleConstants";
 import CustomInputTypeForm from "../../../components/CustomInputTypeForm";
 import ComponentLoadSection from "../../../components/componentLoadSection";
 import CustomSelect from "../../../components/CustomSelect";
+import saqareX from "../../../assets/icons/saqareX.svg";
+
+const ErrorMessage = styled.div`
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  visibility: ${(props) => (props.error ? "visible" : "hidden")};
+  opacity: ${(props) => (props.error ? "1" : "0")};
+  background: #feefef;
+  color: #da1414;
+  border-radius: 5px;
+  font-size: 0.8em;
+  padding: 3px 0px 3px 5px;
+  transition: visibility 0.1s linear, opacity 0.1s linear;
+  span {
+    margin-left: 3px;
+  }
+`;
 
 const CardPayment = styled.div`
   min-width: 400px;
@@ -81,7 +99,7 @@ const SectionCardPayment = (props) => {
   const [errorsStripe, setErrorsStripe] = useState(null);
   const [cardComplete, setCardComplete] = useState(false);
   const [processing, setProcessing] = useState(false);
-  const [labelErrors, setLabelErrors] = useState("");
+  const [labelErrors, setLabelErrors] = useState(null);
   const [paymentCancel, setPaymentCancel] = useState(false);
   const [paymentMethods, setPaymentMethods] = useState(null);
   const [catalogPlansAvailable, setCatalogPlansAvailable] = useState({
@@ -198,10 +216,14 @@ const SectionCardPayment = (props) => {
         card: cardElement,
         billing_details: dataForm,
       });
+
       if (error) {
         setPaymentCancel(true);
         setLabelErrors(error.message);
         setProcessing(false);
+        setTimeout(() => {
+          setLabelErrors(null);
+        }, 5000);
       } else {
         const response = await hanlderCallPostPaymentService(
           {
@@ -372,6 +394,10 @@ const SectionCardPayment = (props) => {
                   />
                 </Col>
               </Row>
+              <ErrorMessage error={isNil(labelErrors) === false}>
+                <img src={saqareX} alt="exclaim" />
+                <span>{labelErrors}</span>
+              </ErrorMessage>
               <div className="button-payment">
                 <button
                   onClick={() => {

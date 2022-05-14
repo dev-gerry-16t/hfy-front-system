@@ -5,6 +5,28 @@ import styled from "styled-components";
 import ENVIROMENT from "../utils/constants/enviroments";
 import CustomDialog from "./CustomDialog";
 
+const MainButtons = styled.div`
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1em;
+  button {
+    border-radius: 1em;
+    border: none;
+    padding: 0.5em 0px;
+    font-weight: 600;
+  }
+  .hfy-primary-button {
+    background: var(--color-primary);
+    color: #fff;
+  }
+  .hfy-secondary-button {
+    background: #fff;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+  }
+`;
+
 const ContentDocumentView = styled.div`
   height: 100%;
   padding: 1em 5px;
@@ -155,6 +177,16 @@ const CustomViewDocumentV3 = (props) => {
           }}
           id="data-iframe-document"
         ></div>
+        <MainButtons>
+          <button
+            className="hfy-secondary-button"
+            onClick={() => {
+              onClose();
+            }}
+          >
+            Salir
+          </button>
+        </MainButtons>
       </ContentDocumentView>
     </CustomDialog>
   );

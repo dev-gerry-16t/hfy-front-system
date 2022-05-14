@@ -170,7 +170,7 @@ const LoadSquare = styled.div`
     text-align: center;
     h1 {
       font-weight: 700;
-      font-size: 1.5em;
+      font-size: 1.4em;
     }
   }
 `;
@@ -302,7 +302,9 @@ const SectionIdentity = (props) => {
                         idUserInRequest,
                         idCustomer: dataFormSave.idCustomer,
                       }}
-                      exited={() => {}}
+                      exited={() => {
+                        onUpdateInformation();
+                      }}
                       finished={() => {
                         onUpdateInformation();
                       }}
