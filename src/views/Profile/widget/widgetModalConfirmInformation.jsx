@@ -28,8 +28,7 @@ const WidgetModalConfirmInformation = (props) => {
           <h2>¿Deseas confirmar tu información?</h2>
           <p>
             Por favor considera que una vez que confirmes tu información no
-            podrás realizar cambios, a excepción de tu información bancaria y de
-            contacto
+            podrás realizar cambios.
           </p>
           <div className="button-action">
             <ButtonsModal

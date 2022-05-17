@@ -454,7 +454,7 @@ const SectionDataProperty = (props) => {
                   placeholder=""
                   label={
                     dataForm.idOperationType == 1
-                      ? "Precio de renta *"
+                      ? "Precio de renta (no incluyas mantenimiento) *"
                       : "Precio de venta *"
                   }
                   error={false}

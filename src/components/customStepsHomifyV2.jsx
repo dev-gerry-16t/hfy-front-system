@@ -3,7 +3,7 @@ import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
 
 const CustomStepsHomify = (props) => {
-  const { steps, onClick, current, callBackFind } = props;
+  const { steps, onClick, current, callBackFind, clickAble = true } = props;
 
   useEffect(() => {
     if (isNil(current) === false && isEmpty(steps) === false) {
@@ -26,8 +26,11 @@ const CustomStepsHomify = (props) => {
                 cursor: "pointer",
               }}
               onClick={() => {
-                onClick(index, row);
+                if (clickAble === true) {
+                  onClick(index, row);
+                }
               }}
+              key={`tabs-form-${index}`}
             >
               <div
                 className={

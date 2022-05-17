@@ -3,6 +3,7 @@ import TagManager from "react-gtm-module";
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ReactComponent as IconInfoCircle } from "../../../assets/iconSvg/svgFile/iconInfoCircle.svg";
+import { API_CONSTANTS } from "../../../utils/constants/apiConstants";
 
 const MessageSubscription = styled.div`
   font-family: Poppins;
@@ -31,8 +32,24 @@ const MessageSubscription = styled.div`
   }
 `;
 const SectionMessageInformation = (props) => {
-  const { dataProfile, cookie } = props;
+  const { dataProfile, cookie, callGlobalActionApi } = props;
   const [isOpenMessage, setIsOpenMessage] = useState(true);
+
+  const handlerCallTrackEvent = async (type) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type,
+        },
+        null,
+        API_CONSTANTS.TRACK_EVENT
+      );
+    } catch (error) {}
+  };
+
   return (
     <MessageSubscription
       isVisible={
@@ -48,6 +65,7 @@ const SectionMessageInformation = (props) => {
           </span>
           <u
             onClick={() => {
+              handlerCallTrackEvent(10);
               TagManager.dataLayer({
                 dataLayer: {
                   event: "clicHome",
@@ -64,6 +82,7 @@ const SectionMessageInformation = (props) => {
           </u>
           <button
             onClick={() => {
+              handlerCallTrackEvent(11);
               TagManager.dataLayer({
                 dataLayer: {
                   event: "clicHome",

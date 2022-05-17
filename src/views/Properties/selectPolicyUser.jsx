@@ -758,12 +758,7 @@ const SelectPolicy = (props) => {
                       ) + "MXN"
                     : "$0MXN";
                 const estimationPolicyAmount = amountTotalPolicy.amountFormat;
-                const content = `<div>
-                El ${userType} <strong>${fullName}</strong> ${agentNo}  ha solicitado una póliza <strong>"${policyType}"</strong>
-                <br/>
-                Monto de renta: <strong>${amountRent}</strong><br/>
-                Valor de póliza calculado: <strong>${estimationPolicyAmount}</strong>
-                </div>`;
+                const content = `<div>El ${userType} <strong>${fullName}</strong> ${agentNo}  ha solicitado una póliza <strong>"${policyType}"</strong><br/>Monto de renta: <strong>${amountRent}</strong><br/>Valor de póliza calculado: <strong>${estimationPolicyAmount}</strong></div>`;
                 if (isNil(estimationPolicyAmount) === false) {
                   setLoadApi(true);
                   await handlerRequestPolicy(content);
