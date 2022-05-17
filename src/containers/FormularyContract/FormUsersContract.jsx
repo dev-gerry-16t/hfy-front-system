@@ -445,7 +445,12 @@ const FormUsersContract = (props) => {
                       setIsLoadApi(false);
                     }, 5000);
                   }}
-                  onClickNext={() => {
+                  onClickNext={async () => {
+                    if (idCustomerType === "2") {
+                      await handlerCallGetOwnerById();
+                    } else if (idCustomerType === "1") {
+                      await handlerCallGetTenantById();
+                    }
                     setCurrent(current + 1);
                   }}
                 />
@@ -528,12 +533,13 @@ const FormUsersContract = (props) => {
             >
               Términos y condiciones
             </a>{" "}
-            de uso de los servicios. Si quieres más información acerca de cómo
-            Homify recopila, utiliza y protege tus datos personales, consulta el{" "}
+            de uso de los servicios. Si deseas mayor información acerca de cómo
+            Homify recopila, utiliza y <strong>protege tus datos</strong>{" "}
+            personales, consulta nuestro{" "}
             <a href="https://www.homify.ai/aviso-de-privacidad" target="_blank">
               aviso de privacidad
-            </a>{" "}
-            de Homify.
+            </a>
+            .
           </span>
         </div>
       </div>
