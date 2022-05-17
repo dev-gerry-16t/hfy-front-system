@@ -153,6 +153,7 @@ const API_CONSTANTS = {
     SIGN_DOCUMENT: `${API.API}/request/signDocument/`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
+  TRACK_EVENT: `${API.API}/event/trackEvent`,  
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
   GET_CONFIRM_PAYMENT_INTENT: `${API.API_SECURE}${API.PROVIDERS}/getConfirmPaymentIntent`,

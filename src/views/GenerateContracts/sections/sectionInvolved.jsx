@@ -210,7 +210,7 @@ const LoadingProcess = styled.div`
   padding: 0.2em 0.5em;
   span {
     font-size: 12px !important;
-    color:  ${(props) => (props.load === 0 ? "#000" : "#fff!important")};
+    color: ${(props) => (props.load === 0 ? "#000" : "#fff!important")};
   }
 `;
 
@@ -273,14 +273,16 @@ const CardInvolved = ({
         position="absolute"
       >
         <div className="all-content-pre-info">
-          <button
-            className="button-edit-involved"
-            onClick={async () => {
-              onViewDetail(row);
-            }}
-          >
-            <IconEditSquare color="var(--color-primary)" size="16px" />
-          </button>
+          {row.canBeEdited === true && (
+            <button
+              className="button-edit-involved"
+              onClick={async () => {
+                onViewDetail(row);
+              }}
+            >
+              <IconEditSquare color="var(--color-primary)" size="16px" />
+            </button>
+          )}
           <CardStatus color={row.idCustomerType === 1 ? "#46E6FD" : "#F3BF3A"}>
             <div className="status-prospect">
               <span>{row.customerType}</span>
@@ -299,11 +301,17 @@ const CardInvolved = ({
                 <h3>{row.fullName}</h3>
                 <u>{row.emailAddress}</u>
                 <span>{row.phoneNumber}</span>
-              <p>
-                <LoadingProcess load={row.percentDataCompleted}>
-                  <span>Formulario al {row.percentDataCompleted}%</span>
-                </LoadingProcess>
-              </p>
+                <p>
+                  <strong>
+                    {row.percentDataCompleted === 0
+                      ? "Sin avance en formulario"
+                      : "Avance en formulario"}
+                  </strong>
+                  <br />
+                  <LoadingProcess load={row.percentDataCompleted}>
+                    <span>{row.percentDataCompleted}%</span>
+                  </LoadingProcess>
+                </p>
               </div>
             </div>
             {toggleCard === false && (

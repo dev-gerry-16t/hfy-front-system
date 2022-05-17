@@ -885,6 +885,7 @@ const DefaultLayout = (props) => {
               <SectionMessageInformation
                 dataProfile={dataProfile}
                 cookie={frontFunctions.getCookie("freePublicPropertyMLM")}
+                callGlobalActionApi={callGlobalActionApi}
               />
               <Switch>
                 {routes.map((route) => {

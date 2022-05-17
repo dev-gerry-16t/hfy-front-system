@@ -167,6 +167,7 @@ const catalogHome = [
     path: "/websystem/dashboard-properties",
     page: "mis_propiedades",
     price: false,
+    type: 1,
   },
   {
     text: "Bolsa inmobiliaria",
@@ -174,6 +175,7 @@ const catalogHome = [
     path: "/websystem/catalog-properties",
     page: "bolsa_inmobiliaria",
     price: false,
+    type: 2,
   },
   {
     text: "Agregar Propiedad",
@@ -181,6 +183,7 @@ const catalogHome = [
     path: "/websystem/add-property",
     page: "agregar_propiedad",
     price: false,
+    type: 3,
   },
   {
     text: "Bandeja de entrada",
@@ -188,6 +191,7 @@ const catalogHome = [
     path: "/websystem/notificaciones/1",
     page: "bandeja_de_entrada",
     price: false,
+    type: 4,
   },
   // { text: "Contactos", icon: IconSchedule, path: null },
   {
@@ -196,6 +200,7 @@ const catalogHome = [
     path: "/websystem/dashboard-adviser",
     page: "dashboard",
     price: false,
+    type: 5,
   },
   {
     text: "Generar contrato de arrendamiento",
@@ -204,6 +209,7 @@ const catalogHome = [
     openComponent: 1,
     page: "genera_contrato_arrendamiento",
     price: true,
+    type: 6,
   },
   // { text: "Investigar inquilino", icon: IconSearchUser, path: null },
   {
@@ -212,6 +218,7 @@ const catalogHome = [
     path: "/websystem/select-policy-user",
     page: "Solicita_una_poliza_juridica",
     price: false,
+    type: 7,
   },
 ];
 
@@ -253,6 +260,21 @@ const HomeAgent = (props) => {
     }
   };
 
+  const handlerCallTrackEvent = async (type) => {
+    const { idSystemUser, idLoginHistory } = dataProfile;
+    try {
+      await callGlobalActionApi(
+        {
+          idSystemUser,
+          idLoginHistory,
+          type,
+        },
+        null,
+        API_CONSTANTS.TRACK_EVENT
+      );
+    } catch (error) {}
+  };
+
   useEffect(() => {
     handlerCallGetServiceFee();
     const cookieOnboarding = frontFunctions.getCookie("onboarding");
@@ -291,11 +313,13 @@ const HomeAgent = (props) => {
         <CustomOnboarding
           visibleOnboard={visibleOnboard}
           onClose={() => {
+            handlerCallTrackEvent(9);
             setVisibleOnboard(false);
             document.cookie =
               "onboarding=success; expires=Fri, 31 Dec 9999 23:59:59 GMT";
           }}
           onClickFinish={() => {
+            handlerCallTrackEvent(8);
             setVisibleOnboard(false);
             document.cookie =
               "onboarding=success; expires=Fri, 31 Dec 9999 23:59:59 GMT";
@@ -316,6 +340,7 @@ const HomeAgent = (props) => {
               <CardHome
                 key={`card-home-${ix}`}
                 onClick={() => {
+                  handlerCallTrackEvent(row.type);
                   TagManager.dataLayer({
                     dataLayer: {
                       event: "clicHome",
