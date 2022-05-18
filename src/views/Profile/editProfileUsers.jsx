@@ -240,7 +240,7 @@ const EditProfileUsers = (props) => {
     const elementDad = document.getElementById("edit-profile-user");
     elementDad.scrollTop = 0;
   }, [current]);
-
+  
   return (
     <Content id="edit-profile-user">
       <CustomStepsHomify
@@ -479,8 +479,7 @@ const EditProfileUsers = (props) => {
         {/*Verificación de identidad */}
         {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 16 && (
           <SectionIdentity
-            dataProfile={dataProfile}
-            onclickNext={() => {
+            onClickNext={() => {
               setCurrent(current + 1);
             }}
             updateInformation={() => {

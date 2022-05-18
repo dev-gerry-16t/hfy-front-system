@@ -228,6 +228,7 @@ const WidgetUploadDocument = (props) => {
         error,
         GLOBAL_CONSTANTS.STATUS_API.ERROR
       );
+      throw error;
     }
   };
 
@@ -298,9 +299,14 @@ const WidgetUploadDocument = (props) => {
                             accept="image/*,.pdf,.docx"
                             style={{ display: "none" }}
                             type="file"
-                            onChange={(e) => {
-                              const fileIndex = e.target.files[0];
-                              handlerAddDocument(fileIndex, row);
+                            onChange={async (e) => {
+                              try {
+                                const fileIndex = e.target.files[0];
+                                await handlerAddDocument(fileIndex, row);
+                              } catch (error) {
+                                const documentFileReader =
+                                  document.getElementById(`id-file-${ix}`);
+                              }
                             }}
                           />
                         </>
@@ -380,9 +386,15 @@ const WidgetUploadDocument = (props) => {
                             accept="image/*,.pdf,.docx"
                             style={{ display: "none" }}
                             type="file"
-                            onChange={(e) => {
-                              const fileIndex = e.target.files[0];
-                              handlerAddDocument(fileIndex, row);
+                            onChange={async (e) => {
+                              try {
+                                const fileIndex = e.target.files[0];
+                                await handlerAddDocument(fileIndex, row);
+                              } catch (error) {
+                                const documentFileReader =
+                                  document.getElementById(`id-file-${ix}`);
+                                documentFileReader.value = "";
+                              }
                             }}
                           />
                         </>

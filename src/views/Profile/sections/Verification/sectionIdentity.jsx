@@ -1,4 +1,14 @@
 import React, { useEffect, useContext, useState } from "react";
+import { connect } from "react-redux";
+import isEmpty from "lodash/isEmpty";
+import isNil from "lodash/isNil";
+import { API_CONSTANTS } from "../../../../utils/constants/apiConstants";
+import GLOBAL_CONSTANTS from "../../../../utils/constants/globalConstants";
+import FrontFunctions from "../../../../utils/actions/frontFunctions";
+import {
+  callGlobalActionApi,
+  callSetImageProfile,
+} from "../../../../utils/actions/actions";
 import styled, { keyframes } from "styled-components";
 import { Row, Col } from "antd";
 import {
@@ -8,6 +18,7 @@ import {
 } from "../../constants/styleConstants";
 import ContextProfile from "../../context/contextProfile";
 import CustomValidationUser from "../../../../components/CustomValidationUser";
+import WidgetModalConfirmation from "../../widget/widgetModalConfirmation";
 
 const rotate360 = keyframes`
 0% { transform: rotate(0) }
@@ -78,21 +89,73 @@ const ButtonContinue = styled.button`
 `;
 
 const SectionIdentity = (props) => {
-  const { onClickNext, dataProfile, updateInformation } = props;
+  const { callGlobalActionApi, onClickNext, dataProfile, updateInformation } =
+    props;
   const [isVisibleVerification, setIsVisibleVerification] = useState(false);
+  const [dataVerificationInfo, setDataVerificationInfo] = useState([]);
+  const [isOpenVerification, setIsOpenVerification] = useState(false);
 
   const dataContextProfile = useContext(ContextProfile);
-  const {} = dataContextProfile;
+  const { identifier, idCustomerOwner } = dataContextProfile;
+
+  const frontFunctions = new FrontFunctions();
+
+  const handlerCallValidateCustomerPropertiesInTab = async () => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          identifier,
+          idCustomer:
+            isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.VALIDATE_CUSTOMER_PROPERTIES_IN_TAB
+      );
+      const responseResult =
+        isNil(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0][0]) === false &&
+        isNil(response.response[0][0].properties) === false &&
+        isEmpty(response.response[0][0].properties) === false
+          ? JSON.parse(response.response[0][0].properties)
+          : [];
+
+      setDataVerificationInfo(responseResult);
+      if (isEmpty(responseResult) === false) {
+        setIsOpenVerification(true);
+        throw "Revisa la información requerida";
+      }
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+      throw error;
+    }
+  };
 
   return (
     <ContentForm>
+      <WidgetModalConfirmation
+        data={dataVerificationInfo}
+        isVisibleModal={isOpenVerification}
+        onNextStep={() => {
+          onClickNext();
+        }}
+        onClose={() => {
+          setIsOpenVerification(false);
+        }}
+      />
       <CustomValidationUser
         isVisible={isVisibleVerification}
         onClose={() => {
           setIsVisibleVerification(false);
         }}
-        finished={() => {
-        }}
+        finished={() => {}}
         metadata={{
           idCustomer: dataProfile.idCustomer,
         }}
@@ -104,23 +167,10 @@ const SectionIdentity = (props) => {
         }}
       />
       <div className="header-title">
-        <h1>Verificación de identidad</h1>
+        <h1>Verificación de cuenta</h1>
       </div>
       <FormProperty>
-        <div className="label-indicator">
-          <Row>
-            <Col span={24} xs={{ span: 24 }} md={{ span: 24 }}>
-              <span>Comenzaremos con la verificación de tu identidad</span>
-              <br />
-              <span>
-                Para evitar errores en la información personal que aparecerá en
-                el contrato de arrendamiento es necesario{" "}
-                <strong>tener a la mano una identificación oficial</strong> y de
-                ser necesario una selfie.
-              </span>
-            </Col>
-          </Row>
-        </div>
+        <div className="label-indicator"></div>
         <div className="type-property">
           <div
             style={{
@@ -164,7 +214,10 @@ const SectionIdentity = (props) => {
           <ButtonNextBackPage
             block={false}
             onClick={async () => {
-              onClickNext();
+              try {
+                await handlerCallValidateCustomerPropertiesInTab();
+                onClickNext();
+              } catch (error) {}
             }}
           >
             <u>{"Siguiente"}</u>
@@ -176,4 +229,16 @@ const SectionIdentity = (props) => {
   );
 };
 
-export default SectionIdentity;
+const mapStateToProps = (state) => {
+  const { dataProfile, dataProfileMenu } = state;
+  return {
+    dataProfile: dataProfile.dataProfile,
+  };
+};
+
+const mapDispatchToProps = (dispatch) => ({
+  callGlobalActionApi: (data, id, constant, method) =>
+    dispatch(callGlobalActionApi(data, id, constant, method)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectionIdentity);
