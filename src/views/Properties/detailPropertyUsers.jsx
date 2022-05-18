@@ -1029,7 +1029,14 @@ const DetailPropertyUsers = (props) => {
                   setIsOpenComponent(null);
                 }}
               />
-              <SectionPropertyDocuments />
+              <SectionPropertyDocuments
+                getDocumentProperty={() => {
+                  handlerCallGetDocRequiredByProperty({
+                    idProperty: dataDetail.idProperty,
+                    idApartment: dataDetail.idApartment,
+                  });
+                }}
+              />
               {dataProfile.idUserType !== 2 && (
                 <>
                   {((isNil(dataDetail.sharedBy) === false &&

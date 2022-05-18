@@ -483,6 +483,10 @@ const EditProfileUsers = (props) => {
             onclickNext={() => {
               setCurrent(current + 1);
             }}
+            updateInformation={() => {
+              handlerCallGetCustomerTabById();
+              handlerCallGetCustomerData();
+            }}
           />
         )}
         {/*Verificación de identidad */}

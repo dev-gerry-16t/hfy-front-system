@@ -78,7 +78,7 @@ const ButtonContinue = styled.button`
 `;
 
 const SectionIdentity = (props) => {
-  const { onClickNext, dataProfile } = props;
+  const { onClickNext, dataProfile, updateInformation } = props;
   const [isVisibleVerification, setIsVisibleVerification] = useState(false);
 
   const dataContextProfile = useContext(ContextProfile);
@@ -91,7 +91,8 @@ const SectionIdentity = (props) => {
         onClose={() => {
           setIsVisibleVerification(false);
         }}
-        finished={() => {}}
+        finished={() => {
+        }}
         metadata={{
           idCustomer: dataProfile.idCustomer,
         }}
@@ -99,7 +100,7 @@ const SectionIdentity = (props) => {
         flowId={dataProfile.flowId}
         finishedProcess={() => {
           setIsVisibleVerification(false);
-          onClickNext();
+          updateInformation();
         }}
       />
       <div className="header-title">
