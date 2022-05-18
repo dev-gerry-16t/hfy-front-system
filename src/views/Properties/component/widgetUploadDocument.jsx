@@ -202,6 +202,7 @@ const WidgetUploadDocument = (props) => {
         isNil(idCustomerOwner) === false ? idCustomerOwner : idCustomer,
       idSystemUser,
       idLoginHistory,
+      idProperty,
     };
     try {
       const response = await callAddDocument(
@@ -270,7 +271,7 @@ const WidgetUploadDocument = (props) => {
           </div>
         ) : (
           <Magnifier
-            src={`${ENVIROMENT}/api/viewFile/${dataPreviewDocument.idDocument}/${dataPreviewDocument.bucketSource}`}
+            src={`${ENVIROMENT}/api/viewFile/${dataPreviewDocument.idDocument}/${dataPreviewDocument.bucketSource}/${dataPreviewDocument.extension}`}
           />
         )}
       </Modal>

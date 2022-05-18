@@ -19,7 +19,8 @@ import { ReactComponent as ArrowDown2 } from "../../../assets/iconSvg/svgFile/ar
 import WidgetUploadDocument from "../component/widgetUploadDocument";
 
 const SectionPropertyDocuments = (props) => {
-  const { idUserType, callGlobalActionApi, dataProfile } = props;
+  const { idUserType, callGlobalActionApi, dataProfile, getDocumentProperty } =
+    props;
   const dataContexProperty = useContext(ContextProperty);
   const {
     dataDetail = {},
@@ -42,7 +43,13 @@ const SectionPropertyDocuments = (props) => {
       </div>
       <ComponentLoadSection isLoadApi={isLoadApi} position="absolute" text="">
         <div className="content-cards" id="user-documents-property">
-          <WidgetUploadDocument detail dataDocument={dataPropertyDocuments} />
+          <WidgetUploadDocument
+            detail
+            dataDocument={dataPropertyDocuments}
+            handlerCallGetCustomerDocument={() => {
+              getDocumentProperty();
+            }}
+          />
         </div>
       </ComponentLoadSection>
     </GeneralCard>
