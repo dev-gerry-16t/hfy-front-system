@@ -58,6 +58,7 @@ import { ReactComponent as IconOwner } from "../../assets/iconSvg/svgFile/iconOw
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionAreYouOwner from "./sectionsDetail/sectionAreYouOwner";
 import { stepAgent, stepAgentTop } from "./constants/stepsProperty";
+import SectionPropertyDocuments from "./sectionsDetail/sectionPropertyDocuments";
 
 const EmptyData = styled.div`
   display: flex;
@@ -101,6 +102,7 @@ const DetailPropertyUsers = (props) => {
   const [dataDetailAdvisers, setDataDetailAdvisers] = useState([]);
   const [dataDetailAmenities, setDataDetailAmenities] = useState([]);
   const [dataDetailDocuments, setDataDetailDocuments] = useState([]);
+  const [dataPropertyDocuments, setDataPropertyDocuments] = useState([]);
   const [dataDetailImages, setDataDetailImages] = useState([]);
   const [dataApplicationMethod, setDataApplicationMethod] = useState([]);
   const [dataEnableIntro, setDataEnableIntro] = useState([]);
@@ -161,6 +163,10 @@ const DetailPropertyUsers = (props) => {
           ? response.response[0][0]
           : {};
       handlerCallGetCustomerTimeLine({
+        idProperty: responseResult.idProperty,
+        idApartment: responseResult.idApartment,
+      });
+      handlerCallGetDocRequiredByProperty({
         idProperty: responseResult.idProperty,
         idApartment: responseResult.idApartment,
       });
@@ -298,6 +304,36 @@ const DetailPropertyUsers = (props) => {
           ? response.response[0]
           : {};
       setDataDetailDocuments(responseResult);
+    } catch (error) {
+      frontFunctions.showMessageStatusApi(
+        error,
+        GLOBAL_CONSTANTS.STATUS_API.ERROR
+      );
+    }
+  };
+
+  const handlerCallGetDocRequiredByProperty = async (data) => {
+    const { idSystemUser, idLoginHistory, idCustomer } = dataProfile;
+    try {
+      const response = await callGlobalActionApi(
+        {
+          idProperty: data.idProperty,
+          idApartment: data.idApartment,
+          idSystemUser,
+          idLoginHistory,
+        },
+        null,
+        API_CONSTANTS.CUSTOMER.GET_DOC_REQUIRED_BY_PROPERTY
+      );
+
+      const responseResult =
+        isEmpty(response) === false &&
+        isNil(response.response) === false &&
+        isNil(response.response[0]) === false &&
+        isNil(response.response[0]) === false
+          ? response.response[0]
+          : {};
+      setDataPropertyDocuments(responseResult);
     } catch (error) {
       frontFunctions.showMessageStatusApi(
         error,
@@ -622,6 +658,7 @@ const DetailPropertyUsers = (props) => {
               dataDetailAdvisers,
               dataDetailAmenities,
               dataDetailDocuments,
+              dataPropertyDocuments,
               history,
               updateProperty: async (data) => {
                 try {
@@ -992,6 +1029,7 @@ const DetailPropertyUsers = (props) => {
                   setIsOpenComponent(null);
                 }}
               />
+              <SectionPropertyDocuments />
               {dataProfile.idUserType !== 2 && (
                 <>
                   {((isNil(dataDetail.sharedBy) === false &&
