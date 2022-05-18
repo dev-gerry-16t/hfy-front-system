@@ -302,6 +302,11 @@ const DefaultLayout = (props) => {
   const menu = (
     <Menu>
       <Menu.Item>
+        <a target="_self" rel="noopener noreferrer" href="/websystem/profile">
+          Ver mi perfil
+        </a>
+      </Menu.Item>
+      <Menu.Item>
         <a
           target="_self"
           rel="noopener noreferrer"
