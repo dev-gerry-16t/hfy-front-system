@@ -26,6 +26,7 @@ import SectionAvalInformation from "./sections/Aval/sectionAvalInformation";
 import WidgetModalConfirmInformation from "./widget/widgetModalConfirmInformation";
 import CustomValidationUser from "../../components/CustomValidationUser";
 import SectionDocumentation from "./sections/Documents/sectionDocumentation";
+import SectionIdentity from "./sections/Verification/sectionIdentity";
 
 const Content = styled.div`
   overflow-y: scroll;
@@ -239,7 +240,7 @@ const EditProfileUsers = (props) => {
     const elementDad = document.getElementById("edit-profile-user");
     elementDad.scrollTop = 0;
   }, [current]);
-
+  
   return (
     <Content id="edit-profile-user">
       <CustomStepsHomify
@@ -468,12 +469,26 @@ const EditProfileUsers = (props) => {
         {/*Agente Persona Moral */}
         {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 13 && (
           <SectionPersonalInformationAgentMoral
-            onclickNext={() => {
+            onClickNext={() => {
               setCurrent(current + 1);
             }}
           />
         )}
         {/*Agente Persona Moral */}
+
+        {/*Verificación de identidad */}
+        {isEmpty(dataConfigForm) === false && dataConfigForm.identifier === 16 && (
+          <SectionIdentity
+            onClickNext={() => {
+              setCurrent(current + 1);
+            }}
+            updateInformation={() => {
+              handlerCallGetCustomerTabById();
+              handlerCallGetCustomerData();
+            }}
+          />
+        )}
+        {/*Verificación de identidad */}
       </ContextProfile.Provider>
     </Content>
   );

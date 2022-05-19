@@ -115,6 +115,9 @@ const API_CONSTANTS = {
     GET_ADVISER_STATS: `${API.CUSTOMER}/customer/getAdviserStats`,
     GET_USER_STATS: `${API.CUSTOMER}/loginHistory/getUserStats`,
     GET_ADVISER_RANKING: `${API.CUSTOMER}/customer/getAdviserRanking`,
+    GET_DOC_REQUIRED_BY_PROPERTY: `${API.CUSTOMER}/propertyDocument/getDocRequiredByProperty`,
+    ADD_PROPERTY_DOCUMENT: `${API.CUSTOMER}/propertyDocument/addPropertyDocument/`,
+    DEACTIVATE_PROPERTY_DOCUMENT: `${API.CUSTOMER}/propertyDocument/deactivatePropertyDocument/`,
   },
   EXTERNAL: {
     SET_REQUEST: `${API.EXTERNAL}/request/setRequest/`,
@@ -153,7 +156,7 @@ const API_CONSTANTS = {
     SIGN_DOCUMENT: `${API.API}/request/signDocument/`,
   },
   GET_PROPERTY_BY_ID: `${API.API}/property/getPropertyById`,
-  TRACK_EVENT: `${API.API}/event/trackEvent`,  
+  TRACK_EVENT: `${API.API}/event/trackEvent`,
   PROCESS_INVITATION: `${API.API}/invitation/processInvitation/`,
   GET_CATALOG_AMOUNT_FOR_GW_TRANSACTION: `${API.API_SECURE}${API.PROVIDERS}/getCatalogAmountForGWTransaction`,
   GET_CONFIRM_PAYMENT_INTENT: `${API.API_SECURE}${API.PROVIDERS}/getConfirmPaymentIntent`,
