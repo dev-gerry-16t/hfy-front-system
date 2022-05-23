@@ -100,7 +100,7 @@ const SectionDocumentation = (props) => {
 
   return (
     <ContentForm>
-      {isNil(matchParams) === false && (
+      {/*isNil(matchParams) === false && (
         <div className="back-button">
           <button
             onClick={() => {
@@ -110,7 +110,7 @@ const SectionDocumentation = (props) => {
             <Arrow width="25px" />
           </button>
         </div>
-      )}
+      )*/}
       <div className="header-title">
         <h1>Documentación</h1>
       </div>

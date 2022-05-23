@@ -181,7 +181,7 @@ const SectionBankInformation = (props) => {
 
   return (
     <ContentForm>
-      {isNil(matchParams) === false && (
+      {/*isNil(matchParams) === false && (
         <div className="back-button">
           <button
             onClick={() => {
@@ -191,7 +191,7 @@ const SectionBankInformation = (props) => {
             <Arrow width="25px" />
           </button>
         </div>
-      )}
+          )*/}
       <div className="header-title">
         <h1>Información Bancaria</h1>
       </div>
