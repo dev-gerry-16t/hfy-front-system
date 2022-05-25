@@ -350,6 +350,10 @@ const PaymentsService = (props) => {
     if (window.screen.width <= 720) {
       setDataTab(dataTabsPaymentMethodMobile);
     }
+
+    return () => {
+      clearInterval(intervalPayment);
+    };
   }, []);
   return (
     <Content>
