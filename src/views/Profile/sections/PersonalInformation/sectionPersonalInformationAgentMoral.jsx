@@ -355,7 +355,7 @@ const SectionPersonalInformationAgentMoral = (props) => {
 
   return (
     <ContentForm>
-      {isNil(matchParams) === false && (
+      {/*isNil(matchParams) === false && (
         <div className="back-button">
           <button
             onClick={() => {
@@ -365,7 +365,7 @@ const SectionPersonalInformationAgentMoral = (props) => {
             <Arrow width="25px" />
           </button>
         </div>
-      )}
+      )*/}
       <div className="header-title">
         <h1>Información personal</h1>
       </div>

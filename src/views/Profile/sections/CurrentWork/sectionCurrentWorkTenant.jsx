@@ -283,7 +283,7 @@ const SectionCurrentWork = (props) => {
 
   return (
     <ContentForm>
-      {isNil(matchParams) === false && (
+      {/*isNil(matchParams) === false && (
         <div className="back-button">
           <button
             onClick={() => {
@@ -293,7 +293,7 @@ const SectionCurrentWork = (props) => {
             <Arrow width="25px" />
           </button>
         </div>
-      )}
+      )*/}
       <div className="header-title">
         <h1>Información Socioeconómica</h1>
       </div>
