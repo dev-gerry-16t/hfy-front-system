@@ -306,25 +306,27 @@ const GenerateContracts = (props) => {
 
   return (
     <Content>
-      <CustomViewRequestContract
-        dataFee={dataFee}
-        visibleDialog={visibleComponent}
-        onConfirmOk={() => {
-          handlerCallGetRequestCoincidences(
-            jsonConditionsState,
-            paginationState
-          );
-        }}
-        onClose={() => {
-          setVisibleComponent(false);
-        }}
-        history={history}
-      />
+      {visibleComponent === true && (
+        <CustomViewRequestContract
+          dataFee={dataFee}
+          visibleDialog={visibleComponent}
+          onConfirmOk={() => {
+            handlerCallGetRequestCoincidences(
+              jsonConditionsState,
+              paginationState
+            );
+          }}
+          onClose={() => {
+            setVisibleComponent(false);
+          }}
+          history={history}
+        />
+      )}
       <ContentFilter>
         <div className="filter-search">
           <div className="search-table">
             <input
-              placeholder="Campo abierto"
+              placeholder="Buscar por usuario"
               value={valueSearch}
               type="text"
               onChange={(e) => {
