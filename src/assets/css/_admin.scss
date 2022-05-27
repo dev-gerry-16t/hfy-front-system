@@ -13,6 +13,10 @@
   width: 100%;
 }
 
+.ant-popconfirm{
+  z-index: 1301!important;
+}
+
 @media screen and (max-width: 715px) {
   .ant-drawer-content-wrapper {
     width: 100% !important;

@@ -3,7 +3,7 @@ import moment from "moment";
 import "moment/locale/es";
 import Fade from "react-reveal/Fade";
 import styled from "styled-components";
-import { Row, Col, message } from "antd";
+import { Row, Col, message, Popconfirm } from "antd";
 import { connect } from "react-redux";
 import isEmpty from "lodash/isEmpty";
 import isNil from "lodash/isNil";
@@ -565,16 +565,27 @@ const CustomViewRequestContract = ({
           zIndex: "2",
         }}
       >
-        <button
-          style={{
-            background: "transparent",
-            border: "none",
-            cursor: "pointer",
+        <Popconfirm
+          placement="left"
+          title="¿Estás seguro que deseas cerrar, puedes perder tu información capturada hasta el momento?"
+          onConfirm={() => {
+            onClose();
           }}
-          onClick={onClose}
+          okText="Si"
+          cancelText="No"
+          className="pop-confirm-generate-contract"
         >
-          X
-        </button>
+          <button
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+            }}
+            onClick={() => {}}
+          >
+            X
+          </button>
+        </Popconfirm>
       </div>
       {visibleSection === stepInit && (
         <Fade right opposite when={isVisibleSection}>
@@ -1491,37 +1502,90 @@ const CustomViewRequestContract = ({
                   Pago de <span>Generación de Contrato</span>
                 </h1>
               </HeaderContainer>
-              {/* <MainContainer>
-              <h1>Generación de contrato</h1>
-            </MainContainer> */}
-              <InfoPayment>
-                <div className="header-card-payment">
-                  <div className="amount-to-pay">
-                    <strong>Monto a pagar</strong>{" "}
-                    <span>{dataInfoRequest.payment.amountFormatted}</span>
+              {dataInfoRequest.request.requiresPymt === true ? (
+                <InfoPayment>
+                  <div className="header-card-payment">
+                    <div className="amount-to-pay">
+                      <strong>Monto a pagar</strong>{" "}
+                      <span>{dataInfoRequest.payment.amountFormatted}</span>
+                    </div>
                   </div>
-                </div>
-                <div className="inclusive-payment">
-                  <h3
-                    style={{
-                      textAlign: "center",
-                      fontWeight: "600",
+                  <div className="inclusive-payment">
+                    <h3
+                      style={{
+                        textAlign: "center",
+                        fontWeight: "600",
+                      }}
+                    >
+                      Incluye
+                    </h3>
+                    {handlerShowInclusive(
+                      dataInfoRequest.payment.serviceDescription
+                    )}
+                  </div>
+                </InfoPayment>
+              ) : (
+                <InfoPayment>
+                  <div className="header-card-payment">
+                    <div className="amount-to-pay">
+                      <strong>Monto a pagar</strong> <span>$0.00MXN</span>
+                    </div>
+                  </div>
+                </InfoPayment>
+              )}
+              <MainButtons>
+                {dataInfoRequest.request.requiresPymt === true ? (
+                  <button
+                    className="hfy-primary-button"
+                    onClick={handlerOnClickPayment}
+                  >
+                    Realizar Pago
+                  </button>
+                ) : (
+                  <button
+                    className="hfy-primary-button"
+                    onClick={() => {
+                      if (
+                        dataOwner.isInfoProvidedByRequester === false &&
+                        dataTenant.isInfoProvidedByRequester === false
+                      ) {
+                        history.push(
+                          `/websystem/detalle-contrato-generado/${requestId}`
+                        );
+                      } else if (
+                        dataOwner.isInfoProvidedByRequester === true &&
+                        dataTenant.isInfoProvidedByRequester === false
+                      ) {
+                        setIsVisibleSection(false);
+                        setTimeout(() => {
+                          setVisibleSection(stepFormOwner);
+                          setIsVisibleSection(true);
+                        }, 1000);
+                      } else if (
+                        dataOwner.isInfoProvidedByRequester === false &&
+                        dataTenant.isInfoProvidedByRequester === true
+                      ) {
+                        setIsVisibleSection(false);
+                        setTimeout(() => {
+                          setVisibleSection(stepFormTenant);
+                          setIsVisibleSection(true);
+                        }, 1000);
+                      } else if (
+                        dataOwner.isInfoProvidedByRequester === true &&
+                        dataTenant.isInfoProvidedByRequester === true
+                      ) {
+                        setIsVisibleSection(false);
+                        setTimeout(() => {
+                          setVisibleSection(stepFormOwner);
+                          setIsVisibleSection(true);
+                        }, 1000);
+                      }
                     }}
                   >
-                    Incluye
-                  </h3>
-                  {handlerShowInclusive(
-                    dataInfoRequest.payment.serviceDescription
-                  )}
-                </div>
-              </InfoPayment>
-              <MainButtons>
-                <button
-                  className="hfy-primary-button"
-                  onClick={handlerOnClickPayment}
-                >
-                  Realizar Pago
-                </button>
+                    Continuar
+                  </button>
+                )}
+
                 <button
                   className="hfy-secondary-button"
                   onClick={() => {
