@@ -38,6 +38,7 @@ const CustomSubSectionCardDocument = (props) => {
 
 const SectionUploadDocument = (props) => {
   const { isModalVisible, onClose, dataDocuments } = props;
+  
   return (
     <Modal
       style={{ top: 20 }}
@@ -69,7 +70,23 @@ const SectionUploadDocument = (props) => {
               className="section-top-documentation"
               style={{ flexDirection: "column" }}
             >
-              <CustomSubSectionCardDocument
+              {isEmpty(dataDocuments) === false &&
+                dataDocuments.map((row) => {
+                  return (
+                    <CustomSubSectionCardDocument
+                      title={row.documentType}
+                      subtitle="N/A"
+                      visibleSubtitle={false}
+                    >
+                      <CustomFileUpload
+                        acceptFile="image/png, image/jpeg, image/jpg, .pdf, .doc, .docx"
+                        dataDocument={row}
+                        typeDocument={1}
+                      />
+                    </CustomSubSectionCardDocument>
+                  );
+                })}
+              {/* <CustomSubSectionCardDocument
                 title="Póliza"
                 subtitle="N/A"
                 visibleSubtitle={false}
@@ -116,7 +133,7 @@ const SectionUploadDocument = (props) => {
                   }
                   typeDocument={1}
                 />
-              </CustomSubSectionCardDocument>
+              </CustomSubSectionCardDocument> */}
             </div>
           </div>
         </div>

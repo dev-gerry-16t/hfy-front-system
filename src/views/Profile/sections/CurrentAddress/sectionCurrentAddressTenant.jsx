@@ -280,7 +280,7 @@ const SectionCurrentAddress = (props) => {
 
   return (
     <ContentForm>
-      {isNil(matchParams) === false && (
+      {/*isNil(matchParams) === false && (
         <div className="back-button">
           <button
             onClick={() => {
@@ -290,7 +290,7 @@ const SectionCurrentAddress = (props) => {
             <Arrow width="25px" />
           </button>
         </div>
-      )}
+      )*/}
       <div className="header-title">
         <h1>Dirección Actual</h1>
       </div>
