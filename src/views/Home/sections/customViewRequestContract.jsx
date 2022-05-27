@@ -567,7 +567,7 @@ const CustomViewRequestContract = ({
       >
         <Popconfirm
           placement="left"
-          title="¿Estás seguro que deseas cerrar, puedes perder tu información capturada hasta el momento?"
+          title="¿Seguro que deseas cerrar?, perderás toda la información capturada."
           onConfirm={() => {
             onClose();
           }}
