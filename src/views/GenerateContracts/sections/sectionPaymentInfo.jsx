@@ -53,10 +53,31 @@ const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
   const [isLoadApi, setIsLoadApi] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  const handlerOnClickPayment = () => {
+  const handlerOnClickPayment = async () => {
+    let channel = null;
     setIsLoadApi(true);
     const channelName = "payment_users_contract";
-    const channel = new BroadcastChannel(channelName);
+    try {
+      channel = new BroadcastChannel(channelName);
+      channel.onmessage = (message) => {
+        if (message.data === "close_payment_contract") {
+          clearInterval(intervalWindow);
+          openPayment.close();
+          setTimeout(() => {
+            setIsLoadApi(false);
+          }, 1500);
+        }
+        if (message.data === "payment_succesed") {
+          clearInterval(intervalWindow);
+          openPayment.close();
+          setPaymentSuccess(true);
+          setTimeout(() => {
+            setIsLoadApi(false);
+            onUpdateInfo();
+          }, 3000);
+        }
+      };
+    } catch (error) {}
 
     const openPayment = window.open(
       `/websystem/payment-service/${dataInfoPayment.idOrderPayment}`,
@@ -70,29 +91,12 @@ const SectionPaymentInfo = ({ dataInfoPayment, onUpdateInfo }) => {
     let intervalWindow = setInterval(() => {
       if (openPayment.closed === true) {
         setIsLoadApi(false);
-        channel.close();
+        if (isNil(channel) === false) {
+          channel.close();
+        }
         clearInterval(intervalWindow);
       }
     }, 2000);
-
-    channel.onmessage = (message) => {
-      if (message.data === "close_payment_contract") {
-        clearInterval(intervalWindow);
-        openPayment.close();
-        setTimeout(() => {
-          setIsLoadApi(false);
-        }, 1500);
-      }
-      if (message.data === "payment_succesed") {
-        clearInterval(intervalWindow);
-        openPayment.close();
-        setPaymentSuccess(true);
-        setTimeout(() => {
-          setIsLoadApi(false);
-          onUpdateInfo();
-        }, 3000);
-      }
-    };
   };
 
   const handlerShowInclusive = (arrayString) => {

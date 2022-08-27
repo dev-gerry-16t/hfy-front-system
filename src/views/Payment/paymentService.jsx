@@ -334,17 +334,28 @@ const PaymentsService = (props) => {
     }
   };
 
+  const createBroadcastChannel = (channelName) => {
+    try {
+      const channel = new BroadcastChannel(channelName);
+      return channel;
+    } catch (error) {
+      return null;
+    }
+  };
+
   useEffect(() => {
     const channelName = "payment_users_contract";
-    channel = new BroadcastChannel(channelName);
+    const channel = createBroadcastChannel(channelName);
     handlerCallGetOrderPaymentById();
     handlerGetCatalogGWtransaction();
     let intervalPayment = setInterval(async () => {
       const response = await handlerCallIsOPPaid();
       if (response === true) {
         clearInterval(intervalPayment);
-        channel.postMessage("payment_succesed");
-        channel.close();
+        if (isNil(channel) === false) {
+          channel.postMessage("payment_succesed");
+          channel.close();
+        }
       }
     }, 5000);
     if (window.screen.width <= 720) {
