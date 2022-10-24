@@ -829,8 +829,7 @@ const SelectPolicy = (props) => {
                           height={"84px"}
                         />
                       </div>
-                      {rowMap.idPolicy ===
-                        "C08517F7-E476-43C4-8015-1C9F7CEDA4EC" && (
+                      {rowMap.requiresEndorsement === true && (
                         <span
                           style={{
                             textAlign: "center",
