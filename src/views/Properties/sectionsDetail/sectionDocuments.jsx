@@ -413,7 +413,7 @@ const SectionDocuments = (props) => {
                           <ButtonDocument
                             onClick={async () => {
                               window.open(
-                                `${ENVIROMENT}/api/viewFileDownload/${row.idDocument}/${row.bucketSource}/${row.extension}?name=${row.documentType}`,
+                                `${ENVIROMENT}/api/viewFileDownload/${row.idPreviousDocument}/${row.bucketSource}/${row.extension}?name=${row.documentType}`,
                                 "_blank"
                               );
                             }}
