@@ -399,7 +399,7 @@ const SectionPersonalInformation = (props) => {
         />
         <WidgetUploadImageProfile />
         <div className="type-property">
-          {/* <Row>
+          <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
                 value={dataForm.givenName}
@@ -408,13 +408,13 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  // setDataForm({
-                  //   ...dataForm,
-                  //   givenName: value,
-                  // });
+                  setDataForm({
+                    ...dataForm,
+                    givenName: value,
+                  });
                 }}
                 type="text"
-                isBlock={true}
+                isBlock={false}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -426,13 +426,13 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  // setDataForm({
-                  //   ...dataForm,
-                  //   lastName: value,
-                  // });
+                  setDataForm({
+                    ...dataForm,
+                    lastName: value,
+                  });
                 }}
                 type="text"
-                isBlock={true}
+                isBlock={false}
               />
             </Col>
           </Row>
@@ -445,13 +445,13 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  // setDataForm({
-                  //   ...dataForm,
-                  //   mothersMaidenName: value,
-                  // });
+                  setDataForm({
+                    ...dataForm,
+                    mothersMaidenName: value,
+                  });
                 }}
                 type="text"
-                isBlock={true}
+                isBlock={false}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -464,12 +464,12 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value) => {
-                  // setDataForm({
-                  //   ...dataForm,
-                  //   idCountryNationality: value,
-                  // });
+                  setDataForm({
+                    ...dataForm,
+                    idCountryNationality: value,
+                  });
                 }}
-                isBlock={true}
+                isBlock={false}
               />
             </Col>
           </Row>
@@ -483,13 +483,13 @@ const SectionPersonalInformation = (props) => {
                 error={false}
                 errorMessage="Este campo es requerido"
                 onChange={(value, option) => {
-                  // setDataForm({
-                  //   ...dataForm,
-                  //   idType: value,
-                  // });
-                  // setFieldDescription(option.fieldDescription);
+                  setDataForm({
+                    ...dataForm,
+                    idType: value,
+                  });
+                  setFieldDescription(option.fieldDescription);
                 }}
-                isBlock={true}
+                isBlock={false}
               />
             </Col>
             <Col span={2} xs={{ span: 24 }} md={{ span: 2 }} />
@@ -502,17 +502,17 @@ const SectionPersonalInformation = (props) => {
                   error={false}
                   errorMessage="Este campo es requerido"
                   onChange={(value) => {
-                    // setDataForm({
-                    //   ...dataForm,
-                    //   idTypeNumber: value,
-                    // });
+                    setDataForm({
+                      ...dataForm,
+                      idTypeNumber: value,
+                    });
                   }}
                   type="text"
-                  isBlock={true}
+                  isBlock={false}
                 />
               </Col>
             )}
-          </Row> */}
+          </Row>
           <Row>
             <Col span={11} xs={{ span: 24 }} md={{ span: 11 }}>
               <CustomInputTypeForm
